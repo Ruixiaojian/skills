@@ -1,50 +1,52 @@
 # 多轮对话
 
-多轮对话是指用户与大模型应用在同一会话中进行多次交互时，模型能够理解并引用先前对话内容的能力。百炼平台通过不同机制实现多轮对话的上下文管理，使应用能够在连续交互中保持语义连贯。
+多轮对话是指用户与大模型应用在同一会话中进行多次连续交互，系统在每次响应时能够理解并引用之前的对话内容，从而实现上下文连贯的自然语言交互。在百炼平台中，多轮对话是智能体应用、工作流应用和 Assistant API 的核心能力之一。
 
 ## 在百炼平台中的使用场景
 
 ### 智能体与工作流应用调用
 
-通过 `Application.call` 接口调用智能体或工作流应用时，多轮对话支持两种实现方式：
+通过 `Application.call` 接口调用智能体或工作流应用时，多轮对话支持两种实现模式：
 
-- **`session_id` 模式**：由服务端自动维护对话历史。首次请求无需传入，系统在响应中返回 `session_id`，后续请求携带该值即可延续对话。有效期为最后一次请求后 **1 小时**，最多支持 **50 轮**。
-- **`messages` 模式（推荐）**：由客户端自行维护对话历史数组，每次请求时传入完整的消息列表，控制更灵活。工作流应用使用此模式时，需在大模型节点中配置提示词变量 `historyList` 并重新发布应用。
+- **`session_id` 模式**：由服务端自动维护对话历史。首次调用无需传入 `session_id`，系统在响应中返回一个会话 ID，后续请求携带该 ID 即可自动加载上下文。有效期为最后一次请求后 **1 小时**，最多支持 **50 轮**对话。
+- **`messages` 模式（推荐）**：由客户端自行维护对话历史数组，每次请求传入完整的消息列表。控制更灵活，不受有效期限制。工作流应用使用此模式时，需在大模型节点配置提示词变量 `historyList` 并发布应用。
 
-> 若请求中同时包含 `session_id` 和 `messages`，系统将优先使用 `messages`。
+> **注意**：若请求中同时包含 `session_id` 和 `messages`，系统将优先使用 `messages`。
 
-### DashScope API 与 Responses API 的差异
+### OpenAI 兼容 Responses API
 
-百炼平台提供两套应用调用接口，它们的多轮对话机制有所不同：
-
-| 接口 | 多轮对话机制 | 说明 |
-|------|------------|------|
-| DashScope API | `session_id` 或 `messages` | 服务端可维护上下文，也支持客户端自管理 |
-| OpenAI 兼容 Responses API | 客户端传递完整消息历史 | `pre_response_id` 和 `conversation_id` 功能计划后续支持 |
-
-迁移时需注意两者的上下文管理方式不同。
+使用 Responses API 调用百炼应用时，当前需要在每次请求的 `input` 中传递完整的对话历史（`pre_response_id` 和 `conversation_id` 功能后续支持）。这与 DashScope API 的 `session_id` 服务端托管机制不同，迁移时需注意。
 
 ### Assistant API（已下线）
 
-Assistant API 通过 **Thread** 机制实现多轮对话管理。Thread 自动记录用户和 Assistant 之间的所有消息，开发者无需手动维护上下文。该 API 目前处于下线状态，建议迁移至 Responses API。
+Assistant API 通过 Thread 机制自动维护对话历史。Thread 记录用户和 Assistant 之间的所有消息，开发者无需手动管理上下文。该 API 已下线，建议迁移至 Responses API。
 
-### 智能体应用中的短期记忆
+### 智能体应用配置
 
-在百炼控制台配置智能体应用时，多轮对话上下文作为**短期记忆**存在，支持配置 **0–30 轮**的会话历史保留。轮次越多，模型可参考的上下文越丰富，但也会占用更多的上下文窗口和输入 [Token](token.md)。
+在百炼控制台创建智能体应用时，可通过**短期记忆**参数配置多轮对话的上下文轮数，支持 **0–30 轮**。该参数决定每次模型推理时携带的历史对话轮数。
 
-### 与长期记忆的配合
+### 与长期记忆的关系
 
-多轮对话的上下文属于会话级别的短期记忆，会话结束后即失效。若需跨会话持续记住用户偏好或历史信息，可结合**记忆库**实现长期记忆。记忆库通过 `AddMemory` 接口将对话内容中的关键信息自动提取为记忆片段，在后续会话中通过 `SearchMemory` 检索并注入 Prompt，实现个性化回复。
+多轮对话属于会话内的短期上下文管理，会话结束后上下文即失效。如需跨会话持久化用户信息，可结合记忆库实现长期记忆——每轮对话结束后调用 `AddMemory` 接口将对话写入记忆库，下次会话时通过 `SearchMemory` 检索历史记忆并注入 Prompt。
 
 ## 关键参数与配置
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
-| `session_id` | string | 会话 ID，用于服务端维护对话历史。首次请求不传，后续从响应中获取并回传 |
-| `messages` | array | 对话历史数组，每条消息包含 `role`（`user` / `assistant`）和 `content` 字段 |
-| 短期记忆轮次 | 0–30 | 在控制台智能体配置中设置，控制模型可参考的历史对话轮数 |
+### DashScope API 参数
 
-### 基本示例（`session_id` 模式）
+| 参数 | 类型 | 必选 | 说明 |
+|------|------|------|------|
+| `session_id` | string | 否 | 多轮对话会话 ID，首次调用不传，后续使用响应返回的值 |
+| `messages` | array | 否 | 自行维护的对话历史数组，每个元素包含 `role` 和 `content` |
+
+### 智能体应用控制台配置
+
+| 配置项 | 说明 |
+|--------|------|
+| 短期记忆轮数 | 0–30 轮，控制模型可见的历史对话深度 |
+
+## 代码示例
+
+### 使用 session_id 实现多轮对话（Python）
 
 ```python
 import os
@@ -54,7 +56,7 @@ from dashscope import Application
 response = Application.call(
     api_key=os.getenv("DASHSCOPE_API_KEY"),
     app_id='YOUR_APP_ID',
-    prompt='我叫小明'
+    prompt='我想去杭州旅游'
 )
 session_id = response.output.session_id
 
@@ -62,27 +64,35 @@ session_id = response.output.session_id
 response = Application.call(
     api_key=os.getenv("DASHSCOPE_API_KEY"),
     app_id='YOUR_APP_ID',
-    prompt='我叫什么？',
+    prompt='帮我推荐几个景点',
     session_id=session_id
 )
-print(response.output.text)  # 模型将回答"小明"
+print(response.output.text)
 ```
 
-### 基本示例（`messages` 模式）
+### 使用 messages 实现多轮对话（Python）
 
 ```python
 import os
 from dashscope import Application
 
-messages = [
-    {"role": "user", "content": "我叫小明"},
-    {"role": "assistant", "content": "你好，小明！"},
-    {"role": "user", "content": "我叫什么？"}
-]
+messages = []
 
+# 第一轮
+messages.append({"role": "user", "content": "我想去杭州旅游"})
 response = Application.call(
     api_key=os.getenv("DASHSCOPE_API_KEY"),
     app_id='YOUR_APP_ID',
+    prompt='我想去杭州旅游'
+)
+messages.append({"role": "assistant", "content": response.output.text})
+
+# 第二轮
+messages.append({"role": "user", "content": "帮我推荐几个景点"})
+response = Application.call(
+    api_key=os.getenv("DASHSCOPE_API_KEY"),
+    app_id='YOUR_APP_ID',
+    prompt='帮我推荐几个景点',
     messages=messages
 )
 print(response.output.text)
@@ -90,17 +100,17 @@ print(response.output.text)
 
 ## 注意事项
 
-- `session_id` 的有效期为最后一次请求后 1 小时，超时后对话历史将丢失。
-- `messages` 模式下，开发者需自行管理消息数组的长度，避免超出模型的上下文窗口限制。
-- 工作流应用使用 `messages` 模式时，必须在大模型节点的提示词中配置 `historyList` 变量并重新发布，否则历史消息不会生效。
-- 多轮对话的历史消息会占用输入 [Token](token.md)，轮次越多成本越高，建议根据业务需要合理控制保留轮数。
+- `session_id` 的有效期为最后一次请求后 1 小时，超时后上下文将被清除。
+- 对话历史会占用模型的上下文窗口，轮数过多可能导致输入 Token 超限，建议根据业务需要合理设置短期记忆轮数。
+- DashScope API 与 Responses API 的多轮对话机制不同：前者支持服务端托管（`session_id`），后者目前需客户端传递完整历史。
+- 如需超出会话生命周期的记忆能力，应结合记忆库功能实现长期记忆。
 
 ## 关联主题页
 
 - [assistant api](../guides/assistant-api.md)
 - [bailian application calling](../guides/bailian-application-calling.md)
 - [memory library overview](../guides/memory-library-overview.md)
-- [long term memory new](../api/long-term-memory-new.md)
 - [llm application](../guides/llm-application.md)
 - [application call](../api/application-call.md)
+- [long term memory new](../api/long-term-memory-new.md)
 

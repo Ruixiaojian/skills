@@ -7610,6 +7610,18 @@ MiniMax-M2.1
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
+MiniMax/MiniMax-M3
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+非思考和思考模式
+
+4.2元
+
+16.8元
+
+无
+
 MiniMax/MiniMax-M2.7
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
@@ -7619,8 +7631,6 @@ MiniMax/MiniMax-M2.7
 2.1元
 
 8.4元
-
-无
 
 MiniMax/MiniMax-M2.5
 

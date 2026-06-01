@@ -205,6 +205,360 @@ curl -X POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions 
 }
 ```
 
+## **多模态调用示例**
+
+MiniMax/MiniMax-M3 不仅支持纯文本对话，还具备强大的多模态理解能力。本章节将介绍如何让模型理解图像和视频内容。
+
+**重要**
+
+MiniMax-M3 通过 `thinking` 参数控制思考模式，默认为自适应模式（`adaptive`）：
+
+-   **非思考模式**（`thinking.type: "disabled"`）：直接输出结果，不包含推理过程
+    
+-   **自适应模式**（`thinking.type: "adaptive"` 或不设置）：模型自主判断是否需要思考，并输出推理过程（`reasoning_content`）
+    
+
+### **图像理解**
+
+图像理解功能让 MiniMax-M3 模型能够识别和分析图像内容。您可以传入单张或多张图像。
+
+## OpenAI兼容
+
+**说明**
+
+`thinking`非 OpenAI 标准参数，OpenAI Python SDK 通过 `extra_body`传入，Node.js SDK中作为顶层参数传入。
+
+## Python
+
+```
+import os
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.getenv("DASHSCOPE_API_KEY"),
+    base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
+)
+
+# 单图传入示例（自适应思考模式）
+completion = client.chat.completions.create(
+    model="MiniMax/MiniMax-M3",
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "图中描绘的是什么景象?"},
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241022/emyrja/dog_and_girl.jpeg"
+                    }
+                }
+            ]
+        }
+    ],
+    extra_body={"thinking": {"type": "adaptive"}}  # 自适应思考模式
+)
+
+# 输出思考过程
+if hasattr(completion.choices[0].message, 'reasoning_content') and completion.choices[0].message.reasoning_content:
+    print("\n" + "=" * 20 + "思考过程" + "=" * 20 + "\n")
+    print(completion.choices[0].message.reasoning_content)
+
+# 输出回复内容
+print("\n" + "=" * 20 + "完整回复" + "=" * 20 + "\n")
+print(completion.choices[0].message.content)
+
+# 多图传入示例（开启思考模式，取消注释使用）
+# completion = client.chat.completions.create(
+#     model="MiniMax/MiniMax-M3",
+#     messages=[
+#         {
+#             "role": "user",
+#             "content": [
+#                 {"type": "text", "text": "这些图描绘了什么内容？"},
+#                 {
+#                     "type": "image_url",
+#                     "image_url": {"url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241022/emyrja/dog_and_girl.jpeg"}
+#                 },
+#                 {
+#                     "type": "image_url",
+#                     "image_url": {"url": "https://dashscope.oss-cn-beijing.aliyuncs.com/images/tiger.png"}
+#                 }
+#             ]
+#         }
+#     ],
+#     extra_body={"thinking": {"type": "adaptive"}}
+# )
+#
+# # 输出思考过程和回复
+# if hasattr(completion.choices[0].message, 'reasoning_content') and completion.choices[0].message.reasoning_content:
+#     print("\n思考过程：\n" + completion.choices[0].message.reasoning_content)
+# print("\n完整回复：\n" + completion.choices[0].message.content)
+```
+
+## Node.js
+
+```
+import OpenAI from "openai";
+import process from 'process';
+
+const openai = new OpenAI({
+    apiKey: process.env.DASHSCOPE_API_KEY,
+    baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1'
+});
+
+// 单图传入示例（自适应思考模式）
+const completion = await openai.chat.completions.create({
+    model: 'MiniMax/MiniMax-M3',
+    messages: [
+        {
+            role: 'user',
+            content: [
+                { type: 'text', text: '图中描绘的是什么景象?' },
+                {
+                    type: 'image_url',
+                    image_url: {
+                        url: 'https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241022/emyrja/dog_and_girl.jpeg'
+                    }
+                }
+            ]
+        }
+    ],
+    thinking: {"type": "adaptive"}  // 自适应思考模式
+});
+
+// 输出思考过程
+if (completion.choices[0].message.reasoning_content) {
+    console.log('\n' + '='.repeat(20) + '思考过程' + '='.repeat(20) + '\n');
+    console.log(completion.choices[0].message.reasoning_content);
+}
+
+// 输出回复内容
+console.log('\n' + '='.repeat(20) + '完整回复' + '='.repeat(20) + '\n');
+console.log(completion.choices[0].message.content);
+
+// 多图传入示例（开启思考模式，取消注释使用）
+// const multiCompletion = await openai.chat.completions.create({
+//     model: 'MiniMax/MiniMax-M3',
+//     messages: [
+//         {
+//             role: 'user',
+//             content: [
+//                 { type: 'text', text: '这些图描绘了什么内容？' },
+//                 {
+//                     type: 'image_url',
+//                     image_url: { url: 'https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241022/emyrja/dog_and_girl.jpeg' }
+//                 },
+//                 {
+//                     type: 'image_url',
+//                     image_url: { url: 'https://dashscope.oss-cn-beijing.aliyuncs.com/images/tiger.png' }
+//                 }
+//             ]
+//         }
+//     ],
+//     thinking: {"type": "adaptive"}
+// });
+//
+// // 输出思考过程和回复
+// if (multiCompletion.choices[0].message.reasoning_content) {
+//     console.log('\n思考过程：\n' + multiCompletion.choices[0].message.reasoning_content);
+// }
+// console.log('\n完整回复：\n' + multiCompletion.choices[0].message.content);
+```
+
+## HTTP
+
+## curl
+
+```
+curl -X POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions \
+-H "Authorization: Bearer $DASHSCOPE_API_KEY" \
+-H "Content-Type: application/json" \
+-d '{
+    "model": "MiniMax/MiniMax-M3",
+    "messages": [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "图中描绘的是什么景象?"
+                },
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241022/emyrja/dog_and_girl.jpeg"
+                    }
+                }
+            ]
+        }
+    ],
+    "thinking": {"type": "adaptive"}
+}'
+
+# 多图输入示例（取消注释使用）
+# curl -X POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions \
+# -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
+# -H "Content-Type: application/json" \
+# -d '{
+#     "model": "MiniMax/MiniMax-M3",
+#     "messages": [
+#         {
+#             "role": "user",
+#             "content": [
+#                 {
+#                     "type": "text",
+#                     "text": "这些图描绘了什么内容？"
+#                 },
+#                 {
+#                     "type": "image_url",
+#                     "image_url": {
+#                         "url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241022/emyrja/dog_and_girl.jpeg"
+#                     }
+#                 },
+#                 {
+#                     "type": "image_url",
+#                     "image_url": {
+#                         "url": "https://dashscope.oss-cn-beijing.aliyuncs.com/images/tiger.png"
+#                     }
+#                 }
+#             ]
+#         }
+#     ],
+#     "thinking": {"type": "adaptive"}
+# }'
+```
+
+### **视频理解**
+
+## OpenAI兼容
+
+## Python
+
+```
+import os
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.getenv("DASHSCOPE_API_KEY"),
+    base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
+)
+
+completion = client.chat.completions.create(
+    model="MiniMax/MiniMax-M3",
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "video_url",
+                    "video_url": {
+                        "url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241115/cqqkru/1.mp4"
+                    },
+                    "fps": 2
+                },
+                {
+                    "type": "text",
+                    "text": "这段视频的内容是什么?"
+                }
+            ]
+        }
+    ]
+)
+
+print(completion.choices[0].message.content)
+```
+
+## Node.js
+
+```
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+    apiKey: process.env.DASHSCOPE_API_KEY,
+    baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+});
+
+async function main() {
+    const response = await openai.chat.completions.create({
+        model: "MiniMax/MiniMax-M3",
+        messages: [
+            {
+                role: "user",
+                content: [
+                    {
+                        type: "video_url",
+                        video_url: {
+                            "url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241115/cqqkru/1.mp4"
+                        },
+                        fps: 2
+                    },
+                    {
+                        type: "text",
+                        text: "这段视频的内容是什么?"
+                    }
+                ]
+            }
+        ]
+    });
+
+    console.log(response.choices[0].message.content);
+}
+
+main();
+```
+
+## HTTP
+
+## curl
+
+```
+curl -X POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions \
+  -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "MiniMax/MiniMax-M3",
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "video_url",
+            "video_url": {
+              "url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241115/cqqkru/1.mp4"
+            },
+            "fps": 2
+          },
+          {
+            "type": "text",
+            "text": "这段视频的内容是什么?"
+          }
+        ]
+      }
+    ]
+  }'
+```
+
+### **文件限制**
+
+## 图像文件
+
+-   **传入方式：**支持通过公网URL或Base64编码传入。
+    
+-   **支持的图像格式：**PNG、JPEG、WEBP、GIF
+    
+-   **图像大小：**单张图片不超过10MB。
+    
+
+## 视频文件
+
+-   **视频大小与时长：**视频文件不超过50MB，时长不超过30分钟。
+    
+-   **视频格式：**MP4、AVI、MOV、MKV。
+    
+-   **音频理解：**不支持对视频文件的音频进行理解。
+    
+
 ## **其它功能**
 
 **模型**
@@ -222,6 +576,22 @@ curl -X POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions 
 [前缀续写](https://help.aliyun.com/zh/model-studio/partial-mode)
 
 [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)
+
+MiniMax/MiniMax-M3
+
+支持
+
+支持
+
+支持
+
+不支持
+
+不支持
+
+不支持
+
+支持
 
 MiniMax/MiniMax-M2.7
 
@@ -273,9 +643,9 @@ MiniMax/MiniMax-M2.1
 
 上下文缓存类型为隐式缓存，自动开启，与阿里云百炼的[隐式缓存](https://help.aliyun.com/zh/model-studio/context-cache)服务有以下不同：
 
--   MiniMax/MiniMax-M2.7 命中缓存的输入 Token 折扣为 20%，MiniMax/MiniMax-M2.5、MiniMax/MiniMax-M2.1 折扣为 10%；
+-   MiniMax/MiniMax-M3、MiniMax/MiniMax-M2.7 命中缓存的输入 Token 折扣为 20%，MiniMax/MiniMax-M2.5、MiniMax/MiniMax-M2.1 折扣为 10%；缓存最少 Token 数为 512（百炼为 256）。
     
--   缓存最少 Token 数为 512（百炼为 256）。
+-   MiniMax/MiniMax-M3 不支持 `n` 参数（即不支持一次生成多条候选回复），`tool_choice` 仅支持 `none` 和 `auto`。
     
 
 ## **参数默认值**
@@ -287,6 +657,12 @@ MiniMax/MiniMax-M2.1
 **temperature**
 
 **top\_p**
+
+MiniMax/MiniMax-M3
+
+1.0
+
+0.95
 
 MiniMax/MiniMax-M2.7
 
@@ -308,7 +684,7 @@ MiniMax/MiniMax-M2.1
 
 ## **模型列表与计费**
 
-MiniMax-M2.7 模型，擅长编程、文本摘要等任务，推荐使用。
+MiniMax-M3 为最新多模态推理模型，支持图像和视频理解，推荐使用；MiniMax-M2.7 擅长编程、文本摘要等任务。
 
 模型上下文长度与价格信息请参见[百炼控制台](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/all)。
 
