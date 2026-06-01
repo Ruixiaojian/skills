@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "千问3-TTS-VD模型是通义实验室最新推出的实时语音合成大模型，可对qwen3-voice-design服务设计的声音进行高保真实时语音合成，且同一音色支持11个语种的语音输出。该模型经过海量数据训练，合成音频可以根据文本自适应调节语气，对复杂文本合成也有较好的处理能力。该模型为2026年01月15日快照版本模型。",
@@ -33,7 +37,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TTS"],
+      "capabilities": [
+        "TTS"
+      ],
       "modelAlias": "qwen3-tts-vd-realtime-0115",
       "versionTag": "SNAPSHOT",
       "latestOnlineAt": "2026-01-14T11:14:10.000+00:00",
@@ -52,14 +58,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

@@ -4,12 +4,19 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image", "Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "HappyHorse-1.0-I2V支持图生视频，具备高度还原的动态画面生成能力，能够精准理解文本语义，输出流畅自然、细节丰富的高质量视频。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "happyhorse",
       "model": "happyhorse-1.0-i2v",
       "prices": [
@@ -46,7 +53,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-21T17:07:07.000+00:00",
@@ -63,14 +72,20 @@
           "name": "视频时长(秒)",
           "key": "duration",
           "default": 5,
-          "range": [3, 15]
+          "range": [
+            3,
+            15
+          ]
         },
         {
           "name": "随机种子",
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         }
       ],
       "samples": {

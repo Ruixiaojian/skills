@@ -4,8 +4,15 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Audio", "Image", "Text", "Video"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Audio",
+          "Image",
+          "Text",
+          "Video"
+        ]
       },
       "openSource": false,
       "description": "Wan2.7-R2V，更加稳定的角色、道具与场景参考，支持最大5个图/视频混合参考，支持音频音色参考，搭配基础能力升级实现更强表演能力。",
@@ -43,7 +50,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-03T03:21:08.000+00:00",
@@ -65,14 +74,20 @@
           "name": "视频时长(秒)",
           "key": "duration",
           "default": 5,
-          "range": [2, 10]
+          "range": [
+            2,
+            10
+          ]
         },
         {
           "name": "随机种子",
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",
@@ -92,8 +107,15 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video", "Audio"],
-        "request_modality": ["Image", "Video", "Text"]
+        "response_modality": [
+          "Video",
+          "Audio"
+        ],
+        "request_modality": [
+          "Image",
+          "Video",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "万相2.6-参考生视频-Flash，生成更快性价比更高。支持指定人物或任意物品进行参考，精准保持形象和声音的一致性，支持多角色参考合拍",
@@ -142,7 +164,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-01-29T10:15:01.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -164,7 +188,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能多镜",
@@ -188,8 +215,15 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video", "Audio"],
-        "request_modality": ["Image", "Video", "Text"]
+        "response_modality": [
+          "Video",
+          "Audio"
+        ],
+        "request_modality": [
+          "Image",
+          "Video",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "万相2.6-参考生视频，支持指定人物或任意物品进行参考，精准保持形象和声音的一致性，支持多角色参考合拍。提醒：当使用视频进行参考时，输入视频也会计入费用，详见模型计费文档。",
@@ -232,7 +266,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-12-15T16:08:49.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -254,7 +290,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能多镜",

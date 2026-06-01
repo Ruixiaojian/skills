@@ -6,7 +6,7 @@
 
 ## **工作流程**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/8534149771/CAEQaxiBgIDB5qWk4BkiIDViYzQ0MWUwNTYyNDQ3NDM5NzM0ZTc4N2Y3NTU2NjA56318723_20260129171731.699.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2842820871/CAEQaxiBgIDB5qWk4BkiIDViYzQ0MWUwNTYyNDQ3NDM5NzM0ZTc4N2Y3NTU2NjA56318723_20260129171731.699.svg)
 
 ## **前提条件**
 
@@ -31,9 +31,9 @@
 
 **支持的模型**
 
--   **文本生成模型**：千问 Max、Plus、Flash、Turbo、Long 的稳定版本及其部分 `latest` 版本，以及 QwQ 系列（qwq-plus、qwq-32b-preview）和部分第三方模型（deepseek-r1、deepseek-v3.2、deepseek-v3）。
+-   **文本生成模型**：千问 Max、Plus、Flash、Long 的稳定版本及其部分 `latest` 版本，以及部分第三方模型（deepseek-r1、deepseek-v3.2、deepseek-v3）。
     
--   **多模态模型**：千问 VL Max、Plus、Flash、OCR的稳定版本及其部分 `latest` 版本，以及千问 Omni 模型。
+-   **多模态模型**：千问 VL Plus、Flash、OCR的稳定版本及其部分 `latest` 版本。
     
 -   **文本向量模型**：所有版本的 text-embedding 模型。
     
@@ -42,29 +42,21 @@
 
 -   **文本生成模型**
     
-    -   千问 Max：qwen3.7-max、qwen3-max、qwen-max、qwen-max-latest
+    -   千问 Max：qwen3.7-max、qwen3-max
         
     -   千问 Plus：qwen3.6-plus、qwen3.5-plus、qwen-plus、qwen-plus-latest
         
     -   千问 Flash：qwen3.6-flash、qwen3.5-flash、qwen-flash
         
-    -   千问 Turbo：qwen-turbo、qwen-turbo-latest
-        
     -   千问 Long：qwen-long、qwen-long-latest
-        
-    -   QwQ：qwq-plus
-        
-    -   QwQ-32B-Preview：qwq-32b-preview
         
     -   第三方模型：deepseek-r1、deepseek-v3.2、deepseek-v3
         
 -   **多模态模型**
     
-    -   [图像与视频理解](https://help.aliyun.com/zh/model-studio/vision)：qwen3.6-plus、qwen3.6-flash、qwen3.5-plus、qwen3.5-flash、qwen3-vl-plus、qwen3-vl-flash、qwen-vl-max、qwen-vl-max-latest、qwen-vl-plus、qwen-vl-plus-latest
+    -   [图像与视频理解](https://help.aliyun.com/zh/model-studio/vision)：qwen3.6-plus、qwen3.6-flash、qwen3.5-plus、qwen3.5-flash、qwen3-vl-plus、qwen3-vl-flash
         
     -   [文字提取](https://help.aliyun.com/zh/model-studio/qwen-vl-ocr)：qwen-vl-ocr、qwen-vl-ocr-latest
-        
-    -   [全模态](https://help.aliyun.com/zh/model-studio/user-guide/qwen-omni)：qwen-omni-turbo
         
 -   [**文本向量模型**](https://help.aliyun.com/zh/model-studio/user-guide/embedding)**：**text-embedding-v1、text-embedding-v2、text-embedding-v3、text-embedding-v4
     
@@ -2741,7 +2733,7 @@ curl -X POST --location "https://dashscope.aliyuncs.com/compatible-mode/v1/batch
         
     -   下载并分析 `error_file_id` 的错误详情
         
-    -   对于常见错误码，参考[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决
+    -   对于常见错误码，参考[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决
         
 -   **成本优化**
     
@@ -2875,7 +2867,7 @@ with open("result.jsonl", "r") as fin:
 
 ## 错误码
 
-调用失败时，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+调用失败时，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
 
 ## **常见问题**
 

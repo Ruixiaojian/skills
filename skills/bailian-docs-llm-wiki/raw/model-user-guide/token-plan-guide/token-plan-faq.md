@@ -34,7 +34,7 @@ Token Plan 团队版常见问题汇总，涵盖购买、使用、计量和性能
 
 API Key 和 Base URL
 
-管理员在[管理后台](https://tokenplan-enterprise.bailian.console.aliyun.com)为成员生成专属 API Key，Base URL 详见[快速开始](https://help.aliyun.com/zh/model-studio/token-plan-quickstart)
+管理员为成员生成专属 API Key，Base URL 详见[快速开始](https://help.aliyun.com/zh/model-studio/token-plan-quickstart)
 
 在[Coding Plan 页面](https://bailian.console.aliyun.com/?tab=plan#/efm/subscription/coding-plan)获取专属 API Key 和专属 Base URL
 
@@ -71,7 +71,7 @@ API Key 和 Base URL
 2.  工具使用了`x-api-key` header 而非 `Authorization: Bearer`
     
 
-1.  联系管理员在[管理后台](https://tokenplan-enterprise.bailian.console.aliyun.com)生成 API Key，在工具中完成配置。
+1.  联系管理员生成 API Key，在工具中完成配置。
     
 2.  将认证方式改为 `Authorization: Bearer`。具体配置方法请参见[接入客户端/开发工具](https://help.aliyun.com/zh/model-studio/use-chat-client-or-development-tool/)。
     
@@ -85,7 +85,7 @@ API Key 和 Base URL
 3.  API Key 复制不完整或包含空格
     
 
-1.  确认使用的是管理员在[管理后台](https://tokenplan-enterprise.bailian.console.aliyun.com)生成的专属 API Key，确保完整且无空格。
+1.  确认使用的是管理员生成的专属 API Key，确保完整且无空格。
     
 2.  确认订阅是否过期。
     
@@ -146,9 +146,9 @@ Base URL 域名拼写错误或网络连接异常
 
 仅限在兼容的 AI 编程和智能体工具中交互式使用，不可用于自动化脚本或应用后端。违规使用可能导致订阅暂停或 API Key 封禁。
 
-### **团队管理后台入口在哪里？**
+### **团队管理入口在哪里？**
 
-在[Token Plan 团队版页面](https://bailian.console.aliyun.com/?tab=plan#/efm/subscription/token-plan)点击**进入管理后台**。
+阿里云主账号或 RAM 用户登录[Token Plan 控制台](https://bailian.console.aliyun.com/?tab=plan#/efm/subscription/token-plan)后，在**我的订阅**页面的**团队版**卡片点击**设置**修改组织信息，在**订阅明细**区域点击**分配座席**管理成员。通过 SSO 或钉钉加入的成员，通过管理员分发的**管理平台地址**登录管理平台。详见[访问入口](https://help.aliyun.com/zh/model-studio/token-plan-team#tp05-enter)。
 
 ### **成员如何获取 API Key？**
 
@@ -166,7 +166,7 @@ Base URL 域名拼写错误或网络连接异常
 
 ### **套餐是否支持退订？**
 
-Token Plan 团队版不支持退款。订阅前请参见[使用细则](https://help.aliyun.com/zh/model-studio/token-plan-overview#tp01-subscribe-notice)了解详细信息。
+支持按席位退订。在控制台**我的订阅**页面点击席位的**退订**，已有用量消耗的席位不可退订。退款原路退回支付账户，预计 1-3 个工作日到账。详见[订阅管理](https://help.aliyun.com/zh/model-studio/token-plan-overview#tp01-sub-mgmt)。
 
 ### **阿里云账号欠费是否影响 Token Plan 团队版的使用？**
 
@@ -180,7 +180,7 @@ Token Plan 团队版实际消耗取决于每次请求中输入 Token、缓存 To
 
 ### **如何查看用量？**
 
-在[Token Plan 团队版页面](https://bailian.console.aliyun.com/?tab=plan#/efm/subscription/overview)可查看套餐和共享用量包的用量详情。管理员还可在[管理后台](https://tokenplan-enterprise.bailian.console.aliyun.com)的用量分析页面查看全部成员的消耗明细。
+在[Token Plan 团队版页面](https://bailian.console.aliyun.com/?tab=plan#/efm/subscription/overview)可查看套餐和共享用量包的用量详情。管理员还可在管理平台的用量分析页面查看全部成员的消耗明细，详见[团队管理](https://help.aliyun.com/zh/model-studio/token-plan-team)。
 
 ### **用量如何重置？**
 

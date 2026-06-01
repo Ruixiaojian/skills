@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "Qwen3-TTS-Flash模型是通义实验室最新推出的实时语音合成大模型，Instruct模型可通过自然语言进行合成效果的处理，确保在不同语境下，合成情感、表达高度贴合的语音。目前支持25个音色的中英文Instruct调节。",
@@ -34,7 +38,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TTS"],
+      "capabilities": [
+        "TTS"
+      ],
       "modelAlias": "qwen3-tts-instruct-flash",
       "versionTag": "MAJOR",
       "equivalentSnapshot": "qwen3-tts-instruct-flash-2026-01-26",
@@ -53,14 +59,20 @@
           "key": "volume",
           "default": 50,
           "tip": "数值越大，合成音频声音越大",
-          "range": [0, 100]
+          "range": [
+            0,
+            100
+          ]
         },
         {
           "name": "语速",
           "key": "speechRate",
           "default": 1,
           "tip": "数值越大，合成音频语速越快",
-          "range": [0.5, 2]
+          "range": [
+            0.5,
+            2
+          ]
         },
         {
           "name": "指令控制",

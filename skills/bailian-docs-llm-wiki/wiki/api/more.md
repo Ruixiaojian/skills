@@ -1,63 +1,121 @@
 # more
 
-本文档汇总了阿里云百炼平台在应用开发与运维过程中的核心辅助功能与安全配置指南。内容涵盖底层服务关联角色的权限托管、不可信环境下的临时认证机制，以及知识库语义检索的高级过滤策略，旨在帮助开发者以最小权限原则和安全架构高效集成平台能力。
+本分类涵盖百炼平台的辅助功能与高级配置，包括服务关联角色管理、临时 API Key 生成以及知识库检索过滤等。这些功能为开发者在安全管控、权限管理和数据检索精度优化方面提供支撑。
 
-## 支持的模型/功能
-本模块不直接涉及大模型调用，而是提供支撑应用全生命周期运行的三项关键基础设施功能：
-* **服务关联角色（SLR）**：用于百炼平台跨产品调用底层云资源。[服务关联角色](../../raw/application-api-reference/more/bailian-service-linked-role.md) 会在您首次开通工作流节点、数据管理、安全存储或模型监控等功能时由系统自动创建，托管对 [[函数计算]]、[[对象存储OSS]]、[[AnalyticDB]] 等产品的访问权限。
-* **临时 API Key**：解决浏览器、移动端等不可信环境下的鉴权安全问题。[生成临时 API Key](../../raw/application-api-reference/more/application-obtain-temporary-authentication-token.md) 提供动态签发的短期凭证，继承主 Key 权限并自动轮转过期。
-* **知识库高级检索过滤**：增强 [[RAG 知识库]] 召回准确率。[知识库SearchFilters](../../raw/application-api-reference/more/how-to-use-search-filters.md) 允许在 `Retrieve` 接口调用时注入结构化过滤条件，剔除语义干扰，特别适用于员工信息表、商品库等强结构化数据场景。
+## 服务关联角色（SLR）
 
-## 关键参数
-* **SLR 标识与策略映射**
-  * `AliyunServiceRoleForSFMAccessFC`：工作流/流程编排调用函数计算，策略绑定 `fc:ListFunctions`, `fc:InvokeFunction`。
-  * `AliyunServiceRoleForSFMDataHubOSSImport`：数据导入访问 OSS，策略含 `oss:GetObject`, `oss:ListObjects` 等，受 `oss:BucketTag/bailian-datahub-access=read` 标签约束。
-  * `AliyunServiceRoleForSFMAccessADB`：安全存储与知识库访问 ADB-PG 向量库，涵盖 `gpdb:DescribeDBInstances`, `gpdb:UpsertCollectionData` 等。
-* **临时 Token 鉴权参数**
-  * `expire_in_seconds`（请求）：有效期设置，整型，范围 `[1, 1800]`，默认 `60`。
-  * `token`（响应）：临时凭证字符串，前缀固定为 `st-`。
-  * `expires_at`（响应）：Unix 时间戳（秒级），标识失效绝对时间。
-* **SearchFilters 过滤语法**
-  * 数据结构：JSON 数组，支持嵌套子分组。
-  * 查询算子：`eq`/`neq`（等值）、`gt`/`gte`/`lt`/`lte`（数值区间）、`like`（通配符）、`tags`（标签数组）。
-  * 类型约束：区间仅支持 `long`/`double`；模糊仅支持 `string`；数组值需序列化（如 `json.dumps`）。
+百炼通过服务关联角色获取对其他阿里云服务的访问权限。首次授权开通相关功能时，系统自动创建对应角色，无需手动操作。详细信息参见 [服务关联角色](../../raw/application-api-reference/more/bailian-service-linked-role.md)。
 
-## 使用方式
-1. **SLR 自动化授权**
-   开发者无需编写 IAM 代码。在控制台配置 [[流程编排]]、导入外部数据或关联向量数据库时，系统拦截请求并自动完成 [[服务关联角色]] 创建与信任策略绑定。权限明细可在 RAM 控制台的角色管理页审计。
-2. **生成与使用临时 Token**
-   后端服务持有 `DASHSCOPE_API_KEY`，通过以下请求获取临时凭证：
-   ```bash
-   curl -X POST "https://dashscope.aliyuncs.com/api/v1/tokens?expire_in_seconds=600" \
-   -H "Authorization: Bearer $DASHSCOPE_API_KEY"
-   ```
-   将返回的 `token` 注入前端 `Authorization: Bearer <token>` Header 即可发起模型请求。
-3. **SDK 集成 SearchFilters**
-   初始化百炼 SDK Client 后，构建 `RetrieveRequest` 对象，将过滤字典赋值给 `search_filters` 字段：
-   ```python
-   retrieve_request = bailian_20231229_models.RetrieveRequest()
-   retrieve_request.index_id = "your_kb_index_id"
-   retrieve_request.query = "筛选符合条件的数据"
-   # 组合查询：分组1(姓名=张三)，分组2(年龄区间20-27)
-   retrieve_request.search_filters = [
-       {"姓名": "张三"},
-       {"年龄": json.dumps({"gte": 20, "lte": 27})}
-   ]
-   resp = client.retrieve(workspace_id, retrieve_request)
-   ```
+### 角色列表概览
 
-## 限制和注意事项
-> **注意**：临时 API Key **不支持手动删除或吊销**。其生命周期由服务端严格管控，到达 `expires_at` 后自动失效。请勿在前端缓存或尝试重复刷新未过期的 Token。
-* **SLR 删除强依赖**：移除服务关联角色前必须彻底解耦业务。例如删除 `AliyunServiceRoleForSFMAccessFC` 前，需下架并重新发布所有包含函数计算节点的工作流/流程；删除 `AliyunServiceRoleForSFMAccessADB` 前，必须在安全存储空间中手动断开所有数据库连接。
-* **权限边界不可越级**：临时 Key 严格继承生成它的永久 Key 的授权范围（如限定模型列表、只读知识库）。若主 Key 无某资源权限，临时 Key 同样无法调用。
-* **检索过滤逻辑限制**：
-  * `searchFilters` 数组的子分组之间强制为 `AND` 逻辑，暂不支持配置 `OR` 关系。
-  * 标签（Tag）查询仅对文档与音视频知识库生效。同一 `tags` 数组内为 `OR` 逻辑；若将不同标签拆分为独立子分组对象，则转为 `AND`。
-  * 使用阿里云 SDK 调用前，子账号必须完成 [[RAM 权限]] 授予（`AliyunBailianDataFullAccess`）并加入对应 [[业务空间]]，否则 API 将返回鉴权失败。
+| 角色名称 | 用途 | 关联服务 |
+|---------|------|---------|
+| AliyunServiceRoleForSFMAccessFC | 工作流应用/流程编排访问函数计算 | FC |
+| AliyunServiceRoleForSFMDataHubOSSImport | 数据管理导入 OSS 数据 | OSS |
+| AliyunServiceRoleForAccessOSS | 安全存储空间访问 OSS | OSS |
+| AliyunServiceRoleForSFMAccessADB | 知识库/安全存储访问 ADB-PG | ADB-PG |
+| AliyunServiceRoleForSFMAccessingMNS | 数据管理监听 OSS 变更消息 | MNS |
+| AliyunServiceRoleForSFMTelemetry | 用量监控与性能分析 | OpenTelemetry |
+| AliyunServiceRoleForSFMAccessingCIP | 应用访问内容安全服务 | 内容安全 |
+| AliyunServiceRoleForSFMAccessSLS | 模型监控访问日志服务 | SLS |
+| AliyunServiceRoleForSFMAccessCMS | 模型监控访问云监控 | CMS |
+| AliyunServiceRoleForAccessCusOss | 平台托管操作用户 OSS 文件 | OSS |
+| AliyunServiceRoleForSFMConnectorAccessDTS | 通过 DTS 接入外部数据源 | DTS |
+| AliyunServiceRoleForSFMFineTuning | 模型调优访问 CPFS/OSS | CPFS, OSS |
+
+### 删除注意事项
+
+- 删除 SLR 前需先移除依赖该角色的资源或配置（如断开安全存储空间连接、删除函数计算节点等）
+- 删除操作参见 RAM 控制台的[服务关联角色](https://help.aliyun.com/zh/ram/user-guide/service-linked-roles#section-b9f-8dv-b5q)文档
+- 删除后相关功能将不可用，请谨慎操作
+
+## 临时 API Key
+
+在浏览器、移动 App 等不可信环境中，应使用临时 API Key 代替永久 API Key 以防止泄露。详见 [生成临时API Key](../../raw/application-api-reference/more/application-obtain-temporary-authentication-token.md)。
+
+### 关键参数
+
+| 参数 | 说明 |
+|------|------|
+| `expire_in_seconds` | 有效期，范围 [1, 1800] 秒，默认 60 秒 |
+
+### 请求方式
+
+```bash
+curl -X POST "https://dashscope.aliyuncs.com/api/v1/tokens?expire_in_seconds=1800" \
+  -H "Authorization: Bearer $DASHSCOPE_API_KEY"
+```
+
+### 响应结构
+
+成功时返回：
+
+```json
+{
+  "token": "st-****",
+  "expires_at": 1744080369
+}
+```
+
+- `token`：临时 API Key，以 `st-` 开头
+- `expires_at`：过期时间（UNIX 时间戳，秒）
+
+### 限制与注意事项
+
+- 临时 API Key 继承生成它的永久 API Key 的全部权限（含模型和知识库访问限制）
+- 无法手动删除，到期后自动失效
+- 各地域 Endpoint 不同，北京使用 `dashscope.aliyuncs.com`，新加坡和弗吉尼亚使用对应地域 Endpoint
+
+## 知识库 SearchFilters
+
+在调用知识库 Retrieve 接口时，可通过 `searchFilters` 参数对语义检索结果进行结构化过滤，减少干扰信息。该功能尤其适合结构化数据场景。完整用法参见 [知识库SearchFilters](../../raw/application-api-reference/more/how-to-use-search-filters.md)。
+
+### 语法结构
+
+```json
+{
+  "searchFilters": [
+    { "字段A": "值1", "字段B": "值2" },
+    { "字段C": "值3" }
+  ]
+}
+```
+
+- 子分组之间为 **AND** 语义，不可更改
+- 同一子分组内的多个键值对也为 AND 关系
+
+### 支持的查询类型
+
+| 查询类型 | 字段类型 | 示例 |
+|---------|---------|------|
+| 单值查询 | 数值（long/double）、字符串 | `{"姓名": "张三"}` |
+| 多值查询 | 纯数值或纯字符串数组 | `{"姓名": "[\"张三\",\"李四\"]"}` |
+| 范围查询（等值） | 数值、字符串 | `eq`、`neq` |
+| 范围查询（区间） | 数值 | `gt`、`gte`、`lt`、`lte` |
+| 模糊查询 | 字符串 | `{"like": "技%员"}`（`%` 匹配任意字符） |
+| 标签查询 | 仅文档搜索/音视频搜索知识库 | `{"tags": "[\"标签1\",\"标签2\"]"}`（多标签为 OR 关系） |
+
+### 前置条件
+
+- 子账号需获取 `AliyunBailianDataFullAccess` 策略并加入业务空间
+- 需安装阿里云百炼 SDK 并配置 AccessKey 环境变量
+- 知识库需已创建且字段参与检索
+
+### 使用示例（Python）
+
+```python
+retrieve_request.query = '公司中叫张三的员工'
+retrieve_request.index_id = '<知识库ID>'
+retrieve_request.search_filters = [
+    {"姓名": "张三"},
+    {"性别": "女"}
+]
+resp = client.retrieve('<业务空间ID>', retrieve_request)
+```
 
 ## 来源文档
 
 - [服务关联角色](../../raw/application-api-reference/more/bailian-service-linked-role.md)
-- [生成临时 API Key](../../raw/application-api-reference/more/application-obtain-temporary-authentication-token.md)
+- [生成临时API Key](../../raw/application-api-reference/more/application-obtain-temporary-authentication-token.md)
 - [知识库SearchFilters](../../raw/application-api-reference/more/how-to-use-search-filters.md)
 

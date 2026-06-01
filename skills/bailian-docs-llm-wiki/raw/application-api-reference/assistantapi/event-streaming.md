@@ -435,6 +435,6 @@ error
 
 ## **常见问题**
 
--   在配置流式输出时，如果您遇到代码执行错误，请参阅[错误信息](https://help.aliyun.com/zh/model-studio/error-code)排查错误类型。
+-   在配置流式输出时，如果您遇到代码执行错误，请参阅[错误码](https://help.aliyun.com/zh/model-studio/error-code)排查错误类型。
     
 -   如需了解 Assistant API 流式输出的配置方法，请参阅[Assistant API 流式输出快速入门](https://help.aliyun.com/zh/model-studio/streaming-output)以了解更多信息。

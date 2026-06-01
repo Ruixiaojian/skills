@@ -4,8 +4,14 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video"
+        ]
       },
       "openSource": true,
       "description": "Qwen3-VL系列最大尺寸Dense模型的推理版本，多模态推理能力仅次于Qwen3-VL-235B-Thinking，STEM&数学类解题能力、通用图像和视频理解能力出众，多模态Agent能力达到SOTA，适合做复杂多模态推理任务。",
@@ -50,7 +56,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["VU", "Reasoning"],
+      "capabilities": [
+        "VU",
+        "Reasoning"
+      ],
       "versionTag": "SNAPSHOT",
       "latestOnlineAt": "2025-10-21T06:26:30.000+00:00",
       "contextWindow": 131072,
@@ -70,7 +79,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -82,7 +94,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -94,7 +109,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -116,8 +134,14 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video"
+        ]
       },
       "openSource": true,
       "description": "Qwen3-VL系列最大尺寸Dense模型的非推理版本，综合表现仅次于Qwen3-VL-235B-Instruct，文档识别和理解能力出色，空间感知与万物识别能力强，视觉2D检测/空间推理能力达到SOTA，适合通用场景下的复杂感知任务。",
@@ -161,7 +185,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["VU"],
+      "capabilities": [
+        "VU"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2025-10-21T06:25:55.000+00:00",
@@ -181,7 +207,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -193,7 +222,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -215,8 +247,14 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video"
+        ]
       },
       "openSource": true,
       "description": "Qwen3-VL系列第二大MoE模型的Thinking版本，响应速度快，具备更强多模态理解与推理、视觉智能体、长视频长文档等超长上下文支持能力；全面升级图像/视频理解、空间感知与万物识别能力，胜任复杂现实任务。",
@@ -261,7 +299,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["VU", "Reasoning"],
+      "capabilities": [
+        "VU",
+        "Reasoning"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2025-09-30T14:44:03.000+00:00",
@@ -281,7 +322,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -293,7 +337,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -305,7 +352,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -327,8 +377,14 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video"
+        ]
       },
       "openSource": true,
       "description": "Qwen3-VL系列第二大MoE模型的Instruct版本，响应速度快，支持长视频长文档等超长上下文；全面升级图像/视频理解、空间感知与万物识别能力；具备视觉2D/3D定位能力，胜任复杂现实任务。",
@@ -373,7 +429,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["VU"],
+      "capabilities": [
+        "VU"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2025-09-30T14:44:03.000+00:00",
@@ -393,7 +451,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -405,7 +466,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -427,8 +491,14 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video"
+        ]
       },
       "openSource": true,
       "description": "Qwen3-VL系列8B Dense模型的Thinking版本，占用显存更低，能够完成多模态理解与推理；支持长视频长文档等超长上下文、视觉2D/3D定位；全面升级图像/视频理解、空间感知与万物识别能力。",
@@ -479,14 +549,20 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["VU", "Reasoning"],
+      "capabilities": [
+        "VU",
+        "Reasoning"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2025-09-30T14:44:03.000+00:00",
       "contextWindow": 131072,
       "maxInputTokens": 126976,
       "trainingTypes": {
-        "sft": ["lora", "full"]
+        "sft": [
+          "lora",
+          "full"
+        ]
       },
       "inferenceProvider": "aliyun-bailian",
       "name": "Qwen3-VL-8B-Thinking",
@@ -502,7 +578,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -514,7 +593,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -526,7 +608,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -548,8 +633,14 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video"
+        ]
       },
       "openSource": true,
       "description": "Qwen3-VL系列8B Dense模型的Instruct版本，占用显存更低，全面升级图像/视频理解、长视频长文档等超长上下文支持、空间感知与万物识别能力，胜任复杂现实任务。",
@@ -600,14 +691,19 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["VU"],
+      "capabilities": [
+        "VU"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2025-09-30T14:44:03.000+00:00",
       "contextWindow": 131072,
       "maxInputTokens": 129024,
       "trainingTypes": {
-        "sft": ["lora", "full"]
+        "sft": [
+          "lora",
+          "full"
+        ]
       },
       "inferenceProvider": "aliyun-bailian",
       "name": "Qwen3-VL-8B-Instruct",
@@ -623,7 +719,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -635,7 +734,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -657,8 +759,14 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video"
+        ]
       },
       "openSource": true,
       "description": "Qwen3系列视觉理解模型，多模态思考能力显著增强，模型在STEM与数学推理方面进行了重点优化；视觉感知与识别能力全面提升、OCR能力迎来重大升级。",
@@ -703,7 +811,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["VU", "Reasoning"],
+      "capabilities": [
+        "VU",
+        "Reasoning"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2025-09-23T10:58:07.000+00:00",
@@ -723,7 +834,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -735,7 +849,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -747,7 +864,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -769,8 +889,14 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video"
+        ]
       },
       "openSource": true,
       "description": "Qwen3系列视觉理解模型，在视觉coding、空间感知等方向全面升级；视觉感知与识别能力大幅提升，支持超长视频理解，OCR能力迎来重大升级。",
@@ -815,7 +941,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["VU"],
+      "capabilities": [
+        "VU"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2025-09-23T10:53:31.000+00:00",
@@ -835,7 +963,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -847,7 +978,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -869,8 +1003,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "基于Qwen3的新一代非思考模式开源模型，相较上一版本（千问3-235B-A22B-Instruct-2507）中文文本理解能力更佳、逻辑推理能力有增强、文本生成类任务表现更好。",
@@ -910,7 +1048,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2025-09-11T14:09:35.000+00:00",
@@ -930,7 +1070,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -942,7 +1085,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -966,8 +1112,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "基于Qwen3的新一代思考模式开源模型，相较上一版本（千问3-235B-A22B-Thinking-2507指令遵循能力有提升、模型总结回复更加精简。",
@@ -1007,7 +1157,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2025-09-11T09:09:19.000+00:00",
@@ -1027,7 +1180,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -1039,7 +1195,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -1051,7 +1210,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -1073,8 +1235,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "基于Qwen3的非思考模式开源模型，相较上一版本（千问3-30B-A3B）中英文和多语言整体通用能力有大幅提升。主观开放类任务专项优化，显著更加符合用户偏好，能够提供更有帮助性的回复。",
@@ -1119,15 +1285,22 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2025-07-29T14:20:27.000+00:00",
       "contextWindow": 131072,
       "maxInputTokens": 129024,
       "trainingTypes": {
-        "sft": ["lora", "full"],
-        "cpt": ["full"]
+        "sft": [
+          "lora",
+          "full"
+        ],
+        "cpt": [
+          "full"
+        ]
       },
       "inferenceProvider": "aliyun-bailian",
       "name": "Qwen3-30B-A3B-Instruct-2507",
@@ -1143,7 +1316,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -1155,7 +1331,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -1179,13 +1358,19 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "基于Qwen3的思考模式开源模型，相较上一版本（千问3-30B-A3B）复杂推理类任务性能优秀，包括逻辑推理、数学、科学、代码类等具有一定难度的任务场景，指令遵循、文本理解、多语言翻译等能力显著提高。",
       "collectionTag": "qwen3",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen",
       "model": "qwen3-30b-a3b-thinking-2507",
       "prices": [
@@ -1220,7 +1405,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2025-07-30T08:38:09.000+00:00",
@@ -1240,7 +1428,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -1252,7 +1443,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -1264,7 +1458,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -1286,13 +1483,19 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "基于Qwen3的思考模式开源模型，相较上一版本（千问3-235B-A22B）逻辑能力、通用能力、知识增强及创作能力均有大幅提升，适用于高难度强推理场景。",
       "collectionTag": "qwen3",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen",
       "model": "qwen3-235b-a22b-thinking-2507",
       "prices": [
@@ -1327,7 +1530,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "latestOnlineAt": "2025-07-25T10:04:54.000+00:00",
       "contextWindow": 131072,
@@ -1345,7 +1551,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -1357,7 +1566,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -1369,7 +1581,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -1391,8 +1606,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "基于Qwen3的非思考模式开源模型，相较上一版本（千问3-235B-A22B）主观创作能力与模型安全性均有小幅度提升。",
@@ -1437,7 +1656,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2025-07-22T13:30:21.000+00:00",
@@ -1457,7 +1678,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -1469,7 +1693,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -1493,8 +1720,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "实现思考模式和非思考模式的有效融合，可在对话中切换模式。推理能力显著超过QwQ、通用能力显著超过Qwen2.5-72B-Instruct，达到同规模业界SOTA水平。",
@@ -1552,7 +1783,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
       "latestOnlineAt": "2025-04-28T16:00:00.000+00:00",
@@ -1574,7 +1808,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -1586,7 +1823,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_thinking",
@@ -1599,7 +1839,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -1623,8 +1866,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "实现思考模式和非思考模式的有效融合，可在对话中切换模式。推理能力以更小参数规模比肩QwQ-32B、通用能力显著超过Qwen2.5-14B，达到同规模业界SOTA水平。",
@@ -1681,7 +1928,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 8192,
       "latestOnlineAt": "2025-04-28T16:00:00.000+00:00",
@@ -1701,7 +1951,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -1713,7 +1966,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_thinking",
@@ -1726,7 +1982,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -1750,8 +2009,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "实现思考模式和非思考模式的有效融合，可在对话中切换模式。推理能力显著超过QwQ、通用能力显著超过Qwen2.5-32B-Instruct，达到同规模业界SOTA水平。",
@@ -1815,15 +2078,27 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 8192,
       "latestOnlineAt": "2025-04-28T16:00:00.000+00:00",
       "contextWindow": 131072,
       "maxInputTokens": 98304,
       "trainingTypes": {
-        "sft": ["lora", "full"],
-        "dpo": ["lora", "full"]
+        "sft": [
+          "lora",
+          "full"
+        ],
+        "dpo": [
+          "lora",
+          "full"
+        ],
+        "cpt": [
+          "full"
+        ]
       },
       "inferenceProvider": "aliyun-bailian",
       "name": "Qwen3-32B",
@@ -1839,7 +2114,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -1851,7 +2129,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_thinking",
@@ -1864,7 +2145,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -1888,8 +2172,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "实现思考模式和非思考模式的有效融合，可在对话中切换模式。推理能力达到同规模业界SOTA水平、通用能力显著超过Qwen2.5-14B。",
@@ -1953,15 +2241,24 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 8192,
       "latestOnlineAt": "2025-04-28T07:37:07.000+00:00",
       "contextWindow": 131072,
       "maxInputTokens": 98304,
       "trainingTypes": {
-        "sft": ["lora", "full"],
-        "dpo": ["lora", "full"]
+        "sft": [
+          "lora",
+          "full"
+        ],
+        "dpo": [
+          "lora",
+          "full"
+        ]
       },
       "inferenceProvider": "aliyun-bailian",
       "name": "Qwen3-14B",
@@ -1977,7 +2274,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -1989,7 +2289,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_thinking",
@@ -2002,7 +2305,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -2026,8 +2332,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "实现思考模式和非思考模式的有效融合，可在对话中切换模式。推理能力达到同规模业界SOTA水平、通用能力显著超过Qwen2.5-7B。",
@@ -2091,15 +2401,24 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 8192,
       "latestOnlineAt": "2025-04-28T16:00:00.000+00:00",
       "contextWindow": 131072,
       "maxInputTokens": 98304,
       "trainingTypes": {
-        "sft": ["lora", "full"],
-        "dpo": ["lora", "full"]
+        "sft": [
+          "lora",
+          "full"
+        ],
+        "dpo": [
+          "lora",
+          "full"
+        ]
       },
       "inferenceProvider": "aliyun-bailian",
       "name": "Qwen3-8B",
@@ -2115,7 +2434,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -2127,7 +2449,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_thinking",
@@ -2140,7 +2465,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -2164,13 +2492,19 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "Qwen3系列新一代代码生成模型，效果接近Qwen3-Coder-Plus兼具更优性能。模型重点优化仓库级别理解、支持多轮工具交互、提升对于agentic coding类工具的适配能力。",
       "collectionTag": "qwen3",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen",
       "model": "qwen3-coder-next",
       "qpmInfo": {
@@ -2250,13 +2584,16 @@
           "rangeEnd": 262144
         }
       ],
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "modelAlias": "",
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 65536,
       "latestOnlineAt": "2026-02-19T14:38:44.000+00:00",
       "contextWindow": 262144,
       "maxInputTokens": 204800,
+      "inferenceProvider": "aliyun-bailian",
       "name": "通义千问3-Coder-Next",
       "docUrl": "https://help.aliyun.com/document_detail/2850166.html",
       "predictConfig": [
@@ -2270,14 +2607,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

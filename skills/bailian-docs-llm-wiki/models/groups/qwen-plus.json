@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "Qwen3系列Plus模型，实现思考模式和非思考模式的有效融合，可在对话中切换模式。推理能力显著超过QwQ、通用能力显著超过Qwen2.5-Plus，达到同规模业界SOTA水平。",
@@ -404,7 +408,10 @@
           "rangeEnd": 1000000
         }
       ],
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "versionTag": "MAJOR",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2025-06-23T16:00:00.000+00:00",
@@ -426,7 +433,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -438,7 +448,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -456,7 +469,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         },
         {
           "name": "result_format",
@@ -486,8 +502,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "千问系列能力均衡的模型，推理效果和速度介于千问-Max和千问-Turbo之间，适合中等复杂任务。本模型是动态更新版本，模型更新不会提前通知。",
@@ -692,7 +712,10 @@
           "rangeEnd": 1000000
         }
       ],
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "versionTag": "LATEST",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2025-07-30T16:00:00.000+00:00",
@@ -712,7 +735,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -724,7 +750,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -742,7 +771,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         },
         {
           "name": "result_format",
@@ -772,12 +804,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "千问系列能力均衡的模型，推理效果和速度介于千问-Max和千问-Turbo之间，适合中等复杂任务。相对于千问-Plus-2024-1220版本，中英文整体能力有提升，中英常识知识类、阅读理解能力提升较为显著，codeswtich现象相比上一版有显著改善，中文指令遵循能力显著提升。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen",
       "model": "qwen-plus-0112",
       "prices": [
@@ -812,7 +850,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "modelAlias": "qwen-plus-2025-01-12",
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 8192,
@@ -833,14 +873,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -864,12 +910,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "千问系列能力均衡的模型，推理效果和速度介于千问-Max和千问-Turbo之间，适合中等复杂任务。相对于千问-Plus-1125版本，中英文整体能力有提升，中英常识知识类、阅读理解能力提升较为显著，codeswtich现象相比上一版有显著改善，中文指令遵循能力显著提升。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen",
       "model": "qwen-plus-1220",
       "prices": [
@@ -904,7 +956,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "modelAlias": "qwen-plus-2024-12-20",
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 8192,
@@ -925,14 +979,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

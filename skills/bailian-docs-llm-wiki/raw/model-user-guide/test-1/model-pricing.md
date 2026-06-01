@@ -64,7 +64,7 @@ qwen3.7-max-2026-05-20
 
 qwen3.7-max-preview
 
-> 当前能力等同于qwen3.7-2026-05-17
+> 当前能力等同于qwen3.7-max-2026-05-17
 
 仅思考模式
 
@@ -74,7 +74,7 @@ qwen3.7-max-preview
 
 36元
 
-qwen3.7-2026-05-17
+qwen3.7-max-2026-05-17
 
 仅思考模式
 
@@ -7440,6 +7440,40 @@ glm-4.5-air
 
 8元
 
+## 国际
+
+服务部署范围为[国际](https://help.aliyun.com/zh/model-studio/regions/#080da663a75xh)时，模型推理计算资源在全球范围内动态调度（不含中国内地）；静态数据存储于您所选的地域。该部署范围支持的地域：新加坡。
+
+**说明**
+
+国际（新加坡）模型无免费额度。
+
+**模型 ID（Model ID）**
+
+**模式**
+
+**单次请求的输入Token数**
+
+**输入单价（每百万Token）**
+
+**输出单价（每百万Token）**
+
+> **思维链和回答**
+
+**免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
+
+glm-5.1
+
+非思考和思考模式
+
+0<Token≤200K
+
+10.492元
+
+32.974元
+
+无
+
 ## 全球
 
 服务部署范围为[全球](https://help.aliyun.com/zh/model-studio/regions/#080da663a75xh)时，模型推理计算资源在全球范围内动态调度；静态数据存储于您所选的地域。该部署范围支持的地域：美国（弗吉尼亚）、德国（法兰克福）。
@@ -7643,6 +7677,30 @@ xiaomi/mimo-v2.5-pro
 14元
 
 42元
+
+### **Stepfun-阶跃星辰**
+
+**说明**
+
+服务部署范围仅支持中国内地。
+
+**模型 ID（Model ID）**
+
+**输入单价（每百万Token）**
+
+**输出单价（每百万Token）**
+
+> **思维链和回答**
+
+**免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
+
+stepfun/step-3.7-flash
+
+1.35元
+
+8.1元
+
+无
 
 ## **图像生成**
 

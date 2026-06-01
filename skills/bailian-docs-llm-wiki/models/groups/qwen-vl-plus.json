@@ -4,8 +4,14 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video"
+        ]
       },
       "openSource": false,
       "description": "千问VL-Plus（qwen-vl-plus），即千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。在广泛的视觉任务上提供卓越的性能。",
@@ -79,7 +85,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["VU"],
+      "capabilities": [
+        "VU"
+      ],
       "versionTag": "MAJOR",
       "maxOutputTokens": 8192,
       "latestOnlineAt": "2025-06-13T08:31:55.000+00:00",
@@ -94,6 +102,7 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "QwenVL-Plus",
       "docUrl": "https://help.aliyun.com/document_detail/2845871.html",
+      "category": "Older",
       "predictConfig": [
         {
           "name": "system",
@@ -105,14 +114,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "vl_high_resolution_images",
@@ -146,12 +161,22 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video"
+        ]
       },
       "openSource": false,
       "description": "千问大规模视觉语言模型。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。在广泛的视觉任务上提供卓越的性能。本模型是动态更新版本，模型更新不会提前通知。",
-      "features": ["model-experience", "prefix-completion", "batch"],
+      "features": [
+        "model-experience",
+        "prefix-completion",
+        "batch"
+      ],
       "provider": "qwen",
       "model": "qwen-vl-plus-latest",
       "prices": [
@@ -198,7 +223,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["VU"],
+      "capabilities": [
+        "VU"
+      ],
       "versionTag": "LATEST",
       "maxOutputTokens": 8192,
       "latestOnlineAt": "2025-09-07T16:00:00.000+00:00",
@@ -218,14 +245,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

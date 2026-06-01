@@ -365,11 +365,11 @@ HTTP状态码。遵循 [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html#n
 
 **code** `_string_`
 
-请求失败时展示错误码（参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)）。
+请求失败时展示错误码（参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)）。
 
 **message** `_string_`
 
-请求失败时展示错误信息（参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)）。
+请求失败时展示错误信息（参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)）。
 
 **output** `_object_`
 

@@ -1,48 +1,119 @@
 # OpenAI 兼容接口
 
-OpenAI 兼容接口是阿里云百炼平台提供的一套完全对齐 OpenAI SDK 与 REST API 规范的服务网关。开发者无需修改现有工程架构，仅需切换 `base_url` 与鉴权凭证，即可无缝调用千问全系列模型、主流第三方大模型及百炼智能体/工作流应用。
+OpenAI 兼容接口是百炼平台提供的一组遵循 OpenAI API 规范的服务端点，开发者可直接使用 OpenAI 官方 SDK 或任何兼容 OpenAI 协议的工具，仅需替换 API Key、Base URL 和模型名称，即可调用百炼平台上的千问（Qwen）系列及其他模型，实现零成本或低成本迁移。
 
-## 在百炼平台的核心应用场景
-该接口已全面打通平台的基础模型、生态工具、业务应用与多模态服务，主要覆盖以下场景：
-- **基础模型直调**：通过 `/compatible-mode/v1` 路径提供 `Chat Completions`（标准多轮对话）与 `Responses`（服务端自动托管上下文）两种范式，覆盖文本、视觉、向量化及重排序任务。
-- **第三方生态集成**：为 Cursor、Claude Code、Dify、Postman 等主流 IDE、CLI 编程助手与低代码平台提供标准接入点，实现零成本迁移现有 LLM 应用。
-- **应用与智能体调用**：通过 OpenAI 兼容 Responses API 调用平台发布的 [[智能体应用]] 与 [[工作流应用]]，支持同步/异步执行与 SSE [[streaming-output|流式输出]]。
-- **语音与音视频翻译**：兼容标准 `chat.completions` 结构，支持公网 URL 输入与强制流式返回译文/音频，适用于 Web 后端批量处理场景。
+## 核心价值
 
-## 关键参数与配置
-接入时需严格匹配地域路由与协议规范，核心配置项如下：
+- **迁移成本最低**：已有 OpenAI 代码的项目只需修改三个配置项即可切换到百炼服务。
+- **生态兼容广泛**：凡是支持 OpenAI 协议的第三方客户端、IDE 插件、Agent 框架（如 Cursor、Claude Code、Dify、Cherry Studio、LangChain 等）均可直接接入。
+- **覆盖多种能力**：不仅限于文本对话，还扩展至视觉理解、向量化、文件管理、批量推理、语音翻译等场景。
 
-| 参数 | 说明与约束 |
-|:---|:---|
-| `base_url` | **地域隔离**。北京：`https://dashscope.aliyuncs.com/compatible-mode/v1`；新加坡：`https://dashscope-intl.aliyuncs.com/compatible-mode/v1`；弗吉尼亚：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`。严禁混用协议路径后缀。 |
-| `api_key` | **鉴权凭证**。强烈建议通过环境变量（如 `DASHSCOPE_API_KEY`）注入。Key 与地域及 [[计费方案]]（按量/Coding Plan/Token Plan）强绑定，不可跨套餐或跨地域复用。 |
-| `model` | **模型标识**。需与控制台当前地域可用列表严格一致。特定地域或功能版模型需使用对应后缀（如 `-us`、`-latest`）。 |
-| `messages` / `input` | Chat 模式需客户端全量拼装历史；Responses 模式支持传入 `previous_response_id` 实现上下文自动关联（有效期 7 天）。 |
-| `stream` | 推荐开启 `true` 降低首字延迟。音视频翻译、思考模式场景下为强制必填。 |
-| `extra_body` | 非 OpenAI 标准参数（如 `translation_options`、`enable_thinking`、`corpus`）在 Python SDK 中必须置于该对象内传递。 |
+## 支持的接口类型
 
-## 使用方式与开发建议
-1. **SDK 初始化**：安装官方 `openai` 多语言 SDK，覆盖 `api_key` 与 `base_url` 即可复用原有 `client.chat.completions.create` 逻辑。
-2. **上下文管理**：长对话建议客户端实现滑动窗口裁剪或摘要压缩，避免触发模型上下文窗口超限。生产环境建议开启 `stream_options: {"include_usage": true}` 获取精确 Token 消耗。
-3. **异步与批处理**：耗时任务可设置 `background: true`（与 `stream` 互斥）获取 `task_id` 后轮询；大规模离线处理推荐使用 `Batch File` 接口上传 JSONL，享受 50% 费用优惠且不受实时限流约束。
-4. **容错机制**：客户端需捕获 HTTP 429（触发 [[rate-limit-policy]]）与 5xx 错误，结合指数退避算法与熔断降级策略保障服务高可用。
+百炼通过 OpenAI 兼容接口暴露了以下能力：
 
-## 限制与注意事项
-- **协议强约束**：开启 `enable_thinking=true` 时必须同步设置 `stream=true`，否则返回 400 校验错误；使用 `response_format: {"type": "json_object"}` 需在 Prompt 显式声明 `json` 并关闭思考模式。
-- **套餐使用边界**：Coding Plan 与 Token Plan 团队版 **仅限** AI 编程工具与 Agent 客户端使用，接入 Dify/n8n 等自动化平台或自定义后端将被视为违规，可能导致 Key 封禁。
-- **异步与流式互斥**：应用调用场景下，`background=true`（后台异步）与 `stream=true`（SSE 实时流）不可同时开启。
-- **路径演进**：旧版兼容端点已逐步下线，新项目请统一采用 `{WorkspaceId}.地域.maas.aliyuncs.com/compatible-mode/v1` 标准路由。限流阈值、可用模型及功能矩阵动态迭代，集成前请以控制台 [[模型总览]] 与 [[model-monitoring]] 实时数据为准。
+| 接口 | 用途 | 说明 |
+|------|------|------|
+| Chat Completions | 文本对话、多轮会话 | 最常用的接口，兼容性最广 |
+| Responses | 内置工具调用的智能体场景 | 内置联网搜索、代码解释器，自动管理对话历史 |
+| Completions | 代码补全、内容续写 | 非对话式的文本生成 |
+| Vision | 图像/视频理解 | 通过多模态消息格式传入图像 |
+| Embedding | 文本向量化 | 用于检索增强等场景 |
+| Files | 文件上传与管理 | 配合批量推理等功能使用 |
+| Batch | 大批量异步推理 | 文件输入模式和 Batch Chat 模式 |
+| Conversations | 跨设备对话上下文管理 | 服务端维护对话状态 |
 
-## 相关主题
-[[api-key]] | [[rate-limit-policy]] | [[billing]] | [[thinking-mode]] | [[structured-output]] | [[batch-inference]] | [[model-monitoring]] | [[计费方案]]
+此外，百炼的**应用调用**（智能体和工作流）也提供了基于 Responses API 的 OpenAI 兼容入口，以及**专用模型**（机器翻译、OCR、语音翻译等）也大多支持 OpenAI 兼容接口。
+
+## 关键配置
+
+### 三要素
+
+使用 OpenAI 兼容接口只需配置三项：
+
+| 配置项 | 说明 |
+|--------|------|
+| `api_key` | 百炼平台的 API Key，建议存入环境变量 `DASHSCOPE_API_KEY` |
+| `base_url` | 按地域和计费方案选择对应的服务地址 |
+| `model` | 百炼平台上的模型名称，如 `qwen3.6-plus`、`qwen3.7-max` |
+
+### 服务地址（Base URL）
+
+不同地域的 Base URL **不可混用**，API Key 也需与地域对应：
+
+| 地域 | Base URL |
+|------|----------|
+| 华北2（北京） | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
+| 新加坡 | `https://dashscope-intl.aliyuncs.com/compatible-mode/v1` |
+| 美国（弗吉尼亚） | `https://dashscope-us.aliyuncs.com/compatible-mode/v1` |
+| 德国（法兰克福） | `https://{WorkspaceId}.eu-central-1.maas.aliyuncs.com/compatible-mode/v1` |
+
+如果使用 [Token](token.md) Plan 团队版或 Coding Plan 等订阅方案，Base URL 有所不同，需使用对应方案的专属地址和 API Key。
+
+Batch Chat 使用独立端点：`https://batch.dashscope.aliyuncs.com/compatible-mode/v1`
+
+## 快速示例
+
+### Python
+
+```python
+import os
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.getenv("DASHSCOPE_API_KEY"),
+    base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
+)
+
+completion = client.chat.completions.create(
+    model="qwen3.6-plus",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "你是谁？"}
+    ]
+)
+print(completion.choices[0].message.content)
+```
+
+### Node.js
+
+```javascript
+import OpenAI from "openai";
+
+const client = new OpenAI({
+    apiKey: process.env.DASHSCOPE_API_KEY,
+    baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+});
+
+const completion = await client.chat.completions.create({
+    model: "qwen3.6-plus",
+    messages: [{ role: "user", content: "你是谁？" }],
+});
+console.log(completion.choices[0].message.content);
+```
+
+## 在不同场景中的使用
+
+### 文本生成模型调用
+
+最典型的使用场景。通过 Chat Completions 接口调用千问系列模型（qwen3.7-max、qwen3.6-plus、qwen3.6-flash 等）以及 DeepSeek、Kimi、GLM 等第三方模型，API 格式完全一致。
+
+### 专用模型调用
+
+机器翻译（qwen-mt-plus）、OCR 文字提取（qwen-vl-ocr-latest）、GUI 自动化（gui-plus）、语音翻译（qwen3-livetranslate-flash）等专用模型均通过 OpenAI 兼容接口调用。部分模型使用非标准参数（如 `translation_options`），需通过 `extra_body` 传入：
+
+```python
+completion = client.chat.completions.create(
+    model="qwen-mt-plus",
+    messages=[{"role": "user", "content": "待翻
 
 ## 关联主题页
 
-- [[get-started-with-models|get started with models]] — `../guides/get-started-with-models.md`
-- [[use-chat-client-or-development-tool|use chat client or development tool]] — `../guides/use-chat-client-or-development-tool.md`
-- [[qwen-api-reference|qwen api reference]] — `../api/qwen-api-reference.md`
-- [[preparations|preparations]] — `../api/[[preparations|preparations]].md`
-- [[toolkits-and-[[frameworks|frameworks]]|toolkits and frameworks]] — `../api/toolkits-and-[[frameworks|frameworks]].md`
-- [[application-call|application call]] — `../api/application-call.md`
-- [[speech-translation-api-reference|speech translation api reference]] — `../api/speech-translation-api-reference.md`
+- [qwen api reference](../api/qwen-api-reference.md)
+- [toolkits and frameworks](../api/toolkits-and-frameworks.md)
+- [get started with models](../guides/get-started-with-models.md)
+- [use chat client or development tool](../guides/use-chat-client-or-development-tool.md)
+- [specialized model](../api/specialized-model.md)
+- [speech translation api reference](../api/speech-translation-api-reference.md)
+- [application call](../api/application-call.md)
 

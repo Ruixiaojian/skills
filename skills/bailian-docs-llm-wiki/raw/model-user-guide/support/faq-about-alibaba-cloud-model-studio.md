@@ -64,7 +64,7 @@
     
 2.  **如何查看错误码信息？**
     
-    阿里云百炼模型服务的API调用将返回状态码以标识调用结果。详情及解决方案请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+    阿里云百炼模型服务的API调用将返回状态码以标识调用结果。详情及解决方案请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
     
 3.  **如何安装SDK?**
     

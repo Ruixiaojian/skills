@@ -19,7 +19,7 @@
 
 API 使用前提：已[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并完成[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如果通过SDK调用，需要[安装SDK](https://help.aliyun.com/zh/model-studio/install-sdk#8833b9274f4v8)。
 
-以下以 vanchin/deepseek-v3.2-think 为例，展示如何通过 OpenAI 兼容方式开启思考模式进行流式输出。vanchin/deepseek-v3.2-think 需要在请求中设置 `enable_thinking` 为 `true` 来开启思考。
+以下以 vanchin/deepseek-v4-pro 为例，展示如何通过 OpenAI 兼容方式开启思考模式进行流式输出。
 
 ## Python
 
@@ -35,7 +35,7 @@ client = OpenAI(
 )
 
 completion = client.chat.completions.create(
-    model="vanchin/deepseek-v3.2-think",
+    model="vanchin/deepseek-v4-pro",
     messages=[{"role": "user", "content": "你是谁"}],
     stream=True,
     extra_body={"enable_thinking": True},
@@ -103,7 +103,7 @@ async function main() {
     const messages = [{ role: 'user', content: '你是谁' }];
 
     const stream = await openai.chat.completions.create({
-        model: 'vanchin/deepseek-v3.2-think',
+        model: 'vanchin/deepseek-v4-pro',
         messages,
         stream: true,
         enable_thinking: true,
@@ -165,7 +165,7 @@ curl -X POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions 
 -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
 -H "Content-Type: application/json" \
 -d '{
-    "model": "vanchin/deepseek-v3.2-think",
+    "model": "vanchin/deepseek-v4-pro",
     "enable_thinking": true,
     "messages": [
         {
@@ -193,7 +193,7 @@ curl -X POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions 
     ],
     "created": 1775139549,
     "id": "as-j8iwhei6hm",
-    "model": "vanchin/deepseek-v3.2-think",
+    "model": "vanchin/deepseek-v4-pro",
     "object": "chat.completion",
     "usage": {
         "completion_tokens": 213,
@@ -204,6 +204,64 @@ curl -X POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions 
         "total_tokens": 224
     }
 }
+```
+
+## **推理强度（reasoning\_effort）**
+
+deepseek-v4-pro 和 deepseek-v4-flash 默认开启思考模式。通过`reasoning_effort`参数可以调整推理强度，可选值为`high`和`max`，默认为`high`。
+
+**说明**
+
+设为`low`或`medium`时会映射为`high`，设为`xhigh`时会映射为`max`。
+
+## **Python**
+
+```
+from openai import OpenAI
+import os
+
+client = OpenAI(
+    api_key=os.getenv("DASHSCOPE_API_KEY"),
+    base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
+)
+
+completion = client.chat.completions.create(
+    model="vanchin/deepseek-v4-pro",
+    messages=[{"role": "user", "content": "9.9和9.11哪个大"}],
+    reasoning_effort="high",
+)
+print(completion.choices[0].message.content)
+```
+
+## **Node.js**
+
+```
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+    apiKey: process.env.DASHSCOPE_API_KEY,
+    baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+});
+
+const completion = await openai.chat.completions.create({
+    model: "vanchin/deepseek-v4-pro",
+    messages: [{ role: "user", content: "9.9和9.11哪个大" }],
+    reasoning_effort: "high",
+});
+console.log(completion.choices[0].message.content);
+```
+
+## **curl**
+
+```
+curl -X POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions \
+-H "Authorization: Bearer $DASHSCOPE_API_KEY" \
+-H "Content-Type: application/json" \
+-d '{
+    "model": "vanchin/deepseek-v4-pro",
+    "messages": [{"role": "user", "content": "9.9和9.11哪个大"}],
+    "reasoning_effort": "high"
+}'
 ```
 
 ## **文字提取**
@@ -397,6 +455,22 @@ curl -X POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions 
 
 [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)
 
+vanchin/deepseek-v4-pro
+
+支持
+
+支持
+
+支持
+
+支持
+
+不支持
+
+支持
+
+支持
+
 vanchin/deepseek-v3.2-think
 
 支持
@@ -477,8 +551,26 @@ vanchin/deepseek-ocr
 
 不支持
 
+vanchin/deepseek-v4-pro 不支持以下参数：`repetition_penalty`、`preserve_thinking`、`thinking_budget`、`tool_stream`、`enable_code_interpreter`、`seed`、`logprobs`、`top_logprobs`、`enable_search`、`search_options`、`skill`。
+
+支持的参数中，部分参数取值范围与功能与百炼不一致：
+
+**参数**
+
+**百炼**
+
+**DeepSeek-V4-Pro**
+
+`n`
+
+取值范围 1-4
+
+思考模式下仅支持取值为 1
+
 -   除 vanchin/deepseek-ocr 外，其他模型均支持上下文缓存（隐式缓存，自动开启），缓存命中时的输入价格折扣为：
     
+    -   vanchin/deepseek-v4-pro：按输入价格的 8.33% 计费
+        
     -   vanchin/deepseek-v3.2-think：按输入价格的 10% 计费
         
     -   vanchin/deepseek-v3.1-terminus、vanchin/deepseek-r1、vanchin/deepseek-v3：按输入价格的 40% 计费
@@ -495,6 +587,16 @@ vanchin/deepseek-ocr
 **enable\_thinking**
 
 **detail**
+
+vanchin/deepseek-v4-pro
+
+0.6
+
+0.95
+
+true
+
+\-
 
 vanchin/deepseek-v3.2-think
 
@@ -548,7 +650,7 @@ auto（可取值为：auto、high、low）
 
 ## **模型列表与计费**
 
-vanchin/deepseek-v3.2-think 模型兼顾高计算效率与卓越推理能力，推荐使用。若用于文字识别任务，可使用快手万擎提供的deepseek-ocr 模型。
+vanchin/deepseek-v4-pro 模型兼顾高计算效率与卓越推理能力，推荐使用。若用于文字识别任务，可使用快手万擎提供的deepseek-ocr 模型。
 
 模型上下文长度与价格信息请参见[百炼控制台](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/all)。
 
@@ -556,4 +658,4 @@ vanchin/deepseek-v3.2-think 模型兼顾高计算效率与卓越推理能力，�
 
 ## **错误码**
 
-如果模型调用失败并返回报错信息，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+如果模型调用失败并返回报错信息，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。

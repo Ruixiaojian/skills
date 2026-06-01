@@ -84,7 +84,7 @@ code
 
 String
 
-错误码。更多错误原因及解决方法，请前往[错误信息](https://help.aliyun.com/zh/model-studio/error-code)页面查询。
+错误码。更多错误原因及解决方法，请前往[错误码](https://help.aliyun.com/zh/model-studio/error-code)页面查询。
 
 InvalidApiKey：无效API Key
 

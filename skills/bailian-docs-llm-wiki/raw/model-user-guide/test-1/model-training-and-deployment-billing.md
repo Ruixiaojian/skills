@@ -118,13 +118,13 @@ Qwen3-VL-8B-Instruct
 
 qwen3-vl-8b-instruct
 
-¥0.015/千Token
+¥0.012/千Token
 
 Qwen3-VL-8B-Thinking
 
 qwen3-vl-8b-thinking
 
-¥0.015/千Token
+¥0.012/千Token
 
 Qwen3-VL-4B-Instruct
 
@@ -260,19 +260,19 @@ wan2.2-kf2v-flash
 
 **后付费输入**
 
-**Per 10K TPM**
+**Per 10K TPM/小时**
 
 **后付费输出**
 
-**Per 1K TPM**
+**Per 1K TPM/小时**
 
 **预付费输入**
 
-**Per 10K TPM**
+**Per 10K TPM/天**
 
 **预付费输出**
 
-**Per 1K TPM**
+**Per 1K TPM/天**
 
 千问3.6-Flash-2026-04-16
 
@@ -372,19 +372,19 @@ qwen-plus-2025-12-01
 
 **后付费输入**
 
-**Per 10K TPM**
+**Per 10K TPM/小时**
 
 **后付费输出**
 
-**Per 1K TPM**
+**Per 1K TPM/小时**
 
 **预付费输入**
 
-**Per 10K TPM**
+**Per 10K TPM/天**
 
 **预付费输出**
 
-**Per 1K TPM**
+**Per 1K TPM/天**
 
 DeepSeek-v4-Pro
 
@@ -438,19 +438,19 @@ deepseek-v3
 
 **后付费输入**
 
-**Per 10K TPM**
+**Per 10K TPM/小时**
 
 **后付费输出**
 
-**Per 1K TPM**
+**Per 1K TPM/小时**
 
 **预付费输入**
 
-**Per 10K TPM**
+**Per 10K TPM/天**
 
 **预付费输出**
 
-**Per 1K TPM**
+**Per 1K TPM/天**
 
 千问3-VL-Plus-2025-09-23
 
@@ -476,19 +476,19 @@ qwen3-vl-plus-2025-09-23
 
 **后付费输入**
 
-**Per 10K TPM**
+**Per 10K TPM/小时**
 
 **后付费输出**
 
-**Per 1K TPM**
+**Per 1K TPM/小时**
 
 **预付费输入**
 
-**Per 10K TPM**
+**Per 10K TPM/天**
 
 **预付费输出**
 
-**Per 1K TPM**
+**Per 1K TPM/天**
 
 GLM-5.1
 
@@ -529,7 +529,7 @@ glm-5.1
 
 **小时单价（元）**
 
-**月单价（元）**
+**包月单价（元）**
 
 千问3.6-35B-A3B
 
@@ -1025,7 +1025,7 @@ MU1
 
 **小时单价（元）**
 
-**月单价（元）**
+**包月单价（元）**
 
 GLM-5
 
@@ -1065,7 +1065,7 @@ PD分离模式：¥386,848
 
 **小时单价（元）**
 
-**月单价（元）**
+**包月单价（元）**
 
 DeepSeek-v4-Flash
 
@@ -1101,7 +1101,7 @@ PD分离模式：¥480,576
 
 **小时单价（元）**
 
-**月单价（元）**
+**包月单价（元）**
 
 MiniMax-M2.5
 
@@ -1153,33 +1153,7 @@ MU2
 
 **小时单价（元）**
 
-**月单价（元）**
-
-千问3.5-Omni-Flash
-
-qwen3.5-omni-flash
-
-MU8
-
-¥47
-
-¥22,400
-
-MU9
-
-¥51
-
-¥24,600
-
-千问3.5-Omni-Plus
-
-qwen3.5-omni-plus
-
-MU9
-
-¥51
-
-¥24,600
+**包月单价（元）**
 
 千问3-VL-235B-A22B-Instruct
 
@@ -1290,6 +1264,44 @@ MU6
 ¥25
 
 ¥12,089
+
+###### 千问 Omni
+
+**模型名称**
+
+**模型代码**
+
+**模型单元规格**
+
+**小时单价（元）**
+
+**包月单价（元）**
+
+千问3.5-Omni-Flash
+
+qwen3.5-omni-flash
+
+MU8
+
+¥47
+
+¥22,400
+
+MU9
+
+¥51
+
+¥24,600
+
+千问3.5-Omni-Plus
+
+qwen3.5-omni-plus
+
+MU9
+
+¥51
+
+¥24,600
 
 模型类型：
 

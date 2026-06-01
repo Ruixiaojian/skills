@@ -16,6 +16,22 @@
 
 推理模型
 
+2026-05-29
+
+vanchin/deepseek-v4-pro
+
+由快手万擎直供的 DeepSeek 模型推理服务。[DeepSeek-快手万擎](https://help.aliyun.com/zh/model-studio/deepseek-api-by-vanchin)
+
+推理模型
+
+2026-05-29
+
+stepfun/step-3.7-flash
+
+阶跃星辰直供的 Step 3.7 Flash 模型，Flash 档位新一代旗舰。在搜索、Agent、编码、多模态四大方向全面升级，深度检索与多模态图搜能力大幅增强，Agent 与工具调用能力显著提升，编码能力在 Flash 档位多项基准中表现优异，多模态理解能力对标头部旗舰。
+
+推理模型
+
 2026-05-25
 
 qwen3.7-max-preview、qwen3.7-max-2026-05-17
@@ -2538,6 +2554,14 @@ qwen-flash、qwen-flash-2025-07-28
 **模型规格**
 
 **功能说明**
+
+推理模型
+
+2026-05-27
+
+glm-5.1
+
+智谱GLM-5.1模型，专为长程任务设计，支持 200K 上下文，最大输出可达 128K Token。通过强大的逻辑推理、长文本理解及代码生成能力，在多项基准测试中表现优异，适用于智能交互、企业应用及开发辅助等场景。[GLM-阿里云](https://help.aliyun.com/zh/model-studio/glm)
 
 推理模型
 

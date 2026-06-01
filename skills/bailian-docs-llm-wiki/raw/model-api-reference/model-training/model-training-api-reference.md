@@ -105,7 +105,12 @@ Map
 
 Body
 
-调优时的超参列表。不同模型支持的参数及其默认值不同，**请在控制台选择相同的模型和训练方式查看实际默认值**。以下参数影响训练费用，**必须填写**：`n_epochs`（循环次数）、`batch_size`（批次大小）、`max_length`（序列长度）。各参数详情请参见[hyper\_parameters 参数说明](https://help.aliyun.com/zh/model-studio/fine-tuning-api-guide#647c159c9dn6e)。
+调优时的超参列表。**不同模型支持的参数集合及其默认值不同**，请在控制台选择相同的模型和训练方式查看实际默认值。
+
+-   **文本生成 / 视觉理解等模型**：使用 `n_epochs`（循环次数）、`batch_size`（批次大小）、`max_length`（序列长度）等参数，其中 `n_epochs`、`batch_size`、`max_length` 影响训练费用，**必须填写**。各参数详情请参见 [hyper\_parameters 参数说明](https://help.aliyun.com/zh/model-studio/fine-tuning-api-guide#647c159c9dn6e)。
+    
+-   **CosyVoice 语音合成模型**（仅 `cosyvoice-v3-flash`）：**8 个 LM / FM 超参全部必填**。各参数详情请参见下方「CosyVoice 语音合成模型 hyper\_parameters」。
+    
 
 training\_type
 
@@ -479,6 +484,104 @@ Integer
 Integer
 
 限制最多保存多少个模型参数快照（Checkpoint）用于发布。
+
+**CosyVoice 语音合成模型 hyper\_parameters**
+
+**仅适用于** `**cosyvoice-v3-flash**` **模型**，与文本生成模型的 `n_epochs`、`batch_size`、`max_length` 不可混用。
+
+**参数**
+
+**必选**
+
+**推荐**
+
+**取值范围**
+
+**说明**
+
+lm\_max\_epoch
+
+是
+
+60
+
+\[1, 2147483647\]
+
+LM 训练轮次（epoch 数）。
+
+lm\_step
+
+是
+
+5
+
+\[1, 2147483647\]
+
+LM 保存 checkpoint 的步长（每多少个 epoch 保存一次）。
+
+lm\_num
+
+是
+
+3
+
+\[1, 2147483647\]
+
+LM 保留的 checkpoint 数量上限。
+
+lm\_batch\_size
+
+是
+
+1000
+
+\[1, 2147483647\]
+
+LM 批次大小（batch size）。
+
+fm\_max\_epoch
+
+是
+
+100
+
+\[1, 2147483647\]
+
+FM 训练轮次（epoch 数）。
+
+fm\_step
+
+是
+
+10
+
+\[1, 2147483647\]
+
+FM 保存 checkpoint 的步长（每多少个 epoch 保存一次）。
+
+fm\_num
+
+是
+
+3
+
+\[1, 2147483647\]
+
+FM 保留的 checkpoint 数量上限。
+
+fm\_batch\_size
+
+是
+
+2000
+
+\[1, 2147483647\]
+
+FM 批次大小（batch size）。
+
+**说明**
+
+CosyVoice 调优当前仅支持 `training_type` 为 `efficient_sft`。完整请求示例与端到端流程参见用户指南 [CosyVoice模型调优](https://help.aliyun.com/zh/model-studio/fine-tune-speech-synthesis-model-by-api)。
 
 ### **返回样例**
 
@@ -866,6 +969,164 @@ output.usage
 Integer
 
 调优任务消耗的Token（count）数，扣费计算公式请参考：[计费项](https://help.aliyun.com/zh/model-studio/billing-for-model-studio#cd67c8d10ekx2)。当任务状态为“SUCCEED”、“CANCELED”时出现。
+
+output.output\_cnt
+
+Integer
+
+当前任务已产出的 Checkpoint 数量。仅对支持多 Checkpoint 输出的模型（如 `cosyvoice-v3-flash`）返回。Checkpoint 详细列表可通过 [查询调优任务 Checkpoint 列表](#cv-cp-h2) 接口获取。
+
+output.max\_output\_cnt
+
+Integer
+
+单次任务可产出的 Checkpoint 数量上限。`output_cnt` 超出上限的部分会按训练充分度截断。仅对支持多 Checkpoint 输出的模型返回。
+
+## 查询调优任务 Checkpoint 列表
+
+查询指定调优任务产出的全部 Checkpoint。当前仅支持多 Checkpoint 输出的模型（如 `cosyvoice-v3-flash`）。
+
+> Windows CMD 请将`${DASHSCOPE_API_KEY}`替换为 `%DASHSCOPE_API_KEY%`，PowerShell 请替换为 `$env:DASHSCOPE_API_KEY`
+
+```
+curl --location --request GET "https://dashscope.aliyuncs.com/api/v1/fine-tunes/<替换为您的调优任务id>/checkpoints" \
+--header "Authorization: Bearer ${DASHSCOPE_API_KEY}" \
+--header 'Content-Type: application/json'
+```
+
+### **输入参数**
+
+**字段**
+
+**类型**
+
+**传参方式**
+
+**必选**
+
+**描述**
+
+job\_id
+
+String
+
+Url Path
+
+是
+
+要查询的调优任务的ID。即[创建调优任务返回参数](#5029d0724bzmm)中的job\_id。
+
+### **返回样例**
+
+```
+{
+    "request_id": "aa4b0229-b1db-9afa-bb6e-3b3e9ee1489b",
+    "output": [
+        {
+            "create_time": "2026-05-27T18:07:16",
+            "full_name": "ft-202605271743-dd2a:checkpoint-00040004",
+            "job_id": "ft-202605271743-dd2a",
+            "checkpoint_id": "ft-202605271743-dd2a:checkpoint-00040004",
+            "checkpoint": "checkpoint-00040004",
+            "model_name": "cosyvoice-v3-flash-ft-202605271743-dd2a",
+            "model_display_name": "ft-202605271743-dd2a",
+            "status": "SUCCEEDED",
+            "expire_time": "2026-06-11T18:07:16",
+            "step": 40004
+        },
+        {
+            "create_time": "2026-05-27T18:07:16",
+            "full_name": "ft-202605271743-dd2a:checkpoint-00030004",
+            "job_id": "ft-202605271743-dd2a",
+            "checkpoint_id": "ft-202605271743-dd2a:checkpoint-00030004",
+            "checkpoint": "checkpoint-00030004",
+            "status": "PENDING",
+            "expire_time": "2026-06-11T18:07:16",
+            "step": 30004
+        }
+    ]
+}
+```
+
+### **返回参数**
+
+**参数名称**
+
+**类型**
+
+**参数说明**
+
+request\_id
+
+String
+
+本次请求的ID。
+
+output
+
+Array
+
+Checkpoint 数组。按 LM epoch × FM epoch 的乘积从大到小排序（乘积越大代表 LM 与 FM 双端训练越充分）。
+
+output\[\*\].checkpoint\_id
+
+String
+
+Checkpoint 唯一标识，格式为 `{job_id}:checkpoint-{LM 4位 epoch}{FM 4位 epoch}`。
+
+output\[\*\].full\_name
+
+String
+
+同 `checkpoint_id`。
+
+output\[\*\].checkpoint
+
+String
+
+Checkpoint 名称，格式为 `checkpoint-{LM 4位 epoch}{FM 4位 epoch}`。例如 `checkpoint-00040004` 表示 LM 第 4 轮 + FM 第 4 轮的组合。
+
+output\[\*\].job\_id
+
+String
+
+该 Checkpoint 所属的调优任务 ID。
+
+output\[\*\].step
+
+Integer
+
+Checkpoint 对应的 step 编码，计算方式为 `LM_epoch × 10000 + FM_epoch`。例如 40004 表示 LM=4、FM=4。
+
+output\[\*\].status
+
+String
+
+该 Checkpoint 的状态。常见值：`SUCCEEDED`（已就绪，可用于部署）、`PENDING`（尚未就绪）。
+
+output\[\*\].model\_name
+
+String
+
+该 Checkpoint 对应的模型 ID，可作为部署接口的 `model_name` 入参。**仅在** `**status=SUCCEEDED**` **时返回**。
+
+output\[\*\].model\_display\_name
+
+String
+
+模型显示名（控制台展示用）。仅在 `status=SUCCEEDED` 时返回。
+
+output\[\*\].create\_time
+
+String
+
+该 Checkpoint 的创建时间，格式为 ISO 8601。
+
+output\[\*\].expire\_time
+
+String
+
+该 Checkpoint 的过期时间，格式为 ISO 8601。
 
 ## 列举调优任务
 

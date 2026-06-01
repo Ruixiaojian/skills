@@ -4,13 +4,20 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Audio", "Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Audio",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "Wan2.7-T2V，演绎能力全面升级，文戏情感细腻自然，动作戏激烈拳拳到肉，搭配更富有戏剧性和节奏感的镜头切换，实现更强表演能力。",
       "collectionTag": "wan2.7",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "wan",
       "model": "wan2.7-t2v",
       "prices": [
@@ -43,7 +50,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-03T03:21:57.000+00:00",
@@ -65,14 +74,20 @@
           "name": "视频时长(秒)",
           "key": "duration",
           "default": 5,
-          "range": [2, 15]
+          "range": [
+            2,
+            15
+          ]
         },
         {
           "name": "随机种子",
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",
@@ -92,13 +107,21 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video", "Audio"],
-        "request_modality": ["Text", "Audio"]
+        "response_modality": [
+          "Video",
+          "Audio"
+        ],
+        "request_modality": [
+          "Text",
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "万相2.6-文生视频，智能分镜调度支持多镜头叙事，能够生成主体、场景和氛围一致的多镜头叙事视频，最高支持15秒时长，更高品质的声音生成，更好的指令遵循和视觉质量",
       "collectionTag": "wan2.6",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "wan",
       "model": "wan2.6-t2v",
       "resourcePackages": [
@@ -150,7 +173,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-12-03T13:03:19.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -172,7 +197,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",
@@ -202,13 +230,21 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video", "Audio"],
-        "request_modality": ["Text", "Audio"]
+        "response_modality": [
+          "Video",
+          "Audio"
+        ],
+        "request_modality": [
+          "Text",
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "万相2.5-文生视频-Preview，全新升级模型架构，支持与画面同步的声音生成，支持10秒长视频生成，更强的指令遵循能力，运动能力、画面质感进一步提升。",
       "collectionTag": "wan2.5",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "wan",
       "model": "wan2.5-t2v-preview",
       "resourcePackages": [
@@ -254,7 +290,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-09-19T06:10:15.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -276,7 +314,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",
@@ -300,8 +341,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "全新升级的万相2.2文生视频，视频品质更高。可稳定生成大幅度复杂运动，支持影视级画面表现与控制，更强大的指令遵循能力，实现物理世界还原。",
@@ -344,7 +389,9 @@
           "async_user_concurrency_limit": 2
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-07-27T16:00:00.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -366,7 +413,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",
@@ -385,8 +435,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "万相2.1-文生视频-Plus，一句话生成视频。视频品质更高，支持大幅度复杂运动、现实物理规律还原、丰富艺术风格和影视级画面质感，指令遵循能力进一步提升。",
@@ -422,7 +476,9 @@
           "async_user_concurrency_limit": 2
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-01-08T16:13:12.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -444,7 +500,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",
@@ -463,8 +522,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "万相2.1-文生视频-Turbo，一句话生成视频。生成速度更快，支持大幅度复杂运动、现实物理规律还原、丰富的艺术风格和影视级画面质感，指令遵循能力进一步提升。",
@@ -506,7 +569,9 @@
           "async_user_concurrency_limit": 2
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-01-08T16:12:34.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -528,7 +593,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",

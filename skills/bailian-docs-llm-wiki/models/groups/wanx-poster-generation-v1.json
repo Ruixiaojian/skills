@@ -4,15 +4,21 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Image"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Image"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "创意海报生成，您的创意海报魔法工厂！它能够根据你的要求自动生成海报的背景和文字排版，支持多种海报风格，从宣传到祝福，让每一张海报都成为你的个性宣言。无需设计基础，轻松制作出彩作品，让创意触手可及。",
       "features": [],
       "provider": "wan",
       "model": "wanx-poster-generation-v1",
-      "capabilities": ["IG"],
+      "capabilities": [
+        "IG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-06-21T02:49:20.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -29,14 +35,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

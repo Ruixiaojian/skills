@@ -4,12 +4,19 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Image"],
-        "request_modality": ["Text", "Image"]
+        "response_modality": [
+          "Image"
+        ],
+        "request_modality": [
+          "Text",
+          "Image"
+        ]
       },
       "openSource": false,
       "description": "Qwen-Image-2.0系列加速版模型，实现了图片生成和图片编辑的融合；具备更专业的文字渲染1k token指令支持能力、更细腻的真实质感，细腻刻画写实场景、更强的语义遵循能力。加速版有效实现了模型效果和性能的最佳平衡。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen",
       "model": "qwen-image-2.0",
       "iconUrl": "",
@@ -33,7 +40,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["IG"],
+      "capabilities": [
+        "IG"
+      ],
       "modelAlias": "qwen-image-2.0",
       "versionTag": "MAJOR",
       "equivalentSnapshot": "qwen-image-2.0-2026-03-03",

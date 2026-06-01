@@ -1,63 +1,177 @@
 # application component api reference
 
-阿里云百炼应用组件 API 提供了对数据连接、知识库检索、Prompt 模板等核心模块的标准编程接口。开发者可通过 RESTful 调用或官方多语言 SDK，实现非结构化/结构化数据的自动化导入、解析、分片管理及业务系统集成。本文档按功能模块、核心参数、标准调用链路及限制说明进行结构化梳理，便于快速对接。
+百炼平台应用组件 API（`bailian/2023-12-29`）采用 ROA 签名风格，提供数据连接、知识库、Prompt 工程等核心功能的程序化管理能力。开发者可通过官方 SDK 或自签名方式调用这些接口，实现文件管理、知识库构建与检索、Prompt 模板管理等操作。本文档汇总了各 API 的分类、关键参数、使用方式及限制约束。
 
-## 支持的模型/功能
-平台能力主要划分为三大组件域，覆盖从数据接入到检索应用的全生命周期：
-* **数据连接管理**：支持类目层级构建 (`AddCategory`)、文件上传租约申请与导入 (`ApplyFileUploadLease`/`AddFile`)、已授权 OSS Bucket 直连、多格式智能解析策略配置 (`ChangeParseSetting`) 以及表格与连接器维护。不支持通过 API 直接操作数据表，需依赖控制台。详见 [AddCategory - 新增类目](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-addcategory.md)。
-* **知识库与检索 (`[[rag-knowledge-base]]`)**：涵盖知识库初始化 (`CreateIndex`)、异步构建提交 (`SubmitIndexJob`)、向量化检索 (`[[Retrieve]]`)、文档/切片 (`Chunk`) 的增删改查、状态轮询 (`GetIndexJobStatus`) 及监控指标查询 (`GetIndexMonitor`)。支持标准版与旗舰版（RCU 弹性扩缩）规格。
-* **Prompt 工程**：提供 Prompt 模板的增删改查及分页列表 (`ListPromptTemplates`)，支持 `${variable}` 变量注入，可无缝对接 `[[agent-app]]` 或 `[[workflow]]` 编排。
+## 接入准备
 
-## 关键参数
-* **核心路由与标识**：
-  * `WorkspaceId`（必传）：业务空间 ID，作为所有资源操作的路径前缀，需在控制台或业务初始化时获取。
-  * 资源主键：`CategoryId`、`FileId`、`IndexId`、`ChunkId`、`ConnectorId`。创建接口返回后，后续读写必传。
-* **分页与游标**：
-  * 部分接口采用 `NextToken` + `MaxResults` 游标分页（如列表查询），部分采用 `PageNumber` + `PageSize` 传统分页，调用时需严格对照接口定义。
-* **解析配置**：
-  * `Parser`：文件处理解析器，可选值包括 `DOCMIND`（智能文档）、`DOCMIND_LLM_VERSION`（大模型解析）、`DOCMIND_LL_VERSION_MEDIA`（音视频）、`AUTO_SELECT` 等。需根据 `CategoryType` 及业务精度要求指定。
+### 身份认证
 
-## 使用方式
-1. **环境鉴权**：准备阿里云 AccessKey 或百炼 API-Key。RAM 子账号需绑定 `AliyunBailianDataFullAccess`（或 ReadOnly）策略，并显式加入目标 `[[workspace]]`。主账号默认具备权限。接入细节可参考 [API概览](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-overview.md)。
-2. **数据接入链路**：创建类目 → 申请上传租约 → 上传文件至百炼临时存储/导入 OSS → 配置或继承类目解析规则。
-3. **索引构建链路**：调用 `CreateIndex` 获取 `IndexId` → 调用 `SubmitIndexJob` 提交构建任务 → 轮询 `GetIndexJobStatus`（建议间隔 ≥5 秒）直至状态为完成。
-4. **检索与集成**：构建完成后，通过 `Retrieve` 传入 Query 与 `IndexId` 直接检索，或在应用调用参数 `rag_options` 中挂载 `IndexId`。
-5. **动态维护**：支持切片级内容/元数据热更新 (`UpdateChunk`)、知识库配置热更新 (`UpdateIndex`)、Prompt 模板增量更新 (`UpdatePromptTemplate`)。
+调用 API 前需准备阿里云访问密钥（AccessKey）。建议创建 RAM 用户并遵循最小权限原则配置策略，避免使用主账号 AccessKey。百炼的 RAM 代码为 `sfm`，授权粒度为操作级。详见 [授权信息](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-ram.md)。
+
+### 服务接入点
+
+| 地域 | 地域 ID | 公网地址 | VPC 地址 |
+|------|---------|---------|----------|
+| 华北2（北京） | cn-beijing | bailian.cn-beijing.aliyuncs.com | bailian-vpc.cn-beijing.aliyuncs.com |
+| 新加坡 | ap-southeast-1 | bailian.ap-southeast-1.aliyuncs.com | bailian-vpc.ap-southeast-1.aliyuncs.com |
+
+### SDK 与签名
+
+推荐使用官方 SDK 调用，支持多种编程语言。自签名对接较为复杂（约需 5 个工作日），建议加入服务钉钉群（147535001692）获取指导。详见 [API概览](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-overview.md)。
+
+## API 分类
+
+### 数据连接（原应用数据）
+
+管理业务空间中的文件类目、文件上传/导入、标签、解析设置及连接器。
+
+| API | 功能 | HTTP 方法 | 限流 |
+|-----|------|-----------|------|
+| AddCategory | 新增类目（最多 500 个/空间） | POST | 5 次/秒 |
+| ListCategory | 获取类目列表 | POST | 5 次/秒 |
+| DeleteCategory | 删除类目 | DELETE | 5 次/秒 |
+| ApplyFileUploadLease | 申请文件上传租约 | POST | 10 次/秒 |
+| AddFile | 添加文件到数据连接 | PUT | 10 次/秒 |
+| AddFilesFromAuthorizedOss | 从已授权 OSS 导入文件 | POST | 5 次/秒 |
+| ListFile | 查询文件列表 | GET | 5 次/秒 |
+| DescribeFile | 查询文件状态 | GET | 10 次/秒 |
+| UpdateFileTag | 更新文件标签 | PUT | 5 次/秒 |
+| BatchUpdateFileTag | 批量更新文档标签 | PUT | - |
+| DeleteFile | 删除文件 | DELETE | 10 次/秒 |
+| GetParseSettings | 获取类目解析设置 | GET | 10 次/秒 |
+| GetAvailableParserTypes | 获取支持的解析器类型 | GET | 10 次/秒 |
+| ChangeParseSetting | 修改类目解析设置 | PUT | 10 次/秒 |
+| AddTable | 添加表格 | POST | 10 次/秒 |
+| UpdateTableFromAuthorizedOss | 从 OSS 更新表格 | PUT | 5 次/秒 |
+| AddConnector | 新增连接器 | POST | 5 次/秒 |
+| GetConnector | 获取连接器信息 | GET | 5 次/秒 |
+
+### 知识库
+
+管理知识库的完整生命周期：创建、提交任务、追加文档、检索、更新和删除。
+
+| API | 功能 | HTTP 方法 | 限流 |
+|-----|------|-----------|------|
+| CreateIndex | 创建知识库 | POST | 10 次/秒 |
+| SubmitIndexJob | 提交知识库创建任务 | POST | 10 次/秒 |
+| SubmitIndexAddDocumentsJob | 追加文件到知识库 | POST | 10 次/秒 |
+| GetIndexJobStatus | 查询任务状态 | GET | - |
+| Retrieve | 检索知识库 | POST | - |
+| ListIndices | 查询知识库列表 | GET | 10 次/秒 |
+| ListIndexDocuments | 查询知识库文件列表 | GET | 15 次/秒 |
+| ListIndexFileDetails | 查询知识库文件详情 | POST | - |
+| UpdateIndex | 更新知识库配置 | POST | - |
+| DeleteIndex | 删除知识库 | POST | 10 次/秒 |
+| DeleteIndexDocument | 删除知识库文件 | POST | 10 次/秒 |
+| ListChunks | 查询切片列表 | POST | 10 次/秒 |
+| UpdateChunk | 修改切片 | POST | 10 次/秒 |
+| DeleteChunk | 删除切片 | POST | 10 次/秒 |
+| GetIndexMonitor | 获取知识库监控数据 | GET | - |
+
+### Prompt 工程
+
+管理 Prompt 模板的 CRUD 操作。
+
+| API | 功能 | HTTP 方法 |
+|-----|------|-----------|
+| CreatePromptTemplate | 创建模板（不支持文生图） | POST |
+| GetPromptTemplate | 获取模板 | GET |
+| UpdatePromptTemplate | 增量更新模板 | PATCH |
+| DeletePromptTemplate | 删除模板 | DELETE |
+| ListPromptTemplates | 获取模板列表 | GET |
+
+## 关键参数说明
+
+### 通用路径参数
+
+- **WorkspaceId**（string，必填）：业务空间 ID，所有 API 均需要在路径中指定。
+- **IndexId**（string）：知识库 ID，由 `CreateIndex` 返回。
+- **FileId**（string）：文件 ID，由 `AddFile` 返回。
+- **CategoryId**（string）：类目 ID，由 `AddCategory` 返回。
+
+### 分页参数
+
+列表类接口支持分页，典型参数：
+- `MaxResults`：每页返回的条目数
+- `NextToken`：下一页查询凭证（为空表示无更多结果）
+- 部分接口使用 `PageNumber` + `PageSize` 分页模式
+
+### 文件解析器类型
+
+`AddFile` 接口中 `Parser` 参数支持：
+- `DOCMIND`：智能文档解析
+- `DOCMIND_DIGITAL`：电子文档解析
+- `DOCMIND_LLM_VERSION`：大模型文档解析
+- `DASH_QWEN_VL_PARSER`：Qwen VL 解析
+- `DOCMIND_LLM_VERSION_MEDIA`：音视频解析
+- `AUTO_SELECT`：自动选择解析器
+
+## 知识库使用流程
+
+1. **上传文件**：`ApplyFileUploadLease` → 上传文件 → `AddFile`
+2. **创建知识库**：`CreateIndex` → `SubmitIndexJob`（必须提交才能完成创建）
+3. **追加文件**：`SubmitIndexAddDocumentsJob`
+4. **查询状态**：`GetIndexJobStatus`（建议间隔 ≥5 秒）
+5. **检索**：`Retrieve`
+
+详细代码示例参见 [CreateIndex - 创建知识库](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-createindex.md)。
+
+## 权限要求
+
+- RAM 用户需先获取百炼 API 权限策略：
+  - `AliyunBailianDataFullAccess`：数据完全访问（覆盖绝大部分接口）
+  - `AliyunBailianDataReadOnlyAccess`：只读访问（仅适用于 DescribeFile、GetParseSettings 等查询接口）
+- RAM 用户需加入目标业务空间
+- 阿里云主账号可直接调用无须额外授权
 
 ## 限制和注意事项
-* **限流策略**：写类接口（如文件上传、知识库创建、Job 提交）频率通常限制为 5~10 QPS；读类接口限制为 10~15 QPS；`GetIndexJobStatus` 轮询频率请勿超过 20 次/分钟。触发限流需实现指数退避重试。
-* **幂等性差异**：`AddFile`、`CreateIndex`、`SubmitIndexJob`、`CreatePromptTemplate` 等**不具备幂等性**，重复调用将创建冗余资源；`Delete`、`Update`、`List` 类接口通常具备幂等性。建议在客户端实现“先查询、后创建”的防重逻辑。
-* **存储层隔离**：数据连接（原应用数据）与知识库索引为解耦架构。调用 `DeleteFile` 仅删除数据源，**不影响**已构建的索引；若需清理索引内容，需调用 `DeleteIndexDocument`。
-> **注意**：`DeleteIndex` 文档明确说明删除知识库不会反向清理已导入的应用数据文件，但 `DeleteFile` 文档又强调“删除应用数据文件不会影响已构建好的知识库”。两者操作对象完全正交，请勿混淆数据源层与向量索引层的生命周期管理。此外，部分旧版 SDK（如 Java 1.10.2 以下）存在 `Filed` 与 `FileId` 字段命名兼容历史，新版集成请统一使用 `FileId`。
-* **功能边界**：暂不支持通过 API 创建/删除数据表；文生图类 Prompt 模板暂不支持 API 创建；`UpdateIndex` 的 `DenseSimilarityTopK` 与 `SparseSimilarityTopK` 参数之和不可超过 200。
-* **版本演进**：接口入参/返回结构会随迭代调整（如 `CreateIndex` 近期发生入参变更），接入前请务必核对最新规范。参考 [版本说明](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-changeset.md) 跟踪 Breaking Changes。
+
+- **限流**：各接口有不同的 QPS 限制（通常 5~15 次/秒），遇到限流请稍后重试。
+- **幂等性**：部分接口具有幂等性（如 `DeleteCategory`、`ListFile`、`Retrieve` 等），部分不具备（如 `AddCategory`、`AddFile`、`CreateIndex`）。调用前请查阅各接口说明。
+- **不支持 API 操作的功能**：新增数据表、删除数据表需通过控制台操作；`SubmitIndexAddDocumentsJob` 不支持数据查询/图片问答类知识库。
+- **删除操作不可逆**：`DeleteIndex`、`DeleteIndexDocument`、`DeleteChunk` 等删除操作为硬删除，无法恢复。
+- **知识库创建后必须提交**：调用 `CreateIndex` 后若不调用 `SubmitIndexJob`，将得到空知识库。
+- **OSS 导入要求**：OSS Bucket 需与百炼同属一个主账号，不支持归档/冷归档/深度冷归档存储类型。
+- **文件状态约束**：`DeleteFile` 仅能删除状态为 `PARSE_FAILED` 或 `PARSE_SUCCESS` 的文件。
+- **监控数据查询**：`GetIndexMonitor` 查询时间范围最大支持 30 天。
+
+> **注意**：`DeleteFile` 接口删除的是应用数据中的文件，不会影响已构建的知识库。若需删除知识库中的文件，应使用 `DeleteIndexDocument` 接口。
+
+> **注意**：版本说明中 `CreateIndex` 接口入参在 2026-03-27 和 2026-03-30 均发生变更，请确保使用最新版 SDK 以避免参数不兼容问题。详见 [版本说明](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-changeset.md)。
+
+> **注意**：`UpdateChunk` 仅支持文档搜索类知识库，不支持数据查询和图片问答类知识库。
 
 ## 来源文档
 
-- [服务接入点](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-endpoint.md)
 - [API概览](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-overview.md)
-- [授权信息](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-ram.md)
+- [服务接入点](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-endpoint.md)
 - [版本说明](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-changeset.md)
+- [授权信息](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-ram.md)
 - [AddCategory - 新增类目](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-addcategory.md)
-- [DeleteCategory - 删除类目](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-deletecategory.md)
 - [ListCategory - 类目列表](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-listcategory.md)
-- [AddFile - 添加文件](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-addfile.md)
-- [AddFilesFromAuthorizedOss - 从已授权OSS Bucket中导入文件](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-addfilesfromauthorizedoss.md)
+- [DeleteCategory - 删除类目](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-deletecategory.md)
 - [ApplyFileUploadLease - 申请文件上传租约](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-applyfileuploadlease.md)
 - [ListFile - 文件列表](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-listfile.md)
+- [AddFilesFromAuthorizedOss - 从已授权OSS Bucket中导入文件](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-addfilesfromauthorizedoss.md)
+- [AddFile - 添加文件](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-addfile.md)
 - [DescribeFile - 查询文件状态](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-describefile.md)
-- [BatchUpdateFileTag - 批量更新文档标签](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-batchupdatefiletag.md)
 - [UpdateFileTag - 更新文件标签](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-updatefiletag.md)
 - [DeleteFile - 删除文件](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-deletefile.md)
+- [BatchUpdateFileTag - 批量更新文档标签](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-batchupdatefiletag.md)
 - [GetParseSettings - 获取类目解析设置](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-getparsesettings.md)
 - [GetAvailableParserTypes - 获取文件支持的解析器类型](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-getavailableparsertypes.md)
-- [AddTable - 添加表格](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-addtable.md)
 - [ChangeParseSetting - 修改类目解析设置](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-changeparsesetting.md)
+- [AddTable - 添加表格](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-addtable.md)
 - [UpdateTableFromAuthorizedOss - 从已授权OSS Bucket中选择文件更新表格](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-updatetablefromauthorizedoss.md)
 - [AddConnector - 新增连接器](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-addconnector.md)
+- [CreatePromptTemplate - 创建Prompt模板](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-prompt-engineering/api-bailian-2023-12-29-createprompttemplate.md)
 - [GetConnector - 获取连接器信息](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-data-connection-original-application-data/api-bailian-2023-12-29-getconnector.md)
-- [GetIndexJobStatus - 查询知识库创建任务状态](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-getindexjobstatus.md)
+- [GetPromptTemplate - 获取Prompt模板](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-prompt-engineering/api-bailian-2023-12-29-getprompttemplate.md)
+- [UpdatePromptTemplate - 更新Prompt模板](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-prompt-engineering/api-bailian-2023-12-29-updateprompttemplate.md)
+- [DeletePromptTemplate - 删除Prompt模板](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-prompt-engineering/api-bailian-2023-12-29-deleteprompttemplate.md)
+- [ListPromptTemplates - 获取Prompt模板列表](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-prompt-engineering/api-bailian-2023-12-29-listprompttemplates.md)
 - [CreateIndex - 创建知识库](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-createindex.md)
+- [GetIndexJobStatus - 查询知识库创建任务状态](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-getindexjobstatus.md)
 - [SubmitIndexJob - 提交知识库创建任务](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-submitindexjob.md)
 - [SubmitIndexAddDocumentsJob - 提交知识库追加任务](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-submitindexadddocumentsjob.md)
 - [Retrieve - 检索知识库](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-retrieve.md)
@@ -66,25 +180,20 @@
 - [DeleteIndexDocument - 删除知识库下的文件](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-deleteindexdocument.md)
 - [UpdateIndex - 更新知识库](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-updateindex.md)
 - [ListIndices - 查询知识库列表](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-listindices.md)
-- [ListChunks - 查询索引下的分片列表](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-listchunks.md)
 - [DeleteIndex - 删除知识库](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-deleteindex.md)
-- [UpdateChunk - 修改切片](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-updatechunk.md)
+- [ListChunks - 查询索引下的分片列表](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-listchunks.md)
 - [DeleteChunk - 删除切片](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-deletechunk.md)
+- [UpdateChunk - 修改切片](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-updatechunk.md)
 - [GetIndexMonitor - 获取知识库监控数据](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-knowledge-base/api-bailian-2023-12-29-getindexmonitor.md)
-- [CreatePromptTemplate - 创建Prompt模板](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-[[prompt|prompt]]-engineering/api-bailian-2023-12-29-create[[prompt|prompt]]template.md)
-- [GetPromptTemplate - 获取Prompt模板](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-[[prompt|prompt]]-engineering/api-bailian-2023-12-29-getprompttemplate.md)
-- [UpdatePromptTemplate - 更新Prompt模板](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-prompt-engineering/api-bailian-2023-12-29-updateprompttemplate.md)
-- [DeletePromptTemplate - 删除Prompt模板](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-prompt-engineering/api-bailian-2023-12-29-deleteprompttemplate.md)
-- [ListPromptTemplates - 获取Prompt模板列表](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-prompt-engineering/api-bailian-2023-12-29-listprompttemplates.md)
-- [GetAlipayTransferStatus - 查询支付宝打赏状态](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-others/api-bailian-2023-12-29-getalipaytransferstatus.md)
 - [GetAlipayUrl - 获取支付宝打赏URL](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-others/api-bailian-2023-12-29-getalipayurl.md)
+- [GetAlipayTransferStatus - 查询支付宝打赏状态](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-others/api-bailian-2023-12-29-getalipaytransferstatus.md)
 - [ApplyTempStorageLease - 申请临时文件上传许可](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-others/api-bailian-2023-12-29-applytempstoragelease.md)
 - [GetMemory - 获取长期记忆体](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-others/api-bailian-2023-12-29-dir-long-term-memory/api-bailian-2023-12-29-getmemory.md)
 - [CreateMemory - 创建长期记忆体](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-others/api-bailian-2023-12-29-dir-long-term-memory/api-bailian-2023-12-29-creatememory.md)
 - [UpdateMemory - 更新长期记忆体](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-others/api-bailian-2023-12-29-dir-long-term-memory/api-bailian-2023-12-29-updatememory.md)
 - [DeleteMemory - 删除长期记忆体](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-others/api-bailian-2023-12-29-dir-long-term-memory/api-bailian-2023-12-29-deletememory.md)
-- [CreateMemoryNode - 创建记忆片段](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-others/api-bailian-2023-12-29-dir-long-term-memory/api-bailian-2023-12-29-creatememorynode.md)
 - [ListMemories - 获取长期记忆体列表](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-others/api-bailian-2023-12-29-dir-long-term-memory/api-bailian-2023-12-29-listmemories.md)
+- [CreateMemoryNode - 创建记忆片段](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-others/api-bailian-2023-12-29-dir-long-term-memory/api-bailian-2023-12-29-creatememorynode.md)
 - [GetMemoryNode - 获取记忆片段](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-others/api-bailian-2023-12-29-dir-long-term-memory/api-bailian-2023-12-29-getmemorynode.md)
 - [UpdateMemoryNode - 更新记忆片段](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-others/api-bailian-2023-12-29-dir-long-term-memory/api-bailian-2023-12-29-updatememorynode.md)
 - [DeleteMemoryNode - 删除记忆片段](../../raw/application-api-reference/application-component-api-reference/api-bailian-2023-12-29-dir/api-bailian-2023-12-29-dir-others/api-bailian-2023-12-29-dir-long-term-memory/api-bailian-2023-12-29-deletememorynode.md)

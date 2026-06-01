@@ -104,7 +104,7 @@ Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-pla
 
 配置过程中遇到报错，请参考对应计费方案的常见问题文档：
 
--   按量付费：[错误信息](https://help.aliyun.com/zh/model-studio/error-code)
+-   按量付费：[错误码](https://help.aliyun.com/zh/model-studio/error-code)
     
 -   Coding Plan：[Coding Plan 常见问题](https://help.aliyun.com/zh/model-studio/coding-plan-faq)
     

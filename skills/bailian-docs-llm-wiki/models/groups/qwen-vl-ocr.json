@@ -4,12 +4,20 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image"
+        ]
       },
       "openSource": false,
       "description": "千问VL-OCR（qwen-vl-ocr），即基于Qwen-VL训练的OCR识别大模型。通过统一模型的方式聚合多种图文识别、解析、处理类任务，提供强大的图文识别能力。",
-      "features": ["model-experience", "batch"],
+      "features": [
+        "model-experience",
+        "batch"
+      ],
       "provider": "qwen-domain-model",
       "model": "qwen-vl-ocr-latest",
       "prices": [
@@ -56,7 +64,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["VU"],
+      "capabilities": [
+        "VU"
+      ],
       "versionTag": "LATEST",
       "maxOutputTokens": 8192,
       "latestOnlineAt": "2025-09-22T16:00:00.000+00:00",
@@ -76,14 +86,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -105,12 +121,19 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image"
+        ]
       },
       "openSource": false,
       "description": "千问VL-OCR（qwen-vl-ocr），即基于Qwen-VL训练的OCR识别大模型。通过统一模型的方式聚合多种图文识别、解析、处理类任务，提供强大的图文识别能力。本模型为2024年10月28日的快照版本。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen-domain-model",
       "model": "qwen-vl-ocr-1028",
       "prices": [
@@ -145,7 +168,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["VU"],
+      "capabilities": [
+        "VU"
+      ],
       "modelAlias": "qwen-vl-ocr-2024-10-28",
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 4096,
@@ -166,14 +191,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -195,12 +226,20 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image"
+        ]
       },
       "openSource": false,
       "description": "千问VL-OCR（qwen-vl-ocr），即基于Qwen-VL训练的OCR识别大模型。通过统一模型的方式聚合多种图文识别、解析、处理类任务，提供强大的图文识别能力。",
-      "features": ["model-experience", "batch"],
+      "features": [
+        "model-experience",
+        "batch"
+      ],
       "provider": "qwen-domain-model",
       "model": "qwen-vl-ocr",
       "prices": [
@@ -247,7 +286,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["VU"],
+      "capabilities": [
+        "VU"
+      ],
       "versionTag": "MAJOR",
       "equivalentSnapshot": "qwen-vl-ocr-2025-11-20",
       "maxOutputTokens": 8192,
@@ -268,14 +309,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

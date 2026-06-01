@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "Qwen3-TTS-Flash模型是通义最新推出的实时语音合成大模型，可对qwen-voice-enrollment服务复刻的声音进行高保真实时语音合成，且同一音色支持11个语种的语音输出。该模型经过海量数据训练，合成音频可以根据文本自适应调节语气，对复杂文本合成也有较好的处理能力。该模型为2026年01月22日快照版本模型。",
@@ -34,7 +38,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TTS"],
+      "capabilities": [
+        "TTS"
+      ],
       "modelAlias": "qwen3-tts-vc-0122",
       "versionTag": "SNAPSHOT",
       "latestOnlineAt": "2026-02-10T03:00:44.000+00:00",

@@ -4,8 +4,14 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Image", "Text", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Image",
+          "Text",
+          "Video"
+        ]
       },
       "builtInToolMultiPrices": [
         {
@@ -118,7 +124,11 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["VU", "TG", "Reasoning"],
+      "capabilities": [
+        "VU",
+        "TG",
+        "Reasoning"
+      ],
       "modelAlias": "",
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 65536,
@@ -139,7 +149,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -151,7 +164,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -169,7 +185,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         },
         {
           "name": "result_format",
@@ -205,8 +224,14 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Image", "Text", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Image",
+          "Text",
+          "Video"
+        ]
       },
       "openSource": true,
       "description": "Qwen3.6系列27B原生视觉语言Dense模型，模型效果相较3.5-27B重点提升了Agentic coding能力、模型STEM与推理能力进一步增强；视觉模态方面在空间智能、物体定位与检测能力上显著增强，视频理解、文档OCR及视觉Agent能力稳步提升。",
@@ -234,7 +259,11 @@
           "priceName": "输出"
         }
       ],
-      "capabilities": ["Reasoning", "VU", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "VU",
+        "TG"
+      ],
       "modelAlias": "",
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 65536,
@@ -255,7 +284,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -267,7 +299,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -285,7 +320,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         },
         {
           "name": "result_format",

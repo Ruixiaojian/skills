@@ -256,7 +256,7 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
 
 配置过程中遇到报错，请参考对应计费方案的常见问题文档：
 
--   按量付费：[错误信息](https://help.aliyun.com/zh/model-studio/error-code)
+-   按量付费：[错误码](https://help.aliyun.com/zh/model-studio/error-code)
     
 -   Coding Plan：[Coding Plan 常见问题](https://help.aliyun.com/zh/model-studio/coding-plan-faq)
     

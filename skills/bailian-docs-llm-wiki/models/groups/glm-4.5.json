@@ -4,13 +4,22 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "GLM-5.1是智谱AI推出的面向长程任务（Long Horizon Task）设计的模型，总参数744B，支持200K超长上下文，最大输出 128K tokens。拥有强大逻辑推理、长文本理解与代码生成能力、兼顾性能与推理效率；在多任务基准中表现优异，适用于智能交互、企业应用、开发辅助等场景。",
       "collectionTag": "",
-      "features": ["cache", "function-calling", "model-experience", "structured-outputs"],
+      "features": [
+        "cache",
+        "function-calling",
+        "model-experience",
+        "structured-outputs"
+      ],
       "provider": "zhipu-ai",
       "model": "glm-5.1",
       "qpmInfo": {
@@ -107,7 +116,9 @@
           "rangeEnd": 204800
         }
       ],
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "modelAlias": "",
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 131072,
@@ -128,7 +139,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -140,7 +154,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_thinking",
@@ -153,7 +170,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -177,13 +197,21 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "GLM-5是面向Coding与Agent场景的新一代大模型，在复杂系统工程与长程任务中达到开源 SOTA，真实编程体验逼近 Claude Opus 级别；基于 744B 新基座、异步强化学习与稀疏注意力，实现从“写代码”到“写工程”的全面升级。",
       "maxOutputTokensThinking": 16384,
-      "features": ["model-experience", "function-calling", "cache"],
+      "features": [
+        "model-experience",
+        "function-calling",
+        "cache"
+      ],
       "provider": "zhipu-ai",
       "model": "glm-5",
       "qpmInfo": {
@@ -256,7 +284,9 @@
           "rangeEnd": 204800
         }
       ],
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "modelAlias": "",
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
@@ -279,7 +309,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -291,7 +324,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_thinking",
@@ -304,7 +340,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -328,12 +367,20 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "智谱最新旗舰，具备更强的编程能力与更稳定的多步骤推理/执行能力。总参数355B，支持长程任务规划、编码、工具协同，问答自然、写作沉浸、创意角色扮演能力强。",
-      "features": ["model-experience", "function-calling", "cache"],
+      "features": [
+        "model-experience",
+        "function-calling",
+        "cache"
+      ],
       "provider": "zhipu-ai",
       "model": "glm-4.7",
       "qpmInfo": {
@@ -406,7 +453,10 @@
           "rangeEnd": 204800
         }
       ],
-      "capabilities": ["TG", "Reasoning"],
+      "capabilities": [
+        "TG",
+        "Reasoning"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
       "latestOnlineAt": "2025-12-25T06:06:48.000+00:00",
@@ -426,7 +476,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -438,7 +491,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_thinking",
@@ -451,7 +507,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -475,13 +534,20 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "GLM新一代旗舰模型，核心能力较4.5全面提升。总参数量为3550 亿，激活参数320亿，上下文窗口扩展至200K。",
       "maxOutputTokensThinking": 16384,
-      "features": ["model-experience", "cache"],
+      "features": [
+        "model-experience",
+        "cache"
+      ],
       "provider": "zhipu-ai",
       "model": "glm-4.6",
       "qpmInfo": {
@@ -554,7 +620,10 @@
           "rangeEnd": 204800
         }
       ],
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
       "latestOnlineAt": "2025-10-21T06:26:06.000+00:00",
@@ -576,7 +645,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -588,7 +660,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_thinking",
@@ -601,7 +676,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -625,12 +703,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "GLM-4.5采用混合专家（MoE）架构，总参数量为3550 亿，激活参数320亿，在复杂推理、代码生成及智能体交互等通用能力上实现了能力融合与技术突破。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "zhipu-ai",
       "model": "glm-4.5",
       "qpmInfo": {
@@ -691,7 +775,9 @@
           "rangeEnd": 131072
         }
       ],
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
       "latestOnlineAt": "2025-08-06T11:38:01.000+00:00",
@@ -711,7 +797,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -723,7 +812,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_thinking",
@@ -736,7 +828,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -760,12 +855,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "GLM-4.5-Air采用混合专家（MoE）架构，总参数量为1060亿，激活参数120亿，相较GLM-4.5更紧凑、轻量，适用于对模型规模和资源消耗有一定限制的场景。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "zhipu-ai",
       "model": "glm-4.5-air",
       "qpmInfo": {
@@ -826,7 +927,9 @@
           "rangeEnd": 131072
         }
       ],
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
       "latestOnlineAt": "2025-08-06T12:02:34.000+00:00",
@@ -846,7 +949,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -858,7 +964,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_thinking",
@@ -871,7 +980,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
