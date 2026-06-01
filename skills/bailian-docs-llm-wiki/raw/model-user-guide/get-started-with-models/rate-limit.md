@@ -2833,6 +2833,28 @@ glm-4.5
 
 glm-4.5-air
 
+## **国际**
+
+服务部署范围为[国际](https://help.aliyun.com/zh/model-studio/regions/#080da663a75xh)时，模型推理计算资源在全球范围内动态调度（不含中国内地）；静态数据存储于您所选的地域。该部署范围支持的地域：新加坡。
+
+**模型名称**
+
+**限流条件（超出任一数值时触发限流）**
+
+> **以下为每分钟限流条件，服务可能按 RPS（RPM/60）与 TPS（TPM/60）限制**
+
+**每分钟调用次数（RPM）**
+
+**每分钟消耗Token数（TPM）**
+
+> **含输入与输出Token**
+
+glm-5.1
+
+500
+
+1,000,000
+
 ## **全球**
 
 服务部署范围为[全球](https://help.aliyun.com/zh/model-studio/regions/#080da663a75xh)时，模型推理计算资源在全球范围内动态调度；静态数据存储于您所选的地域。该部署范围支持的地域：美国（弗吉尼亚）、德国（法兰克福）。
@@ -2966,6 +2988,30 @@ xiaomi/mimo-v2.5-pro
 100
 
 10,000,000
+
+### **Stepfun-阶跃星辰直供**
+
+**说明**
+
+服务部署范围仅支持中国内地。
+
+**模型名称**
+
+**限流条件（超出任一数值时触发限流）**
+
+> **以下为每分钟限流条件，服务可能按 RPS（RPM/60）与 TPS（TPM/60）限制**
+
+**每分钟调用次数（RPM）**
+
+**每分钟消耗Token数（TPM）**
+
+> **含输入与输出Token**
+
+stepfun/step-3.7-flash
+
+500
+
+20,000,000
 
 ## **图像生成**
 
@@ -4437,25 +4483,25 @@ paraformer-8k-v1
 
 happyhorse-1.0-t2v
 
-5
+10
 
 5
 
 happyhorse-1.0-i2v
 
-5
+10
 
 5
 
 happyhorse-1.0-r2v
 
-5
+10
 
 5
 
 happyhorse-1.0-video-edit
 
-5
+10
 
 5
 
@@ -4473,25 +4519,25 @@ happyhorse-1.0-video-edit
 
 happyhorse-1.0-t2v
 
-5
+10
 
 5
 
 happyhorse-1.0-i2v
 
-5
+10
 
 5
 
 happyhorse-1.0-r2v
 
-5
+10
 
 5
 
 happyhorse-1.0-video-edit
 
-5
+10
 
 5
 
@@ -4509,25 +4555,25 @@ happyhorse-1.0-video-edit
 
 happyhorse-1.0-t2v
 
-5
+10
 
 5
 
 happyhorse-1.0-i2v
 
-5
+10
 
 5
 
 happyhorse-1.0-r2v
 
-5
+10
 
 5
 
 happyhorse-1.0-video-edit
 
-5
+10
 
 5
 

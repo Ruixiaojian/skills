@@ -4,13 +4,21 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Audio", "Image", "Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Audio",
+          "Image",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "万相2.7-图生视频，演绎能力全面升级，文戏情感细腻自然，动作戏激烈拳拳到肉，搭配更富有戏剧性和节奏感的镜头切换，实现更强表演能力。",
       "collectionTag": "wan2.7",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "wan",
       "model": "wan2.7-i2v",
       "prices": [
@@ -43,7 +51,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-03T03:21:23.000+00:00",
@@ -60,14 +70,20 @@
           "name": "视频时长(秒)",
           "key": "duration",
           "default": 5,
-          "range": [2, 15]
+          "range": [
+            2,
+            15
+          ]
         },
         {
           "name": "随机种子",
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",
@@ -87,13 +103,22 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video", "Audio"],
-        "request_modality": ["Image", "Audio", "Text"]
+        "response_modality": [
+          "Video",
+          "Audio"
+        ],
+        "request_modality": [
+          "Image",
+          "Audio",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "万相2.6-图生视频-Flash，生成更快更高性价比。智能分镜调度支持多镜头叙事，多人稳定对话，更自然真实音色，最高支持15秒时长生成",
       "collectionTag": "Wan2.6",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "wan",
       "model": "wan2.6-i2v-flash",
       "prices": [
@@ -138,7 +163,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-01-15T07:18:54.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -161,7 +188,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",
@@ -191,13 +221,22 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video", "Audio"],
-        "request_modality": ["Image", "Text", "Audio"]
+        "response_modality": [
+          "Video",
+          "Audio"
+        ],
+        "request_modality": [
+          "Image",
+          "Text",
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "万相2.6-图生视频，智能分镜调度支持多镜头叙事，更高品质的声音生成，多人稳定对话，更自然真实音色，最高支持15秒时长生成",
       "collectionTag": "wan2.6",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "wan",
       "model": "wan2.6-i2v",
       "resourcePackages": [
@@ -249,7 +288,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-12-03T13:03:01.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -271,7 +312,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",
@@ -301,13 +345,22 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video", "Audio"],
-        "request_modality": ["Text", "Image", "Audio"]
+        "response_modality": [
+          "Video",
+          "Audio"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "万相2.5-图生视频-Preview，全新升级技术架构，支持与画面同步的声音生成，支持10秒长视频生成，更强的指令遵循能力，运动能力、画面质感进一步提升。",
       "collectionTag": "wan2.5",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "wan",
       "model": "wan2.5-i2v-preview",
       "resourcePackages": [
@@ -353,11 +406,15 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-09-19T08:44:48.000+00:00",
       "trainingTypes": {
-        "sft": ["lora"]
+        "sft": [
+          "lora"
+        ]
       },
       "inferenceProvider": "aliyun-bailian",
       "name": "Wan2.5-I2V-Preview",
@@ -378,7 +435,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",
@@ -402,8 +462,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image"
+        ]
       },
       "openSource": true,
       "description": "全新升级的万相2.2图生视频，视频品质更高。优化视频生成稳定性与成功率，更强大的指令遵循能力，稳定保持图片文字、人像和商品一致性，精准运镜控制。",
@@ -446,7 +510,9 @@
           "async_user_concurrency_limit": 2
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-07-27T16:00:00.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -468,7 +534,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",
@@ -487,8 +556,13 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image", "Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "全新升级的万相2.2-首尾帧生视频，生成速度更快。优化视频动态稳定性与成功率，更强大的指令遵循能力，两张图片生成丝滑过度视频。",
@@ -539,11 +613,15 @@
           "async_user_concurrency_limit": 2
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-09-12T05:38:00.000+00:00",
       "trainingTypes": {
-        "sft": ["lora"]
+        "sft": [
+          "lora"
+        ]
       },
       "inferenceProvider": "aliyun-bailian",
       "name": "Wan2.2-KF2V-Flash",
@@ -559,14 +637,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -579,8 +663,13 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Video", "Image"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Video",
+          "Image"
+        ]
       },
       "openSource": true,
       "description": "wan2.2-animate-mix视频换人是一款角色替换的模型产品，上传一张角色照片与一段表演视频，即可将原视频中的角色精准替换为照片中的角色，完整保留原始视频的场景、光照和色调等环境细节。",
@@ -620,7 +709,9 @@
           "async_user_concurrency_limit": 1
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-09-19T04:02:28.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -637,14 +728,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -657,8 +754,13 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Video", "Image"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Video",
+          "Image"
+        ]
       },
       "openSource": true,
       "description": "wan2.2-animate-move图生动作是一款角色动画生成模型，用户只需上传一张角色照片和一段参考表演视频，即可将视频中的表情和动作迁移到图片角色上，生成高保真的动画视频。",
@@ -698,7 +800,9 @@
           "async_user_concurrency_limit": 1
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "Wan2.2-Animate-Move",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-09-19T04:02:30.000+00:00",
@@ -716,14 +820,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -736,8 +846,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image"
+        ]
       },
       "openSource": false,
       "description": "wan2.2-s2v 是一款视频生成模型，可基于人物图片和人声音频文件，生成高质量的人物说话/唱歌/表演动态视频。",
@@ -759,7 +873,9 @@
           "priceName": "视频生成（720P）"
         }
       ],
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-08-25T11:54:37.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -776,14 +892,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -797,7 +919,9 @@
     {
       "inferenceMetadata": {
         "response_modality": [],
-        "request_modality": ["Image"]
+        "request_modality": [
+          "Image"
+        ]
       },
       "openSource": false,
       "description": "wan2.2-s2v-detect 是 wan2.2-s2v 的辅助模型，用于确认输入的人物肖像图片是否符合 wan2.2-s2v 模型所需的人物肖像图片规范。wan2.2-s2v 模型基于 wan2.2-s2v-detect 检测通过的图片和人声音频文件进行视频生成。",
@@ -813,7 +937,9 @@
           "priceName": "图片检测"
         }
       ],
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-08-25T11:54:09.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -830,14 +956,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -850,8 +982,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image"
+        ]
       },
       "openSource": false,
       "description": "全新升级的万相2.2图生视频，生成速度更快。优化视频生成稳定性与成功率，更强大的指令遵循能力，稳定保持图片文字、人像和商品一致性，精准运镜控制。",
@@ -902,11 +1038,15 @@
           "async_user_concurrency_limit": 2
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-08-11T03:53:00.000+00:00",
       "trainingTypes": {
-        "sft": ["lora"]
+        "sft": [
+          "lora"
+        ]
       },
       "inferenceProvider": "aliyun-bailian",
       "name": "Wan2.2-I2V-Flash",
@@ -927,7 +1067,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",
@@ -946,8 +1089,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image"
+        ]
       },
       "openSource": false,
       "description": "万相2.1-首尾帧-Plus，两张图片生成丝滑过度视频。支持大幅度复杂运动、物理规律遵循、丰富艺术风格和影视级画面质感，指令遵循能力进一步提升，生成画面细节更丰富。",
@@ -983,7 +1130,9 @@
           "async_user_concurrency_limit": 2
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-04-20T16:00:00.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -1000,14 +1149,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -1020,8 +1175,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image"
+        ]
       },
       "openSource": false,
       "description": "万相2.1-图生视频-Plus，让图片变为动态视频。支持大幅度复杂运动、物理规律遵循、丰富艺术风格和影视级画面质感，指令遵循能力进一步提升，视频质量更高。",
@@ -1057,7 +1216,9 @@
           "async_user_concurrency_limit": 2
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-01-20T03:30:02.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -1079,7 +1240,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",
@@ -1098,8 +1262,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image"
+        ]
       },
       "openSource": false,
       "description": "万相2.1-图生视频-Turbo，让图片变为动态视频。支持大幅度复杂运动、物理规律遵循、丰富艺术风格和影视级画面质感，指令遵循能力进一步提升，生成速度更快。",
@@ -1119,7 +1287,9 @@
           "priceName": "视频生成（std）"
         }
       ],
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-02-27T02:24:00.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -1141,7 +1311,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "智能改写",

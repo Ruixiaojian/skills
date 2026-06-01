@@ -4,8 +4,16 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text", "Audio"],
-        "request_modality": ["Text", "Image", "Video", "Audio"]
+        "response_modality": [
+          "Text",
+          "Audio"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video",
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "千问3-Omni-Flash多模态大模型的实时版，基于Thinker–Talker混合专家（MoE）架构，支持文本、图像、音频、视频的高效理解与语音生成能力，可进行119种语言文本交互和20种语言语音交互，生成类人语音实现跨语言精准沟通。模型具备强大指令跟随与系统提示定制功能，灵活适配对话风格与角色设定，广泛应用于文本创作、语音助手、多媒体分析等场景，提供自然流畅的多模态交互体验。",
@@ -69,7 +77,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Realtime-Omni"],
+      "capabilities": [
+        "Realtime-Omni"
+      ],
       "versionTag": "MAJOR",
       "equivalentSnapshot": "qwen3-omni-flash-realtime-2025-12-01",
       "maxOutputTokens": 16384,
@@ -92,7 +102,9 @@
         {
           "name": "内容输出",
           "key": "modalities",
-          "default": ["text"],
+          "default": [
+            "text"
+          ],
           "tip": "设置模型返回的模态"
         },
         {
@@ -100,7 +112,10 @@
           "key": "top_p",
           "default": 1,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "enable_thinking",

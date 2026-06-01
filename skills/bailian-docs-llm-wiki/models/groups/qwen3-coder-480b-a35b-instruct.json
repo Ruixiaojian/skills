@@ -4,13 +4,19 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "基于Qwen3的代码生成模型，具有强大的Coding Agent能力，代码能力达到开源模型 SOTA。",
       "collectionTag": "qwen3",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen-domain-model",
       "model": "qwen3-coder-480b-a35b-instruct",
       "qpmInfo": {
@@ -109,7 +115,9 @@
           "rangeEnd": 1000000
         }
       ],
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 65536,
       "latestOnlineAt": "2025-07-22T13:29:39.000+00:00",
@@ -129,21 +137,27 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
         "openai": {
           "completionsAPI": {
-            "curl": "curl -X POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions \\\n-H \"Authorization: Bearer $DASHSCOPE_API_KEY\" \\\n-H \"Content-Type: application/json\" \\\n-d '{\n    \"model\": \"qwen3-coder-480b-a35b-instruct\",\n    \"messages\": [\n        {\n            \"role\": \"system\",\n            \"content\": \"You are a helpful assistant.\"\n        },\n        {\n            \"role\": \"user\", \n            \"content\": \"你是谁？\"\n        }\n    ],\n    \"stream\":true\n}'",
             "python": "import os\nfrom openai import OpenAI\n\nclient = OpenAI(\n    # 若没有配置环境变量，请用百炼API Key将下行替换为：api_key=\"sk-xxx\",\n    api_key=os.getenv(\"DASHSCOPE_API_KEY\"),\n    base_url=\"https://dashscope.aliyuncs.com/compatible-mode/v1\",\n)\ncompletion = client.chat.completions.create(\n    model=\"qwen3-coder-480b-a35b-instruct\",\n    messages=[\n        {\"role\": \"system\", \"content\": \"You are a helpful assistant.\"},\n        {\"role\": \"user\", \"content\": \"你是谁？\"},\n    ],\n    stream=True\n)\nfor chunk in completion:\n    print(chunk.choices[0].delta.content, end=\"\", flush=True)",
+            "curl": "curl -X POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions \\\n-H \"Authorization: Bearer $DASHSCOPE_API_KEY\" \\\n-H \"Content-Type: application/json\" \\\n-d '{\n    \"model\": \"qwen3-coder-480b-a35b-instruct\",\n    \"messages\": [\n        {\n            \"role\": \"system\",\n            \"content\": \"You are a helpful assistant.\"\n        },\n        {\n            \"role\": \"user\", \n            \"content\": \"你是谁？\"\n        }\n    ],\n    \"stream\":true\n}'",
             "nodejs": "import OpenAI from \"openai\";\nconst openai = new OpenAI(\n    {\n        // 若没有配置环境变量，请用百炼API Key将下行替换为：apiKey: \"sk-xxx\",\n        apiKey: process.env.DASHSCOPE_API_KEY,\n        baseURL: \"https://dashscope.aliyuncs.com/compatible-mode/v1\"\n    }\n);\nconst completion = await openai.chat.completions.create({\n    model: \"qwen3-coder-480b-a35b-instruct\",\n    messages: [\n        { role: \"system\", content: \"You are a helpful assistant.\" },\n        { role: \"user\", content: \"你是谁？\" }\n    ],\n    stream: true\n});\nfor await (const chunk of completion) {\n    process.stdout.write(chunk.choices[0].delta.content);\n}",
             "docUrl": "https://help.aliyun.com/document_detail/3016807.html"
           }

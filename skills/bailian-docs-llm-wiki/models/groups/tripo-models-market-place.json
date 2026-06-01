@@ -5,7 +5,11 @@
     {
       "openSource": false,
       "description": "Tripo H3.1 是 Tripo 推出的高精度 3D 生成模型，专为需要极致视觉质量与细节表现的创作者设计。模型通过核心算法升级与模块优化，参数规模达 200 亿级，支持十亿体素级三维分辨率与最高 200 万面多边形生成。在保持高精度几何与真实纹理的同时，Tripo H3.1 对输入参考图的还原度与对齐度进一步提升，在角色形体、面部细节与几何文字等复杂结构上实现更稳定、细致的表达，适用于高质量视觉制作与 3D 打印等高精度资产生产场景。",
-      "features": ["function-calling", "batch", "structured-outputs"],
+      "features": [
+        "function-calling",
+        "batch",
+        "structured-outputs"
+      ],
       "provider": "tripo",
       "model": "Tripo/Tripo-H3.1",
       "prices": [
@@ -136,7 +140,9 @@
           "async_user_concurrency_limit": 10
         }
       },
-      "capabilities": ["3D-generation"],
+      "capabilities": [
+        "3D-generation"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-27T04:08:07.000+00:00",
@@ -154,14 +160,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -176,7 +188,11 @@
     {
       "openSource": false,
       "description": "Tripo P1.0 是面向实时应用与生产管线的 3D 生成模型，专为需要干净拓扑和引擎可用网格的开发者与创作者设计。模型可在约 2 秒内生成具备专业级拓扑结构的 3D 资产，适用于游戏、Web3D 与各类实时交互场景。针对 UGC 内容生产中对“速度”和“开箱即用”的需求，Tripo P1.0 在保证质量的同时大幅提升生成效率，使资产能够快速接入实时引擎与开发流程。",
-      "features": ["function-calling", "structured-outputs", "batch"],
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "batch"
+      ],
       "provider": "tripo",
       "model": "Tripo/Tripo-P1.0",
       "prices": [
@@ -253,7 +269,9 @@
           "async_user_concurrency_limit": 10
         }
       },
-      "capabilities": ["3D-generation"],
+      "capabilities": [
+        "3D-generation"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-27T04:07:42.000+00:00",
@@ -271,14 +289,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

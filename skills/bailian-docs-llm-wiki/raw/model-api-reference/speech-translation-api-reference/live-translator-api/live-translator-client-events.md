@@ -180,7 +180,7 @@
 
 **属性**
 
-**corpus.phrases** `_object_` （可选）
+**phrases** `_object_` （可选）
 
 热词映射表。key 为源语言词汇，value 为目标语言对应翻译。
 

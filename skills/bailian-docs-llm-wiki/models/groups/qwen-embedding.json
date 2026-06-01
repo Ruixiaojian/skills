@@ -5,7 +5,9 @@
     {
       "inferenceMetadata": {
         "response_modality": [],
-        "request_modality": ["Text"]
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "是通义实验室基于Qwen3训练的多语言文本统一向量模型，相较V3版本在文本检索、聚类、分类性能大幅提升；在MTEB多语言、中英、Code检索等评测任务上效果提升15%~40%；支持64~2048维用户自定义向量维度。",
@@ -44,7 +46,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TR"],
+      "capabilities": [
+        "TR"
+      ],
       "versionTag": "SNAPSHOT",
       "latestOnlineAt": "2025-06-05T03:07:20.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -61,14 +65,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -84,7 +94,9 @@
     {
       "inferenceMetadata": {
         "response_modality": [],
-        "request_modality": ["Text"]
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "通用文本向量，是通义实验室基于LLM底座的多语言文本统一向量模型，面向全球多个主流语种，提供高水准的向量服务，帮助开发者将文本数据快速转换为高质量的向量数据。",
@@ -128,7 +140,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TR"],
+      "capabilities": [
+        "TR"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-07-12T09:44:51.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -145,14 +159,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -168,7 +188,9 @@
     {
       "inferenceMetadata": {
         "response_modality": [],
-        "request_modality": ["Text"]
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "通用文本向量的批处理接口，通过这个接口客户可以以文本方式一次性的提交大批量的向量计算请求，在系统完成所有的计算之后，大模型服务平台会将结果信息存储在结果文件中供客户下载解析。",
@@ -188,7 +210,9 @@
           "priceName": "文本输入"
         }
       ],
-      "capabilities": ["TR"],
+      "capabilities": [
+        "TR"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-04-09T09:04:41.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -205,14 +229,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -228,7 +258,9 @@
     {
       "inferenceMetadata": {
         "response_modality": [],
-        "request_modality": ["Text"]
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "通用文本向量的批处理接口，通过这个接口客户可以以文本方式一次性的提交大批量的向量计算请求，在系统完成所有的计算之后，大模型服务平台会将结果信息存储在结果文件中供客户下载解析。",
@@ -248,7 +280,9 @@
           "priceName": "文本输入"
         }
       ],
-      "capabilities": ["TR"],
+      "capabilities": [
+        "TR"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-04-09T09:05:28.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -265,14 +299,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -288,7 +328,9 @@
     {
       "inferenceMetadata": {
         "response_modality": [],
-        "request_modality": ["Text"]
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "通用文本向量，是通义实验室基于LLM底座的多语言文本统一向量模型，面向全球多个主流语种，提供高水准的向量服务，帮助开发者将文本数据快速转换为高质量的向量数据。",
@@ -332,7 +374,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TR"],
+      "capabilities": [
+        "TR"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-04-09T09:02:12.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -349,14 +393,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -372,7 +422,9 @@
     {
       "inferenceMetadata": {
         "response_modality": [],
-        "request_modality": ["Text"]
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "通用文本向量，是通义实验室基于LLM底座的多语言文本统一向量模型，面向全球多个主流语种，提供高水准的向量服务，帮助开发者将文本数据快速转换为高质量的向量数据。",
@@ -416,7 +468,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TR"],
+      "capabilities": [
+        "TR"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-04-09T09:03:19.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -433,14 +487,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

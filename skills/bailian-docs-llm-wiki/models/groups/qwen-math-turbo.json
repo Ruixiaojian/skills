@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "千问系列数学模型是专门用于数学解题的语言模型，推理速度快，成本低。",
@@ -13,7 +17,9 @@
         "announceUrl": "https://www.aliyun.com/notice/118177"
       },
       "offlineAt": "2026-07-13T15:59:59.000+00:00",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen-domain-model",
       "model": "qwen-math-turbo",
       "prices": [
@@ -48,7 +54,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "MAJOR",
       "maxOutputTokens": 3072,
       "latestOnlineAt": "2024-09-18T16:00:00.000+00:00",
@@ -63,6 +71,7 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Qwen-Math-Turbo",
       "docUrl": "https://help.aliyun.com/document_detail/2849934.html",
+      "category": "Older",
       "predictConfig": [
         {
           "name": "system",
@@ -74,14 +83,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

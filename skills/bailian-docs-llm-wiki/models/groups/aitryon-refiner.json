@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Image"],
-        "request_modality": ["Image"]
+        "response_modality": [
+          "Image"
+        ],
+        "request_modality": [
+          "Image"
+        ]
       },
       "openSource": false,
       "description": "图片精修是对AI试衣生成的效果图进行二次生成，输出还原度更高的精修试衣效果图。",
@@ -104,7 +108,9 @@
           ]
         }
       ],
-      "capabilities": ["IG"],
+      "capabilities": [
+        "IG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-06-28T11:03:13.000+00:00",
       "inferenceProvider": "aliyun-bailian",

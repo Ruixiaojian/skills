@@ -105,7 +105,7 @@ curl -X POST 'https://dashscope.aliyuncs.com/api/v1/services/embeddings/text-emb
 
 **Authorization** `_string_`**（必选）**
 
-请求身份认证。接口使用阿里云百炼API-Key进行身份认证。示例值：Bearer sk-xxxx。
+请求身份认证。接口使用阿里云百炼API Key进行身份认证。示例值：Bearer sk-xxxx。
 
 **Content-Type** `_string_` **（必选）**
 
@@ -179,7 +179,7 @@ url `_string_` **（必选）**
 
 #### 异常响应
 
-创建任务失败，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+创建任务失败，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
 
 ```
 {
@@ -224,11 +224,11 @@ url `_string_` **（必选）**
 
 **code** `_string_`
 
-请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **message** `_string_`
 
-请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 ### **根据任务ID查询结果**
 
@@ -251,7 +251,7 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/86ecf553-d340-4e21-xxxxx
 
 **Authorization** `_string_`**（必选）**
 
-请求身份认证。接口使用阿里云百炼API-Key进行身份认证。示例值：Bearer sk-xxxx。
+请求身份认证。接口使用阿里云百炼API Key进行身份认证。示例值：Bearer sk-xxxx。
 
 ###### **URL路径参数（Path parameters）**
 
@@ -360,11 +360,11 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/86ecf553-d340-4e21-xxxxx
 
 **code** `_string_`
 
-请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **message** `_string_`
 
-请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **usage** `_object_`
 
@@ -710,7 +710,7 @@ url `_string_` **（必选）**
 
 **status\_code** `string`
 
-请求状态码，表示请求的执行结果（如 200 表示成功）。详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求状态码，表示请求的执行结果（如 200 表示成功）。详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **request\_id** `string`
 
@@ -718,11 +718,11 @@ url `_string_` **（必选）**
 
 **code** `string`
 
-请求失败时表示错误码，成功时返回参数中该参数为空。详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败时表示错误码，成功时返回参数中该参数为空。详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **message** `string`
 
-请求失败，表示失败详细信息，成功时返回参数中该参数为空。详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败，表示失败详细信息，成功时返回参数中该参数为空。详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **output** `_object_`
 
@@ -815,7 +815,7 @@ url `_string_` **（必选）**
 
 ## 错误码
 
-如果模型调用失败并返回报错信息，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+如果模型调用失败并返回报错信息，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
 
 ## 基础限流
 

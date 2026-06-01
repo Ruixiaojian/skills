@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Image"],
-        "request_modality": ["Image"]
+        "response_modality": [
+          "Image"
+        ],
+        "request_modality": [
+          "Image"
+        ]
       },
       "openSource": false,
       "description": "万相-涂鸦作画通过手绘任意内容加文字描述，即可生成精美的涂鸦绘画作品，作品中的内容在参考手绘线条的同时，兼顾创意性和趣味性。涂鸦作画支持扁平插画、油画、二次元、3D卡通和水彩5种风格，可用于创意娱乐、辅助设计、儿童教学等场景。",
@@ -25,7 +29,9 @@
           "priceName": "图片生成"
         }
       ],
-      "capabilities": ["IG"],
+      "capabilities": [
+        "IG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-06-11T11:21:09.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -42,14 +48,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

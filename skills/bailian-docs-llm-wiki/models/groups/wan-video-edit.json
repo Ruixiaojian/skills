@@ -4,13 +4,21 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image", "Text", "Video"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image",
+          "Text",
+          "Video"
+        ]
       },
       "openSource": false,
       "description": "Wan2.7-VideoEdit，自然语言指令编辑视频，支持局部或全局编辑，可参考图像替换视频元素，支持复刻视频动作、特效、运镜等动态过程。",
       "collectionTag": "wan2.7",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "wan",
       "model": "wan2.7-videoedit",
       "prices": [
@@ -43,7 +51,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-03T03:19:53.000+00:00",
@@ -79,7 +89,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         }
       ],
       "samples": {

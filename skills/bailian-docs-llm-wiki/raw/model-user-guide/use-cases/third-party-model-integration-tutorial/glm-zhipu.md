@@ -548,7 +548,7 @@ GLM 系列模型是智谱AI专为智能体设计的混合推理模型，提供�
 
 ## **错误码**
 
-如果执行报错，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+如果执行报错，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
 
 以下为智谱独有的业务错误码。HTTP 错误码与百炼通用错误码一致，请参见上述链接。
 

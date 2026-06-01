@@ -119,7 +119,7 @@ curl --location 'https://dashscope.aliyuncs.com/api/v1/services/aigc/background-
 
 **Authorization** `_string_`**（必选）**
 
-请求身份认证。接口使用阿里云百炼API-Key进行身份认证。示例值：Bearer sk-xxxx。
+请求身份认证。接口使用阿里云百炼API Key进行身份认证。示例值：Bearer sk-xxxx。
 
 **X-DashScope-Async** `_string_` **（必选）**
 
@@ -137,11 +137,11 @@ curl --location 'https://dashscope.aliyuncs.com/api/v1/services/aigc/background-
 
 **详细说明**
 
-此参数根据阿里云百炼API-Key进行填写。
+此参数根据阿里云百炼API Key进行填写。
 
--   若为主账号API-Key，可不填。不填则使用主账号权限，填写则使用对应的业务空间权限。
+-   若为主账号API Key，可不填。不填则使用主账号权限，填写则使用对应的业务空间权限。
     
--   若为RAM子账号API-Key，则必填。RAM子账号一定归属于某个业务空间。
+-   若为RAM子账号API Key，则必填。RAM子账号一定归属于某个业务空间。
     
 
 业务空间必须具备访问模型的权限，才能调用API。若无权限，请参考[授权子业务空间模型调用、训练和部署](https://help.aliyun.com/zh/model-studio/use-workspace#f2e68d7ba7ubk)。
@@ -388,11 +388,11 @@ foreground\_edge图像列表和background\_edge图像列表之和不得超过10�
 
 **code** `_string_`
 
-请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **message** `_string_`
 
-请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 ### **步骤2：根据任务ID查询结果**
 
@@ -413,7 +413,7 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/86ecf553-d340-4e21-xxxxx
 
 **Authorization** `_string_`**（必选）**
 
-请求身份认证。接口使用阿里云百炼API-Key进行身份认证。示例值：Bearer sk-xxxx。
+请求身份认证。接口使用阿里云百炼API Key进行身份认证。示例值：Bearer sk-xxxx。
 
 #### **URL路径参数（Path parameters）**
 
@@ -625,7 +625,7 @@ def make_elements(name):
 
 ## 错误码
 
-大模型服务通用状态码请查阅：[错误信息](https://help.aliyun.com/zh/model-studio/error-code)
+大模型服务通用状态码请查阅：[错误码](https://help.aliyun.com/zh/model-studio/error-code)
 
 同时本模型还有如下特定错误码：
 

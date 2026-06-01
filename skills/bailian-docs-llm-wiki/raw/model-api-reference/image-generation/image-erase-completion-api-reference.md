@@ -400,7 +400,7 @@ API-Key，例如：Bearer d1\*\*2a。
 
 ## 状态码说明
 
-DashScope阿里云百炼模型服务通用状态码请查阅：[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+DashScope阿里云百炼模型服务通用状态码请查阅：[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 此API还有特定状态码，具体如下所示：
 

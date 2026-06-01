@@ -2,7 +2,7 @@
 
 本文介绍Paraformer实时语音识别Java SDK的参数和接口细节。
 
-**用户指南：**关于模型介绍和选型建议请参见[实时语音识别-Fun-ASR/Gummy/Paraformer](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition)。
+**用户指南：**关于模型介绍和选型建议请参见[实时语音识别-Fun-ASR/Paraformer](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition)。
 
 **在线体验**：仅paraformer-realtime-v2、paraformer-realtime-8k-v2和paraformer-realtime-v1支持[在线体验](https://bailian.console.aliyun.com/?tab=model#/efm/model_experience_center/voice)。
 
@@ -137,7 +137,7 @@
 
 提交单个语音实时转写任务，通过传入本地文件的方式同步阻塞地拿到转写结果。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/1013285771/CAEQURiBgMDS0c2RpxkiIDNmYjBlMTE3ODQxYTQ3Nzk4MGMxNTc5MjY3OWVjZjlj4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3824789771/CAEQURiBgMDS0c2RpxkiIDNmYjBlMTE3ODQxYTQ3Nzk4MGMxNTc5MjY3OWVjZjlj4709861_20241015153444.149.svg)
 
 实例化[Recognition类](#adcb5e9bddbyq)，调用`call`方法绑定[请求参数](#d72d661a1brzp)和待识别文件，进行识别并最终获取识别结果。
 
@@ -191,7 +191,7 @@ public class Main {
 
 提交单个语音实时转写任务，通过实现回调接口的方式流式输出实时识别结果。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/1013285771/CAEQURiBgID1ooWUpxkiIDcyOTEyYjZiZmUxNzRkZjVhMTNhYmNkYjI2NzYzYTMy4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/4824789771/CAEQURiBgID1ooWUpxkiIDcyOTEyYjZiZmUxNzRkZjVhMTNhYmNkYjI2NzYzYTMy4709861_20241015153444.149.svg)
 
 1.  启动流式语音识别
     
@@ -1401,7 +1401,7 @@ public String getPunctuation()
 
 ## **错误码**
 
-如遇报错问题，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行排查。
+如遇报错问题，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行排查。
 
 若问题仍未解决，请加入[开发者群](https://github.com/aliyun/alibabacloud-bailian-speech-demo)反馈遇到的问题，并提供Request ID，以便进一步排查问题。
 

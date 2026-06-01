@@ -5406,7 +5406,7 @@ func main() {
 
 ## **错误码**
 
-如果调用失败并返回报错信息，请参阅[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+如果调用失败并返回报错信息，请参阅[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
 
 ## **计费说明**
 

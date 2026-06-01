@@ -1,32 +1,119 @@
 # image generation
 
-百炼平台提供覆盖文生图、图生图、图像编辑及垂直场景的完整生成能力，支持通过 HTTP 接口或 DashScope SDK 快速集成。平台整合了千问、万相、可灵等多系列模型，满足从基础高清出图、复杂文本渲染到交互式编辑与分镜生成的高阶需求。开发者可根据业务对延迟、画质与成本的要求，灵活选择同步或异步调用模式。
+百炼平台提供多种图像生成与编辑模型，覆盖文生图、图像编辑、风格迁移、背景生成等场景。主要模型系列包括千问-文生图（Qwen-Image）、万相（Wan/Wanx）、Z-Image 和可灵（Kling），各模型在分辨率、响应速度、功能侧重上有所差异，开发者可根据需求选择合适的模型。
 
-## 支持的模型与核心功能
-* **通用文生图**：`qwen-image-2.0` 系列擅长多语言复杂文本渲染与细节刻画；`wan2.6-t2i` / `wan2.7-image` 系列支持高分辨率（最高4K）与图文混排；`z-image-turbo` 为轻量极速模型；`kling/kling-v3` 系列支持角色/场景连续性的分镜组图生成。详见 [千问-文生图API参考](../../raw/model-api-reference/image-generation/qwen-image-api.md)。
-* **图像编辑与处理**：涵盖指令编辑、局部重绘、背景替换、智能扩图与擦除补全。`wan2.7-image` 与 [[qwen-image-edit]] 支持交互式框选编辑与多图融合；`image-out-painting` 专注多比例画面扩展。
-* **垂直场景与专项模型**：提供 [[aitryon]]（AI试衣与分割精修）、虚拟模特、[[facechain]]（人物写真训练与生成）、创意海报、创意文字（[[wordart]]）及鞋靴试穿等开箱即用方案。图像翻译可通过 [[qwen-mt-image]] 实现带排版保留的跨语种转换。
+## 支持的模型与功能
 
-> **注意**：平台部分早期模型（如 `wanx-v1`、`wanx-sketch-to-image-lite`、`wanx-x-painting`、`wanx-poster-generation-v1`、`wanx-virtualmodel` 等）目前仅支持免费体验，免费额度耗尽后将停止服务且不支持付费转商用。生产环境请优先迁移至万相 2.5+ 或千问系列。详见 [万相-文生图V1版API参考](../../raw/model-api-reference/image-generation/text-to-image-api-reference.md)。
+### 文生图模型
 
-## 关键参数
-不同模型协议存在差异，核心参数映射如下：
-* **输入结构**：新协议统一使用 `input.messages` 数组格式（如 `[{"role": "user", "content": [{"text": "[[prompt|prompt]]"}, {"image": "url"}]}]`）；旧版协议使用 `input: { [[prompt|prompt]]: "...", images: [...] }`。
-* **尺寸控制 (`size` / `resolution`)**：支持格式通常为 `"宽*高"`（如 `"1280*1280"`）或预设档位（`"1K"`, `"2K"`, `"4K"`）。总像素上限因模型而异（常见为 2048×2048 或 4K），宽高比通常需在 `[1:10, 10:1]` 范围内。未指定时默认保持输入图比例或生成 `1024*1024`/`1280*1280`。
-* **生成策略**：`n` 控制输出张数（通常 1~6）；`watermark` 默认 `true`，需显式传 `false` 关闭水印；`negative_[[prompt|prompt]]` 用于屏蔽不期望元素；`prompt_extend` 或 `thinking_mode` 可启用提示词智能优化或深度推理，但会增加首字延迟。
-* **参考控制**：`ref_image` 配合 `ref_strength` / `ref_mode` 实现内容或风格迁移；`enable_interleave` 开启后可输出图文混排内容。
+| 模型系列 | 推荐模型 | 特点 | 最大分辨率 |
+|---------|---------|------|-----------|
+| 千问-文生图 | qwen-image-2.0-pro | 复杂文本渲染、真实质感、语义遵循 | 2048×2048 |
+| 万相2.7 | wan2.7-image-pro | 文生图支持4K输出，支持组图和编辑 | 4K |
+| 万相文生图V2 | wan2.6-t2i | 多种艺术风格与写实摄影 | 1440×1440 |
+| Z-Image | z-image-turbo | 轻量快速，支持中英文字渲染 | 2048×2048 |
+| 可灵 | kling/kling-v3-omni-image-generation | 文生图、参考图生图、组图生成 | 4K |
+
+详见 [千问-文生图API参考](../../raw/model-api-reference/image-generation/qwen-image-api.md) 和 [万相-文生图V2版API参考](../../raw/model-api-reference/image-generation/text-to-image-v2-api-reference.md)。
+
+### 图像编辑模型
+
+| 模型 | 功能 |
+|------|------|
+| qwen-image-2.0-pro | 多图输入/输出、文字修改、物体增删、风格迁移 |
+| wan2.7-image-pro | 图像编辑、交互式编辑、组图生成 |
+| wan2.6-image | 图像编辑、图文混排输出 |
+| wan2.5-i2i-preview | 单图编辑、多图融合 |
+| wanx2.1-imageedit | 风格化、局部重绘、扩图、超分、上色等 |
+
+### 专用模型
+
+- **图像翻译**：qwen-mt-image（保留排版的多语种翻译）
+- **人像风格重绘**：wanx-style-repaint-v1
+- **涂鸦作画**：wanx-sketch-to-image-lite
+- **背景生成**：wanx-background-generation-v2
+- **AI试衣**：aitryon / aitryon-plus
+- **创意文字**：WordArt 锦书
+- **虚拟模特**：virtualmodel-v2
+
+> **注意**：wanx-x-painting（图像局部重绘）、wanx-virtualmodel、shoemodel-v1、wanx-poster-generation-v1 等模型当前仅提供免费体验，免费额度用尽后不可调用且不支持付费。推荐使用千问图像编辑或万相2.1作为替代方案。
 
 ## 调用方式
-* **同步调用（Sync）**：推荐用于 `qwen-image`、`z-image`、`wan2.6+` 等新一代模型。Endpoint 为 `/api/v1/services/aigc/multimodal-generation/generation`。单次 POST 请求即可直接返回图像 URL 或 Base64，链路最短。
-* **异步调用（Async）**：适用于 `wanx` 早期版本、大部分编辑类与翻译类模型。请求 Header 必须携带 `X-DashScope-Async: enable`。流程分为两步：1. POST 创建任务获取 `task_id`；2. GET `/v1/tasks/{task_id}` 轮询状态，直至 `SUCCEEDED`。[[async-polling]] 机制下 `task_id` 有效期为 24 小时。
-* **SDK 支持**：Python 与 Java DashScope SDK 已全面适配新版协议。安装后可通过 `Generation` 或 `AsyncCall` 客户端封装鉴权与轮询逻辑。
 
-## 限制与注意事项
-* **地域与鉴权隔离**：[[api-key]]、计费额度与服务 Endpoint 严格绑定部署地域（如北京、新加坡、弗吉尼亚）。跨地域混用 Key 或地址将直接导致 `InvalidApiKey` 或 `AccessDenied` 报错。
-* **图像输入规范**：公网 URL 必须支持 HTTP/HTTPS 且不可包含中文字符；格式通常为 JPG/PNG/WEBP；文件大小一般限制在 10MB 以内；分辨率单边需在 512~4096 像素之间。下载失败通常由防火墙拦截、防盗链或 URL 编码问题引起。
-* **计费与限流**：仅对成功生成的**输出图片**计费（按张）。主账号与 RAM 子账号共享免费额度（默认 500 张，90 天有效）与限流阈值（多数模型 QPS 为 2，并发任务 1~2 个）。超限将触发排队或 `RateLimit` 错误。
-* **协议演进**：平台正逐步收敛至多模态统一路由。新业务开发请勿使用已废弃的独立路由（如 `/text2image/image-synthesis`、`/image2image/image-synthesis`），以免影响后续功能迭代。详见 [可灵-图像生成API参考](../../raw/model-api-reference/image-generation/kling-image-generation-api-reference.md) 中的服务开通说明。
-* **内容安全**：所有请求均经过前置合规检测。触发安全策略的提示词或参考图将直接拦截，请确保输入内容符合合规要求。
+### 同步调用
+
+较新的模型（qwen-image-2.0 系列、wan2.6-t2i、wan2.7-image、z-image-turbo）支持同步接口，一次请求直接返回结果：
+
+```bash
+curl --location 'https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation' \
+--header 'Content-Type: application/json' \
+--header "Authorization: Bearer $DASHSCOPE_API_KEY" \
+--data '{
+    "model": "qwen-image-2.0-pro",
+    "input": {
+        "messages": [{"role": "user", "content": [{"text": "提示词"}]}]
+    },
+    "parameters": {"size": "1024*1024", "n": 1}
+}'
+```
+
+### 异步调用
+
+旧版模型及耗时较长的任务（万相V1、图像编辑、背景生成等）采用异步模式，分两步完成：
+
+1. **创建任务**：发送请求，Headers 中必须包含 `X-DashScope-Async: enable`，返回 `task_id`
+2. **轮询结果**：`GET https://dashscope.aliyuncs.com/api/v1/tasks/{task_id}`
+
+> **注意**：缺少 `X-DashScope-Async: enable` 请求头将报错 "current user api does not [support](../guides/support.md) synchronous calls"。task_id 有效期为 24 小时，请勿重复创建任务。
+
+### 地域与请求地址
+
+| 地域 | 请求地址 |
+|------|---------|
+| 北京 | `https://dashscope.aliyuncs.com/api/v1/services/aigc/...` |
+| 新加坡 | `https://dashscope-intl.aliyuncs.com/api/v1/services/aigc/...` |
+| 弗吉尼亚 | `https://dashscope-us.aliyuncs.com/api/v1/services/aigc/...` |
+
+> **注意**：各地域 API Key 与请求地址独立，不可混用，跨地域调用将导致鉴权失败。不同文档中对弗吉尼亚地域的支持范围说明不一致——wan2.6-t2i 支持弗吉尼亚，但部分万相2.6 image 编辑功能在该地域仅支持异步调用。请以控制台模型列表为准。
+
+## 关键参数
+
+| 参数 | 说明 | 适用模型 |
+|------|------|---------|
+| `size` | 输出图像尺寸，格式为 `宽*高`（像素）或预设值如 `1K`/`2K`/`4K` | 大部分模型 |
+| `n` | 生成图像张数 | 大部分模型 |
+| `prompt_extend` | 智能思考/提示词优化，开启后返回优化后的提示词 | qwen-image、wan2.6-t2i、z-image-turbo |
+| `negative_prompt` | 反向提示词，描述不希望出现的元素 | 万相V1/V2 |
+| `watermark` | 是否添加水印 | wan2.6/2.7 |
+| `thinking_mode` | 开启思考模式 | wan2.7-image |
+| `style` | 图像风格选择 | wanx-v1 |
+| `seed` | 随机种子，用于复现结果 | 部分模型 |
+
+分辨率约束因模型而异，详见 [万相-图像生成与编辑2.7 API参考](../../raw/model-api-reference/image-generation/wan-image-generation-and-editing-api-reference.md)。
+
+## 输入图像要求
+
+- **格式**：通常支持 JPG、JPEG、PNG、BMP、WEBP
+- **传入方式**：公网可访问的 HTTP/HTTPS URL（URL 中不能包含中文字符），部分模型支持 Base64
+- **尺寸限制**：因模型不同有差异，一般要求分辨率不低于 512×512，不超过 4096×4096
+- **大小限制**：通常不超过 10MB
+- **本地文件**：可通过百炼平台"上传文件获取临时URL"接口获取公网地址
+
+## 前提条件
+
+1. [获取 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)
+2. [配置 API Key 到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)
+3. 如使用 SDK，需 [安装 DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk)（支持 Python 和 Java）
+
+## 限制和注意事项
+
+- **图像 URL 有效期**：异步任务成功后返回的图像 URL 有效期为 24 小时，需及时下载保存。
+- **限流**：主账号与 RAM 子账号共享限流配额，典型限制为 QPS 2、并发任务数 1-5（具体因模型而异）。
+- **免费额度**：开通百炼服务后自动发放 500 张，有效期 90 天，主账号与 RAM 子账号共享。
+- **计费**：仅对模型成功生成的输出图片计费，输入图片和失败任务不计费。
+- **万相V1版**（wanx-v1）为旧版模型，推荐迁移至万相V2或千问-文生图系列。
+- **图像翻译**（qwen-mt-image）仅支持北京地域，且不支持两个非中英语种之间的直接翻译。
+- **图文混排输出**（wan2.6-image 的 `enable_interleave=true`）仅支持[流式输出](../concepts/streaming.md)，需同时设置 `X-DashScope-Sse: enable` 和 `parameters.stream: true`。
 
 ## 来源文档
 
@@ -37,22 +124,22 @@
 - [万相-文生图V1版API参考](../../raw/model-api-reference/image-generation/text-to-image-api-reference.md)
 - [万相-文生图V2版API参考](../../raw/model-api-reference/image-generation/text-to-image-v2-api-reference.md)
 - [万相-图像生成与编辑2.7 API参考](../../raw/model-api-reference/image-generation/wan-image-generation-and-editing-api-reference.md)
-- [万相-通用图像编辑2.5](../../raw/model-api-reference/image-generation/wan2-5-image-edit-api-reference.md)
 - [万相-图像生成与编辑2.6 API参考](../../raw/model-api-reference/image-generation/wan-image-generation-api-reference.md)
+- [万相-通用图像编辑2.5](../../raw/model-api-reference/image-generation/wan2-5-image-edit-api-reference.md)
 - [万相-涂鸦作画API参考](../../raw/model-api-reference/image-generation/wanx-sketch-to-image-api-reference.md)
 - [万相-通用图像编辑API参考](../../raw/model-api-reference/image-generation/wanx-image-edit-api-reference.md)
-- [图像画面扩展API参考](../../raw/model-api-reference/image-generation/image-scaling-api.md)
-- [万相-图像局部重绘API参考](../../raw/model-api-reference/image-generation/vary-region-api-reference.md)
 - [人像风格重绘API参考](../../raw/model-api-reference/image-generation/portrait-style-redraw-api-reference.md)
+- [万相-图像局部重绘API参考](../../raw/model-api-reference/image-generation/vary-region-api-reference.md)
+- [图像画面扩展API参考](../../raw/model-api-reference/image-generation/image-scaling-api.md)
 - [虚拟模特API参考](../../raw/model-api-reference/image-generation/virtual-model-api-details.md)
 - [鞋靴模特API参考](../../raw/model-api-reference/image-generation/shoe-model-api.md)
-- [人物实例分割API参考](../../raw/model-api-reference/image-generation/image-instance-segmentation-api-reference.md)
 - [创意海报生成API参考](../../raw/model-api-reference/image-generation/creative-poster-generation-api.md)
+- [人物实例分割API参考](../../raw/model-api-reference/image-generation/image-instance-segmentation-api-reference.md)
 - [图像背景生成API参考](../../raw/model-api-reference/image-generation/wanx-background-generation-api-reference.md)
-- [图像擦除补全API参考](../../raw/model-api-reference/image-generation/image-erase-completion-api-reference.md)
 - [AI试衣OutfitAnyone](../../raw/model-api-reference/image-generation/outfitanyone.md)
+- [图像擦除补全API参考](../../raw/model-api-reference/image-generation/image-erase-completion-api-reference.md)
 - [人物写真生成FaceChain](../../raw/model-api-reference/image-generation/facechain-portrait-generation.md)
 - [创意文字WordArt锦书](../../raw/model-api-reference/image-generation/wordart-quick-start.md)
-- [可灵-图像生成API参考](../../raw/model-api-reference/image-generation/kling-image-generation-api-reference.md)
 - [常见问题](../../raw/model-api-reference/image-generation/image-faq.md)
+- [可灵-图像生成API参考](../../raw/model-api-reference/image-generation/kling-image-generation-api-reference.md)
 

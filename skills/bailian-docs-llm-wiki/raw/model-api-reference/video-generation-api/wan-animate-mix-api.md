@@ -81,7 +81,7 @@ curl --location 'https://dashscope.aliyuncs.com/api/v1/services/aigc/image2video
 
 **Authorization** `_string_`**（必选）**
 
-请求身份认证。接口使用阿里云百炼API-Key进行身份认证。示例值：Bearer sk-xxxx。
+请求身份认证。接口使用阿里云百炼API Key进行身份认证。示例值：Bearer sk-xxxx。
 
 **X-DashScope-Async** `_string_` **（必选）**
 
@@ -188,7 +188,7 @@ curl --location 'https://dashscope.aliyuncs.com/api/v1/services/aigc/image2video
 
 ### 异常响应
 
-创建任务失败，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+创建任务失败，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
 
 ```
 {
@@ -233,11 +233,11 @@ curl --location 'https://dashscope.aliyuncs.com/api/v1/services/aigc/image2video
 
 **message** `_string_`
 
-请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **code** `_string_`
 
-请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 ### 步骤2：根据任务ID查询结果
 
@@ -281,7 +281,7 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/0385dc79-5ff8-4d82-bcb6-
 
 **Authorization** `_string_`**（必选）**
 
-请求身份认证。接口使用阿里云百炼API-Key进行身份认证。示例值：Bearer sk-xxxx。
+请求身份认证。接口使用阿里云百炼API Key进行身份认证。示例值：Bearer sk-xxxx。
 
 ##### **URL路径参数（Path parameters）**
 
@@ -317,7 +317,7 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/0385dc79-5ff8-4d82-bcb6-
 
 ## 任务执行失败
 
-若任务执行失败，task\_status将置为 FAILED，并提供错误码和信息。请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+若任务执行失败，task\_status将置为 FAILED，并提供错误码和信息。请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
 
 ```
 {
@@ -384,11 +384,11 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/0385dc79-5ff8-4d82-bcb6-
 
 **code** `_string_`
 
-请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **message** `_string_`
 
-请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **usage** `_object_`
 
@@ -412,7 +412,7 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/0385dc79-5ff8-4d82-bcb6-
 
 **数据时效**：任务task\_id和视频URL均只保留 24 小时，过期后将无法查询或下载，请及时[下载视频到本地](#866ccf3fa3y1p)。
 
-**内容审核**：输入与输出内容均会经过内容安全审核，包含违规内容的请求将报错“IPInfringementSuspect”或“DataInspectionFailed”，具体参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+**内容审核**：输入与输出内容均会经过内容安全审核，包含违规内容的请求将报错“IPInfringementSuspect”或“DataInspectionFailed”，具体参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 ## **计费与限流**
 
@@ -429,7 +429,7 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/0385dc79-5ff8-4d82-bcb6-
 
 ## **错误码**
 
-如果调用失败，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+如果调用失败，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 ## **常见问题**
 

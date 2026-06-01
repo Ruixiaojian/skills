@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "Qwen3系列Turbo模型，实现思考模式和非思考模式的有效融合，可在对话中切换模式。推理能力以更小参数规模比肩QwQ-32B、通用能力显著超过Qwen2.5-Turbo，达到同规模业界SOTA水平。",
@@ -14,7 +18,11 @@
       },
       "offlineAt": "2026-07-13T15:59:59.000+00:00",
       "collectionTag": "qwen3",
-      "features": ["model-experience", "cache", "structured-outputs"],
+      "features": [
+        "model-experience",
+        "cache",
+        "structured-outputs"
+      ],
       "provider": "qwen",
       "model": "qwen-turbo",
       "prices": [
@@ -103,7 +111,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "versionTag": "MAJOR",
       "maxOutputTokens": 16384,
       "latestOnlineAt": "2025-06-23T16:00:00.000+00:00",
@@ -118,6 +129,7 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Qwen-Turbo",
       "docUrl": "https://help.aliyun.com/document_detail/2712576.html",
+      "category": "Older",
       "predictConfig": [
         {
           "name": "system",
@@ -129,7 +141,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -141,7 +156,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -159,7 +177,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         },
         {
           "name": "result_format",

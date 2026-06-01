@@ -500,6 +500,249 @@ tool\_return
 
 会携带工具返回信息， `step` 开始变成其他状态，事件发生时 `step` 仍为 `tool_calling_{工具名称}`。
 
+## Agent tool call message和工具名映射
+
+当有工具调用时，在消息中的\["extra"\]\["step"\]字段中，会显示“tool\_calling\_xx”，显示正在调用的工具是什么。具体消息中的工具调用消息和实际的工具名的映射关系如下表所示。
+
+### **文本问答**
+
+**工具调用的 step 消息**
+
+**工具名**
+
+tool\_calling\_search
+
+联网搜索
+
+tool\_calling\_visit
+
+网页阅读
+
+tool\_calling\_video\_search
+
+视频搜索
+
+tool\_calling\_lemma\_search
+
+百度词条
+
+tool\_calling\_query\_suggesting
+
+追问
+
+### **多模态问答**
+
+相比于文本问答，新增了 2 个工具图搜图，文搜图。
+
+**工具调用的 step 消息**
+
+**工具名**
+
+tool\_calling\_image\_search
+
+文搜图
+
+tool\_calling\_image\_to\_image\_search
+
+图搜图
+
+## 图文并茂消息协议
+
+在开启图文并茂后，模型输出的消息中，会穿插图片，图片在消息正文中的为 html 标准图片格式，示例如下：
+
+```
+<img src=\"xxx\" data-type=\"image\" data-url=\"xxx\" data-title=\"台风后的杭州:蓝天白云如漫画般清新️\" alt=\"杭州 晴天 蓝天\" width=\"1080\" height=\"1410\">
+```
+
+标签中：
+
+-   data-type：数据类型，image 为图片数据
+    
+-   src ：图片的 url 地址
+    
+-   data-url ：图片的来源网址
+    
+-   data-tile ：图片标题
+    
+-   width/height ：图片的尺寸宽和高
+    
+
+在包含图片的模型消息中，additional\_kwargs 字段中包含了如下两个字段：
+
+-   data\_type，如果为图文并茂的图片消息，则值为 image
+    
+-   data\_json，包含当前内容相关的所有图片，正文中只显示一张。这里是所有相关图片的集合，数据类型为 json。
+    
+    -   在 data\_json 中，每张图片的消息体如下所示：
+        
+        -   idx：图片编号 id
+            
+        -   url：图片来源网址
+            
+        -   title：图片标题
+            
+        -   published：网址发布日期
+            
+        -   image\_info\["url"\]：图片网址
+            
+        -   image\_info\["width"\]：图片宽
+            
+        -   image\_info\["height"\]：图片高
+            
+
+```
+{"idx": 15, "query": "杭州 晴天 蓝天", "url": "xxx", "title": "xx", "published": "2024-11-04 03:04:04", "image_info": {"url": "xxx", "width": 1080, "height": 1410}}
+```
+
+以下展示了图文并茂消息完整的 3 个消息包示例：
+
+```
+data: {
+    "status_code": 200,
+    "code": "",
+    "message": "",
+    "output": {
+        "choices": [
+            {
+                "finish_reason": "",
+                "message": {
+                    "content": "游玩。\n\n",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "ai",
+                    "name": null,
+                    "id": "run--019e63e4-e728-7421-b3e5-57b408d6d4b0",
+                    "example": false,
+                    "tool_calls": [],
+                    "invalid_tool_calls": [],
+                    "usage_metadata": null,
+                    "tool_call_chunks": [],
+                    "reasoning_content": "",
+                    "role": "assistant",
+                    "extra": {
+                        "group": "generating",
+                        "step_change": "",
+                        "step": "generating"
+                    }
+                }
+            }
+        ]
+    },
+    "usage": null,
+    "request_id": "chenwen-test-web-search-01"
+}
+
+data: {
+    "status_code": 200,
+    "code": "",
+    "message": "",
+    "output": {
+        "choices": [
+            {
+                "finish_reason": "",
+                "message": {
+                    "content": "<img src=\"http://miaobi-lite.bj.bcebos.com/miaobi/5mao/b%275Y%2Bw6aOO6L%2BH5ZCO55qE5Zu%2B54mHXzE3MzA2NTY4MTMuMTQ0MDA1NQ%3D%3D%27/0.png\" data-type=\"image\" data-url=\"http://mbd.baidu.com/newspage/data/dtlandingsuper?nid=dt_4158884509151638702\" data-title=\"台风后的杭州:蓝天白云如漫画般清新\" alt=\"杭州 晴天 蓝天\" width=\"1080\" height=\"1410\">\n\n\n",
+                    "additional_kwargs": {
+                        "data_type": "image",
+                        "data_json": [
+                            {
+                                "idx": 15,
+                                "query": "杭州 晴天 蓝天",
+                                "url": "http://mbd.baidu.com/newspage/data/dtlandingsuper?nid=dt_4158884509151638702",
+                                "title": "台风后的杭州:蓝天白云如漫画般清新",
+                                "published": "2024-11-04 03:04:04",
+                                "image_info": {
+                                    "url": "http://miaobi-lite.bj.bcebos.com/miaobi/5mao/b%275Y%2Bw6aOO6L%2BH5ZCO55qE5Zu%2B54mHXzE3MzA2NTY4MTMuMTQ0MDA1NQ%3D%3D%27/0.png",
+                                    "width": 1080,
+                                    "height": 1410
+                                }
+                            },
+                            {
+                                "idx": 16,
+                                "query": "杭州 晴天 蓝天",
+                                "url": "http://m.dianping.com/ugcdetail/175828244?sceneType=0&bizType=29&msource=baiduappugc",
+                                "title": "杭州的天空也太美了吧!",
+                                "published": "2023-07-26 00:00:00",
+                                "image_info": {
+                                    "url": "http://qcloud.dpfile.com/pc/VWohABccM5j2sRMTT4YdH7qapT46U8bLlM3Wp-xKeMm3OVoihIkmurvV3052Y9Xt.jpg",
+                                    "width": 2048,
+                                    "height": 2731
+                                }
+                            },
+                            {
+                                "idx": 17,
+                                "query": "杭州 晴天 蓝天",
+                                "url": "http://m.dianping.com/ugcdetail/175964222?sceneType=0&bizType=29&msource=baiduappugc",
+                                "title": "杭州蓝天白云很美,只是每次去人都要晒黑两",
+                                "published": "2023-07-27 00:00:00",
+                                "image_info": {
+                                    "url": "http://qcloud.dpfile.com/pc/6ScKLghe1ZcE15OpzbomPigY1VkO6o_UTx9z6UB_BoNtf5OGAsnbF-AFIAJjozRl.jpg",
+                                    "width": 2048,
+                                    "height": 2731
+                                }
+                            }
+                        ]
+                    },
+                    "response_metadata": {},
+                    "type": "ai",
+                    "name": null,
+                    "id": "run--019e63e4-e728-7421-b3e5-57b408d6d4b0",
+                    "example": false,
+                    "tool_calls": [],
+                    "invalid_tool_calls": [],
+                    "usage_metadata": null,
+                    "tool_call_chunks": [],
+                    "reasoning_content": "",
+                    "role": "assistant",
+                    "extra": {
+                        "group": "generating",
+                        "step_change": "",
+                        "step": "generating"
+                    }
+                }
+            }
+        ]
+    },
+    "usage": null,
+    "request_id": "chenwen-test-web-search-01"
+}
+
+data: {
+    "status_code": 200,
+    "code": "",
+    "message": "",
+    "output": {
+        "choices": [
+            {
+                "finish_reason": "",
+                "message": {
+                    "content": "**总结**：",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "ai",
+                    "name": null,
+                    "id": "run--019e63e4-e728-7421-b3e5-57b408d6d4b0",
+                    "example": false,
+                    "tool_calls": [],
+                    "invalid_tool_calls": [],
+                    "usage_metadata": null,
+                    "tool_call_chunks": [],
+                    "reasoning_content": "",
+                    "role": "assistant",
+                    "extra": {
+                        "group": "generating",
+                        "step_change": "",
+                        "step": "generating"
+                    }
+                }
+            }
+        ]
+    },
+    "usage": null,
+    "request_id": "chenwen-test-web-search-01"
+}
+```
+
 ## **多模态图像理解问答**
 
 联网搜索 Agent 多模态接口支持通过图片 + 文本的方式进行对话。用户可以上传图片 URL，并附加文本问题，Agent 将理解图片内容调用工具并给出回答。

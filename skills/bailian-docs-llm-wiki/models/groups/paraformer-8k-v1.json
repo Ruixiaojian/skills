@@ -4,12 +4,18 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Audio"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "Paraformer语音识别提供的文件转写API，能够对常见的音频或音视频文件进行语音识别，并将结果返回给调用者。Paraformer中文语音识别模型，支持8kHz电话语音识别。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen",
       "model": "paraformer-8k-v1",
       "resourcePackages": [
@@ -25,7 +31,9 @@
           "priceName": "音频时长"
         }
       ],
-      "capabilities": ["ASR"],
+      "capabilities": [
+        "ASR"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-04-09T09:17:24.000+00:00",
       "inferenceProvider": "aliyun-bailian",

@@ -4,12 +4,23 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text", "Audio"],
-        "request_modality": ["Text", "Image", "Video", "Audio"]
+        "response_modality": [
+          "Text",
+          "Audio"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video",
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "千问全新多模态理解生成大模型，支持文本, 图像，语音，视频输入理解和混合输入理解，具备文本和语音同时流式生成能力，多模态内容理解速度显著提升，提供了4种自然对话音色。",
-      "features": ["model-experience", "batch"],
+      "features": [
+        "model-experience",
+        "batch"
+      ],
       "provider": "qwen",
       "model": "qwen-omni-turbo",
       "prices": [
@@ -122,7 +133,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Multimodal-Omni"],
+      "capabilities": [
+        "Multimodal-Omni"
+      ],
       "versionTag": "MAJOR",
       "maxOutputTokens": 2048,
       "latestOnlineAt": "2025-02-14T14:56:44.000+00:00",
@@ -142,14 +155,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -165,12 +184,22 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text", "Audio"],
-        "request_modality": ["Text", "Image", "Video", "Audio"]
+        "response_modality": [
+          "Text",
+          "Audio"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video",
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "千问全新多模态理解生成大模型，支持文本, 图像，语音，视频输入理解和混合输入理解，具备文本和语音同时流式生成能力，多模态内容理解速度显著提升，提供了4种自然对话音色，此版本为动态更新版本。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen",
       "model": "qwen-omni-turbo-latest",
       "prices": [
@@ -229,7 +258,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Multimodal-Omni"],
+      "capabilities": [
+        "Multimodal-Omni"
+      ],
       "versionTag": "LATEST",
       "maxOutputTokens": 2048,
       "latestOnlineAt": "2025-02-14T14:55:08.000+00:00",
@@ -249,14 +280,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

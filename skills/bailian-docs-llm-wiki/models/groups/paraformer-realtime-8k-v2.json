@@ -4,12 +4,18 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Audio"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "推荐使用 Paraformer最新实时语音识别模型，支持多个语种自由切换的视频直播、会议等实时场景的语音识别。可以通过language_hints参数选择语种获得更准确的识别效果。支持8kHz电话客服等场景下的实时语音识别。\n支持的语言包括：中文（含粤语等各种方言）、英文、日语、韩语。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen",
       "model": "paraformer-realtime-8k-v2",
       "prices": [
@@ -20,7 +26,9 @@
           "priceName": "音频时长"
         }
       ],
-      "capabilities": ["Realtime-ASR"],
+      "capabilities": [
+        "Realtime-ASR"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-12-31T08:01:43.000+00:00",
       "inferenceProvider": "aliyun-bailian",

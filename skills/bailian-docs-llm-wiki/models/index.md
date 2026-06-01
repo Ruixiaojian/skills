@@ -1,17 +1,17 @@
 # 百炼模型市场索引
 
-> 自动生成 · 共 160 个模型家族 · 355 个主干模型 · 更新于 2026-05-27
+> 自动生成 · 共 161 个模型家族 · 357 个主干模型 · 更新于 2026-06-01
 
 **机器查询走结构化文件**：
 
-- `index.json` — 全局摘要（统计 + 能力/厂商分布 + 轻量家族列表），适合 dashboard 或 LLM 快速定位
+- `index.json` — 全局摘要（统计 + 能力/厂商分布 + 轻量家族列表）
 - `families.jsonl` — 每行一个家族（含轻量 `items[]` 摘要），适合按家族筛选
 - `models.jsonl` — 每行一个主干模型（含价格/QPM/features），适合跨家族批量查询
 - `groups/<slug>.json` — 单家族完整明细（含调用代码、入参 schema）
 
 join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].slug`。
 
-## 文本生成 `TG` — 30 个家族
+## 文本生成 `TG` — 32 个家族
 
 - [通义法睿-Plus-32K](groups/farui-plus.json) — 通义法睿是以通义千问为基座经法律行业数据和知识专门训练的法律行业大模型产品，综合运用了模型精调、强化学习、 RAG检索增强、法律Agent技术，具有回答法律问题、推理法律适用、推荐裁判类案、辅助案情分…
   - 模型：`farui-plus`
@@ -73,6 +73,10 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen3.5-plus`
 - [SiliconFlow DeepSeek](groups/siliconflow-models.json) — 由硅基流动提供的DeepSeek系列模型API服务。
   - 模型：`siliconflow/deepseek-r1-0528`, `siliconflow/deepseek-v3-0324`, `siliconflow/deepseek-v3.1-terminus`, `siliconflow/deepseek-v3.2`
+- [StepFun推理模型](groups/stepfun-models-market-place.json) — 由阶跃星辰StepFun提供的Step系列推理模型API服务
+  - 模型：`stepfun/step-3.7-flash`
+- [Vanchin DeepSeek](groups/vanchin-models-market-place.json) — 由快手万擎提供的DeepSeek系列模型API服务。
+  - 模型：`vanchin/deepseek-ocr`, `vanchin/deepseek-r1`, `vanchin/deepseek-v3`, `vanchin/deepseek-v3.1-terminus`, `vanchin/deepseek-v3.2-think`, `vanchin/deepseek-v4-pro`
 
 ## 图像生成 `IG` — 29 个家族
 
@@ -188,41 +192,6 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [Wan2.1-VACE-Plus](groups/wanx2.1-vace-plus.json) — 万相2.1-VACE-Plus，视频编辑统一模型。支持局部编辑、视频重绘、背景扩展、时长延展、图片参考等多种视频编辑与生成任务，支持文本、图像、视频等多模态条件控制。
   - 模型：`wanx2.1-vace-plus`
 
-## 推理 `Reasoning` — 16 个家族
-
-- [DeepSeek](groups/deepseek.json) — DeepSeek是由深度求索提供的开源模型，包含 V3.1、V3、R1以及基于Qwen2.5系列蒸馏的大语言模型。
-  - 模型：`deepseek-r1`, `deepseek-r1-0528`, `deepseek-r1-distill-qwen-1.5b`, `deepseek-r1-distill-qwen-14b`, `deepseek-r1-distill-qwen-32b`, `deepseek-r1-distill-qwen-7b`, `deepseek-v3`, `deepseek-v3.1`, `deepseek-v3.2`, `deepseek-v3.2-exp`, `deepseek-v4-flash`, `deepseek-v4-pro`
-- [Kimi](groups/Kimi-K2.json) — Kimi是由月之暗面提供的开源模型，包含k2.5、k2-thinking、k2-instruct等多模态和大语言模型。
-  - 模型：`kimi-k2-thinking`, `kimi-k2.5`, `kimi-k2.6`, `Moonshot-Kimi-K2-Instruct`
-- [MiniMax](groups/MiniMax-M2.1.json) — MiniMax推出的旗舰级开源大模型，聚焦真实世界复杂任务，包含MiniMax-M2.1、MiniMax-M2.5等开源模型。
-  - 模型：`MiniMax-M2.1`, `MiniMax-M2.5`
-- [QVQ-Max](groups/qvq-max.json) — 千问QVQ视觉推理模型，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。
-  - 模型：`qvq-max`
-- [Qwen-Flash](groups/qwen-flash.json) — Qwen3系列Flash模型，实现思考模式和非思考模式的有效融合，可在对话中切换模式。复杂推理类任务性能优秀，指令遵循、文本理解等能力显著提高。支持1M上下文长度，按照上下文长度进行阶梯计费。
-  - 模型：`qwen-flash`
-- [Qwen-Plus](groups/qwen-plus.json) — 千问超大规模语言模型的增强版，支持中文英文等不同语言输入。主干模型、latest和快照04-28已升级Qwen3系列，实现思考模式和非思考模式的有效融合，可在对话中切换模式。
-  - 模型：`qwen-plus`, `qwen-plus-0112`, `qwen-plus-1220`, `qwen-plus-latest`
-- [Qwen-QVQ-Plus](groups/qvq-plus.json) — 千问QVQ视觉推理模型增强版，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。
-  - 模型：`qvq-plus`
-- [Qwen-QwQ-Plus](groups/qwq-plus.json) — 千问QwQ推理模型增强版，基于Qwen2.5模型训练的QwQ推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、livecodebench）以及部分通用指标（…
-  - 模型：`qwq-plus`
-- [Qwen-Turbo](groups/qwen-turbo.json) — 千问超大规模语言模型，支持中文英文等不同语言输入。主干模型、latest和快照04-28已升级Qwen3系列，实现思考模式和非思考模式的有效融合，可在对话中切换模式。
-  - 模型：`qwen-turbo`
-- [Qwen3.5-Flash](groups/qwen3.5-flash.json) — Qwen3.5原生视觉语言系列Flash模型，展现出与当前顶尖前沿模型相媲美的卓越性能，模型效果在纯文本与多模态方面相较3系列均实现飞跃式进步。
-  - 模型：`qwen3.5-flash`
-- [Qwen3.5开源模型](groups/qwen3.5.json) — Qwen3.5系列开源模型，基于混合架构设计的原生视觉语言模型，融合了线性注意力机制与稀疏混合专家模型，实现了更高的推理效率。
-  - 模型：`qwen3.5-122b-a10b`, `qwen3.5-27b`, `qwen3.5-35b-a3b`, `qwen3.5-397b-a17b`
-- [Qwen3.6-Flash](groups/qwen3.6-flash.json) — Qwen3.6原生视觉语言系列Flash模型，模型效果相较3.5-Flash显著提升。本模型重点提升agentic coding能力（在多项代码智能体基准上大幅超越前代）、数学推理和代码推理能力；视觉…
-  - 模型：`qwen3.6-flash`
-- [Qwen3.6-Max](groups/qwen3.6-max.json) — Qwen3.6原生Max模型，相较于此前发布的Qwen3-Max和Qwen3.6-Plus，本模型在vibe coding能力上进一步提升、coding agent执行更加高效、前端编程开发能力显著提…
-  - 模型：`qwen3.6-max-preview`
-- [Qwen3.6-Plus](groups/qwen3.6-plus.json) — Qwen3.6原生视觉语言系列Plus模型，展现出与当前顶尖前沿模型相媲美的卓越性能，模型效果相较3.5系列显著提升。模型在Agentic coding、前端编程、Vibe coding等代码能力、多…
-  - 模型：`qwen3.6-plus`
-- [Qwen3.7-Max](groups/qwen3.7-max.json) — Qwen3.7系列中规模最大、综合能力最强的Max模型，当前开放纯文本模型能力供体验。Qwen3.7是面向智能体时代的新一代旗舰模型，核心优势在于智能体能力的广度与深度：在编程、办公与生产力、长周期自…
-  - 模型：`qwen3.7-max`, `qwen3.7-max-preview`
-- [Vanchin DeepSeek](groups/vanchin-models-market-place.json) — 由快手万擎提供的DeepSeek系列模型API服务。
-  - 模型：`vanchin/deepseek-ocr`, `vanchin/deepseek-r1`, `vanchin/deepseek-v3`, `vanchin/deepseek-v3.1-terminus`, `vanchin/deepseek-v3.2-think`
-
 ## 语音合成 `TTS` — 16 个家族
 
 - [大模型声音复刻及声音设计](groups/voice-enrollment.json) — 大模型声音复刻服务依托先进的大模型技术进行特征提取，无需训练过程就可以完成声音的复刻。仅需提供极短的音频，即可迅速生成高度相似且听感自然的定制声音。 大模型声音设计使用FunAudioGen-VD模型…
@@ -257,6 +226,39 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen3-tts-vd-realtime-2026-01-15`
 - [Sambert语音合成](groups/sambert.json) — 提供高效的文字转语音服务。该技术具备推理速度快、合成效果卓越、读音精准、韵律自然、声音还原度高以及表现力强等优点。此外，用户可以选择开启字级别和音素级别的时间戳，用于生成字幕或驱动数字人的嘴型。
   - 模型：`sambert-beth-v1`, `sambert-betty-v1`, `sambert-brian-v1`, `sambert-cally-v1`, `sambert-camila-v1`, `sambert-cindy-v1`, `sambert-clara-v1`, `sambert-donna-v1`, `sambert-eva-v1`, `sambert-hanna-v1`, `sambert-indah-v1`, `sambert-perla-v1`, `sambert-waan-v1`, `sambert-zhichu-v1`, `sambert-zhida-v1`, `sambert-zhide-v1`, `sambert-zhifei-v1`, `sambert-zhigui-v1`, `sambert-zhihao-v1`, `sambert-zhijia-v1`, `sambert-zhijing-v1`, `sambert-zhilun-v1`, `sambert-zhimao-v1`, `sambert-zhimiao-emo-v1`, `sambert-zhiming-v1`, `sambert-zhimo-v1`, `sambert-zhina-v1`, `sambert-zhinan-v1`, `sambert-zhiqi-v1`, `sambert-zhiqian-v1`, `sambert-zhiru-v1`, `sambert-zhishu-v1`, `sambert-zhishuo-v1`, `sambert-zhistella-v1`, `sambert-zhiting-v1`, `sambert-zhiwei-v1`, `sambert-zhixiang-v1`, `sambert-zhixiao-v1`, `sambert-zhiya-v1`, `sambert-zhiye-v1`, `sambert-zhiying-v1`, `sambert-zhiyuan-v1`, `sambert-zhiyue-v1`
+
+## 推理 `Reasoning` — 15 个家族
+
+- [DeepSeek](groups/deepseek.json) — DeepSeek是由深度求索提供的开源模型，包含 V3.1、V3、R1以及基于Qwen2.5系列蒸馏的大语言模型。
+  - 模型：`deepseek-r1`, `deepseek-r1-0528`, `deepseek-r1-distill-qwen-1.5b`, `deepseek-r1-distill-qwen-14b`, `deepseek-r1-distill-qwen-32b`, `deepseek-r1-distill-qwen-7b`, `deepseek-v3`, `deepseek-v3.1`, `deepseek-v3.2`, `deepseek-v3.2-exp`, `deepseek-v4-flash`, `deepseek-v4-pro`
+- [Kimi](groups/Kimi-K2.json) — Kimi是由月之暗面提供的开源模型，包含k2.5、k2-thinking、k2-instruct等多模态和大语言模型。
+  - 模型：`kimi-k2-thinking`, `kimi-k2.5`, `kimi-k2.6`, `Moonshot-Kimi-K2-Instruct`
+- [MiniMax](groups/MiniMax-M2.1.json) — MiniMax推出的旗舰级开源大模型，聚焦真实世界复杂任务，包含MiniMax-M2.1、MiniMax-M2.5等开源模型。
+  - 模型：`MiniMax-M2.1`, `MiniMax-M2.5`
+- [QVQ-Max](groups/qvq-max.json) — 千问QVQ视觉推理模型，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。
+  - 模型：`qvq-max`
+- [Qwen-Flash](groups/qwen-flash.json) — Qwen3系列Flash模型，实现思考模式和非思考模式的有效融合，可在对话中切换模式。复杂推理类任务性能优秀，指令遵循、文本理解等能力显著提高。支持1M上下文长度，按照上下文长度进行阶梯计费。
+  - 模型：`qwen-flash`
+- [Qwen-Plus](groups/qwen-plus.json) — 千问超大规模语言模型的增强版，支持中文英文等不同语言输入。主干模型、latest和快照04-28已升级Qwen3系列，实现思考模式和非思考模式的有效融合，可在对话中切换模式。
+  - 模型：`qwen-plus`, `qwen-plus-0112`, `qwen-plus-1220`, `qwen-plus-latest`
+- [Qwen-QVQ-Plus](groups/qvq-plus.json) — 千问QVQ视觉推理模型增强版，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。
+  - 模型：`qvq-plus`
+- [Qwen-QwQ-Plus](groups/qwq-plus.json) — 千问QwQ推理模型增强版，基于Qwen2.5模型训练的QwQ推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、livecodebench）以及部分通用指标（…
+  - 模型：`qwq-plus`
+- [Qwen-Turbo](groups/qwen-turbo.json) — 千问超大规模语言模型，支持中文英文等不同语言输入。主干模型、latest和快照04-28已升级Qwen3系列，实现思考模式和非思考模式的有效融合，可在对话中切换模式。
+  - 模型：`qwen-turbo`
+- [Qwen3.5-Flash](groups/qwen3.5-flash.json) — Qwen3.5原生视觉语言系列Flash模型，展现出与当前顶尖前沿模型相媲美的卓越性能，模型效果在纯文本与多模态方面相较3系列均实现飞跃式进步。
+  - 模型：`qwen3.5-flash`
+- [Qwen3.5开源模型](groups/qwen3.5.json) — Qwen3.5系列开源模型，基于混合架构设计的原生视觉语言模型，融合了线性注意力机制与稀疏混合专家模型，实现了更高的推理效率。
+  - 模型：`qwen3.5-122b-a10b`, `qwen3.5-27b`, `qwen3.5-35b-a3b`, `qwen3.5-397b-a17b`
+- [Qwen3.6-Flash](groups/qwen3.6-flash.json) — Qwen3.6原生视觉语言系列Flash模型，模型效果相较3.5-Flash显著提升。本模型重点提升agentic coding能力（在多项代码智能体基准上大幅超越前代）、数学推理和代码推理能力；视觉…
+  - 模型：`qwen3.6-flash`
+- [Qwen3.6-Max](groups/qwen3.6-max.json) — Qwen3.6原生Max模型，相较于此前发布的Qwen3-Max和Qwen3.6-Plus，本模型在vibe coding能力上进一步提升、coding agent执行更加高效、前端编程开发能力显著提…
+  - 模型：`qwen3.6-max-preview`
+- [Qwen3.6-Plus](groups/qwen3.6-plus.json) — Qwen3.6原生视觉语言系列Plus模型，展现出与当前顶尖前沿模型相媲美的卓越性能，模型效果相较3.5系列显著提升。模型在Agentic coding、前端编程、Vibe coding等代码能力、多…
+  - 模型：`qwen3.6-plus`
+- [Qwen3.7-Max](groups/qwen3.7-max.json) — Qwen3.7系列中规模最大、综合能力最强的Max模型，当前开放纯文本模型能力供体验。Qwen3.7是面向智能体时代的新一代旗舰模型，核心优势在于智能体能力的广度与深度：在编程、办公与生产力、长周期自…
+  - 模型：`qwen3.7-max`, `qwen3.7-max-preview`
 
 ## 语音识别 `ASR` — 11 个家族
 

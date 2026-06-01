@@ -1,43 +1,66 @@
-# assistant api
+# Assistant API
 
-Assistant API 提供了一套标准化的服务端接口，用于快速构建具备多轮对话、上下文管理与工具调用能力的大模型应用。该接口通过封装模型推理流程与状态机逻辑，有效降低了复杂 AI Agent 的集成门槛。详细接口规范与交互说明可参考 [Assistant API（下线中）](../../raw/application-user-guide/assistant-api.md)。
+Assistant API 是百炼平台提供的大模型应用开发接口，旨在帮助开发者快速构建个人助理、智能导购等应用。相比文本生成 API，它内置了[多轮对话管理](../concepts/multi-turn-conversation.md)和工具调用组件，降低了开发成本。**该 API 目前处于下线状态，建议迁移至 Responses API。**
 
-## 支持的模型/功能
-- **模型支持**：兼容千问系列核心模型，标识符包括 `qwen-turbo`、`qwen-plus`、`qwen-max`。
-- **内置工具生态**：原生集成多款官方工具及扩展调用方式，无需额外配置外部服务。
-  | 工具名称 | 标识符 | 适用场景 |
-  |---|---|---|
-  | 代码解释器 | `code_interpreter` | Python 执行、数学计算、数据分析 |
-  | 夸克搜索 | `quark_search` | 实时网络信息检索 |
-  | 文生图 | `text_to_image` | 文本转图像生成 |
-  | 计算器 | `calculator` | 高精度数值运算 |
-  | 生成二维码 | `generate_qrcode` | 文本转二维码 |
-  | GitHub搜索 | `github_search` | 开源项目信息检索 |
-  | [[function-calling|函数调用]] | `function` | 本地环境自定义逻辑执行 |
-  | 知识检索增强 | `rag` | 外部知识库匹配与引用 |
-  | 自定义插件 | `${plugin_id}` | 对接内部业务接口 |
-- **核心能力**：自动维护 [[上下文管理]] 历史，支持 [[流式输出]]，并提供标准化编排模板以实现 [[多智能体]] 协同。完整能力矩阵详见 [Assistant API（下线中）](../../raw/application-user-guide/assistant-api.md)。
+> **注意**：根据 [Assistant API（下线中）](../../raw/application-user-guide/assistant-api.md) 文档，Assistant API 正在下线，官方建议迁移至 Responses API，后者同样内置多种工具并支持多轮上下文管理。
 
-## 关键参数
-API 交互依赖以下四个核心对象参数，需按生命周期顺序实例化：
-- **Assistant**：定义模型基座（`model`）、系统指令（`instructions`）及启用的工具列表（`tools`）。
-- **Thread**：会话级容器（`thread_id`），用于持久化存储多轮交互记录，解除开发者手动拼接 `history` 的负担。
-- **Message**：内容载体，需指定 `role`（`user` / `assistant` / `system`）与 `content`。支持附加文件元数据。
-- **Run**：推理与执行控制器。关键状态包括 `in_progress`、`requires_action`（待提交工具输出）、`completed` / `failed`。支持配置 `stream: true` 开启实时事件推送。
+## 核心概念与使用流程
 
-## 使用方式
-标准调用链路遵循 `创建会话 -> 注入上下文 -> 触发执行 -> 处理回调` 模式：
-1. 调用 `Assistants.create` 初始化配置。
-2. 调用 `Threads.create` 获取独立 `thread_id`。
-3. 调用 `Messages.create` 追加用户输入。
-4. 调用 `Runs.create` 启动推理流。若返回 `thread.run.requires_action`，需解析 `tool_calls` 参数，在本地执行对应逻辑后，调用 `Runs.submit_tool_outputs` 将结果回传，直至 `run` 状态终结。
-完整状态流转示例、事件枚举处理及工具回调代码可在 [Assistant API（下线中）](../../raw/application-user-guide/assistant-api.md) 中获取。
+构建一个 Assistant 应用通常需要依次完成以下四个步骤：
+
+1. **创建 Assistant**：配置大模型、指令和工具列表，定义 Assistant 要执行的任务。
+2. **创建 Thread**：Thread 记录用户和 Assistant 之间的所有消息，实现多轮对话。
+3. **创建 Message**：Message 是承载用户输入和 Assistant 回复的容器。
+4. **创建 Run**：Run 代表 Assistant 处理对话的完整流程，包括模型推理和工具调用，支持[流式输出](../concepts/streaming.md)。
+
+智能体应用与 Assistant 虽然均为大模型应用，但功能相互独立：智能体应用通过控制台创建和管理，通过应用调用 API 进行调用；Assistant 仅通过 Assistant API 进行全生命周期管理。
+
+## 支持的模型
+
+根据 [Assistant API（下线中）](../../raw/application-user-guide/assistant-api.md) 的说明，支持以下千问系列模型：
+
+| 模型系列 | 模型标识符 |
+|---------|-----------|
+| 千问-Turbo | `qwen-turbo` |
+| 千问-Plus | `qwen-plus` |
+| 千问-Max | `qwen-max` |
+
+> **注意**：千问-Turbo、千问-Plus、千问-Max 的快照版本（如 `qwen-plus-1220`）仅兼容"函数调用"及"知识检索增强"工具，其他工具的兼容性以实际运行结果为准。
+
+## 支持的工具
+
+| 工具名称 | 标识符 | 用途 |
+|---------|--------|------|
+| 代码解释器 | `code_interpreter` | 执行 Python 代码，适用于编程、数学计算、数据分析 |
+| 夸克搜索 | `quark_search` | 实时检索网络信息 |
+| 文生图 | `text_to_image` | 将文字描述转为图像 |
+| 计算器 | `calculator` | 执行精确运算任务 |
+| 生成二维码 | `generate_qrcode` | 将文本转换为二维码 |
+| GitHub 搜索 | `github_search` | 搜索 GitHub 项目信息 |
+| 函数调用 | `function` | 在本地设备执行特定功能，无需外部网络 |
+| 知识检索增强（RAG） | `rag` | 检索外部知识，增强回答准确性 |
+| 自定义插件 | `${plugin_id}` | 连接自定义业务接口 |
+
+## 核心能力
+
+### 内置对话管理
+
+Thread 机制自动维护对话历史，开发者无需手动管理上下文。通过 `Runs.create()` 创建运行后，可监听事件流（如 `thread.message.delta`、`thread.run.completed` 等）获取实时响应。
+
+### 工具调用
+
+当 Run 事件返回 `thread.run.requires_action` 时，表示需要执行工具调用。开发者解析 `tool_calls` 中的函数名和参数，在本地执行后通过 `Runs.submit_tool_outputs()` 提交结果，Assistant 将基于工具输出继续生成回复。
+
+### 多智能体系统
+
+Assistant API 提供了构建多智能体（Multi Agent）系统的基础模板，支持通过规划 Agent 确定执行顺序，依次调用不同 Agent 处理任务，并将前一个 Agent 的输出作为后续 Agent 的参考输入。
 
 ## 限制和注意事项
-> **注意**：该 API 目前处于**下线中**阶段，官方已停止新增功能迭代。建议新项目全面迁移至 [[responses-api]]，新接口提供更完整的上下文生命周期管理及更丰富的原生工具支持。
-- **体系隔离**：[[智能体应用]] 与 Assistant API 创建的实例在底层完全独立。控制台配置的应用仅能通过应用调用 API 访问，不可混用本接口管理。
-- **快照版本兼容限制**：使用 `qwen-plus-1220`、`qwen-max-1220` 等带日期的快照版本时，系统仅支持 `function` 与 `rag` 工具。如需调用 `code_interpreter` 或搜索类工具，请使用无后缀的最新版本标识符。
-- **容错建议**：自定义插件与外部搜索工具的执行成功率受网络及目标服务稳定性影响。建议在 `submit_tool_outputs` 环节增加重试机制与异常拦截，避免 `run` 状态因单次调用失败而永久阻塞。
+
+- **下线状态**：如 [Assistant API（下线中）](../../raw/application-user-guide/assistant-api.md) 所述，该 API 正在下线，新项目应优先使用 Responses API。
+- **快照模型限制**：模型快照版本仅支持函数调用和 RAG 两种工具。
+- **插件兼容性**：自定义插件的兼容性需以实际执行结果为准。
+- **与智能体应用的区别**：Assistant 与控制台中的智能体应用功能完全独立，不可混用管理方式和调用接口。
 
 ## 来源文档
 

@@ -4,12 +4,21 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "旗舰级 MoE 大模型，总参1.6T、激活 49B，原生支持百万级超长上下文。依托海量高质量训练数据，具备顶尖数学逻辑、复杂推理、专业代码与长文本深度解析能力，适配高阶科研、复杂办公、深度智能代理等高难度场景。",
-      "features": ["cache", "function-calling", "model-experience", "web-search"],
+      "features": [
+        "cache",
+        "function-calling",
+        "model-experience",
+        "web-search"
+      ],
       "provider": "deepseek",
       "model": "deepseek-v4-pro",
       "prices": [
@@ -50,7 +59,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "modelAlias": "",
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 393216,
@@ -71,7 +83,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -83,7 +98,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -101,7 +119,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [4000, 32768]
+          "range": [
+            4000,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -125,12 +146,21 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "高效轻量化MoE模型，总参284B，激活13B，原生支持百万超长上下文能力。推理速度快、延迟低、调用成本低廉，综合能力均衡，主打高并发、轻量化任务，适合日常对话、内容创作、基础 RAG、批量文案处理等普惠刚需场景。",
-      "features": ["cache", "function-calling", "model-experience", "web-search"],
+      "features": [
+        "cache",
+        "function-calling",
+        "model-experience",
+        "web-search"
+      ],
       "provider": "deepseek",
       "model": "deepseek-v4-flash",
       "prices": [
@@ -171,7 +201,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG", "Reasoning"],
+      "capabilities": [
+        "TG",
+        "Reasoning"
+      ],
       "modelAlias": "",
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 393216,
@@ -192,7 +225,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -204,7 +240,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -222,7 +261,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [4000, 32768]
+          "range": [
+            4000,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -246,12 +288,22 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "DeepSeek-V3.2是引入DeepSeek Sparse Attention（一种稀疏注意力机制）的正式版模型，也是DeepSeek推出的首个将思考融入工具使用的模型，同时支持思考模式与非思考模式的工具调用。",
-      "features": ["model-experience", "function-calling", "web-search", "cache", "batch"],
+      "features": [
+        "model-experience",
+        "function-calling",
+        "web-search",
+        "cache",
+        "batch"
+      ],
       "provider": "deepseek",
       "model": "deepseek-v3.2",
       "prices": [
@@ -330,7 +382,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 65536,
       "latestOnlineAt": "2025-12-02T06:56:41.000+00:00",
@@ -350,14 +405,20 @@
           "key": "top_p",
           "default": 0.95,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.6,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_thinking",
@@ -370,7 +431,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -394,12 +458,20 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "引入了DeepSeek Sparse Attention（一种稀疏注意力机制）的实验性质版本，针对长文本的训练和推理效率进行了探索性的优化和验证。",
-      "features": ["model-experience", "function-calling", "web-search"],
+      "features": [
+        "model-experience",
+        "function-calling",
+        "web-search"
+      ],
       "provider": "deepseek",
       "model": "deepseek-v3.2-exp",
       "prices": [
@@ -434,7 +506,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG", "Reasoning"],
+      "capabilities": [
+        "TG",
+        "Reasoning"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 65536,
       "latestOnlineAt": "2025-09-30T14:44:03.000+00:00",
@@ -454,14 +529,20 @@
           "key": "top_p",
           "default": 0.95,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.6,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_thinking",
@@ -474,7 +555,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -498,12 +582,21 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "DeepSeek-V3.1为混合推理架构模型，同时支持思考模式与非思考模式，具备更高的推理效率和更强的Agent能力。",
-      "features": ["model-experience", "function-calling", "web-search", "cache"],
+      "features": [
+        "model-experience",
+        "function-calling",
+        "web-search",
+        "cache"
+      ],
       "provider": "deepseek",
       "model": "deepseek-v3.1",
       "prices": [
@@ -544,7 +637,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG", "Reasoning"],
+      "capabilities": [
+        "TG",
+        "Reasoning"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 65536,
       "latestOnlineAt": "2025-08-22T16:31:50.000+00:00",
@@ -564,14 +660,20 @@
           "key": "top_p",
           "default": 0.95,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.6,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_thinking",
@@ -584,7 +686,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -608,12 +713,20 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "0528为R1模型的小版本升级，相较于旧版 R1，新版在复杂推理任务中的表现有了显著提升。在数学、编程与通用逻辑等多个基准测评中取得了优异成绩。",
-      "features": ["model-experience", "function-calling", "web-search"],
+      "features": [
+        "model-experience",
+        "function-calling",
+        "web-search"
+      ],
       "provider": "deepseek",
       "model": "deepseek-r1-0528",
       "prices": [
@@ -648,7 +761,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning"],
+      "capabilities": [
+        "Reasoning"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
       "latestOnlineAt": "2025-06-04T15:30:34.000+00:00",
@@ -668,7 +783,10 @@
           "key": "max_tokens",
           "default": 4000,
           "tip": "最终回答的最大长度（不含思维链输出）",
-          "range": [1, 8192]
+          "range": [
+            1,
+            8192
+          ]
         }
       ],
       "samples": {
@@ -690,12 +808,21 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "DeepSeek-V3 为自研 MoE 模型，671B 参数，激活 37B，在 14.8T token 上进行了预训练，在长文本、代码、数学、百科、中文 能力上表现优秀。",
-      "features": ["model-experience", "function-calling", "web-search", "cache"],
+      "features": [
+        "model-experience",
+        "function-calling",
+        "web-search",
+        "cache"
+      ],
       "provider": "deepseek",
       "model": "deepseek-v3",
       "prices": [
@@ -748,7 +875,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG", "Reasoning"],
+      "capabilities": [
+        "TG",
+        "Reasoning"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 8192,
       "latestOnlineAt": "2025-01-27T12:45:18.000+00:00",
@@ -768,21 +898,30 @@
           "key": "top_p",
           "default": 0.6,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "presence_penalty",
           "key": "presence_penalty",
           "default": 0.95,
           "tip": "用户控制模型生成时整个序列中的重复度。提高该参数时可以降低模型生成的重复度。",
-          "range": [-2, 2]
+          "range": [
+            -2,
+            2
+          ]
         }
       ],
       "samples": {
@@ -806,12 +945,21 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能较高，能力较强。",
-      "features": ["model-experience", "function-calling", "web-search", "cache"],
+      "features": [
+        "model-experience",
+        "function-calling",
+        "web-search",
+        "cache"
+      ],
       "provider": "deepseek",
       "model": "deepseek-r1",
       "prices": [
@@ -864,7 +1012,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning"],
+      "capabilities": [
+        "Reasoning"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
       "latestOnlineAt": "2025-06-17T16:00:00.000+00:00",
@@ -884,7 +1034,10 @@
           "key": "max_tokens",
           "default": 4000,
           "tip": "最终回答的最大长度（不含思维链输出）",
-          "range": [1, 8192]
+          "range": [
+            1,
+            8192
+          ]
         }
       ],
       "samples": {
@@ -906,12 +1059,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "DeepSeek-R1-Distill-Qwen-32B是一个基于Qwen2.5-32B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "deepseek",
       "model": "deepseek-r1-distill-qwen-32b",
       "prices": [
@@ -946,7 +1105,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
       "latestOnlineAt": "2025-02-05T11:57:01.000+00:00",
@@ -966,7 +1127,10 @@
           "key": "max_tokens",
           "default": 4000,
           "tip": "最终回答的最大长度（不含思维链输出）",
-          "range": [1, 8192]
+          "range": [
+            1,
+            8192
+          ]
         }
       ],
       "samples": {
@@ -988,12 +1152,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "DeepSeek-R1-Distill-Qwen-14B是一个基于Qwen2.5-14B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "deepseek",
       "model": "deepseek-r1-distill-qwen-14b",
       "prices": [
@@ -1028,7 +1198,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
       "latestOnlineAt": "2025-02-05T11:57:01.000+00:00",
@@ -1048,7 +1220,10 @@
           "key": "max_tokens",
           "default": 4000,
           "tip": "最终回答的最大长度（不含思维链输出）",
-          "range": [1, 8192]
+          "range": [
+            1,
+            8192
+          ]
         }
       ],
       "samples": {
@@ -1070,12 +1245,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "DeepSeek-R1-Distill-Qwen-7B是一个基于Qwen2.5-Math-7B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "deepseek",
       "model": "deepseek-r1-distill-qwen-7b",
       "prices": [
@@ -1110,7 +1291,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
       "latestOnlineAt": "2025-02-05T11:57:01.000+00:00",
@@ -1130,7 +1313,10 @@
           "key": "max_tokens",
           "default": 4000,
           "tip": "最终回答的最大长度（不含思维链输出）",
-          "range": [1, 8192]
+          "range": [
+            1,
+            8192
+          ]
         }
       ],
       "samples": {
@@ -1152,12 +1338,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "DeepSeek-R1-Distill-Qwen-1.5B是一个基于Qwen2.5-Math-1.5B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "deepseek",
       "model": "deepseek-r1-distill-qwen-1.5b",
       "qpmInfo": {
@@ -1178,7 +1370,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
       "latestOnlineAt": "2025-02-05T11:57:01.000+00:00",
@@ -1198,7 +1392,10 @@
           "key": "max_tokens",
           "default": 4000,
           "tip": "最终回答的最大长度（不含思维链输出）",
-          "range": [1, 8192]
+          "range": [
+            1,
+            8192
+          ]
         }
       ],
       "samples": {

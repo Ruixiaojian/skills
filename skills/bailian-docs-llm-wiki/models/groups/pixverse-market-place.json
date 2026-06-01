@@ -4,12 +4,18 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "输入文字描述，秒级生成与语义精准匹配的高质量视频，支持多种风格。PixVerse V5.6 是爱诗科技自研的视频生成大模型，在文生视频与图生视频能力上实现全面升级。模型在画面清晰度、复杂运动稳定性与音画协同方面显著提升，多角色对话场景下嘴型与台词同步更准确，情绪表达更自然。同时优化构图、光影与质感一致性，整体生成质量进一步提升。PixVerse V5.6 在 Artificial Analysis 文生视频与图生视频榜单中位列全球第一梯队。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "pixverse",
       "model": "pixverse/pixverse-v5.6-t2v",
       "iconUrl": "",
@@ -87,7 +93,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-03-19T06:58:48.000+00:00",
@@ -109,7 +117,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "生成音频",
@@ -128,8 +139,13 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image", "Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "输入2–7张图像，智能融合不同主体，保持风格统一与动作协调，轻松构建丰富叙事场景，提升内容可控性与创意自由度。PixVerse V5.6 是爱诗科技自研的视频生成大模型，在文生视频与图生视频能力上实现全面升级。模型在画面清晰度、复杂运动稳定性与音画协同方面显著提升，多角色对话场景下嘴型与台词同步更准确，情绪表达更自然。同时优化构图、光影与质感一致性，整体生成质量进一步提升。PixVerse V5.6 在 Artificial Analysis 文生视频与图生视频榜单中位列全球第一梯队。",
@@ -211,7 +227,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-03-19T06:43:04.000+00:00",
@@ -228,14 +246,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -249,8 +273,13 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image", "Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "在任意两张图片之间实现无缝转换，实现更流畅自然的场景过渡，打造视觉冲击力强的画面效果。PixVerse V5.6 是爱诗科技自研的视频生成大模型，在文生视频与图生视频能力上实现全面升级。模型在画面清晰度、复杂运动稳定性与音画协同方面显著提升，多角色对话场景下嘴型与台词同步更准确，情绪表达更自然。同时优化构图、光影与质感一致性，整体生成质量进一步提升。PixVerse V5.6 在 Artificial Analysis 文生视频与图生视频榜单中位列全球第一梯队。",
@@ -332,7 +361,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-03-19T06:56:40.000+00:00",
@@ -349,14 +380,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -370,12 +407,19 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image", "Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "上传任意图片，自由定制剧情、节奏与风格，生成生动连贯的视频。PixVerse V5.6 是爱诗科技自研的视频生成大模型，在文生视频与图生视频能力上实现全面升级。模型在画面清晰度、复杂运动稳定性与音画协同方面显著提升，多角色对话场景下嘴型与台词同步更准确，情绪表达更自然。同时优化构图、光影与质感一致性，整体生成质量进一步提升。PixVerse V5.6 在 Artificial Analysis 文生视频与图生视频榜单中位列全球第一梯队。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "pixverse",
       "model": "pixverse/pixverse-v5.6-it2v",
       "iconUrl": "",
@@ -453,7 +497,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-03-19T06:59:33.000+00:00",
@@ -475,7 +521,10 @@
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "生成音频",

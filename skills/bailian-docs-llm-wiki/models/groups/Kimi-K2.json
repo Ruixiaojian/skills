@@ -4,12 +4,22 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Image", "Text", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Image",
+          "Text",
+          "Video"
+        ]
       },
       "openSource": true,
       "description": "kimi-k2.6是Kimi最新最智能的模型，具备更强更稳的长程代码编写能力，指令遵循和自我纠错能力显著提升，同时支持文本、图片与视频输入，思考与非思考模式，对话与Agent任务。",
-      "features": ["cache", "function-calling", "model-experience"],
+      "features": [
+        "cache",
+        "function-calling",
+        "model-experience"
+      ],
       "provider": "moonshot-ai",
       "model": "kimi-k2.6",
       "prices": [
@@ -62,7 +72,11 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning", "VU", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "VU",
+        "TG"
+      ],
       "modelAlias": "",
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
@@ -104,12 +118,22 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video"
+        ]
       },
       "openSource": true,
       "description": "kimi-k2.5是月之暗面迄今发布最全能的模型，原生多模态架构设计，同时支持视觉与文本输入、思考与非思考模式、对话与Agent任务。",
-      "features": ["model-experience", "function-calling", "cache"],
+      "features": [
+        "model-experience",
+        "function-calling",
+        "cache"
+      ],
       "provider": "moonshot-ai",
       "model": "kimi-k2.5",
       "iconUrl": "https://img.alicdn.com/imgextra/i4/O1CN01KzHLBW1LISVEUaotl_!!6000000001276-2-tps-56-56.png",
@@ -163,7 +187,11 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning", "VU", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "VU",
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
       "latestOnlineAt": "2026-01-30T01:49:03.000+00:00",
@@ -204,12 +232,20 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "kimi-k2-thinking模型是月之暗面提供的具有通用 Agentic能力和推理能力的思考模型，它擅长深度推理，并可通过多步工具调用，帮助解决各类难题。",
-      "features": ["model-experience", "cache", "function-calling"],
+      "features": [
+        "model-experience",
+        "cache",
+        "function-calling"
+      ],
       "provider": "moonshot-ai",
       "model": "kimi-k2-thinking",
       "iconUrl": "https://img.alicdn.com/imgextra/i4/O1CN01KzHLBW1LISVEUaotl_!!6000000001276-2-tps-56-56.png",
@@ -251,7 +287,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG", "Reasoning"],
+      "capabilities": [
+        "TG",
+        "Reasoning"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 16384,
       "latestOnlineAt": "2025-11-10T07:24:34.000+00:00",
@@ -271,21 +310,30 @@
           "key": "top_p",
           "default": 1,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.6,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "thinking_budget",
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         }
       ],
       "samples": {
@@ -307,12 +355,20 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "Kimi-K2是月之暗面提供的国内首个开源万亿参数MoE模型，激活参数达 320 亿，具有卓越的编码和工具调用能力。",
-      "features": ["model-experience", "cache", "function-calling"],
+      "features": [
+        "model-experience",
+        "cache",
+        "function-calling"
+      ],
       "provider": "moonshot-ai",
       "model": "Moonshot-Kimi-K2-Instruct",
       "iconUrl": "https://img.alicdn.com/imgextra/i4/O1CN01KzHLBW1LISVEUaotl_!!6000000001276-2-tps-56-56.png",
@@ -354,7 +410,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "latestOnlineAt": "2025-07-16T14:56:31.000+00:00",
       "contextWindow": 131072,
@@ -372,14 +430,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

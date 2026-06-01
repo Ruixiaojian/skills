@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image"
+        ]
       },
       "openSource": false,
       "description": "表情包emoji是一款人脸动效视频生成模型，可基于人脸图片和预设的人脸动态模板，生成人脸动效视频。",
@@ -20,7 +24,9 @@
           "priceName": "视频生成（std）"
         }
       ],
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-01-16T09:46:00.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -37,14 +43,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
