@@ -65,13 +65,13 @@
 ## 横切概念
 
 - [多轮对话](concepts/multi-turn-conversation.md) — 关联 6 个主题
-- [函数调用](concepts/function-calling.md) — 关联 7 个主题
-- [检索增强生成](concepts/rag.md) — 关联 7 个主题
+- [函数调用（工具调用）](concepts/function-calling.md) — 关联 7 个主题
+- [检索增强生成（RAG）](concepts/rag.md) — 关联 7 个主题
 - [流式输出](concepts/streaming.md) — 关联 6 个主题
-- [异步任务](concepts/async-task.md) — 关联 6 个主题
-- [API Key 管理](concepts/api-key.md) — 关联 7 个主题
+- [向量化与语义检索](concepts/embedding-and-retrieval.md) — 关联 6 个主题
+- [异步任务模式](concepts/async-task.md) — 关联 6 个主题
 - [OpenAI 兼容接口](concepts/openai-compatible-api.md) — 关联 7 个主题
-- [Token](concepts/token.md) — 关联 6 个主题
+- [Token（令牌计量）](concepts/token.md) — 关联 7 个主题
 
 ## 对比分析
 

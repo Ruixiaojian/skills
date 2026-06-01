@@ -148,13 +148,13 @@ description: >-
 | 模型家族总览 / 按能力分桶浏览         | `models/index.md`                                        |
 | 主题页 / API 文档（按功能领域查找）    | `wiki/index.md`（完整索引入口）                          |
 | OpenAI 兼容接口 | `wiki/concepts/openai-compatible-api.md` |
-| 函数调用 | `wiki/concepts/function-calling.md` |
-| 检索增强生成 | `wiki/concepts/rag.md` |
+| 函数调用（工具调用） | `wiki/concepts/function-calling.md` |
+| 检索增强生成（RAG） | `wiki/concepts/rag.md` |
+| Token（令牌计量） | `wiki/concepts/token.md` |
 | 流式输出 | `wiki/concepts/streaming.md` |
-| Token | `wiki/concepts/token.md` |
+| 异步任务模式 | `wiki/concepts/async-task.md` |
 | 多轮对话 | `wiki/concepts/multi-turn-conversation.md` |
-| 异步任务 | `wiki/concepts/async-task.md` |
-| API Key 管理 | `wiki/concepts/api-key.md` |
+| 向量化与语义检索 | `wiki/concepts/embedding-and-retrieval.md` |
 | 语音合成、语音识别与语音翻译对比 | `wiki/comparisons/speech-synth-vs-recognition-vs-translation.md` |
 | 文本Embedding与多模态向量对比 | `wiki/comparisons/text-embedding-vs-multimodal-vector.md` |
 | 模型评估与应用评估对比 | `wiki/comparisons/model-evaluation-vs-application-evaluation.md` |

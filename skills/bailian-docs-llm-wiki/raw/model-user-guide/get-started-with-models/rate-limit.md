@@ -999,7 +999,7 @@ qvq-plus-2025-05-15
 
 qwen3-vl-plus
 
-1,200
+60
 
 1,000,000
 
@@ -2955,11 +2955,13 @@ MiniMax-M2.1
 
 > **含输入与输出Token**
 
-MiniMax/MiniMax-M2.7
+MiniMax/MiniMax-M3
 
 500
 
 20,000,000
+
+MiniMax/MiniMax-M2.7
 
 MiniMax/MiniMax-M2.5
 
