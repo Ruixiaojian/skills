@@ -56,13 +56,14 @@ compatibility: 需要已安装 bailian-docs-llm-wiki skill（提供 models/ 数�
 
 ### 第二步：筛选候选
 
-从 `models/models.jsonl` 中筛选匹配的模型（10~50 个）：
+从 `models/models.jsonl` 和 `models/groups/<slug>.json` 中综合筛选匹配的模型（10~50 个），结构化字段和语义信息同时参与筛选：
 
 1. 去除历史快照版本（如 `model-2025-04-28`），只保留主版本
 2. 按模态过滤（输入/输出模态必须兼容）
 3. 按能力、特性、上下文窗口、质量定位评分排序
-4. 同一家族最多保留少量模型，避免同质化
-5. 候选不足时放宽过滤条件
+4. 读取 group 文件的 description（group 级 + item 级），将场景关键词（如"科研"、"代码"、"长文本"、"客服"）与用户需求做语义匹配，提升匹配模型的排序
+5. 同一家族最多保留少量模型，避免同质化
+6. 候选不足时放宽过滤条件
 
 数据源字段说明见 [references/data-source.md](references/data-source.md)。
 

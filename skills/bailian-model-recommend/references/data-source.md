@@ -8,7 +8,7 @@
 | --- | --- |
 | `models/models.jsonl` | 主数据源，每行一个模型 |
 | `models/families.jsonl` | 家族信息，用于去重 |
-| `models/groups/<slug>.json` | 模型详情，含 samples（API 调用示例代码） |
+| `models/groups/<slug>.json` | 模型详情，含 description（语义匹配）和 samples（API 调用示例代码） |
 
 ## models.jsonl 字段
 
@@ -39,9 +39,10 @@
 单个家族完整明细：
 
 - `name` — 家族名称
-- `description` — 家族描述
+- `description` — 家族描述（包含整体定位、适用领域，用于语义匹配）
 - `items[]` — 家族下所有模型版本，每个 item 含：
   - `model` — API 调用名
+  - `description` — 模型版本描述（包含能力特点、场景优势，用于语义匹配）
   - `contextWindow` / `maxInputTokens` / `maxOutputTokens`
   - `capabilities` / `features`
   - `prices` / `qpmInfo`
