@@ -34,8 +34,8 @@ Index: [index.md](index.md)
 | `--n <count>` | number | no | Number of images (default: 1, max: 6) |
 | `--seed <n>` | number | no | Random seed for reproducible results |
 | `--negative-prompt <text>` | string | no | Negative prompt to exclude unwanted content |
-| `--prompt-extend <bool>` | string | no | Enable prompt extend (true/false). Default: true. |
-| `--watermark <bool>` | string | no | Enable watermark (true/false). Default: true. |
+| `--prompt-extend <bool>` | string | no | Enable prompt extend (true/false). Omit flag to use CLI default (true). |
+| `--watermark <bool>` | string | no | Enable watermark (true/false). Omit flag to use CLI default (true). |
 | `--out-dir <dir>` | string | no | Download images to directory |
 | `--out-prefix <prefix>` | string | no | Filename prefix (default: edited) |
 
@@ -80,8 +80,8 @@ bl image edit --image ./photo.png --prompt "把背景换成海滩" --watermark f
 | `--n <count>` | number | no | Number of images per request (default: 1, max: 6) |
 | `--seed <n>` | number | no | Random seed for reproducible generation |
 | `--negative-prompt <text>` | string | no | Negative prompt to exclude unwanted content |
-| `--prompt-extend <bool>` | string | no | Enable prompt extend (true/false). Default: true for qwen-image sync models; omit for async. |
-| `--watermark <bool>` | string | no | Enable watermark (true/false). Default: true. |
+| `--prompt-extend <bool>` | string | no | Enable prompt extend (true/false). Omit flag: true for qwen-image sync; parameter omitted on async models (API default). |
+| `--watermark <bool>` | string | no | Enable watermark (true/false). Omit flag to use CLI default (true). |
 | `--no-wait` | boolean | no | Return task ID immediately without waiting (async models only) |
 | `--out-dir <dir>` | string | no | Download images to directory |
 | `--out-prefix <prefix>` | string | no | Filename prefix (default: image) |
