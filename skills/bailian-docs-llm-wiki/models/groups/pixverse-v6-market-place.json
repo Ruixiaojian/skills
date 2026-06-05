@@ -4,12 +4,18 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "V6是PixVerse在26年3月底推出的新模型，t2v（文字生成视频）模型可通过提示词精准控制视频画面，精确还原各类镜头语言，推、拉、摇、移、跟随等运镜方式流畅自然，视角切换精准可控。支持15秒长视频、音乐和视频直出、支持多种语言文字。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "pixverse",
       "model": "pixverse/pixverse-v6-t2v",
       "iconUrl": "",
@@ -89,7 +95,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-01T07:48:41.225+00:00",
@@ -106,14 +114,20 @@
           "name": "视频时长",
           "key": "duration",
           "default": 5,
-          "range": [1, 15]
+          "range": [
+            1,
+            15
+          ]
         },
         {
           "name": "随机种子",
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "生成音频",
@@ -137,12 +151,19 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image", "Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "V6是PixVerse在26年3月底推出的新模型，it2v（图片生成视频）模型全球排名第二，it2v除了拥有t2v（文字生成视频）的提示词控制能力外，还能高度还原参考图片的色彩、饱和度、场景和人物特征，拥有更强的人物情绪、高速运动表现力。支持15秒长视频、音乐和视频直出、支持多种语言文字。在电商产品特写、广告宣传片、模拟c4d建模展示产品结构等场景下可一键直出。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "pixverse",
       "model": "pixverse/pixverse-v6-it2v",
       "iconUrl": "",
@@ -222,7 +243,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-01T07:48:50.774+00:00",
@@ -239,14 +262,20 @@
           "name": "视频时长",
           "key": "duration",
           "default": 5,
-          "range": [1, 15]
+          "range": [
+            1,
+            15
+          ]
         },
         {
           "name": "随机种子",
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "生成音频",
@@ -270,8 +299,13 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image", "Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "V6是PixVerse在26年3月底推出的新模型，kf2v（首尾帧生成视频）模型可将任意两张图片衔接，视频转场更加流畅自然，支持15秒长视频、音乐和视频直出、支持多种语言文字。",
@@ -355,7 +389,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-01T07:48:31.417+00:00",
@@ -373,14 +409,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

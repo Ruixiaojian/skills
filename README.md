@@ -8,21 +8,21 @@
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
-[Aliyun Model Studio CLI Site](https://bailian.console.aliyun.com/cli) · [中文](./README_CN.md) · [API Documentation](https://help.aliyun.com/zh/model-studio/) · [Get API Key](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/api-key)
+[Aliyun Model Studio CLI Site](https://bailian.console.aliyun.com/cli?source_channel=cli_github&) · [中文](./README_CN.md) · [API Documentation](https://help.aliyun.com/zh/model-studio/) · [Get API Key](https://bailian.console.aliyun.com/cli?source_channel=key_github&)
 
 ---
 
 _1st-party skills pair with bailian-cli (bl) for Bailian's full-modal capabilities,_
 _curated 3rd-party skills cover creation, dev, design, docs, and testing — pick and go._
 
-_Empowering AI Agents with a Skills collection curated and verified by the Aliyun Bailian team._
+_Empowering AI Agents with a Skills collection curated and verified by the ModelStudio team._
 
 </div>
 
-ModelStudio Skills is the official AI Agent Skills repository from Aliyun Model Studio, containing two categories:
+ModelStudio Skills is the official AI Agent Skills repository from ModelStudio, containing two categories:
 
-- **1st-party skills** — Developed by the Bailian team and paired with [`bailian-cli`](https://www.npmjs.com/package/bailian-cli) (`bl`, install via [bailian.aliyun.com/cli/install.md](https://bailian.aliyun.com/cli/install.md)), covering chat, multimodal, image/video, speech, vision, apps, memory, RAG, and web search on the Bailian platform.
-- **Curated 3rd-party skills** — Continuously tracked from GitHub, Anthropic, Vercel, Google Labs, and other communities. Each Claude Code / Agent Skill is verified in real-world scenarios by the Bailian team; only those marked "usable" are included, grouped by use case for direct integration.
+- **1st-party skills** — Developed by the ModelStudio team and paired with [`bailian-cli`](https://www.npmjs.com/package/bailian-cli) (`bl`, install via [bailian.aliyun.com/cli/install.md](https://bailian.aliyun.com/cli/install.md)), covering chat, multimodal, image/video, speech, vision, apps, memory, RAG, and web search on the Bailian platform.
+- **Curated 3rd-party skills** — Continuously tracked from GitHub, Anthropic, Vercel, Google Labs, and other communities. Each Claude Code / Agent Skill is verified in real-world scenarios by the ModelStudio team; only those marked "usable" are included, grouped by use case for direct integration.
 
 Each skill is an independent, composable workflow unit. The 3rd-party set spans **skill management, code development, design & creativity, documentation, video production, and testing** — six major scenarios.
 

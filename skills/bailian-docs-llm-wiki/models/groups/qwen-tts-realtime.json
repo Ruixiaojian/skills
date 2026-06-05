@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "Qwen-TTS实时模型是通义实验室“qwen系列”模型中的语音合成模型。具备双向上下文感知能力，可以低延迟高保真完成多音色、方言及长文本的双向流式生成。",
@@ -44,7 +48,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Realtime-Text-to-Speech"],
+      "capabilities": [
+        "Realtime-Text-to-Speech"
+      ],
       "versionTag": "MAJOR",
       "maxOutputTokens": 7680,
       "latestOnlineAt": "2025-07-16T06:02:09.000+00:00",
@@ -64,14 +70,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -85,8 +97,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "Qwen-TTS实时模型是通义实验室千问模型中语音合成利器，始终与最新快照版能力相同。具备双向上下文感知能力，可以低延迟高保真完成多音色、方言及长文本的双向流式生成。本模型是动态更新版本，模型更新不会提前通知。",
@@ -125,7 +141,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Realtime-Text-to-Speech"],
+      "capabilities": [
+        "Realtime-Text-to-Speech"
+      ],
       "versionTag": "LATEST",
       "maxOutputTokens": 7680,
       "latestOnlineAt": "2025-07-16T06:03:00.000+00:00",
@@ -145,14 +163,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

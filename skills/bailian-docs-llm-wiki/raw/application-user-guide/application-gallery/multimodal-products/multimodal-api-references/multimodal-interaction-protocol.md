@@ -508,9 +508,9 @@ string
 
 否
 
-设置指令，用于控制方言、情感等合成效果。该功能仅适用于cosyvoice-v3-flash模型的复刻音色，以及[音色列表](https://help.aliyun.com/zh/model-studio/cosyvoice-voice-list)中标记为支持Instruct的系统音色。
+设置指令，用于控制方言、情感等合成效果。该功能适用于cosyvoice-v3.5-plus、cosyvoice-v3.5-flash、cosyvoice-v3-plus、cosyvoice-v3-flash。
 
-instruction有固定格式要求，具体格式参考此文档里的"instruction"参数说明。[Java SDK](https://help.aliyun.com/zh/model-studio/cosyvoice-java-sdk)
+instruction有固定格式要求，具体格式参考[Java SDK](https://help.aliyun.com/zh/model-studio/cosyvoice-java-sdk)里的"instruction"参数说明。
 
 **parameters.client\_info**的参数说明如下：
 
@@ -594,7 +594,7 @@ json object
 
 否
 
-需要透传给agent的参数，各类agent传递的参数参考[调用官方Agent](https://help.aliyun.com/zh/model-studio/official-agent)文档说明
+设置需要透传给agent的参数，各类agent传递的参数参考[调用官方Agent](https://help.aliyun.com/zh/model-studio/official-agent)文档说明。可以在extra\_config子节点中设置对话扩展参数，目前支持enable\_web\_search，表示是否开启联网搜索。这里的设置优先级更高，会覆盖管控台配置。
 
 user\_prompt\_params
 
@@ -708,6 +708,9 @@ VAD检测方
           },
           "biz_params":{
             "user_defined_params": {
+                "extra_config": {
+                    "enable_web_search": false
+                },
                 "agent_id_xxxxx": {
                     "name": "value"
                 }

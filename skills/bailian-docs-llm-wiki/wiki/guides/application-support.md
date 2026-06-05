@@ -1,37 +1,70 @@
-# application [[support|support]]
+# application [support](support.md)
 
-本文档汇总阿里云百炼应用开发、插件集成与数据管理过程中的核心配置指引与常见问题。旨在帮助开发者快速定位接口调用、[[streaming-output|流式输出]]及知识库检索中的技术细节，并规范完成合规上架流程。平台持续迭代，接入前建议核对最新服务条款。
+阿里云百炼平台为开发者提供应用构建过程中的常见问题解答、数据管理指引、合规备案说明以及相关服务协议。本页面汇总了应用中心、数据管理、插件使用等方面的关键信息，帮助开发者快速定位和解决问题。
 
-## 支持的模型与功能
-- **官方内置插件**：默认提供 Python 代码解释器、计算器、图片生成、夸克搜索、生成二维码、GitHub 搜索。部分高阶插件需通过工单申请开通，详见 [常见问题](../../raw/application-user-guide/application-[[support|support]]/application-faq.md)。
-- **自定义插件/函数**：支持通过标准协议注册外部 API。大模型将自动学习传入的参数定义，完成意图解析与结果透传，可与 [[agent-config]] 协同使用。
-- **RAG 检索增强**：多知识库采用并行检索架构，按用户配置计算相关性得分后选取 TopN 结果。适用于复杂问答、文本摘要及 [[rag-retrieval]] 场景。
-- **协议支持**：服务遵循标准化授权与数据合规要求，完整法律文本参见 [相关协议](../../raw/application-user-guide/application-[[support|support]]/application-related-agreements.md)。
+## 应用中心常见问题
 
-## 关键参数
-| 参数/标识 | 说明 |
-|---|---|
-| `stream=True` | 启用 HTTP 流式响应，适用于长文本实时渲染场景。 |
-| `incremental_output=True` | 配合流式使用，实现增量输出（避免重复返回历史累积内容）。 |
-| `MD5` | 数据管理上传接口必填项，用于校验文件传输完整性与防篡改。 |
-| `Authorization` | 唯一允许透传至自定义插件后端的请求头，其他自定义 Header 将被拦截。 |
+以下内容整理自 [常见问题](../../raw/application-user-guide/application-support/application-faq.md) 中的应用中心部分。
 
-## 使用方式
-- **[[streaming-output|流式输出]]配置**：在 API 请求中同时声明 `stream=True` 与 `incremental_output=True` 可获取逐段生成的 Token。前端需通过 SSE 或 WebSocket 协议接收并拼接渲染。
-- **Markdown 解析**：模型默认输出标准 Markdown 语法（如 `**加粗**`）。业务侧需集成解析库（如 `marked.js`、`markdown-it`）进行 DOM 转换，不可直接渲染纯文本。
-- **检索效果调优**：测试 [[rag-retrieval]] 时若发现回复偏差，可在控制台点击反馈按钮勾选类型，或提取 `RequestId` 通过工单提交底层日志分析。
-- **合规备案流程**：接入通义系列模型上架应用市场或小程序前，需先完成 [[compliance-filing]]，并独立申请合作协议。详细指引参考 [常见问题](../../raw/application-user-guide/application-support/application-faq.md)。
+### 插件能力
 
-## 限制和注意事项
-- **计费边界**：自定义插件功能本身暂不收费，但涉及 [[assistant-api]] 的 Prompt 优化、实际应用调用及测试窗调试均按标准 Token 计量计费。
-- **存储配额**：单业务空间文档上限为 10 万篇。结构化数据导入时，系统遇空行即终止解析（首行为空则判定为空文件），需提前清洗数据。
-- **文件规范**：PDF 后缀必须为全小写 `.pdf`，大写后缀将触发 `140010` 格式错误。
-- **架构差异**：Agent 侧重开发者自主编排插件模型与上下文逻辑；[[assistant-api]] 提供封装类接口便于快速调优与状态管理。
+- **系统内置插件**：目前提供六款官方插件——Python 代码解释器、计算器、图片生成、夸克搜索、生成二维码、GitHub 搜索。部分插件需申请后方可使用。
+- **自定义插件**：自定义插件服务本身暂不收费，但配置智能体 API 时涉及的 [prompt](prompt.md) 优化、应用调用及测试窗测试会产生费用。
+- **自定义 Header**：调用自定义插件时不支持自定义 header，仅支持 `authorization`。
 
-> **注意**：自定义插件 Header 透传策略已明确限定仅支持 `Authorization`，业务侧若依赖其他自定义鉴权头（如 `X-Custom-Token`），需在插件网关层自行映射或通过参数体传递。平台计费与容量配额策略可能随产品迭代调整，请以控制台实时账单及最新公告为准。
+### Agent 与 Assistant API
+
+- **核心区别**：Agent 侧重于调整插件模型、基于上下文的理解，开发者自行开发；Assistant API 提供各类封装，方便调优。
+- **参数理解**：自定义 API 插件遵循协议传给大模型理解；函数调用时，大模型会学习传入的参数信息并返回完整结果。
+
+### RAG 检索增强
+
+- **应用领域**：问答系统、对话系统、文本摘要、知识图谱构建与推理、教育与培训、客户服务、新闻与内容创作、智能搜索与推荐等。
+- **检索方式**：多知识库并行检索，根据每个知识库的用户配置进行检索，然后按得分选取 TopN。
+- **回复不准确时**：可点击模型回复内容下方的问题反馈按钮提交，或复制 `RequestId` 通过阿里云工单反馈。
+
+### 输出控制
+
+- 若需增量[流式输出](../concepts/streaming.md)（而非每次全量回复），设置以下参数：
+
+```python
+stream=True               # 流式输出
+incremental_output=True   # 增量式流式输出
+```
+
+- 模型输出的 `**xxx**` 为 Markdown 加粗标识，前端渲染时需解析 Markdown 语法做对应展示。
+
+## 数据管理
+
+根据 [常见问题](../../raw/application-user-guide/application-support/application-faq.md) 中的数据管理部分，以下为关键注意事项：
+
+| 问题 | 说明 |
+|------|------|
+| PDF 上传报错 `140010` | 确保文件后缀为小写 `pdf` |
+| 文档数量上限 | 每个业务空间最多 10 万个文档，超出需提交工单申请扩容 |
+| 上传接口 MD5 参数 | 用于验证上传文件的完整性 |
+| 结构化数据导入缺失 | 检查表格中是否存在空行，空行后的数据不会被识别；首行为空行则视为空文件 |
+
+## 应用合规备案
+
+产品接入通义千问大模型后，如需上架至应用市场或小程序平台：
+
+1. 参考 [应用合规备案](https://help.aliyun.com/zh/model-studio/compliance-and-launch-filing-guide-for-ai-apps-powered-by-the-tongyi-model) 完成备案流程。
+2. [提交工单](https://smartservice.console.aliyun.com/service/create-ticket) 申请通义千问系列模型的合作协议。
+
+## 相关协议
+
+以下协议与服务条款汇总自 [相关协议](../../raw/application-user-guide/application-support/application-related-agreements.md)：
+
+- [阿里云百炼服务协议](https://terms.alicdn.com/legal-agreement/terms/common_platform_service/20230728213935489/20230728213935489.html)
+- [阿里云百炼服务特别说明](https://help.aliyun.com/zh/model-studio/bailian-service-notes)
+- [开源模型协议条款说明](https://help.aliyun.com/zh/model-studio/open-source-model-terms)
+
+> **注意**：两篇原始文档均提及了"阿里云百炼服务协议"链接，内容一致，无矛盾。但 [常见问题](../../raw/application-user-guide/application-support/application-faq.md) 中仅列出了服务协议，而 [相关协议](../../raw/application-user-guide/application-support/application-related-agreements.md) 额外包含了"服务特别说明"和"开源模型协议条款说明"，建议以后者为完整参考。
 
 ## 来源文档
 
 - [常见问题](../../raw/application-user-guide/application-support/application-faq.md)
 - [相关协议](../../raw/application-user-guide/application-support/application-related-agreements.md)
+
 

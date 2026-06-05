@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Audio"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "通义百聆推出的新一代轻量级实时语音识别模型，依托自研的先进语音技术架构，具备强大的上下文理解能力。专为中文电话客服场景设计：覆盖多地区方言口音，在低采样率、低信噪比环境下实现低延迟、高准确率的流式转写，满足高效部署需求。",
@@ -32,7 +36,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Realtime-ASR"],
+      "capabilities": [
+        "Realtime-ASR"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "equivalentSnapshot": "fun-asr-flash-8k-realtime-2026-01-28",
@@ -52,14 +58,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -73,8 +85,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Audio"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "通义实验室新一代端到端语音识别大模型的实时版，基于领先的自研语音技术，具备卓越的上下文感知和高精度语音转写能力。基于端到端架构，Fun-ASR 集成了创新的 RAG 技术，支持大规模热词自定义、敏感/语气词自动过滤、ITN 规范化、标点预测等多维功能，显著提升了整体识别准确率和语境贴合度。同时，Fun-ASR 支持中英文自由切换，多地区方言覆盖，具备更强的噪声鲁棒性，适应多样复杂环境。",
@@ -106,7 +122,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Realtime-ASR"],
+      "capabilities": [
+        "Realtime-ASR"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-09-23T11:05:02.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -124,7 +142,10 @@
           "key": "max_sentence_silence",
           "default": 1300,
           "tip": "VAD(语音活动检测)断句的静音时长阈值(单位为ms)",
-          "range": [200, 6000]
+          "range": [
+            200,
+            6000
+          ]
         }
       ],
       "samples": {

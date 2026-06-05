@@ -1227,4 +1227,4 @@ String
 
 ## 状态码说明
 
-大模型服务平台通用状态码详情，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+大模型服务平台通用状态码详情，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。

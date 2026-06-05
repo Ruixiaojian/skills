@@ -213,6 +213,13 @@ OpenCode 是一款终端 AI 编程工具，可以通过按量计费、Coding Pla
 
 将 `YOUR_API_KEY` 替换为[阿里云百炼 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。可用模型请参考[Anthropic 兼容 API](https://help.aliyun.com/zh/model-studio/anthropic-api-messages#07833dedefft7)。
 
+`baseURL` 按地域设置，API Key 需与所选地域对应：
+
+-   华北2（北京）：`https://dashscope.aliyuncs.com/apps/anthropic/v1`
+    
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/apps/anthropic/v1`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
+    
+
 ```
 {
   "$schema": "https://opencode.ai/config.json",
@@ -251,6 +258,8 @@ OpenCode 是一款终端 AI 编程工具，可以通过按量计费、Coding Pla
   }
 }
 ```
+
+如需添加[其他模型](https://help.aliyun.com/zh/model-studio/anthropic-api-messages#07833dedefft7)，在 `models` 中以相同格式追加即可。
 
 ## **验证配置**
 

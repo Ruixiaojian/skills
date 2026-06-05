@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "千问2.5系列千亿级别超大规模语言模型，支持中文、英文等不同语言输入。随着模型的升级，qwen-max将滚动更新升级。如果希望使用固定版本，请使用历史快照版本。",
@@ -74,7 +78,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "MAJOR",
       "maxOutputTokens": 8192,
       "latestOnlineAt": "2024-10-15T05:39:20.000+00:00",
@@ -89,6 +95,7 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Qwen-Max",
       "docUrl": "https://help.aliyun.com/document_detail/2712576.html",
+      "category": "Older",
       "predictConfig": [
         {
           "name": "system",
@@ -100,14 +107,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",

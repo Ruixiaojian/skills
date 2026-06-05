@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Audio"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "Paraformer中文实时语音识别模型，支持8kHz电话客服等场景下的实时语音识别。",
@@ -25,7 +29,9 @@
           "priceName": "音频时长"
         }
       ],
-      "capabilities": ["Realtime-ASR"],
+      "capabilities": [
+        "Realtime-ASR"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-06-06T11:36:50.000+00:00",
       "inferenceProvider": "aliyun-bailian",

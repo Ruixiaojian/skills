@@ -4,7 +4,7 @@
 
 ## 加解密过程
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3284226771/CAEQWhiBgMDutN2xvBkiIGU1NWJmYmRkYzEzMTQ4YTU5YTg5YmJiZWVkODk1ZWQw4860485_20250226112255.459.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2904789771/CAEQWhiBgMDutN2xvBkiIGU1NWJmYmRkYzEzMTQ4YTU5YTg5YmJiZWVkODk1ZWQw4860485_20250226112255.459.svg)
 
 采用混合加密机制：数据由AES对称算法加密，其密钥通过RSA非对称加密实现安全传输。
 
@@ -962,4 +962,4 @@ A：不需要。建议在客户端缓存 RSA 公钥（推荐缓存时长 1 分�
 
 ## 错误码
 
-如果调用失败并返回报错信息，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+如果调用失败并返回报错信息，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。

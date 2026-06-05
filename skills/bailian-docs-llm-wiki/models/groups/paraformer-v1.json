@@ -4,12 +4,18 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Audio"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "Paraformer中英文语音识别模型，支持16kHz及以上采样率的音频或视频语音识别。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen",
       "model": "paraformer-v1",
       "resourcePackages": [
@@ -25,7 +31,9 @@
           "priceName": "音频时长"
         }
       ],
-      "capabilities": ["ASR"],
+      "capabilities": [
+        "ASR"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-04-09T09:20:05.000+00:00",
       "inferenceProvider": "aliyun-bailian",

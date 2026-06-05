@@ -96,7 +96,7 @@ model:
 
 -   华北2（北京）：`https://dashscope.aliyuncs.com/apps/anthropic`
     
--   新加坡：`https://dashscope-intl.aliyuncs.com/apps/anthropic`
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/apps/anthropic`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
     
 
 ```

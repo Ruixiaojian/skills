@@ -4,12 +4,18 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "基于Qwen3全面升级的基础级文本翻译大模型，支持32个语种互译，模型性能和翻译效果全面升级，并提供更稳定的术语定制、格式还原度、领域提示能力，让译文更精准、自然。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen-domain-model",
       "model": "qwen-mt-lite",
       "prices": [
@@ -44,7 +50,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "MAJOR",
       "maxOutputTokens": 8192,
       "latestOnlineAt": "2025-11-19T11:49:54.000+00:00",

@@ -1,44 +1,105 @@
-# 函数调用
+# 函数调用（工具调用）
 
-函数调用（Function Calling）是大语言模型将自然语言意图转化为结构化外部工具请求的机制。模型根据上下文与系统指令自主调度已注册的插件、API 或协议服务，执行外部逻辑后回传结果，从而突破纯文本生成边界并实现复杂业务闭环。
+函数调用（Function Calling），也称工具调用（Tool Calling），是百炼平台中大模型与外部工具协作的核心机制。开发者通过向模型描述可用工具的名称、功能和参数schema，模型在对话过程中自主判断是否需要调用工具，并生成结构化的调用参数，由应用侧执行后将结果返回模型以生成最终回复。
 
-## 在百炼平台不同场景中的使用
-百炼平台提供多种架构范式支持函数调用，开发者可根据业务确定性需求选择适配路径：
-- **[[智能体应用]]**：采用提示词驱动与模型自主规划架构（ReAct）。开发者挂载工具后，模型基于对话上下文动态触发调用、解析参数并串联多步执行。支持配置 `ReAct 最大轮次`（1-50）控制单次会话的调用上限。
-- **[[工作流应用]]**：采用可视化节点确定性编排。函数调用被固化为独立插件或代码节点，参数流转需手动通过变量映射串联，不依赖模型自主决策，适用于高稳定性要求的固定业务链。
-- **API 直调与 Assistant 架构**：通过请求体 `tools` 字段声明可用函数。模型推理遇外部任务时，返回 `requires_action` 状态及结构化 `tool_calls` 指令。开发者需在本地环境执行逻辑，并调用 `Runs.submit_tool_outputs` 回传结果以驱动状态机流转。
-- **[[模型上下文协议]] (MCP)**：基于 JSON-RPC 标准化协议接入外部服务。在智能体中作为函数调用资源池由模型动态调度；在工作流中采用“单节点绑定单工具”模式。支持 `streamableHttp` 传输与云端异步任务执行。
+## 工作原理
 
-## 关键参数与配置
-| 参数/配置项 | 说明与应用场景 |
-|---|---|
-| `tools` / 工具声明 | 定义可用函数集合。需提供唯一标识符、功能描述及 JSON Schema 参数定义，直接决定模型路由准确率。 |
-| `tool_calls` / `requires_action` | 模型返回的调用指令结构。包含目标工具 ID 及从上下文中提取的入参值。在 Assistant API 中表现为 `Run` 对象的阻塞状态。 |
-| `submit_tool_outputs` | 用于回传工具执行结果的核心接口。结果将自动拼接至上下文，触发模型二次推理并生成最终答复。 |
-| `biz_params` (业务透传) | 应用调用 API 中的动态参数注入字段。通过 `user_defined_params` 结构可将运行时变量精准路由至指定自定义插件。 |
-| **入参映射策略** | 支持“大模型识别”（自动从对话提取）或“业务透传”（SDK/HTTP 显式传入）。出参结构需严格遵循 JSON 规范，子属性严禁为空。 |
-| **执行超时限制** | 自定义插件与工具执行默认存在 **5 秒超时**。高频或耗时场景建议改用 [[高代码应用]] 实现异步队列，或启用 MCP 极速模式消除冷启动。 |
+函数调用的基本流程如下：
 
-## 开发注意事项
-- **网络与安全边界**：官方 `code_interpreter` 隔离运行且无外网权限；MCP 自定义服务部署于无状态云端，**无固定公网 IP**，访问云资源需配置白名单或 VPC 互通。搜索类工具仅返回标题与摘要，不直接抓取网页详情。
-- **状态机与容错设计**：函数调用链路依赖严格的状态流转。外部服务网络波动易导致 `Run` 永久阻塞，建议在 `submit_tool_outputs` 环节增加指数退避重试与异常拦截。
-- **触发策略调优**：若模型未触发预期调用，优先检查工具描述（Description）是否清晰、System Prompt 是否划定调用边界，或尝试升级至 `qwen-max` 等强推理模型。
-- **架构演进提示**：旧版 `[[assistant api]]` 已处于**下线中**阶段。新建项目推荐迁移至 `[[responses-api]]` 或平台原生应用架构，以获得更完整的上下文生命周期管理与更低的集成维护成本。
+1. 开发者在请求中通过 `tools` 参数定义可用工具（名称、描述、参数 JSON Schema）
+2. 模型根据**用户输入内容**、**工具名称**和**工具描述**判断是否需要调用工具
+3. 若需要调用，模型输出工具名称和结构化参数（而非直接回答用户）
+4. 应用侧执行对应函数，获取返回结果
+5. 将工具返回结果与对话上下文合并，再次输入模型生成最终回复
 
-## 相关主题
-- [[智能体应用]]
-- [[工作流应用]]
-- [[模型上下文协议]]
-- [[插件]]
-- [[responses-api]]
-- [[assistant api]]
+若模型判断无需调用工具，则直接生成文本回复。
+
+## 在百炼平台的使用场景
+
+### 模型 API 直接调用
+
+百炼平台的通用文本生成模型（如 `qwen3.6-plus`、`qwen3.7-max`、`qwen3.6-flash`）和部分视觉/全模态模型均支持 Function Calling。开发者可通过以下接口使用：
+
+| 接口类型 | Function Calling 支持方式 |
+|---------|--------------------------|
+| OpenAI 兼容 Chat Completions | 通过 `tools` 参数定义工具，模型返回 `tool_calls` |
+| OpenAI 兼容 Responses | 内置联网搜索、代码解释器等工具，自动管理调用流程 |
+| Anthropic 兼容 Messages | 兼容 Anthropic 工具调用格式 |
+| DashScope 原生接口 | 提供最完整的工具调用参数支持 |
+
+### 智能体应用（Agent）
+
+- **Agent 2.0（新版）**：将知识库、MCP 服务统一作为工具，由智能体自主规划调用顺序，支持完整的"规划-执行-反思"链路
+- **Agent 1.0（旧版）**：通过插件机制调用工具，大模型根据工具描述决策是否调用
+- 通过 ReAct 最大轮次参数（1-50）限制单次会话中工具调用的最大次数
+
+### 工作流应用
+
+在工作流中，工具（插件/MCP）作为节点按编排方式执行，每个节点手动指定一个工具并串联输入输出，由大模型节点负责自然语言与参数的转换。
+
+### 实时多模态交互（Omni Realtime API）
+
+`qwen3.5-omni-realtime` 系列模型在 WebSocket 实时交互中支持工具调用：
+
+- 通过 `session.update` 事件配置可用工具
+- 服务端通过 `response.function_call_arguments.delta` / `done` 事件返回工具调用参数
+- 客户端通过 `conversation.item.create` 事件回传工具执行结果
+
+## 工具接入方式
+
+| 方式 | 说明 | 适用场景 |
+|------|------|---------|
+| 自定义 Function Calling | 在 API 请求中通过 `tools` 参数定义工具 | 直接调用模型 API 的开发者 |
+| 插件（Plugin） | 平台预置或自定义的工具集合，包括官方插件、三方插件和自定义插件 | 智能体/工作流应用 |
+| MCP 服务 | 通过模型上下文协议接入标准化外部工具 | 智能体/工作流应用 |
+| 内置工具 | 联网搜索、代码解释器等无需额外配置的工具 | Qwen3.6/3.5 系列 plus/flash 模型 |
+
+## 关键参数和配置
+
+### tools 参数定义
+
+```json
+{
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "get_weather",
+        "description": "获取指定城市的当前天气信息",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string",
+              "description": "城市名称，如'北京'"
+            }
+          },
+          "required": ["city"]
+        }
+      }
+    }
+  ]
+}
+```
+
+### 影响工具调用效果的要素
+
+| 要素 | 说明 |
+|------|------|
+| 工具名称 | 应具有语义，帮助模型理解工具功能 |
+| 工具描述 | 功能和使用场景的简要说明，直接影响模型的调用判断 |
+| 参数描述 | 参数的含义和格式说明，影响模型提取参数的准确性 |
+| 系统提示词 | 在智能体场景中，提示词中明确工具名称和能力描述可提升调用效果 |
+
+###
 
 ## 关联主题页
 
-- [[assistant-api|assistant api]] — `../guides/assistant-api.md`
-- [[plug-in|plug in]] — `../guides/plug-in.md`
-- [[model-context-protocol|model context protocol]] — `../guides/model-context-protocol.md`
-- [[llm-application|llm application]] — `../guides/llm-application.md`
-- [[bailian-application-calling|bailian [[application-call|application call]]ing]] — `../guides/bailian-application-calling.md`
-- [[assistantapi|assistantapi]] — `../api/[[assistantapi|assistantapi]].md`
+- [model inference](../guides/model-inference.md)
+- [omni realtime api](../api/omni-realtime-api.md)
+- [plug in](../guides/plug-in.md)
+- [model context protocol](../guides/model-context-protocol.md)
+- [llm application](../guides/llm-application.md)
+- [qwen api reference](../api/qwen-api-reference.md)
+- [more about models](../api/more-about-models.md)
 

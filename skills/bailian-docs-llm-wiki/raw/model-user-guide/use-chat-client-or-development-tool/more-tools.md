@@ -62,7 +62,7 @@ OpenAI
 
 华北2（北京）：`https://dashscope.aliyuncs.com/compatible-mode/v1`
 
-新加坡：`https://dashscope-intl.aliyuncs.com/compatible-mode/v1`
+新加坡：`https://[workspace-id].ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
 
 美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
 
@@ -74,7 +74,7 @@ Anthropic
 
 华北2（北京）：`https://dashscope.aliyuncs.com/apps/anthropic`
 
-新加坡：`https://dashscope-intl.aliyuncs.com/apps/anthropic`
+新加坡：`https://[workspace-id].ap-southeast-1.maas.aliyuncs.com/apps/anthropic`
 
 [支持的模型](https://help.aliyun.com/zh/model-studio/anthropic-api-messages#ae1b2c3d4e5f6)
 
@@ -93,11 +93,7 @@ Token Plan 团队版和 Coding Plan 仅限在 AI 编程工具和 OpenClaw 类型
 
 ## **在 IDE 中使用**
 
-**说明**
-
-部分编程工具（如通义灵码个人版、Cursor 免费版、Trae）不支持接入自定义服务端点，无法直接使用 Token Plan 团队版或 Coding Plan。
-
-如需在 VS Code 系列（Cursor、Trae 等）或 JetBrains IDE（IDEA、PyCharm 等）中使用，可通过安装以下插件接入：
+如需在 VS Code 系列或 JetBrains IDE 中使用，可通过安装以下插件接入：
 
 **插件**
 

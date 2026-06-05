@@ -4,12 +4,18 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "MiniMax 语音大模型能够根据上下文，智能预测文本的情绪、语调等信息，并生成超自然、高保真、个性化的语音。在社交、播客、有声书、新闻资讯、教育、数字人等多种场景中展现出强大的实力。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "mini-max",
       "model": "MiniMax/speech-2.8-turbo",
       "iconUrl": "",
@@ -45,12 +51,14 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TTS"],
+      "capabilities": [
+        "TTS"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-03-19T08:44:53.000+00:00",
       "maxInputTokens": 10000,
-      "inferenceProvider": "minimax",
+      "inferenceProvider": "mini-max",
       "name": "speech-2.8-turbo",
       "predictConfig": [],
       "samples": {
@@ -64,12 +72,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "MiniMax 语音大模型能够根据上下文，智能预测文本的情绪、语调等信息，并生成超自然、高保真、个性化的语音。在社交、播客、有声书、新闻资讯、教育、数字人等多种场景中展现出强大的实力。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "mini-max",
       "model": "MiniMax/speech-2.8-hd",
       "iconUrl": "",
@@ -105,12 +119,14 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TTS"],
+      "capabilities": [
+        "TTS"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-03-19T08:46:11.000+00:00",
       "maxInputTokens": 10000,
-      "inferenceProvider": "minimax",
+      "inferenceProvider": "mini-max",
       "name": "speech-2.8-hd",
       "predictConfig": [],
       "samples": {
@@ -124,12 +140,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "MiniMax 语音大模型能够根据上下文，智能预测文本的情绪、语调等信息，并生成超自然、高保真、个性化的语音。在社交、播客、有声书、新闻资讯、教育、数字人等多种场景中展现出强大的实力。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "mini-max",
       "model": "MiniMax/speech-02-turbo",
       "iconUrl": "",
@@ -165,12 +187,14 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TTS"],
+      "capabilities": [
+        "TTS"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-03-19T08:44:37.000+00:00",
       "maxInputTokens": 10000,
-      "inferenceProvider": "minimax",
+      "inferenceProvider": "mini-max",
       "name": "speech-02-turbo",
       "predictConfig": [],
       "samples": {
@@ -184,12 +208,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "MiniMax 语音大模型能够根据上下文，智能预测文本的情绪、语调等信息，并生成超自然、高保真、个性化的语音。在社交、播客、有声书、新闻资讯、教育、数字人等多种场景中展现出强大的实力。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "mini-max",
       "model": "MiniMax/speech-02-hd",
       "iconUrl": "",
@@ -225,12 +255,14 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TTS"],
+      "capabilities": [
+        "TTS"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-03-19T08:45:04.000+00:00",
       "maxInputTokens": 10000,
-      "inferenceProvider": "minimax",
+      "inferenceProvider": "mini-max",
       "name": "speech-02-hd",
       "predictConfig": [],
       "samples": {

@@ -1923,7 +1923,7 @@
     
     否
     
-    合成语音的音色风格。支持的音色请参考[实时语音合成-千问](https://help.aliyun.com/zh/model-studio/realtime-tts-user-guide#184aea6f4399s)。
+    合成语音的音色风格。支持的音色请参考[实时语音合成](https://help.aliyun.com/zh/model-studio/realtime-tts-user-guide#184aea6f4399s)。
     
 -   **节点输出**
     
@@ -2269,7 +2269,7 @@
     
 -   关于调用参数传递问题，请参见[应用的参数传递](https://help.aliyun.com/zh/model-studio/pass-through-of-application-parameters)。
     
--   关于调用报错信息，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+-   关于调用报错信息，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
     
 -   关于调用并发数限制问题，应用本身不限流，主要与内部调用的模型有关，有关模型内容请参见[百炼控制台](https://bailian.console.alibabacloud.com/cn-beijing?tab=model#/model-market/all)。
     

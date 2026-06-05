@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Audio"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "千问3-ASR-Flash的大文件转录版本，千问3-ASR-Flash是一款基于大语言模型的高精度、高智能、高鲁棒性的多语种语音识别模型。依托强大的基座模型、海量的文本与多模态数据、千万小时音频数据，千问3-ASR-Flash实现了高精度的语音识别功能，能够自动判断语种并准确识别多个语种的语音，在复杂的音频环境下能够保证精确转录。",
@@ -38,7 +42,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["ASR"],
+      "capabilities": [
+        "ASR"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-11-17T13:12:02.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -55,14 +61,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

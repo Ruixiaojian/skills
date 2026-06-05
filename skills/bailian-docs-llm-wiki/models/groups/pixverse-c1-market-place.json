@@ -4,8 +4,13 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image", "Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "C1是PixVerse在26年3月底推出的影视行业大模型，r2v（多主体参考生成视频）输入2-7张图像，智能融合不同主体，同时拥有t2v（文字生成视频）的提示词控制能力，和it2v（图片生成视频）的一致性保持能力和想象力、更接近影视专业水准的打斗动作和术法特效。支持15秒长视频、音乐和视频直出、支持多种语言文字。适合多主体群像、多人对话、多人交互等复杂剧情，适合中景、全景镜头。\n如果输入了1张多宫格分镜图片（最高支持九宫格），则可以一键生成连续分镜长视频。",
@@ -89,7 +94,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-09T13:35:02.000+00:00",
@@ -107,14 +114,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -128,8 +141,13 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image", "Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "C1是PixVerse在26年3月底推出的影视行业大模型，kf2v（首尾帧生成视频）模型可将任意两张图片衔接，视频转场更加流畅自然，支持15秒长视频、音乐和视频直出、支持多种语言文字。",
@@ -213,7 +231,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-09T13:34:56.000+00:00",
@@ -231,14 +251,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -252,12 +278,19 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image", "Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "C1是PixVerse在26年3月底推出的影视行业大模型，it2v（图片生成视频）模型除了拥有t2v（文字生成视频）的提示词控制能力外，还能高度还原参考图片的色彩、饱和度、场景和人物特征。相比V6可增强提示词，拥有更强的想象力、更接近影视专业水准的打斗动作、术法特效。支持15秒长视频、音乐和视频直出、支持多种语言文字。适合单人特写、单人独白、定格/慢动作、空镜转场等短时长镜头。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "pixverse",
       "model": "pixverse/pixverse-c1-it2v",
       "iconUrl": "",
@@ -335,7 +368,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-09T13:34:51.000+00:00",
@@ -352,14 +387,20 @@
           "name": "视频时长",
           "key": "duration",
           "default": 5,
-          "range": [1, 15]
+          "range": [
+            1,
+            15
+          ]
         },
         {
           "name": "随机种子",
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "生成音频",
@@ -378,12 +419,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "C1是PixVerse在26年3月底推出的影视行业大模型，t2v（文字生成视频）模型可通过提示词精准控制视频画面，精确还原各类镜头语言，推、拉、摇、移、跟随等运镜方式流畅自然，视角切换精准可控。支持15秒长视频、音乐和视频直出、支持多种语言文字。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "pixverse",
       "model": "pixverse/pixverse-c1-t2v",
       "iconUrl": "",
@@ -463,7 +510,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-09T13:34:47.000+00:00",
@@ -480,14 +529,20 @@
           "name": "视频时长",
           "key": "duration",
           "default": 5,
-          "range": [1, 15]
+          "range": [
+            1,
+            15
+          ]
         },
         {
           "name": "随机种子",
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         },
         {
           "name": "生成音频",

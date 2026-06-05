@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "CosyVoice-v3.5-Flash是通义实验室CosyVoice系列的高性能语音合成大模型。对声音克隆和声音设计的语音合成效果进行全面升级，确保说话人高相似度的前提下，支持free-style指令控制，合成风格丰富多样。较之前版本大幅减少首包延迟，同时提高发音准确率，改善韵律和音质。支持跨多语种（中、英、德、法、俄、日、韩、葡、泰、印尼、越南）超自然听感实时语音合成。",
@@ -33,7 +37,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TTS"],
+      "capabilities": [
+        "TTS"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-02-27T09:13:23.000+00:00",
@@ -46,14 +52,20 @@
           "key": "volume",
           "default": 50,
           "tip": "数值越大，合成音频声音越大",
-          "range": [0, 100]
+          "range": [
+            0,
+            100
+          ]
         },
         {
           "name": "语速",
           "key": "speechRate",
           "default": 1,
           "tip": "数值越大，合成音频语速越快",
-          "range": [0.5, 2]
+          "range": [
+            0.5,
+            2
+          ]
         }
       ],
       "samples": {
@@ -68,8 +80,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "CosyVoice-v3.5-Plus是通义实验室CosyVoice系列的超高表现力语音合成大模型。对声音克隆和声音设计的语音合成效果进行全面升级，确保说话人高相似度的前提下，支持free-style指令控制，合成风格丰富多样。较之前版本大幅减少首包延迟，同时提高发音准确率，改善韵律和音质。支持跨多语种（中、英、德、法、俄、日、韩、葡、泰、印尼、越南）超自然听感实时语音合成。",
@@ -96,7 +112,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TTS"],
+      "capabilities": [
+        "TTS"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-02-27T09:13:30.000+00:00",
@@ -116,8 +134,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "合成能力：CosyVoice-v3-Flash是通义实验室CosyVoice系列最新版高性能的语音合成大模型，较之前版本在自然度、音质、韵律、情感表现力上有更好的表现。该模型支持文本至语音的实时流式合成。克隆能力：CosyVoice-v3-Flash也是通义实验室CosyVoice系列最新版的语音克隆大模型，较之前版本提升了发音准确性、音色相似度，并且增加了更多小语种支持（德、西、法、意、俄）。仅需提供5-20s的参考音频，即可迅速生成高度相似且听感自然的定制声音。",
@@ -144,7 +166,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TTS"],
+      "capabilities": [
+        "TTS"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-11-17T06:35:36.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -155,14 +179,20 @@
           "key": "volume",
           "default": 50,
           "tip": "数值越大，合成音频声音越大",
-          "range": [0, 100]
+          "range": [
+            0,
+            100
+          ]
         },
         {
           "name": "语速",
           "key": "speechRate",
           "default": 1,
           "tip": "数值越大，合成音频语速越快",
-          "range": [0.5, 2]
+          "range": [
+            0.5,
+            2
+          ]
         }
       ],
       "samples": {
@@ -176,8 +206,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "克隆能力：CosyVoice-v3-plus是通义实验室CosyVoice系列最新版的语音克隆大模型，具有更好的音质和复刻相似度，适用于更专业的场景。仅需提供5-20s的参考音频，即可迅速生成高度相似且听感自然的定制声音。合成能力：CosyVoice-v3-plus是通义实验室CosyVoice系列最新版的语音合成大模型，具有更好的音质和表现力，适用于更专业的场景。该模型支持文本至语音的实时流式合成。",
@@ -209,7 +243,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TTS"],
+      "capabilities": [
+        "TTS"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-09-03T01:45:34.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -227,14 +263,20 @@
           "key": "volume",
           "default": 50,
           "tip": "数值越大，合成音频声音越大",
-          "range": [0, 100]
+          "range": [
+            0,
+            100
+          ]
         },
         {
           "name": "语速",
           "key": "speechRate",
           "default": 1,
           "tip": "数值越大，合成音频语速越快",
-          "range": [0.5, 2]
+          "range": [
+            0.5,
+            2
+          ]
         }
       ],
       "samples": {
@@ -248,8 +290,12 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "声音复刻Cosyvoice大模型，依托先进的大模型技术进行特征提取，从而完成声音的复刻，且无需训练过程。仅需提供时长较短的音频，即可迅速生成高度相似且听感自然的定制声音。",
@@ -264,7 +310,9 @@
           "priceName": "语音合成"
         }
       ],
-      "capabilities": ["TTS"],
+      "capabilities": [
+        "TTS"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-09-12T16:00:00.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -281,21 +329,31 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ]
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "cosyvoice-V2是通义实验室依托大规模预训练语言模型，在深度融合文本理解和语音生成的新一代生成式语音合成大模型，支持文本至语音的实时流式合成。",
@@ -315,7 +373,9 @@
           "priceName": "语音合成"
         }
       ],
-      "capabilities": ["TTS"],
+      "capabilities": [
+        "TTS"
+      ],
       "versionTag": "SNAPSHOT",
       "latestOnlineAt": "2025-05-27T10:10:42.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -327,14 +387,20 @@
           "key": "volume",
           "default": 50,
           "tip": "数值越大，合成音频声音越大",
-          "range": [0, 100]
+          "range": [
+            0,
+            100
+          ]
         },
         {
           "name": "语速",
           "key": "speechRate",
           "default": 1,
           "tip": "数值越大，合成音频语速越快",
-          "range": [0.5, 2]
+          "range": [
+            0.5,
+            2
+          ]
         },
         {
           "name": "字级别时间戳",
@@ -353,12 +419,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Audio"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Audio"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "CosyVoice 是通义实验室依托大规模预训练语言模型，深度融合文本理解和语音生成的新一代生成式语音合成大模型，支持文本至语音的实时流式合成。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen-domain-model",
       "model": "cosyvoice-v1",
       "resourcePackages": [
@@ -374,7 +446,9 @@
           "priceName": "语音合成"
         }
       ],
-      "capabilities": ["TTS"],
+      "capabilities": [
+        "TTS"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2025-03-18T02:20:34.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -386,14 +460,20 @@
           "key": "volume",
           "default": 50,
           "tip": "数值越大，合成音频声音越大",
-          "range": [0, 100]
+          "range": [
+            0,
+            100
+          ]
         },
         {
           "name": "语速",
           "key": "speechRate",
           "default": 1,
           "tip": "数值越大，合成音频语速越快",
-          "range": [0.5, 2]
+          "range": [
+            0.5,
+            2
+          ]
         }
       ],
       "samples": {

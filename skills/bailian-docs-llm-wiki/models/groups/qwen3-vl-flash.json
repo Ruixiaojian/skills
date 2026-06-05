@@ -4,8 +4,14 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text", "Image", "Video"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text",
+          "Image",
+          "Video"
+        ]
       },
       "openSource": false,
       "description": "Qwen3系列小尺寸视觉理解模型，实现思考模式和非思考模式的有效融合，效果优于开源版Qwen3-VL-30B-A3B，响应速度快。全面升级图像/视频理解，支持长视频长文档等超长上下文、空间感知与万物识别；具备视觉2D/3D定位能力，胜任复杂现实任务。",
@@ -229,7 +235,10 @@
           "rangeEnd": 262144
         }
       ],
-      "capabilities": ["VU", "Reasoning"],
+      "capabilities": [
+        "VU",
+        "Reasoning"
+      ],
       "modelAlias": "qwen3-vl-plus",
       "versionTag": "MAJOR",
       "equivalentSnapshot": "qwen3-vl-flash-2026-01-22",
@@ -253,7 +262,10 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "stop",
@@ -265,7 +277,10 @@
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         },
         {
           "name": "enable_search",
@@ -283,7 +298,10 @@
           "key": "thinking_budget",
           "default": 4000,
           "tip": "思维链的最大输出tokens数量",
-          "range": [1, 32768]
+          "range": [
+            1,
+            32768
+          ]
         },
         {
           "name": "result_format",

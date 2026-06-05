@@ -4,12 +4,18 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "千问数学模型具有强大的数学解题能力,擅长处理中英文数学题，包括方程、计算、证明等方向。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen-domain-model",
       "model": "qwen-math-plus",
       "prices": [
@@ -44,7 +50,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "MAJOR",
       "maxOutputTokens": 3072,
       "latestOnlineAt": "2024-09-12T16:00:06.000+00:00",
@@ -64,14 +72,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -95,12 +109,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "千问系列数学模型是专门用于数学解题的语言模型，推理效果好，模型性能优秀本模型为2024年9月19日快照版本，预计维护到下个版本发布后一个月（待定）。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen-domain-model",
       "model": "qwen-math-plus-0919",
       "prices": [
@@ -135,7 +155,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "modelAlias": "qwen-math-plus-2024-09-19",
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 3072,
@@ -156,14 +178,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -187,12 +215,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "千问系列数学模型是专门用于数学解题的语言模型，推理效果好，模型性能优秀，本模型是动态更新版本，模型更新不会提前通知。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen-domain-model",
       "model": "qwen-math-plus-latest",
       "prices": [
@@ -227,7 +261,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "versionTag": "LATEST",
       "maxOutputTokens": 3072,
       "latestOnlineAt": "2024-09-18T16:00:00.000+00:00",
@@ -247,14 +283,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -278,12 +320,18 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "千问数学模型具有强大的数学解题能力,擅长处理中英文数学题，包括方程、计算、证明等方向。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen-domain-model",
       "model": "qwen-math-plus-0816",
       "prices": [
@@ -318,7 +366,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["TG"],
+      "capabilities": [
+        "TG"
+      ],
       "modelAlias": "qwen-math-plus-2024-08-16",
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 3072,
@@ -339,14 +389,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

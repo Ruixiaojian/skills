@@ -63,7 +63,7 @@ Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-pla
 
 -   华北2（北京）：`https://dashscope.aliyuncs.com/compatible-mode/v1`
     
--   新加坡：`https://dashscope-intl.aliyuncs.com/compatible-mode/v1`
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
     
 -   美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
     
@@ -104,7 +104,7 @@ Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-pla
 
 配置过程中遇到报错，请参考对应计费方案的常见问题文档：
 
--   按量付费：[错误信息](https://help.aliyun.com/zh/model-studio/error-code)
+-   按量付费：[错误码](https://help.aliyun.com/zh/model-studio/error-code)
     
 -   Coding Plan：[Coding Plan 常见问题](https://help.aliyun.com/zh/model-studio/coding-plan-faq)
     

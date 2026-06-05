@@ -25,9 +25,7 @@
 
 #### **模型调优流程**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6780689771/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
-
-阿里云百炼模型调优功能还支持：[Paraformer语音识别热词定制与管理](https://help.aliyun.com/zh/model-studio/paraformer-asr-phrase-manager)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/9438830871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
 
 详情参见：
 
@@ -48,6 +46,20 @@
 **DPO全参训练（dpo\_full）**
 
 **DPO高效训练（dpo\_lora）**
+
+Qwen3.6-Flash-2026-04-16
+
+qwen3.6-flash-2026-04-16
+
+×
+
+支持
+
+×
+
+×
+
+×
 
 Qwen3.5-27B
 
@@ -77,11 +89,25 @@ qwen3.5-9b
 
 ×
 
+Qwen3.5-Flash-2026-02-23
+
+qwen3.5-flash-2026-02-23
+
+×
+
+支持
+
+×
+
+×
+
+×
+
 Qwen3-32B
 
 qwen3-32b
 
-×
+支持
 
 支持
 
@@ -232,84 +258,6 @@ qwen-plus-character-2025-11-06
 支持
 
 > `-Base`表示该模型只完成了预训练，虽然模型内已经存储了海量的知识，但无法正常进行对话。
-
-#### **调优方法对比**
-
-**特性**
-
-**CPT（持续预训练）**
-
-**SFT （监督微调）**
-
-**DPO （直接偏好优化）**
-
-一句话总结
-
-补知识**（**注入领域知识**）**
-
-学做事**（**学会遵循指令**）**
-
-做得更好**（**对齐人类偏好**）**
-
-输入数据
-
-1000万+ Token
-
-无标签的领域文本
-
-1000+ 条
-
-高质量的“问-答”对
-
-100+ 组
-
-同一指令下的“更好-更差”回答对
-
-核心目标
-
-领域适应，学习专业词汇和事实
-
-教会模型对话格式和任务执行能力
-
-使模型输出更符合人类价值观和偏好
-
-学习方式
-
-自监督学习（预测下一个词**）**
-
-监督学习**（**模仿标准答案**）**
-
-直接偏好学习**（**增大好答案概率，降低坏答案概率**）**
-
-模型阶段
-
-通常在 SFT 之前
-
-CPT 之后，DPO 之前
-
-通常在 SFT 之后，作为对齐的最后一步
-
-#### **训练模式对比**
-
-**全参训练**
-
-**高效训练 （LoRA，推荐）**
-
-**适用场景**
-
-• 需要模型学习新能力
-
-• 追求全局效果最优
-
-• 优化模型特定场景下的效果
-
-• 对训练时间和成本敏感的场景
-
-**训练时间**
-
-较长，收敛速度较慢。
-
-较短，收敛速度快。
 
 ## 视觉理解（千问VL）
 
@@ -491,58 +439,6 @@ CPT 之后，DPO 之前
 
 较短，收敛速度快。
 
-## 语音识别-热词定制与管理
-
-**模型代码**
-
-**热词定制与管理**
-
-**CPT**
-
-**全参训练**
-
-**SFT**
-
-**全参训练**
-
-**SFT**
-
-**高效训练**
-
-**DPO**
-
-**全参训练**
-
-**DPO**
-
-**高效训练**
-
-paraformer-realtime-v1（仅API）
-
-![hailuo\_652023034\_RF](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5896176271/p842709.png)
-
-paraformer-realtime-8k-v1（仅API）
-
-![hailuo\_652023034\_RF](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5896176271/p842709.png)
-
-paraformer-8k-v1（仅API）
-
-![hailuo\_652023034\_RF](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5896176271/p842709.png)
-
-paraformer-v1（仅API）
-
-![hailuo\_652023034\_RF](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5896176271/p842709.png)
-
-paraformer-mtl-v1（仅API）
-
-![hailuo\_652023034\_RF](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5896176271/p842709.png)
-
-paraformer-v2（仅API）
-
-![hailuo\_652023034\_RF](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5896176271/p842709.png)
-
-热词定制与管理：管理热词表，提升热词表内词汇的识别效果。
-
 ## 计费说明
 
 **计费方式**
@@ -567,6 +463,12 @@ paraformer-v2（仅API）
 
 **价格**
 
+Qwen3.6-Flash-2026-04-16
+
+qwen3.6-flash-2026-04-16
+
+¥0.05/千Token
+
 Qwen3.5-27B
 
 qwen3.5-27b
@@ -578,6 +480,12 @@ Qwen3.5-9B
 qwen3.5-9b
 
 ¥0.02/千Token
+
+Qwen3.5-Flash-2026-02-23
+
+qwen3.5-flash-2026-02-23
+
+¥0.05/千Token
 
 Qwen3-32B
 
@@ -691,8 +599,6 @@ qwen2.5-vl-7b-instruct
 
 ## **模型调优前必读**
 
--   如果您并不是需要对文本生成模型进行调优，请直接前往[Paraformer语音识别热词定制与管理](https://help.aliyun.com/zh/model-studio/paraformer-asr-phrase-manager)页面。
-    
 -   文本生成模型调优虽然能在特定业务/场景取得非常好的效果，但有以下限制：
     
     -   **耗时较长**，包括：拥有一个大规模（最少 0.5亿 token）CPT 数据集、构建一个有效（1000+）SFT 数据集、收集足够的（100+）Bad Case 构建[模型部署计费](https://help.aliyun.com/zh/model-studio/model-training-and-deployment-billing#2083766ef99p1)有效 DPO 数据集、模型优化迭代速度慢等。
@@ -722,15 +628,13 @@ qwen2.5-vl-7b-instruct
 
 ### **使用控制台进行模型调优**
 
-控制台只支持文本生成模型的调优，详细使用信息请参见[在控制台进行模型调优](https://help.aliyun.com/zh/model-studio/model-training-on-console)。
-
 **调优步骤**
 
 **控制台截图**
 
 **步骤一**：在[模型调优](https://bailian.console.aliyun.com/?tab=model#/efm/model_manager)页面点击**创建训练任务**。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3889372671/p1024309.png)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6609399771/p1075286.png)
 
 **步骤二：训练配置**
 
@@ -751,14 +655,12 @@ qwen2.5-vl-7b-instruct
     
     数据样例：[SFT-ChatML格式示例.jsonl](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241014/utjdbx/SFT-ChatML%E6%A0%BC%E5%BC%8F%E7%A4%BA%E4%BE%8B.jsonl)；
     
-    训练数据如何构建、上传请参考：[创建数据集](https://help.aliyun.com/zh/model-studio/training-set-and-evaluation-set#4ad23e7460s65)和[构建调优数据](#2f5553c6d832d)。
-    
 -   **混合训练**： 不开启
     
 -   **验证集**：设置为**自动切分**，分割 10% 作为验证集
     
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3889372671/p1024312.png)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6609399771/p1075287.png)
 
 **步骤四：配置模型参数快照（Checkpoint）保存参数**
 
@@ -779,7 +681,7 @@ qwen2.5-vl-7b-instruct
 
 **步骤五**：点击“开始训练”后，等待模型训练完毕。
 
-**步骤六**：使用阿里云百炼的[模型部署](https://bailian.console.aliyun.com/?tab=model#/efm/model_deploy)功能部署训练好的自定义模型，部署好后就可以对调优好的模型进行评测。模型部署相关信息请参见[帮助中心：模型部署](https://help.aliyun.com/zh/model-studio/model-deployment-introduction)。
+**步骤六**：使用阿里云百炼的[模型部署](https://bailian.console.aliyun.com/?tab=model#/efm/model_deploy)功能部署训练好的自定义模型，部署好后就可以对调优好的模型进行评测。模型部署相关信息请参见[模型部署简介](https://help.aliyun.com/zh/model-studio/model-deployment-introduction)。
 
 **步骤七**：使用阿里云百炼[模型评测](https://bailian.console.aliyun.com/?tab=model#/efm/model_evaluate)功能评估自定义模型的训练效果，相关信息请参见[模型评测](https://help.aliyun.com/zh/model-studio/model-evaluation-overview)。
 
@@ -1189,14 +1091,6 @@ IT 信息、行政信息、HR 信息、员工福利解答、公司日历查询�
 控制台可以在训练时及时方便地显示验证集 Loss 和 Token Accuracy。
 
 ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3889372671/p1024312.png)
-
-## **详细操作指导**
-
-[在控制台进行模型调优](https://help.aliyun.com/zh/model-studio/model-training-on-console)
-
-[使用 API 进行模型调优](https://help.aliyun.com/zh/model-studio/model-training/)
-
-[Paraformer语音识别热词定制与管理](https://help.aliyun.com/zh/model-studio/paraformer-asr-phrase-manager)
 
 ## **常见问题**
 

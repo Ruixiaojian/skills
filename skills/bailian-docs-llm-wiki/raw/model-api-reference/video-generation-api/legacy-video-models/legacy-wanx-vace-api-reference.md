@@ -19,6 +19,10 @@
 
 本文的示例代码适用于**北京地域**。
 
+**重要**
+
+新加坡地域的旧版域名 `https://dashscope-intl.aliyuncs.com` 即将下线，请及时迁移到新版域名 `https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com`。
+
 ## HTTP调用
 
 视频编辑统一模型的处理耗时较长（约5-10分钟），API采用异步调用的方式。整个流程包含 **“创建任务 -> 轮询获取”** 两个核心步骤，具体如下：
@@ -31,7 +35,9 @@
 
 ## **新加坡**
 
-`POST https://dashscope-intl.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis`
+`POST https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis`
+
+调用时请将`WorkspaceId`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
 
 #### 请求参数
 
@@ -158,7 +164,7 @@ curl --location 'https://dashscope.aliyuncs.com/api/v1/services/aigc/video-gener
 
 **Authorization** `_string_`**（必选）**
 
-请求身份认证。接口使用阿里云百炼API-Key进行身份认证。示例值：Bearer sk-xxxx。
+请求身份认证。接口使用阿里云百炼API Key进行身份认证。示例值：Bearer sk-xxxx。
 
 **X-DashScope-Async** `_string_` **（必选）**
 
@@ -1105,7 +1111,7 @@ curl --location 'https://dashscope.aliyuncs.com/api/v1/services/aigc/video-gener
 
 ### 异常响应
 
-创建任务失败，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+创建任务失败，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
 
 ```
 {
@@ -1150,11 +1156,11 @@ curl --location 'https://dashscope.aliyuncs.com/api/v1/services/aigc/video-gener
 
 **code** `_string_`
 
-请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **message** `_string_`
 
-请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 ### 步骤2：根据任务ID查询结果
 
@@ -1164,7 +1170,9 @@ curl --location 'https://dashscope.aliyuncs.com/api/v1/services/aigc/video-gener
 
 ## **新加坡**
 
-`GET https://dashscope-intl.aliyuncs.com/api/v1/tasks/{task_id}`
+`GET https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1/tasks/{task_id}`
+
+调用时请将`WorkspaceId`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
 
 #### 请求参数
 
@@ -1181,7 +1189,7 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/{task_id} \
 
 **Authorization** `_string_`**（必选）**
 
-请求身份认证。接口使用阿里云百炼API-Key进行身份认证。示例值：Bearer sk-xxxx。
+请求身份认证。接口使用阿里云百炼API Key进行身份认证。示例值：Bearer sk-xxxx。
 
 ##### **URL路径参数（Path parameters）**
 
@@ -1218,7 +1226,7 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/{task_id} \
 
 ## 任务执行失败
 
-若任务执行失败，task\_status将置为 FAILED，并提供错误码和信息。请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+若任务执行失败，task\_status将置为 FAILED，并提供错误码和信息。请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
 
 ```
 {
@@ -1287,11 +1295,11 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/{task_id} \
 
 **code** `_string_`
 
-请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **message** `_string_`
 
-请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **usage** `_object_`
 
@@ -1324,7 +1332,7 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/{task_id} \
 
 ## **错误码**
 
-如果模型调用失败并返回报错信息，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+如果模型调用失败并返回报错信息，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
 
 ## **常见问题**
 

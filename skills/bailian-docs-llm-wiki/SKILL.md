@@ -70,44 +70,40 @@ description: >-
   - 找支持 function-calling 的文本模型：`grep '"function-calling"' models.jsonl | jq -c '{model,family,contextWindow}'`
 
 两份 JSONL 的 **join 字段**：`models.jsonl[].family == families.jsonl[].slug`。命中后按 `detailPath` 打开 `groups/<slug>.json` 取完整字段（`samples`、`predictConfig`）。
+
 - `models/groups/<slug>.json` — 单个模型家族（如 `qwen3-max`、`deepseek`、`wan-image-to-video`）的完整明细：
   - 家族层：`name`、`description`
-  - `items[]`：该家族下所有**主干模型版本**（剔除了带日期后缀的快照），已经过裁剪
-    （丢弃了 `permissions` / `activationStatus` / `quota` / `scope` / `tags` / `license` /
-    `serviceSites` / `modelInfo` 等与模型能力无关的账号/UI 字段），保留：
+  - `items[]`：该家族下所有**主干模型版本**（剔除了带日期后缀的快照），保留字段：
     `model`（API 调用名）、`modelAlias`、`contextWindow`、`maxInputTokens`、`maxOutputTokens`、
     `capabilities`、`features`、`provider`、`docUrl`、`prices`、`qpmInfo`、
     `samples`（**调用示例**，扁平化结构：`samples.<sdk>.<api>.{curl,python,nodejs,java,docUrl}`，
     例如 `samples.openai.completionsAPI.python` 直接是代码字符串）、
-    `predictConfig`（**模型调用入参定义**：从 `getPredictParamConfig` 网关获取，
-    含 `system`/`temperature`/`top_p`/`enable_search`/`enable_thinking` 等参数的
+    `predictConfig`（**模型调用入参定义**，含 `system`/`temperature`/`top_p`/`enable_search`/`enable_thinking` 等参数的
     `name`/`key`/`default`/`tip`/`range`，与百炼 Playground 对齐）
 - `models/meta.json` — 增量爬取的指纹缓存，**不要给用户引用**
-
-> 数据通过 `pnpm --filter bailian-docs-llm-wiki run crawl:models` 刷新。
 
 #### 能力代码（capability）映射
 
 `index.md` 的章节标题与 `items[].capabilities[]` 用的是英文短代码，
 对应中文含义如下：
 
-| 代码                       | 中文标签       |
-| -------------------------- | -------------- |
-| `TG`                       | 文本生成       |
-| `Reasoning`                | 推理           |
-| `VU`                       | 视觉理解       |
-| `IG`                       | 图像生成       |
-| `VG`                       | 视频生成       |
-| `TTS`                      | 语音合成       |
-| `ASR`                      | 语音识别       |
-| `Realtime-ASR`             | 实时语音识别   |
-| `Realtime-Text-to-Speech`  | 实时语音合成   |
-| `Realtime-Audio-Translate` | 实时音频翻译   |
-| `Realtime-Omni`            | 实时全模态     |
-| `Multimodal-Omni`          | 全模态         |
-| `ME`                       | 多模态嵌入     |
-| `TR`                       | 翻译           |
-| `3D-generation`            | 3D 生成        |
+| 代码 | 中文标签 |
+| --- | --- |
+| `TG` | 文本生成 |
+| `Reasoning` | 推理 |
+| `VU` | 视觉理解 |
+| `IG` | 图像生成 |
+| `VG` | 视频生成 |
+| `TTS` | 语音合成 |
+| `ASR` | 语音识别 |
+| `Realtime-ASR` | 实时语音识别 |
+| `Realtime-Text-to-Speech` | 实时语音合成 |
+| `Realtime-Audio-Translate` | 实时音频翻译 |
+| `Realtime-Omni` | 实时全模态 |
+| `Multimodal-Omni` | 全模态 |
+| `ME` | 多模态嵌入 |
+| `TR` | 翻译 |
+| `3D-generation` | 3D 生成 |
 
 一个模型常常带多个 capability，`index.md` 中按 `capabilities[0]`（主能力）归类，
 查找时按中文标签即可定位章节。
@@ -139,7 +135,7 @@ description: >-
 2. **概念/使用方式查 wiki 索引**：读取 `wiki/index.md` 找到对应的主题页、概念页或对比页
 3. **概念/对比优先**：跨领域问题或方案选型问题，优先看 `wiki/concepts/*` 与 `wiki/comparisons/*`
 4. **回溯 raw 原文**：从主题页末尾的 `## 来源文档` 列表点进 `raw/.../*.md` 看完整细节
-5. **全文索引**：`llms.txt` 含完整目录树；`llms-full.txt` 含全文拼接，可用 grep
+5. **全文索引**：`llms.txt` 含完整目录树，可快速定位
 6. **特定参数/错误码**：直接在 `raw/` 下用 grep
 
 ## 快速定位映射
@@ -150,18 +146,23 @@ description: >-
 | **跨家族筛选模型**：按 contextWindow / capability / feature / price 批量查找 | `models/models.jsonl`（`grep` / `jq` 一行一模型） |
 | **按家族筛选**：按 primaryCapability / providers / itemCount / maxContextWindow 找家族 | `models/families.jsonl`（一行一家族，含 items[] 摘要） |
 | 模型家族总览 / 按能力分桶浏览         | `models/index.md`                                        |
-| 模型列表 / Qwen / DeepSeek            | `wiki/guides/more-about-models.md`                       |
-| 文本对话 / Chat Completion  | `wiki/api/text-generation-api-reference.md`              |
-| 语音合成 / TTS              | `wiki/api/speech-synthesis-api-reference.md`             |
-| 语音识别 / ASR              | `wiki/api/speech-recognition-api-reference.md`           |
-| 图片生成 / 图片编辑         | `wiki/api/image-generation-api-reference.md`             |
-| 视频生成                    | `wiki/api/video-generation-api-reference.md`             |
-| 多模态 / Omni               | `wiki/api/multimodal-api-reference.md`                   |
-| Function Calling / 工具调用 | `wiki/concepts/function-calling.md`                      |
-| RAG / 知识库                | `wiki/concepts/rag.md` + `wiki/guides/knowledge-base.md` |
-| 智能体 / 应用调用           | `wiki/guides/application-call.md`                        |
-| OpenAI 兼容                 | `wiki/concepts/openai-compatibility.md`                  |
-| Token / 计费 / 限流         | `wiki/guides/billing-and-rate-limit.md`                  |
+| 主题页 / API 文档（按功能领域查找）    | `wiki/index.md`（完整索引入口）                          |
+| OpenAI 兼容接口 | `wiki/concepts/openai-compatible-api.md` |
+| DashScope SDK 与原生 API | `wiki/concepts/dashscope-sdk.md` |
+| API Key 与鉴权 | `wiki/concepts/api-key-authentication.md` |
+| 流式输出（SSE 与 WebSocket） | `wiki/concepts/streaming-output.md` |
+| RAG 检索增强生成 | `wiki/concepts/rag-knowledge-base.md` |
+| 函数调用与工具集成 | `wiki/concepts/function-calling-and-tools.md` |
+| 业务空间（Workspace）隔离 | `wiki/concepts/workspace-isolation.md` |
+| 异步任务轮询模式 | `wiki/concepts/async-task-pattern.md` |
+| 地域与可用性限制 | `wiki/concepts/region-availability.md` |
+| Token 计费与限流配额 | `wiki/concepts/token-billing-and-quota.md` |
+| 语音合成、识别与翻译 API 对比 | `wiki/comparisons/speech-apis-comparison.md` |
+| 文本向量与多模态向量对比 | `wiki/comparisons/text-vs-multimodal-embedding.md` |
+| 会话记忆与长期记忆对比 | `wiki/comparisons/memory-short-vs-long.md` |
+| 模型微调与训练对比 | `wiki/comparisons/fine-tuning-vs-training.md` |
+| 应用评测与模型评测对比 | `wiki/comparisons/evaluation-app-vs-model.md` |
+| 应用监控与模型监控对比 | `wiki/comparisons/monitoring-app-vs-model.md` |
 
 > 实际文件名以 `wiki/index.md` 为准；上表若有出入应回到索引页查找。
 
@@ -169,7 +170,3 @@ description: >-
 
 - 文档持续更新，如遇矛盾以 `models/` > `raw/` > `wiki/` 的顺序为准
   （`models/` 直接拉自 console 网关，最新；`raw/` 是源站爬取；`wiki/` 是 LLM 合成可能滞后）
-- `metadata.json` 记录每篇 raw 文档的最后修改时间
-- `wiki-metadata.json` 记录每个 wiki 页面的合成 hash、时间戳、可选的 `qualityScore`
-- `wiki/eval-report.md` 是最近一次评测报告（结构问题、断链、长度异常等）
-- `wiki/` 目录可能尚未生成（需运行 `pnpm --filter bailian-docs-llm-wiki run synthesize`）

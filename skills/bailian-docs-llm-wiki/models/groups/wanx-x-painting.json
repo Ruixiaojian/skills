@@ -4,15 +4,21 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Image"],
-        "request_modality": ["Image"]
+        "response_modality": [
+          "Image"
+        ],
+        "request_modality": [
+          "Image"
+        ]
       },
       "openSource": false,
       "description": "万相-图像局部重绘是基于自研的Composer组合生成框架的AI绘画创作大模型后置处理链路，能够根据用户输入的原始图片和意涂抹图中局部区域和prompt提示词文字内容，生成符合语义描述的多样化风格的局部重绘图像。通过知识重组与可变维度扩散模型，加速收敛并提升最终生成图片的效果, 布局自然、细节丰富、画面细腻、结果逼真。",
       "features": [],
       "provider": "wan",
       "model": "wanx-x-painting",
-      "capabilities": ["IG"],
+      "capabilities": [
+        "IG"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-05-28T10:45:39.000+00:00",
       "inferenceProvider": "aliyun-bailian",
@@ -29,14 +35,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

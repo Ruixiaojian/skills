@@ -4,12 +4,19 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Video"],
-        "request_modality": ["Image", "Text"]
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
+          "Image",
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "HappyHorse-1.0-R2V支持参考生视频，更加稳定的主体与场景参考，支持最多9张图片参考，能够精准保持创作意图，实现更强表现能力。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "happyhorse",
       "model": "happyhorse-1.0-r2v",
       "prices": [
@@ -46,7 +53,9 @@
           "async_user_concurrency_limit": 5
         }
       },
-      "capabilities": ["VG"],
+      "capabilities": [
+        "VG"
+      ],
       "modelAlias": "",
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-26T12:42:22.406+00:00",
@@ -68,14 +77,20 @@
           "name": "视频时长(秒)",
           "key": "duration",
           "default": 5,
-          "range": [3, 15]
+          "range": [
+            3,
+            15
+          ]
         },
         {
           "name": "随机种子",
           "key": "seed",
           "default": 1234,
           "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [1, 2147483647]
+          "range": [
+            1,
+            2147483647
+          ]
         }
       ],
       "samples": {

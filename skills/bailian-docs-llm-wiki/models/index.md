@@ -1,17 +1,17 @@
 # 百炼模型市场索引
 
-> 自动生成 · 共 160 个模型家族 · 355 个主干模型 · 更新于 2026-05-27
+> 自动生成 · 共 162 个模型家族 · 359 个主干模型 · 更新于 2026-06-05
 
 **机器查询走结构化文件**：
 
-- `index.json` — 全局摘要（统计 + 能力/厂商分布 + 轻量家族列表），适合 dashboard 或 LLM 快速定位
+- `index.json` — 全局摘要（统计 + 能力/厂商分布 + 轻量家族列表）
 - `families.jsonl` — 每行一个家族（含轻量 `items[]` 摘要），适合按家族筛选
 - `models.jsonl` — 每行一个主干模型（含价格/QPM/features），适合跨家族批量查询
 - `groups/<slug>.json` — 单家族完整明细（含调用代码、入参 schema）
 
 join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].slug`。
 
-## 文本生成 `TG` — 30 个家族
+## 文本生成 `TG` — 33 个家族
 
 - [通义法睿-Plus-32K](groups/farui-plus.json) — 通义法睿是以通义千问为基座经法律行业数据和知识专门训练的法律行业大模型产品，综合运用了模型精调、强化学习、 RAG检索增强、法律Agent技术，具有回答法律问题、推理法律适用、推荐裁判类案、辅助案情分…
   - 模型：`farui-plus`
@@ -30,7 +30,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [MiMo文本模型](groups/xiaomi-models-market-place.json) — 由小米MiMo提供的MiMo文本模型API服务
   - 模型：`xiaomi/mimo-v2.5-pro`
 - [MiniMax文本模型](groups/minimax-models-market-place.json) — 由MiniMax提供的MiniMax-M系列文本模型API服务。
-  - 模型：`MiniMax/MiniMax-M2.1`, `MiniMax/MiniMax-M2.5`, `MiniMax/MiniMax-M2.7`
+  - 模型：`MiniMax/MiniMax-M2.1`, `MiniMax/MiniMax-M2.5`, `MiniMax/MiniMax-M2.7`, `MiniMax/MiniMax-M3`
 - [Qwen-Coder-Plus](groups/qwen-coder-plus.json) — 千问系列代码及编程模型是专门用于编程和代码生成的语言模型，性能出色，效果突出。
   - 模型：`qwen-coder-plus`
 - [Qwen-Coder-Turbo](groups/qwen-coder-turbo.json) — Qwen-Coder-Turbo模型是专门用于编程和代码生成的语言模型，推理速度快，成本低。
@@ -71,8 +71,14 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen3-max`, `qwen3-max-preview`
 - [Qwen3.5-Plus](groups/qwen3.5-plus.json) — Qwen3.5原生视觉语言系列Plus模型，展现出与当前顶尖前沿模型相媲美的卓越性能，模型效果在纯文本与多模态方面相较3系列均实现飞跃式进步。
   - 模型：`qwen3.5-plus`
+- [Qwen3.7-Plus](groups/qwen3.7-plus.json) — Qwen3.7系列中高性价比Plus模型，在强大文本能力的基础上全面升级了视觉-语言能力，同时保持了在编码、工具使用和生产力工作流方面的完整智能体能力。其核心特色为多模态交互混合智能体能力，能够感知真…
+  - 模型：`qwen3.7-plus`
 - [SiliconFlow DeepSeek](groups/siliconflow-models.json) — 由硅基流动提供的DeepSeek系列模型API服务。
   - 模型：`siliconflow/deepseek-r1-0528`, `siliconflow/deepseek-v3-0324`, `siliconflow/deepseek-v3.1-terminus`, `siliconflow/deepseek-v3.2`
+- [StepFun推理模型](groups/stepfun-models-market-place.json) — 由阶跃星辰StepFun提供的Step系列推理模型API服务
+  - 模型：`stepfun/step-3.7-flash`
+- [Vanchin DeepSeek](groups/vanchin-models-market-place.json) — 由快手万擎提供的DeepSeek系列模型API服务。
+  - 模型：`vanchin/deepseek-ocr`, `vanchin/deepseek-r1`, `vanchin/deepseek-v3`, `vanchin/deepseek-v3.1-terminus`, `vanchin/deepseek-v3.2-think`, `vanchin/deepseek-v4-pro`
 
 ## 图像生成 `IG` — 29 个家族
 
@@ -188,7 +194,42 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [Wan2.1-VACE-Plus](groups/wanx2.1-vace-plus.json) — 万相2.1-VACE-Plus，视频编辑统一模型。支持局部编辑、视频重绘、背景扩展、时长延展、图片参考等多种视频编辑与生成任务，支持文本、图像、视频等多模态条件控制。
   - 模型：`wanx2.1-vace-plus`
 
-## 推理 `Reasoning` — 16 个家族
+## 语音合成 `TTS` — 16 个家族
+
+- [大模型声音复刻及声音设计](groups/voice-enrollment.json) — 大模型声音复刻服务依托先进的大模型技术进行特征提取，无需训练过程就可以完成声音的复刻。仅需提供极短的音频，即可迅速生成高度相似且听感自然的定制声音。 大模型声音设计使用FunAudioGen-VD模型…
+  - 模型：`voice-enrollment`
+- [音乐生成](groups/fun-music.json) — 百聆音乐生成大模型（Fun音乐大模型）支持输入开放性歌曲的创作要求或歌词，生成整首男/女声演唱的中文或英文歌曲。歌曲通俗易懂，情绪由浅入深，是人类灵感与大模型能力的完美结合。
+  - 模型：`fun-music-preview`, `fun-music-v1`
+- [CosyVoice大模型](groups/cosyvoice.json) — 基于新一代生成式语音大模型，CosyVoice将文本理解和语音生成技术深度融合，能够精准解析并诠释各种文本内容，将其转化为如同真人发声般的自然语音，带来高度拟人化的自然语音合成体验。
+  - 模型：`cosyvoice-clone-v1`, `cosyvoice-v1`, `cosyvoice-v2`, `cosyvoice-v3-flash`, `cosyvoice-v3-plus`, `cosyvoice-v3.5-flash`, `cosyvoice-v3.5-plus`
+- [MiniMax-Speech系列语音模型](groups/MiniMax-speech-market-place.json) — 由MiniMax提供的MiniMax-Speech系列语音模型API服务。
+  - 模型：`MiniMax/speech-02-hd`, `MiniMax/speech-02-turbo`, `MiniMax/speech-2.8-hd`, `MiniMax/speech-2.8-turbo`
+- [Qwen-声音复刻](groups/qwen-voice-enrollment.json) — 千问voice-enrollment模型是千问语音模型的声音复刻系列模型，仅需5s以上的音频，即可迅速复刻高相似度声音。结合qwen3-tts-vc-realtime模型使用，可将一个人的声音高保真复…
+  - 模型：`qwen-voice-enrollment`
+- [Qwen-声音设计](groups/qwen-voice-design.json) — Qwen-Voice-Design模型是千问语音模型的声音设计系列模型，仅需输入简单的文字描述，即可迅速设计出符合要求的相关声音。结合qwen3-tts-vd-realtime模型使用，可设计输出11…
+  - 模型：`qwen-voice-design`
+- [Qwen-TTS](groups/qwen-tts.json) — 千问系列首个语音合成模型，支持中文、英文、中英混合输入。自适应根据输入文本调整输出语气，音色真实自然，支持输入输出全流式。
+  - 模型：`qwen-tts`, `qwen-tts-latest`
+- [Qwen3-TTS-Flash](groups/qwen3-tts-flash.json) — Qwen3-TTS-Flash模型是通义实验室最新推出的离线语音合成大模型，不仅拥有17种高表现力的拟人音色，且能低延迟高稳定地合成音频；同时支持多种语言，方言，支持同一音色多语言输出。该模型经过海量…
+  - 模型：`qwen3-tts-flash`
+- [Qwen3-TTS-Flash-Realtime](groups/qwen3-tts-flash-realtime.json) — Qwen3-TTS-Flash-Realtime模型是通义实验室最新的实时语音合成大模型，不仅拥有17种高表现力的拟人音色，且能低延迟高稳定地实时合成音频；同时支持多种语言，方言，支持同一音色多语言输…
+  - 模型：`qwen3-tts-flash-realtime`
+- [Qwen3-TTS-Instruct-Flash](groups/qwen3-tts-instruct-flash.json) — Qwen3-TTS-Flash模型是通义实验室最新推出的实时语音合成大模型，Instruct模型可通过自然语言进行合成效果的处理，确保在不同语境下，合成情感、表达高度贴合的语音。目前支持25个音色的中…
+  - 模型：`qwen3-tts-instruct-flash`
+- [qwen3-tts-instruct-flash-realtime](groups/qwen3-tts-instruct-flash-realtime.json) — 通义千问3-TTS-Flash模型是通义最新推出的实时语音合成大模型，Instruct模型可通过自然语言进行合成效果的处理，确保在不同语境下，合成情感、表达高度贴合的语音。目前支持25个音色的中英文I…
+  - 模型：`qwen3-tts-instruct-flash-realtime`
+- [Qwen3-TTS-VC](groups/qwen3-tts-vc.json) — Qwen3-TTS-Flash模型是通义实验室最新推出的实时语音合成大模型，可对qwen-voice-enrollment服务复刻的声音进行高保真实时语音合成，且同一音色支持11个语种的语音输出。该模…
+  - 模型：`qwen3-tts-vc-2026-01-22`
+- [Qwen3-TTS-VC-Realtime](groups/qwen3-tts-vc-realtime.json) — Qwen3-TTS-VC-Realtime模型是通义实验室最新推出的实时语音合成大模型，可对qwen3-voice-enrollment服务复刻的声音进行高保真实时语音合成，且同一音色支持11个语种的…
+  - 模型：`qwen3-tts-vc-realtime-2026-01-15`
+- [Qwen3-TTS-VD](groups/qwen3-tts-vd.json) — Qwen3-TTS-VD模型是通义实验室最新推出的实时语音合成大模型，可对qwen3-voice-design服务设计的声音进行高保真实时语音合成，且同一音色支持11个语种的语音输出。该模型经过海量数…
+  - 模型：`qwen3-tts-vd-2026-01-26`
+- [Qwen3-TTS-VD-Realtime](groups/qwen3-tts-vd-realtime.json) — Qwen3-TTS-VD模型是通义实验室最新推出的实时语音合成大模型，可对qwen3-voice-design服务设计的声音进行高保真实时语音合成，且同一音色支持11个语种的语音输出。该模型经过海量数…
+  - 模型：`qwen3-tts-vd-realtime-2026-01-15`
+- [Sambert语音合成](groups/sambert.json) — 提供高效的文字转语音服务。该技术具备推理速度快、合成效果卓越、读音精准、韵律自然、声音还原度高以及表现力强等优点。此外，用户可以选择开启字级别和音素级别的时间戳，用于生成字幕或驱动数字人的嘴型。
+  - 模型：`sambert-beth-v1`, `sambert-betty-v1`, `sambert-brian-v1`, `sambert-cally-v1`, `sambert-camila-v1`, `sambert-cindy-v1`, `sambert-clara-v1`, `sambert-donna-v1`, `sambert-eva-v1`, `sambert-hanna-v1`, `sambert-indah-v1`, `sambert-perla-v1`, `sambert-waan-v1`, `sambert-zhichu-v1`, `sambert-zhida-v1`, `sambert-zhide-v1`, `sambert-zhifei-v1`, `sambert-zhigui-v1`, `sambert-zhihao-v1`, `sambert-zhijia-v1`, `sambert-zhijing-v1`, `sambert-zhilun-v1`, `sambert-zhimao-v1`, `sambert-zhimiao-emo-v1`, `sambert-zhiming-v1`, `sambert-zhimo-v1`, `sambert-zhina-v1`, `sambert-zhinan-v1`, `sambert-zhiqi-v1`, `sambert-zhiqian-v1`, `sambert-zhiru-v1`, `sambert-zhishu-v1`, `sambert-zhishuo-v1`, `sambert-zhistella-v1`, `sambert-zhiting-v1`, `sambert-zhiwei-v1`, `sambert-zhixiang-v1`, `sambert-zhixiao-v1`, `sambert-zhiya-v1`, `sambert-zhiye-v1`, `sambert-zhiying-v1`, `sambert-zhiyuan-v1`, `sambert-zhiyue-v1`
+
+## 推理 `Reasoning` — 15 个家族
 
 - [DeepSeek](groups/deepseek.json) — DeepSeek是由深度求索提供的开源模型，包含 V3.1、V3、R1以及基于Qwen2.5系列蒸馏的大语言模型。
   - 模型：`deepseek-r1`, `deepseek-r1-0528`, `deepseek-r1-distill-qwen-1.5b`, `deepseek-r1-distill-qwen-14b`, `deepseek-r1-distill-qwen-32b`, `deepseek-r1-distill-qwen-7b`, `deepseek-v3`, `deepseek-v3.1`, `deepseek-v3.2`, `deepseek-v3.2-exp`, `deepseek-v4-flash`, `deepseek-v4-pro`
@@ -220,43 +261,6 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen3.6-plus`
 - [Qwen3.7-Max](groups/qwen3.7-max.json) — Qwen3.7系列中规模最大、综合能力最强的Max模型，当前开放纯文本模型能力供体验。Qwen3.7是面向智能体时代的新一代旗舰模型，核心优势在于智能体能力的广度与深度：在编程、办公与生产力、长周期自…
   - 模型：`qwen3.7-max`, `qwen3.7-max-preview`
-- [Vanchin DeepSeek](groups/vanchin-models-market-place.json) — 由快手万擎提供的DeepSeek系列模型API服务。
-  - 模型：`vanchin/deepseek-ocr`, `vanchin/deepseek-r1`, `vanchin/deepseek-v3`, `vanchin/deepseek-v3.1-terminus`, `vanchin/deepseek-v3.2-think`
-
-## 语音合成 `TTS` — 16 个家族
-
-- [大模型声音复刻及声音设计](groups/voice-enrollment.json) — 大模型声音复刻服务依托先进的大模型技术进行特征提取，无需训练过程就可以完成声音的复刻。仅需提供极短的音频，即可迅速生成高度相似且听感自然的定制声音。 大模型声音设计使用FunAudioGen-VD模型…
-  - 模型：`voice-enrollment`
-- [音乐生成](groups/fun-music.json) — 百聆音乐生成大模型（Fun音乐大模型）支持输入开放性歌曲的创作要求或歌词，生成整首男/女声演唱的中文或英文歌曲。歌曲通俗易懂，情绪由浅入深，是人类灵感与大模型能力的完美结合。
-  - 模型：`fun-music-v1`
-- [CosyVoice大模型](groups/cosyvoice.json) — 基于新一代生成式语音大模型，CosyVoice将文本理解和语音生成技术深度融合，能够精准解析并诠释各种文本内容，将其转化为如同真人发声般的自然语音，带来高度拟人化的自然语音合成体验。
-  - 模型：`cosyvoice-clone-v1`, `cosyvoice-v1`, `cosyvoice-v2`, `cosyvoice-v3-flash`, `cosyvoice-v3-plus`, `cosyvoice-v3.5-flash`, `cosyvoice-v3.5-plus`
-- [MiniMax-Speech系列语音模型](groups/MiniMax-speech-market-place.json) — 由MiniMax提供的MiniMax-Speech系列语音模型API服务。
-  - 模型：`MiniMax/speech-02-hd`, `MiniMax/speech-02-turbo`, `MiniMax/speech-2.8-hd`, `MiniMax/speech-2.8-turbo`
-- [Qwen-声音复刻](groups/qwen-voice-enrollment.json) — 千问voice-enrollment模型是千问语音模型的声音复刻系列模型，仅需5s以上的音频，即可迅速复刻高相似度声音。结合qwen3-tts-vc-realtime模型使用，可将一个人的声音高保真复…
-  - 模型：`qwen-voice-enrollment`
-- [Qwen-声音设计](groups/qwen-voice-design.json) — Qwen-Voice-Design模型是千问语音模型的声音设计系列模型，仅需输入简单的文字描述，即可迅速设计出符合要求的相关声音。结合qwen3-tts-vd-realtime模型使用，可设计输出11…
-  - 模型：`qwen-voice-design`
-- [Qwen-TTS](groups/qwen-tts.json) — 千问系列首个语音合成模型，支持中文、英文、中英混合输入。自适应根据输入文本调整输出语气，音色真实自然，支持输入输出全流式。
-  - 模型：`qwen-tts`, `qwen-tts-latest`
-- [Qwen3-TTS-Flash](groups/qwen3-tts-flash.json) — Qwen3-TTS-Flash模型是通义实验室最新推出的离线语音合成大模型，不仅拥有17种高表现力的拟人音色，且能低延迟高稳定地合成音频；同时支持多种语言，方言，支持同一音色多语言输出。该模型经过海量…
-  - 模型：`qwen3-tts-flash`
-- [Qwen3-TTS-Flash-Realtime](groups/qwen3-tts-flash-realtime.json) — Qwen3-TTS-Flash-Realtime模型是通义实验室最新的实时语音合成大模型，不仅拥有17种高表现力的拟人音色，且能低延迟高稳定地实时合成音频；同时支持多种语言，方言，支持同一音色多语言输…
-  - 模型：`qwen3-tts-flash-realtime`
-- [Qwen3-TTS-Instruct-Flash](groups/qwen3-tts-instruct-flash.json) — Qwen3-TTS-Flash模型是通义实验室最新推出的实时语音合成大模型，Instruct模型可通过自然语言进行合成效果的处理，确保在不同语境下，合成情感、表达高度贴合的语音。目前支持25个音色的中…
-  - 模型：`qwen3-tts-instruct-flash`
-- [qwen3-tts-instruct-flash-realtime](groups/qwen3-tts-instruct-flash-realtime.json) — 通义千问3-TTS-Flash模型是通义最新推出的实时语音合成大模型，Instruct模型可通过自然语言进行合成效果的处理，确保在不同语境下，合成情感、表达高度贴合的语音。目前支持25个音色的中英文I…
-  - 模型：`qwen3-tts-instruct-flash-realtime`
-- [Qwen3-TTS-VC](groups/qwen3-tts-vc.json) — Qwen3-TTS-Flash模型是通义实验室最新推出的实时语音合成大模型，可对qwen-voice-enrollment服务复刻的声音进行高保真实时语音合成，且同一音色支持11个语种的语音输出。该模…
-  - 模型：`qwen3-tts-vc-2026-01-22`
-- [Qwen3-TTS-VC-Realtime](groups/qwen3-tts-vc-realtime.json) — Qwen3-TTS-VC-Realtime模型是通义实验室最新推出的实时语音合成大模型，可对qwen3-voice-enrollment服务复刻的声音进行高保真实时语音合成，且同一音色支持11个语种的…
-  - 模型：`qwen3-tts-vc-realtime-2026-01-15`
-- [Qwen3-TTS-VD](groups/qwen3-tts-vd.json) — Qwen3-TTS-VD模型是通义实验室最新推出的实时语音合成大模型，可对qwen3-voice-design服务设计的声音进行高保真实时语音合成，且同一音色支持11个语种的语音输出。该模型经过海量数…
-  - 模型：`qwen3-tts-vd-2026-01-26`
-- [Qwen3-TTS-VD-Realtime](groups/qwen3-tts-vd-realtime.json) — Qwen3-TTS-VD模型是通义实验室最新推出的实时语音合成大模型，可对qwen3-voice-design服务设计的声音进行高保真实时语音合成，且同一音色支持11个语种的语音输出。该模型经过海量数…
-  - 模型：`qwen3-tts-vd-realtime-2026-01-15`
-- [Sambert语音合成](groups/sambert.json) — 提供高效的文字转语音服务。该技术具备推理速度快、合成效果卓越、读音精准、韵律自然、声音还原度高以及表现力强等优点。此外，用户可以选择开启字级别和音素级别的时间戳，用于生成字幕或驱动数字人的嘴型。
-  - 模型：`sambert-beth-v1`, `sambert-betty-v1`, `sambert-brian-v1`, `sambert-cally-v1`, `sambert-camila-v1`, `sambert-cindy-v1`, `sambert-clara-v1`, `sambert-donna-v1`, `sambert-eva-v1`, `sambert-hanna-v1`, `sambert-indah-v1`, `sambert-perla-v1`, `sambert-waan-v1`, `sambert-zhichu-v1`, `sambert-zhida-v1`, `sambert-zhide-v1`, `sambert-zhifei-v1`, `sambert-zhigui-v1`, `sambert-zhihao-v1`, `sambert-zhijia-v1`, `sambert-zhijing-v1`, `sambert-zhilun-v1`, `sambert-zhimao-v1`, `sambert-zhimiao-emo-v1`, `sambert-zhiming-v1`, `sambert-zhimo-v1`, `sambert-zhina-v1`, `sambert-zhinan-v1`, `sambert-zhiqi-v1`, `sambert-zhiqian-v1`, `sambert-zhiru-v1`, `sambert-zhishu-v1`, `sambert-zhishuo-v1`, `sambert-zhistella-v1`, `sambert-zhiting-v1`, `sambert-zhiwei-v1`, `sambert-zhixiang-v1`, `sambert-zhixiao-v1`, `sambert-zhiya-v1`, `sambert-zhiye-v1`, `sambert-zhiying-v1`, `sambert-zhiyuan-v1`, `sambert-zhiyue-v1`
 
 ## 语音识别 `ASR` — 11 个家族
 
@@ -292,7 +296,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [Qwen-VL-OCR](groups/qwen-vl-ocr.json) — Qwen-VL-OCR，即基于Qwen-VL训练的OCR识别大模型。通过统一模型的方式聚合多种图文识别、解析、处理类任务，提供强大的图文识别能力。
   - 模型：`qwen-vl-ocr`, `qwen-vl-ocr-1028`, `qwen-vl-ocr-latest`
 - [Qwen-VL-Plus](groups/qwen-vl-plus.json) — Qwen-VL-Plus，即千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。在广泛的视觉任务上提供卓越的性能。
-  - 模型：`qwen-vl-plus`, `qwen-vl-plus-latest`
+  - 模型：`qwen-vl-plus`
 - [Qwen3-VL-Flash](groups/qwen3-vl-flash.json) — Qwen3系列小尺寸视觉理解模型，实现思考模式和非思考模式的有效融合，效果优于开源版Qwen3-VL-30B-A3B，响应速度快。全面升级图像/视频理解，支持长视频长文档等超长上下文、空间感知与万物识…
   - 模型：`qwen3-vl-flash`
 - [Qwen3-VL-Plus](groups/qwen3-vl-plus.json) — Qwen3系列视觉理解模型，实现思考模式和非思考模式的有效融合，视觉智能体能力在OS World等公开测试集上达到世界顶尖水平。此版本在视觉coding、空间感知、多模态思考等方向全面升级；视觉感知与…

@@ -219,7 +219,7 @@ curl --location 'https://dashscope.aliyuncs.com/api/v1/services/aigc/video-gener
 
 **Authorization** `_string_`**（必选）**
 
-请求身份认证。接口使用阿里云百炼API-Key进行身份认证。示例值：Bearer sk-xxxx。
+请求身份认证。接口使用阿里云百炼API Key进行身份认证。示例值：Bearer sk-xxxx。
 
 **X-DashScope-Async** `_string_` **（必选）**
 
@@ -534,7 +534,7 @@ duration直接影响费用，按秒计费，时间越长费用越高，请前往
 
 -   kling/kling-v3-omni-video-generation：取值为\[3, 15\]之间的整数，默认值为5。
     
-    -   注意：当传入参考视频（`type=base或者feature`）时，取值为\[3, 10\]之间的整数，默认值为5。
+    -   注意：当传入视频（`type=base或feature`）时，取值为\[3, 10\]之间的整数，默认值为5。
         
 -   kling/kling-v3-video-generation：取值为\[3, 15\]之间的整数，默认值为5。
     
@@ -553,6 +553,8 @@ audio直接影响费用，请前往[百炼控制台](https://bailian.console.ali
     
 -   `true`：输出有声视频。
     
+
+注意：当传入视频（`type=base或feature`）时，`audio`只能设置为`false`。
 
 **watermark** `_boolean_` （可选）
 
@@ -581,7 +583,7 @@ audio直接影响费用，请前往[百炼控制台](https://bailian.console.ali
 
 ### 异常响应
 
-创建任务失败，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+创建任务失败，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
 
 ```
 {
@@ -626,11 +628,11 @@ audio直接影响费用，请前往[百炼控制台](https://bailian.console.ali
 
 **code** `_string_`
 
-请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **message** `_string_`
 
-请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 ### **步骤2：根据任务ID查询结果**
 
@@ -664,7 +666,7 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/{task_id} \
 
 **Authorization** `_string_`**（必选）**
 
-请求身份认证。接口使用阿里云百炼API-Key进行身份认证。示例值：Bearer sk-xxxx。
+请求身份认证。接口使用阿里云百炼API Key进行身份认证。示例值：Bearer sk-xxxx。
 
 ##### **URL路径参数（Path parameters）**
 
@@ -701,7 +703,7 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/{task_id} \
 
 ## 任务执行失败
 
-若任务执行失败，task\_status将置为 FAILED，并提供错误码和信息。请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+若任务执行失败，task\_status将置为 FAILED，并提供错误码和信息。请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
 
 ```
 {
@@ -764,9 +766,13 @@ task\_id查询有效期为 24 小时，超时后将无法查询，返回以下�
     
 -   初次查询状态通常为 PENDING（排队中）或 RUNNING（处理中）。
     
--   当状态变为 SUCCEEDED 时，响应中将包含生成的视频url。
+-   当状态变为 SUCCEEDED 时，响应中将包含生成的视频URL。
     
 -   若状态为 FAILED，请检查错误信息并重试。
+    
+-   若状态为 CANCELED，表示任务已取消，如需继续请重新提交任务。
+    
+-   若状态为 UNKNOWN，表示任务不存在或状态未知，可能在 task\_id 不存在或超过 24 小时有效期后出现。
     
 
 **submit\_time** `_string_`
@@ -799,11 +805,11 @@ task\_id查询有效期为 24 小时，超时后将无法查询，返回以下�
 
 **code** `_string_`
 
-请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的错误码。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **message** `_string_`
 
-请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)。
+请求失败的详细信息。请求成功时不会返回此参数，详情请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
 
 **usage** `_object_`
 
@@ -841,4 +847,4 @@ task\_id查询有效期为 24 小时，超时后将无法查询，返回以下�
 
 ## **错误码**
 
-如果模型调用失败并返回报错信息，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+如果模型调用失败并返回报错信息，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。

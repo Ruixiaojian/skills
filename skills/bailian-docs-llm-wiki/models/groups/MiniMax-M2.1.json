@@ -4,12 +4,20 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "MiniMax-M2.5是MiniMax推出的旗舰级开源大模型，经过数十万个真实复杂环境中的大规模强化学习训练，M2.5 在编程、工具调用和搜索、办公等生产力场景都达到或者刷新了行业的 SOTA。",
-      "features": ["model-experience", "function-calling", "cache"],
+      "features": [
+        "model-experience",
+        "function-calling",
+        "cache"
+      ],
       "provider": "mini-max",
       "model": "MiniMax-M2.5",
       "prices": [
@@ -50,7 +58,10 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "modelAlias": "",
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 131072,
@@ -71,14 +82,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {
@@ -100,12 +117,20 @@
     },
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": true,
       "description": "MiniMax-M2.1是MiniMax推出的旗舰级开源大模型，聚焦真实世界复杂任务，以多语言编程与长链 Agent 能力为核心优势。",
-      "features": ["model-experience", "function-calling", "cache"],
+      "features": [
+        "model-experience",
+        "function-calling",
+        "cache"
+      ],
       "provider": "mini-max",
       "model": "MiniMax-M2.1",
       "iconUrl": "https://img.alicdn.com/imgextra/i1/O1CN01EFGi131NqT95FPDqc_!!6000000001621-2-tps-56-56.png",
@@ -129,7 +154,10 @@
           "priceName": "输入（缓存命中）"
         }
       ],
-      "capabilities": ["Reasoning", "TG"],
+      "capabilities": [
+        "Reasoning",
+        "TG"
+      ],
       "versionTag": "SNAPSHOT",
       "maxOutputTokens": 32768,
       "latestOnlineAt": "2026-01-23T07:47:49.000+00:00",
@@ -149,14 +177,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

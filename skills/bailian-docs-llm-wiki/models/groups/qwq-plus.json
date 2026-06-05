@@ -4,8 +4,12 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Text"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Text"
+        ]
       },
       "openSource": false,
       "description": "千问QwQ推理模型增强版，基于Qwen2.5模型训练的QwQ推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、livecodebench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平。",
@@ -13,7 +17,12 @@
         "announceUrl": "https://www.aliyun.com/notice/118177"
       },
       "offlineAt": "2026-07-13T15:59:59.000+00:00",
-      "features": ["model-experience", "function-calling", "web-search", "batch"],
+      "features": [
+        "model-experience",
+        "function-calling",
+        "web-search",
+        "batch"
+      ],
       "provider": "qwen",
       "model": "qwq-plus",
       "prices": [
@@ -60,7 +69,9 @@
           "type": "model-default"
         }
       },
-      "capabilities": ["Reasoning"],
+      "capabilities": [
+        "Reasoning"
+      ],
       "versionTag": "MAJOR",
       "maxOutputTokens": 8192,
       "latestOnlineAt": "2025-03-05T15:17:03.000+00:00",
@@ -75,6 +86,7 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "QwQ-Plus",
       "docUrl": "https://help.aliyun.com/document_detail/2870973.html",
+      "category": "Older",
       "predictConfig": [
         {
           "name": "system",
@@ -86,14 +98,20 @@
           "key": "top_p",
           "default": 0.8,
           "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [0.0001, 1]
+          "range": [
+            0.0001,
+            1
+          ]
         },
         {
           "name": "temperature",
           "key": "temperature",
           "default": 0.7,
           "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [0, 1.9999]
+          "range": [
+            0,
+            1.9999
+          ]
         }
       ],
       "samples": {

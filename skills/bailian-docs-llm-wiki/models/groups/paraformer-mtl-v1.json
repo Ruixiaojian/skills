@@ -4,12 +4,18 @@
   "items": [
     {
       "inferenceMetadata": {
-        "response_modality": ["Text"],
-        "request_modality": ["Audio"]
+        "response_modality": [
+          "Text"
+        ],
+        "request_modality": [
+          "Audio"
+        ]
       },
       "openSource": false,
       "description": "Paraformer多语言语音识别模型，支持16kHz及以上采样率的音频或视频语音识别。\n\n支持的语种/方言包括：中文普通话、中文方言（粤语、吴语、闽南语、东北话、甘肃话、贵州话、河南话、湖北话、湖南话、宁夏话、山西话、陕西话、山东话、四川话、天津话）、英语、日语、韩语、西班牙语、印尼语、法语、德语、意大利语、马来语。",
-      "features": ["model-experience"],
+      "features": [
+        "model-experience"
+      ],
       "provider": "qwen",
       "model": "paraformer-mtl-v1",
       "resourcePackages": [
@@ -25,7 +31,9 @@
           "priceName": "音频时长"
         }
       ],
-      "capabilities": ["ASR"],
+      "capabilities": [
+        "ASR"
+      ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-04-09T09:18:59.000+00:00",
       "inferenceProvider": "aliyun-bailian",

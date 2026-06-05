@@ -1,52 +1,141 @@
 # model deployment 1
 
-阿里云百炼平台支持将基础模型及[[模型调优]]后的自定义模型部署为独立、资源专享的推理服务，满足高并发、低延迟及私有化计算需求。平台提供预置吞吐（PTU）、模型单元（MU）及 Token 按量等多种部署方案，开发者可通过控制台、HTTP API 或 SDK 完成服务的创建、监控与调用。
+百炼平台提供模型部署能力，将预置模型或调优后的模型部署为独立、资源专享的推理服务，以满足高并发、低延迟等业务需求。本主题汇总了模型部署的三种计费方式、API 部署流程，以及从 OSS 导入自定义 LoRA 模型的要求与操作。
 
-## 支持的模型与计费模式
-平台支持千问系列、DeepSeek、GLM 及多模态（VL/Omni）等预置模型的独立部署，同时支持导入[[OSS 存储]]中的自定义 LoRA 权重进行专属服务化。不同模型支持的计费与性能模式如下：
+> **注意**：以下所有部署能力**仅适用于"中国内地（北京）"地域**。
 
-- **PTU（预置吞吐）**：保障固定输入/输出 TPM，适合流量稳定的高负载生产环境。超出阈值后自动切换至公共按量服务。
-- **MU（模型单元）**：按算力单元数量与时长计费，资源独占。支持自定义 RPM/TPM 限流、最长上下文长度、推理模式（Instruct/Thinking）及 PD 分离架构以降低首字延迟。
-- **Token 按量（Lora 专属）**：仅适用于完成 SFT 高效微调的模型，按实际调用 Token 量计费，连续 30 天无调用将自动释放实例。
-- **CU（计算单元）**：适用于图像/视频生成类模型，按独占实例时长计费。
+## 支持的模型与功能
 
-> 详细定价表与规格说明请参考 [模型部署简介](../../raw/model-user-guide/model-deployment-1/model-deployment-introduction.md)。
+百炼平台支持的部署对象包括：
 
-## 关键配置参数
-部署与调用时需关注以下核心参数：
+- **平台预置模型**：千问系列（Max / Plus / Flash / VL / Omni）、DeepSeek、GLM、MiniMax、Kimi、CosyVoice 等，最长上下文从 64K 到 128K Token 不等。
+- **调优后的自定义模型**：仅支持 **LoRA**（Low-Rank Adaptation）微调模型，不支持全参微调模型。
+- **本地训练的 LoRA 模型**：通过 OSS 导入。当前可作为基础模型导入的有千问3（32B/14B/8B/4B-Instruct-2507）、千问3-VL-8B-Instruct、千问2.5（72B/32B/14B/7B-Instruct）、千问2.5-VL（72B/7B-Instruct）。
 
-| 参数 | 说明 | 适用场景 |
-|---|---|---|
-| `model_name` | 待部署模型的 Code 或自定义模型 ID | 所有部署计划 |
-| `plan` | 计费模式：`ptu` \| `mu` \| `lora` \| `cu` | 所有部署请求 |
-| `ptu_capacity` | `{input_tpm: int, output_tpm: int}` | PTU 模式 |
-| `deploy_spec` / `capacity` | MU 规格标识与实例数量 / Lora 容量占位符 | MU / Lora 模式 |
-| `enable_thinking` | `true`/`false`，控制是否启用深度思考推理 | MU / 调用请求 |
-| `max_context_length` | 限制单次对话最大上下文 Token 数 | 部分 MU 模式 |
-| `model` | 调用时使用的专属服务 ID（即 `deployed_model`） | 推理调用 |
+完整的模型清单与单价请见 [模型部署简介](../../raw/model-user-guide/model-deployment-1/model-deployment-introduction.md)。
 
-**推理参数对齐建议**：为确保平台输出与本地 vLLM 环境一致，建议在调用时显式设置：`temperature=1.0`, `top_p=1.0`, `top_k=99`, `presence_penalty=0`, `repetition_penalty=1.0`（DashScope 协议）。
+## 三种计费方式
 
-## 使用方式
-完整工作流包含导入、部署、调用与清理，具体步骤如下：
+部署模型时必须选择一种计费方式，**服务创建后无法更改**；如需切换，必须先下线再重新部署。
 
-1. **导入自定义权重**：将包含 `adapter_model.safetensors` 与 `adapter_config.json` 的 LoRA 目录上传至子目录，完成标签授权后在控制台执行导入。流程详见 [模型导入](../../raw/model-user-guide/model-deployment-1/model-import.md)。
-2. **发起部署**：通过控制台可视化表单或 HTTP API (`POST /api/v1/deployments`) 提交任务。部署成功后即开始计费，无论是否产生调用。
-3. **状态轮询**：调用 `GET /api/v1/deployments/{deploy_id}` 检查 `status`，当返回 `RUNNING` 时表示服务可用。
-4. **推理调用**：使用 DashScope SDK 或 [[openai-compatible-api|OpenAI 兼容接口]]发起请求。`model` 参数必须填入部署返回的专属服务 ID。示例代码见 [使用 API或命令行进行模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md)。
-5. **服务下线**：调用 `DELETE` 接口立即终止实例并停止计费，该操作不可逆。
+| 计费方式 | 适用场景 | 资源特性 | 性能可调性 |
+| --- | --- | --- | --- |
+| **预置吞吐（PTU）** | 高负载生产环境，流量稳定可预估 | 平台预留资源、按 TPM 保障吞吐 | 不可调（吞吐/生成速度由平台预置），相比 Token 用量 TPS 提升约 1.5～2.0 倍 |
+| **模型单元（MU）** | 调优后大规模推理、需独占资源 | 资源独占，按使用时长 × 模型单元数 | 可自定义最长上下文、RPM/TPM 限流，支持 PD 分离模式 |
+| **按 Token 用量** | 调优后效果验证、低并发高性价比 | 不使用不计费 | 不可调，**仅支持部分 SFT/LoRA 调优后的模型** |
 
-## 限制与注意事项
-- **权限隔离**：API Key 所属的[[业务空间]]必须显式开启目标模型的部署权限。子账号需主账号授予服务关联角色创建权限后方可执行首次授权。
-- **参数无效声明**：`lora` 计划部署请求中 `capacity` 参数为必填但实际无效。如需动态扩缩容，需在控制台提交工单申请，API 直接修改不生效。
-- **文件强校验**：LoRA 导入严格校验 `rank` 值（仅限 8/16/32/64 且全层一致）。禁止训练过程中修改基础模型的 `vocab` 与 `chat_template`。视觉语言模型（VL）的 Adapter 中严禁包含 `visual` 开头的权重，否则导入失败。
-- **计费策略锁定**：部署创建后计费模式不可变更。如需切换计费方案，必须下线现有部署并重新创建。
+各方式的扩缩容方式：
+- PTU：自助增减吞吐量
+- MU：自助增减模型单元数量
+- Token 用量：控制台提交申请，等待人工审核
 
-> **注意**：PTU 模式下若单位时间内调用量超出购买的 TPM 配额，系统会自动将超额请求降级至公共[[模型调用]]通道。此时推理性能可能波动，限流受全局策略管控，且响应 Header 中将携带 `x-dashscope-ptu-overflow: true`。建议结合[[模型监控]]面板观察实际吞吐水位，必要时提前扩容。
+更多计费公式、单价表、PD 分离模式说明参考 [模型部署简介](../../raw/model-user-guide/model-deployment-1/model-deployment-introduction.md)。
+
+## 通过 API 部署（关键参数）
+
+通用入口为 `POST https://dashscope.aliyuncs.com/api/v1/deployments`，请求体中通过 `plan` 字段切换计费方式。完整示例见 [使用 API或命令行进行模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md)。
+
+### PTU（预置吞吐）
+
+```json
+{
+  "name": "my_qwen_flash",
+  "model_name": "qwen-flash-2025-07-28",
+  "plan": "ptu",
+  "ptu_capacity": { "input_tpm": 10000, "output_tpm": 1000 }
+}
+```
+
+### MU（模型单元）
+
+```json
+{
+  "name": "my_qwen_plus",
+  "model_name": "qwen-plus-2025-12-01",
+  "plan": "mu",
+  "deploy_spec": "MU1",
+  "enable_thinking": true,
+  "capacity": 4,
+  "max_context_length": 10000,
+  "rpm_limit": 500,
+  "tpm_limit": 1000
+}
+```
+
+关键字段：
+- `deploy_spec`：模型单元规格（如 MU1、MU2 等，规格能力差异见单价表）
+- `capacity`：模型单元数量
+- `enable_thinking`：是否开启思考模式（仅 Instruct/Thinking 双模式模型支持）
+- `max_context_length`：最长上下文，依赖模型类型
+- `rpm_limit` / `tpm_limit`：服务级限流
+
+### Token 用量（LoRA）
+
+```json
+{
+  "model_name": "qwen3-8b-ft-202511132025-0260",
+  "plan": "lora",
+  "capacity": 1,
+  "name": "qwen3-8b-ft"
+}
+```
+
+> **注意**：`capacity` 字段在 `plan=lora` 时**填写无效但必须传**，扩缩容需在控制台提交人工申请。
+
+### 图片/视频模型（按算力单元 cu）
+
+```json
+{
+  "model_name": "animate-anyone-detect",
+  "capacity": 2,
+  "plan": "cu",
+  "name": "my_animate"
+}
+```
+
+### 部署后查询、调用与删除
+
+- 查询：`GET /api/v1/deployments/{deployed_model}`，`status` 为 `RUNNING` 表示已就绪
+- 调用：`model` 参数传入返回值中的 `deployed_model`（即模型 code），可用 OpenAI 兼容协议、DashScope SDK、Assistant SDK 任一方式
+- 删除：`DELETE /api/v1/deployments/{deployed_model}`，**立即下线、停止计费、不可恢复**
+
+## 导入自定义 LoRA 模型
+
+通过 **我的模型** → **导入模型** 可将本地训练的 LoRA 适配器从 OSS 拉到百炼平台。详细步骤、授权方法、子账号 RAM 策略示例见 [模型导入](../../raw/model-user-guide/model-deployment-1/model-import.md)。
+
+### OSS 准备要点
+
+- Bucket 不能是归档/冷归档/深度冷归档存储类型；支持私有 Bucket、内容加密 Bucket。
+- 模型文件夹必须放在 Bucket 的**子目录**下，不支持根目录访问。
+- 必须为 Bucket 添加标签 `bailian-datahub-access` = `read`，否则百炼无法读取。
+- 首次导入需开通 OSS 服务关联角色；子账号还需主账号在 RAM 中授予 `ram:CreateServiceLinkedRole` 权限（限定 `ram:ServiceName=datahub.sfm.aliyuncs.com`）。
+
+### 文件要求
+
+- 必需文件：`adapter_model.safetensors`（LoRA 权重）+ `adapter_config.json`（含 rank、alpha）
+- `rank` 取值只能是 **8、16、32、64**，且同一模型所有 LoRA 层必须一致
+- **禁止修改词汇表**：训练中新增 token 或改动 vocab 的模型无法导入
+- **禁止修改 chat_template**：必须与基础模型默认配置一致（检查 `config.json` 与 `tokenizer_config.json`）
+- **VL 模型必须冻结 VIT**：`adapter_model.safetensors` 中不能包含以 `visual` 开头的权重键
+
+### 推理参数对齐
+
+> **注意**：导入模型后若发现与本地 vLLM/SGLang 推理结果不一致，主要原因是采样参数默认值不同。建议调用时显式对齐 `temperature=1.0`、`top_p=1.0`、`top_k>100`（或 None）、`presence_penalty=0`、`repetition_penalty=1.0`，以贴近 vLLM 默认行为。
+
+## 限制与常见问题
+
+- **计费即开始**：部署成功立即开始计费，即便未发起任何调用。
+- **预付费规则**：PTU 预付费按天，MU 预付费按月；首月内提前退订，日单价按 **1.2 倍** 计费，且无法提前终止预付费订单。
+- **欠费保留**：后付费欠费后资源继续保留并计费 24 小时，之后自动释放。
+- **超量降级**：PTU 超出购买 TPM 时自动降级为按量付费，响应头返回 `x-dashscope-ptu-overflow: true`，并受业务空间公共流量限流。
+- **Token 用量模式自动释放**：1 个月未使用将自动释放部署。
+- **权限报错**：API 报 `Workspace xxx does not have deployment privilege for model xxxx` 时，需在业务空间的"模型权限流控设置"中为目标模型授权；报 `Workspace access denied` 时，需在业务空间的"权限管理"中加入 API Key 归属账号。
+- **业务空间一致性**：调用专属服务的 API Key 必须与部署所在的业务空间相同。
 
 ## 来源文档
 
-- [模型导入](../../raw/model-user-guide/model-deployment-1/model-import.md)
-- [使用 API或命令行进行模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md)
 - [模型部署简介](../../raw/model-user-guide/model-deployment-1/model-deployment-introduction.md)
+- [使用 API或命令行进行模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md)
+- [模型导入](../../raw/model-user-guide/model-deployment-1/model-import.md)
+
 

@@ -21,7 +21,7 @@ curl -X POST "https://dashscope.aliyuncs.com/api/v1/tokens?expire_in_seconds=180
 
 > 各地域的API Key 不同。
 
-> 以下示例使用新加坡地域的 Endpoint。如需使用北京地域，请将URL替换为：https://dashscope.aliyuncs.com/api/v1/tokens?expire\_in\_seconds=1800
+> 以下示例使用新加坡地域的 Endpoint，调用时请将WorkspaceId替换为真实的业务空间ID。如需使用北京地域，请将URL替换为：https://dashscope.aliyuncs.com/api/v1/tokens?expire\_in\_seconds=1800
 
 ## 响应示例
 
@@ -84,7 +84,7 @@ code
 
 String
 
-错误码。更多错误原因及解决方法，请前往[错误信息](https://help.aliyun.com/zh/model-studio/error-code)页面查询。
+错误码。更多错误原因及解决方法，请前往[错误码](https://help.aliyun.com/zh/model-studio/error-code)页面查询。
 
 InvalidApiKey：无效API Key
 

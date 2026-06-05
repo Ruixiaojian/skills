@@ -1,8 +1,6 @@
 <div align="center">
 
-<img src="https://img.alicdn.com/imgextra/i1/O1CN01RSQFUD1jN5IBzHORt_!!6000000004535-2-tps-2440-521.png" alt="Aliyun Model Studio AI Skills" width="420" />
-
-# >\_ Aliyun Model Studio AI Skills
+<img src="https://img.alicdn.com/imgextra/i4/O1CN01VWH9Nq1SfXnTTVTCw_!!6000000002274-2-tps-1915-821.png" alt="Aliyun Model Studio AI Skills"  />
 
 **阿里云百炼 (DashScope) AI 平台官方 Agent 技能集**
 
@@ -10,7 +8,7 @@
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
-[阿里云百炼 CLI 官方主页](https://bailian.console.aliyun.com/cli) · [English](./README.md) · [API 文档](https://help.aliyun.com/zh/model-studio/) · [获取 API Key](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/api-key)
+[阿里云百炼 CLI 官方主页](https://bailian.console.aliyun.com/cli?source_channel=cli_github&) · [English](./README.md) · [API 文档](https://help.aliyun.com/zh/model-studio/) · [获取 API Key](https://bailian.console.aliyun.com/cli?source_channel=key_github&)
 
 ---
 
@@ -59,8 +57,8 @@ npx skills add modelstudioai/skills
 |------|------|
 | [`bailian-cli`](./skills/bailian-cli/) |  引导 Agent 使用 `bl` 命令完成对话、多模态、图像/视频、语音、视觉、应用、记忆、RAG 与联网搜索；详细命令参考 `reference/`。先装 CLI → [bailian.aliyun.com/cli/install.md](https://bailian.aliyun.com/cli/install.md)。 |
 | [`bailian-docs-llm-wiki`](./skills/bailian-docs-llm-wiki/) | **百炼文档库**：查模型规格、API/错误码、智能体/RAG/知识库、SDK 兼容、多模态与计费等百炼问题时启用；`models/` 查规格与定价，`wiki/` 查概念与指南。 |
----
 
+---
 
 ## 阿里云百炼精选技能
 

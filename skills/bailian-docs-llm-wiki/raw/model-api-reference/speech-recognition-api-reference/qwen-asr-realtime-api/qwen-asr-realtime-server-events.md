@@ -2,7 +2,7 @@
 
 本文档介绍在与 Qwen-ASR Realtime API 的 WebSocket 会话中，服务端向客户端发送的事件。
 
-**用户指南：**模型介绍、功能特性和完整示例代码请参见[实时语音识别-千问](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition-user-guide)
+**用户指南：**模型介绍、功能特性和完整示例代码请参见[实时语音识别](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition-user-guide)
 
 ## **error**
 
@@ -42,7 +42,7 @@ error.message
 
 string
 
-具体的报错信息。请按[错误信息](https://help.aliyun.com/zh/model-studio/error-code)所示的解决方案进行处理。
+具体的报错信息。请按[错误码](https://help.aliyun.com/zh/model-studio/error-code)所示的解决方案进行处理。
 
 error.param
 

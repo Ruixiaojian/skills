@@ -637,4 +637,4 @@ kimi/kimi-k2.6、kimi/kimi-k2.5属于混合思考模型，通过`enable_thinking
 
 ## **错误码**
 
-如果执行报错，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+如果执行报错，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。

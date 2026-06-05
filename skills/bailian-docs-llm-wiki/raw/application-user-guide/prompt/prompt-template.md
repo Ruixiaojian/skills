@@ -69,7 +69,7 @@ Prompt模板分为[预置Prompt模板](https://bailian.console.aliyun.com/?tab=a
 
 访问[提示词](https://bailian.console.aliyun.com/?tab=app#/plugin-market/prompt)页面，可查看和使用阿里云百炼提供的针对不同场景的预置Prompt模板。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2914013671/p1026677.png)
+每个 Prompt 模板以卡片形式展示，包含模板内容摘要和模板 ID。卡片底部提供 **查看详情**、**复制 prompt** 和更多操作（**···**）按钮。
 
 #### **2\. 查看与管理**
 
@@ -81,13 +81,13 @@ Prompt模板分为[预置Prompt模板](https://bailian.console.aliyun.com/?tab=a
     
 -   单击**创建应用**，模板内容将自动填充到**智能体应用**的提示词编辑框中。可直接使用或基于业务场景修改。
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3814013671/p977195.png)
+    填充后的提示词中包含自定义变量 `${number}` 和 `${content}`，用于生成小红书风格文案。
     
 -   单击**调用API**，可查看模板调用的代码示例。此处仅为核心代码示例，不能直接运行。完整的代码示例，请参见[GetPromptTemplate - 获取Prompt模板](https://api.aliyun.com/api/bailian/2023-12-29/GetPromptTemplate?spm=a2c4g.11186623.0.0.15e5d339W9qg6b&RegionId=cn-beijing)中的**SDK示例**。
     
 -   单击**复制模板**，会在**[提示词](https://bailian.console.aliyun.com/?tab=app#/component-manage/prompt)**页面创建一个自定义Prompt模板：“预置Prompt模板名称\_副本\_时间戳”。
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3814013671/p950499.png)
+    复制后的模板卡片展示**模板内容**预览和**模板 ID**（可单击右侧图标复制），底部提供**编辑**、**复制 prompt**及更多操作按钮。
     
 
 ### **自定义Prompt模板**
@@ -104,7 +104,7 @@ Prompt模板分为[预置Prompt模板](https://bailian.console.aliyun.com/?tab=a
     
 -   **基于业务需求创建**
     
-    在**[提示词](https://bailian.console.aliyun.com/?tab=app#/component-manage/prompt)**页面，单击**创建提示词**，完成相关配置后，单击**保存**即可完成模板创建。更多创建详情请参阅[自定义Prompt模板](https://help.aliyun.com/zh/model-studio/prompt-custom-template)。![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3814013671/p935584.png)
+    在**[提示词](https://bailian.console.aliyun.com/?tab=app#/component-manage/prompt)**页面，单击**创建提示词**，完成相关配置后，单击**保存**即可完成模板创建。更多创建详情请参阅[自定义Prompt模板](https://help.aliyun.com/zh/model-studio/prompt-custom-template)。在Prompt模板管理页面，可通过类型筛选（全部、文本生成、图片生成）和搜索框查找已有模板。单击右上角**\+ 创建提示词**按钮新建Prompt模板。已创建的模板以卡片形式展示，包含模板标题、内容预览和模板ID，支持**编辑**和**复制prompt**操作。
     
 
 #### **API**
@@ -118,8 +118,6 @@ Prompt模板分为[预置Prompt模板](https://bailian.console.aliyun.com/?tab=a
 
 **查看：**自定义Prompt模板创建完成后，可在[提示词](https://bailian.console.aliyun.com/?tab=app#/component-manage/prompt)页面查看。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3814013671/p952413.png)
-
 **管理：**
 
 -   单击模板卡片上的**编辑**，可修改模板内容。
@@ -127,8 +125,6 @@ Prompt模板分为[预置Prompt模板](https://bailian.console.aliyun.com/?tab=a
 -   单击**复制prompt**，可以复制模板内容。
     
 -   单击**创建应用**，模板内容将自动填充到**智能体应用**的提示词编辑框中。可直接使用或基于业务场景修改。
-    
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3814013671/p977195.png)
     
 -   单击**调用API**，可查看模板调用的代码示例。此处仅为核心代码示例，不能直接运行。完整的代码示例，请参见[GetPromptTemplate - 获取Prompt模板](https://api.aliyun.com/api/bailian/2023-12-29/GetPromptTemplate?spm=a2c4g.11186623.0.0.15e5d339W9qg6b&RegionId=cn-beijing)中的**SDK示例**。
     
@@ -143,18 +139,16 @@ Prompt模板分为[预置Prompt模板](https://bailian.console.aliyun.com/?tab=a
 
 1.  单击预置Prompt模板或自定义Prompt模板中的**使用prompt** > **创建应用**，模板内容将自动填充到智能体应用的提示词中。
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3814013671/p950436.png)
+    填充后的提示词输入框中可见模板变量（如 `${name}`），输入框右下角显示字符计数，最大支持 6144 个字符。
     
 2.  为应用设置模型，输入问题测试提示词效果。
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3814013671/p952386.png)
+    在模型调试界面左侧，选择模型（如**通义千问-Plus-Latest 128K**）并在**提示词**区域编写系统指令；右侧在用户输入区输入测试问题后单击执行，下方展示模型回复内容及输入/输出token统计信息。
     
 
 ## API
 
 1.  打开[获取Prompt模板](https://help.aliyun.com/zh/model-studio/api-bailian-2023-12-29-getprompttemplate)接口调用文档，单击**调试**。
-    
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6722599371/p918371.png)
     
 2.  在**参数配置**界面分别输入 workspaceId 和 promptTemplateId。
     
@@ -166,7 +160,20 @@ Prompt模板分为[预置Prompt模板](https://bailian.console.aliyun.com/?tab=a
     
     调用成功示例：
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6722599371/p918440.png)
+    ```
+    {   // Schema of Response
+      "variables": [   // 模板变量列表
+        "platform",   // 模板变量
+        "topic",   // 模板变量
+        "num1",   // 模板变量
+        "num2"   // 模板变量
+      ],
+      "promptTemplateId": "cfec40c311f14f3e976403059d8f0116",   // 模板Id
+      "requestId": "8C616xxx",   // 请求Id
+      "name": "营销文案生成",   // 模板名称
+      "content": "你是一名在${platform}平台具有丰富经验的专业爆款营销文案策划人，现在请以\"${topic}\"为核心主题，撰写一段极具吸引力的${platform}营销内容。要求内容包括：一个引人入胜且符合SEO优化原则的标题，以及一段详细且富有情感煽动力的正文。在正文中，请至少插入${num1}不同的emoji表情，以增加内容的互动性和视觉吸引力。此外，请根据该主题，设计并提供最多${num2}热门推荐标签，这些标签需具有高度概括主题和吸引目标用户群体的特点。",   // 模板内容
+    }
+    ```
     
 
 ## SDK
@@ -185,7 +192,7 @@ Prompt模板分为[预置Prompt模板](https://bailian.console.aliyun.com/?tab=a
     
     > 获取方法请参见[获取 AccessKey 与 AgentKey](https://help.aliyun.com/zh/model-studio/get-accesskey-appid-and-agentkey)。
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/8868803671/p952213.png)
+    在 OpenAPI 调试页面右侧，单击 **SDK示例** 页签，选择 SDK 代系 **V2.0（推荐）** 及目标语言（如 **Java**），即可查看对应的 SDK 示例代码。
     
 
 ## **效果示例**
@@ -329,17 +336,17 @@ Prompt模板分为[预置Prompt模板](https://bailian.console.aliyun.com/?tab=a
 
 你是一名专业的文案风格改写专家，请将我提供的文案用【3种】不同的【小红书】风格改写的更加【积极向上】。我的文案是【一成不变的生活，每天重复着三点一线的日子难免有些枯燥。然而，这种生活状态在现代社会中并不罕见。我们常常为了生计或者事业，每天按部就班地过着同样的生活。】
 
-1.  小红书风格一：
+1.  小红书风格一。
     
 
 虽然每天的生活看起来有些枯燥，但是我们可以通过改变自己的心态，让每一天都变得更加有意义。我们可以尝试新的事物，挑战自己，让生活充满惊喜。只要我们保持积极的态度，我们就可以把平淡的生活变得更加有趣。
 
-2.  小红书风格二：
+2.  小红书风格二。
     
 
 虽然我们可能每天都在重复着同样的生活，但是我们可以通过改变自己的习惯，让生活变得更加美好。我们可以尝试早起锻炼，学习新的技能，或者去一个新的地方旅行。只要我们保持积极的态度，我们就可以让生活变得更加丰富多彩。
 
-3.  小红书风格三：
+3.  小红书风格三。
     
 
 虽然我们可能每天都在重复着同样的生活，但是我们可以通过改变自己的态度，让生活变得更加有意义。我们可以尝试感恩，享受当下，或者帮助他人。只要我们保持积极的态度，我们就可以把平淡的生活变得更加充实。
@@ -361,7 +368,7 @@ Prompt模板分为[预置Prompt模板](https://bailian.console.aliyun.com/?tab=a
 
 ## 错误码
 
-如果调用失败并返回报错信息，请参见[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+如果调用失败并返回报错信息，请参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
 
 ## **常见问题**
 
