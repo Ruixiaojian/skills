@@ -57,6 +57,7 @@ npx skills add modelstudioai/skills
 |------|------|
 | [`bailian-cli`](./skills/bailian-cli/) |  引导 Agent 使用 `bl` 命令完成对话、多模态、图像/视频、语音、视觉、应用、记忆、RAG 与联网搜索；详细命令参考 `reference/`。先装 CLI → [bailian.aliyun.com/cli/install.md](https://bailian.aliyun.com/cli/install.md)。 |
 | [`bailian-docs-llm-wiki`](./skills/bailian-docs-llm-wiki/) | **百炼文档库**：查模型规格、API/错误码、智能体/RAG/知识库、SDK 兼容、多模态与计费等百炼问题时启用；`models/` 查规格与定价，`wiki/` 查概念与指南。 |
+| [`financial-expert`](./skills/financial-expert/) | **金融数据分析**：覆盖中国 A 股选股 / 基金 / 基金经理筛选、财务与宏观数据查询、券商研报与上市公司公告检索。 |
 
 ---
 
