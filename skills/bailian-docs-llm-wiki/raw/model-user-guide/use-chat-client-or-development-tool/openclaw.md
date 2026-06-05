@@ -118,7 +118,7 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
     
     **首次配置**：复制以下内容到配置文件，将 `YOUR_API_KEY` 替换为 Token Plan 团队版 API Key。
     
-    **已有配置**：若需保留已有配置，请勿直接全量替换，详见[已有配置如何安全修改](#cp-openclaw-faq-safe-modify-title)。
+    **已有配置**：若需保留已有配置，请勿直接全量替换，详见[已有配置如何安全修改](#cp-openclaw-faq-safe-modify)。
     
     ```
     {
@@ -305,7 +305,7 @@ Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用方
     
     **首次配置**：复制以下内容到配置文件，将 `YOUR_API_KEY` 替换为 Token Plan 团队版 API Key。
     
-    **已有配置**：若需保留已有配置，请勿直接全量替换，详见[已有配置如何安全修改](#cp-openclaw-faq-safe-modify-title)。
+    **已有配置**：若需保留已有配置，请勿直接全量替换，详见[已有配置如何安全修改](#cp-openclaw-faq-safe-modify)。
     
     ```
     {
@@ -498,7 +498,7 @@ Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-pla
     
     **首次配置**：复制以下内容到配置文件，将 `YOUR_API_KEY` 替换为 Coding Plan API Key。
     
-    **已有配置**：若需保留已有配置，请勿直接全量替换，详见[已有配置如何安全修改](#cp-openclaw-faq-safe-modify-title)。
+    **已有配置**：若需保留已有配置，请勿直接全量替换，详见[已有配置如何安全修改](#cp-openclaw-faq-safe-modify)。
     
     ```
     {
@@ -646,7 +646,7 @@ Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-pla
 
 **说明**
 
-Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[方式一：终端方式](#cp-terminal-h2)。
+Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[方式一：终端方式](#speru1gqcpccc)。
 
 1.  **启动 Web UI**
     
@@ -662,7 +662,7 @@ Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[�
     
     **首次配置**：复制以下内容到配置文件，将 `YOUR_API_KEY` 替换为 Coding Plan API Key。
     
-    **已有配置**：若需保留已有配置，请勿直接全量替换，详见[已有配置如何安全修改](#cp-openclaw-faq-safe-modify-title)。
+    **已有配置**：若需保留已有配置，请勿直接全量替换，详见[已有配置如何安全修改](#cp-openclaw-faq-safe-modify)。
     
     ```
     {
@@ -812,7 +812,7 @@ Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[�
 
 -   华北2（北京）：`https://dashscope.aliyuncs.com/apps/anthropic`
     
--   新加坡：`https://dashscope-intl.aliyuncs.com/apps/anthropic`
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/apps/anthropic`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
     
 
 **可用模型**
@@ -839,7 +839,7 @@ Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[�
     
     **首次配置**：复制以下内容到配置文件，将 `YOUR_API_KEY` 替换为百炼 API Key。
     
-    **已有配置**：若需保留已有配置，请勿直接全量替换，详见[已有配置如何安全修改](#cp-openclaw-faq-safe-modify-title)。
+    **已有配置**：若需保留已有配置，请勿直接全量替换，详见[已有配置如何安全修改](#cp-openclaw-faq-safe-modify)。
     
     ```
     {
@@ -935,7 +935,7 @@ Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[�
 
 **说明**
 
-Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[方式一：终端方式](#payg-terminal-h2)。
+Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[方式一：终端方式](#hx6cgckzxwnoc)。
 
 1.  **启动 Web UI**
     
@@ -951,7 +951,7 @@ Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[�
     
     **首次配置**：复制以下内容到配置文件，将 `YOUR_API_KEY` 替换为百炼 API Key。
     
-    **已有配置**：若需保留已有配置，请勿直接全量替换，详见[已有配置如何安全修改](#cp-openclaw-faq-safe-modify-title)。
+    **已有配置**：若需保留已有配置，请勿直接全量替换，详见[已有配置如何安全修改](#cp-openclaw-faq-safe-modify)。
     
     ```
     {
@@ -1049,7 +1049,7 @@ Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[�
         
 2.  **创建钉钉机器人应用**
     
-    1.  登录[钉钉开放平台](https://open-dev.dingtalk.com/)，在顶部菜单栏，选择**应用开发**。
+    1.  登录[钉钉开放平台](https://open-dev.dingtalk.com/)，在顶部菜单栏，选择**应用**。
         
     2.  在页面右侧，单击**创建应用**，填写应用名称（例如"AI 助手"）和描述，然后单击**保存**，系统自动进入应用详情页。
         
@@ -1107,7 +1107,7 @@ Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[�
 
 如果使用[轻量应用服务器部署方案](https://help.aliyun.com/zh/simple-application-server/use-cases/quickly-deploy-and-use-openclaw)或[无影云电脑部署方案](https://help.aliyun.com/zh/edsp/getting-started/quickly-create-openclaw-through-wuying-cloud-computer-personal-edition/)部署 OpenClaw，通常可以通过图形化界面进行配置，无需手动修改配置文件。
 
-在 `~/.openclaw/openclaw.json` 中添加 `channels` 和 `plugins.allow` 配置。将 `YOUR_DINGTALK_APPKEY` 和 `YOUR_DINGTALK_APPSECRET` 替换为[步骤一](#oc-channel-dingtalk-step1)中获取的凭证。请将 `channels` 和 `plugins` 添加到已有配置文件的对应位置，不要覆盖已有的 `models`、`agents` 等配置。
+在 `~/.openclaw/openclaw.json` 中添加 `channels` 和 `plugins.allow` 配置。将 `YOUR_DINGTALK_APPKEY` 和 `YOUR_DINGTALK_APPSECRET` 替换为[步骤一](#npnpzc5r22p7b)中获取的凭证。请将 `channels` 和 `plugins` 添加到已有配置文件的对应位置，不要覆盖已有的 `models`、`agents` 等配置。
 
 **说明**
 
@@ -1166,42 +1166,43 @@ Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[�
     
 2.  左侧导航栏单击**凭证与基础信息** 页面，复制**App ID**（格式如 `cli_xxx`）和**App Secret**。
     
-3.  左侧导航栏单击 **权限管理** 页面，单击**批量导入/导出权限** 按钮，粘贴以下 JSON 配置，单击**下一步，确认新增权限**，单击**申请开通**。
+3.  左侧导航栏单击 **权限管理**页面，单击**批量导入/导出权限** 按钮，粘贴以下 JSON 配置，单击**下一步，确认新增权限**，单击**申请开通**。
     
-    **JSON配置文件内容**
-    
-    ```
-    {
-      "scopes": {
-        "tenant": [
-          "aily:file:read",
-          "aily:file:write",
-          "application:application.app_message_stats.overview:readonly",
-          "application:application:self_manage",
-          "application:bot.menu:write",
-          "cardkit:card:write",
-          "contact:user.employee_id:readonly",
-          "corehr:file:download",
-          "docs:document.content:read",
-          "event:ip_list",
-          "im:chat",
-          "im:chat.access_event.bot_p2p_chat:read",
-          "im:chat.members:bot_access",
-          "im:message",
-          "im:message.group_at_msg:readonly",
-          "im:message.group_msg",
-          "im:message.p2p_msg:readonly",
-          "im:message:readonly",
-          "im:message:send_as_bot",
-          "im:resource",
-          "sheets:spreadsheet",
-          "wiki:wiki:readonly"
-        ],
-        "user": ["aily:file:read", "aily:file:write", "im:chat.access_event.bot_p2p_chat:read"]
-      }
-    }
-    ```
-    
+
+**JSON配置文件内容**
+
+```
+{
+     "scopes": {
+       "tenant": [
+         "aily:file:read",
+         "aily:file:write",
+         "application:application.app_message_stats.overview:readonly",
+         "application:application:self_manage",
+         "application:bot.menu:write",
+         "cardkit:card:write",
+         "contact:user.employee_id:readonly",
+         "corehr:file:download",
+         "docs:document.content:read",
+         "event:ip_list",
+         "im:chat",
+         "im:chat.access_event.bot_p2p_chat:read",
+         "im:chat.members:bot_access",
+         "im:message",
+         "im:message.group_at_msg:readonly",
+         "im:message.group_msg",
+         "im:message.p2p_msg:readonly",
+         "im:message:readonly",
+         "im:message:send_as_bot",
+         "im:resource",
+         "sheets:spreadsheet",
+         "wiki:wiki:readonly"
+       ],
+       "user": ["aily:file:read", "aily:file:write", "im:chat.access_event.bot_p2p_chat:read"]
+     }
+   }
+```
+
 4.  左侧导航栏中单击， 选择**按能力添加**页签，找到**机器人**卡片，单击**配置**。
     
 5.  配置事件订阅。
@@ -1221,25 +1222,17 @@ Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[�
     openclaw channels add
     ```
     
-    根据界面交互提示，完成以下配置。
+
+根据界面交互提示，完成以下配置。
+
+-   选择 **Feishu**
     
-    -   选择 **Feishu**
-        
-    -   输入 **App ID**
-        
-    -   输入 **App Secret**
-        
+-   输入 **App ID**
     
-    配置完成后，重启网关。
+-   输入 **App Secret**
     
-2.  创建群聊或在已有群聊中添加机器人，在飞书群中**@机器人**进行对话，或通过搜索的方式与机器人私聊进行测试。
-    
-3.  在群聊中添加机器人：**设置**。
-    
-4.  单击机器人头像，单击发送消息，可向机器人私发一条消息，机器人会回复一条包含**配对码**的消息。
-    
-5.  复制消息的最后一行，在 OpenClaw 对话中发送，OpenClaw 会自动完成飞书机器人配对。
-    
+
+配置完成后，重启网关。 2. 创建群聊或在已有群聊中添加机器人，在飞书群中**@机器人**进行对话，或通过搜索的方式与机器人私聊进行测试。 3. 在群聊中添加机器人：**设置**。 4. 单击机器人头像，单击发送消息，可向机器人私发一条消息，机器人会回复一条包含**配对码**的消息。 5. 复制消息的最后一行，在 OpenClaw 对话中发送，OpenClaw 会自动完成飞书机器人配对。
 
 #### 步骤三：测试
 
@@ -1255,10 +1248,8 @@ Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[�
     openclaw status
     ```
     
-    在 Channels 部分，Feishu 应显示为 `ON` 且状态为 `OK`。
-    
-3.  在飞书中发送消息进行测试。
-    
+
+在 Channels 部分，Feishu 应显示为 `ON` 且状态为 `OK`。 3. 在飞书中发送消息进行测试。
 
 ### 微信
 
@@ -1330,7 +1321,7 @@ Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[�
 
 #### 步骤三：接入 QQ 消息渠道
 
-1.  在 `~/.openclaw/openclaw.json` 中添加 `channels` 和 `plugins.allow` 配置。将 `YOUR_APP_ID` 和 `YOUR_APP_SECRET` 替换为[步骤二](#oc-channel-qq-step2)中获取的凭证。请将 `channels` 和 `plugins` 添加到已有配置文件的对应位置，不要覆盖已有的 `models`、`agents` 等配置。
+1.  在 `~/.openclaw/openclaw.json` 中添加 `channels` 和 `plugins.allow` 配置。将 `YOUR_APP_ID` 和 `YOUR_APP_SECRET` 替换为[步骤二](#qpcehihxepe6a)中获取的凭证。请将 `channels` 和 `plugins` 添加到已有配置文件的对应位置，不要覆盖已有的 `models`、`agents` 等配置。
     
     ```
     {
@@ -1355,14 +1346,13 @@ Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[�
     }
     ```
     
-    以上配置中`dmPolicy`设为`open`表示允许私聊，`allowFrom`设为`["*"]`表示允许所有用户消息，适用于测试或个人使用场景，生产环境中建议根据实际需求限制访问范围。
-    
-2.  配置完成后重启网关。
-    
-    ```
-    openclaw gateway restart
-    ```
-    
+
+以上配置中`dmPolicy`设为`open`表示允许私聊，`allowFrom`设为`["*"]`表示允许所有用户消息，适用于测试或个人使用场景，生产环境中建议根据实际需求限制访问范围。 2. 配置完成后重启网关。
+
+```
+openclaw gateway restart
+```
+
 3.  在 QQ 中向机器人发送消息进行测试。
     
 
@@ -1441,37 +1431,7 @@ Web UI 方式仅在 OpenClaw **≤ 2026.3.28** 可用，更高版本请使用[�
     
     参数说明如下：
     
-    **参数**
-    
-    **说明**
-    
-    `--name`
-    
-    任务名称
-    
-    `--cron`
-    
-    Cron 表达式，`"0 9 * * *"` 表示每天 9:00 执行
-    
-    `--tz`
-    
-    时区，设为 `"Asia/Shanghai"` 即北京时间
-    
-    `--message`
-    
-    发送给 Agent 的提示词，告诉 AI 要抓取什么内容、如何总结
-    
-    `--channel`
-    
-    推送通道，设为 `dingtalk`
-    
-    `--announce`
-    
-    将结果推送到钉钉对话中
-    
-    `--timeout-seconds`
-    
-    任务超时时间（秒），网页抓取建议设为 120
+    | **参数** | **说明** | | --- | --- | | `--name` | 任务名称 | | `--cron` | Cron 表达式，`"0 9 * * *"` 表示每天 9:00 执行 | | `--tz` | 时区，设为 `"Asia/Shanghai"` 即北京时间 | | `--message` | 发送给 Agent 的提示词，告诉 AI 要抓取什么内容、如何总结 | | `--channel` | 推送通道，设为 `dingtalk` | | `--announce` | 将结果推送到钉钉对话中 | | `--timeout-seconds` | 任务超时时间（秒），网页抓取建议设为 120 |
     
     创建成功后将返回 JSON 格式的任务信息，包含任务 ID 和下次执行时间。
     
@@ -1684,8 +1644,8 @@ Skill 是可扩展的能力模块，Agent 会根据请求自动匹配并加载�
     }
     ```
     
-    部分内置 Skill需要配置对应的第三方 API Key 才能使用，请在 `~/.openclaw/openclaw.json` 的 `skills.entries` 中配置，具体请参考 [Skills 配置文档](https://docs.openclaw.ai/zh-CN/tools/skills-config)。
-    
+
+部分内置 Skill需要配置对应的第三方 API Key 才能使用，请在 `~/.openclaw/openclaw.json` 的 `skills.entries` 中配置，具体请参考 [Skills 配置文档](https://docs.openclaw.ai/zh-CN/tools/skills-config)。
 
 #### **查找更多 Skill**
 

@@ -308,7 +308,7 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
 
 -   华北2（北京）：`https://dashscope.aliyuncs.com/compatible-mode/v1`
     
--   新加坡：`https://dashscope-intl.aliyuncs.com/compatible-mode/v1`
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
     
 -   美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
     

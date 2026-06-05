@@ -8,7 +8,7 @@ Cherry Studio 是一款开源 AI 桌面客户端，可以通过 Token Plan 团�
 
 ## **配置接入凭证**
 
-打开 Cherry Studio，点击右上角的设置按钮，在**模型服务**栏点击**添加**，填写供应商名称（如 Token Plan 团队版），提供商类型选择 OpenAI。
+打开 Cherry Studio，点击右上角的设置按钮，在**模型**栏点击**添加**，填写供应商名称（如 Token Plan 团队版），提供商类型选择 OpenAI。
 
 百炼提供三种计费方案，根据需要选择：
 
@@ -71,7 +71,7 @@ Cherry Studio 是一款开源 AI 桌面客户端，可以通过 Token Plan 团�
 
 -   华北2（北京）：`https://dashscope.aliyuncs.com/compatible-mode/v1`
     
--   新加坡：`https://dashscope-intl.aliyuncs.com/compatible-mode/v1`
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
     
 -   美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
     
@@ -109,7 +109,7 @@ Cherry Studio 是一款开源 AI 桌面客户端，可以通过 Token Plan 团�
 
 可能的原因：
 
--   **地域不匹配**：免费额度仅适用于**中国内地版**（北京地域）的模型。使用其他地域的模型会产生费用。请检查**API 地址**是否与目标地域匹配，详情请参见[新人免费额度](https://help.aliyun.com/zh/model-studio/new-free-quota)。
+-   **地域不匹配**：免费额度仅适用于**中国大陆版**（北京地域）的模型。使用其他地域的模型会产生费用。请检查**API 地址**是否与目标地域匹配，详情请参见[新人免费额度](https://help.aliyun.com/zh/model-studio/new-free-quota)。
     
 -   **额度按模型独立计算**：各模型的免费额度相互独立，不可跨模型共享。
     

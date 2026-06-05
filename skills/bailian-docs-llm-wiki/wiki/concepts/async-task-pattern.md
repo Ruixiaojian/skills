@@ -1,109 +1,82 @@
-# 异步任务模式
+# 异步任务轮询模式
 
-异步任务模式是百炼平台针对耗时较长的 AI 生成任务所采用的调用机制。其核心流程为"**创建任务 → 获取 task_id → 轮询或回调获取结果**"，将任务提交与结果获取解耦，避免长时间阻塞连接。
+异步任务轮询模式是百炼平台为处理长耗时生成类请求（视频、3D、音乐、语音转写、模型调优、模型部署等）统一采用的调用范式：客户端先 `POST` 提交任务获取 `task_id` / `job_id`，再周期性 `GET` 查询任务状态，直到进入 `SUCCEEDED` 或 `FAILED` 终态后取走结果 URL 或下游标识。
 
 ## 适用场景
 
-百炼平台中以下类型的 API 采用异步任务模式：
+百炼平台中，下列场景一律走异步任务流程（同步立即返回会被显式拒绝）：
 
-| 场景 | 典型模型 / 功能 | 任务耗时参考 |
-|------|----------------|-------------|
-| **视频生成** | 万相 2.7、可灵、爱诗 PixVerse、数字人等 | 1–5 分钟 |
-| **3D 模型生成** | Tripo-H3.1、Tripo-P1.0 | 分钟级 |
-| **图像生成与编辑** | 万相 V1、wanx2.1-imageedit、背景生成等旧版模型 | 秒级至分钟级 |
-| **应用调用** | 智能体 / 工作流的异步执行（Responses API 中 `background=true`） | 视应用复杂度而定 |
+- **视频生成**：通义万相、爱诗 Pixverse、可灵 Kling、Vidu、数字人 / 特效模型。客户端拿到 `task_id`，轮询完成后下载视频，下载链接默认 24 小时有效。
+- **3D 模型生成**：Tripo-H3.1 / Tripo-P1.0 的文生 3D、单图生 3D、多图生 3D。结果含 `pbr_model_url` / `base_model_url`，下载链接 2 小时有效。
+- **录音文件识别（ASR）**：Qwen-ASR-Filetrans、Paraformer-v2、Fun-ASR 等模型对长音频的离线转写。
+- **音乐生成**：Fun-Music 在非流式模式下返回音频 OSS URL（24 小时有效）。
+- **模型调优 / 微调**：上传训练文件 → 创建调优任务 → 轮询 `job_id` 至成功后拿到 `finetuned_output` 模型 ID。
+- **模型导入 / 模型部署**：把 OSS 权重注册到百炼，或把基础模型 / 微调模型拉起为专属推理服务。
 
-> **说明**：较新的图像生成模型（如 qwen-image-2.0、wan2.6-t2i、z-image-turbo）已支持同步调用，无需使用异步模式。音乐生成（Fun-Music）同样支持同步及 SSE 流式调用，不依赖异步任务轮询。
+实时识别 / SSE 流式音乐 / OpenAI 兼容同步接口走 WebSocket 或流式协议，不在本模式范围内。
 
-## 调用流程
+## 标准调用流程
 
-### 步骤 1：创建任务
+无论具体业务，异步任务都遵循同一条三段式主线：
 
-向对应的模型接口发送 POST 请求，**必须**在请求头中包含 `X-DashScope-Async: enable`，否则会收到错误 `"current user api does not support synchronous calls"`。
+1. **提交任务**：`POST` 业务端点，请求头必须带 `X-DashScope-Async: enable`（否则报 "current user api does not [support](../guides/support.md) synchronous calls"），鉴权统一用 `Authorization: Bearer ${DASHSCOPE_API_KEY}`，响应返回 `task_id` 或 `job_id`。
+2. **轮询查询**：`GET https://dashscope.aliyuncs.com/api/v1/tasks/{task_id}`（视频 / 3D / ASR / 音乐），或 `GET /api/v1/fine-tunes/{job_id}`（模型调优）、`GET /api/v1/custom_models/import/{job_id}`（模型导入）。建议轮询间隔 15 秒。
+3. **拿结果**：终态为 `SUCCEEDED` 时从 `output` / `results` 中取下载 URL 或下游模型标识；`FAILED` 时根据 `error_code` / `message` 排查。
 
-```bash
-curl -X POST '<模型对应的接口地址>' \
-    -H 'X-DashScope-Async: enable' \
-    -H 'Authorization: Bearer $DASHSCOPE_API_KEY' \
-    -H 'Content-Type: application/json' \
-    -d '{
-        "model": "<模型名称>",
-        "input": { ... },
-        "parameters": { ... }
-    }'
-```
+### 通用任务状态机
 
-成功后返回 `task_id`，有效期为 **24 小时**。
+| 业务类型 | 状态枚举 |
+| --- | --- |
+| 视频 / 3D / ASR / 音乐 | `PENDING` → `RUNNING` → `SUCCEEDED` / `FAILED` |
+| 模型调优 | `PENDING` / `QUEUING` / `RUNNING` / `CANCELING` / `SUCCEEDED` / `FAILED` / `CANCELED` |
+| 模型导入 | `PENDING` → `RUNNING` → `SUCCESSED` / `FAILED`（注意拼写为 `SUCCESSED`） |
 
-### 步骤 2：轮询查询结果
+任务超过有效期后部分接口会返回 `UNKNOWN` 状态，需视为不可恢复。
 
-使用返回的 `task_id` 轮询任务状态：
+## 关键参数与请求头
 
-```bash
-curl -X GET 'https://dashscope.aliyuncs.com/api/v1/tasks/{task_id}' \
-    -H 'Authorization: Bearer $DASHSCOPE_API_KEY'
-```
+### 必备请求头
 
-建议轮询间隔 **15 秒**。任务完成后，响应体中包含生成结果（如文件下载 URL）。
+| 头字段 | 值 | 说明 |
+| --- | --- | --- |
+| `X-DashScope-Async` | `enable` | 异步提交必填，缺失即被同步路径拒绝 |
+| `Authorization` | `Bearer ${DASHSCOPE_API_KEY}` | 北京 / 新加坡 API Key 不通用，需按地域分别获取 |
+| `Content-Type` | `application/json` | 标准 JSON 提交 |
 
-### 步骤 3（可选）：接收完成通知代替轮询
+### 服务端点地域
 
-频繁轮询会浪费资源并可能触发限流（默认 20 QPS）。百炼支持通过事件总线（EventBridge）主动推送任务完成通知，收到通知后只需一次查询即可获取结果。
+- **中国内地（北京）**：`https://dashscope.aliyuncs.com/...`
+- **国际（新加坡）**：`https://dashscope-intl.aliyuncs.com/...` 或新版多租域名 `https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/...`
 
-| 通知方案 | 适用场景 | 特点 |
-|---------|---------|------|
-| HTTP 回调 URL | 通用场景 | 简单直接，需公网或 VPC 可达的 HTTP 接口 |
-| RocketMQ | 对消息可靠性要求高的场景 | 支持消息无丢失和失败重试 |
+3D 生成、模型调优、模型导入 / 部署等部分能力**仅在北京地域可用**，使用前需确认 API Key 归属地域，否则返回鉴权或路由错误。
 
-事件源为 `acs.dashscope`，事件类型为 `dashscope:System:AsyncTaskFinish`。
+### 标识与有效期
 
-## 任务状态
+| 标识 | 来源 | 有效期 |
+| --- | --- | --- |
+| `task_id` | 视频 / 3D / ASR / 音乐异步提交响应 | 通常 24 小时；超时查询返回 `UNKNOWN` |
+| `job_id` | 模型调优 / 模型导入 / 模型压缩响应 | 任务终态前持续有效 |
+| 结果下载 URL | `output.audio.url` / `results[*].url` / `pbr_model_url` 等 | 视频 / 音乐 24 小时；3D 模型 2 小时 |
+| `deployed_model` | 模型部署响应 | 持续有效，作为后续推理调用的 `model` id |
 
-任务在生命周期内依次经历以下状态：
+务必在有效期内将结果文件**转存至自有存储**，过期后链接不可恢复。
 
-| 状态 | 含义 |
-|------|------|
-| `PENDING` | 排队中，等待调度 |
-| `RUNNING` | 处理中 |
-| `SUCCEEDED` | 任务成功，可获取结果 |
-| `FAILED` | 任务失败，响应中包含错误信息 |
-| `CANCELED` | 已取消（仅 `PENDING` 状态的任务可取消） |
-| `UNKNOWN` | 任务不存在或已过期 |
+## 工程实践建议
 
-## 任务管理接口
-
-| 操作 | 方法 | 路径 | 限流 |
-|------|------|------|------|
-| 查询单个任务 | `GET` | `/api/v1/tasks/{task_id}` | 20 QPS |
-| 批量查询任务 | `GET` | `/api/v1/tasks/` | 20 QPS |
-| 取消任务 | `POST` | `/api/v1/tasks/{task_id}/cancel` | 20 QPS |
-
-批量查询支持按时间、模型、状态等条件筛选。查询接口可查询当前 API Key 所属主账号下的所有任务，但无法跨主账号查询。
-
-## 关键参数与配置
-
-| 参数 / 请求头 | 必选 | 说明 |
-|--------------|------|------|
-| `X-DashScope-Async: enable` | 是 | 启用异步模式的请求头，缺失将报错 |
-| `Authorization: Bearer <API Key>` | 是 | 鉴权，各地域 API Key 独立 |
-| `Content-Type: application/json` | 是 | 固定值 |
-| `X-DashScope-OssResourceResolve: enable` | 条件 | 当输入使用 `oss://` 临时 URL 时必须设置 |
-
-## 注意事项
-
-- **task_id 有效期**：24 小时，过期后查询返回 `UNKNOWN` 状态。
-- **结果文件有效期**：因场景而异（如 3D 模型下载链接 2 小时、音频 URL 24 小时），请及时下载保存。
-- **避免重复创建任务**：获取 `task_id` 后应通过轮询或回调等待结果，重复提交相同请求会产生额外计费。
-- **地域隔离**：各地域的 API Key 与请求地址独立，不可混用，跨地域调用将导致鉴权失败。
-- **轮询频率控制**：查询接口默认限流 20 QPS，高并发场景建议使用 EventBridge 回调通知方案。
+- **不要重复创建任务**：拿到 `task_id` / `job_id` 后只走查询接口；重复提交会重复计费（特别是模型部署，`POST` 成功即开始计费，无论是否调用模型）。
+- **控制轮询频率**：查询接口有 RPS 限制（如 3D 默认 20 RPS）。生产环境建议 15 秒一次，超出频率请改用**异步任务回调**（部分接口支持）。
+- **并发约束**：模型调优**同一用户同时只允许一个训练任务执行**，其余任务进入 `QUEUING`，调度时需按串行规划。
+- **完整状态覆盖**：轮询逻辑必须覆盖所有终态（`SUCCEEDED` / `FAILED` / `CANCELED` / `UNKNOWN`），并对失败响应中的 `code` / `error_code` / `message` 做差错处理（常见：`InvalidParameter`、`NotFound`、`OperationDenied`、`InvalidApiKey`、`InternalError`）。
+- **批量任务排查**：批量提交场景（如文件上传）需检查响应中 `data.failed_uploads` 等部分失败字段，不要假定整批成功。
+- **结果落地**：所有下载 URL 都是 OSS 临时签名链接，业务系统应在轮询成功的同一调用链中完成转存，避免延后处理导致链接失效。
 
 ## 关联主题页
 
 - [video generation api](../api/video-generation-api.md)
 - [3d generation](../api/3d-generation.md)
+- [speech recognition api reference](../api/speech-recognition-api-reference.md)
 - [music generation references](../api/music-generation-references.md)
-- [image generation](../api/image-generation.md)
-- [more about models](../api/more-about-models.md)
-- [application call](../api/application-call.md)
+- [model training](../api/model-training.md)
+- [deploy dedicated services](../api/deploy-dedicated-services.md)
 
 
