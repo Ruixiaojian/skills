@@ -1,145 +1,158 @@
-# API Key 认证与安全
+# API Key 与鉴权
 
-API Key 是调用阿里云百炼平台大模型和应用服务的唯一鉴权凭证，用于标识调用者身份并控制访问权限。安全地管理和使用 API Key 是保障生产环境稳定运行的基础。
+API Key 是阿里云百炼平台访问模型与应用 API 的核心凭证，所有调用通过 HTTP 请求头 `Authorization: Bearer <API_KEY>` 完成鉴权。Key 的权限由其归属的**业务空间**决定，并按使用场景细分为永久 Key、临时 Key、套餐专属 Key 等多种形态。
 
-## 基本概念
+## API Key 的形态与归属
 
-API Key 的格式为 `sk-xxxxx`，创建后永久有效（无过期时间），手动删除后即失效。单个 API Key 只能归属**一个地域**内的**一个业务空间**和**一个用户**，不可转移。同一业务空间内的 API Key 权限相同，无需为不同模型类型（文生文、文生图、语音合成等）创建不同的 API Key。
+百炼平台目前存在三种格式的 API Key，互不相通，混用会触发 `401 Invalid API-key` 或 `401 invalid access token`：
 
-> **注意**：Coding Plan 使用专属 API Key（格式：`sk-sp-xxxxx`），与百炼通用 API Key 不同。
+| 格式前缀 | 用途 | 获取入口 |
+| --- | --- | --- |
+| `sk-xxxxx` | 通用永久 API Key，调用模型 API / 应用 API | 百炼控制台 → API Key（华北 2 北京）或工作台 → API Key（其他地域） |
+| `sk-sp-xxxxx` | Token Plan 团队版 / Coding Plan 专属 Key | Token Plan 管理后台或 Coding Plan 个人控制台 |
+| `st-xxxxx` | 临时 API Key（短期凭证） | 由永久 Key 调用 `POST /api/v1/tokens` 接口换取 |
 
-## 获取与创建
+**归属规则**（适用于永久 Key）：
 
-### 权限要求
+- 单个 Key 只能归属**一个地域 + 一个业务空间 + 一个用户**，不可转移。
+- Key 的可调用模型、限流配额与归属业务空间一致，**不受用户控制台权限影响**。
+- 同一业务空间内的所有 API Key 权限相同，无需为文生文 / 文生图 / 语音等不同模型分别建 Key。
+- 调优后的模型只能用其所在业务空间的 API Key 调用。
 
-需使用主账号，或具备`管理员`或`API-Key`页面权限的子账号操作。
+## 创建与配额
 
-### 数量限制
+创建 API Key 必须由**主账号**或拥有「API-Key 管理」页面权限的 RAM 子账号操作。创建成功后弹窗仅展示一次完整 Key，**关闭后无法再次查看明文**，必须立即复制保存。
 
-| 地域 | 上限 |
-|------|------|
-| 华北2（北京）、新加坡、德国（法兰克福） | 每个主账号每个地域最多 50 个 |
-| 美国（弗吉尼亚） | 每个归属账号最多 20 个 |
+各地域配额：
 
-### 权限配置
+| 地域 | 每主账号最大 Key 数 | IP 白名单 |
+| --- | --- | --- |
+| 华北 2（北京）、新加坡、德国（法兰克福） | 50 | 仅华北 2 支持，最多 20 个 IPv4/IPv6 地址或网段 |
+| 美国（弗吉尼亚） | 20 | 不支持 |
 
-- **全部**：授予调用所有模型与应用的权限。
-- **自定义**：可配置 IP 访问白名单（最多 20 个 IPv4/IPv6 地址或网段）。
+> 自 2026 年 3 月 25 日起，华北 2（北京）地域所有**新创建**的 API Key 均归属主账号。
 
-> 目前仅华北2（北京）地域支持 IP 白名单等精细权限控制。
+**生命周期**：
 
-## 安全存储：配置环境变量
+| 操作 | 主账号 API Key | RAM 账号 API Key |
+| --- | --- | --- |
+| 主动删除 | 失效，不可恢复 | 失效，不可恢复 |
+| RAM 账号被移出业务空间 | — | 失效（重新加入后恢复） |
+| RAM 控制台删除该账号 | — | 失效，不可恢复 |
 
-为避免在代码中硬编码 API Key 导致泄漏风险，**必须**将其配置为环境变量。环境变量名称统一为 `DASHSCOPE_API_KEY`。
+## 配置环境变量 `DASHSCOPE_API_KEY`
+
+强烈建议把永久 Key 写入环境变量 `DASHSCOPE_API_KEY`，避免硬编码进代码。
+
+### Linux / macOS
+
+| 类型 | Linux | macOS (Zsh) | macOS (Bash) |
+| --- | --- | --- | --- |
+| 永久 | 写入 `~/.bashrc` | 写入 `~/.zshrc` | 写入 `~/.bash_profile` |
+| 临时 | `export DASHSCOPE_API_KEY="..."` | 同左 | 同左 |
+| 生效 | `source ~/.bashrc` | `source ~/.zshrc` | `source ~/.bash_profile` |
+| 验证 | `echo $DASHSCOPE_API_KEY` | 同左 | 同左 |
+
+一行写入示例：
 
 ```bash
-# Linux / macOS 永久生效
-echo 'export DASHSCOPE_API_KEY="sk-xxx"' >> ~/.bashrc
-source ~/.bashrc
+echo "export DASHSCOPE_API_KEY='YOUR_DASHSCOPE_API_KEY'" >> ~/.zshrc
+source ~/.zshrc
 ```
 
-```cmd
-# Windows CMD 永久生效
-setx DASHSCOPE_API_KEY "sk-xxx"
-```
+### Windows
 
-### 环境变量不生效的常见原因
+- **系统属性**：`Win+Q` 搜索"编辑系统环境变量" → **环境变量 → 新建**，变量名 `DASHSCOPE_API_KEY`。
+- **CMD 永久**：`setx DASHSCOPE_API_KEY "YOUR_KEY"`，验证 `echo %DASHSCOPE_API_KEY%`。
+- **PowerShell 永久**：`[Environment]::SetEnvironmentVariable("DASHSCOPE_API_KEY", "YOUR_KEY", [EnvironmentVariableTarget]::User)`，验证 `echo $env:DASHSCOPE_API_KEY`。
+- **临时**：CMD 用 `set DASHSCOPE_API_KEY=...`，PowerShell 用 `$env:DASHSCOPE_API_KEY = "..."`。
 
-- 仅设置了临时环境变量，对已启动的 IDE 或应用不生效
-- 设置永久环境变量后未重启 IDE 或命令行工具
-- 使用 `sudo` 执行脚本时未继承环境变量（可用 `sudo -E` 解决）
-- 应用通过 systemd 等服务管理器启动，需在其配置文件中单独添加
+> 环境变量生效后**不会**自动注入到已经启动的 IDE / 命令行 / 服务进程。常见失败原因：未重启 IDE；使用 `sudo` 时未带 `-E` 继承环境；`systemd` / `supervisord` 启动的进程需在服务配置中显式声明。
 
-## 调用时使用
+## 临时 API Key（`st-` 开头）
 
-API Key 通过 HTTP 请求头 `Authorization: Bearer` 传递：
+用于浏览器、移动 App 等**不可信前端环境**：由可信后端用永久 Key 兑换临时 Key 下发，避免长期凭证外泄。
 
-```python
-from openai import OpenAI
-import os
-
-client = OpenAI(
-    api_key=os.getenv("DASHSCOPE_API_KEY"),
-    base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-)
-```
-
-各地域对应独立的 Base URL 和 API Key，**不可跨地域混用**：
-
-| 地域 | Base URL |
-|------|----------|
-| 华北2（北京） | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
-| 新加坡 | `https://dashscope-intl.aliyuncs.com/compatible-mode/v1` |
-| 美国（弗吉尼亚） | `https://dashscope-us.aliyuncs.com/compatible-mode/v1` |
-| 德国（法兰克福） | `https://{WorkspaceId}.eu-central-1.maas.aliyuncs.com/compatible-mode/v1` |
-
-## 临时 API Key
-
-在浏览器、移动 App 等不可信环境中，应使用临时 API Key 代替永久 API Key 以防止泄露。
-
-### 生成方式
+调用接口：
 
 ```bash
 curl -X POST "https://dashscope.aliyuncs.com/api/v1/tokens?expire_in_seconds=1800" \
   -H "Authorization: Bearer $DASHSCOPE_API_KEY"
 ```
 
-### 关键参数
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `token` | String | 临时 API Key，前缀固定为 `st-` |
+| `expires_at` | Number | UNIX 时间戳（秒），到期后自动失效 |
 
-| 参数 | 说明 |
-|------|------|
-| `expire_in_seconds` | 有效期，范围 [1, 1800] 秒，默认 60 秒 |
+关键约束：
 
-### 响应示例
+- **权限继承**：临时 Key 完全继承永久 Key 的权限（模型 / 知识库白名单等）。生成前应先把永久 Key 配置为最小权限。
+- **有效期**：默认 60 秒，通过 `expire_in_seconds` 指定，范围 `[1, 1800]` 秒。
+- **不可提前撤销**：一旦生成只能等 TTL 过期，**不支持手动删除**。
+- **地域隔离**：北京、新加坡、弗吉尼亚的永久 Key 互相独立，临时 Key 也必须在对应地域接口调用。
+- **RAM 联动**：RAM 用户在 RAM 控制台被禁用或删除后，其名下所有 API Key（包括用其换出的临时 Key）立即失效。
+
+## 套餐专属 API Key（`sk-sp-` 开头）
+
+Token Plan 团队版与 Coding Plan 都使用 `sk-sp-` 前缀，但**互不相通**。
+
+| 套餐 | API Key 获取入口 | Base URL（OpenAI 兼容） | Base URL（Anthropic 兼容） |
+| --- | --- | --- | --- |
+| Token Plan 团队版 | 管理后台由管理员分配席位后生成 | `https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1` | `https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic` |
+| Coding Plan | 个人控制台获取 | `https://coding.dashscope.aliyuncs.com/v1` | `https://coding.dashscope.aliyuncs.com/apps/anthropic` |
+
+> Coding Plan 必须使用专属 `sk-sp-xxxxx` Key，不能与通用 `sk-xxxxx` 混用；把 Token Plan 的 Base URL 用到 Coding Plan 工具上（或反之）会得到 `400 url error` / `404 status code`。
+
+## OpenAPI 调用与 RAM 授权
+
+RAM 用户默认**无权**调用百炼应用的数据、知识库、Prompt 工程、长期记忆等 OpenAPI，需由主账号在 RAM 控制台单独授权：
+
+- **`AliyunBailianFullAccess`**：跨地域、跨空间的超级管理员权限（不含 OpenAPI 接口权限）。
+- **`AliyunBailianDataFullAccess`**：调用应用 API 目录下所有 API。
+- **`AliyunBailianDataReadOnlyAccess`**：仅调用只读类 API。
+
+## 鉴权调用范式
+
+所有支持 API Key 鉴权的接口（包括模型推理、应用调用、异步任务管理、临时 Key 换取等）统一使用 HTTP Bearer Token：
+
+```
+Authorization: Bearer ${DASHSCOPE_API_KEY}
+```
+
+请求失败时返回标准错误体：
 
 ```json
 {
-  "token": "st-****",
-  "expires_at": 1744080369
+  "code": "InvalidApiKey",
+  "message": "...",
+  "request_id": "..."
 }
 ```
 
-### 限制
+常见鉴权类错误码：
 
-- 临时 API Key（`st-` 前缀）继承生成它的永久 API Key 的全部权限
-- 到期后自动失效，无法手动删除
-- 不同地域需使用对应的 Endpoint 生成
+| 错误码 / HTTP | 含义 | 排查方向 |
+| --- | --- | --- |
+| `401 InvalidApiKey` | Key 不存在、被删除或被禁用 | 检查 Key 是否复制完整、所属 RAM 账号是否还在；Token Plan / Coding Plan / 通用 Key 是否混用 |
+| `401 invalid access token` | 套餐 Key 与 Base URL 不匹配 | 比对 `sk-sp-` Key 的来源套餐与请求的 Base URL 是否一致 |
+| `400 url error` / `404` | Base URL 路径错误 | OpenAI 兼容路径以 `/v1` / `/compatible-mode/v1` 结尾；Anthropic 兼容路径以 `/apps/anthropic` 结尾 |
+| `403 Forbidden` | IP 不在白名单或业务空间未开通模型 | 检查华北 2 Key 的 IP 白名单、目标模型是否在业务空间已授权 |
 
-## 权限与生命周期管理
+## 最佳实践
 
-### API Key 权限边界
-
-- API Key 的可调用模型和限流与归属业务空间的权限一致
-- 不受用户控制台页面权限管理的影响
-- 子业务空间的 API Key 仅能调用该空间授权的模型
-
-### 状态变更规则
-
-| 操作 | 结果 |
-|------|------|
-| 主动删除 | 失效，不可恢复 |
-| RAM 账号移出业务空间 | 失效（重新加入后恢复） |
-| RAM 控制台删除账号 | 失效，不可恢复 |
-
-> 自 2026 年 3 月 25 日起，华北2（北京）地域所有新创建的 API Key 均归属主账号。
-
-## 安全最佳实践
-
-1. **永远不要在客户端代码中硬编码** API Key，使用环境变量或密钥管理服务。
-2. **前端/移动端场景**使用临时 API Key，有效期设置为满足业务需求的最短时间。
-3. **生产环境按空间隔离**：为 dev/test/prod 创建独立业务空间，使用各自的 API Key。
-4. **启用 IP 白名单**（北京地域）：限制 API Key 只能从特定 IP 地址调用。
-5. **定期轮换**：虽然 API Key 无过期时间，仍建议定期删除旧 Key 并创建新 Key。
-6. **如需停止服务**：在控制台删除已创建的 API Key 即可阻止所有调用。
+- **永远不要把永久 Key 嵌入前端代码或客户端 App**。前端调用必须经由后端换取临时 Key。
+- **按环境隔离**：为开发、测试、生产分别创建业务空间（如 `project-dev-workspace` / `project-prod-workspace`），用各空间的独立 Key 调用，便于限流、审计与停用。
+- **遵循最小权限**：永久 Key 应限定模型 / 知识库白名单（华北 2 还可加 IP 白名单），避免临时 Key 继承到过大权限。
+- **轮换与撤销**：Key 泄露时立即在控制台删除（不可恢复），重新签发；不要为同一职责长期复用同一 Key。
+- **代码中通过环境变量读取**：始终用 `os.environ["DASHSCOPE_API_KEY"]` 等方式读取，不要把 Key 写入版本控制。
 
 ## 关联主题页
 
 - [preparations](../api/preparations.md)
-- [more about models](../api/more-about-models.md)
 - [more](../api/more.md)
+- [more about models](../api/more-about-models.md)
 - [application permission management](../guides/application-permission-management.md)
-- [get started with models](../guides/get-started-with-models.md)
-- [security and compliance](../guides/security-and-compliance.md)
-- [support](../guides/support.md)
+- [token plan guide](../guides/token-plan-guide.md)
 
 

@@ -27,9 +27,9 @@ Codex 是 OpenAI 推出的终端 AI 编程助手。可通过 Token Plan 团队�
 
 `model`请选择[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-overview)。将`OPENAI_API_KEY`环境变量设置为 Token Plan 团队版专属 [API Key](https://bailian.console.aliyun.com/?tab=plan#/efm/subscription/overview)。
 
-#### Responses API（qwen3.7-max、qwen3.6-plus）
+#### Responses API（qwen3.7-max、qwen3.6-plus、qwen3.6-flash）
 
-qwen3.7-max 和 qwen3.6-plus 支持 Responses API，可使用最新版 Codex。
+qwen3.7-max、qwen3.6-plus 和 qwen3.6-flash 支持 Responses API，可使用最新版 Codex。
 
 ```
 model_provider = "Model_Studio_Token_Plan"
@@ -241,7 +241,7 @@ wire_api = "chat"
 
 -   华北2（北京）：`https://dashscope.aliyuncs.com/compatible-mode/v1`
     
--   新加坡：`https://dashscope-intl.aliyuncs.com/compatible-mode/v1`
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
     
 
 按量计费支持 Responses API 和 Chat/Completions API 两种接入方式，请根据使用的模型选择：

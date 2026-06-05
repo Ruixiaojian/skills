@@ -1,118 +1,94 @@
 # specialized model
 
-百炼平台提供多个专用模型（Specialized Model），分别面向机器翻译、深度研究、文字提取（OCR）和界面交互自动化等垂直场景。这些模型通过 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)或 DashScope API 调用，各模型的接口协议和参数有所差异。本文汇总各专用模型的核心能力、关键参数与使用注意事项。
+百炼平台的“专用模型”指针对单一垂直任务深度优化的 Qwen 系列模型，覆盖机器翻译（Qwen-MT）、深度研究（Qwen-Deep-Research）、文字识别（Qwen-OCR）、界面交互（GUI-Plus）四大方向。这些模型大多通过 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)或 DashScope API 调用，参数与通用对话模型存在差异，使用前需特别关注接口形式、地域支持和专属字段。
 
-## 支持的模型
+## 模型与能力一览
 
-| 模型 | 用途 | 支持的接口 | 多地域部署 |
-|------|------|-----------|-----------|
-| `qwen-mt-plus` / `qwen-mt-turbo` | 机器翻译（含术语干预、翻译记忆、领域提示） | OpenAI 兼容、DashScope | 北京、新加坡、弗吉尼亚 |
-| `qwen-deep-research` | 深度研究（自动搜索、规划、生成研究报告） | 仅 Python DashScope SDK | 仅北京（中国大陆版） |
-| `qwen-vl-ocr-latest` | 图像文字提取 | OpenAI 兼容、DashScope | 北京、新加坡、弗吉尼亚 |
-| `gui-plus-2026-02-26` | GUI 界面交互自动化（鼠标/键盘操作） | OpenAI 兼容、DashScope | 北京 |
+| 方向 | 代表模型 | 主要能力 | 调用方式 |
+| --- | --- | --- | --- |
+| 机器翻译 | `qwen-mt-plus` | 多语言翻译、术语干预、翻译记忆、领域提示 | OpenAI 兼容 / DashScope |
+| 深度研究 | `qwen-deep-research` | 两阶段研究：反问澄清 + 深入分析，返回带引用的报告 | 仅 Python DashScope SDK |
+| 文字识别 | `qwen-vl-ocr-latest` | 图像 OCR、票据/结构化字段抽取、流式输出 | OpenAI 兼容 / DashScope |
+| 界面交互 | `gui-plus-2026-02-26` | 基于截图执行鼠标/键盘等 GUI 操作，工具调用模式 | OpenAI 兼容 / DashScope |
 
-> **注意**：Qwen-Deep-Research 当前**仅支持 Python DashScope SDK**，不支持 Java SDK 与 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)，这与其他专用模型不同。详见 [Qwen-Deep-Research API 参考](../../raw/model-api-reference/specialized-model/qwen-deep-research-api.md)。
+各模型对应的接口与参数详见 [Qwen-MT API参考](../../raw/model-api-reference/specialized-model/qwen-mt-api.md)、[Qwen-Deep-Research API 参考](../../raw/model-api-reference/specialized-model/qwen-deep-research-api.md)、[Qwen-OCR API参考](../../raw/model-api-reference/specialized-model/qwen-vl-ocr-api-reference.md) 与 [GUI-Plus API参考](../../raw/model-api-reference/specialized-model/gui-plus-interface-interaction-model.md)。
 
-## 关键参数与功能
+## 接入端点与地域
 
-### Qwen-MT（机器翻译）
+除 Qwen-Deep-Research 外，其余三类模型均提供 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)，`base_url` 因地域而异：
 
-通过 `translation_options` 参数控制翻译行为，主要字段包括：
+- 华北 2（北京）：`https://dashscope.aliyuncs.com/compatible-mode/v1`
+- 新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
+- 美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
 
-- **`source_lang`** / **`target_lang`**：源语言与目标语言，`source_lang` 支持设为 `"auto"` 自动检测。
-- **`terms`**：术语干预列表，每项包含 `source`（原文术语）和 `target`（译文术语），用于强制统一专业术语翻译。
-- **`tm_list`**：翻译记忆列表，提供类似句对作为参考，帮助模型保持风格一致。
-- **`domains`**：领域提示，以自然语言描述翻译领域和风格要求。
+HTTP 调用统一为 `POST <base_url>/chat/completions`。GUI-Plus 当前文档仅给出北京地域的端点示例，参考 [GUI-Plus API参考](../../raw/model-api-reference/specialized-model/gui-plus-interface-interaction-model.md)。
 
-使用 OpenAI SDK 时，`translation_options` 通过 `extra_body` 传入。详细用法参见 [Qwen-MT API 参考](../../raw/model-api-reference/specialized-model/qwen-mt-api.md)。
+> **注意**：不同地域的 API Key 互不通用；切换地域时必须同时更换 `base_url`、HTTP endpoint 和 API Key。详见各文档中“地域”章节，例如 [Qwen-OCR API参考](../../raw/model-api-reference/specialized-model/qwen-vl-ocr-api-reference.md)。
 
-### Qwen-Deep-Research（深度研究）
+> **注意**：Qwen-Deep-Research **仅适用于中国大陆版（北京）**，且目前只支持 Python DashScope SDK；Java SDK 与 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)均不可用，参见 [Qwen-Deep-Research API 参考](../../raw/model-api-reference/specialized-model/qwen-deep-research-api.md)。
 
-采用**两阶段调用**流程：
+## Qwen-MT：机器翻译
 
-1. **反问确认**：发送初始研究主题，模型返回澄清式问题。
-2. **深入研究**：将第一步的 assistant 回复和用户的补充说明一起发送，模型执行搜索并生成报告。
+通过在请求体的 `extra_body.translation_options`（OpenAI 兼容）或 `parameters.translation_options`（DashScope）中传入翻译相关字段调用：
+
+- `source_lang` / `target_lang`：源语言与目标语言，可填 `auto` 让模型自动识别。
+- `terms`：术语干预表，`[{source, target}]` 强制将专有名词译为指定术语。
+- `tm_list`：翻译记忆，传入历史对照句对让模型保持表达风格一致。
+- `domains`：领域提示，使用一段英文描述输入文本所属行业，引导译文风格（例如 IT 领域要保持专业故障排查术语）。
+
+`messages` 内容即为待翻译文本，无需 system [prompt](../guides/prompt.md)。完整字段语义、请求/响应示例可参考 [Qwen-MT API参考](../../raw/model-api-reference/specialized-model/qwen-mt-api.md)。
+
+## Qwen-Deep-Research：两阶段深度研究
+
+调用流程必须分两步进行：
+
+1. **反问确认**：用户传入一个宽泛的研究主题（如“研究一下人工智能在教育中的应用”），模型流式返回澄清式问题。
+2. **深入研究**：把第一步返回的 assistant 内容连同用户的澄清答复（缩小范围的回复）一并放入 `messages`，再次调用同一模型，模型才会进入正式研究。
 
 关键参数：
-- **`output_format`**：报告格式。`model_detailed_report`（默认，约 6000 Token）或 `model_summary_report`（约 1500-2000 Token）。
 
-响应中的 `phase` 字段标识当前阶段：`ResearchPlanning`、`WebResearch`、`KeepAlive`、`answer`。
+- `model`：固定为 `qwen-deep-research`。
+- `messages`：必须按 `user → assistant → user` 三轮顺序组织上下文。
+- `output_format`（可选）：
+  - `model_detailed_report`（默认）：完整深度报告，约 6000 tokens。
+  - `model_summary_report`：精炼摘要报告，约 1500-2000 tokens。
 
-### Qwen-OCR（文字提取）
+响应通过 SSE 流式返回，`output.message.phase` 标识当前阶段（`ResearchPlanning` / `WebResearch` / `KeepAlive` / `answer`），并在 `answer` 与 `WebResearch` 阶段通过 `extra.deep_research.references`、`webSites` 返回引用网页列表。详细字段、状态机和示例响应见 [Qwen-Deep-Research API 参考](../../raw/model-api-reference/specialized-model/qwen-deep-research-api.md)。
 
-通过多模态消息格式传入图像和提取指令：
+## Qwen-OCR：图像文字识别
 
-- **`image_url`**：图片 URL 或 Base64 编码。
-- **`min_pixels`** / **`max_pixels`**：控制图像分辨率缩放阈值（如 `min_pixels: 3072`，`max_pixels: 8388608`）。
-- **`text`**（可选）：自定义提取 Prompt。未传入时使用默认 Prompt：`Please output only the text content from the image without any additional descriptions or formatting.`
+调用方式遵循多模态 chat completions 规范，`messages[].content` 为数组：
 
-支持流式与非[流式输出](../concepts/streaming.md)。详细参数参见 [Qwen-OCR API参考](../../raw/model-api-reference/specialized-model/qwen-vl-ocr-api-reference.md)。
+- `{"type": "image_url", "image_url": {"url": "..."}}`：传入图像 URL（也支持 base64）。
+- `{"type": "text", "text": "..."}`：可选 Prompt；不传时使用默认 Prompt `Please output only the text content from the image without any additional descriptions or formatting.`，仅做纯文本提取。
+- `min_pixels` / `max_pixels`：图像预处理的像素阈值，控制放缩范围（示例值 `32*32*3` 至 `32*32*8192`）。
 
-### GUI-Plus（界面交互）
+支持流式输出，开启方式与通用 chat 接口一致：`stream=True`，`stream_options={"include_usage": True}`。模型名建议使用 `qwen-vl-ocr-latest` 跟随最新版本。结合 Prompt 可让模型按 JSON schema 输出结构化字段（如车票发票号码、票价、座位号），示例见 [Qwen-OCR API参考](../../raw/model-api-reference/specialized-model/qwen-vl-ocr-api-reference.md)。
 
-通过 `computer_use` 工具函数实现 GUI 自动化，支持的操作包括：
+## GUI-Plus：界面交互模型
 
-- 鼠标操作：`left_click`、`right_click`、`double_click`、`mouse_move`、`scroll` 等
-- 键盘操作：`key`（组合键）、`type`（输入文本）
-- 流程控制：`wait`、`terminate`、`answer`
+GUI-Plus 用于让模型基于屏幕截图执行鼠标/键盘等 GUI 操作，调用形态本质是“截图 + 工具调用”：
 
-需要在 `system` 消息中配置工具定义（function schema），并通过 `extra_body` 传入 `vl_high_resolution_images: true` 以启用高分辨率图像处理。屏幕分辨率默认为 1000×1000。
+- `model`：当前文档示例使用 `gui-plus-2026-02-26`。
+- `messages[0]`：必须传入 system [prompt](../guides/prompt.md)，定义可用的 `computer_use` 工具（包含 `key`、`type`、`mouse_move`、`left_click`、`left_click_drag`、`scroll`、`wait`、`terminate`、`answer`、`interact` 等动作）以及输出格式约束。
+- `messages[1]`：用户消息，`content` 中一并传入屏幕截图（`image_url`）和自然语言指令。
+- `extra_body.vl_high_resolution_images`：建议设为 `true`，让模型按高分辨率处理截图，便于定位坐标。
 
-## 使用方式
+模型按照 system [prompt](../guides/prompt.md) 约束的格式返回：第一行 `Action:` 简要描述要做的操作，紧跟一个 `<tool_call>` 块，其中 JSON 给出 `name=computer_use` 与具体 `arguments`（动作类型、坐标、文本等）。客户端解析后执行动作并把新截图回传给模型，循环直到 `action=terminate`。完整 system prompt 与示例代码见 [GUI-Plus API参考](../../raw/model-api-reference/specialized-model/gui-plus-interface-interaction-model.md)。
 
-### 接口端点
+## 使用前的通用注意事项
 
-各模型（Qwen-Deep-Research 除外）均支持 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)，端点按地域区分：
-
-| 地域 | base_url |
-|------|----------|
-| 北京 | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
-| 新加坡 | `https://dashscope-intl.aliyuncs.com/compatible-mode/v1` |
-| 弗吉尼亚 | `https://dashscope-us.aliyuncs.com/compatible-mode/v1` |
-
-Qwen-Deep-Research 使用 DashScope 原生端点：`https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation`。
-
-### 认证
-
-所有模型均需通过 API Key 认证。不同地域的 API Key 不通用，需在对应地域的控制台获取。
-
-### 快速示例（Python，Qwen-MT）
-
-```python
-import os
-from openai import OpenAI
-
-client = OpenAI(
-    api_key=os.getenv("DASHSCOPE_API_KEY"),
-    base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-)
-
-completion = client.chat.completions.create(
-    model="qwen-mt-plus",
-    messages=[{"role": "user", "content": "我看到这个视频后没有笑"}],
-    extra_body={
-        "translation_options": {
-            "source_lang": "Chinese",
-            "target_lang": "English"
-        }
-    }
-)
-print(completion.choices[0].message.content)
-```
-
-## 限制和注意事项
-
-- **地域限制**：Qwen-Deep-Research 仅在中国大陆版（北京）可用，必须使用北京地域的 API Key。
-- **SDK 限制**：Qwen-Deep-Research 仅支持 Python DashScope SDK，暂不支持 Java SDK 和 OpenAI 兼容接口。
-- **API Key 隔离**：北京、新加坡、弗吉尼亚各地域的 API Key 不互通，调用时需确保 `base_url` 与 API Key 匹配。
-- **[流式输出](../concepts/streaming.md)**：Qwen-Deep-Research 的响应始终为流式；Qwen-OCR 和 GUI-Plus 支持通过 `stream` 参数切换。
-- **图像输入**：Qwen-OCR 和 GUI-Plus 均为多模态模型，需在 `messages` 中以 `image_url` 类型传入图片。
-- **Qwen-OCR 默认行为**：如未传入自定义 `text` Prompt，模型会使用英文默认 Prompt 提取图像中的全部文本。
+- **API Key 与环境变量**：所有调用都需要先获取 API Key 并配置 `DASHSCOPE_API_KEY` 环境变量；不同地域的 Key 不可混用。
+- **SDK 兼容性**：Qwen-MT、Qwen-OCR、GUI-Plus 三类模型同时支持 OpenAI 兼容与 DashScope 接口；Qwen-Deep-Research 仅支持 Python DashScope SDK 与等价的 curl 调用。
+- **请求体差异**：OpenAI 兼容接口下，所有专属字段（如 `translation_options`、`vl_high_resolution_images`）应放在 `extra_body` 内；DashScope 接口则放在 `parameters` 中。
+- **响应解析**：Qwen-Deep-Research 与 Qwen-OCR 推荐使用流式输出，需要按 SSE 逐块拼接 `content`；GUI-Plus 客户端需自行解析 `<tool_call>` JSON 并把执行结果回填到 `messages`。
+- **图像与坐标**：GUI-Plus 与 Qwen-OCR 都接受图像输入；GUI-Plus 还需要客户端按模型返回的坐标在真实屏幕上执行动作，确保渲染分辨率与模型理解一致。
 
 ## 来源文档
 
-- [Qwen-MT API 参考](../../raw/model-api-reference/specialized-model/qwen-mt-api.md)
+- [Qwen-MT API参考](../../raw/model-api-reference/specialized-model/qwen-mt-api.md)
 - [Qwen-Deep-Research API 参考](../../raw/model-api-reference/specialized-model/qwen-deep-research-api.md)
 - [Qwen-OCR API参考](../../raw/model-api-reference/specialized-model/qwen-vl-ocr-api-reference.md)
 - [GUI-Plus API参考](../../raw/model-api-reference/specialized-model/gui-plus-interface-interaction-model.md)
+
 

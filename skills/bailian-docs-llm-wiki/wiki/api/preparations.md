@@ -1,116 +1,131 @@
 # preparations
 
-在使用阿里云百炼平台的大模型服务之前，需要完成一系列准备工作，包括获取 API Key、配置环境变量、安装 SDK 等。本文汇总了这些准备步骤的核心内容，帮助开发者快速完成接入前的配置工作。
+调用阿里云百炼模型前，需要完成三项准备工作：获取并妥善保管 API Key、将 Key 配置到环境变量以避免硬编码泄漏、安装官方 SDK（DashScope 或 OpenAI 兼容）。本页汇总了准备阶段的关键信息以及常见错误码的速查索引，面向首次接入与排查问题的开发者。
 
-## 准备流程概览
+## 1. 获取 API Key
 
-整体准备流程分为三步：
+[获取API Key](../../raw/model-api-reference/preparations/get-api-key.md) 必须由主账号或具备 `管理员` / `API-Key` 页面权限的子账号操作。各地域的入口不同：
 
-1. **获取 API Key** — 创建鉴权凭证
-2. **配置环境变量** — 安全存储 API Key
-3. **安装 SDK** — 选择合适的 SDK 进行开发
+- **华北2（北京）**：百炼控制台 → API Key → **创建 API Key**，可选择**全部**权限或**自定义**（限制 IP 白名单，最多 20 个 IPv4/IPv6 地址或网段）。
+- **新加坡 / 美国（弗吉尼亚）/ 德国（法兰克福）**：在右上角切换到目标地域，进入**工作台 → API Key**。创建成功后弹窗仅展示一次完整 Key，**关闭后无法再次查看明文**，必须立即复制保存。
 
-## 获取 API Key
+> **注意**：目前仅华北2（北京）地域支持 IP 白名单等精细权限控制；其他地域只能配置归属业务空间和描述。
 
-API Key 是调用百炼大模型和应用的鉴权凭证。详细操作步骤参见 [获取API Key](../../raw/model-api-reference/preparations/get-api-key.md)。
+**API Key 与业务空间的关系**：API Key 的调用权限完全由其**归属业务空间**决定。同一空间内的 API Key 权限相同，无需为不同模型（文生文 / 文生图 / 语音）创建不同 Key。调优后的模型仅能用所在业务空间的 API Key 调用。
 
-### 权限要求
+**配额**：
 
-需使用主账号，或具备 `管理员` 或 `API-Key` 页面权限的子账号操作。
+| 地域 | 每个主账号最大 API Key 数 |
+| --- | --- |
+| 华北2（北京）、新加坡、德国（法兰克福） | 50 |
+| 美国（弗吉尼亚） | 20 |
 
-### 各地域 Base URL
+> **注意**：[Coding Plan](https://help.aliyun.com/zh/model-studio/coding-plan) 必须使用专属 API Key（格式 `sk-sp-xxxxx`），不能与本文获取的通用 API Key（格式 `sk-xxxxx`）混用。
+
+**临时 API Key**：若需为第三方应用提供临时访问权限，可生成有效期 60 秒的临时 Key，避免长期 Key 外泄。RAM 用户在 RAM 控制台被禁用或删除后，其创建的所有 API Key 都会立即失效。
+
+## 2. 配置环境变量（DASHSCOPE_API_KEY）
+
+强烈建议将 API Key 写入环境变量 `DASHSCOPE_API_KEY`，避免硬编码到代码中。[将API Key配置到环境变量](../../raw/model-api-reference/preparations/configure-api-key-through-environment-variables.md) 给出了三大操作系统的完整命令。
+
+### Linux / macOS
+
+| 类型 | Linux | macOS (Zsh) | macOS (Bash) |
+| --- | --- | --- | --- |
+| 永久 | 写入 `~/.bashrc` | 写入 `~/.zshrc` | 写入 `~/.bash_profile` |
+| 临时 | `export DASHSCOPE_API_KEY="..."` | 同左 | 同左 |
+| 生效 | `source ~/.bashrc` | `source ~/.zshrc` | `source ~/.bash_profile` |
+| 验证 | `echo $DASHSCOPE_API_KEY` | 同左 | 同左 |
+
+写入永久变量的最简单方式：
+
+```bash
+echo "export DASHSCOPE_API_KEY='YOUR_DASHSCOPE_API_KEY'" >> ~/.zshrc
+source ~/.zshrc
+```
+
+### Windows
+
+- **系统属性**：`Win+Q` 搜索“编辑系统环境变量” → **环境变量 → 新建**，变量名 `DASHSCOPE_API_KEY`。
+- **CMD 永久**：`setx DASHSCOPE_API_KEY "YOUR_KEY"`（验证 `echo %DASHSCOPE_API_KEY%`）。
+- **PowerShell 永久**：`[Environment]::SetEnvironmentVariable("DASHSCOPE_API_KEY", "YOUR_KEY", [EnvironmentVariableTarget]::User)`（验证 `echo $env:DASHSCOPE_API_KEY`）。
+- **临时**：CMD 用 `set DASHSCOPE_API_KEY=...`，PowerShell 用 `$env:DASHSCOPE_API_KEY = "..."`。
+
+> **注意**：环境变量生效后**不会**自动注入到已经启动的 IDE、命令行工具或服务进程。常见失败原因：
+> - 只设置了临时变量，新窗口或新会话失效；
+> - 未重启 IDE / 应用 / 命令行；
+> - 通过 `systemd` / `supervisord` 等服务管理器启动的进程，需要在服务配置中显式声明；
+> - 使用 `sudo python xx.py` 时不继承用户环境，需改用 `sudo -E python xx.py`。
+
+## 3. 安装 SDK
+
+百炼同时支持官方 [DashScope SDK](../../raw/model-api-reference/preparations/install-sdk.md)（Python / Java）与 OpenAI 官方 SDK（通过 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)调用，覆盖 Python / Node.js / Java / Go）。语言与 SDK 对照如下：
+
+| 语言 | DashScope 官方 | OpenAI 兼容 |
+| --- | --- | --- |
+| Python (`>=3.8`) | `pip install -U dashscope` | `pip install -U openai` |
+| Java (`>=8`) | Maven `com.alibaba:dashscope-sdk-java` | Maven `com.openai:openai-java`（推荐 `3.5.0`） |
+| Node.js | — | `npm install --save openai` |
+| Go (`>=1.22`) | — | `go get github.com/openai/openai-go/v3` |
+
+部分常用配置：
+
+- npm 安装失败时切换镜像：`npm config set registry https://registry.npmmirror.com/`
+- Go 走代理：`go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct`
+- Java 项目须将 `the-latest-version` 替换为 Maven Central 上的实际版本号。
+
+完成安装后即可调用[文本生成](https://help.aliyun.com/zh/model-studio/qwen-api-reference/)、[图像生成](https://help.aliyun.com/zh/model-studio/text-to-image-v2-api-reference)、[视频生成](https://help.aliyun.com/zh/model-studio/legacy-image-to-video-api-reference/)、[语音合成 / 识别](https://help.aliyun.com/zh/model-studio/cosyvoice-python-sdk)、向量、排序等模型。
+
+## 4. 调用方式：Base URL 速查
+
+通过 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)调用时，需要根据 API Key 所属地域设置 Base URL：
 
 | 地域 | Base URL |
-|------|----------|
+| --- | --- |
 | 华北2（北京） | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
-| 新加坡 | `https://dashscope-intl.aliyuncs.com/compatible-mode/v1` |
+| 新加坡 | `https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1` |
 | 美国（弗吉尼亚） | `https://dashscope-us.aliyuncs.com/compatible-mode/v1` |
 | 德国（法兰克福） | `https://{WorkspaceId}.eu-central-1.maas.aliyuncs.com/compatible-mode/v1` |
 
-### API Key 权限配置
+> **注意**：新加坡与德国 Base URL 中的 `{WorkspaceId}` 必须替换为真实的[业务空间 ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)，否则会返回鉴权错误。
 
-- **全部**：授予调用所有模型与应用的权限。
-- **自定义**：可配置 IP 访问白名单（最多 20 个 IPv4/IPv6 地址或网段）。
+## 5. 排错：常见错误码索引
 
-> **注意**：目前仅华北2（北京）地域支持为 API Key 配置 IP 白名单等精细权限控制，其他地域暂不支持。
+[错误码](../../raw/model-api-reference/preparations/error-code.md) 文档以 HTTP 状态码 + 错误名分组（如 `400-InvalidParameter`）。准备阶段最容易踩到的几类如下：
 
-### API Key 关键特性
+### 参数类（400-InvalidParameter）
 
-- **无过期时间**：创建后永久有效，手动删除后即失效。
-- **权限由归属业务空间决定**：同一空间内的 API Key 权限相同，无需为不同模型类型创建不同的 API Key。
-- **数量限制**：华北2（北京）、新加坡和德国（法兰克福）地域每个主账号每个地域最多 50 个；美国（弗吉尼亚）地域每个归属账号最多 20 个。
-- **临时 API Key**：如需为第三方提供临时访问权限，可生成有效期 60 秒的临时 API Key。
+| 报错关键词 | 典型原因 | 修复 |
+| --- | --- | --- |
+| `Model not exist` | 模型名拼错或混用了开源社区命名 | 严格用百炼模型 ID，如 `qwen3-235b-a22b-instruct-2507`（不是 `Qwen/Qwen3-...`） |
+| `Range of max_tokens / input length should be [1, xxx]` | 超出模型最大输入 / 输出 Token | 对照模型列表的上限；连续对话时开启新会话清空历史 |
+| `Temperature should be in [0.0, 2.0)` / `top_p (0.0, 1.0]` / `top_k >= 0` | 采样参数越界 | 按区间修正 |
+| `parameter.enable_thinking must be set to false for non-streaming calls` | 思考模式只能流式调用 | 改用流式，且 `incremental_output=true`、`result_format="message"` |
+| `'audio' output only support with stream=true` | Qwen-Omni 强制流式 | 启用 `stream=true` |
+| `messages with role "tool" must be a response to a preceding ... tool_calls` | Function Calling 缺少 Assistant Message | 把模型上一轮的 Assistant Message 追加回 `messages` 再加 Tool Message |
+| `'messages' must contain the word 'json' ...` | 用 `response_format=json_object` 但提示词无 `json` 关键字 | 在提示词中加入 `json` 字样 |
+| `Json mode response is not supported when enable_thinking is true` | 结构化输出与思考模式互斥 | 把 `enable_thinking` 设为 `false` |
+| `Required body invalid, please check the request body format` | JSON 体不合法 | 检查多余逗号、括号闭合 |
+| `The provided URL does not appear to be valid` | 多模态输入 URL 格式不符 | URL 需以 `http(s)://` / `data:` / `file://` 开头；OSS 临时 URL 走 HTTP 时要加 Header `X-DashScope-OssResourceResolve: enable`，SDK 仅支持 DashScope SDK |
 
-> **注意**：Coding Plan 使用专属 API Key（格式：`sk-sp-xxxxx`），与本文介绍的百炼通用 API Key（格式：`sk-xxxxx`）不同。
+### 文件 / 多模态类
 
-## 将 API Key 配置到环境变量
+- 单张图片或 Base64 文件不得超过 10 MB；视频 URL 上限按模型不同分别为 2 GB（Qwen3-VL、qwen-vl-max）/ 1 GB（qwen-vl-plus 系列）/ 150 MB（其他）。
+- Qwen-Long 仅支持纯文本格式（TXT / DOCX / PDF / EPUB / MOBI / MD），图片或扫描文档请改用千问 VL。
+- 视频以图像序列输入时：Qwen3-VL 与 Qwen2.5-VL 系列需 4–512 张，其他模型 4–80 张。
+- File 接口：单文件 ≤ 150 MB、≤ 15000 页，`file-id` 同时引用数量 < 100。
 
-为避免在代码中硬编码 API Key 导致泄漏风险，建议将其配置为环境变量。环境变量名称统一为 `DASHSCOPE_API_KEY`。详细操作参见 [将API Key配置到环境变量](../../raw/model-api-reference/preparations/configure-api-key-through-environment-variables.md)。
+### 账号 / 鉴权类
 
-### 各平台配置方式速查
+- `Arrearage`：账号欠费，登录控制台**费用与成本**充值，等待几分钟同步。
+- 调试时遇到难以判断的报错，推荐直接复制报错原文到[阿里云 AI 助理](https://www.aliyun.com/ai-assistant/)，其知识库整合了官方文档可直接给出修复方案。
 
-| 操作系统 | 永久性环境变量 | 临时性环境变量 |
-|---------|-------------|-------------|
-| Linux | 追加到 `~/.bashrc`，然后 `source ~/.bashrc` | `export DASHSCOPE_API_KEY="your-key"` |
-| macOS (Zsh) | 追加到 `~/.zshrc`，然后 `source ~/.zshrc` | `export DASHSCOPE_API_KEY="your-key"` |
-| macOS (Bash) | 追加到 `~/.bash_profile`，然后 `source ~/.bash_profile` | `export DASHSCOPE_API_KEY="your-key"` |
-| Windows CMD | `setx DASHSCOPE_API_KEY "your-key"`（新窗口生效） | `set DASHSCOPE_API_KEY=your-key` |
-| Windows PowerShell | `[Environment]::SetEnvironmentVariable(...)` | `$env:DASHSCOPE_API_KEY = "your-key"` |
-| Windows 系统属性 | 通过"编辑系统环境变量"图形界面配置 | — |
+## 6. 安全与运维要点
 
-### 环境变量不生效的常见原因
-
-- 仅设置了临时环境变量，对已启动的 IDE 或应用不生效
-- 设置永久环境变量后未重启 IDE、命令行工具或应用服务
-- 使用 `sudo` 执行脚本时未继承环境变量（可用 `sudo -E` 解决）
-- 应用通过 systemd 等服务管理器启动，需在其配置文件中添加环境变量
-
-## 安装 SDK
-
-百炼支持通过官方 DashScope SDK 或 OpenAI 兼容 SDK 进行调用。详细安装步骤参见 [安装SDK](../../raw/model-api-reference/preparations/install-sdk.md)。
-
-### SDK 支持矩阵
-
-| 语言 | OpenAI SDK | DashScope SDK | 最低版本要求 |
-|------|-----------|--------------|------------|
-| Python | ✅ `pip install -U openai` | ✅ `pip install -U dashscope` | Python >= 3.8 |
-| Java | ✅ `com.openai:openai-java`（推荐 3.5.0） | ✅ `com.alibaba:dashscope-sdk-java` | Java 8+（OpenAI SDK） |
-| Node.js | ✅ `npm install --save openai` | — | — |
-| Go | ✅ `go get github.com/openai/openai-go/v3` | — | Go 1.22+ |
-
-### 安装提示
-
-- **Node.js**：安装失败时可配置镜像源 `npm config set registry https://registry.npmmirror.com/`
-- **Go**：访问超时时可设置代理 `go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct`
-- **Java**：Maven/Gradle 依赖中需将 `the-latest-version` 替换为实际的最新版本号
-
-## 常见错误码
-
-调用模型失败时，可根据返回的错误码排查问题。完整错误码列表参见 [错误码](../../raw/model-api-reference/preparations/error-code.md)。以下列出最常遇到的几类错误：
-
-### 参数相关（400-InvalidParameter）
-
-| 错误信息 | 原因 | 解决方案 |
-|---------|------|---------|
-| `Model not exist.` | 模型名称错误或格式不正确 | 检查大小写、空格，使用百炼模型ID而非开源社区名称 |
-| `Range of input length should be [1, xxx]` | 输入内容超过模型上限 | 控制 Token 数在模型最大输入范围内 |
-| `Range of max_tokens should be [1, xxx]` | `max_tokens` 超出模型允许范围 | 参考模型列表文档中的最大输出 Token 数 |
-| `Temperature should be in [0.0, 2.0)` | temperature 参数越界 | 设置为 [0.0, 2.0) 范围内的数字 |
-| `enable_thinking only support stream call` | 非流式调用思考模式 | 设置 `enable_thinking=false` 或改用流式输出 |
-| `Required body invalid` | 请求体 JSON 格式错误 | 检查 JSON 格式，如多余逗号、括号未闭合等 |
-
-### 文件相关
-
-| 错误信息 | 原因 | 解决方案 |
-|---------|------|---------|
-| `Invalid file` | file-id 无效 | 确认 file-id 是否正确且属于当前账号 |
-| `File format is not supported` | 文件格式不支持 | 检查文件格式是否在支持列表中 |
-| `File exceeds size limit` | 文件大小超限 | 确保文件小于 150 MB |
-
-### 调试建议
-
-- 推荐使用[阿里云 AI 助理](https://www.aliyun.com/ai-assistant/)，输入完整错误信息即可获取解决方案
-- 请勿以任何方式公开 API Key，避免安全风险或资金损失
+- API Key 一旦创建无失效日期，**只能手动删除**；丢失需立即删除并重建。
+- 任何第三方场景请优先使用临时 API Key（有效期 60 秒）或为 Key 配置 IP 白名单（华北2）。
+- 切勿将 API Key 提交到 Git、写入前端代码或公开渠道；强烈建议读取自 `DASHSCOPE_API_KEY` 环境变量。
+- 多业务 / 多团队场景使用子业务空间隔离权限与账单；调优后的模型只能在所在业务空间的 API Key 下调用。
 
 ## 来源文档
 
@@ -118,4 +133,5 @@ API Key 是调用百炼大模型和应用的鉴权凭证。详细操作步骤参
 - [将API Key配置到环境变量](../../raw/model-api-reference/preparations/configure-api-key-through-environment-variables.md)
 - [安装SDK](../../raw/model-api-reference/preparations/install-sdk.md)
 - [错误码](../../raw/model-api-reference/preparations/error-code.md)
+
 
