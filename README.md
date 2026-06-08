@@ -12,7 +12,7 @@
 
 ---
 
-_1st-party skills pair with bailian-cli (bl) for Bailian's full-modal capabilities,_
+_1st-party skills: core `bailian-cli` skill lives in [`modelstudioai/cli`](https://github.com/modelstudioai/cli); this repo adds optional extensions. Pair with `bl` for Bailian's full-modal capabilities,_
 _curated 3rd-party skills cover creation, dev, design, docs, and testing — pick and go._
 
 _Empowering AI Agents with a Skills collection curated and verified by the ModelStudio team._
@@ -21,7 +21,7 @@ _Empowering AI Agents with a Skills collection curated and verified by the Model
 
 ModelStudio Skills is the official AI Agent Skills repository from ModelStudio, containing two categories:
 
-- **1st-party skills** — Developed by the ModelStudio team and paired with [`bailian-cli`](https://www.npmjs.com/package/bailian-cli) (`bl`, install via [bailian.aliyun.com/cli/install.md](https://bailian.aliyun.com/cli/install.md)), covering chat, multimodal, image/video, speech, vision, apps, memory, RAG, and web search on the Bailian platform.
+- **1st-party skills** — Developed by the ModelStudio team. Install the core **`bailian-cli` skill** from [`modelstudioai/cli`](https://github.com/modelstudioai/cli) (`npx skills add modelstudioai/cli --all -g`), then add optional extensions from this repo. Use with the [`bailian-cli`](https://www.npmjs.com/package/bailian-cli) npm package (`bl`; binary install: [bailian.aliyun.com/cli/install.md](https://bailian.aliyun.com/cli/install.md)), covering chat, multimodal, image/video, speech, vision, apps, memory, RAG, and web search on the Bailian platform.
 - **Curated 3rd-party skills** — Continuously tracked from GitHub, Anthropic, Vercel, Google Labs, and other communities. Each Claude Code / Agent Skill is verified in real-world scenarios by the ModelStudio team; only those marked "usable" are included, grouped by use case for direct integration.
 
 Each skill is an independent, composable workflow unit. The 3rd-party set spans **skill management, code development, design & creativity, documentation, video production, and testing** — six major scenarios.
@@ -33,10 +33,14 @@ Each skill is an independent, composable workflow unit. The 3rd-party set spans 
 ### Manual Install
 
 ```bash
+npm install -g bailian-cli
+npx skills add modelstudioai/cli --all -g
 npx skills add modelstudioai/skills
 ```
 
-When prompted, press `a` to select all skills, then Enter to confirm.
+When prompted on the second skills command, press `a` to select all skills, then Enter to confirm.
+
+> The **`bailian-cli` skill** (`bl` usage and `reference/`) lives in [`modelstudioai/cli`](https://github.com/modelstudioai/cli) under `skills/bailian-cli/`. Install it with `npx skills add modelstudioai/cli --all -g` (see above).
 
 ### Install via Your Agent (Recommended)
 
@@ -45,25 +49,28 @@ Paste the following into your AI Agent:
 ```
 Please install Bailian AI Skills for me:
 1. Check if Node.js is installed (>= 18), install it if not
-2. Run: npx skills add modelstudioai/skills --all -y
-3. Once installed, start with "Bailian Skills installed", then list the installed skills and what I can do
+2. Run: npm install -g bailian-cli
+3. Run: npx skills add modelstudioai/cli --all -g -y
+4. Run: npx skills add modelstudioai/skills --all -g -y
+5. Once installed, start with "Bailian Skills installed", then list the installed skills and what I can do
 ```
 
 ---
 
-## Skills
+## First-party skills in this repo
 
-| Skill | Description |
-|-------|-------------|
-| [`bailian-cli`](./skills/bailian-cli/) | Guides the Agent to use `bl` commands for chat, multimodal, image/video, speech, vision, apps, memory, RAG, and web search; detailed command reference under `reference/`. Install the CLI first → [bailian.aliyun.com/cli/install.md](https://bailian.aliyun.com/cli/install.md). |
-| [`bailian-docs-llm-wiki`](./skills/bailian-docs-llm-wiki/) | **Bailian Docs Library**: enable when answering Bailian questions about model specs, APIs/error codes, agents/RAG/knowledge base, SDK compatibility, multimodal, billing, etc.; check `models/` for specs and pricing, `wiki/` for concepts and guides. |
-| [`financial-expert`](./skills/financial-expert/) | **Financial Data Analysis**: A-share stock/fund/manager screening, financial & macro data queries, broker research reports, and listed-company filings. |
+These skills ship with this repository and are maintained by the ModelStudio team. Install `modelstudioai/skills`, then let your Agent activate them as needed (unlike the **community index** in the next section).
+
+| Skill | What it does |
+|-------|----------------|
+| [`bailian-docs-llm-wiki`](./skills/bailian-docs-llm-wiki/) | Routes the Agent through the in-repo **Bailian docs library** for model specs and pricing, API/error codes, agents/RAG/knowledge base, SDKs and multimodal, billing, etc. Start from `models/index.md` and `wiki/index.md`, then drill down. |
+| [`spark-video`](./skills/spark-video/) | **End-to-end short-film production**: screenwriter ↔ director (per scene) → parallel render DAG → per-clip QA → stitch. Best for “make me an episode / a product ad in one go.” The entry skill registers as **`spark-video-episode`** (see [`SKILL.md`](./skills/spark-video/SKILL.md)). |
 
 ---
 
 ## Aliyun Bailian Curated Skills
 
-The following skills come from open-source community projects, curated and verified by the Bailian team. Use the example prompts directly with your Agent, or install each one individually.
+The table below is an index of **curated community** projects verified by the Bailian team. Use the example prompts with your Agent, or install individually. The section above lists **first-party** skills bundled in this repository.
 
 > See [`AWESOME_SKILLS.md`](./AWESOME_SKILLS.md) for detailed descriptions and category overviews.
 

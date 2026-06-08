@@ -31,7 +31,7 @@ description: >-
 
 - 询问 OpenAI / Anthropic / Google 等其他厂商的 API、模型或定价
 - 通用编程问题、框架问题（React、Vue、Spring 等）
-- `bl` CLI 命令本身的用法（那是 `bailian-cli` skill 的职责）
+- `bl` CLI 命令本身的用法（见 [`modelstudioai/cli`](https://github.com/modelstudioai/cli) 仓库内 `skills/bailian-cli/`）
 - 与百炼无关的阿里云产品（OSS、ECS、RDS 等）
 
 ## 文档层级
@@ -148,19 +148,19 @@ description: >-
 | 模型家族总览 / 按能力分桶浏览         | `models/index.md`                                        |
 | 主题页 / API 文档（按功能领域查找）    | `wiki/index.md`（完整索引入口）                          |
 | OpenAI 兼容接口 | `wiki/concepts/openai-compatible-api.md` |
-| DashScope 接口 | `wiki/concepts/dashscope-api.md` |
-| 异步任务 | `wiki/concepts/async-task.md` |
-| 函数调用 | `wiki/concepts/function-calling.md` |
-| 流式输出 | `wiki/concepts/streaming-output.md` |
-| 检索增强生成 | `wiki/concepts/rag.md` |
-| Token 计量与计费 | `wiki/concepts/token.md` |
-| 业务空间 | `wiki/concepts/workspace.md` |
-| 语音合成、识别与翻译 API 对比 | `wiki/comparisons/speech-apis-comparison.md` |
-| 图像生成、视频生成与 3D 生成对比 | `wiki/comparisons/generation-modalities.md` |
-| 模型评测与应用评测对比 | `wiki/comparisons/evaluation-comparison.md` |
-| 知识库与记忆库对比 | `wiki/comparisons/knowledge-vs-memory.md` |
-| 文本向量与多模态向量对比 | `wiki/comparisons/embedding-comparison.md` |
-| 模型微调与模型压缩对比 | `wiki/comparisons/model-optimization.md` |
+| 函数调用（工具调用） | `wiki/concepts/function-calling.md` |
+| 检索增强生成（RAG） | `wiki/concepts/rag.md` |
+| Token（令牌计量） | `wiki/concepts/token.md` |
+| 流式输出 | `wiki/concepts/streaming.md` |
+| 异步任务模式 | `wiki/concepts/async-task.md` |
+| 多轮对话 | `wiki/concepts/multi-turn-conversation.md` |
+| 向量化与语义检索 | `wiki/concepts/embedding-and-retrieval.md` |
+| 语音合成、语音识别与语音翻译对比 | `wiki/comparisons/speech-synth-vs-recognition-vs-translation.md` |
+| 文本Embedding与多模态向量对比 | `wiki/comparisons/text-embedding-vs-multimodal-vector.md` |
+| 模型评估与应用评估对比 | `wiki/comparisons/model-evaluation-vs-application-evaluation.md` |
+| 模型监控与应用监控对比 | `wiki/comparisons/model-monitoring-vs-application-monitoring.md` |
+| 模型微调、模型训练与模型部署对比 | `wiki/comparisons/fine-tuning-vs-model-training-vs-model-deployment.md` |
+| 图像生成、视频生成与3D生成对比 | `wiki/comparisons/image-vs-video-vs-3d-generation.md` |
 
 > 实际文件名以 `wiki/index.md` 为准；上表若有出入应回到索引页查找。
 
