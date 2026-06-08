@@ -61,8 +61,17 @@ Skill 会引导你完成需求发现，并组装出类似这样的 Prompt：
 
 ## 前置要求
 
-- 已安装 [`bailian-cli`](https://www.npmjs.com/package/bailian-cli)（`bl`）—— [安装指南](https://bailian.aliyun.com/cli/install.md)
-- DashScope API Key
+本技能依赖阿里云百炼 CLI（`bl`）。在使用本技能前，请先检查 `bl` 是否已安装：
+
+```bash
+bl --version
+```
+
+如果未安装或命令不存在，请阅读以下安装文档并按照说明完成安装：
+
+> https://bailian.aliyun.com/cli/install.md
+
+此外还需配置 DashScope API Key 用于视频生成。
 
 ## 直接运行 Prompt
 

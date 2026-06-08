@@ -61,8 +61,17 @@ The skill will guide you through discovery and assemble a prompt like:
 
 ## Prerequisites
 
-- [`bailian-cli`](https://www.npmjs.com/package/bailian-cli) (`bl`) installed — [install guide](https://bailian.aliyun.com/cli/install.md)
-- A DashScope API key for video generation
+This skill requires Alibaba Cloud Model Studio CLI (`bl`). Before using this skill, check if `bl` is installed:
+
+```bash
+bl --version
+```
+
+If not installed or the command is not found, follow the install guide:
+
+> https://bailian.aliyun.com/cli/install.md
+
+A DashScope API key is also required for video generation.
 
 ## Run the prompt directly
 
