@@ -8,7 +8,7 @@
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
-[Aliyun Model Studio CLI Site](https://bailian.console.aliyun.com/cli?source_channel=cli_github&) · [中文](./README_CN.md) · [API Documentation](https://help.aliyun.com/zh/model-studio/) · [Get API Key](https://bailian.console.aliyun.com/cli?source_channel=key_github&)
+[Aliyun Model Studio CLI Site](https://bailian.console.aliyun.com/cli?source_channel=cli_github&) · [中文](./README.zh.md) · [API Documentation](https://help.aliyun.com/zh/model-studio/) · [Get API Key](https://bailian.console.aliyun.com/cli?source_channel=key_github&)
 
 ---
 
@@ -33,14 +33,10 @@ Each skill is an independent, composable workflow unit. The 3rd-party set spans 
 ### Manual Install
 
 ```bash
-npm install -g bailian-cli
-npx skills add modelstudioai/cli --all -g
 npx skills add modelstudioai/skills
 ```
 
-When prompted on the second skills command, press `a` to select all skills, then Enter to confirm.
-
-> The **`bailian-cli` skill** (`bl` usage and `reference/`) lives in [`modelstudioai/cli`](https://github.com/modelstudioai/cli) under `skills/bailian-cli/`. Install it with `npx skills add modelstudioai/cli --all -g` (see above).
+When prompted, select the skills you want to install, then press Enter to confirm.
 
 ### Install via Your Agent (Recommended)
 
@@ -49,10 +45,8 @@ Paste the following into your AI Agent:
 ```
 Please install Bailian AI Skills for me:
 1. Check if Node.js is installed (>= 18), install it if not
-2. Run: npm install -g bailian-cli
-3. Run: npx skills add modelstudioai/cli --all -g -y
-4. Run: npx skills add modelstudioai/skills --all -g -y
-5. Once installed, start with "Bailian Skills installed", then list the installed skills and what I can do
+2. Run: npx skills add modelstudioai/skills
+3. Once installed, start with "Bailian Skills installed", then list the installed skills and what I can do
 ```
 
 ---

@@ -12,7 +12,7 @@
 
 ---
 
-_核心 `bailian-cli` skill 在 [`modelstudioai/cli`](https://github.com/modelstudioai/cli)；本仓库为可选扩展，配合 bailian-cli (bl) 接入百炼全模态能力，_
+_官方一方技能：核心 `bailian-cli` 技能在 [`modelstudioai/cli`](https://github.com/modelstudioai/cli) 仓库；本仓库提供可选扩展。配合 `bl` 接入百炼全模态能力，_
 _精选三方技能覆盖创作、开发、设计、文档、测试 — 按需挑选，即装即用。_
 
 _为 AI Agent 赋能，由阿里云百炼团队精选并验证的 Skill 集合。_
@@ -21,7 +21,7 @@ _为 AI Agent 赋能，由阿里云百炼团队精选并验证的 Skill 集合�
 
 ModelStudio Skills 是阿里云百炼（ModelStudio）推出的官方 AI Agent 技能仓库，包含两类：
 
-- **官方一方技能** — 由百炼团队维护：核心 **`bailian-cli` skill** 请从 [`modelstudioai/cli`](https://github.com/modelstudioai/cli) 安装（`npx skills add modelstudioai/cli --all -g`），本仓库提供可选扩展。与 [`bailian-cli`](https://www.npmjs.com/package/bailian-cli) npm 包（命令 `bl`，可执行文件安装见 [bailian.aliyun.com/cli/install.md](https://bailian.aliyun.com/cli/install.md)）配合使用，覆盖对话、多模态、图像/视频、语音、视觉、应用、记忆、RAG、联网搜索等百炼平台核心能力。
+- **官方一方技能** — 由百炼团队开发。先从 [`modelstudioai/cli`](https://github.com/modelstudioai/cli) 安装核心 **`bailian-cli` 技能**（`npx skills add modelstudioai/cli --all -g`），再从本仓库安装可选扩展。配合 [`bailian-cli`](https://www.npmjs.com/package/bailian-cli) npm 包（命令别名 `bl`，安装见 [bailian.aliyun.com/cli/install.md](https://bailian.aliyun.com/cli/install.md)）使用，覆盖对话、多模态、图像/视频、语音、视觉、应用、记忆、RAG、联网搜索等百炼平台核心能力。
 - **精选三方技能** — 持续追踪 GitHub、Anthropic、Vercel、Google Labs 等社区的优质 Claude Code / Agent Skills，经百炼团队真实场景验证，仅收录结论为「可用」的项目，按使用场景分组沉淀，方便开发者直接调用。
 
 每个技能都是独立的、可组合的工作流单元，三方部分覆盖**技能管理、代码开发、设计创意、文档写作、影视创作、测试质量**六大场景。
@@ -33,14 +33,10 @@ ModelStudio Skills 是阿里云百炼（ModelStudio）推出的官方 AI Agent �
 ### 手动安装
 
 ```bash
-npm install -g bailian-cli
-npx skills add modelstudioai/cli --all -g
 npx skills add modelstudioai/skills
 ```
 
-第二条 skills 命令提示时按 `a` 全选技能，回车确认。
-
-> **`bailian-cli` skill**（`bl` 命令用法与 `reference/`）在 [`modelstudioai/cli`](https://github.com/modelstudioai/cli) 仓库的 `skills/bailian-cli/`，通过上面的 `npx skills add modelstudioai/cli --all -g` 安装。
+提示时选择想要安装的技能，回车确认。
 
 ### 使用 Agent 安装（推荐）
 
@@ -49,28 +45,26 @@ npx skills add modelstudioai/skills
 ```
 请帮我安装百炼 AI Skills：
 1. 检查 Node.js 是否已安装（需要 ≥ 18），没有则帮我安装
-2. 执行：npm install -g bailian-cli
-3. 执行：npx skills add modelstudioai/cli --all -g -y
-4. 执行：npx skills add modelstudioai/skills --all -g -y
-5. 安装完成后先说「Bailian Skills 已安装」，再列出已安装的技能及我能做什么
+2. 执行：npx skills add modelstudioai/skills
+3. 安装完成后先说「Bailian Skills 已安装」，再列出已安装的技能及我能做什么
 ```
 
 ---
 
-## 本仓库官方技能
+## 本仓库一方技能
 
-以下 Skill 与本仓库代码一同发布，由百炼团队维护；安装 `modelstudioai/skills` 后由 Agent 按需启用（与下一节「精选」中的**社群索引**不同）。
+以下技能随本仓库发布，由百炼团队维护。安装 `modelstudioai/skills` 后，Agent 按需自动激活（与下方**社区精选**不同）。
 
-| Skill | 做什么 |
-|-------|--------|
-| [`bailian-docs-llm-wiki`](./skills/bailian-docs-llm-wiki/) | 回答百炼平台问题时，先查本仓库内的 **文档知识库**：模型规格与定价、API/错误码、智能体/RAG/知识库、SDK 与多模态、计费等；按 `models/index.md`、`wiki/index.md` 索引导读后再下钻。 |
-| [`spark-video`](./skills/spark-video/) | **一键短片制片**：编剧 ↔ 导演（按场）→ 渲染链 DAG 并行 → 逐镜质检 → 拼接成片；适合「一句话做一集 / 产品广告短片」等长流程。入口 Skill 注册名为 **`spark-video-episode`**（详见 [`SKILL.md`](./skills/spark-video/SKILL.md)）。 |
+| 技能 | 说明 |
+|------|------|
+| [`bailian-docs-llm-wiki`](./skills/bailian-docs-llm-wiki/) | 引导 Agent 查阅仓库内置的**百炼文档库**：模型规格与定价、API/错误码、智能体/RAG/知识库、SDK 与多模态、计费等。从 `models/index.md` 和 `wiki/index.md` 开始逐层查阅。 |
+| [`spark-video`](./skills/spark-video/) | **端到端短片制作**：编剧 ↔ 导演（逐场景）→ 并行渲染 DAG → 逐 clip 审片 → 拼接。适合"帮我做一集短剧/产品广告"一句话出片。入口技能注册为 **`spark-video-episode`**（见 [`SKILL.md`](./skills/spark-video/SKILL.md)）。 |
 
 ---
 
 ## 阿里云百炼精选技能
 
-以下为**社区开源**项目索引，由百炼团队精选验证；可直接对 Agent 说示例话术，或单独安装。上表为**本仓库自带**一方技能。
+下表为百炼团队验证的**社区精选**项目索引。可直接对 Agent 说示例话术，或用安装命令单独引入。上方章节列出的是**本仓库内置的一方技能**。
 
 > 详细说明与分组介绍见 [`AWESOME_SKILLS.md`](./AWESOME_SKILLS.md)。
 
