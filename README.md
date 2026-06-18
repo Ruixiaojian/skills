@@ -64,6 +64,9 @@ These skills ship with this repository and are maintained by the ModelStudio tea
 | Skill | What it does |
 |-------|----------------|
 | [`bailian-docs-llm-wiki`](./skills/bailian-docs-llm-wiki/) | Routes the Agent through the in-repo **Bailian docs library** for model specs and pricing, API/error codes, agents/RAG/knowledge base, SDKs and multimodal, billing, etc. Start from `models/index.md` and `wiki/index.md`, then drill down. |
+| [`bailian-model-recommend`](./skills/bailian-model-recommend/) | **Model selection & recommendation**: given a scenario or feature need, picks the best-fit Bailian model and hands back ready-to-run sample code. Activates on "recommend / which model / compare." Reads the `models/` data from `bailian-docs-llm-wiki`. |
+| [`financial-expert`](./skills/financial-expert/) | **Financial data analysis** over China A-shares, funds, and bonds via `bl mcp` (`market-cmapi00073529`): stock/fund/fund-manager screening, financials (net profit / revenue / ROE), macro & industry time series (GDP / CPI), broker research reports, and listed-company filings. |
+| [`happyhorse-prompt-studio`](./skills/happyhorse-prompt-studio/) | **Interactive prompt studio for HappyHorse 1.0 video**: guides scenario discovery with vivid examples, then assembles production-ready prompts in JP/CN/EN. Covers manga drama, character PV, manga motion, virtual idol MV, and free-form scenarios. |
 | [`spark-video`](./skills/spark-video/) | **End-to-end short-film production**: screenwriter ↔ director (per scene) → parallel render DAG → per-clip QA → stitch. Best for “make me an episode / a product ad in one go.” The entry skill registers as **`spark-video-episode`** (see [`SKILL.md`](./skills/spark-video/SKILL.md)). |
 
 ---
