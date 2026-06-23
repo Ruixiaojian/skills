@@ -31,7 +31,7 @@ bl --version
 
 1. **素材来源** — 用户是否提供了小说文件（EPUB/TXT）？如果有，先读取内容提取剧情结构。
 2. **游戏类型** — 互动小说（选择影响剧情） / 文字冒险+解谜 / 文字RPG（含属性系统）
-3. **UI 风格** — 像素风 / 赛博朋克 / 水墨中国风 / 简约现代
+3. **UI 风格** — 默认 `auto`：根据小说题材自动推断（见下表），用户可覆盖。仅当用户明确不满意推断结果时才切换为指定风格。
 4. **叙事视角** — 第一人称（扮演主角） / 第三人称上帝视角（旁观者选择）/ 双主角切换
 5. **AI 素材生成** — 是否需要 AI 生成角色立绘和过场？如需要，选择素材模式：
    - **视频模式** — 角色立绘为动态视频循环，过场为视频（效果最佳，生成慢，成本高）
@@ -44,6 +44,19 @@ bl --version
    - BGM + 音效 + TTS 旁白（BGM/音效程序化生成 + `bl speech synthesize` 生成旁白语音）
 7. **游戏时长** — 15-20分钟（8-10场景）/ 30-45分钟（15-18场景）/ 1小时+（25+场景）
 
+### UI 风格自动推断表（`auto` 模式）
+
+根据小说题材关键词判定，并在第二步产出物中说明判定理由：
+
+| 题材关键词                           | 推断风格   | 视觉特征                           |
+| ------------------------------------ | ---------- | ---------------------------------- |
+| 科幻 / 未来 / 太空 / 人工智能 / 末日 | 赛博朋克   | 冷色调、霓虹高光、等宽字体、扫描线 |
+| 古风 / 武侠 / 仙侠 / 历史 / 宫廷     | 水墨中国风 | 墨色、留白、衬线字体、水墨晕染     |
+| 复古 / 8bit / 轻松 / 治愈 / 搞笑     | 像素风     | 低饱和、像素字体、CRT 扫描线       |
+| 现代 / 都市 / 现实主义 / 悬疑 / 职场 | 简约现代   | 中性色、无衬线字体、扁平化         |
+
+多题材混合时取主导题材；无法判定时默认「简约现代」。
+
 ---
 
 ## 第二步：剧情设计
@@ -51,11 +64,33 @@ bl --version
 根据原著/素材/用户描述，直接设计以下内容：
 
 1. **核心剧情线** — 识别 1-3 条主线（可交织），每条线梳理关键场景
-2. **关键分支点** — 选出 3-5 个影响结局的重大选择
+2. **关键分支点** — 选出 3-5 个影响结局的重大选择。**选择即分叉**（详见下方分支原则）
 3. **结局设计** — 设计 3-5 个不同结局，每个由 flags 组合决定
 4. **角色列表** — 列出需要立绘的主要角色（6-8个），含外观描述
 5. **过场场景** — 列出需要生成素材的高潮场景（5-8个），含画面描述
 6. **收集物/档案** — 设计通过选择解锁的背景知识条目
+7. **UI 风格推断**（`auto` 模式时）— 根据题材判定风格并说明理由
+8. **分支图** — 画出场景分叉/合流/结局的拓扑（文字版即可），确保每个重大选择有 ≥2 条不同后续路径
+
+### 分支设计原则（核心）
+
+互动小说的灵魂在于「选择有意义」。遵循以下原则：
+
+- **选择即分叉**：重大选择的每个选项应导向**不同的下一场景**（不同 `next`），而非「同场景 + 不同 flag」。玩家选 A 走 A 路线，选 B 走 B 路线，看到的文本/立绘/BGM 都不同。
+- **分后必合或分后不归**：分支后要么在下游中转节点汇合（合流点保留共同剧情推进，但用 flag 微调文本），要么一路分到底导向不同结局。
+- **禁止「假分支」**：避免「选 A 或 B 但下一场景相同且仅 flag 不同」的伪选择。若 A/B 后续差异不大则合并为单线，不要硬凑分支。
+- **分支深度**：每个重大分支至少影响 2-3 个后续场景的文本/立绘/BGM，让玩家感受到「这次玩的不一样」。
+- **flag 的角色**：flag 不再是分支的全部，而是记录「累计倾向」，用于在合流点微调文本和最终决定结局。真正的分支由 `next` 指向不同场景实现。
+
+**示例（三体·红岸基地）**：
+
+```
+红岸基地·发射抉择
+  ├─ 选「按下发射」→ scene_send_signal（发送信号路线，2-3个独有场景）
+  │      └─ ... → 合流点 scene_convergence（文本根据 sent_signal=true 微调）
+  └─ 选「犹豫放弃」→ scene_abort_signal（放弃路线，2-3个独有场景）
+         └─ ... → 合流点 scene_convergence（文本根据 sent_signal=false 微调）
+```
 
 ---
 
@@ -110,31 +145,38 @@ public/
 
 ```js
 export const scenes = {
-  "scene_id": {
+  scene_id: {
     id: "scene_id",
     title: "章节标题",
-    timeline: "past|present|game",    // 时间线标识（影响 UI 颜色）
-    year: "1967",                      // 显示年份
-    character: "character_key",        // 当前场景角色立绘
-    bgm: "bgm_name",                  // 背景音乐
-    cutscene: "cutscene_key",          // 过场素材 key（可选）
-    narration: "narration_key",        // TTS 旁白 key（可选）
+    timeline: "past|present|game", // 时间线标识（影响 UI 颜色）
+    year: "1967", // 显示年份
+    character: "character_key", // 当前场景角色立绘
+    bgm: "bgm_name", // 背景音乐
+    cutscene: "cutscene_key", // 过场素材 key（可选）
+    narration: "narration_key", // TTS 旁白 key（可选）
     isEnding: false,
     endingType: "ending_a",
-    texts: [
-      "第一段文字...",
-      "第二段文字..."
-    ],
+    texts: ["第一段文字...", "第二段文字..."],
     choices: [
       {
-        text: "选择A的文字",
-        next: "next_scene_id",         // 跳转目标（null = 根据 flags 进入结局）
-        setFlags: { flag_name: true },
-        archive: "archive_key"         // 解锁档案（可选）
-      }
-    ]
-  }
+        text: "按下发射按钮",
+        next: "scene_send_signal", // 分叉路线 A — 不同场景
+        setFlags: { sent_signal: true },
+        archive: "archive_signal_sent", // 解锁档案（可选）
+      },
+      {
+        text: "犹豫后放弃",
+        next: "scene_abort_signal", // 分叉路线 B — 不同场景（真实分叉）
+        setFlags: { sent_signal: false },
+      },
+    ],
+  },
 };
+
+// 合流点：两条分叉路线在此汇合，根据 flag 渲染条件文本
+export function getSceneText(scene, flags) {
+  // 读 flag 返回该玩家路线专属的文本/立绘
+}
 
 export function getEnding(flags) {
   // 根据 flags 组合返回对应结局 scene id
@@ -154,7 +196,10 @@ export function getEnding(flags) {
     "countdown": { "path": "/assets/cutscenes/countdown.png", "type": "image" }
   },
   "backgrounds": {
-    "campus_1967": { "path": "/assets/backgrounds/campus_1967.png", "type": "image" }
+    "campus_1967": {
+      "path": "/assets/backgrounds/campus_1967.png",
+      "type": "image"
+    }
   },
   "narrations": {
     "scene_opening": { "path": "/assets/narrations/scene_opening.mp3" }
@@ -185,24 +230,28 @@ export function getEnding(flags) {
 ## 第五步：关键实现模式
 
 ### 打字机效果（TypeWriter）
+
 - 用 setInterval 逐字显示，speed 约 40-50ms
 - 点击/触摸可跳过（立即显示全文）
 - 每个字符触发打字音效回调
 - 显示完毕调用 onDone 回调
 
 ### 选择面板（ChoicePanel）
+
 - 在最后一段文字打字完成后淡入
 - 每个选项延迟入场动画（nth-child animation-delay）
 - hover 时边框变色 + 微位移 + 阴影扩大
 - 点击触发音效 → 设置 flags → 自动存档 → 跳转下一场景
 
 ### Hash 路由
+
 - URL hash 同步当前场景：`#scene_id`
 - 支持直接通过 URL 跳转到任意章节（开发调试 + 分享）
 - 监听 hashchange 支持浏览器前进/后退
 - 回到标题时清除 hash
 
 ### 存档系统（localStorage）
+
 - **自动存档**：每次做出选择后自动保存当前状态到 `localStorage.setItem('novel_autosave', JSON.stringify(state))`
 - **手动存档**：支持 3 个存档槽位（`novel_save_1` / `novel_save_2` / `novel_save_3`），每个槽位保存完整 state + 存档时间 + 当前场景标题
 - **TitleScreen 入口**：
@@ -213,17 +262,20 @@ export function getEnding(flags) {
 - 存档数据结构：`{ state, savedAt, sceneTitle, playTime }`
 
 ### 角色立绘（CharacterPortrait）— 自动适配视频/图片
+
 - 从 `generated-assets.json` 读取素材信息，根据 `type` 字段渲染：
   - `type: "video"` → `<video src={path} autoPlay loop muted playsInline />`
   - `type: "image"` → `<img src={path} />` + 可选呼吸动效（CSS `animation: breathe 3s ease-in-out infinite`）
 - 无素材时显示角色名首字母占位符
 
 ### 过场播放（CutScene）— 自动适配视频/图片
+
 - `type: "video"` → 全屏 `<video>` 播放，结束后自动关闭
 - `type: "image"` → 全屏 `<img>` + Ken Burns 动效（CSS `animation: kenburns 5s ease-in-out`），5 秒后自动关闭
 - Ken Burns 效果：从 `scale(1.1) translate(-2%, -2%)` 过渡到 `scale(1.0) translate(0, 0)`，模拟镜头缓慢推拉
 
 ### 素材懒加载
+
 - 所有视频元素默认 `<video preload="none">`，不预加载
 - 仅预加载当前场景和下一可能场景的素材
 - 场景切换时：`video.load()` 加载当前 → `requestIdleCallback` 预加载下一个
@@ -231,6 +283,7 @@ export function getEnding(flags) {
 - 图片使用 `loading="lazy"` 属性
 
 ### 移动端适配
+
 - `<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">`
 - 竖屏优先布局：文字区占屏幕上方 60%，立绘在下方 40%（横屏时立绘在侧边）
 - 选择按钮最小高度 44px（iOS 触控标准）
@@ -349,6 +402,7 @@ done
 ```
 
 #### 关键规则
+
 - **素材必须离线生成并下载到本地**：游戏运行时零 API 调用
 - **本地文件路径直接传入 `--image`**：`bl` CLI 自动上传到临时存储，无需手动上传
 - **已生成素材自动跳过**：脚本检查本地文件是否存在（`[ -f path ]`）
@@ -356,6 +410,7 @@ done
 - **视频用 `--async` 并行提交**：3-5 个并发，避免串行等待
 
 ### Web Audio API 程序化音乐
+
 - 用 MIDI 音高数组定义旋律乐句，循环播放
 - 多声部叠加（主旋律 + 去谐波 detune + pad 持续音）
 - 卷积混响（用随机衰减 impulse buffer）
@@ -364,6 +419,7 @@ done
 - 不同场景/氛围用不同配置（bpm、音阶、波形、滤波频率）
 
 ### 音效
+
 - **打字音**：白噪声脉冲 + 带通滤波（2000-4000Hz）+ 微弱正弦下降音，模拟机械击键
 - **点击音**：双音方波上行（660→880Hz）
 - **场景切换**：四音正弦琶音 + 混响
@@ -410,3 +466,6 @@ done
 - **CRA 清理**：初始化后立即删除 App.css/logo.svg/setupTests.js 等样板文件，避免冲突
 - **移动端字体**：正文最小 16px，否则 iOS Safari 会自动缩放页面
 - **视频内存泄漏**：离开场景时必须 `video.pause(); video.removeAttribute('src'); video.load()` 释放内存
+- **避免伪分支**：若两个选项的 `next` 指向同一场景且仅 flag 不同，玩家会感觉「选了没用」。重大选择必须 `next` 到不同场景，或至少在同场景用 flag 触发明显不同的文本/立绘
+- **合流点保留差异感**：分叉汇合后，至少在合流场景的文本/旁白中体现玩家之前的选择（读 flag 渲染条件文本），否则分叉毫无意义
+- **分支深度要够**：每个重大分支至少影响 2-3 个后续场景，仅分叉一个场景就立刻合流会让玩家觉得「选了也就多看一句话」
