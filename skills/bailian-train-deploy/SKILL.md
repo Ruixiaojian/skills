@@ -23,7 +23,7 @@ description: 用百炼 CLI (`bl`) 走完"数据→微调训练→导出→部署
 
 `bl finetune create` 与 `bl deploy create` 都是真实写操作，会产生计费资源（微调训练 + 推理部署）。`bl` **没有 `--dry-run`**，所以用**预检命令**代替预演、用**计费确认**把关预留资源。任何写操作前必须先过这三道闸：
 
-1. **预检代替 dry-run**（创建前必跑，确认可行再写）：
+1. **预检代替 dry-run**（创建前必跑，确认可行再写）。这些预检命令本身都需先通过下方[前置检查](#前置检查动作流起点)的认证——未认证先 `bl auth login` 再预检：
    - 训练前：`bl finetune capability --model <base>` —— 确认基座支持你选的 training-type（不支持会快速失败且不耗配额；`create` 提交时也会再校验一次）。
    - 部署前：`bl deploy models --source custom`（链路 A 微调输出）或 `--source base`（链路 B 基座）—— 确认目标模型可部署、看清可用 plan，再决定 `--plan`。
    - 复用检测：`bl deploy list --status RUNNING` —— 若已有引用同一 `finetuned_output` 且 RUNNING 的部署，直接复用其 `deployed_model`，**不要再建第二个计费实例**。
@@ -58,7 +58,7 @@ description: 用百炼 CLI (`bl`) 走完"数据→微调训练→导出→部署
 - **没有这些 flag/子命令**：`bl` 无 `--dry-run`、无 `deploy create create`、无 `finetune start`、无 `deploy stop`（CLI 暂无 stop 命令，RUNNING 的 mu/ptu 需到控制台停用）。
 - **必填**：`finetune create` 的 `--model` / `--datasets`；`deploy create` 的 `--model` / `--name`。
 
-## 前置检查
+## 前置检查（动作流起点）
 
 - 认证：`bl auth status`，确认已配置 API key（`DASHSCOPE_API_KEY` 或 `bl auth login --api-key sk-...`）。
 - 基座选型：文本推理推荐 Qwen3 系列（支持思维链），常见 `qwen3-8b` / `qwen3-14b` / `qwen3.6-flash`。查询训练能力用 `bl finetune capability`（查 listFoundationModels，走 API key、无需 console 登录）：
@@ -87,22 +87,9 @@ bl finetune create \
   --yes --output json
 ```
 
-**training-type 取值与映射**（CLI 用 `<method>`/`<method>-lora` 约定，提交时映射到服务端字段）：
-
-| CLI 值 | 服务端 | 适用 |
-|---|---|---|
-| `sft-lora` | efficient_sft | **默认**，LoRA，便宜快，大多数场景 |
-| `sft` | 全参 SFT | 效果上限高，成本显著增加 |
-| `dpo-lora` / `dpo` | dpo | 偏好对齐，需 preference 数据 |
-| `cpt` | 继续预训练 | 注入领域知识，需非对话格式数据 |
-
-> `cpt` 服务端没有 `-lora` 变体，只有全参；其余方法（sft/dpo）均有 `<method>` 与 `<method>-lora` 两个变体。
-
-**超参建议：**
-- `n-epochs` 默认 3。小数据集（几百条）3 够用；过拟合降到 1-2。
-- `batch-size` 按数据量自适应（<100KB 自动设 8），一般不手动设。
-- `learning-rate` 以**字符串**传入避免 JSON 精度丢失，如 `"1e-4"`。LoRA 默认 `3e-4`（平台对小数据集的设定），过拟合可调小。
-- `--validations <path>` 可选，传验证集观察指标。
+**training-type 取值与映射、超参建议**详见 [`references/finetune.md`](references/finetune.md)。要点：
+- `--training-type` 默认 `sft-lora`（LoRA，便宜快，大多数场景）；可选 `sft`（全参）/ `dpo`(-lora) / `cpt`（继续预训练，无 lora 变体）。CLI 边界自动映射到服务端字段，永远传 CLI 值。
+- `--n-epochs` 默认 3；`--learning-rate` 必须**字符串**（如 `"1e-4"`）避免 JSON 精度丢失；`--batch-size` 一般不手动设。
 
 从响应记下：`output.job_id`、`output.finetuned_output`（输出模型名，形如 `qwen3-8b-ft-<ts>-<id>`）。
 
@@ -143,15 +130,10 @@ bl deploy create \
 ```
 
 - `--model`：链路 A 传第 2 步的 `finetuned_output`；链路 B 直接传基座模型名（如 `qwen3-8b`）。
-- `--plan`：可用计划**随模型来源不同而不同，不要盲目用 `lora`**——
-  - 链路 A（微调输出）：`lora`（按 token 计费，默认，适合验证/低负载）；也支持 `mu`。
-  - 链路 B（基座）：通常只支持 `ptu`（预留吞吐，需 `--input-tpm`/`--output-tpm`）或 `mu`（独占资源，需 `--template-id`/`--capacity`），**不支持 `lora`**。
+- `--plan`：链路 A 默认 `lora`（token 计费）；链路 B 通常只支持 `ptu`/`mu`，**不支持 `lora`**。各 plan 必填参数与计费细则见 [`references/deploy.md`](references/deploy.md)。
 - 不确定支持哪些 plan：链路 A 用 `bl deploy models --source custom`，链路 B 用 `bl deploy models --source base`，按返回的 `plans` 选。
 
-⚠️ **避坑（最高频错误）：`--model` 在不同命令里含义不同，切勿混用。**
-- `bl deploy create --model` 传的是**导出模型名**（`qwen3-8b-ft-...`，来自第 2 步）。
-- 响应里返回的 `output.deployed_model`（如 `qwen3-8b-b98a331831a7`）才是**部署实例 id**。
-- 下一步推理 `bl text chat --model` 必须用响应里的 `deployed_model`，**不是**你传给 deploy create 的名字。两个 `--model` 指向不同值，不要复用。
+⚠️ **避坑（最高频错误）：`--model` 在 `deploy create` 与 `text chat` 里含义不同**——`deploy create --model` 传导出模型名，响应返回的 `output.deployed_model` 才是部署实例 id，`text chat --model` 必须用 `deployed_model`，**不要复用**。详见 [`references/deploy.md`](references/deploy.md)。
 
 从响应记下：`output.deployed_model`。
 
@@ -177,6 +159,6 @@ bl text chat --model <DEPLOYED_MODEL> --message "你的问题"
 - 常用运维命令：`bl deploy get --deployed-model <id>` 查状态；`bl deploy delete --deployed-model <id>` 删除部署；`bl finetune list` 查历史任务。
 
 ## 收尾提示
-- **闲置计费**：`lora` 按 token 计费，闲置一般不计费，留着无妨；`mu`/`ptu` 是预留资源，闲置也计费，不用要及时清理。注意 `bl deploy delete` 只能删 `STOPPED`/`FAILED` 状态的部署，而 CLI 暂无 stop 命令——RUNNING 状态的 mu/ptu 需先到百炼控制台停用，再删；或用 `bl deploy delete --deployed-model <id> --skip-precheck` 尝试（跳过本地前置检查，但服务端仍可能拒绝 RUNNING 删除）。
+- **闲置计费与删除**：`lora` 闲置一般不计费；`mu`/`ptu` 闲置也计费，不用要清理，且 `bl deploy delete` 有状态约束（CLI 无 stop 命令）。细则见 [`references/deploy.md`](references/deploy.md#计费与运维细则)。
 - **复用数据集**：多次训练同一数据时，先 `bl dataset upload` 拿 file-id，再用 `--datasets <file-id>` 避免重复上传。
 - **效果不好**：优先加数据（量与质量），其次调 `n-epochs`/`learning-rate`，最后才考虑全参 `sft`。小数据集（<100 条）效果上限有限，要管理预期。
