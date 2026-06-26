@@ -31,9 +31,21 @@
 **直接部署基座（跳过训练）：**
 - "把 `qwen3-8b` 部署成我自己的服务"
 
-**不适用：**
-- 只想调用公共模型 API → 直接用 `bailian-cli`
-- 纯粹的模型选型 / 价格查询 → 用 `bailian-model-recommend` 或 `bailian-docs-llm-wiki`
+**不适用（反触发路由）：**
+- 只想试模型效果 / 一次性对话 → `bailian-cli`：`bl text chat --model qwen3-8b --message "..."`
+- 不知道选哪个基座 / 模型选型 → `bailian-model-recommend`
+- 纯查模型参数 / 价格 / 上下文窗口 → `bailian-docs-llm-wiki`
+- 已有训练任务 / 部署的查删（生命周期管理）→ `bl` 直接：`bl finetune list` / `bl deploy list` / `bl deploy delete --deployed-model <id>`
+
+> 本 skill 只负责"新建训练任务 + 新建部署 + 调用交付"闭环；全生命周期管理（list/stop/delete）不在流程内。
+
+## 安全护栏
+
+`bl finetune create` 与 `bl deploy create` 都是真实写操作，会产生计费资源。`bl` **没有 `--dry-run`**，所以用真实预检 + 计费闸门代替：
+
+1. **预检代替 dry-run** —— `bl finetune capability --model <base>`（训练支持）、`bl deploy models --source custom|base`（可部署 + 可用 plan）、`bl deploy list --status RUNNING`（复用已有同模型部署，不再建第二个计费实例）。
+2. **mu/ptu 计费闸门** —— `lora`（token 计费，闲置一般免费）是安全默认；`mu`/`ptu` 是预留资源、闲置也计费，创建前**必须取得用户显式确认**，在 agent/CI 等非交互环境**不用 `--yes` 替用户放行**。
+3. **账号就绪** —— 先 `bl auth status`，未认证即停。
 
 ## 使用示例
 

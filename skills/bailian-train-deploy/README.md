@@ -31,9 +31,24 @@ Tell your agent "train a model" or "deploy my fine-tuned model on Bailian," and 
 **Direct base-model deployment (skip training):**
 - "Just deploy `qwen3-8b` as my own service"
 
-**Not for this skill:**
-- You just want to call a public model API → use `bailian-cli` directly
-- Pure model selection / pricing lookup → use `bailian-model-recommend` or `bailian-docs-llm-wiki`
+**Not for this skill (reverse-trigger routing):**
+- Just want to try a model / one-off chat → `bailian-cli`: `bl text chat --model qwen3-8b --message "..."`
+- Don't know which base model to pick → `bailian-model-recommend`
+- Pure parameter / pricing / context-window lookup → `bailian-docs-llm-wiki`
+- Lifecycle management of existing jobs/deployments (list/stop/delete) → `bl` directly: `bl finetune list` / `bl deploy list` / `bl deploy delete`
+
+## Safety guardrails
+
+`bl finetune create` and `bl deploy create` are real write operations that create billable resources. `bl` has **no `--dry-run`**, so the skill substitutes real pre-checks + a billing gate:
+
+1. **Pre-checks instead of dry-run** — `bl finetune capability --model <base>` (training support), `bl deploy models --source custom|base` (deployable + available plans), `bl deploy list --status RUNNING` (reuse an existing deployment of the same model instead of creating a second billable instance).
+2. **Billing gate on `mu`/`ptu`** — `lora` (token-billed, idle usually free) is the safe default; `mu`/`ptu` are reserved resources that bill even when idle, so the skill **asks the user for explicit confirmation before creating them** and never auto-approves reserved resources with `--yes` in non-interactive (agent/CI) contexts.
+3. **Account readiness** — `bl auth status` first; stop if not authenticated.
+
+## Prerequisites
+
+- `bl` (bailian-cli) installed and authenticated (`bl auth status`, or `bl auth login --api-key sk-...`)
+- Recommended base for text reasoning: Qwen3 series (`qwen3-8b` / `qwen3-14b` / `qwen3.6-flash`)
 
 ## Example
 
@@ -54,11 +69,6 @@ base model → deploy create → wait RUNNING → text chat
 ```
 
 It captures the right IDs at each step (`job_id` / `finetuned_output` → `deployed_model`) and steers around the common pitfalls (e.g. calling the fine-tuned model by its `qwen3-8b-ft-...` name returns 404 — you must deploy first and call the `deployed_model` instance id).
-
-## Prerequisites
-
-- `bl` (bailian-cli) installed and authenticated (`bl auth status`, or `bl auth login --api-key sk-...`)
-- Recommended base for text reasoning: Qwen3 series (`qwen3-8b` / `qwen3-14b` / `qwen3.6-flash`)
 
 ## How it works under the hood
 

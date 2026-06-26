@@ -19,6 +19,45 @@ description: 用百炼 CLI (`bl`) 走完"数据→微调训练→导出→部署
 
 > 本技能假设 `bl`（bailian-cli）已安装。命令/flag 细节以 `bl <cmd> --help` 为准；本技能聚焦**流程编排与避坑**。
 
+## 写操作护栏（创建前必读）
+
+`bl finetune create` 与 `bl deploy create` 都是真实写操作，会产生计费资源（微调训练 + 推理部署）。`bl` **没有 `--dry-run`**，所以用**预检命令**代替预演、用**计费确认**把关预留资源。任何写操作前必须先过这三道闸：
+
+1. **预检代替 dry-run**（创建前必跑，确认可行再写）：
+   - 训练前：`bl finetune capability --model <base>` —— 确认基座支持你选的 training-type（不支持会快速失败且不耗配额；`create` 提交时也会再校验一次）。
+   - 部署前：`bl deploy models --source custom`（链路 A 微调输出）或 `--source base`（链路 B 基座）—— 确认目标模型可部署、看清可用 plan，再决定 `--plan`。
+   - 复用检测：`bl deploy list --status RUNNING` —— 若已有引用同一 `finetuned_output` 且 RUNNING 的部署，直接复用其 `deployed_model`，**不要再建第二个计费实例**。
+2. **计费确认硬闸门（mu/ptu）**：
+   - `lora`（默认，按 token 计费，闲置一般不计费）—— 安全默认，可直接创建。
+   - `mu` / `ptu` 是**预留/独占资源，闲置也计费**——创建前**必须**向用户显式说明计费方式并取得确认。在 agent / CI 等**非交互环境里，不要用 `--yes` 替用户放行 mu/ptu 创建**；`--yes` 只在真人交互终端里跳过 `[y/N]`，不等于"agent 可自动开通预留资源"。命中 mu/ptu 时，把"这会产生闲置计费"连同命令交还给真人在终端确认。
+3. **账号就绪检查**：`bl auth status` —— `authenticated: false` 即停，给 `bl auth login --api-key sk-...`。百炼走 API key / access token 认证，**没有独立的实名闸门**，`auth status` 即账号就绪检查。
+
+## 反触发表（不归本 skill 的意图，附完整命令）
+
+| 用户意图 | 路由到 | 完整示范命令 |
+|---|---|---|
+| 只想试模型效果 / 一次性对话 | `bailian-cli` | `bl text chat --model qwen3-8b --message "..."` |
+| 已确定模型，只要调用方式 | `bailian-cli` | `bl text chat --model <model> --message "..."` |
+| 不知道选哪个基座 / 模型选型 | `bailian-model-recommend` | （让该 skill 按场景推荐）|
+| 纯查模型参数 / 价格 / 上下文窗口 | `bailian-docs-llm-wiki` | （查模型数据目录）|
+| 已有部署，只想生成调用示例 | `bailian-cli` | `bl text chat --model <deployed_model> --message "..."` |
+| 对已有训练任务 / 部署做查删（生命周期） | `bl` 直接 | `bl finetune list` / `bl deploy list` / `bl deploy delete --deployed-model <id>` |
+
+> 本 skill 只负责"新建训练任务 + 新建部署 + 调用交付"这一条闭环。训练任务与部署的**全生命周期管理**（list / stop / delete 历史任务、删除部署等）不在本 skill 流程内，用 `bl finetune list` / `bl deploy list` / `bl deploy delete` 直接操作。
+
+## 反幻觉清单
+
+- **`--model` 在不同命令里含义不同，切勿复用**：
+  - `bl finetune create --model` → 基座模型名（`qwen3-8b`）。
+  - `bl deploy create --model` → 导出模型名（链路 A：`qwen3-8b-ft-...`；链路 B：基座名 `qwen3-8b`）。
+  - `bl text chat --model` → 必须用 `deploy create` 响应里的 `deployed_model`（如 `qwen3-8b-95ea...`），**不是**你传给 deploy create 的名字。
+- **`--training-type` 取值穷举**：`sft` / `sft-lora`（默认）/ `dpo` / `dpo-lora` / `cpt`。映射在 CLI 边界完成（`sft-lora`→`efficient_sft`），永远传 CLI 值，不要传服务端字符串。`cpt` 无 `-lora` 变体。
+- **`--plan` 取值穷举**：`lora`（默认，token 计费）/ `ptu`（需 `--input-tpm`/`--output-tpm`）/ `mu`（需 `--template-id`/`--capacity`）。链路 B 基座通常**不支持 `lora`**。
+- **`--source` 取值穷举**（`bl deploy models`）：`custom`（微调输出）/ `base`（基座）/ `public`。
+- **`--learning-rate` 必须字符串**：传 `"3e-4"`，不要传数字 `3e-4`，避免 JSON 精度丢失。
+- **没有这些 flag/子命令**：`bl` 无 `--dry-run`、无 `deploy create create`、无 `finetune start`、无 `deploy stop`（CLI 暂无 stop 命令，RUNNING 的 mu/ptu 需到控制台停用）。
+- **必填**：`finetune create` 的 `--model` / `--datasets`；`deploy create` 的 `--model` / `--name`。
+
 ## 前置检查
 
 - 认证：`bl auth status`，确认已配置 API key（`DASHSCOPE_API_KEY` 或 `bl auth login --api-key sk-...`）。
@@ -90,6 +129,8 @@ bl finetune export --job-id <JOB_ID> --checkpoint <name> --model-name <自定义
 ```
 
 ## 第 5 步：创建部署
+
+> 创建前先过[写操作护栏](#写操作护栏创建前必读)：`bl deploy list --status RUNNING` 查是否已有同模型部署可复用；`bl deploy models --source custom|base` 确认可用 plan；`mu`/`ptu` 必须先取得用户计费确认。
 
 ⚠️ **关键避坑：微调后的模型不能直接用 `qwen3-8b-ft-...` 名字调用，会 404 `Model not exist`。必须先创建部署。**（链路 B 部署基座同理——直接 `bl text chat --model qwen3-8b` 走的是公共推理，不经过你的部署实例。）
 
