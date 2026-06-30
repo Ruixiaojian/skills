@@ -1,0 +1,26 @@
+{
+  "skill_name": "bailian-train-deploy",
+  "evals": [
+    {
+      "id": 0,
+      "name": "deploy-existing-finetuned",
+      "prompt": "我之前在百炼微调了一个模型，输出名是 qwen3-8b-ft-202606241852-a100，帮我部署成我自己的推理服务，并调用一次验证效果。",
+      "expected_output": "创建 lora 部署，等待 RUNNING，用响应里的 deployed_model（而非 qwen3-8b-ft-...）调用 text chat 成功",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "dataset-not-ready",
+      "prompt": "我想在百炼上微调一个模型，但数据集我还没准备好，你看怎么办？",
+      "expected_output": "给出数据来源的可选方案：本地文件 / 列出已上传数据集(bl dataset list) / 生成示例数据，并自然向用户确认，不擅自创建训练任务",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "linkb-base-deploy-plan",
+      "prompt": "我不想训练，直接把 qwen3-8b 部署成我自己的推理服务。先帮我看清楚可用方案再动手。",
+      "expected_output": "识别为链路B（用户明确跳过训练），查 bl deploy models --source base，指出基座不能用 lora、需 ptu/mu，给出带必填参数的命令；不盲目 --plan lora",
+      "files": []
+    }
+  ]
+}
