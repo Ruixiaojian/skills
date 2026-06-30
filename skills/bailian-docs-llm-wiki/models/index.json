@@ -1,15 +1,15 @@
 {
-  "updatedAt": "2026-06-23",
+  "updatedAt": "2026-06-30",
   "totalFamilies": 164,
   "totalModels": 370,
   "capabilityDistribution": {
-    "TG": 33,
+    "TG": 34,
     "IG": 29,
     "VG": 25,
     "TTS": 16,
     "Reasoning": 14,
     "ASR": 12,
-    "VU": 10,
+    "VU": 9,
     "Realtime-ASR": 7,
     "Multimodal-Omni": 5,
     "Realtime-Omni": 4,
@@ -39,11 +39,11 @@
     {
       "slug": "Kimi-K2",
       "name": "Kimi",
-      "primaryCapability": "VU",
+      "primaryCapability": "TG",
       "capabilities": [
+        "TG",
         "VU",
-        "Reasoning",
-        "TG"
+        "Reasoning"
       ],
       "providers": [
         "moonshot-ai"
@@ -2451,7 +2451,7 @@
     },
     {
       "slug": "vidu-models-market-place",
-      "name": "Vidu",
+      "name": "Vidu AI生视频",
       "primaryCapability": "VG",
       "capabilities": [
         "VG"

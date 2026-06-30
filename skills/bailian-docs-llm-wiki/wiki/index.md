@@ -22,14 +22,14 @@
 - [model data overview](guides/model-data-overview.md) — 2 篇源文档
 - [model deployment 1](guides/model-deployment-1.md) — 4 篇源文档
 - [model evaluation introduction](guides/model-evaluation-introduction.md) — 1 篇源文档
-- [model experience](guides/model-experience.md) — 3 篇源文档
+- [model experience](guides/model-experience.md) — 11 篇源文档
 - [model high speed inference](guides/model-high-speed-inference.md) — 1 篇源文档
-- [model inference](guides/model-inference.md) — 8 篇源文档
 - [model monitoring](guides/model-monitoring.md) — 2 篇源文档
 - [plug in](guides/plug-in.md) — 3 篇源文档
 - [prompt](guides/prompt.md) — 5 篇源文档
 - [release notes](guides/release-notes.md) — 2 篇源文档
 - [security and compliance](guides/security-and-compliance.md) — 12 篇源文档
+- [skill](guides/skill.md) — 1 篇源文档
 - [start using](guides/start-using.md) — 2 篇源文档
 - [support](guides/support.md) — 2 篇源文档
 - [test 1](guides/test-1.md) — 5 篇源文档
@@ -46,6 +46,7 @@
 - [frameworks](api/frameworks.md) — 3 篇源文档
 - [image generation](api/image-generation.md) — 25 篇源文档
 - [long term memory new](api/long-term-memory-new.md) — 1 篇源文档
+- [managed agents api](api/managed-agents-api.md) — 6 篇源文档
 - [model production](api/model-production.md) — 3 篇源文档
 - [more](api/more.md) — 3 篇源文档
 - [more about models](api/more-about-models.md) — 6 篇源文档
@@ -59,21 +60,21 @@
 
 ## 横切概念
 
-- [DashScope SDK](concepts/dashscope-sdk.md) — 关联 5 个主题
-- [OpenAI 兼容接口](concepts/openai-compatible.md) — 关联 5 个主题
-- [Token 与计费](concepts/token-billing.md) — 关联 5 个主题
-- [业务空间](concepts/workspace.md) — 关联 5 个主题
-- [异步任务调用](concepts/async-task.md) — 关联 4 个主题
-- [检索增强生成](concepts/rag.md) — 关联 5 个主题
-- [模型上下文协议](concepts/mcp.md) — 关联 4 个主题
-- [流式输出](concepts/streaming-output.md) — 关联 4 个主题
+- [函数调用](concepts/function-calling.md) — 关联 7 个主题
+- [地域与可用区](concepts/region.md) — 关联 6 个主题
+- [模型部署](concepts/model-deployment.md) — 关联 4 个主题
+- [流式输出](concepts/streaming-output.md) — 关联 5 个主题
+- [私网访问](concepts/vpc-private-access.md) — 关联 3 个主题
+- [评测](concepts/evaluation.md) — 关联 4 个主题
+- [软件开发工具包](concepts/sdk.md) — 关联 6 个主题
+- [限流与配额](concepts/rate-limiting.md) — 关联 5 个主题
 
 ## 对比分析
 
-- [多模态生成 API 对比：图像、视频与 3D](comparisons/generation-api-comparison.md) — 对比 3 个主题
-- [应用监控与模型监控对比](comparisons/monitoring-comparison.md) — 对比 2 个主题
-- [应用评估与模型评估对比](comparisons/evaluation-comparison.md) — 对比 2 个主题
-- [模型优化方式对比：微调、压缩与部署](comparisons/model-optimization-comparison.md) — 对比 3 个主题
-- [通用支持与应用支持对比](comparisons/support-comparison.md) — 对比 2 个主题
-- [通用用例与应用用例对比](comparisons/use-cases-comparison.md) — 对比 2 个主题
+- [图像、视频与3D生成对比](comparisons/generation-modalities-comparison.md) — 对比 3 个主题
+- [应用监控与模型监控对比](comparisons/monitoring-app-vs-model-comparison.md) — 对比 2 个主题
+- [应用评测与模型评测对比](comparisons/evaluation-app-vs-model-comparison.md) — 对比 2 个主题
+- [模型微调、压缩与部署对比](comparisons/model-customization-methods-comparison.md) — 对比 3 个主题
+- [知识库与数据连接对比](comparisons/data-sources-for-rag-comparison.md) — 对比 2 个主题
+- [记忆库与长期记忆对比](comparisons/memory-approaches-comparison.md) — 对比 2 个主题
 
