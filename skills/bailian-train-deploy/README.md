@@ -2,7 +2,7 @@
 
 > [中文版 / Chinese →](README.zh.md)
 
-End-to-end **train → deploy → call** skill for **Alibaba Cloud Model Studio (Bailian)** — drives the full closed loop with the Bailian CLI (`bl`): dataset validation/upload → SFT/DPO/CPT fine-tune → wait for training → export checkpoint → create inference deployment → wait for ready → hand off a callable example. Can also skip training and deploy a base model directly.
+End-to-end **train → deploy → call** skill for **Alibaba Cloud Model Studio (Bailian)** — drives the full closed loop with the Bailian CLI (`bl`): dataset validation/upload → SFT/DPO/CPT fine-tune (text) or CosyVoice TTS fine-tune (audio) or Wan2.7 image generation fine-tune → wait for training → export checkpoint → create inference deployment → wait for ready → hand off a callable example. Can also skip training and deploy a base model directly.
 
 ## What it does
 
@@ -10,11 +10,11 @@ Tell your agent "train a model" or "deploy my fine-tuned model on Bailian," and 
 
 1. **Pre-check** — verify auth (`bl auth status`) and query training capabilities (`bl finetune capability`) to pick a supported base model and training type
 2. **Prepare data** — local file, an already-uploaded dataset, or a generated sample; validate with `bl dataset validate` before submitting
-3. **Create the fine-tune job** — `bl finetune create` with the right `--training-type` (`sft-lora` / `sft` / `dpo` / `cpt`) and sensible hyperparameters
+3. **Create the fine-tune job** — `bl finetune create` with the right `--training-type` (`sft-lora` / `sft` / `dpo` / `cpt`) and sensible hyperparameters. Audio TTS uses `sft-lora` → `efficient_sft` with auto-injected audio hyperparams. Image generation also uses `sft-lora` with auto-injected Wan2.x hyperparams (max_steps, lora_rank, etc.)
 4. **Wait asynchronously** — poll training status via a Monitor script (non-blocking), exit on `SUCCEEDED` / `FAILED` / `CANCELED`
 5. **Deploy** — `bl deploy create` to turn the fine-tuned (or base) model into a dedicated inference instance
 6. **Wait for ready** — poll deployment status until `RUNNING`
-7. **Hand off** — a ready-to-run `bl text chat` example plus common ops commands
+7. **Hand off** — a ready-to-run example: `bl text chat` for text models, `bl speech synthesize --voice default` for audio TTS, async API + trigger word for image generation
 
 ## When to use
 
@@ -22,11 +22,15 @@ Tell your agent "train a model" or "deploy my fine-tuned model on Bailian," and 
 - "Fine-tune a model on my data and deploy it"
 - "Train an SFT/LoRA/DPO model on Bailian"
 - "Deploy my fine-tuned model so I can call it"
+- "Fine-tune a CosyVoice TTS model with my voice data"
+- "Fine-tune a Wan2.7 image generation model"
 
 **Implicit (describe a goal, the skill runs the loop):**
 - "Train a reasoning model on my customer Q&A"
 - "Continued-pretrain on my domain docs"
 - "I want my own deployed Qwen instance"
+- "Train a voice synthesis model using my own voice"
+- "Train a text-to-image model with my own pictures"
 
 **Direct base-model deployment (skip training):**
 - "Just deploy `qwen3-8b` as my own service"
@@ -49,6 +53,8 @@ Tell your agent "train a model" or "deploy my fine-tuned model on Bailian," and 
 
 - `bl` (bailian-cli) installed and authenticated (`bl auth status`, or `bl auth login --api-key sk-...`)
 - Recommended base for text reasoning: Qwen3 series (`qwen3-8b` / `qwen3-14b` / `qwen3.6-flash`)
+- Recommended base for audio TTS: `cosyvoice-v3-flash`
+- Recommended base for image generation: `wan2.7-image-pro` / `wan2.7-image`
 
 ## Example
 
@@ -75,16 +81,30 @@ It captures the right IDs at each step (`job_id` / `finetuned_output` → `deplo
 ```
 User request
   → Pre-check auth + training capability (listFoundationModels via API key)
-  → Prepare & validate dataset (.jsonl ChatML)
-  → finetune create (sft-lora default; map CLI value → server field)
+  → Modality dispatch: text → text.md | audio TTS → audio.md | image → image.md
+  → Prepare & validate dataset (text .jsonl / audio .zip / image .zip)
+  → finetune create (sft-lora default; CLI value → server field; audio/image hyperparams auto-injected)
   → Monitor wait.sh finetune <JOB_ID>   (30s poll, async)
   → Auto-export best checkpoint (usually skip manual export)
-  → deploy create (pick plan by model source: lora for ft, ptu/mu for base)
+  → deploy create (pick plan by model source + modality: text ft → lora/mu, audio TTS → mu, image → lora)
   → Monitor wait.sh deploy <DEPLOYED_MODEL>  (15s poll, async)
-  → text chat --model <DEPLOYED_MODEL> + ops commands
+  → Call: text → text chat | audio TTS → speech synthesize | image → async API + trigger word
 ```
 
-The skill encodes the full orchestration plus the gotchas (zsh `status` is read-only, `--model` means different things in `deploy create` vs `text chat`, state-propagation 404 right after `RUNNING`, idle-billing differences between `lora` / `mu` / `ptu`) so the agent doesn't have to rediscover them.
+The skill encodes the full orchestration plus the gotchas (zsh `status` is read-only, `--model` means different things in `deploy create` vs inference commands, state-propagation 404 right after `RUNNING`, idle-billing differences between `lora` / `mu` / `ptu`, audio TTS only supports `mu` plan, image generation only supports `lora` plan, image prompt requires trigger word) so the agent doesn't have to rediscover them.
+
+## Modality extension architecture
+
+The skill uses a **generic flow + per-modality reference file** layered design to avoid bloat as modalities grow:
+
+- `SKILL.md` — generic 7-step flow skeleton (shared across all modalities)
+- `references/text.md` — text model specifics (data format, hyperparams, inference command)
+- `references/audio.md` — audio TTS specifics (ZIP format, CosyVoice hyperparams, speech synthesize)
+- `references/image.md` — image generation specifics (ZIP format, Wan2.x hyperparams, async API + trigger word)
+- `references/finetune.md` — training-type mapping table (cross-modality)
+- `references/deploy.md` — plan/deploy-spec reference (cross-modality)
+
+Adding a new modality = one new `references/<modality>.md` file; the main flow skeleton stays unchanged.
 
 ## License
 

@@ -1,21 +1,27 @@
 ---
 name: bailian-train-deploy
-description: 用百炼 CLI (`bl`) 走完"数据→微调训练→导出→部署→调用"的完整闭环，或跳过训练直接部署基座模型。涵盖数据集校验/上传、创建 SFT/DPO/CPT 微调任务、等待训练、导出最佳 checkpoint、创建推理部署、等待就绪、给出调用示例。当用户提到在百炼 / DashScope / 阿里云模型工作室上"训练模型""微调""fine-tune""finetune""部署模型""模型上线""把微调模型跑起来/调用""训练一个推理模型""继续预训练""LoRA/SFT/DPO 训练"等，都应激活本技能——即使用户没明说"用 bl"，只要意图是百炼平台的训练或部署，就用本技能，不要自己拼凑命令。
+description: 用百炼 CLI (`bl`) 走完"数据→微调训练→导出→部署→调用"的完整闭环，或跳过训练直接部署基座模型。支持文本模型（SFT/DPO/CPT）、音频 TTS 模型（CosyVoice）和图像生成模型（Wan2.7）微调。涵盖数据集校验/上传、创建微调任务、等待训练、导出最佳 checkpoint、创建推理部署、等待就绪、给出调用示例。当用户提到在百炼 / DashScope / 阿里云模型工作室上"训练模型""微调""fine-tune""finetune""部署模型""模型上线""把微调模型跑起来/调用""训练一个推理模型""继续预训练""LoRA/SFT/DPO 训练""语音合成模型""TTS 微调""CosyVoice""声音克隆""图像生成微调""文生图""图生图""Wan2.7""图像模型训练"等，都应激活本技能——即使用户没明说"用 bl"，只要意图是百炼平台的训练或部署，就用本技能，不要自己拼凑命令。
 ---
 
 # 百炼模型训练→部署闭环 (`bl`)
 
-用百炼 CLI `bl` 把模型部署成可调用的专属推理服务——可以先微调再部署，也可以跳过训练直接部署基座。两条链路，两处"等待"用 Monitor 异步轮询，不阻塞主流程。
+用百炼 CLI `bl` 把模型部署成可调用的专属推理服务——可以先微调再部署，也可以跳过训练直接部署基座。支持文本、音频 TTS 和图像生成三种模态，两处"等待"用 Monitor 异步轮询，不阻塞主流程。
 
 ```
 链路 A（先训练后部署）：
-数据集 → finetune create → 等 SUCCEEDED → 导出模型(通常自动) → deploy create → 等 RUNNING → text chat 调用
+数据集 → finetune create → 等 SUCCEEDED → 导出模型(通常自动) → deploy create → 等 RUNNING → 调用
 
 链路 B（直接部署基座，跳过训练）：
-选基座 → deploy create → 等 RUNNING → text chat 调用
+选基座 → deploy create → 等 RUNNING → 调用
 ```
 
 链路 B 适用于"只想把某个基座跑成自己的部署服务"——和直接调用 API 在推理上没本质区别，但能拿到独立部署实例、可调速率/计费方式、纳入自己的运维。**仅当用户明确表示不训练 / 跳过训练 / 直接部署基座时才走这条**；用户只是没提训练细节时，默认按链路 A 引导，不要擅自跳过训练。
+
+**模态分发**：本技能的通用流程适用于所有模态，但数据格式、超参、推理命令因模态而异。确定用户意图后，按模态查阅对应参考文件：
+- **文本模型**（对话/推理）→ [`references/text.md`](references/text.md)
+- **音频 TTS 模型**（语音合成/CosyVoice）→ [`references/audio.md`](references/audio.md)
+- **图像生成模型**（文生图/图生图/Wan2.7）→ [`references/image.md`](references/image.md)
+- 未来新增模态 = 新增对应 reference 文件，本流程骨架不变
 
 > 本技能假设 `bl`（bailian-cli）已安装。命令/flag 细节以 `bl <cmd> --help` 为准；本技能聚焦**流程编排与避坑**。
 
@@ -40,7 +46,7 @@ description: 用百炼 CLI (`bl`) 走完"数据→微调训练→导出→部署
 | 已确定模型，只要调用方式 | `bailian-cli` | `bl text chat --model <model> --message "..."` |
 | 不知道选哪个基座 / 模型选型 | `bailian-model-recommend` | （让该 skill 按场景推荐）|
 | 纯查模型参数 / 价格 / 上下文窗口 | `bailian-docs-llm-wiki` | （查模型数据目录）|
-| 已有部署，只想生成调用示例 | `bailian-cli` | `bl text chat --model <deployed_model> --message "..."` |
+| 已有部署，只想生成调用示例 | `bailian-cli` | `bl text chat --model <deployed_model> --message "..."` 或 `bl speech synthesize --model <deployed_model> --voice default --text "..."` 或异步 API + 触发词（图像生成，见 [image.md](references/image.md#推理与调用)）|
 | 对已有训练任务 / 部署做查删（生命周期） | `bl` 直接 | `bl finetune list` / `bl deploy list` / `bl deploy delete --deployed-model <id>` |
 
 > 本 skill 只负责"新建训练任务 + 新建部署 + 调用交付"这一条闭环。训练任务与部署的**全生命周期管理**（list / stop / delete 历史任务、删除部署等）不在本 skill 流程内，用 `bl finetune list` / `bl deploy list` / `bl deploy delete` 直接操作。
@@ -48,23 +54,26 @@ description: 用百炼 CLI (`bl`) 走完"数据→微调训练→导出→部署
 ## 反幻觉清单
 
 - **`--model` 在不同命令里含义不同，切勿复用**：
-  - `bl finetune create --model` → 基座模型名（`qwen3-8b`）。
-  - `bl deploy create --model` → 导出模型名（链路 A：`qwen3-8b-ft-...`；链路 B：基座名 `qwen3-8b`）。
-  - `bl text chat --model` → 必须用 `deploy create` 响应里的 `deployed_model`（如 `qwen3-8b-95ea...`），**不是**你传给 deploy create 的名字。
-- **`--training-type` 取值穷举**：`sft` / `sft-lora`（默认）/ `dpo` / `dpo-lora` / `cpt`。映射在 CLI 边界完成（`sft-lora`→`efficient_sft`），永远传 CLI 值，不要传服务端字符串。`cpt` 无 `-lora` 变体。
-- **`--plan` 取值穷举**：`lora`（默认，token 计费）/ `ptu`（需 `--input-tpm`/`--output-tpm`）/ `mu`（需 `--template-id`/`--capacity`）。链路 B 基座通常**不支持 `lora`**。
+  - `bl finetune create --model` → 基座模型名（文本 `qwen3-8b`，音频 `cosyvoice-v3-flash`，图像 `wan2.7-image-pro`）。
+  - `bl deploy create --model` → 导出模型名（链路 A：`qwen3-8b-ft-...` / `cosyvoice-v3-flash-ft-...` / `wan2.7-image-pro-ft-...`；链路 B：基座名）。
+  - 推理命令 `--model` → 必须用 `deploy create` 响应里的 `deployed_model`，**不是**你传给 deploy create 的名字。
+- **`--training-type` 取值穷举**：`sft` / `sft-lora`（默认）/ `dpo` / `dpo-lora` / `cpt`。映射在 CLI 边界完成（`sft-lora`→`efficient_sft`），永远传 CLI 值，不要传服务端字符串。`cpt` 无 `-lora` 变体。音频 TTS 和图像生成都只用 `sft-lora`。
+- **`--plan` 取值穷举**：`lora`（默认，token 计费）/ `ptu`（需 `--input-tpm`/`--output-tpm`）/ `mu`（需 `--deploy-spec`/`--capacity`）。链路 B 基座通常**不支持 `lora`**。音频 TTS 微调模型**只支持 `mu`**。图像生成微调模型**只支持 `lora`**。
+- **`--deploy-spec`**（非 ~~template-id~~）：mu plan 的部署规格 flag。CLI 从 catalog 读取 `template_id`，在请求体中发送为 `deploy_spec`。
 - **`--source` 取值穷举**（`bl deploy models`）：`custom`（微调输出）/ `base`（基座）/ `public`。
-- **`--learning-rate` 必须字符串**：传 `"3e-4"`，不要传数字 `3e-4`，避免 JSON 精度丢失。
+- **`--learning-rate` 必须字符串**：传 `"3e-4"`，不要传数字 `3e-4`，避免 JSON 精度丢失（文本适用，音频/图像不需要传此参数）。
+- **推理命令因模态不同**：文本模型用 `bl text chat`，音频 TTS 用 `bl speech synthesize --voice default`，图像生成用异步 API + 触发词（详见 [`references/image.md`](references/image.md#推理与调用)）。
 - **没有这些 flag/子命令**：`bl` 无 `--dry-run`、无 `deploy create create`、无 `finetune start`、无 `deploy stop`（CLI 暂无 stop 命令，RUNNING 的 mu/ptu 需到控制台停用）。
 - **必填**：`finetune create` 的 `--model` / `--datasets`；`deploy create` 的 `--model` / `--name`。
 
 ## 前置检查（动作流起点）
 
 - 认证：`bl auth status`，确认已配置 API key（`DASHSCOPE_API_KEY` 或 `bl auth login --api-key sk-...`）。
-- 基座选型：文本推理推荐 Qwen3 系列（支持思维链），常见 `qwen3-8b` / `qwen3-14b` / `qwen3.6-flash`。查询训练能力用 `bl finetune capability`（查 listFoundationModels，走 API key、无需 console 登录）：
-  - `bl finetune capability --model qwen3-8b` —— 该模型支持哪些训练类型（返回 `supported: [sft, sft-lora, dpo, ...]`，其中 `cpt` 为 `false` 表示不支持继续预训练）。
+- 基座选型：查询训练能力用 `bl finetune capability`（查 listFoundationModels，走 API key、无需 console 登录）：
+  - `bl finetune capability --model <base>` —— 该模型支持哪些训练类型。
   - `bl finetune capability --training-type sft-lora` —— 反向查：哪些模型支持该训练类型（返回 `models` 列表，含中文名）。
   - 选定基座后可直接进入第 2 步；`bl finetune create` 提交前也会再用 listFoundationModels 校验，不支持会快速失败。
+  - 文本推理推荐 Qwen3 系列（`qwen3-8b` / `qwen3-14b` / `qwen3.6-flash`）；音频 TTS 用 `cosyvoice-v3-flash`；图像生成用 `wan2.7-image-pro` / `wan2.7-image`。
 
 ## 第 1 步：准备数据集
 
@@ -74,24 +83,29 @@ description: 用百炼 CLI (`bl`) 走完"数据→微调训练→导出→部署
 2. **已上传数据集** —— 从百炼上已有的数据集中选取（`bl dataset list`）。
 3. **生成示例数据** —— 征得用户同意后，由你生成一份小规模示例数据，仅用于跑通流程（效果有限，需如实告知用户）。
 
-数据为 `.jsonl` 格式（ChatML，每行一个 `{"messages":[...]}` 对象）。提交训练前用 `bl dataset validate --file <path>` 校验通过再继续。
+**数据格式因模态不同**，详见对应参考文件：
+- **文本模型**：`.jsonl` 文件（ChatML/DPO/CPT schema），详见 [`references/text.md`](references/text.md#数据格式)。
+- **音频 TTS**：`.zip` 包（内含 `data.jsonl` + `train/*.wav`），详见 [`references/audio.md`](references/audio.md#数据格式)。
+- **图像生成**：`.zip` 包（内含 `data.jsonl` + 图像文件平铺），详见 [`references/image.md`](references/image.md#数据格式)。
+
+提交训练前用 `bl dataset validate --file <path>` 校验通过再继续（CLI 自动探测 schema，也可 `--schema tts` / `--schema image` / `--schema chatml` 显式指定）。
 
 ## 第 2 步：创建微调任务
 
 ```bash
 bl finetune create \
-  --model qwen3-8b \
+  --model <base-model> \
   --datasets <path-or-file-id> \
   --training-type sft-lora \
-  --n-epochs 3 \
   --yes --output json
 ```
 
-**training-type 取值与映射、超参建议**详见 [`references/finetune.md`](references/finetune.md)。要点：
-- `--training-type` 默认 `sft-lora`（LoRA，便宜快，大多数场景）；可选 `sft`（全参）/ `dpo`(-lora) / `cpt`（继续预训练，无 lora 变体）。CLI 边界自动映射到服务端字段，永远传 CLI 值。
-- `--n-epochs` 默认 3；`--learning-rate` 必须**字符串**（如 `"1e-4"`）避免 JSON 精度丢失；`--batch-size` 一般不手动设。
+**training-type 取值与映射**详见 [`references/finetune.md`](references/finetune.md)。**模态特异性超参**见对应参考文件：
+- 文本模型：`--n-epochs` / `--learning-rate` 等，详见 [`references/text.md`](references/text.md#创建训练任务)。
+- 音频 TTS：`--training-type` 固定 `sft-lora`，超参由 CLI 自动注入，详见 [`references/audio.md`](references/audio.md#创建训练任务)。
+- 图像生成：`--training-type` 固定 `sft-lora`，超参由 CLI 自动注入，详见 [`references/image.md`](references/image.md#创建训练任务)。
 
-从响应记下：`output.job_id`、`output.finetuned_output`（输出模型名，形如 `qwen3-8b-ft-<ts>-<id>`）。
+从响应记下：`output.job_id`、`output.finetuned_output`（输出模型名，形如 `<base>-ft-<ts>-<id>`）。
 
 ## 第 3 步：等待训练完成（异步）
 
@@ -119,21 +133,27 @@ bl finetune export --job-id <JOB_ID> --checkpoint <name> --model-name <自定义
 
 > 创建前先过[写操作护栏](#写操作护栏创建前必读)：`bl deploy list --status RUNNING` 查是否已有同模型部署可复用；`bl deploy models --source custom|base` 确认可用 plan；`mu`/`ptu` 必须先取得用户计费确认。
 
-⚠️ **关键避坑：微调后的模型不能直接用 `qwen3-8b-ft-...` 名字调用，会 404 `Model not exist`。必须先创建部署。**（链路 B 部署基座同理——直接 `bl text chat --model qwen3-8b` 走的是公共推理，不经过你的部署实例。）
+⚠️ **关键避坑：微调后的模型不能直接用微调输出名调用，会 404 `Model not exist`。必须先创建部署。**（链路 B 部署基座同理——直接调用走的是公共推理，不经过你的部署实例。）
 
 ```bash
 bl deploy create \
-  --model <model-name> \              # 微调输出名(链路A，如 qwen3-8b-ft-...) 或基座名(链路B，如 qwen3-8b)
+  --model <model-name> \              # 微调输出名(链路A) 或基座名(链路B)
   --name <display-name> \
-  --plan <lora|ptu|mu> \              # 链路A 可用 lora；链路B 通常只能 ptu/mu，见下方说明
+  --plan <lora|ptu|mu> \              # 见下方说明
   --yes --output json
 ```
 
-- `--model`：链路 A 传第 2 步的 `finetuned_output`；链路 B 直接传基座模型名（如 `qwen3-8b`）。
-- `--plan`：链路 A 默认 `lora`（token 计费）；链路 B 通常只支持 `ptu`/`mu`，**不支持 `lora`**。各 plan 必填参数与计费细则见 [`references/deploy.md`](references/deploy.md)。
+- `--model`：链路 A 传第 2 步的 `finetuned_output`；链路 B 直接传基座模型名。
+- `--plan`：
+  - 文本微调模型默认 `lora`（token 计费），也可用 `mu`。
+  - **音频 TTS 微调模型只支持 `mu`**（不支持 `lora` / `ptu`），需 `--deploy-spec` + `--capacity`。
+  - **图像生成微调模型只支持 `lora`**（不支持 `mu` / `ptu`）。
+  - 链路 B 基座通常只支持 `ptu`/`mu`，**不支持 `lora`**。
+  - 各 plan 必填参数与计费细则见 [`references/deploy.md`](references/deploy.md)。
+- `--deploy-spec`：mu plan 的部署规格（如 `dps-20260521172224-1vabse`），省略时自动从 catalog 匹配。
 - 不确定支持哪些 plan：链路 A 用 `bl deploy models --source custom`，链路 B 用 `bl deploy models --source base`，按返回的 `plans` 选。
 
-⚠️ **避坑（最高频错误）：`--model` 在 `deploy create` 与 `text chat` 里含义不同**——`deploy create --model` 传导出模型名，响应返回的 `output.deployed_model` 才是部署实例 id，`text chat --model` 必须用 `deployed_model`，**不要复用**。详见 [`references/deploy.md`](references/deploy.md)。
+⚠️ **避坑（最高频错误）：`--model` 在 `deploy create` 与推理命令里含义不同**——`deploy create --model` 传导出模型名，响应返回的 `output.deployed_model` 才是部署实例 id，推理命令 `--model` 必须用 `deployed_model`，**不要复用**。详见 [`references/deploy.md`](references/deploy.md)。
 
 从响应记下：`output.deployed_model`。
 
@@ -149,13 +169,28 @@ Monitor command: bash <本技能目录>/scripts/wait.sh deploy <DEPLOYED_MODEL>
 
 ## 第 7 步：调用与交付
 
+**推理命令因模态不同**：
+
+文本模型：
 ```bash
 bl text chat --model <DEPLOYED_MODEL> --message "你的问题"
 ```
 
+音频 TTS 模型：
+```bash
+bl speech synthesize --model <DEPLOYED_MODEL> --voice default --text "你要合成的文本" --out result.mp3
+```
+
+图像生成模型（异步 API，需触发词）：
+```bash
+# 详见 references/image.md —— 需 X-DashScope-Async 头 + prompt 含触发词
+```
+
+> `--model` 必须用 `deploy create` 响应中的 `deployed_model`，**不是**微调输出名。音频 TTS 的 `--voice` 固定为 `default`。图像生成需异步调用且 prompt 包含触发词。详见对应模态参考文件。
+
 向用户交付时给出：
-- **部署实例 id**（`deployed_model`）——调用用它，不是 `qwen3-8b-ft-...`
-- 一条可直接运行的 `bl text chat` 示例（建议带一个推理类问题演示效果）
+- **部署实例 id**（`deployed_model`）——调用用它，不是微调输出名
+- 一条可直接运行的推理示例命令
 - 常用运维命令：`bl deploy get --deployed-model <id>` 查状态；`bl deploy delete --deployed-model <id>` 删除部署；`bl finetune list` 查历史任务。
 
 ## 收尾提示
