@@ -54,25 +54,23 @@ bl dataset validate --file <zip-path> --schema image  # 显式指定
 ## 创建训练任务
 
 ```bash
-bl finetune create \
+bl finetune image create \
   --model wan2.7-image-pro \
   --datasets <zip-path-or-file-id> \
-  --training-type sft-lora \
   --yes --output json
 ```
 
 I2I（图生图）模式**自动检测**——只要 JSONL 中有 `input_img` 字段，CLI 自动识别为 I2I 并调整超参（`max_pixels`/`val_img_size` 从 "2k" 切换为 "1k"），无需额外 flag：
 
 ```bash
-bl finetune create \
+bl finetune image create \
   --model wan2.7-image-pro \
   --datasets <i2i-zip-path-or-file-id> \
-  --training-type sft-lora \
   --yes --output json
 ```
 
 要点：
-- `--training-type` 固定 `sft-lora`（CLI 映射到 `efficient_sft`），图像不支持全参 sft / dpo / cpt
+- 图像微调固定用 `sft-lora`（映射到 `efficient_sft`）——`finetune image create` **不暴露 `--training-type`**，无需也不能传；不支持全参 sft / dpo / cpt
 - **无需手动传超参**——12 个图像专有超参由 CLI 自动注入默认值
 - T2I/I2I 由数据内容自动推断（首行有 `input_img` → I2I，否则 T2I），`max_pixels`/`val_img_size` 随之自动调整
 - `--n-epochs` / `--batch-size` 等文本超参对图像无效，不要传
@@ -87,7 +85,7 @@ bl finetune create \
 ## 部署
 
 ```bash
-bl deploy create \
+bl deploy image create \
   --model <finetuned_output> \
   --name <display-name> \
   --plan lora \
@@ -123,7 +121,7 @@ curl -X POST 'https://dashscope.aliyuncs.com/api/v1/services/aigc/image-generati
 ```
 
 要点：
-- `model` 必须用 `deploy create` 响应中的 `deployed_model`，**不是** `finetuned_output`
+- `model` 必须用 `deploy image create` 响应中的 `deployed_model`，**不是** `finetuned_output`
 - 请求头必须带 `X-DashScope-Async: enable`（异步模式）
 - `prompt` 中**必须包含触发词**（训练完成后平台会告知，形如 `s86b5p`）
 - 返回 `task_id`，通过轮询获取结果

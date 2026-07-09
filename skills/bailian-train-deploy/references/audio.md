@@ -50,15 +50,14 @@ pip install edge-tts
 ## 创建训练任务
 
 ```bash
-bl finetune create \
+bl finetune audio create \
   --model cosyvoice-v3-flash \
   --datasets <zip-path-or-file-id> \
-  --training-type sft-lora \
   --yes --output json
 ```
 
 要点：
-- `--training-type` 固定 `sft-lora`（CLI 映射到 `efficient_sft`），音频不支持全参 sft / dpo / cpt
+- 音频微调固定用 `sft-lora`（映射到 `efficient_sft`）——`finetune audio create` **不暴露 `--training-type`**，无需也不能传；不支持全参 sft / dpo / cpt
 - **无需手动传超参**——8 个音频专有超参（lm_max_epoch、fm_max_epoch 等）由 CLI 自动注入默认值
 - `--n-epochs` / `--learning-rate` / `--batch-size` 等文本超参对音频无效，不要传
 - capability 检查可能显示 `supports.sft=false`，这是已知矛盾（API 元数据与实际行为不一致），CLI 已自动跳过
@@ -72,7 +71,7 @@ bl finetune create \
 ## 部署
 
 ```bash
-bl deploy create \
+bl deploy audio create \
   --model <finetuned_output> \
   --name <display-name> \
   --plan mu \
@@ -100,7 +99,7 @@ bl speech synthesize \
 ```
 
 要点：
-- `--model` 必须用 `deploy create` 响应中的 `deployed_model`（如 `cosyvoice-v3-flash-9d4f3eeb27ca`），**不是** `finetuned_output`
+- `--model` 必须用 `deploy audio create` 响应中的 `deployed_model`（如 `cosyvoice-v3-flash-9d4f3eeb27ca`），**不是** `finetuned_output`
 - `--voice` 必须为 `default`（微调模型只有这一个 voice）
 - 输出为音频文件（mp3/wav/pcm/opus），用 `--format` 指定
 - 推理秒级返回

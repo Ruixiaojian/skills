@@ -34,7 +34,7 @@ bl dataset validate --file <jsonl-path> --schema dpo  # 显式指定
 ## 创建训练任务
 
 ```bash
-bl finetune create \
+bl finetune text create \
   --model qwen3-8b \
   --datasets <path-or-file-id> \
   --training-type sft-lora \
@@ -60,7 +60,7 @@ bl finetune create \
 ## 部署
 
 ```bash
-bl deploy create \
+bl deploy text create \
   --model <finetuned_output> \
   --name <display-name> \
   --plan lora \
@@ -77,5 +77,5 @@ bl deploy create \
 bl text chat --model <DEPLOYED_MODEL> --message "你的问题"
 ```
 
-- `--model` 必须用 `deploy create` 响应中的 `deployed_model`，**不是** `finetuned_output`
+- `--model` 必须用 `deploy text create` 响应中的 `deployed_model`，**不是** `finetuned_output`
 - 建议带一个推理类问题演示效果

@@ -14,7 +14,7 @@ CLI 用 `<method>` / `<method>-lora` 约定，提交时在 CLI 边界映射到�
 | `cpt` | 继续预训练 | 文本 | 注入领域知识，需非对话格式数据 |
 
 > `cpt` 服务端没有 `-lora` 变体，只有全参；其余方法（sft / dpo）均有 `<method>` 与 `<method>-lora` 两个变体。
-> 音频 TTS 和图像生成都只用 `sft-lora`（映射到 `efficient_sft`），不支持其他 training-type。
+> 音频 TTS 和图像生成都只用 `sft-lora`（映射到 `efficient_sft`），不支持其他 training-type；且 `finetune audio create` / `finetune image create` **不暴露 `--training-type` flag**（内部固定 sft-lora），该 flag 仅 `finetune text create` 接受。
 
 ## 超参建议
 
@@ -46,6 +46,6 @@ CLI 用 `<method>` / `<method>-lora` 约定，提交时在 CLI 边界映射到�
 
 ## 提交前校验
 
-`bl finetune create` 提交前会用 listFoundationModels 校验模型是否支持所选 training-type，不支持会快速失败（不耗配额）。若训练集样本数 ≤ batch_size，会在上传/耗配额前被拒。可用 `bl finetune capability --model <base>` 提前确认。
+`bl finetune <模态> create` 提交前会用 listFoundationModels 校验模型是否支持所选 training-type，不支持会快速失败（不耗配额）。若训练集样本数 ≤ batch_size，会在上传/耗配额前被拒。可用 `bl finetune capability --model <base>` 提前确认。
 
 > **已知矛盾**：cosyvoice-v3-flash 和 wan2.7 系列的 capability 返回 `supports.sft=false`，但 API 实际接受 `efficient_sft` 训练请求。CLI 已对音频和图像模态自动跳过此检查。

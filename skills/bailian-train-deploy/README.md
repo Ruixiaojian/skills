@@ -10,9 +10,9 @@ Tell your agent "train a model" or "deploy my fine-tuned model on Bailian," and 
 
 1. **Pre-check** — verify auth (`bl auth status`) and query training capabilities (`bl finetune capability`) to pick a supported base model and training type
 2. **Prepare data** — local file, an already-uploaded dataset, or a generated sample; validate with `bl dataset validate` before submitting
-3. **Create the fine-tune job** — `bl finetune create` with the right `--training-type` (`sft-lora` / `sft` / `dpo` / `cpt`) and sensible hyperparameters. Audio TTS uses `sft-lora` → `efficient_sft` with auto-injected audio hyperparams. Image generation also uses `sft-lora` with auto-injected Wan2.x hyperparams (max_steps, lora_rank, etc.)
+3. **Create the fine-tune job** — `bl finetune <modality> create` with the right `--training-type` (`sft-lora` / `sft` / `dpo` / `cpt`) and sensible hyperparameters. Audio TTS uses `sft-lora` → `efficient_sft` with auto-injected audio hyperparams. Image generation also uses `sft-lora` with auto-injected Wan2.x hyperparams (max_steps, lora_rank, etc.)
 4. **Wait asynchronously** — poll training status via a Monitor script (non-blocking), exit on `SUCCEEDED` / `FAILED` / `CANCELED`
-5. **Deploy** — `bl deploy create` to turn the fine-tuned (or base) model into a dedicated inference instance
+5. **Deploy** — `bl deploy <modality> create` to turn the fine-tuned (or base) model into a dedicated inference instance
 6. **Wait for ready** — poll deployment status until `RUNNING`
 7. **Hand off** — a ready-to-run example: `bl text chat` for text models, `bl speech synthesize --voice default` for audio TTS, async API + trigger word for image generation
 
@@ -43,7 +43,7 @@ Tell your agent "train a model" or "deploy my fine-tuned model on Bailian," and 
 
 ## Safety guardrails
 
-`bl finetune create` and `bl deploy create` are real write operations that create billable resources. `bl` has **no `--dry-run`**, so the skill substitutes real pre-checks + a billing gate:
+`bl finetune <modality> create` and `bl deploy <modality> create` are real write operations that create billable resources. `bl` has **no `--dry-run`**, so the skill substitutes real pre-checks + a billing gate:
 
 1. **Pre-checks instead of dry-run** — `bl finetune capability --model <base>` (training support), `bl deploy models --source custom|base` (deployable + available plans), `bl deploy list --status RUNNING` (reuse an existing deployment of the same model instead of creating a second billable instance).
 2. **Billing gate on `mu`/`ptu`** — `lora` (token-billed, idle usually free) is the safe default; `mu`/`ptu` are reserved resources that bill even when idle, so the skill **asks the user for explicit confirmation before creating them** and never auto-approves reserved resources with `--yes` in non-interactive (agent/CI) contexts.
@@ -68,10 +68,10 @@ The skill walks the two-link pipeline, polling at the two wait points via Monito
 
 ```
 Link A (train then deploy):
-dataset → finetune create → wait SUCCEEDED → (auto-export) → deploy create → wait RUNNING → text chat
+dataset → finetune <modality> create → wait SUCCEEDED → (auto-export) → deploy <modality> create → wait RUNNING → text chat
 
 Link B (deploy base, skip training):
-base model → deploy create → wait RUNNING → text chat
+base model → deploy <modality> create → wait RUNNING → text chat
 ```
 
 It captures the right IDs at each step (`job_id` / `finetuned_output` → `deployed_model`) and steers around the common pitfalls (e.g. calling the fine-tuned model by its `qwen3-8b-ft-...` name returns 404 — you must deploy first and call the `deployed_model` instance id).
@@ -83,15 +83,15 @@ User request
   → Pre-check auth + training capability (listFoundationModels via API key)
   → Modality dispatch: text → text.md | audio TTS → audio.md | image → image.md
   → Prepare & validate dataset (text .jsonl / audio .zip / image .zip)
-  → finetune create (sft-lora default; CLI value → server field; audio/image hyperparams auto-injected)
+  → finetune <modality> create (sft-lora default; CLI value → server field; audio/image hyperparams auto-injected)
   → Monitor wait.sh finetune <JOB_ID>   (30s poll, async)
   → Auto-export best checkpoint (usually skip manual export)
-  → deploy create (pick plan by model source + modality: text ft → lora/mu, audio TTS → mu, image → lora)
+  → deploy <modality> create (pick plan by model source + modality: text ft → lora/mu, audio TTS → mu, image → lora)
   → Monitor wait.sh deploy <DEPLOYED_MODEL>  (15s poll, async)
   → Call: text → text chat | audio TTS → speech synthesize | image → async API + trigger word
 ```
 
-The skill encodes the full orchestration plus the gotchas (zsh `status` is read-only, `--model` means different things in `deploy create` vs inference commands, state-propagation 404 right after `RUNNING`, idle-billing differences between `lora` / `mu` / `ptu`, audio TTS only supports `mu` plan, image generation only supports `lora` plan, image prompt requires trigger word) so the agent doesn't have to rediscover them.
+The skill encodes the full orchestration plus the gotchas (zsh `status` is read-only, `--model` means different things in `deploy <modality> create` vs inference commands, state-propagation 404 right after `RUNNING`, idle-billing differences between `lora` / `mu` / `ptu`, audio TTS only supports `mu` plan, image generation only supports `lora` plan, image prompt requires trigger word) so the agent doesn't have to rediscover them.
 
 ## Modality extension architecture
 

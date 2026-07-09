@@ -10,9 +10,9 @@
 
 1. **前置检查** —— 验证认证（`bl auth status`）、查询训练能力（`bl finetune capability`），选定支持的基座与训练类型
 2. **准备数据** —— 本地文件、已上传数据集或生成示例数据；提交前用 `bl dataset validate` 校验通过
-3. **创建微调任务** —— `bl finetune create`，选对 `--training-type`（`sft-lora` / `sft` / `dpo` / `cpt`）与合理超参
+3. **创建微调任务** —— `bl finetune <模态> create`，选对 `--training-type`（`sft-lora` / `sft` / `dpo` / `cpt`）与合理超参
 4. **异步等待** —— 用 Monitor 脚本轮询训练状态（不阻塞），到 `SUCCEEDED` / `FAILED` / `CANCELED` 终态退出
-5. **创建部署** —— `bl deploy create`，把微调（或基座）模型变成专属推理实例
+5. **创建部署** —— `bl deploy <模态> create`，把微调（或基座）模型变成专属推理实例
 6. **等待就绪** —— 轮询部署状态直到 `RUNNING`
 7. **交付调用** —— 给出可直接运行的推理示例：文本模型用 `bl text chat`，音频 TTS 用 `bl speech synthesize --voice default`，图像生成用异步 API + 触发词，加常用运维命令
 
@@ -47,7 +47,7 @@
 
 ## 安全护栏
 
-`bl finetune create` 与 `bl deploy create` 都是真实写操作，会产生计费资源。`bl` **没有 `--dry-run`**，所以用真实预检 + 计费闸门代替：
+`bl finetune <模态> create` 与 `bl deploy <模态> create` 都是真实写操作，会产生计费资源。`bl` **没有 `--dry-run`**，所以用真实预检 + 计费闸门代替：
 
 1. **预检代替 dry-run** —— `bl finetune capability --model <base>`（训练支持）、`bl deploy models --source custom|base`（可部署 + 可用 plan）、`bl deploy list --status RUNNING`（复用已有同模型部署，不再建第二个计费实例）。
 2. **mu/ptu 计费闸门** —— `lora`（token 计费，闲置一般免费）是安全默认；`mu`/`ptu` 是预留资源、闲置也计费，创建前**必须取得用户显式确认**，在 agent/CI 等非交互环境**不用 `--yes` 替用户放行**。
@@ -65,10 +65,10 @@ Skill 会走两段链路，在两处「等待」用 Monitor 异步轮询：
 
 ```
 链路 A（先训练后部署）：
-数据集 → finetune create → 等 SUCCEEDED → (自动导出) → deploy create → 等 RUNNING → text chat
+数据集 → finetune <模态> create → 等 SUCCEEDED → (自动导出) → deploy <模态> create → 等 RUNNING → text chat
 
 链路 B（直接部署基座，跳过训练）：
-基座 → deploy create → 等 RUNNING → text chat
+基座 → deploy <模态> create → 等 RUNNING → text chat
 ```
 
 每一步捕获正确的 id（`job_id` / `finetuned_output` → `deployed_model`），并绕开常见坑（例如直接用 `qwen3-8b-ft-...` 名字调用会 404 —— 必须先部署，再用响应里的 `deployed_model` 实例 id 调用）。
@@ -87,15 +87,15 @@ Skill 会走两段链路，在两处「等待」用 Monitor 异步轮询：
   → 前置检查：认证 + 训练能力（listFoundationModels，走 API key）
   → 模态分发：文本 → text.md | 音频 TTS → audio.md | 图像生成 → image.md
   → 准备并校验数据集（文本 .jsonl / 音频 .zip / 图像 .zip）
-  → finetune create（默认 sft-lora；CLI 值映射到服务端字段；音频/图像超参自动注入）
+  → finetune <模态> create（默认 sft-lora；CLI 值映射到服务端字段；音频/图像超参自动注入）
   → Monitor wait.sh finetune <JOB_ID>  （30s 轮询，异步）
   → 自动导出 best checkpoint（通常跳过手动导出）
-  → deploy create（按模型来源和模态选 plan：文本微调用 lora/mu，音频 TTS 只支持 mu，图像生成只支持 lora）
+  → deploy <模态> create（按模型来源和模态选 plan：文本微调用 lora/mu，音频 TTS 只支持 mu，图像生成只支持 lora）
   → Monitor wait.sh deploy <DEPLOYED_MODEL> （15s 轮询，异步）
   → 调用：文本 → text chat | 音频 TTS → speech synthesize | 图像生成 → 异步 API + 触发词
 ```
 
-Skill 把完整编排和高频避坑点都固化进去（zsh 的 `status` 是只读变量、`--model` 在 `deploy create` 与推理命令里含义不同、刚到 `RUNNING` 时状态传播延迟导致 404、`lora` / `mu` / `ptu` 闲置计费差异、音频 TTS 只支持 mu plan、图像生成只支持 lora plan、图像推理需异步调用 + 触发词），让 Agent 不必重新踩坑。
+Skill 把完整编排和高频避坑点都固化进去（zsh 的 `status` 是只读变量、`--model` 在 `deploy <模态> create` 与推理命令里含义不同、刚到 `RUNNING` 时状态传播延迟导致 404、`lora` / `mu` / `ptu` 闲置计费差异、音频 TTS 只支持 mu plan、图像生成只支持 lora plan、图像推理需异步调用 + 触发词），让 Agent 不必重新踩坑。
 
 ## 模态扩展架构
 

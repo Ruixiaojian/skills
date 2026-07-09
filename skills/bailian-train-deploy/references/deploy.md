@@ -33,9 +33,9 @@
 
 ## --model 在不同命令里含义不同（最高频错误，切勿混用）
 
-- `bl deploy create --model` 传的是**导出模型名**（`qwen3-8b-ft-...`，链路 A 来自第 2 步 `finetuned_output`；链路 B 直接传基座名 `qwen3-8b`）。
+- `bl deploy <模态> create --model` 传的是**导出模型名**（`qwen3-8b-ft-...`，链路 A 来自第 2 步 `finetuned_output`；链路 B 直接传基座名 `qwen3-8b`）。
 - 响应里返回的 `output.deployed_model`（如 `qwen3-8b-b98a331831a7`）才是**部署实例 id**。
-- 下一步推理（`bl text chat` / `bl speech synthesize` / 异步 API）`--model` 必须用响应里的 `deployed_model`，**不是**你传给 `deploy create` 的名字。两个 `--model` 指向不同值，不要复用。
+- 下一步推理（`bl text chat` / `bl speech synthesize` / 异步 API）`--model` 必须用响应里的 `deployed_model`，**不是**你传给 `deploy <模态> create` 的名字。两个 `--model` 指向不同值，不要复用。
 
 ## 计费与运维细则
 
@@ -43,7 +43,7 @@
 - **删除约束**：`bl deploy delete` 只能删 `STOPPED` / `FAILED` 状态的部署；CLI 暂无 `stop` 命令——`RUNNING` 状态的 mu/ptu 需先到百炼控制台停用，再删；或用 `bl deploy delete --deployed-model <id> --skip-precheck` 尝试（跳过本地前置检查，但服务端仍可能拒绝 RUNNING 删除）。
 - **状态传播延迟**：部署刚到 `RUNNING` 时立即调用可能短暂 404 `Model not exist`，是服务端状态传播延迟，约 1 分钟内稳定，遇 404 等十几秒重试；若持续 404，先核对用的是 `deployed_model` 而非微调输出名。
 
-## 必填 flag（`bl deploy create`）
+## 必填 flag（`bl deploy <模态> create`）
 
 - `--model`：导出模型名（见上方歧义说明）。
 - `--name`：控制台显示名。
