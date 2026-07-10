@@ -1,71 +1,83 @@
-# API Key
+# API Key 鉴权
 
-API Key 是调用阿里云百炼平台所有模型与应用服务的唯一鉴权凭证，由百炼控制台创建和管理，用于在 HTTP 请求或 SDK 调用中标识调用方身份并验证权限。
+API Key 是调用阿里云百炼平台模型服务和应用 API 的唯一鉴权凭证，通过 HTTP 请求头 `Authorization: Bearer <API-Key>` 传递，平台据此识别调用者身份并执行权限控制。
 
-## 创建与获取
+## 在百炼平台的使用场景
 
-在百炼控制台的密钥管理页面创建 API Key，操作要求具备主账号权限，或子账号拥有"管理员"或"API-Key"页面权限。创建时需选择归属的[业务空间](workspace.md)（建议选默认空间），并可配置 IP 白名单和模型访问范围。
+### 模型调用
 
-自 2026 年 3 月 25 日起，华北2（北京）地域新创建的 API Key 均归属主账号，前缀为 `sk-ws`。API Key 仅在创建时展示一次明文，关闭弹窗后无法再次查看，请立即复制保存。
+所有模型 API（文本生成、图像生成、语音合成等）统一使用 API Key 鉴权。同一[业务空间](workspace.md)内的 API Key 权限相同，无需为不同模型类型分别创建。调用时将 API Key 配置为环境变量 `DASHSCOPE_API_KEY`，SDK 会自动读取。
 
-不同地域的控制台入口不同，且各地域（北京、新加坡、弗吉尼亚、法兰克福、东京）的 API Key 不互通，使用时须确保地域匹配。
+### 应用调用
 
-## 权限机制
+通过 Responses API 或 DashScope API 调用智能体和工作流应用时，同样需要 API Key 鉴权。子[业务空间](workspace.md)下的应用调用还需额外提供 Workspace ID。
 
-API Key 的调用权限由其归属的[业务空间](workspace.md)决定：
+### 知识检索与问答
 
-- **默认[业务空间](workspace.md)**的 API Key 可调用所有标准模型，无法设置模型级限制。
-- **子业务空间**的 API Key 仅可调用该空间已授权的模型，支持按模型调用、模型训练、模型部署三个维度做精细化授权，并支持请求数限流和 [Token](token.md) 限流。
-- 同一业务空间内的 API Key 权限相同，无需为不同模型类型（文生文、文生图、语音合成）分别创建。
-- 单个 API Key 只能归属一个地域内的一个业务空间和一个用户，且不能转移。
+知识检索和知识问答接口使用[业务空间](workspace.md) ID 拼接的专属 Base URL，配合 API Key Bearer 鉴权。
 
-## 环境变量配置
+### [Token](token.md) Plan / Coding Plan
 
-建议将 API Key 配置到环境变量 `DASHSCOPE_API_KEY`，避免在代码中硬编码造成泄露风险。SDK（DashScope SDK 和 OpenAI 兼容 SDK）会自动读取该变量。
+订阅型套餐使用专属 API Key（以 `sk-sp-` 开头）和专属 Base URL，与按量计费的普通 API Key 互不相通。
 
-- **Linux/macOS**：在 `~/.bashrc` 或 `~/.zshrc` 中追加 `export DASHSCOPE_API_KEY="your-key"`，然后 `source` 生效。
-- **Windows**：通过系统属性设置系统变量，或使用 `setx` / `[Environment]::SetEnvironmentVariable` 命令。
+## 关键参数与配置
 
-设置后需重启 IDE 或终端以加载新变量。使用 `sudo` 运行脚本时需加 `-E` 参数继承用户环境变量。
+### API Key 类型
 
-## 临时 API Key
+| 类型 | 前缀 | Base URL | 适用场景 |
+|------|------|----------|----------|
+| 普通 API Key | `sk-ws` | `dashscope.aliyuncs.com` | 按量计费模型调用 |
+| [Token](token.md) Plan 专属 | `sk-sp-` | `token-plan.cn-beijing.maas.aliyuncs.com` | [Token](token.md) Plan 团队版 |
+| Coding Plan 专属 | `sk-sp-` | `coding.dashscope.aliyuncs.com` | Coding Plan 个人开发 |
+| 临时 API Key | `st-` | 同永久 Key | 浏览器/移动端等不可信环境 |
 
-在浏览器、移动 App 等不可信环境中，应通过后端服务生成临时 API Key，避免永久 Key 泄露。
+### 创建与权限
 
-- 有效期默认 60 秒，可通过 `expire_in_seconds` 参数设置，范围 1 至 1800 秒。
-- 临时 Key 继承生成它的永久 Key 的全部权限，无法进一步收窄。
-- 到期后自动失效，不能提前删除。
-- 生成的临时 Key 前缀为 `st-`。
+- 在百炼控制台 API Key 管理页面创建，需主账号或具备相应权限的子账号操作。
+- 每个主账号每个地域最多 50 个 API Key（美国地域为 20 个）。
+- API Key 归属于特定业务空间，调用权限由该空间的模型授权决定。
+- 支持配置 IP 访问白名单和模型范围限制。
+- 创建后仅展示一次明文，关闭弹窗后无法再次查看。
 
-请求示例：
+### 临时 API Key
+
+在不可信环境中，通过后端服务生成临时 API Key 避免永久凭证泄露：
 
 ```
-curl -X POST "https://dashscope.aliyuncs.com/api/v1/tokens?expire_in_seconds=1800" \
--H "Authorization: Bearer $DASHSCOPE_API_KEY"
+POST https://dashscope.aliyuncs.com/api/v1/tokens?expire_in_seconds=1800
 ```
 
-## [Token](token.md) Plan 专属 API Key
+- `expire_in_seconds`：有效期范围 [1, 1800] 秒，默认 60 秒。
+- 临时 Key 继承永久 Key 的全部权限，到期自动失效，无法手动删除。
+- 各地域的 API Key 不互通，需使用对应地域的 Endpoint。
 
-[Token](token.md) Plan 团队版使用独立的 API Key（前缀 `sk-sp-`），与百炼通用 API Key（前缀 `sk-`）体系完全隔离，配合专属 Base URL 使用。两类 Key 不可混用，MCP 服务仍需使用百炼通用 API Key。
+### 环境变量配置
 
-## 有效性与安全注意事项
+推荐将 API Key 配置到环境变量，避免硬编码泄露：
 
-- API Key 没有自动失效日期，手动删除后即永久失效。
-- 将 RAM 账号移出业务空间会使其 API Key 失效，重新加入后可恢复。
-- 在 RAM 控制台删除账号或角色会导致 API Key 永久失效、不可恢复。
-- 生产环境建议按环境（dev/test/prod）划分业务空间，对 API Key 做隔离管理。
+```bash
+# Linux/macOS
+export DASHSCOPE_API_KEY="sk-xxx"
+
+# 写入 shell 配置文件永久生效
+echo 'export DASHSCOPE_API_KEY="sk-xxx"' >> ~/.bashrc
+```
+
+## 安全注意事项
+
+- 不要在客户端代码中硬编码 API Key，使用环境变量或密钥管理服务。
+- 浏览器/移动端场景务必使用临时 API Key。
+- 将 RAM 账号移出业务空间会使其 API Key 失效（重新加入后恢复）；在 RAM 控制台删除账号则 API Key 永久失效。
+- 三类 API Key 与 Base URL 互不相通，误用会导致按量扣费或鉴权失败（401/403）。
 
 ## 关联主题页
 
 - [preparations](../api/preparations.md)
-- [qwen api reference](../api/qwen-api-reference.md)
 - [application call](../api/application-call.md)
-- [frameworks](../api/frameworks.md)
 - [more](../api/more.md)
 - [more about models](../api/more-about-models.md)
 - [token plan guide](../guides/token-plan-guide.md)
-- [managed agents api](../api/managed-agents-api.md)
 - [security and compliance](../guides/security-and-compliance.md)
-- [bailian application calling](../guides/bailian-application-calling.md)
+- [knowledge](../api/knowledge.md)
 
 

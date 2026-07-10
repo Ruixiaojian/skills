@@ -429,7 +429,7 @@ OSS
     
 4.  为文件**配置标签**（可选）。
     
-    > [通过API调用应用](https://help.aliyun.com/zh/model-studio/application-calling-guide#4100253b7chc3)时，可以在请求参数`tags`中指定标签。应用在检索知识库时，会先根据标签筛选相关文件，从而提高检索效率。对于[智能体应用](https://help.aliyun.com/zh/model-studio/single-agent-application)，可在控制台调试知识库时设置标签。
+    > [通过API调用应用](https://help.aliyun.com/zh/model-studio/application-calling-guide#4100253b7chc3)时，可以在请求参数`tags`中指定标签。应用在检索知识库时，会先根据标签筛选相关文件，从而提高检索效率。对于[智能体应用（Agent 1.0）](https://help.aliyun.com/zh/model-studio/single-agent-application)，可在控制台调试知识库时设置标签。
     
 5.  点击**确认**，系统将开始解析和导入，可在页面查看任务进度。
     
@@ -548,7 +548,7 @@ OSS
         
     4.  为文件**配置标签**（可选）。
         
-        > [通过API调用应用](https://help.aliyun.com/zh/model-studio/application-calling-guide#4100253b7chc3)时，可以在请求参数`tags`中指定标签。应用在检索知识库时，会先根据标签筛选相关文件，从而提高检索效率。对于[智能体应用](https://help.aliyun.com/zh/model-studio/single-agent-application)，可在控制台编辑应用时直接设置标签（启用**知识库** > **+知识库** > **知识库高级配置** > **标签过滤**）。
+        > [通过API调用应用](https://help.aliyun.com/zh/model-studio/application-calling-guide#4100253b7chc3)时，可以在请求参数`tags`中指定标签。应用在检索知识库时，会先根据标签筛选相关文件，从而提高检索效率。对于[智能体应用（Agent 1.0）](https://help.aliyun.com/zh/model-studio/single-agent-application)，可在控制台编辑应用时直接设置标签（启用**知识库** > **+知识库** > **知识库高级配置** > **标签过滤**）。
         
     5.  点击**确认**，系统将开始解析和导入，可在页面查看任务进度。
         
@@ -1586,11 +1586,13 @@ VSwitch ID
     
 -   **导入OSS文件遇到“10041495”报错，应如何处理？**
     
-    通常是主账号未开通OSS服务，处理步骤：
+    该报错由以下原因引起，按顺序排查：
     
-    1.  需主账号前往[OSS管理控制台](https://oss.console.aliyun.com/)，按界面指引开通 OSS。
+    1.  主账号未开通OSS服务。需主账号前往[OSS管理控制台](https://oss.console.aliyun.com/)，按界面指引开通OSS。
         
-    2.  返回阿里云百炼页面，再尝试授权。
+    2.  目标OSS Bucket未添加`bailian-datahub-access`标签（值为`read`）。未添加该标签的Bucket阿里云百炼无法访问。前往[OSS管理控制台](https://oss.console.aliyun.com/bucket)Bucket标签页面，为目标Bucket添加标签。
+        
+    3.  完成上述操作后，返回阿里云百炼页面重新授权。
         
     
 
@@ -1798,3 +1800,75 @@ VSwitch ID
                 ```
                 SHOW VARIABLES LIKE 'wait_timeout';
                 ```
+                
+    
+
+-   **创建数据源时遇到CHECK\_BINLOG\_FORMAT、CHECK\_ENFORCE\_GTID\_MODE或CHECK\_GTID\_CONSISTENCY报错，应如何处理？**
+    
+    这些报错表示您的MySQL数据库配置不满足数据连接器的前置要求。系统在创建数据源时会自动校验以下配置项：
+    
+    **报错代码**
+    
+    **含义**
+    
+    **期望值**
+    
+    `CHECK_BINLOG_FORMAT`
+    
+    Binlog格式需要为ROW模式
+    
+    `binlog_format=ROW`
+    
+    `CHECK_ENFORCE_GTID_MODE`
+    
+    需要开启GTID模式
+    
+    `gtid_mode=ON`
+    
+    `CHECK_GTID_CONSISTENCY`
+    
+    需要开启GTID一致性约束
+    
+    `enforce_gtid_consistency=ON`
+    
+    **解决方法：**
+    
+    ## 阿里云RDS MySQL
+    
+    1.  前往[RDS控制台](https://rdsnext.console.aliyun.com/)，点击左侧导航栏中的**实例列表**，然后点击目标RDS实例。
+        
+    2.  点击左侧导航栏中的**参数设置**，在**可修改参数**选项卡中，将以下参数修改为对应的期望值：
+        
+        -   `binlog_format`设为`ROW`
+            
+        -   `gtid_mode`设为`ON`
+            
+        -   `enforce_gtid_consistency`设为`ON`
+            
+    3.  提交参数修改后，根据提示重启RDS实例使配置生效。
+        
+    
+    > 修改`gtid_mode`和`enforce_gtid_consistency`需要重启实例。请在业务低峰期操作，避免影响在线业务。
+    
+    ## 自建MySQL
+    
+    修改MySQL配置文件（以Linux系统为例，一般位于：/etc/my.cnf 或 /etc/mysql/my.cnf），在`[mysqld]`段中添加或修改以下配置项：
+    
+    ```
+    [mysqld]
+    binlog_format=ROW
+    gtid_mode=ON
+    enforce_gtid_consistency=ON
+    ```
+    
+    保存配置文件后，重启MySQL服务使配置生效：
+    
+    ```
+    sudo systemctl restart mysqld
+    ```
+    
+    重启后，可通过以下命令验证配置是否已生效：
+    
+    ```
+    SHOW VARIABLES WHERE Variable_name IN ('binlog_format', 'gtid_mode', 'enforce_gtid_consistency');
+    ```

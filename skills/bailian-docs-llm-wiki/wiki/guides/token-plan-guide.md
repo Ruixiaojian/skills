@@ -1,27 +1,27 @@
 # token plan guide
 
-阿里云百炼提供两类面向 AI 编程与智能体场景的订阅型套餐——**Token Plan 团队版**与 **Coding Plan**。两者均以专属 API Key + 专属 Base URL 的方式接入主流 AI 编程工具（Claude Code、Qwen Code、OpenClaw、OpenCode、Cursor、Codex、Cline、Kilo CLI 等），通过预付费订阅锁定预算、避免按量计费欠费风险。本主题汇总两款套餐的产品定位、订阅流程、接入方式、团队与用量管理、工具扩展（联网搜索 / 多模态生成 / 视觉理解）以及高频报错排查。
+阿里云百炼提供两类面向 AI 编程与智能体场景的订阅型套餐——**[Token](../concepts/token.md) Plan 团队版**与 **Coding Plan**。两者均以专属 [API Key](../concepts/api-key.md) + 专属 Base URL 的方式接入主流 AI 编程工具（Claude Code、Qwen Code、OpenClaw、OpenCode、Cursor、Codex、Cline、Kilo CLI 等），通过预付费订阅锁定预算、避免按量计费欠费风险。本主题汇总两款套餐的产品定位、订阅流程、接入方式、团队与用量管理、工具扩展（联网搜索 / [多模态](../concepts/multimodal.md)生成 / 视觉理解）以及高频报错排查。
 
 ## 套餐总览与对比
 
-| 对比项 | Token Plan 团队版 | Coding Plan |
+| 对比项 | [Token](../concepts/token.md) Plan 团队版 | Coding Plan |
 | --- | --- | --- |
 | 适用场景 | 一人公司 / 团队 / 企业日常办公 | 个人开发场景 |
 | 支持模型 | 文本生成 + 图像生成模型 | 文本生成模型 |
-| 计费方式 | 按 Token 消耗抵扣 Credits | 按模型调用次数 |
+| 计费方式 | 按 [Token](../concepts/token.md) 消耗抵扣 Credits | 按模型调用次数 |
 | 使用频次限制 | 无每 5 小时 / 每周限额 | 每 5 小时 / 每周 / 每月限额 |
 | 高峰期性能 | 多租户隔离，不排队 | 高峰期间可能排队 |
 | 数据安全 | 承诺不使用对话数据训练模型 | 用户数据授权用于服务改进 |
-| API Key 格式 | `sk-sp-xxx`（专属） | `sk-sp-xxx`（专属） |
+| [API Key](../concepts/api-key.md) 格式 | `sk-sp-xxx`（专属） | `sk-sp-xxx`（专属） |
 | 服务地域 | 仅支持华北2（北京） | 不限制使用地域 |
 
-> 三类 API Key 与 Base URL 互不相通：百炼按量计费（`sk-xxx` + `dashscope.aliyuncs.com`）、Token Plan 团队版（`sk-sp-xxx` + `token-plan.cn-beijing.maas.aliyuncs.com`）、Coding Plan（`sk-sp-xxx` + `coding.dashscope.aliyuncs.com`）。误用会导致按量计费扣费或 401/403 报错。
+> 三类 [API Key](../concepts/api-key.md) 与 Base URL 互不相通：百炼按量计费（`sk-xxx` + `dashscope.aliyuncs.com`）、[Token](../concepts/token.md) Plan 团队版（`sk-sp-xxx` + `token-plan.cn-beijing.maas.aliyuncs.com`）、Coding Plan（`sk-sp-xxx` + `coding.dashscope.aliyuncs.com`）。误用会导致按量计费扣费或 401/403 报错。
 
-## Token Plan 团队版
+## [Token](../concepts/token.md) Plan 团队版
 
 ### 产品简介
 
-Token Plan 团队版整合千问、万相、DeepSeek、月之暗面、智谱 AI、MiniMax 等厂商模型，支持文本生成与图像生成，以 Credits 统一计量。提供标准坐席、高级坐席、尊享坐席三档套餐，配套团队管理后台（席位分配 / 用量分析 / SSO / 钉钉登录），并承诺不使用对话数据训练模型。目前仅支持**华北2（北京）**地域。
+[Token](../concepts/token.md) Plan 团队版整合千问、万相、DeepSeek、月之暗面、智谱 AI、MiniMax 等厂商模型，支持文本生成与图像生成，以 Credits 统一计量。提供标准坐席、高级坐席、尊享坐席三档套餐，配套团队管理后台（席位分配 / 用量分析 / SSO / 钉钉登录），并承诺不使用对话数据训练模型。目前仅支持**华北2（北京）**地域。
 
 ### 支持的模型
 
@@ -171,7 +171,7 @@ Token Plan 团队版提供两种工具接入方式：
 
 > 提问时建议明确提及 `websearch MCP` 以避免与其他工具混淆。旧版 SSE 协议（`/sse` 结尾）需取消开通后重新开通以升级到 Streamable HTTP。
 
-### 接入多模态生成模型（图像生成）
+### 接入[多模态](../concepts/multimodal.md)生成模型（图像生成）
 
 Token Plan 团队版支持 `qwen-image-2.0`、`qwen-image-2.0-pro`、`wan2.7-image`、`wan2.7-image-pro` 等图像生成模型，但需通过工具的扩展机制（Skill / Slash Command / Agent）接入，无法通过文本模型 Base URL 直接调用。
 
@@ -275,6 +275,9 @@ Coding Plan 中 `qwen3.6-plus`、`qwen3.5-plus`、`kimi-k2.5` 原生支持视觉
 - [联网搜索](../../raw/model-user-guide/token-plan-guide/coding-plan-guide/web-search-for-coding-plan.md)
 - [添加视觉理解能力](../../raw/model-user-guide/token-plan-guide/coding-plan-guide/add-vision-skill.md)
 - [常见问题](../../raw/model-user-guide/token-plan-guide/coding-plan-guide/coding-plan-faq.md)
+
+
+
 
 
 

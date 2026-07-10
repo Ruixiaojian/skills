@@ -1,52 +1,63 @@
 # 函数调用
 
-函数调用（Function Calling）是大模型根据用户意图自动选择并调用外部工具（API、代码、数据库等），再将工具返回结果纳入上下文继续生成回复的能力。它是构建智能体、[工作流](workflow.md)和多工具协同场景的核心机制，使大模型能够突破自身在获取实时信息、精确计算和操作外部系统上的局限。
+函数调用（Function Calling）是大语言模型与外部工具交互的核心机制，允许模型在对话过程中识别用户意图并自动选择、调用预先定义的函数，从而扩展模型能力至实时数据查询、业务系统操作等场景。
 
-## 在百炼平台的使用方式
+## 工作原理
 
-百炼平台在多个层次提供函数调用能力，开发者可按集成形态和接口协议选择：
+函数调用的基本流程为：开发者在请求中定义可用工具（函数）的名称、描述和参数 schema，模型根据用户输入判断是否需要调用工具，若需要则返回函数名和参数，由客户端执行后将结果回传模型继续生成最终回答。
 
-### 1. 通过模型 API 直接定义工具
+## 在百炼平台中的使用场景
 
-在 OpenAI 兼容 Chat Completions 接口中，通过请求体的 `tools` 字段按 OpenAI function call 协议自定义工具 schema，模型在响应中返回 `tool_calls`，调用方执行后回传结果，模型继续生成。DashScope 原生接口对参数支持最完整，适合需要最全采样参数或业务字段的场景。Anthropic 兼容 Messages 接口同样支持思考（thinking）与工具调用。
+### 文本对话接口
 
-> 仅 OpenAI 兼容 Responses 接口内置联网搜索、代码解释器、网页内容提取等工具，开箱即用；Chat Completions 与 Messages 接口如需这些能力，需自行定义工具或通过协议接入。
+通过 OpenAI 兼容 Chat Completions 接口，在请求中定义 `tools` 列表即可启用函数调用。模型会根据对话上下文自动判断是否需要调用工具，并输出结构化的调用参数。百炼的 Qwen3 系列通用模型（qwen3.7-max、qwen3.7-plus、qwen3.6-flash 等）均支持此能力。
 
-### 2. 通过插件调用
+### Responses API
 
-百炼插件本质上是「工具集合」，一个插件下可包含多个工具。模型根据用户输入、工具名称与工具描述判断是否调用、调用哪个工具，应用内部完成调用后将结果与用户内容合并再次输入模型。插件支持智能体应用、[工作流](workflow.md)应用与 Assistant API 三种调用形态，每个智能体最多可添加 10 个工具。
+Responses API 作为 Chat Completions 的演进版本，除了支持自定义函数调用外，还内置了联网搜索、代码解释器、网页抓取等工具，开箱即用无需额外定义。
 
-### 3. 通过 MCP 服务
+### 实时多模态交互
 
-模型上下文协议（MCP）提供统一的标准协议接入外部工具。智能体根据输入对话自动判断是否调用 MCP 服务，单个智能体最多同时添加 5 个 MCP 服务。[工作流](workflow.md)中每个 MCP 节点只能使用一个工具，需手动指定输入参数并把输出传递到下一个节点。MCP 服务不能在直接调用千问 API 时接入，只能在智能体或工作流应用中使用。
+Qwen-Omni-Realtime API 在 WebSocket 实时对话中同样支持函数调用。通过 `session.update` 事件配置工具列表，模型在语音对话过程中触发工具调用时会发送 `response.function_call_arguments.done` 事件，客户端执行完毕后通过 `conversation.item.create` 事件回传结果。Qwen3.5-Omni-Realtime 系列支持此能力。
 
-### 4. 在实时多模态与托管智能体中
+### 意图理解模型
 
-Qwen-Omni-Realtime API 通过 WebSocket 长连接支持工具调用（Function Calling），与语音、视频、图像交互融合。Managed Agents API 由平台托管会话、沙箱与工具执行，开发者通过 Agent、Environment、Skill、Session 等资源管理工具调用生命周期，无需自建调度与执行基础设施。
+`tongyi-intent-detect-v3` 模型可同时输出用户意图分类和函数调用信息，适用于需要同时做意图路由和工具调度的场景。
 
-## 关键参数与配置
+## 关键参数和配置
 
-- **`tools` / `tool_choice`**：在 Chat Completions 与 Messages 接口中定义可用工具及调用策略（`auto`、`required`、指定函数名等）。
-- **`model`**：不同模型对工具调用的兼容性有差异，Qwen 系列中 `qwen-turbo` / `qwen-plus` / `qwen-max` / `qwen-vl-max` / `qwen-vl-plus` 均支持插件调用；最新兼容性以控制台实际执行结果为准。
-- **工具 ID**：通过 API 调用插件工具时需正确传递工具 ID（如 `calculator`、`code_interpreter`），可在插件详情页「插件工具」下获取。
-- **MCP 配置**：`mcpServers` 结构中 `type`（`stdio` / `streamable-http`）、`command`/`args`、`url`、`env` 等决定服务部署与连接方式。
-- **提示词**：模型需明确指令才能准确调用工具，建议在提示词中写明工具名称与能力；若仍无效可更换更强的推理模型（如千问 3 系列）。
+| 参数 | 说明 |
+| --- | --- |
+| `tools` | 工具定义数组，每个元素包含 `type`（固定为 `function`）和 `function` 对象 |
+| `tools[].function.name` | 函数名称，模型调用时会引用此标识 |
+| `tools[].function.description` | 函数描述，帮助模型判断何时应调用该工具 |
+| `tools[].function.parameters` | 函数参数的 JSON Schema 定义，模型据此生成结构化参数 |
+| `tool_choice` | 工具选择策略：`auto`（模型自行判断）、`none`（禁止调用）、或指定具体函数名 |
 
-## 限制和注意事项
+## 支持的模型
 
-- **功能完整度差异**：兼容接口为保证协议一致性，可能不暴露百炼原生的全部参数；如需最全工具相关参数建议改用 DashScope 原生接口。
-- **对话历史管理**：仅 Responses 接口自动维护历史，迁移到其他接口时需自行管理上下文长度，避免超出模型[上下文窗口](context-window.md)。
-- **Token 消耗增加**：调用工具会将工具返回内容作为上下文传入模型，导致输入 Token 增加，并可能间接增加输出 Token，需关注计费与限流。
-- **调用准确性依赖提示词**：模型需明确指令才能准确调用工具，建议在提示词中写明工具名称与能力；若仍无效可更换更强的推理模型。
-- **网络与本地资源**：MCP 服务托管在函数计算 FC，无固定出口公网 IP，无法访问用户本地数据库；Python 代码解释器不支持对外访问网络及上传本地文件。
+百炼平台上支持函数调用的主要模型包括：
+
+- **Qwen3 系列**：qwen3.7-max、qwen3.7-plus、qwen3.6-flash 等通用模型
+- **DeepSeek 系列**：deepseek-v4-pro、deepseek-v4-flash
+- **视觉模型**：qwen3.7-plus（视觉）、qwen3.6-flash（视觉）、qwen3.5-omni-plus
+- **实时模型**：qwen3.5-omni-plus-realtime、qwen3.5-omni-flash-realtime
+- **专用模型**：tongyi-intent-detect-v3（意图+函数调用）
+
+## 最佳实践
+
+- 函数描述应清晰准确，避免歧义，帮助模型正确判断调用时机
+- 参数 schema 应使用 `required` 字段标注必填参数，并为可选参数提供合理默认值
+- 对于复杂业务流程，可定义多个函数让模型按需组合调用
+- 生产环境中建议对模型返回的函数参数做校验，防止非法输入
+- 如需使用内置工具（联网搜索、代码解释器等），优先考虑 Responses API 以简化开发
 
 ## 关联主题页
 
 - [qwen api reference](../api/qwen-api-reference.md)
 - [omni realtime api](../api/omni-realtime-api.md)
-- [model context protocol](../guides/model-context-protocol.md)
-- [plug in](../guides/plug-in.md)
-- [managed agents api](../api/managed-agents-api.md)
 - [toolkits and frameworks](../api/toolkits-and-frameworks.md)
+- [model experience](../guides/model-experience.md)
+- [more models](../api/more-models.md)
 
 

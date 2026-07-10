@@ -24,9 +24,9 @@
 | 限制模型训练 | 是否可调优（控制台 & API）及调优后部署 | 模型列表 → 模型授权 → 模型训练列 |
 | 限制[模型部署](../concepts/model-deployment.md) | 是否可直接部署 | 模型列表 → 模型授权 → [模型部署](../concepts/model-deployment.md)列 |
 
-单个 [API Key](../concepts/api-key.md) 只能归属一个地域内的一个[业务空间](../concepts/workspace.md)和一个用户，且不能转移。[API Key](../concepts/api-key.md) 的可调用功能与模型限流与**归属业务空间**的权限保持一致，不受用户控制台权限影响，也无需为不同模型（文生文、文生图、语音合成）创建不同 [API Key](../concepts/api-key.md)。自 2026 年 3 月 25 日起，华北2（北京）地域所有新创建的 [API Key](../concepts/api-key.md) 均归属主账号，并支持设置 IP 访问白名单。
+单个 [API Key](../concepts/api-key.md) 只能归属一个地域内的一个[业务空间](../concepts/workspace.md)和一个用户，且不能转移。[API Key](../concepts/api-key.md) 的可调用功能与模型限流与**归属[业务空间](../concepts/workspace.md)**的权限保持一致，不受用户控制台权限影响，也无需为不同模型（文生文、文生图、语音合成）创建不同 [API Key](../concepts/api-key.md)。自 2026 年 3 月 25 日起，华北2（北京）地域所有新创建的 [API Key](../concepts/api-key.md) 均归属主账号，并支持设置 IP 访问白名单。
 
-> **注意**：[API Key](../concepts/api-key.md) 的有效性受账号操作影响——将 RAM 账号移出业务空间会使其 [API Key](../concepts/api-key.md) 失效（重新加入后恢复），而在 RAM 控制台删除账号/角色则会使 [API Key](../concepts/api-key.md) 永久失效、不可恢复。
+> **注意**：[API Key](../concepts/api-key.md) 的有效性受账号操作影响——将 RAM 账号移出[业务空间](../concepts/workspace.md)会使其 [API Key](../concepts/api-key.md) 失效（重新加入后恢复），而在 RAM 控制台删除账号/角色则会使 [API Key](../concepts/api-key.md) 永久失效、不可恢复。
 
 ### OpenAPI 接口权限
 
@@ -37,8 +37,8 @@ RAM 用户默认无权调用百炼应用的数据、[知识库](../concepts/know
 
 ### 生产环境实践
 
-- **空间规划**：推荐按环境（dev/test/prod）划分业务空间实现隔离，或按业务线划分便于权限与成本管理。
-- **限流策略**：将主账号总配额按比例分配给各业务空间并预留缓冲。例如总配额 1000 QPM，可分配 prod 600 / test 200 / dev 100，预留 100。
+- **空间规划**：推荐按环境（dev/test/prod）划分[业务空间](../concepts/workspace.md)实现隔离，或按业务线划分便于权限与成本管理。
+- **限流策略**：将主账号总配额按比例分配给各[业务空间](../concepts/workspace.md)并预留缓冲。例如总配额 1000 QPM，可分配 prod 600 / test 200 / dev 100，预留 100。
 
 ## 内容安全：AI 安全护栏
 
@@ -145,15 +145,15 @@ SDK 自动完成加解密，响应为明文，无需手动处理。
 - **同境内或同境外跨地域**（如华东1杭州 VPC → 华北2北京百炼）：推荐启用跨地域端点。
 - **跨境跨地域**（中国内地与境外之间，如华北2北京 VPC → 新加坡百炼）：通过 CEN 跨地域 VPC 互通。
 
-## 安全存储业务空间
+## 安全存储[业务空间](../concepts/workspace.md)
 
-安全存储业务空间通过反向终端节点与 VPC 私网连接，让部署其中的应用访问同 VPC 下的 ElasticSearch、AnalyticDB（ADB）、OSS 等云组件，避免公网访问风险。该能力需联系商务人员申请开通。
+安全存储[业务空间](../concepts/workspace.md)通过反向终端节点与 VPC 私网连接，让部署其中的应用访问同 VPC 下的 ElasticSearch、AnalyticDB（ADB）、OSS 等云组件，避免公网访问风险。该能力需联系商务人员申请开通。
 
 ### 配置流程总览
 
 | 步骤 | 说明 | 参考 |
 | --- | --- | --- |
-| 1. 创建安全存储业务空间 | 业务空间管理 → 新增业务空间，空间类型选"安全存储空间" | [配置终端节点并发起连接](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-an-endpoint-and-initiate-a-connection.md) |
+| 1. 创建安全存储[业务空间](../concepts/workspace.md) | [业务空间](../concepts/workspace.md)管理 → 新增[业务空间](../concepts/workspace.md)，空间类型选"安全存储空间" | [配置终端节点并发起连接](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-an-endpoint-and-initiate-a-connection.md) |
 | 2. 创建反向终端节点 | 终端节点控制台创建反向终端节点，终端节点服务选描述为"百炼公共云生产环境-北京站点-安全存储空间专网通道接入点"的服务（VPC NAT 网关、反向、IPv4），配置 VPC/安全组/可用区与交换机 | 同上 |
 | 3. 在百炼确认连接 | 业务空间管理 → 管理安全存储空间 → 选择终端节点 → 连接，等待状态变为"已连接" | 同上 |
 | 4. 配置可用区 IP | 创建 MSE 云原生网关（2核4G、2 节点、启用 TLS 硬件加速、私网、至少两可用区），获取 NLB 各可用区 VIP 与交换机网段，在百炼配置对应可用区 IP，并将 VIP 加入反向终端节点安全组入方向（全部端口） | [配置可用区IP](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-zone-ip.md) |
@@ -171,7 +171,7 @@ SDK 自动完成加解密，响应为明文，无需手动处理。
 ## 限制与注意事项汇总
 
 - 默认业务空间无法设置模型调用/训练/部署限制，所有模型均可调用、调优、部署，且无法限流。
-- API Key 不可跨地域、跨业务空间、跨用户转移；账号移出空间会使其 API Key 失效（重新加入恢复），删除账号/角色则永久失效。
+- [API Key](../concepts/api-key.md) 不可跨地域、跨业务空间、跨用户转移；账号移出空间会使其 [API Key](../concepts/api-key.md) 失效（重新加入恢复），删除账号/角色则永久失效。
 - AI 安全护栏目前仅支持文本和图片类型模型。
 - [DashScope SDK](../concepts/dashscope-sdk.md) 自动加密仅支持 Java/Python 且不支持自定义密钥；HTTP 手动加密仅适用于 DashScope Endpoint，OpenAI 兼容 Endpoint 不支持。
 - PrivateLink 私网访问美国（弗吉尼亚）地域暂不支持；跨地域访问需区分同境内/同境外与跨境两种方式。
@@ -192,6 +192,9 @@ SDK 自动完成加解密，响应为明文，无需手动处理。
 - [配置可用区IP](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-zone-ip.md)
 - [配置私有网络中的资源](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-resources-in-private-network.md)
 - [配置MSE云原生网关](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-mse.md)
+
+
+
 
 
 

@@ -48,12 +48,12 @@
 - [knowledge](api/knowledge.md) — 1 篇源文档
 - [long term memory new](api/long-term-memory-new.md) — 1 篇源文档
 - [managed agents api](api/managed-agents-api.md) — 7 篇源文档
-- [model production](api/model-production.md) — 3 篇源文档
+- [model production](api/model-production.md) — 2 篇源文档
 - [more](api/more.md) — 3 篇源文档
 - [more about models](api/more-about-models.md) — 6 篇源文档
 - [more models](api/more-models.md) — 6 篇源文档
 - [omni realtime api](api/omni-realtime-api.md) — 6 篇源文档
-- [preparations](api/preparations.md) — 3 篇源文档
+- [preparations](api/preparations.md) — 4 篇源文档
 - [qwen api reference](api/qwen-api-reference.md) — 1 篇源文档
 - [toolkits and frameworks](api/toolkits-and-frameworks.md) — 10 篇源文档
 - [vector and sort](api/vector-and-sort.md) — 4 篇源文档
@@ -61,22 +61,22 @@
 
 ## 横切概念
 
-- [上下文窗口](concepts/context-window.md) — 关联 4 个主题
-- [函数调用](concepts/function-calling.md) — 关联 6 个主题
-- [向量嵌入](concepts/embedding.md) — 关联 5 个主题
-- [工作流](concepts/workflow.md) — 关联 5 个主题
-- [提示词工程](concepts/prompt-engineering.md) — 关联 5 个主题
-- [模型调优](concepts/fine-tuning.md) — 关联 5 个主题
-- [流式输出](concepts/streaming-output.md) — 关联 5 个主题
-- [重排序](concepts/rerank.md) — 关联 3 个主题
-- [限流与配额](concepts/rate-limiting.md) — 关联 5 个主题
+- [API Key 鉴权](concepts/api-key.md) — 关联 7 个主题
+- [DashScope SDK](concepts/dashscope-sdk.md) — 关联 4 个主题
+- [OpenAI 兼容接口](concepts/openai-compatible-interface.md) — 关联 6 个主题
+- [Token](concepts/token.md) — 关联 6 个主题
+- [业务空间](concepts/workspace.md) — 关联 7 个主题
+- [函数调用](concepts/function-calling.md) — 关联 5 个主题
+- [异步调用](concepts/async-invocation.md) — 关联 4 个主题
+- [检索增强生成](concepts/rag.md) — 关联 5 个主题
+- [流式输出](concepts/streaming.md) — 关联 4 个主题
 
 ## 对比分析
 
-- [应用评测与应用监控对比](comparisons/application-evaluation-vs-monitoring.md) — 对比 2 个主题
-- [应用调用方式对比](comparisons/application-call-vs-bailian-calling.md) — 对比 2 个主题
-- [微调与模型压缩对比](comparisons/fine-tuning-vs-compression.md) — 对比 2 个主题
-- [模型评测与模型监控对比](comparisons/model-evaluation-vs-monitoring.md) — 对比 2 个主题
-- [模型部署与高速推理对比](comparisons/model-deployment-vs-inference.md) — 对比 2 个主题
-- [知识库与记忆库对比](comparisons/knowledge-base-vs-memory-library.md) — 对比 2 个主题
+- [Qwen API vs 全双工实时API vs 托管智能体API](comparisons/qwen-api-vs-omni-realtime-vs-managed-agents.md) — 对比 3 个主题
+- [图像生成 vs 视频生成 vs 3D生成](comparisons/image-video-3d-generation-comparison.md) — 对比 3 个主题
+- [模型微调 vs 模型压缩 vs 模型部署](comparisons/fine-tuning-vs-compression-vs-deployment.md) — 对比 3 个主题
+- [模型监控 vs 应用监控](comparisons/model-monitoring-vs-application-monitoring.md) — 对比 2 个主题
+- [模型评估 vs 应用评估](comparisons/model-evaluation-vs-application-evaluation.md) — 对比 2 个主题
+- [知识库 vs 长期记忆库](comparisons/knowledge-base-vs-memory-library.md) — 对比 3 个主题
 
