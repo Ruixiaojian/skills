@@ -35,7 +35,7 @@ description: 用百炼 CLI (`bl`) 走完"数据→微调训练→导出→部署
    - 复用检测：`bl deploy list --status RUNNING` —— 若已有引用同一 `finetuned_output` 且 RUNNING 的部署，直接复用其 `deployed_model`，**不要再建第二个计费实例**。
 2. **计费确认硬闸门（mu/ptu）**：
    - `lora`（默认，按 token 计费，闲置一般不计费）—— 安全默认，可直接创建。
-   - `mu` / `ptu` 是**预留/独占资源，闲置也计费**——创建前**必须**向用户显式说明计费方式并取得确认。在 agent / CI 等**非交互环境里，不要用 `--yes` 替用户放行 mu/ptu 创建**；`--yes` 只在真人交互终端里跳过 `[y/N]`，不等于"agent 可自动开通预留资源"。命中 mu/ptu 时，把"这会产生闲置计费"连同命令交还给真人在终端确认。
+   - `mu` / `ptu` 是**预留/独占资源，闲置也计费**——创建前**必须**向用户显式说明计费方式并取得确认。在 agent / CI 等非交互环境**不能自动开通预留资源**。命中 mu/ptu 时，把“这会产生闲置计费”连同命令交还给真人在终端确认（`bl` 当前不提供 `--yes` 跳过确认 flag，确认行为完全由真人把控）。
 3. **账号就绪检查**：`bl auth status` —— `authenticated: false` 即停，给 `bl auth login --api-key sk-...`。百炼走 API key / access token 认证，**没有独立的实名闸门**，`auth status` 即账号就绪检查。
 
 ## 反触发表（不归本 skill 的意图，附完整命令）
@@ -96,7 +96,7 @@ description: 用百炼 CLI (`bl`) 走完"数据→微调训练→导出→部署
 bl finetune <模态> create \
   --model <base-model> \
   --datasets <path-or-file-id> \
-  --yes --output json
+  --output json
 ```
 
 **training-type 取值与映射**详见 [`references/finetune.md`](references/finetune.md)。**模态特异性超参**见对应参考文件：
@@ -139,7 +139,7 @@ bl deploy <模态> create \
   --model <model-name> \              # 微调输出名(链路A) 或基座名(链路B)
   --name <display-name> \
   --plan <lora|ptu|mu> \              # 见下方说明
-  --yes --output json
+  --output json
 ```
 
 - **模态段**（`text` / `audio` / `image`）须与部署模型模态匹配；三个模态子命令 flag 完全相同。

@@ -57,7 +57,7 @@ bl dataset validate --file <zip-path> --schema image  # 显式指定
 bl finetune image create \
   --model wan2.7-image-pro \
   --datasets <zip-path-or-file-id> \
-  --yes --output json
+  --output json
 ```
 
 I2I（图生图）模式**自动检测**——只要 JSONL 中有 `input_img` 字段，CLI 自动识别为 I2I 并调整超参（`max_pixels`/`val_img_size` 从 "2k" 切换为 "1k"），无需额外 flag：
@@ -66,7 +66,7 @@ I2I（图生图）模式**自动检测**——只要 JSONL 中有 `input_img` �
 bl finetune image create \
   --model wan2.7-image-pro \
   --datasets <i2i-zip-path-or-file-id> \
-  --yes --output json
+  --output json
 ```
 
 要点：
@@ -90,7 +90,7 @@ bl deploy image create \
   --name <display-name> \
   --plan lora \
   --capacity 1 \
-  --yes --output json
+  --output json
 ```
 
 要点：

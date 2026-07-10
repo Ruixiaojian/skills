@@ -50,7 +50,7 @@
 `bl finetune <模态> create` 与 `bl deploy <模态> create` 都是真实写操作，会产生计费资源。`bl` **没有 `--dry-run`**，所以用真实预检 + 计费闸门代替：
 
 1. **预检代替 dry-run** —— `bl finetune capability --model <base>`（训练支持）、`bl deploy models --source custom|base`（可部署 + 可用 plan）、`bl deploy list --status RUNNING`（复用已有同模型部署，不再建第二个计费实例）。
-2. **mu/ptu 计费闸门** —— `lora`（token 计费，闲置一般免费）是安全默认；`mu`/`ptu` 是预留资源、闲置也计费，创建前**必须取得用户显式确认**，在 agent/CI 等非交互环境**不用 `--yes` 替用户放行**。
+2. **mu/ptu 计费闸门** —— `lora`（token 计费，闲置一般免费）是安全默认；`mu`/`ptu` 是预留资源、闲置也计费，创建前**必须取得用户显式确认**，在 agent/CI 等非交互环境**不能自动开通预留资源**。
 3. **账号就绪** —— 先 `bl auth status`，未认证即停。
 
 ## 使用示例

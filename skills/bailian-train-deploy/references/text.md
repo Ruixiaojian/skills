@@ -39,7 +39,7 @@ bl finetune text create \
   --datasets <path-or-file-id> \
   --training-type sft-lora \
   --n-epochs 3 \
-  --yes --output json
+  --output json
 ```
 
 ### training-type 选择
@@ -64,7 +64,7 @@ bl deploy text create \
   --model <finetuned_output> \
   --name <display-name> \
   --plan lora \
-  --yes --output json
+  --output json
 ```
 
 - 文本微调模型支持 `lora`（默认，token 计费）和 `mu` plan

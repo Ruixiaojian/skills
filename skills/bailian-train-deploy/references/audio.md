@@ -53,7 +53,7 @@ pip install edge-tts
 bl finetune audio create \
   --model cosyvoice-v3-flash \
   --datasets <zip-path-or-file-id> \
-  --yes --output json
+  --output json
 ```
 
 要点：
@@ -77,7 +77,7 @@ bl deploy audio create \
   --plan mu \
   --deploy-spec <spec-id> \
   --capacity 1 \
-  --yes --output json
+  --output json
 ```
 
 要点：
