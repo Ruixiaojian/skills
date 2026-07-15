@@ -63,6 +63,37 @@
       "name": "HappyHorse-1.1-T2V",
       "docUrl": "https://help.aliyun.com/document_detail/3029820.html",
       "category": "Visual",
+      "predictConfig": [
+        {
+          "name": "清晰度",
+          "key": "resolution",
+          "default": "1080P"
+        },
+        {
+          "name": "宽高比",
+          "key": "ratio",
+          "default": "16:9"
+        },
+        {
+          "name": "视频时长(秒)",
+          "key": "duration",
+          "default": 5,
+          "range": [
+            3,
+            15
+          ]
+        },
+        {
+          "name": "随机种子",
+          "key": "seed",
+          "default": 1234,
+          "tip": "随机数种子，用于控制模型生成内容的随机性",
+          "range": [
+            1,
+            2147483647
+          ]
+        }
+      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -131,6 +162,37 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "HappyHorse-1.0-T2V",
       "docUrl": "https://help.aliyun.com/document_detail/3029820.html",
+      "predictConfig": [
+        {
+          "name": "清晰度",
+          "key": "resolution",
+          "default": "1080P"
+        },
+        {
+          "name": "宽高比",
+          "key": "ratio",
+          "default": "16:9"
+        },
+        {
+          "name": "视频时长(秒)",
+          "key": "duration",
+          "default": 5,
+          "range": [
+            3,
+            15
+          ]
+        },
+        {
+          "name": "随机种子",
+          "key": "seed",
+          "default": 1234,
+          "tip": "随机数种子，用于控制模型生成内容的随机性",
+          "range": [
+            1,
+            2147483647
+          ]
+        }
+      ],
       "samples": {
         "dashscope": {
           "default": {

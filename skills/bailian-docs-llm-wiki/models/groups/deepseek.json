@@ -74,6 +74,59 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "DeepSeek-V4-Pro",
       "docUrl": "https://help.aliyun.com/document_detail/2868565.html",
+      "predictConfig": [
+        {
+          "name": "system",
+          "key": "systemMessage",
+          "tip": "系统人设，例如“你是一个AI助手”。"
+        },
+        {
+          "name": "top_p",
+          "key": "top_p",
+          "default": 0.8,
+          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
+          "range": [
+            0.0001,
+            1
+          ]
+        },
+        {
+          "name": "stop",
+          "key": "stop",
+          "tip": "用于控制生成时遇到某些内容则停止。您可传入多个字符串。"
+        },
+        {
+          "name": "temperature",
+          "key": "temperature",
+          "default": 0.7,
+          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
+          "range": [
+            0,
+            1.9999
+          ]
+        },
+        {
+          "name": "enable_search",
+          "key": "enable_search",
+          "tip": "联网搜索补充互联网知识，当前暂时免费提供服务，即将于2025年8月25日0时起转计费模式，按量后付费"
+        },
+        {
+          "name": "enable_thinking",
+          "key": "enable_thinking",
+          "default": false,
+          "tip": "推理模式"
+        },
+        {
+          "name": "thinking_budget",
+          "key": "thinking_budget",
+          "default": 4000,
+          "tip": "思维链的最大输出tokens数量",
+          "range": [
+            4000,
+            32768
+          ]
+        }
+      ],
       "samples": {
         "openai": {
           "completionsAPI": {
@@ -166,6 +219,59 @@
       "name": "DeepSeek-V4-Flash",
       "docUrl": "https://help.aliyun.com/document_detail/2868565.html",
       "category": "Third-party",
+      "predictConfig": [
+        {
+          "name": "system",
+          "key": "systemMessage",
+          "tip": "系统人设，例如“你是一个AI助手”。"
+        },
+        {
+          "name": "top_p",
+          "key": "top_p",
+          "default": 0.8,
+          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
+          "range": [
+            0.0001,
+            1
+          ]
+        },
+        {
+          "name": "stop",
+          "key": "stop",
+          "tip": "用于控制生成时遇到某些内容则停止。您可传入多个字符串。"
+        },
+        {
+          "name": "temperature",
+          "key": "temperature",
+          "default": 0.7,
+          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
+          "range": [
+            0,
+            1.9999
+          ]
+        },
+        {
+          "name": "enable_search",
+          "key": "enable_search",
+          "tip": "联网搜索补充互联网知识，当前暂时免费提供服务，即将于2025年8月25日0时起转计费模式，按量后付费"
+        },
+        {
+          "name": "enable_thinking",
+          "key": "enable_thinking",
+          "default": false,
+          "tip": "推理模式"
+        },
+        {
+          "name": "thinking_budget",
+          "key": "thinking_budget",
+          "default": 4000,
+          "tip": "思维链的最大输出tokens数量",
+          "range": [
+            4000,
+            32768
+          ]
+        }
+      ],
       "samples": {
         "openai": {
           "completionsAPI": {
@@ -301,6 +407,49 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "DeepSeek-V3.2",
       "docUrl": "https://help.aliyun.com/document_detail/2868565.html",
+      "predictConfig": [
+        {
+          "name": "system",
+          "key": "systemMessage",
+          "tip": "系统人设，例如“你是一个AI助手”。"
+        },
+        {
+          "name": "top_p",
+          "key": "top_p",
+          "default": 0.95,
+          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
+          "range": [
+            0.0001,
+            1
+          ]
+        },
+        {
+          "name": "temperature",
+          "key": "temperature",
+          "default": 0.6,
+          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
+          "range": [
+            0,
+            1.9999
+          ]
+        },
+        {
+          "name": "enable_thinking",
+          "key": "enable_thinking",
+          "default": false,
+          "tip": "推理模式"
+        },
+        {
+          "name": "thinking_budget",
+          "key": "thinking_budget",
+          "default": 4000,
+          "tip": "思维链的最大输出tokens数量",
+          "range": [
+            1,
+            32768
+          ]
+        }
+      ],
       "samples": {
         "openai": {
           "completionsAPI": {
@@ -390,6 +539,49 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Deepseek-V3.2-Exp",
       "docUrl": "https://help.aliyun.com/document_detail/2868565.html",
+      "predictConfig": [
+        {
+          "name": "system",
+          "key": "systemMessage",
+          "tip": "系统人设，例如“你是一个AI助手”。"
+        },
+        {
+          "name": "top_p",
+          "key": "top_p",
+          "default": 0.95,
+          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
+          "range": [
+            0.0001,
+            1
+          ]
+        },
+        {
+          "name": "temperature",
+          "key": "temperature",
+          "default": 0.6,
+          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
+          "range": [
+            0,
+            1.9999
+          ]
+        },
+        {
+          "name": "enable_thinking",
+          "key": "enable_thinking",
+          "default": false,
+          "tip": "推理模式"
+        },
+        {
+          "name": "thinking_budget",
+          "key": "thinking_budget",
+          "default": 4000,
+          "tip": "思维链的最大输出tokens数量",
+          "range": [
+            1,
+            32768
+          ]
+        }
+      ],
       "samples": {
         "openai": {
           "completionsAPI": {
@@ -486,6 +678,49 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "DeepSeek-V3.1",
       "docUrl": "https://help.aliyun.com/document_detail/2868565.html",
+      "predictConfig": [
+        {
+          "name": "system",
+          "key": "systemMessage",
+          "tip": "系统人设，例如“你是一个AI助手”。"
+        },
+        {
+          "name": "top_p",
+          "key": "top_p",
+          "default": 0.95,
+          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
+          "range": [
+            0.0001,
+            1
+          ]
+        },
+        {
+          "name": "temperature",
+          "key": "temperature",
+          "default": 0.6,
+          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
+          "range": [
+            0,
+            1.9999
+          ]
+        },
+        {
+          "name": "enable_thinking",
+          "key": "enable_thinking",
+          "default": false,
+          "tip": "推理模式"
+        },
+        {
+          "name": "thinking_budget",
+          "key": "thinking_budget",
+          "default": 4000,
+          "tip": "思维链的最大输出tokens数量",
+          "range": [
+            1,
+            32768
+          ]
+        }
+      ],
       "samples": {
         "openai": {
           "completionsAPI": {
@@ -594,6 +829,43 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "DeepSeek-V3",
       "docUrl": "https://help.aliyun.com/document_detail/2868565.html",
+      "predictConfig": [
+        {
+          "name": "system",
+          "key": "systemMessage",
+          "tip": "系统人设，例如“你是一个AI助手”。"
+        },
+        {
+          "name": "top_p",
+          "key": "top_p",
+          "default": 0.6,
+          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
+          "range": [
+            0.0001,
+            1
+          ]
+        },
+        {
+          "name": "temperature",
+          "key": "temperature",
+          "default": 0.7,
+          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
+          "range": [
+            0,
+            1.9999
+          ]
+        },
+        {
+          "name": "presence_penalty",
+          "key": "presence_penalty",
+          "default": 0.95,
+          "tip": "用户控制模型生成时整个序列中的重复度。提高该参数时可以降低模型生成的重复度。",
+          "range": [
+            -2,
+            2
+          ]
+        }
+      ],
       "samples": {
         "openai": {
           "completionsAPI": {
@@ -682,6 +954,23 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "DeepSeek-R1-0528",
       "docUrl": "https://help.aliyun.com/document_detail/2868565.html",
+      "predictConfig": [
+        {
+          "name": "system",
+          "key": "systemMessage",
+          "tip": "系统人设，例如“你是一个AI助手”。"
+        },
+        {
+          "name": "max_tokens",
+          "key": "max_tokens",
+          "default": 4000,
+          "tip": "最终回答的最大长度（不含思维链输出）",
+          "range": [
+            1,
+            8192
+          ]
+        }
+      ],
       "samples": {
         "openai": {
           "default": {
@@ -787,6 +1076,23 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "DeepSeek-R1",
       "docUrl": "https://help.aliyun.com/document_detail/2868565.html",
+      "predictConfig": [
+        {
+          "name": "system",
+          "key": "systemMessage",
+          "tip": "系统人设，例如“你是一个AI助手”。"
+        },
+        {
+          "name": "max_tokens",
+          "key": "max_tokens",
+          "default": 4000,
+          "tip": "最终回答的最大长度（不含思维链输出）",
+          "range": [
+            1,
+            8192
+          ]
+        }
+      ],
       "samples": {
         "openai": {
           "default": {
@@ -871,6 +1177,23 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "DeepSeek-R1-Distill-Qwen-7B",
       "docUrl": "https://help.aliyun.com/document_detail/2868565.html",
+      "predictConfig": [
+        {
+          "name": "system",
+          "key": "systemMessage",
+          "tip": "系统人设，例如“你是一个AI助手”。"
+        },
+        {
+          "name": "max_tokens",
+          "key": "max_tokens",
+          "default": 4000,
+          "tip": "最终回答的最大长度（不含思维链输出）",
+          "range": [
+            1,
+            8192
+          ]
+        }
+      ],
       "samples": {
         "openai": {
           "default": {
@@ -955,6 +1278,23 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "DeepSeek-R1-Distill-Qwen-32B",
       "docUrl": "https://help.aliyun.com/document_detail/2868565.html",
+      "predictConfig": [
+        {
+          "name": "system",
+          "key": "systemMessage",
+          "tip": "系统人设，例如“你是一个AI助手”。"
+        },
+        {
+          "name": "max_tokens",
+          "key": "max_tokens",
+          "default": 4000,
+          "tip": "最终回答的最大长度（不含思维链输出）",
+          "range": [
+            1,
+            8192
+          ]
+        }
+      ],
       "samples": {
         "openai": {
           "default": {
@@ -1039,6 +1379,23 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "DeepSeek-R1-Distill-Qwen-14B",
       "docUrl": "https://help.aliyun.com/document_detail/2868565.html",
+      "predictConfig": [
+        {
+          "name": "system",
+          "key": "systemMessage",
+          "tip": "系统人设，例如“你是一个AI助手”。"
+        },
+        {
+          "name": "max_tokens",
+          "key": "max_tokens",
+          "default": 4000,
+          "tip": "最终回答的最大长度（不含思维链输出）",
+          "range": [
+            1,
+            8192
+          ]
+        }
+      ],
       "samples": {
         "openai": {
           "default": {
@@ -1103,6 +1460,23 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "DeepSeek-R1-Distill-Qwen-1.5B",
       "docUrl": "https://help.aliyun.com/document_detail/2868565.html",
+      "predictConfig": [
+        {
+          "name": "system",
+          "key": "systemMessage",
+          "tip": "系统人设，例如“你是一个AI助手”。"
+        },
+        {
+          "name": "max_tokens",
+          "key": "max_tokens",
+          "default": 4000,
+          "tip": "最终回答的最大长度（不含思维链输出）",
+          "range": [
+            1,
+            8192
+          ]
+        }
+      ],
       "samples": {
         "openai": {
           "default": {

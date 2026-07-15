@@ -176,6 +176,32 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "HappyHorse-1.0-I2V",
       "docUrl": "https://help.aliyun.com/document_detail/3029821.html",
+      "predictConfig": [
+        {
+          "name": "清晰度",
+          "key": "resolution",
+          "default": "1080P"
+        },
+        {
+          "name": "视频时长(秒)",
+          "key": "duration",
+          "default": 5,
+          "range": [
+            3,
+            15
+          ]
+        },
+        {
+          "name": "随机种子",
+          "key": "seed",
+          "default": 1234,
+          "tip": "随机数种子，用于控制模型生成内容的随机性",
+          "range": [
+            1,
+            2147483647
+          ]
+        }
+      ],
       "samples": {
         "dashscope": {
           "default": {

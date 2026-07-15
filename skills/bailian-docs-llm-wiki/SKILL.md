@@ -92,7 +92,19 @@ description: >-
 | `TG` | 文本生成 |
 | `Reasoning` | 推理 |
 | `VU` | 视觉理解 |
+| `IG` | 图像生成 |
 | `VG` | 视频生成 |
+| `TTS` | 语音合成 |
+| `ASR` | 语音识别 |
+| `Realtime-ASR` | 实时语音识别 |
+| `Realtime-Text-to-Speech` | 实时语音合成 |
+| `Realtime-Audio-Translate` | 实时音频翻译 |
+| `Realtime-Omni` | 实时全模态 |
+| `Multimodal-Omni` | 全模态 |
+| `ME` | 多模态嵌入 |
+| `TR` | 翻译 |
+| `3D-generation` | 3D 生成 |
+| `Realtime-Chatting` | Realtime-Chatting |
 
 一个模型常常带多个 capability，`index.md` 中按 `capabilities[0]`（主能力）归类，
 查找时按中文标签即可定位章节。

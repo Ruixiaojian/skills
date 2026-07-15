@@ -42,18 +42,18 @@
 
 - [3d generation](api/3d-generation.md) — 1 篇源文档
 - [application call](api/application-call.md) — 5 篇源文档
-- [application component api reference](api/application-component-api-reference.md) — 57 篇源文档
+- [application component api reference](api/application-component-api-reference.md) — 56 篇源文档
 - [file management api](api/file-management-api.md) — 1 篇源文档
 - [frameworks](api/frameworks.md) — 3 篇源文档
-- [image generation](api/image-generation.md) — 26 篇源文档
+- [image generation](api/image-generation.md) — 25 篇源文档
 - [knowledge](api/knowledge.md) — 1 篇源文档
 - [long term memory new](api/long-term-memory-new.md) — 1 篇源文档
 - [managed agents api](api/managed-agents-api.md) — 7 篇源文档
 - [model production](api/model-production.md) — 2 篇源文档
 - [more](api/more.md) — 3 篇源文档
-- [more about models](api/more-about-models.md) — 6 篇源文档
+- [more about models](api/more-about-models.md) — 5 篇源文档
 - [more models](api/more-models.md) — 6 篇源文档
-- [omni realtime api](api/omni-realtime-api.md) — 6 篇源文档
+- [omni realtime api](api/omni-realtime-api.md) — 5 篇源文档
 - [preparations](api/preparations.md) — 4 篇源文档
 - [qwen api reference](api/qwen-api-reference.md) — 1 篇源文档
 - [toolkits and frameworks](api/toolkits-and-frameworks.md) — 10 篇源文档
@@ -62,20 +62,20 @@
 
 ## 横切概念
 
-- [OpenAI 兼容接口](concepts/openai-compatible-api.md) — 关联 5 个主题
-- [Token 计量与管理](concepts/token.md) — 关联 5 个主题
+- [OpenAI 兼容接口](concepts/openai-compatible-interface.md) — 关联 5 个主题
+- [Token](concepts/token.md) — 关联 5 个主题
 - [函数调用](concepts/function-calling.md) — 关联 4 个主题
-- [多模态能力](concepts/multi-modal.md) — 关联 5 个主题
-- [插件机制](concepts/plugin.md) — 关联 5 个主题
+- [插件](concepts/plugin.md) — 关联 5 个主题
 - [检索增强生成](concepts/rag.md) — 关联 5 个主题
+- [模型上下文协议（MCP）](concepts/model-context-protocol.md) — 关联 5 个主题
 - [流式输出](concepts/streaming-output.md) — 关联 5 个主题
-- [长期记忆](concepts/long-term-memory.md) — 关联 4 个主题
+- [长期记忆](concepts/long-term-memory.md) — 关联 5 个主题
 
 ## 对比分析
 
-- [图像、视频与3D生成能力对比](comparisons/image-video-3d-generation.md) — 对比 3 个主题
-- [应用编排能力对比：托管智能体、应用组件与模型上下文协议](comparisons/application-orchestration.md) — 对比 3 个主题
-- [模型评估与监控体系对比](comparisons/model-evaluation-monitoring.md) — 对比 3 个主题
-- [模型部署方案对比：高并发推理、生产部署与压缩优化](comparisons/model-deployment-options.md) — 对比 3 个主题
+- [图像生成与视频生成对比](comparisons/image-vs-video-generation.md) — 对比 2 个主题
+- [应用开发框架对比：Managed Agents、Application Component 与 Toolkits](comparisons/application-frameworks.md) — 对比 3 个主题
+- [模型评估与监控能力对比](comparisons/model-evaluation-monitoring.md) — 对比 3 个主题
+- [模型部署方式对比：高并发推理、模型压缩与模型部署指南](comparisons/model-deployment-options.md) — 对比 3 个主题
 - [长期记忆与知识库方案对比](comparisons/memory-solutions.md) — 对比 3 个主题
 

@@ -1,86 +1,64 @@
 # [more](more.md) models
 
-百炼平台提供一系列面向垂直场景的专用大模型，覆盖法律、翻译、意图理解、深度研究、OCR和GUI自动化等能力。这些模型基于通义千问基座，通过领域精调、RAG增强、多模态融合或工具调用机制实现专业任务优化。开发者可通过DashScope SDK或OpenAI兼容接口调用，需注意地域、域名及参数配置差异。
+百炼平台提供一系列面向垂直场景的专用大模型，覆盖意图理解、法律咨询、机器翻译、深度研究、OCR文字识别及GUI自动化等能力。这些模型均基于通义千问系列基座模型精调或增强，具备领域适配性与高精度输出特性，适用于构建专业级AI应用。
 
 ## 支持的模型/功能
 
-| 模型名称 | 用途 | 输入类型 | 关键特性 | 文档引用 |
-|----------|------|----------|----------|----------|
-| `farui-plus` | 法律行业问答、文书生成、合同审查 | 文本 | RAG检索增强、法律Agent、司法专属小模型 [通义法睿大语言模型](../../raw/model-api-reference/more-models/tongyi-farui-api.md) | [通义法睿大语言模型](../../raw/model-api-reference/more-models/tongyi-farui-api.md) |
-| `qwen-mt-plus` | 高质量机器翻译 | 文本 | 支持术语干预、翻译记忆（TM）、领域提示 | [Qwen-MT API参考](../../raw/model-api-reference/more-models/qwen-mt-api.md) |
-| `tongyi-intent-detect-v3` | 意图识别与[函数调用](../concepts/function-calling.md)决策 | 文本 | 双模式输出：`INTENT_MODE`（含工具调用）或纯标签分类；支持简写单Token响应 | [意图理解能力](../../raw/model-api-reference/more-models/intent-detect-capability.md) |
-| `qwen-deep-research` | 多阶段深度研究（规划→搜索→报告生成） | 文本 | 仅支持华北2（北京）地域；必须分两步调用（反问确认 + 深入研究）；支持`model_detailed_report`/`model_summary_report`输出格式 | [Qwen-Deep-Research API 参考](../../raw/model-api-reference/more-models/qwen-deep-research-api.md) |
-| `qwen3.5-ocr` | 图像文字提取与结构化解析 | 图文混合（image_url + text） | 支持自定义Prompt、min/max_pixels图像缩放控制、[流式输出](../concepts/streaming-output.md) | [Qwen-OCR API参考](../../raw/model-api-reference/more-models/qwen-vl-ocr-api-reference.md) |
-| `gui-plus-2026-02-26` | GUI界面自动化操作 | 图文混合（image_url + text） | 基于工具调用（`computer_use`），需严格遵循Action + `<tool>`响应格式；支持高分辨率图像处理 | [GUI-Plus API参考](../../raw/model-api-reference/more-models/gui-plus-interface-interaction-model.md) |
+当前支持的专用模型包括：
 
-> **注意**：文档4明确指出`qwen-deep-research`“仅支持华北2（北京）地域”，而文档2、3、5中均提及新加坡/美国地域的兼容接口配置。若在非北京地域调用该模型将失败，此为硬性限制而非配置问题。
+- **意图理解模型**：`tongyi-intent-detect-v3`，支持毫秒级意图识别与工具调用决策，适用于对话路由、智能助手等场景 [意图理解能力](../../raw/model-api-reference/more-models/intent-detect-capability.md)；
+- **法律大模型**：`farui-plus`，专为法律行业优化，支持法律问答、文书生成、案情分析与合同审查等功能；
+- **机器翻译模型**：`qwen-mt-plus`，支持多语言互译、术语干预与翻译记忆，适用于本地化与技术文档翻译；
+- **深度研究模型**：`qwen-deep-research`，仅限华北2（北京）地域，支持两阶段交互式研究（反问确认 + 深度分析），并集成网络搜索与引用溯源能力 [Qwen-Deep-Research API 参考](../../raw/model-api-reference/more-models/qwen-deep-research-api.md)；
+- **OCR模型**：`qwen3.5-ocr`，支持图像中结构化文本提取，兼容 OpenAI 多模态消息格式（含 `image_url` 与 `text` 组合输入）；
+- **GUI自动化模型**：`gui-plus-2026-02-26`，面向桌面界面操作，支持截图理解、鼠标键盘控制与任务终止，需配合 `<tools>` 系统提示与 `<tool_call>` 格式化响应 [GUI-Plus API参考](../../raw/model-api-reference/more-models/gui-plus-interface-interaction-model.md)。
+
+> **注意**：文档4明确指出 `qwen-deep-research` “仅支持通过 Python DashScope SDK 调用，暂不支持 Java SDK 与 [OpenAI 兼容接口](../concepts/openai-compatible-interface.md)”，但文档5和文档6均提供了完整的 OpenAI 兼容调用示例（含 `qwen3.5-ocr` 和 `gui-plus-2026-02-26`）。该矛盾表明 `qwen-deep-research` 的 OpenAI 兼容支持状态与其他模型不一致，开发者应以文档4的声明为准，避免在生产环境中尝试非支持接口。
 
 ## 关键参数
 
-- **`model`**（必选）：模型标识符，如`farui-plus`、`qwen-mt-plus`等，大小写敏感。
-- **`messages`**（必选）：对话消息数组，每项含`role`（`user`/`system`/`assistant`）和`content`。OCR与GUI模型支持图文混合`content`（含`image_url`和`text`子项）。
-- **`result_format` / `output_format`**：
-  - DashScope SDK通用参数：`result_format='message'`（推荐）或`'text'`；
-  - `qwen-deep-research`特有：`output_format`可选`model_detailed_report`（默认，~6000 Token）或`model_summary_report`（~1500–2000 Token）。
-- **`stream`**（可选）：启用[流式输出](../concepts/streaming-output.md)（`True`/`true`），适用于长文本生成或实时反馈场景。
-- **领域扩展参数**：
-  - `qwen-mt-plus`：`translation_options`对象，含`source_lang`、`target_lang`、`terms`（术语表）、`tm_list`（翻译记忆）；
-  - `qwen3.5-ocr`：`image_url`子项支持`min_pixels`/`max_pixels`控制图像预处理；
-  - `gui-plus-2026-02-26`：`extra_body={"vl_high_resolution_images": True}`启用高分辨率图像支持。
+各模型通用关键参数如下：
+
+- **`model`**（必选）：字符串，指定模型名称，如 `"tongyi-intent-detect-v3"`、`"qwen-mt-plus"` 等；
+- **`messages`**（必选）：消息数组，按对话顺序排列；对多模态模型（如 `qwen3.5-ocr`、`gui-plus-2026-02-26`），`content` 支持混合类型（`text` + `image_url`）；
+- **`extra_body`**（可选，OpenAI 兼容）：用于传递模型特有参数：
+  - `qwen-mt-plus`：传入 `translation_options`（含 `source_lang`、`target_lang`、`terms`、`tm_list`）；
+  - `gui-plus-2026-02-26`：建议设置 `"vl_high_resolution_images": true` 以提升图像理解精度；
+- **`output_format`**（可选，`qwen-deep-research`）：取值 `model_detailed_report`（默认，约6000 [Token](../concepts/token.md)）或 `model_summary_report`（约1500–2000 [Token](../concepts/token.md)）；
+- **图像处理参数**（`qwen3.5-ocr` / `gui-plus-2026-02-26`）：`image_url` 对象内可指定 `min_pixels` 与 `max_pixels` 控制缩放行为。
 
 ## 使用方式
 
-### 基础调用流程
-1. **环境准备**：安装SDK（[DashScope](https://help.aliyun.com/zh/model-studio/install-sdk) 或 [OpenAI](https://help.aliyun.com/zh/model-studio/install-sdk)），获取并配置API Key至环境变量`DASHSCOPE_API_KEY`；
-2. **域名配置**：强烈建议使用业务空间专属域名（如`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com`），详见各文档中的迁移提示；
-3. **构造请求**：按模型要求组织`messages`，设置必要参数；
-4. **发起调用**：使用SDK方法（如`dashscope.Generation.call()`或`client.chat.completions.create()`）。
+### 基础调用前提
+- 已获取并配置 API Key（推荐设为环境变量 `DASHSCOPE_API_KEY`）；
+- 安装对应 SDK（[DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk) 或 [OpenAI SDK](https://help.aliyun.com/zh/model-studio/install-sdk)）；
+- **强烈建议迁移至业务空间专属域名**：华北2（北京）使用 `https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com`，新加坡使用 `https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com`，以获得更高性能与稳定性 [意图理解能力](../../raw/model-api-reference/more-models/intent-detect-capability.md)。
 
-### 典型调用示例
-- **法律文书生成（farui-plus）**：  
-  ```python
-  response = dashscope.Generation.call(
-      model="farui-plus",
-      messages=[{"role": "user", "content": "我哥欠我10000块钱，给我生成起诉书。"}],
-      result_format='message'
-  )
-  ```
-- **翻译+术语干预（qwen-mt-plus）**：  
-  ```python
-  completion = client.chat.completions.create(
-      model="qwen-mt-plus",
-      messages=[{"role": "user", "content": "生物传感器"}],
-      extra_body={"translation_options": {"source_lang": "Chinese", "target_lang": "English", "terms": [{"source": "生物传感器", "target": "biological sensor"}]}}
-  )
-  ```
-- **OCR结构化提取（qwen3.5-ocr）**：  
-  ```python
-  completion = client.chat.completions.create(
-      model="qwen3.5-ocr",
-      messages=[{
-          "role": "user",
-          "content": [
-              {"type": "image_url", "image_url": {"url": "https://..."}},
-              {"type": "text", "text": "提取发票号码、金额、日期"}
-          ]
-      }]
-  )
-  ```
+### 接口选择
+- **[OpenAI 兼容接口](../concepts/openai-compatible-interface.md)**：适用于 `tongyi-intent-detect-v3`、`qwen-mt-plus`、`qwen3.5-ocr`、`gui-plus-2026-02-26`，`base_url` 统一为 `.../compatible-mode/v1`；
+- **DashScope 原生接口**：适用于 `farui-plus`、`qwen-deep-research`（仅 Python SDK），`base_http_api_url` 设为 `.../api/v1`；
+- **[流式输出](../concepts/streaming-output.md)**：所有模型均支持，OpenAI 接口设 `stream=True`，DashScope 接口使用 `stream=True`（Python）或 `streamCall`（Java）。
+
+### 特殊调用模式
+- **意图识别双模式**：
+  - `INTENT_MODE`：System Message 中声明 `Response in INTENT_MODE.` 并注入工具定义，返回 `<tags>`/`<tool_call>`/`<content>` 结构化结果；
+  - **纯标签模式**：System Message 指定意图字典并要求“仅回复所选标签”，可进一步压缩为单 [Token](../concepts/token.md) 输出以优化延迟。
+- **深度研究两阶段流程**：先调用获取模型反问（`ResearchPlanning` 阶段），再将用户澄清与历史消息组合发起第二轮调用，触发 `WebResearch` 与 `answer` 阶段。
 
 ## 限制和注意事项
 
-- **地域限制**：`qwen-deep-research`仅支持华北2（北京）地域，其他模型虽支持多地域，但需匹配对应API Key和`base_url`（如新加坡地域Key不可用于北京域名）；
-- **限流策略**：所有模型受百炼平台统一限流控制，详情见[限流文档](https://help.aliyun.com/zh/model-studio/rate-limit)；
-- **成本与免费额度**：`tongyi-intent-detect-v3`提供90天内100万Token免费额度，其余模型按输入/输出Token计费（如`farui-plus`输入20元/百万Token）；
-- **SDK兼容性**：`qwen-deep-research`当前**仅支持Python DashScope SDK**，不支持Java SDK或OpenAI兼容接口 [Qwen-Deep-Research API 参考](../../raw/model-api-reference/more-models/qwen-deep-research-api.md)；
-- **安全实践**：API Key务必配置至环境变量，避免硬编码；Java SDK中`Generation`对象非线程安全，需自行管理同步 [通义法睿大语言模型](../../raw/model-api-reference/more-models/tongyi-farui-api.md)；
-- **响应解析**：`tongyi-intent-detect-v3`返回内容含XML标记（如`<tags>`、<tool_call>），需用正则解析提取工具调用JSON [意图理解能力](../../raw/model-api-reference/more-models/intent-detect-capability.md)。
+- **地域限制**：`qwen-deep-research` 仅支持华北2（北京）地域，其他地域调用将失败；
+- **SDK 限制**：`qwen-deep-research` 当前**不支持 Java SDK 与 [OpenAI 兼容接口](../concepts/openai-compatible-interface.md)**，仅 Python DashScope SDK 可用；
+- **域名迁移强制建议**：旧域名（如 `dashscope.aliyuncs.com`）虽仍可用，但新业务空间专属域名提供“卓越的性能和更高的稳定性”，生产环境务必迁移；
+- **成本与配额**：`tongyi-intent-detect-v3` 提供开通后90天内100万 Token 免费额度；`farui-plus` 输入/输出成本为20元/百万 Token（文档2未列明输出成本，存在信息缺失）；
+- **OCR 图像约束**：`qwen3.5-ocr` 对输入图像像素有硬性要求（`min_pixels`/`max_pixels`），超限将自动缩放，需在请求中显式配置；
+- **GUI 模型行为约束**：`gui-plus-2026-02-26` 无终端或应用菜单访问权限，所有操作必须通过点击桌面图标启动应用，并需合理插入 `wait` 动作应对加载延迟。
 
 ## 来源文档
 
+- [意图理解能力](../../raw/model-api-reference/more-models/intent-detect-capability.md)
 - [通义法睿大语言模型](../../raw/model-api-reference/more-models/tongyi-farui-api.md)
 - [Qwen-MT API参考](../../raw/model-api-reference/more-models/qwen-mt-api.md)
-- [意图理解能力](../../raw/model-api-reference/more-models/intent-detect-capability.md)
 - [Qwen-Deep-Research API 参考](../../raw/model-api-reference/more-models/qwen-deep-research-api.md)
 - [Qwen-OCR API参考](../../raw/model-api-reference/more-models/qwen-vl-ocr-api-reference.md)
 - [GUI-Plus API参考](../../raw/model-api-reference/more-models/gui-plus-interface-interaction-model.md)

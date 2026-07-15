@@ -1,42 +1,45 @@
 # application [support](support.md)
 
-`application support` 指百炼平台为构建和运行 AI 应用（含智能体、RAG 应用、插件集成等）所提供的核心能力支持体系，涵盖模型调用、插件扩展、知识检索增强、[流式输出](../concepts/streaming-output.md)及数据管理等关键环节。开发者需结合服务协议与技术规范进行开发与部署。相关法律约束和合规要求详见 [相关协议](../../raw/application-user-guide/application-support/application-related-agreements.md)。
+`application support` 指百炼平台为构建和运行 AI 应用（如智能体、RAG 应用、[插件](../concepts/plugin.md)集成应用等）所提供的核心能力支持体系，涵盖模型调用、[插件](../concepts/plugin.md)扩展、知识检索增强、[流式输出](../concepts/streaming-output.md)等关键功能。开发者可通过 Assistant API 或 Agent 框架接入，需关注参数配置、协议约束及服务边界。所有能力均受 [阿里云百炼服务协议](https://terms.alicdn.com/legal-agreement/terms/common_platform_service/20230728213935489/20230728213935489.html?spm=5176.28197581.0.0.16e829a4HTC9FE) 约束，具体条款详见 [原文标题](../../raw/application-user-guide/application-support/application-related-agreements.md)。
 
 ## 支持的模型与功能
 
-- **插件能力**：官方提供六类内置插件：Python代码解释器、计算器、图片生成、夸克搜索、生成二维码、GitHub搜索；其中部分插件需申请开通。  
-- **自定义插件**：支持通过 API 注册自定义插件，大模型可解析其参数定义并调用（参见 [常见问题](../../raw/application-user-guide/application-support/application-faq.md) 第3条）。  
-- **RAG（知识检索增强）**：支持多知识库并行检索，按配置策略（如相似度得分）选取 topN 片段后融合生成，适用于问答、客服、教育等场景（[常见问题](../../raw/application-user-guide/application-support/application-faq.md) 第5条）。  
-- **流式与增量输出**：支持 `stream=True` 实现流式响应；进一步启用 `incremental_output=True` 可获得真正增量式 token 输出（非全量重传），适用于前端实时渲染（[常见问题](../../raw/application-user-guide/application-support/application-faq.md) 第8条）。
+- **内置[插件](../concepts/plugin.md)**：当前官方支持 6 类插件：Python 代码解释器、计算器、图片生成、夸克搜索、生成二维码、GitHub 搜索。部分插件需申请开通 [原文标题](../../raw/application-user-guide/application-support/application-faq.md)。
+- **自定义插件**：支持通过符合 OpenAPI 规范的 HTTP 接口注册；大模型可理解插件描述及参数结构，并据此生成调用逻辑；但**仅支持透传 `Authorization` header**，其他自定义 header 将被忽略（见文档 1 第 10 条）。
+- **RAG（知识检索增强）**：支持多知识库并行检索，按配置权重与相似度得分聚合结果后选取 topN 片段；适用于问答、客服、教育等场景 [原文标题](../../raw/application-user-guide/application-support/application-faq.md)。
+- **[流式输出](../concepts/streaming-output.md)**：支持增量式流式响应，需同时设置 `stream=True` 和 `incremental_output=True`（文档 1 第 8 条）。
 
-> **注意**：文档2中第4条称“Assistant API 可提供各种类，方便调优”，但未明确具体类名或接口契约；当前 SDK 与 OpenAI 兼容 API 中实际暴露的是 `assistant` 类型资源（非 `Assistant` 类），该描述易引发歧义，建议以 [API 参考文档](https://help.aliyun.com/zh/model-studio/developer-reference) 为准。
+> **注意**：文档 1 中“Agent 和 Assistant API 的最大区别”（第 4 条）表述模糊且缺乏技术细节，实际差异应以最新版 [Assistant API 文档](https://help.aliyun.com/zh/model-studio/assistant-api-overview) 为准；该 FAQ 条目已过时，不建议作为架构选型依据。
 
 ## 关键参数
 
 | 参数 | 类型 | 说明 |
 |------|------|------|
 | `stream` | bool | 启用[流式输出](../concepts/streaming-output.md)（逐 token 返回） |
-| `incremental_output` | bool | 在 `stream=True` 基础上启用增量式输出（仅返回新增 token，非累计内容） |
-| `MD5`（文件上传） | string | 文件完整性校验值，必填（[常见问题](../../raw/application-user-guide/application-support/application-faq.md) 第3条） |
-| `authorization`（插件调用） | header | 插件 HTTP 请求中唯一支持透传的 header；其他自定义 header 将被丢弃（[常见问题](../../raw/application-user-guide/application-support/application-faq.md) 第10条） |
+| `incremental_output` | bool | 启用增量式流式输出（仅返回新增内容，非全量重传） |
+| `knowledge_retrieval` | object | 控制 RAG 行为，含 `top_k`、`score_threshold`、`enable_rerank` 等子字段 |
+| `plugins` | list | 指定启用的插件 ID 列表（如 `["python_interpreter", "qrcode_generator"]`） |
 
 ## 使用方式
 
-- **插件调用**：注册插件时需声明 `name`、`description`、`parameters`（JSON Schema 格式），系统自动注入至模型上下文；调用时模型生成结构化 function call 请求，平台负责路由与执行。  
-- **RAG 应用测试**：若检索结果不准确，可通过回复下方“问题反馈”按钮提交，或复制 `RequestId` 提交工单（[常见问题](../../raw/application-user-guide/application-support/application-faq.md) 第6条）。  
-- **Markdown 渲染**：模型输出中的 `**text**` 等标记需由前端自行解析并渲染为加粗等样式（[常见问题](../../raw/application-user-guide/application-support/application-faq.md) 第7条）。  
-- **备案与合作**：接入通义千问模型并上架应用市场/小程序前，须完成 [应用合规备案](https://help.aliyun.com/zh/model-studio/compliance-and-launch-filing-guide-for-ai-apps-powered-by-the-tongyi-model)，并提交工单申请合作协议（[常见问题](../../raw/application-user-guide/application-support/application-faq.md) 第11条）。
+- **调用入口**：统一通过 `/v1/applications/{app_id}/chat` 接口发起请求（RESTful）或使用 SDK 封装的 `assistant.chat()` 方法。
+- **插件配置**：在应用控制台中绑定插件，或在 API 请求中显式声明 `plugins` 参数；自定义插件需提前在「插件管理」中完成注册与鉴权配置。
+- **RAG 配置**：上传文件至知识库（仅支持小写后缀 `.pdf`, `.doc`, `.docx`；见文档 1 数据管理第 1 条），并在应用中关联知识库 ID；空行会导致结构化数据截断（文档 1 第 4 条）。
+- **错误处理**：RAG 结果不准确时，可通过界面反馈按钮提交问题，或复制 `RequestId` 提交工单 [原文标题](../../raw/application-user-guide/application-support/application-faq.md)。
 
 ## 限制和注意事项
 
-- **文件上传**：仅支持 `.pdf`（小写后缀）、`.doc`、`.docx`；结构化数据导入时，空行将导致后续行被截断（[常见问题](../../raw/application-user-guide/application-support/application-faq.md) 第1、4条）。  
-- **知识库容量**：单业务空间上限为 10 万个文档；超限时需提交工单申请扩容（[常见问题](../../raw/application-user-guide/application-support/application-faq.md) 第2条）。  
-- **协议约束**：所有应用必须遵守 [阿里云百炼服务协议](../../raw/application-user-guide/application-support/application-related-agreements.md) 及 [开源模型协议条款说明](../../raw/application-user-guide/application-support/application-related-agreements.md)，尤其注意数据使用、模型输出责任归属等条款。  
-- **插件安全限制**：自定义插件无法透传除 `Authorization` 外的任何 HTTP header，服务端会主动剥离其余 header 字段（[常见问题](../../raw/application-user-guide/application-support/application-faq.md) 第10条）。
+- **文件上传**：单业务空间上限 10 万个文档；超限时需提交工单申请扩容（文档 1 第 2 条）。
+- **MD5 校验**：上传接口必填 `Content-MD5` 头，用于验证文件完整性（文档 1 第 3 条）。
+- **协议约束**：
+  - 自定义插件不收费，但 [prompt](prompt.md) 优化、API 调用及测试窗使用将计费；
+  - 所有应用上线前须完成 [应用合规备案](https://help.aliyun.com/zh/model-studio/compliance-and-launch-filing-guide-for-ai-apps-powered-by-the-tongyi-model)，并签署通义千问合作协议（文档 1 应用备案章节）；
+  - 开源模型使用须遵守 [开源模型协议条款说明](https://help.aliyun.com/zh/model-studio/open-source-model-terms)（见 [原文标题](../../raw/application-user-guide/application-support/application-related-agreements.md)）。
+- **渲染提示**：模型输出中的 `**text**` 为 Markdown 加粗语法，需前端自行解析渲染（文档 1 第 7 条）。
 
 ## 来源文档
 
-- [相关协议](../../raw/application-user-guide/application-support/application-related-agreements.md)
 - [常见问题](../../raw/application-user-guide/application-support/application-faq.md)
+- [相关协议](../../raw/application-user-guide/application-support/application-related-agreements.md)
 
 
