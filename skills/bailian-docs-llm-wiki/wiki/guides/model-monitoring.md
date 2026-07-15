@@ -1,86 +1,77 @@
 # model monitoring
 
-百炼平台提供模型监控与用量管理能力，帮助开发者追踪模型调用的性能指标、[Token](../concepts/token.md) 消耗和费用趋势。通过监控面板可实时观测调用时长、失败率、RPM/TPM 等关键指标，并配置告警规则实现异常的主动发现。结合用量统计功能，开发者可以按[业务空间](../concepts/workspace.md)维度精细化管理模型成本。
+模型监控是百炼平台提供的核心可观测性能力，用于实时跟踪模型调用行为、性能表现、成本消耗与异常事件。它覆盖从基础调用统计到细粒度 Token 追踪、从控制台可视化到 Prometheus 自建集成的全链路监控能力，适用于生产环境下的稳定性保障与成本精细化治理。所有监控数据默认按「模型 + 业务空间」维度聚合，主账号可跨空间查看，子账号仅限当前业务空间。
 
-## 支持的模型与地域
+## 支持的模型与功能
 
-- **用量统计**：模型列表中的所有模型均支持查看用量，包括调优后的自定义模型。详见[模型用量](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)。
-- **普通监控**：支持所有模型（含自定义模型）。
-- **高级监控**：仅支持北京、新加坡、弗吉尼亚地域。
-- **告警功能**：仅支持北京、新加坡地域。
+- **监控覆盖范围**：  
+  - **普通监控**支持[选择模型](https://help.aliyun.com/zh/model-studio/models)中的全部模型（含基于其调优的[自定义模型](https://help.aliyun.com/zh/model-studio/model-deployment-introduction#f17bf700c06k5)）；  
+  - **高级监控**（含分钟级指标、告警、Prometheus 接入）仅支持北京、新加坡、弗吉尼亚地域下的模型；  
+  - **告警功能**仅支持北京、新加坡地域（见 [模型监控 (raw/model-user-guide/model-monitoring/model-telemetry.md)](../../raw/model-user-guide/model-monitoring/model-telemetry.md)）。  
 
-> **注意**：普通监控的数据延迟为小时级，高级监控可提供分钟级数据洞察。用量统计数据延迟约 1 小时，且不支持查看 30 天以前的数据。
+- **核心功能模块**：  
+  - **调用统计**：调用次数、失败次数、失败率、限流错误（429）、内容安全拦截次数；  
+  - **性能指标**：RPM、TPM、调用时长、首Token延时、非首Token延时；  
+  - **成本监控**：Token 消耗汇总与单次追踪（仅北京地域部分模型支持）；  
+  - **日志审计**：输入/输出对话记录（仅北京地域且限于[指定模型列表](../../raw/model-user-guide/model-monitoring/model-telemetry.md)）；  
+  - **用量统计**：按业务空间维度的模型用量（含免费额度使用情况），延迟约 1 小时（见 [模型用量 (raw/model-user-guide/model-monitoring/model-usage-statistics.md)](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)）。  
 
-## 监控指标
+> **注意**：文档 1 称“普通监控延迟通常为小时级”，而文档 2 明确用量统计延迟“约为 1 小时”；二者一致。但文档 1 中“新模型在首次数据同步完成后自动加入列表”未说明是否含自定义模型——文档 2 明确“调优后的模型”同样支持用量查看，故可推断其也纳入普通监控范围，无额外限制。
 
-模型监控将指标分为四大类：
+## 关键参数与指标
 
-| 类型 | 典型指标 | 用途 |
-|------|----------|------|
-| 安全 | 内容安全错误次数 | 识别违规内容 |
-| 成本 | 平均单次请求调用量、[Token](../concepts/token.md) 消耗 | 评估成本效益 |
-| 性能 | 调用时长、首 [Token](../concepts/token.md) 延时、RPM、TPM | 观察性能变化 |
-| 错误 | 失败次数、失败率、限流错误次数 | 判断模型稳定性 |
+| 类别 | 指标名 | 说明 | 支持过滤 Label |
+|--------|---------|------|----------------|
+| 调用次数 | `model_call_count` | 总调用次数 | `user_id`, `apikey_id`, `workspace_id`, `model`, `protocol`, `sub_protocol`, `status_code`, `error_code` |
+| 调用时长 | `model_call_duration`, `model_call_duration_p99` | 均值/P99 时长（秒） | 同上 |
+| 首Token延时 | `model_first_token_duration` | 首包响应时间 | 同上 |
+| 非首Token延时 | `model_generation_duration_per_token` | 每 Token 生成耗时 | 同上 |
+| Token用量 | `model_usage` | 总 Token 数（支持 `usage_type` 过滤：`input_tokens`/`output_tokens`/`total_tokens` 等） | `usage_type`, `workspace_id`, `model`, `apikey_id` |
 
-监控详情页支持按 API-KEY、推理类型（实时/批量）、时间范围和时间精度（分钟/小时）进行筛选。详细的指标列表和 Prometheus 查询方式见[模型监控](../../raw/model-user-guide/model-monitoring/model-telemetry.md)。
+所有指标均通过 Prometheus HTTP API 提供，需开启[高级监控](../../raw/model-user-guide/model-monitoring/model-telemetry.md)并配置 AccessKey 认证（见 [模型监控 (raw/model-user-guide/model-monitoring/model-telemetry.md)](../../raw/model-user-guide/model-monitoring/model-telemetry.md)）。
 
-## 用量统计
+## 使用方式
 
-用量数据按[业务空间](../concepts/workspace.md)维度统计（不支持按阿里云账号维度），在控制台「模型用量」页面查看。不同模型类型的计量单位：
+1. **控制台访问**：  
+   - 普通监控入口：[模型监控](https://bailian.console.aliyun.com/?tab=model#/model-telemetry)（北京）或对应地域控制台；  
+   - 用量统计入口：[模型用量](https://bailian.console.aliyun.com/?tab=costing-balance#/costing-balance/usage-statistics)（仅业务空间维度）；  
+   - 免费额度管理：[免费额度](https://bailian.console.aliyun.com/?tab=costing-balance#/costing-balance/free-quota)。  
 
-- **大语言模型 / 全模态模型 / 向量模型**：Token
-- **图像生成**：张
-- **视频生成**：秒
-- **语音模型**：秒、字符或 Token（视模型而定）
+2. **日志与单次 Token 查看**（仅北京地域）：  
+   - 需先在「模型监控配置」中开通**审计日志 + 推理日志**；  
+   - 开通后，在模型列表点击「日志」页签，查看请求/响应及 `用量` 字段（见 [模型监控 (raw/model-user-guide/model-monitoring/model-telemetry.md)](../../raw/model-user-guide/model-monitoring/model-telemetry.md)）。  
 
-免费额度管理可在控制台「免费额度」页面操作，开启「免费额度用完即停」后，额度耗尽时服务将自动停止（返回 403 错误），避免产生额外费用。
+3. **告警配置**：  
+   - 仅北京、新加坡地域支持；  
+   - 需先开启高级监控 → 进入[模型告警](https://bailian.console.aliyun.com/?tab=model#/model-alert) → 创建规则（支持短信/邮件/钉钉/Webhook 等通知方式）。  
 
-## 告警配置
+4. **Grafana / 自建应用接入**：  
+   - 获取 Prometheus HTTP API 地址（需开启高级监控）；  
+   - 使用 `Basic` 认证（AccessKey:AccessKeySecret Base64 编码）调用 `/api/v1/query_range`；  
+   - 示例：`GET {API}/api/v1/query_range?query=model_usage{workspace_id="xxx",model="qwen-plus"}&start=...&step=60s`（详见 [模型监控 (raw/model-user-guide/model-monitoring/model-telemetry.md)](../../raw/model-user-guide/model-monitoring/model-telemetry.md)）。
 
-建立主动告警的流程：
+## 限制和注意事项
 
-1. **开启高级监控**：在模型监控页面 → 模型监控配置 → 开启「性能和用量指标监控」。
-2. **创建告警规则**：在模型告警页面选择监控模型和模板，设置触发条件。
-3. **通知方式**：支持短信、邮件、电话、钉钉机器人、企业微信机器人及 Webhook。
+- **地域限制严格**：  
+  - 日志审计、单次 Token 追踪、告警、Prometheus 接入等功能**仅限北京、新加坡、弗吉尼亚地域**；其他地域仅提供小时级普通监控（如调用总量、失败率等基础卡片）。  
 
-告警等级与通知渠道对应关系：
+- **模型兼容性差异**：  
+  - 并非所有模型均支持全部监控能力。例如，历史对话（输入/输出日志）仅支持文档 1 列出的千问系列、开源及三方模型快照版本（如 `qwen3-max-2025-09-23`），旧版快照或未列型号不支持（见 [模型监控 (raw/model-user-guide/model-monitoring/model-telemetry.md)](../../raw/model-user-guide/model-monitoring/model-telemetry.md)）。  
 
-- 紧急（CRITICAL）：电话、短信、邮件
-- 错误（ERROR）：短信、邮件
-- 警告（WARNING）：短信、邮件
-- 普通（INFO）：邮件
+- **数据延迟与范围**：  
+  - 普通监控数据延迟约 **1 小时**；高级监控支持分钟级洞察；  
+  - 控制台用量页面**最多查看最近 30 天数据**，更早数据需通过[费用与成本](https://billing-cost.console.aliyun.com/finance/expense-report/expense-detail-by-instance)查询（见 [模型用量 (raw/model-user-guide/model-monitoring/model-usage-statistics.md)](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)）。  
 
-## 模型日志
+- **权限约束**：  
+  - 主账号及具备足够权限的子账号可开通日志与高级监控；  
+  - 子业务空间成员**无法切换查看其他业务空间数据**，仅限当前空间（见 [模型监控 (raw/model-user-guide/model-monitoring/model-telemetry.md)](../../raw/model-user-guide/model-monitoring/model-telemetry.md)）。  
 
-开通推理日志后可查看每次调用的输入、输出及 Token 消耗，适用于故障排查和内容审计。
-
-> **注意**：日志功能目前仅适用于华北2（北京）地域的部分模型。从调用发生到日志记录存在分钟级延迟。
-
-开通步骤：模型监控页面 → 模型监控配置 → 依次开通审计日志和推理日志。
-
-## 接入外部系统
-
-高级监控数据存储在私有 Prometheus 实例中，支持标准 Prometheus HTTP API。可接入 Grafana 或自建应用进行可视化分析。认证方式为 Basic Auth（`base64(AccessKey:AccessKeySecret)`）。详见[模型监控](../../raw/model-user-guide/model-monitoring/model-telemetry.md)中的接入说明。
-
-## 生产环境最佳实践
-
-- **控制输出长度**：合理设置 `max_tokens` 参数限制单次生成的最大 Token 数。
-- **按任务选模型**：简单任务（分类、摘要）优先使用轻量级模型以降低成本。
-- **监控与告警**：配置用量和性能告警，异常时及时响应。
-- **优化 Prompt**：简洁清晰的 Prompt 可减少不必要的输入 Token 消耗。
-- **批量推理**：非实时大批量任务使用批量推理接口，成本更低。
-
-更多用量管理建议参见[模型用量](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)。
+- **用量单位差异**：  
+  - 大语言模型按 **Token** 计费；视觉模型按 **张**（图像）、**秒**（视频）；语音模型按 **秒/字符/Token**（依模型而定）；全模态模型文本部分按 Token，其他模态按对应 Token 数（见 [模型用量 (raw/model-user-guide/model-monitoring/model-usage-statistics.md)](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)）。
 
 ## 来源文档
 
-- [模型用量](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)
 - [模型监控](../../raw/model-user-guide/model-monitoring/model-telemetry.md)
-
-
-
-
-
-
+- [模型用量](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)
 
 

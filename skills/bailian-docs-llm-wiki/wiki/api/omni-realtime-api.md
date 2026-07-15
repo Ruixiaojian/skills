@@ -1,164 +1,61 @@
 # omni realtime api
 
-Qwen-Omni-Realtime API 是阿里云百炼平台提供的实时[多模态](../concepts/multimodal.md)交互接口，基于 WebSocket 协议实现低延迟的音视频对话。该 API 支持语音输入/输出、图像输入、语音活动检测（VAD）、工具调用（Function Calling）、联网搜索及声音复刻等功能，适用于智能客服、语音助手等实时对话场景。
+Qwen-Omni-Realtime API 是一个基于 WebSocket 的实时多模态交互接口，支持语音输入、文本/音频输出、VAD 自动检测、工具调用与联网搜索（部分模型），适用于智能客服、虚拟助手等低延迟对话场景。其核心是双向事件流通信：客户端发送 `session.update`、`input_audio_buffer.append` 等事件，服务端返回 `session.created`、`response.audio.delta` 等事件。
 
-## 支持的模型
+## 支持的模型与功能
 
-| 模型系列 | 模型名称 | 特性 |
-| --- | --- | --- |
-| Qwen3.5-Omni-Realtime | qwen3.5-omni-plus-realtime、qwen3.5-omni-flash-realtime | 支持 semantic_vad、联网搜索、工具调用、idle_timeout_ms |
-| Qwen3-Omni-Flash-Realtime | qwen3-omni-flash-realtime | 支持 smooth_output 参数 |
-| Qwen-Omni-Turbo-Realtime | qwen-omni-turbo-realtime | 大部分生成参数不支持修改 |
+- **支持模型**：`qwen3.5-omni-realtime`、`qwen3.5-omni-plus-realtime`、`qwen3.5-omni-flash-realtime`、`qwen3-omni-flash-realtime`、`qwen-omni-turbo-realtime`。各模型能力存在差异，详见 [客户端事件](../../raw/model-api-reference/omni-realtime-api/client-events.md) 中的参数兼容性说明。
+- **核心模态**：默认支持 `["text", "audio"]` 输出；可设为 `["text"]` 仅输出文本。输入仅支持 `pcm` 格式音频（16 kHz 采样率）。
+- **语音活动检测（VAD）**：支持 `server_vad`（声学检测）和 `semantic_vad`（语义检测，**仅 `qwen3.5-omni-realtime` 支持**）[客户端事件](../../raw/model-api-reference/omni-realtime-api/client-events.md)。
+- **高级功能**：
+  - 工具调用（`tools`）：所有支持模型均可配置，但仅 `qwen3.5-omni-realtime` 系列在文档中明确标注支持完整流程；
+  - 联网搜索（`enable_search`）：**仅 `qwen3.5-omni-realtime` 系列支持**，且与 `tools` 不兼容 [客户端事件](../../raw/model-api-reference/omni-realtime-api/client-events.md)；
+  - 声音复刻：需先调用独立声音复刻 API 创建音色，再在 `session.update` 中通过 `voice` 参数传入，**驱动模型必须与复刻时指定的 `target_model` 严格一致** [声音复刻API参考](../../raw/model-api-reference/omni-realtime-api/qwen-omni-voice-cloning.md)。
 
-各模型的默认音色不同：Qwen3.5-Omni-Realtime 系列为 `Tina`，Qwen3-Omni-Flash-Realtime 为 `Cherry`，Qwen-Omni-Turbo-Realtime 为 `Chelsie`。
+> **注意**：文档 2（服务端事件）中 `session.created` 示例显示 `model: "qwen3-omni-flash-realtime"`，而文档 1（客户端事件）中 `voice` 默认值表格将 `qwen3-omni-flash-realtime` 对应音色列为 `"Cherry"`，但文档 3（Python SDK）和文档 4（Java SDK）均将该模型写作 `"qwen3-omni-flash-realtime"`（无连字符），而文档 6（声音复刻）中 `target_model` 列表使用 `"qwen3.5-omni-flash-realtime"`。实际调用时请以控制台模型列表或最新 SDK 枚举为准，避免因命名不一致导致 `invalid_request_error`。
 
-## 交互模式
+## 关键参数
 
-根据[实时多模态交互流程](../../raw/model-api-reference/omni-realtime-api/omni-realtime-interaction-process.md)，API 支持两种交互模式：
+所有参数均通过 `session.update` 客户端事件或 SDK 的 `update_session()` 方法设置：
 
-### VAD 模式（默认）
+| 参数 | 类型 | 说明 | 兼容性 |
+|------|------|------|--------|
+| `modalities` | `["text"]` 或 `["text","audio"]` | 输出模态组合 | 全系列支持 |
+| `voice` | `string` | 音色 ID，如 `"Chelsie"`、`"Tina"`；复刻音色需传入生成的 voice ID | 全系列支持 |
+| `input_audio_format` / `output_audio_format` | `"pcm"` | 输入/输出音频格式，固定值 | 全系列支持 |
+| `instructions` | `string` | 系统角色提示词 | 全系列支持 |
+| `turn_detection.type` | `"server_vad"` 或 `"semantic_vad"` | VAD 类型 | `semantic_vad` 仅 `qwen3.5-omni-realtime` 支持 |
+| `turn_detection.silence_duration_ms` | `integer [200, 6000]` | 静音触发响应阈值（毫秒） | 全系列支持 |
+| `turn_detection.idle_timeout_ms` | `integer [5000, 30000]` | 静默超时主动引导时间 | **仅 `qwen3.5-omni-plus-realtime` 或 `qwen3.5-omni-flash-realtime` + `server_vad` 时生效** |
+| `enable_search` | `boolean` | 启用联网搜索 | **仅 `qwen3.5-omni-realtime` 系列支持** |
+| `tools` | `array` | 工具定义列表 | 全系列支持，但 `qwen3.5-omni-realtime` 文档最完整 |
+| `temperature` / `top_p` / `top_k` | `float` / `float` / `integer` | 采样控制参数 | `qwen-omni-turbo` 系列**不支持修改** |
+| `max_tokens` | `integer` | 最大输出 token 数 | `qwen-omni-turbo` 系列**不支持修改** |
+| `smooth_output` | `boolean` or `null` | **仅 `qwen3-omni-flash-realtime` 系列支持**，控制口语化/书面化风格 | |
 
-将 `session.turn_detection` 设为 `server_vad` 或 `semantic_vad`。服务端自动检测语音起止并触发模型响应，适用于持续音频流场景。支持语音打断。
+> **注意**：`repetition_penalty` 和 `presence_penalty` 在文档 1 和文档 2 中默认值存在差异（如 `qwen3.5-omni-realtime` 的 `presence_penalty`，文档 1 写 `1.5`，文档 2 未明确，默认值以 [客户端事件](../../raw/model-api-reference/omni-realtime-api/client-events.md) 为准。
 
-### Manual 模式
+## 使用方式
 
-将 `session.turn_detection` 设为 `null`。客户端通过 `input_audio_buffer.commit` + `response.create` 手动控制对话节奏，适用于按下即说场景。
+1. **建立连接**：使用 WebSocket 连接到地域专属域名（推荐 `wss://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api-ws/v1/realtime` 或 `wss://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api-ws/v1/realtime`），`{WorkspaceId}` 从控制台获取。
+2. **初始化会话**：连接后，服务端立即返回 `session.created` 事件。随后调用 `session.update` 设置初始配置（如 `modalities`, `voice`, `instructions`）。
+3. **输入数据**：
+   - **VAD 模式（推荐）**：持续发送 `input_audio_buffer.append`，服务端自动检测起止并提交；无需手动发 `commit` 或 `response.create` [实时多模态交互流程](../../raw/model-api-reference/omni-realtime-api/omni-realtime-interaction-process.md)。
+   - **Manual 模式**：发送 `input_audio_buffer.append` → `input_audio_buffer.commit` → `response.create` 触发响应。
+4. **处理响应**：监听 `response.audio.delta`（流式音频）、`response.text.delta`（流式文本）、`response.done`（完成）等事件。
+5. **工具调用**：当收到 `response.function_call_arguments.done` 事件时，执行本地工具，再通过 `conversation.item.create` 回传结果，最后发 `response.create`（Manual 模式）或等待服务端自动响应（VAD 模式）。
 
-## 连接地址
+## 限制和注意事项
 
-```
-wss://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api-ws/v1/realtime   # 北京地域
-wss://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api-ws/v1/realtime  # 新加坡地域
-```
-
-将 `{WorkspaceId}` 替换为[业务空间](../concepts/workspace.md) ID。建议使用[业务空间](../concepts/workspace.md)专属域名以获得更好的性能和稳定性。
-
-## 客户端事件
-
-详细参数说明参见[客户端事件](../../raw/model-api-reference/omni-realtime-api/client-events.md)。
-
-| 事件 | 用途 |
-| --- | --- |
-| `session.update` | 更新会话配置（模态、音色、VAD、工具等） |
-| `input_audio_buffer.append` | 追加音频数据（Base64 编码） |
-| `input_audio_buffer.commit` | 提交音频缓冲区（Manual 模式必需） |
-| `input_audio_buffer.clear` | 清空音频缓冲区 |
-| `input_image_buffer.append` | 追加图像数据（JPG/JPEG，Base64 编码） |
-| `response.create` | 触发模型生成响应 |
-| `response.cancel` | 取消正在进行的响应 |
-| `conversation.item.create` | 回传工具调用结果 |
-
-## 服务端事件
-
-详细参数说明参见[服务端事件](../../raw/model-api-reference/omni-realtime-api/server-events.md)。
-
-| 事件 | 含义 |
-| --- | --- |
-| `session.created` | 连接建立，返回默认配置 |
-| `session.updated` | 会话配置更新成功 |
-| `error` | 错误信息 |
-| `input_audio_buffer.speech_started` | VAD 检测到语音开始 |
-| `input_audio_buffer.speech_stopped` | VAD 检测到语音结束 |
-| `input_audio_buffer.committed` | 音频缓冲区已提交 |
-| `response.audio.delta` | 增量音频输出 |
-| `response.audio_transcript.delta` | 增量文本转录 |
-| `response.done` | 响应完成 |
-| `response.function_call_arguments.done` | 工具调用参数完成 |
-| `conversation.item.input_audio_transcription.delta` | 实时语音识别中间结果 |
-
-## 关键会话参数
-
-通过 `session.update` 事件配置：
-
-| 参数 | 说明 | 默认值 |
-| --- | --- | --- |
-| `modalities` | 输出模态：`["text"]` 或 `["text","audio"]` | `["text","audio"]` |
-| `voice` | 音色名称 | 因模型而异 |
-| `input_audio_format` | 输入音频格式，仅支持 `pcm`（16kHz） | `pcm` |
-| `output_audio_format` | 输出音频格式，仅支持 `pcm`（24kHz） | `pcm` |
-| `instructions` | 系统消息 | - |
-| `turn_detection.type` | VAD 类型：`server_vad` / `semantic_vad` | `server_vad` |
-| `turn_detection.threshold` | VAD 灵敏度，范围 [-1.0, 1.0] | 0.5 |
-| `turn_detection.silence_duration_ms` | 静音触发时间（ms），范围 [200, 6000] | 800 |
-| `turn_detection.idle_timeout_ms` | 静默超时（ms），范围 [5000, 30000]，仅 qwen3.5 系列 | - |
-| `enable_search` | 联网搜索，仅 Qwen3.5-Omni-Realtime | `false` |
-| `tools` | 工具定义列表，仅 Qwen3.5-Omni-Realtime | `[]` |
-| `smooth_output` | 口语化风格，仅 Qwen3-Omni-Flash-Realtime | `true` |
-
-> **注意**：`tools` 和 `enable_search` 不兼容，不可同时开启。
-
-### 生成参数
-
-| 参数 | Qwen3.5-Omni-Realtime | Qwen3-Omni-Flash-Realtime | Qwen-Omni-Turbo-Realtime |
-| --- | --- | --- | --- |
-| `temperature` | 0.7 | 0.9 | 1.0（不可改） |
-| `top_p` | 0.8 | 1.0 | 0.01（不可改） |
-| `top_k` | 20 | 50 | 20（不可改） |
-| `repetition_penalty` | 1.0 | 1.05 | 1.05（不可改） |
-| `presence_penalty` | 1.5 | 0.0 | 0.0（不可改） |
-
-> **注意**：`qwen-omni-turbo` 系列模型的生成参数不支持修改。
-
-## SDK 使用
-
-### Python SDK
-
-需要 [DashScope SDK](../concepts/dashscope-sdk.md) >= 1.25.17。核心类为 `OmniRealtimeConversation`，通过 `from dashscope.audio.qwen_omni import OmniRealtimeConversation` 引入。详见 [Python SDK](../../raw/model-api-reference/omni-realtime-api/omni-realtime-python-sdk.md)。
-
-```python
-from dashscope.audio.qwen_omni import MultiModality, OmniRealtimeCallback, OmniRealtimeConversation
-
-conv = OmniRealtimeConversation(model="qwen3.5-omni-plus-realtime", callback=callback, url=url)
-conv.connect()
-conv.update_session(
-    output_modalities=[MultiModality.AUDIO, MultiModality.TEXT],
-    voice="Tina",
-    enable_turn_detection=True
-)
-conv.append_audio(audio_base64)
-conv.close()
-```
-
-### Java SDK
-
-需要 DashScope Java SDK >= 2.22.15。核心类为 `OmniRealtimeConversation`，通过 `OmniRealtimeParam` 和 `OmniRealtimeConfig` 配置参数。详见 [Java SDK](../../raw/model-api-reference/omni-realtime-api/omni-realtime-java-sdk.md)。
-
-```java
-OmniRealtimeParam param = OmniRealtimeParam.builder()
-    .model("qwen3.5-omni-plus-realtime")
-    .url(url)
-    .build();
-OmniRealtimeConversation conversation = new OmniRealtimeConversation(param, callback);
-conversation.connect();
-conversation.updateSession(OmniRealtimeConfig.builder()
-    .modalities(Arrays.asList(OmniRealtimeModality.AUDIO, OmniRealtimeModality.TEXT))
-    .voice("Tina")
-    .enableTurnDetection(true)
-    .build());
-```
-
-> **注意**：Java SDK 中 `instructions`、`smooth_output`、`enable_search`、`search_options`、`tools` 及生成参数（temperature/top_p/top_k 等）需通过 `OmniRealtimeConfig` 的 `parameters` 方法设置。
-
-## 工具调用（Function Calling）
-
-仅 Qwen3.5-Omni-Realtime 模型支持。流程如下：
-
-1. 通过 `session.update` 配置 `tools` 列表
-2. 服务端识别到需要调用工具时，通过 `response.function_call_arguments.done` 返回函数名和参数
-3. 客户端执行工具函数，通过 `conversation.item.create` 回传结果（`type: "function_call_output"`）
-4. VAD 模式下服务端自动生成响应；Manual 模式下需额外发送 `response.create`
-
-## 声音复刻
-
-通过 `qwen-voice-enrollment` 模型创建自定义音色，然后在实时对话中使用。音频要求：WAV/MP3/M4A 格式，10-20 秒，采样率 >= 24kHz，单声道，文件 < 10MB。创建音色时指定的 `target_model` 必须与后续对话使用的模型一致。
-
-支持的驱动模型：qwen3.5-omni-plus-realtime、qwen3.5-omni-flash-realtime。
-
-## 输入限制
-
-- 音频输入：16kHz 采样率 PCM，音频缓冲区最大 15MiB
-- 图像输入：JPG/JPEG 格式，建议 480p-720p（最高 1080p），Base64 编码后不超过 256KB，建议 1 帧/秒
-- 图像需在至少一次 `input_audio_buffer.append` 之后发送，通过 `input_audio_buffer.commit` 与音频一起提交
+- **音频限制**：输入音频必须为 16 kHz PCM；输出音频固定为 24 kHz PCM；单次 `append_audio` 数据量无明确上限，但 SDK 示例建议 ≤15 MiB。
+- **图片限制**：仅 JPG/JPEG；Base64 编码后 ≤256 KB；建议分辨率 480p/720p；发送频率 ≤1 张/秒。
+- **并发与超时**：单个 WebSocket 连接对应一个会话；`idle_timeout_ms` 仅在特定模型+VAD 组合下生效；`max_tokens` 截断响应但不影响生成过程。
+- **兼容性约束**：
+  - `tools` 与 `enable_search` **不可同时启用**；
+  - `qwen-omni-turbo` 系列模型**不支持修改** `temperature`、`top_p`、`top_k`、`max_tokens`、`repetition_penalty`、`presence_penalty`、`seed`；
+  - `semantic_vad` 仅 `qwen3.5-omni-realtime` 支持，其他模型设为该值将报错；
+  - 声音复刻音色必须与 Omni 调用模型严格匹配（如复刻时 `target_model="qwen3.5-omni-plus-realtime"`，则 Omni 调用时 `model` 和 `voice` 必须对应同一模型）[声音复刻API参考](../../raw/model-api-reference/omni-realtime-api/qwen-omni-voice-cloning.md)。
+- **错误处理**：服务端返回 `error` 事件（含 `type`、`code`、`message`、`param`），需根据 `param` 字段定位问题参数。
 
 ## 来源文档
 
@@ -168,11 +65,5 @@ conversation.updateSession(OmniRealtimeConfig.builder()
 - [Java SDK](../../raw/model-api-reference/omni-realtime-api/omni-realtime-java-sdk.md)
 - [实时多模态交互流程](../../raw/model-api-reference/omni-realtime-api/omni-realtime-interaction-process.md)
 - [声音复刻API参考](../../raw/model-api-reference/omni-realtime-api/qwen-omni-voice-cloning.md)
-
-
-
-
-
-
 
 

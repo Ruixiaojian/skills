@@ -1,87 +1,65 @@
 # 3d generation
 
-百炼平台基于 Tripo 模型提供 3D 资产生成能力，支持文生 3D、单图生 3D 与多图生 3D 三种输入方式，产出带贴图的 PBR 材质 GLB 模型或无贴图基础模型。由于生成耗时较长，API 采用[异步调用](../concepts/async-invocation.md)，整体流程为「创建任务 → 轮询获取结果」。详细接口与参数见 [Tripo-3D模型生成](../../raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md)。
+百炼平台的 3D 生成能力基于 Tripo 模型，支持文生 3D、单图生 3D 和多图生 3D 三种输入模式，输出带 PBR 材质或无贴图的 GLB 格式模型及预览渲染图。该能力为异步任务，需通过 `task_id` 轮询获取结果，**仅在华北2（北京）地域可用**。详细接口规范与行为约束请参考 [Tripo-3D模型生成](../../raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md)。
 
-## 适用范围
+## 支持的模型/功能
 
-- 仅适用于**华北2（北京）**地域，且必须使用该地域的 [API Key](../concepts/api-key.md)。
-- 需先在百炼控制台模型市场搜索「Tripo」并开通服务、完成授权，再配置好 [API Key](../concepts/api-key.md) 环境变量。具体开通与配置步骤见 [Tripo-3D模型生成](../../raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md)。
+- **模型列表**：
+  - `Tripo/Tripo-H3.1`：高精度生成，最高支持 200 万面，对应 Tripo 官方 API 版本 `v3.1-20260211`；
+  - `Tripo/Tripo-P1.0`：专业级快速生成，最高 2 万面，对应版本 `P1-20260311`。
+- **输入模式**（三者互斥）：
+  - 文生 3D：通过 `prompt` 字段传入文本描述；
+  - 单图生 3D：通过 `image` 字段传入单张公网 URL 图像；
+  - 多图生 3D：通过 `images` 数组传入 4 张按「前、左、后、右」顺序排列的图像（空视角用 `{}` 占位），实际有效图数为 2–4 张。
+- **输出类型**：
+  - 默认返回 `pbr_model_url`（带 PBR 材质的 GLB）；
+  - 若显式设置 `"texture": false, "pbr": false`，则返回 `base_model_url`（无贴图基础模型）；
+  - 始终返回 `rendered_image_url`（单张预览图）。
 
-## 调用流程
+> **注意**：文档中 `images` 数组长度固定为 4，但示例中存在传入 2 张图 + 2 个 `{}` 的写法，与“实际有效图数为 2~4 张”的说明一致；而部分旧文档曾误述为“必须填满 4 张”，此表述已过时，请以 [Tripo-3D模型生成](../../raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md) 中的当前定义为准。
 
-API 仅支持[异步调用](../concepts/async-invocation.md)，包含两个步骤：
+## 关键参数
 
-1. **创建任务**：`POST https://dashscope.aliyuncs.com/api/v1/services/aigc/video-generation/3d-generation`
-2. **轮询查询结果**：`GET https://dashscope.aliyuncs.com/api/v1/tasks/{task_id}`
+| 参数 | 类型 | 是否必填 | 说明 |
+|------|------|----------|------|
+| `model` | string | 必填 | 固定为 `Tripo/Tripo-H3.1` 或 `Tripo/Tripo-P1.0` |
+| `input.prompt` / `input.image` / `input.images` | string / string / array | 条件必填 | 三者仅选其一；`images` 数组长度恒为 4，空视角用 `{}` |
+| `parameters.texture_quality` | string | 可选 | `standard`（默认）或 `detailed`；仅对带贴图输出生效 |
+| `parameters.geometry_quality` | string | 可选 | 仅 `Tripo/Tripo-H3.1` 支持；`standard`（≤150 万面）或 `ultra`（≤200 万面） |
+| `parameters.pbr` | boolean | 可选 | 默认 `true`；设为 `false` 时需同步设 `texture: false` 才能获得无贴图模型 |
+| `parameters.texture` | boolean | 可选 | 默认 `true`；与 `pbr` 联动，详见 [Tripo-3D模型生成](../../raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md) |
 
-创建任务时必须携带 `X-DashScope-Async: enable` 请求头，否则会报错 `current user api does not support synchronous calls`。成功创建后返回 `task_id`，有效期 24 小时，**请勿重复创建任务**，轮询获取即可。
+## 使用方式
 
-轮询建议间隔约 15 秒，任务状态流转为 `PENDING`（排队中）→ `RUNNING`（处理中）→ `SUCCEEDED` / `FAILED`。查询接口默认 RPS 为 20，如需更高频查询或事件通知建议配置异步任务回调。
+1. **前置准备**：
+   - 在[百炼控制台（北京地域）](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/all)开通 Tripo 服务；
+   - 配置环境变量 `DASHSCOPE_API_KEY`（仅限北京地域 API Key）。
 
-## 支持的模型
+2. **创建任务**（POST）：
+   - Endpoint：`https://dashscope.aliyuncs.com/api/v1/services/aigc/video-generation/3d-generation`
+   - 请求头必须包含：`Content-Type: application/json`、`Authorization: Bearer <key>`、`X-DashScope-Async: enable`
+   - 成功响应含 `task_id`（有效期 24 小时），**禁止重复提交相同任务**。
 
-| 模型名 | 定位 | 输出面数 | 对应官方 API 版本 |
-| --- | --- | --- | --- |
-| `Tripo/Tripo-H3.1` | 高精度生成 | 最高 200 万面 | `v3.1-20260211` |
-| `Tripo/Tripo-P1.0` | 专业生成，速度更快 | 最高 2 万面 | `P1-20260311` |
+3. **轮询结果**（GET）：
+   - Endpoint：`https://dashscope.aliyuncs.com/api/v1/tasks/{task_id}`
+   - 建议间隔 ≥15 秒；状态流转为 `PENDING` → `RUNNING` → `SUCCEEDED`/`FAILED`；
+   - `SUCCEEDED` 时 `output.results` 返回 `pbr_model_url`、`base_model_url`（按参数配置）和 `rendered_image_url`，所有 URL 有效期均为 2 小时。
 
-## 输入方式
+## 限制和注意事项
 
-`input` 中 `prompt`、`image`、`images` 三者**互斥**，只能选其一，同时传多个将报错。
-
-- **文生 3D**：`prompt` 必填，支持中英文等多语言，每个字符计 1 个字符，最大 1024 字符。
-- **单图生 3D**：`image` 必填，传入单张图像公网 URL。图像格式限 JPEG/PNG，宽高范围 [20, 6000] 像素（建议边长大于 256），文件不超过 20MB，支持 HTTP/HTTPS。
-- **多图生 3D**：`images` 必填，数组长度固定为 4，对应视角顺序为**前、左、后、右**；不需要的视角传空对象 `{}`。实际有效图片数为 2~4 张，多张图像的分辨率和宽高比不要求一致。每个对象含 `type`（`jpeg` 或 `png`）与 `file_token`（公网 URL）字段。
-
-## 关键参数（parameters）
-
-| 参数 | 适用模型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `texture_quality` | 全部 | `standard` | 贴图质量，可选 `standard`（标清）/`detailed`（高清） |
-| `geometry_quality` | `Tripo/Tripo-H3.1` | `standard` | 几何精度，`standard` 最高 150 万面，`ultra` 最高 200 万面 |
-| `pbr` | 全部 | `true` | 是否生成 PBR 材质模型。设为 `true` 时强制启用贴图，返回 `pbr_model_url` |
-| `texture` | 全部 | `true` | 是否生成贴图。生成无贴图模型需**同时**将 `texture` 和 `pbr` 设为 `false`，返回 `base_model_url` |
-
-## 响应与产物
-
-成功响应的 `output.results` 仅在 `task_status` 为 `SUCCEEDED` 时返回，包含以下字段：
-
-- `pbr_model_url`：PBR 材质模型（GLB）下载 URL，当 `pbr` 为 `true`（默认）时返回。
-- `base_model_url`：无贴图基础模型（GLB）下载 URL，当 `texture` 与 `pbr` 均为 `false` 时返回。
-- `rendered_image_url`：3D 模型预览渲染图（1 张）URL。
-
-> **注意**：以上下载链接有效期均为 **2 小时**，请及时下载。
-
-`usage` 字段记录任务类型（`text-to-3d` / `image-to-3d` / `multi-image-to-3d`）、生成数量 `count`、贴图质量与几何精度，仅对成功结果计数。任务状态 `task_status` 的完整枚举为 `PENDING` / `RUNNING` / `SUCCEEDED` / `FAILED` / `CANCELED` / `UNKNOWN`，其中 `UNKNOWN` 表示任务不存在或超过 24 小时有效期。更多响应字段说明见 [Tripo-3D模型生成](../../raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md)。
-
-## 限制与注意事项
-
-- 仅限北京地域 [API Key](../concepts/api-key.md) 调用，地域不匹配将无法使用。
-- `task_id` 查询有效期 24 小时，超时返回 `UNKNOWN` 且无法再查询。
-- 查询接口默认 RPS 限制为 20，建议通过异步任务回调获取更高频通知。
-- 产物下载链接有效期仅 2 小时。
-- 调用失败时响应中会返回 `code` 与 `message`，可参照百炼错误码文档排查。
+- **地域限制**：API 仅支持华北2（北京）地域，跨地域调用将失败；
+- **输入限制**：
+  - `prompt` 最长 1024 字符；
+  - 单图 `image` 或 `images[i].file_token` 必须为公网可访问的 HTTP/HTTPS URL，格式为 JPEG/PNG，分辨率 [20, 6000] 像素，单文件 ≤20MB；
+- **任务生命周期**：
+  - `task_id` 有效期严格为 24 小时，超时后查询返回 `task_status: UNKNOWN`；
+  - 成功结果中的 URL（如 `pbr_model_url`）有效期仅 2 小时，需及时下载；
+- **错误处理**：
+  - 缺少 `X-DashScope-Async: enable` 头将报错 `current user api does not support synchronous calls`；
+  - 错误码详情见 [Tripo-3D模型生成](../../raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md) 中引用的错误码文档。
 
 ## 来源文档
 
 - [Tripo-3D模型生成](../../raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

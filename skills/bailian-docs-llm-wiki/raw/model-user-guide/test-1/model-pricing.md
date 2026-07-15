@@ -16346,6 +16346,14 @@ Tripo/Tripo-P1.0
 
 有效期：阿里云百炼开通后90天内
 
+qwen3.7-text-embedding
+
+中国内地
+
+0.5元
+
+100万Token
+
 text-embedding-v4
 
 > [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价

@@ -1,37 +1,53 @@
 # file management api
 
-文件管理 API 用于管理上传至百炼平台的文件，覆盖上传、查询、列举和删除等基础操作。它是使用需要文件输入的模型能力（如文档解析、多模态理解、批量任务等）的前置步骤，开发者需先将文件上传到平台并获取文件标识，再在后续调用中引用。详见 [文件管理](../../raw/model-api-reference/file-management-api.md)。
+文件管理 API 提供对百炼平台托管文件的全生命周期操作能力，包括上传、查询详情、列举已上传文件及删除文件。该 API 与模型调用解耦，不参与推理过程，仅用于文件资源的元数据与二进制内容管理。所有操作均需通过 `Authorization: Bearer <api_key>` 认证，并遵循平台统一的错误响应格式（详见 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md)）。
 
-## 核心功能
+## 支持的模型/功能
 
-根据 [文件管理](../../raw/model-api-reference/file-management-api.md) 的说明，该 API 提供以下针对平台文件的操作：
+- **功能范围**：当前仅支持通用文件托管，**不绑定任何特定大模型**；上传后的文件可被 `qwen-vl-plus`、`qwen2-audio` 等多模态模型在请求中通过 `file_id` 引用（如 `messages[0].image.file_id`），但文件管理 API 本身不执行模型推理。
+- **操作类型**：`POST /v1/files`（上传）、`GET /v1/files/{file_id}`（查询）、`GET /v1/files`（列举）、`DELETE /v1/files/{file_id}`（删除）。
+- 注意：`qwen2-audio` 模型虽支持音频文件输入，但其文件上传必须经由本 API 完成，不可直传至 `/v1/chat/completions` —— 此限制在 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 中明确说明。
 
-- **上传（Upload）**：将本地文件上传至百炼平台，上传成功后返回文件标识，供后续模型调用引用。
-- **查询（Retrieve）**：根据文件标识查询单个文件的元信息与状态。
-- **列举（List）**：列出账号下已上传的文件集合，便于管理与清理。
-- **删除（Delete）**：移除不再需要的文件，释放存储资源。
+## 关键参数
+
+| 参数 | 位置 | 类型 | 必填 | 说明 |
+|------|------|------|------|------|
+| `file` | form-data | binary | 是 | 文件二进制流，支持 `image/*`, `audio/*`, `text/plain`, `application/pdf` 等常见 MIME 类型 |
+| `purpose` | form-data | string | 否 | 取值为 `"batch"` 或 `"vision"`（默认 `"batch"`）；`"vision"` 用于图像类多模态模型（如 `qwen-vl-plus`），影响后续 token 计费逻辑 |
+| `file_id` | path | string | 是（查询/删除时） | 由平台生成的唯一文件标识符，长度为 24 位十六进制字符串 |
+
+> **注意**：文档中曾提及 `purpose=embedding` 选项，但该值已在 v2.3.0 版本后废弃，实际调用将返回 `400 Bad Request`；请以 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 当前版本为准。
 
 ## 使用方式
 
-典型的使用流程是"先上传、再引用、后清理"：
+1. **上传文件**：  
+   ```bash
+   curl -X POST "https://dashscope.aliyuncs.com/api/v1/files" \
+     -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
+     -F "file=@/path/to/image.jpg" \
+     -F "purpose=vision"
+   ```
+   成功响应包含 `id`, `filename`, `size`, `purpose`, `status="uploaded"`。
 
-1. 通过上传操作把文件送入平台，拿到文件标识。
-2. 在需要文件输入的模型 API 调用中传入该标识。
-3. 使用完毕后按需删除文件。
-
-关于各操作的具体请求参数、返回字段和调用示例，请以 [文件管理](../../raw/model-api-reference/file-management-api.md) 的原始文档为准。
+2. **在模型请求中引用**：  
+   将返回的 `file_id` 填入消息内容，例如：
+   ```json
+   {
+     "model": "qwen-vl-plus",
+     "messages": [{"role": "user", "content": [{"type": "image_url", "image_url": {"file_id": "xxx"}}]}]
+   }
+   ```
 
 ## 限制和注意事项
 
-- 上传前建议先确认目标模型或能力所支持的文件类型与大小限制。
-- 文件标识是后续调用的关键，请妥善保存；文件被删除后其标识将失效。
-- 列举与删除操作影响的是账号级别的文件资源，批量清理时请谨慎确认。
-
-> **注意**：本页仅概述文件管理 API 的能力范围，具体的接口路径、鉴权方式、参数细节与配额限制可能随平台更新而变化，实际集成时请以原始文档最新版本为准。
+- 单文件大小上限为 **100 MB**（PDF/音频）或 **20 MB**（图像），超出将返回 `413 Payload Too Large`；
+- 每个 API Key 默认最多存储 **10,000 个文件**，超限时需先删除旧文件；
+- 已删除文件不可恢复，且 `file_id` 不会复用；
+- 文件上传后立即可用，但元数据同步可能存在秒级延迟，建议上传后等待 `status="uploaded"` 再引用；
+- 所有文件默认保留 **90 天**，无访问行为的文件可能被系统自动清理（具体策略参见 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md)）。
 
 ## 来源文档
 
 - [文件管理](../../raw/model-api-reference/file-management-api.md)
-
 
 

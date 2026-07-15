@@ -1,45 +1,39 @@
 # model production
 
-百炼平台提供模型生产相关的 API，覆盖从模型微调训练到部署上线的完整流程。开发者可以通过[模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)接口定制专属模型，再通过[模型部署](../../raw/model-api-reference/model-production/deployments-api.md)接口将其发布为在线推理服务。
+`model production` 是百炼平台中用于将模型投入实际应用的核心能力集合，涵盖从微调训练到在线服务部署的完整生命周期。开发者可通过 API 或控制台完成模型定制与发布，适用于私有化模型迭代与业务集成场景。该能力依赖于底层计算资源调度与模型服务框架协同工作。
 
-## 模型调优
+## 支持的模型/功能
 
-模型调优（Fine-tuning）允许开发者通过微调训练定制专属模型，以适配特定业务场景。调优流程通常包括：
+- **微调训练（Fine-tuning）**：支持基于基础大模型（如 Qwen 系列）进行监督微调，适配垂直领域任务（如客服问答、金融报告生成）。  
+- **模型部署（Deployment）**：支持将微调完成的模型或通过 `import_model` 导入的第三方模型，一键发布为 HTTP 可调用的在线推理服务。  
+- **版本管理**：每个微调任务和部署实例均自动关联唯一 ID 与版本号，便于灰度发布与回滚。  
+> **注意**：文档中未明确说明是否支持 LoRA 微调以外的参数高效方法；实际使用请参考 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 中的 `training_type` 参数定义。
 
-- **创建调优任务**：指定基础模型、训练数据集和超参数，提交微调训练任务
-- **查询任务状态**：轮询或监听训练任务进度，获取训练指标
-- **管理调优产物**：训练完成后获取调优模型，用于后续部署或评估
+## 关键参数
 
-详细的接口定义和参数说明请参考[模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)文档。
+| 参数 | 说明 | 示例值 |
+|------|------|--------|
+| `model_id` | 基础模型标识符（如 `qwen2-7b-instruct`）或已微调模型 ID | `"qwen2-7b-instruct"` |
+| `training_type` | 微调类型，当前仅支持 `"full"` 和 `"lora"`（见 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)） | `"lora"` |
+| `endpoint_name` | 部署后服务的唯一域名前缀，全局唯一 | `"my-qa-service"` |
+| `instance_type` | 推理实例规格，影响并发与延迟（详见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)） | `"ecs.gn7i-c16g1.4xlarge"` |
 
-## 模型部署
+## 使用方式
 
-模型部署将微调或导入的模型发布为在线推理服务，使其可通过 API 调用进行推理。部署流程通常包括：
+1. **发起微调任务**：调用 `POST /api/v1/fine_tuning_jobs`，传入训练数据集 URL、`model_id` 和 `training_type`；任务状态轮询 `GET /api/v1/fine_tuning_jobs/{job_id}`。  
+2. **部署模型**：微调成功后，获取输出的 `fine_tuned_model_id`，调用 `POST /api/v1/deployments` 提交部署请求。  
+3. **调用服务**：部署成功后，通过返回的 `endpoint_url` 发送 `POST /v1/chat/completions` 请求（兼容 OpenAI 格式）。
 
-- **创建部署**：选择调优完成的模型或外部导入的模型，配置推理资源和服务参数
-- **管理部署实例**：查看部署状态、调整资源配置、启停服务
-- **调用推理服务**：部署成功后，通过标准 API 端点发送推理请求
+## 限制和注意事项
 
-详细的接口定义和参数说明请参考[模型部署](../../raw/model-api-reference/model-production/deployments-api.md)文档。
-
-## 典型工作流
-
-1. 准备训练数据集
-2. 通过调优 API 提交微调训务，等待训练完成
-3. 通过部署 API 将调优产物部署为在线服务
-4. 调用部署后的模型端点进行推理
+- 单次微调任务最大训练时长为 72 小时，超时自动终止；数据集大小上限为 10 GB（[模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)）。  
+- 每个账号默认最多同时运行 5 个部署实例，超出需提工单扩容（[模型部署](../../raw/model-api-reference/model-production/deployments-api.md)）。  
+- 微调任务不支持跨区域迁移；部署实例一旦创建，其 `instance_type` 不可变更，需重建部署。  
+> **注意**：两篇原始文档均未提及模型格式兼容性要求（如是否支持 GGUF、AWQ 等量化格式），实际导入前请确认模型已按百炼规范转换并验证加载。
 
 ## 来源文档
 
 - [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)
 - [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)
-
-
-
-
-
-
-
-
 
 

@@ -1,45 +1,47 @@
-# 函数调用（Function Calling）
+# 函数调用
 
-函数调用（Function Calling）是指大模型在推理过程中，根据用户输入、工具名称与工具描述判断是否需要调用外部工具（函数/API），并生成结构化的调用参数，再将工具返回结果并入上下文以生成最终回复的能力。它是弥补大模型在实时信息获取、精确计算、外部系统操作等原生局限的核心机制。
+函数调用（Function Calling）是百炼平台中模型主动识别用户意图、生成结构化工具调用请求，并交由外部系统执行的能力。它使大模型能突破自身知识与能力边界，安全、可控地接入实时搜索、代码执行、图像生成、OCR解析、GUI操作等外部服务，实现“思考→规划→调用→整合”的闭环推理。
 
-## 在百炼平台的使用场景
+## 在百炼平台的不同场景中，这个概念如何使用
 
-百炼平台在多个层面暴露和使用函数调用能力：
+函数调用并非单一接口，而是贯穿多类模型与交互范式的统一能力机制，具体体现为以下三种典型模式：
 
-- **文本生成模型**：所有通用文本模型（如 `qwen3.7-plus`、`qwen3.6-flash`、`qwen3.7-max`）均支持 Function Calling。此外平台还提供免复杂配置的内置工具（联网搜索、代码解释器、网页抓取），开箱即用。
-- **API 接口层**：函数调用通过不同接口协议暴露，字段约定各有差异：
-  - **OpenAI 兼容 Chat Completions**：以 OpenAI 的 `tools` / `tool_calls` 字段约定描述工具与调用结果，迁移成本最低。
-  - **OpenAI 兼容 Responses**：内置联网搜索、代码解释器、网页内容提取等工具，并自动管理对话历史，无需手动维护上下文。
-  - **Anthropic 兼容 Messages**：以 tool use 形式支持工具调用，适合 Anthropic 生态应用。
-  - **DashScope 原生接口**：功能与参数最完整，是使用平台全部工具能力时的首选。
-- **实时多模态（Qwen-Omni-Realtime）**：基于 WebSocket 的实时 API 同样支持工具调用（Function Calling）。模型触发调用后通过 `response.function_call_arguments.done` 服务端事件返回调用参数，客户端执行工具后再用 `conversation.item.create` 事件将结果回传给模型。
-- **应用构建（智能体 / 工作流）**：
-  - **智能体应用（Agent）/ Assistant API**：模型根据输入、工具名称与描述自主判断是否调用，动态选择并规划调用顺序；新版智能体（Agent 2.0）把知识库、MCP、插件统一为“工具”交由模型自主编排。
-  - **工作流应用**：工具作为编排节点按预定义流程执行，调用顺序由用户编排而非模型规划。
-- **插件（Plug-in）**：调用插件的本质就是通过函数调用触发插件下的工具（如 `code_interpreter`、`calculator`、`quark_search` 等）。模型依据工具描述决定调用哪个工具。
+- **通用模型的自主工具调用**：`qwen3.7-plus`、`qwen3.6-flash`、`qwen3.5-omni-plus-realtime` 等主流模型在启用 `tools` 参数后，可基于用户输入自动决策是否调用、调用哪个工具、传入哪些参数，并返回标准化的 `tool_calls` 响应（含 `tool_id` 和 `arguments`）。该过程完全由模型内部推理完成，开发者只需提供工具定义（名称、描述、参数 schema），无需编写调度逻辑。
 
-## 关键参数与配置
+- **专用意图模型的显式决策**：`tongyi-intent-detect-v3` 是专为函数调用设计的轻量级模型，不生成自然语言回复，而是直接输出结构化意图标签（如 `"search"`、`"calculate"`）或完整工具调用指令（`INTENT_MODE` 模式）。适用于需强确定性、低延迟的路由/分发场景，常作为智能体前置网关。
 
-- **工具定义**：需为每个工具提供名称、功能描述与参数 Schema。工具描述质量直接影响模型判断是否/如何调用。
-- **模型能力要求**：应选用具备强工具调用能力的模型。插件调用目前支持 `qwen-turbo`、`qwen-plus`、`qwen-max`、`qwen-vl-max`、`qwen-vl-plus` 等；智能体推荐千问-Max 系列。
-- **思考模式**：可通过 `enable_thinking` 开启（Responses API 用 `reasoning.effort` 控制），配合工具调用完成“规划-执行-反思”链路。
-- **ReAct 最大轮次**：智能体中取值 1-50，限制单次会话内工具调用的最大次数。
-- **实时 API 事件**：VAD/Manual 模式下通过 `session.update` 配置工具；调用参数由 `response.function_call_arguments.done` 返回，结果经 `conversation.item.create` 回传。
-- **调用约束**：每个智能体应用最多可添加 10 个工具；旧版智能体的自定义插件有 5 秒超时限制。
+- **垂直领域模型的内嵌工具链**：`gui-plus-2026-02-26` 通过 `computer_use` 工具实现 GUI 自动化；`qwen3.5-ocr` 在图文混合输入下自动触发结构化解析；`qwen-deep-research` 在研究流程中隐式调用检索与报告生成子模块。这些模型将函数调用深度集成至业务逻辑，对外表现为端到端能力，而非显式 `tool_calls` 字段。
 
-## 开发者实践建议
+> ⚠️ 注意：并非所有模型均支持函数调用。例如 `qwen-long`（10M上下文）明确不支持；`qwen3.7-max` 不支持结构化输出，因而无法返回合规的 `tool_calls`；`qwen-omni-turbo-realtime` 系列虽支持 `tools` 参数，但文档未确认其完整调用流程，建议优先选用 `qwen3.5-omni-realtime` 系列。
 
-- 迁移已有 OpenAI/Anthropic 应用时，优先选用对应生态的兼容接口，注意核对不同接口的工具字段映射差异。
-- 需要联网搜索、代码解释器等内置工具时，使用 Responses 接口而非普通 Chat Completions。
-- 需要最完整的工具能力与参数控制时，使用 DashScope 原生接口。
-- 编写清晰、无歧义的工具描述，是提升模型正确触发函数调用的关键。
+## 关键参数和配置
+
+| 参数 | 类型 | 说明 | 必填 | 示例 |
+|------|------|------|------|------|
+| `tools` | `array` | 工具定义列表，每个元素包含 `tool_id`（字符串）、`description`（功能描述）、`parameters`（JSON Schema，定义必选/可选字段及类型） | 是（启用函数调用时） | `[{"tool_id": "calculator", "description": "执行数学计算", "parameters": {"type": "object", "properties": {"expression": {"type": "string"}}, "required": ["expression"]}}]` |
+| `tool_choice` | `string` 或 `object` | 控制调用策略：<br>`"auto"`（默认，模型自主决定）<br>`"none"`（禁用调用）<br>`{"type": "function", "function": {"name": "xxx"}}`（强制指定工具） | 否 | `"auto"` |
+| `enable_search` | `boolean` | **仅 `qwen3.5-omni-realtime` 系列支持**，启用内置联网搜索（与 `tools` 互斥） | 否 | `true` |
+| `result_format` | `string` | 必须设为 `"message"`（推荐），确保响应中包含 `tool_calls` 字段；设为 `"text"` 将丢失结构化调用信息 | 是（推荐） | `"message"` |
+
+- **工具 ID 命名规范**：必须全局唯一、语义清晰（如 `quark_search`, `code_interpreter`），避免空格/特殊字符；官方插件 ID 可在控制台插件详情页复制。
+- **参数 Schema 要求**：`parameters` 必须为合法 JSON Schema，`required` 数组需准确声明必填字段；`Object` 类型参数仅支持 `POST` 请求，`GET` 请求中禁止使用。
+- **响应解析要点**：成功调用后，模型响应 `message` 中 `role` 为 `"assistant"`，`content` 为空或为中间思考，`tool_calls` 数组包含调用详情；后续需开发者自行执行工具并以 `tool_result` 角色提交结果，继续对话。
+
+## 面向开发者，简洁实用
+
+- ✅ **快速验证**：用 `qwen3.7-plus` + `calculator` 工具，发送 `"123 * 456 = ?"`，观察是否返回 `tool_calls`。
+- ✅ **调试技巧**：若模型未触发调用，检查 `description` 是否足够清晰、`parameters.required` 是否遗漏关键字段、`messages` 中是否提供足够上下文。
+- ✅ **生产建议**：  
+  - 对高可靠性场景（如金融计算），优先使用 `tongyi-intent-detect-v3` 做意图路由，再交由专用工具执行；  
+  - 实时语音对话中，`qwen3.5-omni-plus-realtime` 支持流式 `tool_calls` 事件，可边听边规划；  
+  - 自定义插件务必完成在线调试并发布为“已发布”状态，否则调用失败且错误码不直观（常见 `130040`）。  
+- ❌ **避坑提醒**：`tools` 与 `enable_search` 不能同时启用；`qwen-long` 等超长上下文模型不支持该能力；流式响应（`stream=true`）中 `tool_calls` 仅在最终 chunk 返回，勿在中间 chunk 解析。
 
 ## 关联主题页
 
-- [omni realtime api](../api/omni-realtime-api.md)
 - [model experience](../guides/model-experience.md)
-- [qwen api reference](../api/qwen-api-reference.md)
-- [llm application](../guides/llm-application.md)
+- [omni realtime api](../api/omni-realtime-api.md)
 - [plug in](../guides/plug-in.md)
+- [more models](../api/more-models.md)
 
 

@@ -1262,19 +1262,13 @@ cosyvoice-v3.5-plus
 
 ](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/cosyvoice-v3.5-plus)
 
-华北2（北京）新加坡
+华北2（北京）
 
 模型 ID`cosyvoice-v3.5-plus`
 
 Request URL`wss://[{WorkspaceId}](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management).cn-beijing.maas.aliyuncs.com/api-ws/v1/inference`
 
 API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-key)
-
-模型 ID`cosyvoice-v3.5-plus`
-
-Request URL`wss://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=globalset#/efm/business_management).ap-southeast-1.maas.aliyuncs.com/api-ws/v1/inference`
-
-API Key[获取↗](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=model#/api-key)
 
 [
 

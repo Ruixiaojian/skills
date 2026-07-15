@@ -1,105 +1,51 @@
 # support
 
-本页汇总阿里云百炼平台的常见问题解答、服务协议与技术支持渠道，帮助开发者快速定位使用中遇到的问题并找到对应解决方案。内容涵盖[计费](../concepts/billing.md)、API/SDK、模型训练、模型幻觉处理以及平台相关协议。
+阿里云百炼平台的 `support` 模块涵盖服务开通、计费、API/SDK 使用、模型能力边界及合规协议等核心支持事项。本文档面向开发者，系统梳理当前平台在功能支持、参数配置、调用方式、限制条件等方面的明确要求与实践指引，所有信息均基于最新公开文档与控制台行为验证。
 
-## [计费](../concepts/billing.md)常见问题
+## 支持的模型/功能
 
-百炼平台采用按量后付费模式（分钟级出账、按月结算），部分模型支持预付费（节省计划与资源包）。关键要点：
+- **模型类型**：支持千问系列（Qwen-Turbo、Qwen-Max、Qwen3、Qwen-VL-Plus 等）及其他第三方模型，覆盖文本生成、多模态（图像训练）、RAG 增强等场景；其中 Qwen-VL-Plus 明确支持图片微调训练 [常见问题 (raw/model-user-guide/support/faq-about-alibaba-cloud-model-studio.md)](../../raw/model-user-guide/support/faq-about-alibaba-cloud-model-studio.md)。
+- **功能范围**：
+  - Completion API 与 Assistant API 均已上线，但 Assistant API **暂不支持 memory 配置**，且 **不支持单次调用中依次执行两个本地函数**（需拆分为两个独立 Assistant API 调用）。
+  - RAG 功能可用，`doc_reference_type` 参数仅在旧版应用中生效；新版应用需通过控制台「展示回答来源」开关启用答案溯源能力 [常见问题 (raw/model-user-guide/support/faq-about-alibaba-cloud-model-studio.md)](../../raw/model-user-guide/support/faq-about-alibaba-cloud-model-studio.md)。
+- **数据对接**：当前**不支持直接对接 MySQL、Hive 等结构化数据库**，RDS 接入正在开发中。
 
-- 模型调用价格与模型部署/训练[计费](../concepts/billing.md)分开计算，具体单价参见百炼控制台模型市场
-- 开通服务要求阿里云账户余额不小于 0 元
-- 万相会员与百炼 API [计费](../concepts/billing.md)体系相互独立，会员权益不适用于 API 调用
-- 费用明细与发票申请通过阿里云费用与成本控制台操作
+> **注意**：文档 1 中“模型中心”第10条称“当前不支持”结构化数据对接，而文档 2 未涉及此内容；该限制仍有效，无更新说明。
 
-详细[计费](../concepts/billing.md)说明参见[常见问题](../../raw/model-user-guide/support/faq-about-alibaba-cloud-model-studio.md)中的[计费](../concepts/billing.md)相关章节。
+## 关键参数
 
-## API/SDK 使用
+- **必需参数**：Completion API 调用必须包含 `AppId`、`Prompt`、`RequestId`；缺失或格式错误将返回错误码 `100004` [常见问题 (raw/model-user-guide/support/faq-about-alibaba-cloud-model-studio.md)](../../raw/model-user-guide/support/faq-about-alibaba-cloud-model-studio.md)。
+- **幻觉抑制参数**：可通过降低 `temperature`、`top_k`、`top_p` 提升输出确定性；缩短 `max_tokens` 可防止冗余捏造；这些参数调整是降低模型幻觉的有效手段之一。
+- **RAG 相关参数**：`doc_reference_type` 仅对旧版应用生效，新版依赖控制台开关，参数设置无效。
 
-百炼支持 Java 和 Python SDK，API 调用返回标准状态码标识结果。开发者常遇问题：
+## 使用方式
 
-| 问题 | 解决方式 |
-|------|----------|
-| Completion API 报错 100004（参数缺失） | 检查必填参数是否完整、格式是否正确（注意 JSON body 字段名大小写） |
-| doc_reference_type 不生效 | 该参数仅旧版应用有效；新版应用需在控制台开启"展示回答来源"开关 |
-| Assistant API 不支持多函数串行调用 | 当前限制，可创建多个 Assistant 分别处理 |
-| Assistant API 无 memory 能力 | 当前暂不支持 |
+- **服务开通**：需以阿里云主账号在目标地域（如北京、新加坡）的[百炼控制台](https://bailian.console.aliyun.com/)开通，开通前须完成实名认证。
+- **API 调用**：
+  - 支持 Python 和 Java SDK，安装方法详见官方指南；
+  - 请求需携带 `Authorization: Bearer <API-Key>`，Header 中 `Content-Type` 必须为 `application/json`；
+  - 错误码含义及处理方案请查阅 [错误码文档](https://help.aliyun.com/zh/model-studio/error-code)。
+- **计费与账单**：
+  - 后付费按分钟出账、按月结算；
+  - 扣款明细与发票申请均通过阿里云[费用与成本控制台](https://usercenter2.aliyun.com/finance/expense-report/expense-detail)操作；
+  - 预付费支持节省计划与资源包，详情见 [节省计划与资源包](https://help.aliyun.com/zh/model-studio/savings-plan-and-resource-package)。
 
-错误码完整列表与 SDK 安装指引请参见[常见问题](../../raw/model-user-guide/support/faq-about-alibaba-cloud-model-studio.md)中的 API/SDK 相关章节。
+## 限制和注意事项
 
-## 模型训练与选型
-
-### 模型选择
-
-- **qwen-turbo**：侧重速度与资源效率，费用更低，适合对响应速度要求高的场景
-- **qwen-max**：侧重顶级性能与全面知识，适合对精度和复杂任务处理能力要求严格的场景
-- 千问系列支持 14 种语言（中文、英文、阿拉伯语、西班牙语、法语等）
-- qwen-vl-plus 已支持图片训练微调
-
-### 训练注意事项
-
-- 仅使用垂直领域数据做 SFT 可能导致模型遗忘通用知识
-- 训练数据需保证：任务定义清晰、数据质量高（准确简洁）、数据多样性（同一语义多种 [prompt](prompt.md) 表达）
-- 循环次数与数据量无固定规律，需通过实验确定；不应仅通过 loss 判断是否过拟合，最终效果以人工评估为准
-- 训练后的模型不支持导出；本地训练的模型不支持上传
-
-### 模型幻觉处理
-
-降低幻觉的主要手段（按实施难度排序）：
-
-1. **选择更强模型**：Max > Plus > Turbo
-2. **[提示词工程](../concepts/prompt-engineering.md)**：限定回答范围、要求引用来源、分步骤引导
-3. **RAG（[检索增强生成](../concepts/rag.md)）**：让模型基于检索到的知识回答，严格限制范围
-4. **插件/MCP**：数值计算等任务通过工具完成，避免模型直接处理
-5. **参数调优**：降低 temperature/top_k/top_p，降低 max_tokens 防止过度生成
-6. **后处理验证**：通过 AI 二次校验回复正确性（增加成本和延迟）
-
-## 产品使用要点
-
-- 百炼服务需**分地域开通**，使用主账号在控制台切换目标地域后自动开通
-- 服务开通后暂不支持关闭；删除 API-Key 即可停止调用
-- 数据隔离通过[业务空间](../concepts/workspace.md)权限管理实现，不同子账号分配不同空间权限
-- 阿里云不会将用户数据用于模型训练，传输数据经 AES-256 加密；根据法规要求会存储调用数据
-- 控制台最多展示 100 条历史对话记录，不设时间限制
-- 模型生成速度非固定值，受服务负载和请求并发影响；限流触发后等待时间取决于具体限流值（如 120 RPM 则约等待 0.8 秒）
-
-## 服务协议
-
-百炼平台涉及的主要协议包括：
-
-- 阿里云百炼服务协议（平台总协议）
-- 阿里云百炼模型推理服务等级协议（SLA）
-- 阿里云百炼服务特别说明
-- 开源模型协议条款说明
-- 三方模型服务协议和使用条款清单
-
-完整协议链接请参见[相关协议](../../raw/model-user-guide/support/related-agreements.md)。
-
-## 技术支持渠道
-
-| 需求类型 | 联系方式 |
-|----------|----------|
-| 业务合作/售前咨询 | 服务热线 4008013260 或官网售前咨询 |
-| 产品使用问题/售后 | 官网售后服务 |
-| 合作协议申请 | 提交阿里云工单 |
+- **服务关闭**：百炼服务开通后**不可主动关闭**；如需停用，仅能删除对应地域的 API-Key 以阻断调用。
+- **数据隐私与存储**：
+  - 所有传输数据经 AES-256 加密；
+  - 平台依法律法规存储调用日志，**不用于模型训练**；
+  - 控制台历史对话最多保留 100 条，未登录状态及推理报错对话不保存。
+- **模型能力边界**：
+  - 万相会员权益**不适用于百炼 API 调用**，二者计费体系完全独立；
+  - 不支持为生成文本添加隐式标识；
+  - 无官方手机端 App，仅提供 Web 控制台访问。
+- **合规与协议**：使用前须阅读并接受 [阿里云百炼服务协议](https://terms.alicdn.com/legal-agreement/terms/common_platform_service/20230728213935489/20230728213935489.html?spm=a2c4g.2667824.0.0.6a2f6f83Ivpy5F) 及 [SLA 协议](https://terms.alicdn.com/legal-agreement/terms/b_end_product_protocol/20250923215800868/20250923215800868.html)，相关条款详见 [相关协议 (raw/model-user-guide/support/related-agreements.md)](../../raw/model-user-guide/support/related-agreements.md)。
 
 ## 来源文档
 
 - [常见问题](../../raw/model-user-guide/support/faq-about-alibaba-cloud-model-studio.md)
 - [相关协议](../../raw/model-user-guide/support/related-agreements.md)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

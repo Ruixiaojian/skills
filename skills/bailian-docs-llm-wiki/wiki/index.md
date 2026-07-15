@@ -62,23 +62,20 @@
 
 ## 横切概念
 
-- [API Key 鉴权](concepts/api-key.md) — 关联 6 个主题
-- [OpenAI 兼容接口](concepts/openai-compatible-interface.md) — 关联 5 个主题
-- [Token 与计量计费](concepts/token.md) — 关联 5 个主题
-- [业务空间（Workspace）](concepts/workspace.md) — 关联 5 个主题
-- [函数调用（Function Calling）](concepts/function-calling.md) — 关联 5 个主题
-- [多模态能力](concepts/multimodal.md) — 关联 5 个主题
-- [异步调用与任务轮询](concepts/async-invocation.md) — 关联 5 个主题
-- [检索增强生成（RAG）](concepts/rag.md) — 关联 6 个主题
-- [模型微调与生产链路](concepts/fine-tuning.md) — 关联 5 个主题
-- [流式输出](concepts/streaming.md) — 关联 3 个主题
-- [评测体系](concepts/evaluation.md) — 关联 3 个主题
+- [OpenAI 兼容接口](concepts/openai-compatible-api.md) — 关联 5 个主题
+- [Token 计量与管理](concepts/token.md) — 关联 5 个主题
+- [函数调用](concepts/function-calling.md) — 关联 4 个主题
+- [多模态能力](concepts/multi-modal.md) — 关联 5 个主题
+- [插件机制](concepts/plugin.md) — 关联 5 个主题
+- [检索增强生成](concepts/rag.md) — 关联 5 个主题
+- [流式输出](concepts/streaming-output.md) — 关联 5 个主题
+- [长期记忆](concepts/long-term-memory.md) — 关联 4 个主题
 
 ## 对比分析
 
-- [图像、视频与3D生成对比](comparisons/media-generation-compare.md) — 对比 3 个主题
-- [应用监控与模型监控对比](comparisons/monitoring-compare.md) — 对比 2 个主题
-- [应用评测与模型评测对比](comparisons/evaluation-compare.md) — 对比 2 个主题
-- [模型微调、压缩与高速推理对比](comparisons/model-optimization-compare.md) — 对比 3 个主题
-- [知识库与长期记忆对比](comparisons/knowledge-memory-compare.md) — 对比 3 个主题
+- [图像、视频与3D生成能力对比](comparisons/image-video-3d-generation.md) — 对比 3 个主题
+- [应用编排能力对比：托管智能体、应用组件与模型上下文协议](comparisons/application-orchestration.md) — 对比 3 个主题
+- [模型评估与监控体系对比](comparisons/model-evaluation-monitoring.md) — 对比 3 个主题
+- [模型部署方案对比：高并发推理、生产部署与压缩优化](comparisons/model-deployment-options.md) — 对比 3 个主题
+- [长期记忆与知识库方案对比](comparisons/memory-solutions.md) — 对比 3 个主题
 

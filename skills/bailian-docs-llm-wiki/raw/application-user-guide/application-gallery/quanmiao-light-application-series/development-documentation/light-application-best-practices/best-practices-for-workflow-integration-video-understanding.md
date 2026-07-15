@@ -19,7 +19,7 @@
 
 ### **步骤一：创建函数（FC）**
 
-1.  在[函数计算](https://fcnext.console.aliyun.com/cn-hangzhou/functions)控制台创建事件函数。具体操作，请参见[创建事件函数](https://help.aliyun.com/zh/functioncompute/fc/user-guide/creating-an-event-function)。
+1.  在[函数计算](https://fcnext.console.aliyun.com/cn-hangzhou/functions)控制台创建事件函数。具体操作，请参见[创建事件函数](https://help.aliyun.com/zh/functioncompute/creating-an-event-function)。
     
     -   创建视频理解提交任务函数（建议函数名称：SubmitVideoAnalysisTask）。
         
@@ -49,7 +49,7 @@
         pip3 install alibabacloud_endpoint_util alibabacloud_tea_openapi alibabacloud_quanmiaolightapp20240801 -t .
         ```
         
-    -   方案二：以“层”的方式安装。相关文档，请参见[创建自定义层](https://help.aliyun.com/zh/functioncompute/fc/user-guide/create-a-custom-layer-1)。
+    -   方案二：以“层”的方式安装。相关文档，请参见[创建自定义层](https://help.aliyun.com/zh/functioncompute/fc/create-a-custom-layer-1)。
         
     
 3.  您可自行优化调整代码中的入参：比如`prompt`模板、`modelId`等。

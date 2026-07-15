@@ -36,7 +36,7 @@ OpenAPI 错误码发生变更。
 
 [查看API文档](https://api.aliyun.com/document/AnyTrans/2025-07-07/BatchTranslate)
 
-[BatchTranslateForHtml](https://help.aliyun.com/zh/model-studio/api-anytrans-2025-07-07-batchtranslateforhtml)
+[BatchTranslateForHtml](https://help.aliyun.com/zh/document_detail/3037877.html)
 
 OpenAPI 错误码发生变更。
 
@@ -70,7 +70,7 @@ OpenAPI 错误码发生变更、OpenAPI 返回结构发生变更。
 
 [查看API文档](https://api.aliyun.com/document/AnyTrans/2025-07-07/BatchTranslate)
 
-[BatchTranslateForHtml](https://help.aliyun.com/zh/model-studio/api-anytrans-2025-07-07-batchtranslateforhtml)
+[BatchTranslateForHtml](https://help.aliyun.com/zh/document_detail/3037877.html)
 
 OpenAPI 错误码发生变更、OpenAPI 返回结构发生变更。
 
@@ -230,7 +230,7 @@ OpenAPI 名称
 
 操作
 
-[BatchTranslateForHtml](https://help.aliyun.com/zh/model-studio/api-anytrans-2025-07-07-batchtranslateforhtml)
+[BatchTranslateForHtml](https://help.aliyun.com/zh/document_detail/3037877.html)
 
 新增 OpenAPI。
 

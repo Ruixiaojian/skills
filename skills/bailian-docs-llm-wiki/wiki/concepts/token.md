@@ -1,65 +1,51 @@
-# Token 与计量计费
+# Token 计量与管理
 
-Token 是大语言模型处理文本的最小计量单位，百炼平台以 Token 为核心，对模型的输入、输出、训练用量进行计量、计费与监控。理解 Token 的产生方式与计费规则，是控制模型调用成本、优化应用性能的基础。
+Token 计量与管理是百炼平台对大模型调用资源消耗进行标准化度量、实时追踪、精准计费与精细化治理的核心机制。它以 **Token** 为最小计量单元，覆盖输入、输出、缓存等全链路消耗，并统一映射到 Credits（Token Plan）或按量账单（Pay-as-you-go），支撑成本控制、用量分析与性能优化。
 
-## 什么是 Token
+## 在百炼平台的不同场景中，这个概念如何使用
 
-Token 是模型在处理文本时切分出的基本片段（一个汉字、单词或子词可能对应一个或多个 Token）。在百炼平台中，Token 既是**用量计量单位**，也是**大部分计费的核算基准**：
+- **Token Plan 订阅服务**：以 Credits 为计费单位，按实际消耗的 `input_tokens`、`output_tokens` 和 `cache_tokens` 动态抵扣；模型白名单严格限定可计量范围，非白名单模型调用不计入 Credits，可能触发按量扣费。
+- **模型监控（Model Monitoring）**：提供分钟级/小时级 `model_usage` 指标（含 `input_tokens`/`output_tokens`/`total_tokens` 等 `usage_type` 维度），支持按 `model`、`apikey_id`、`workspace_id` 等标签过滤，用于成本归因与异常排查（北京地域支持单次请求级 Token 查看）。
+- **应用观测（Application Monitoring）**：在 Span 级别精确统计 `Input Tokens` 与 `Output Tokens`，关联至具体节点（如 `LLM`、`EMBEDDING`），支持按链路深度、节点类型、状态筛选，是智能体/工作流成本拆解与性能瓶颈定位的关键依据。
+- **模型评测（Model Evaluation）**：评测任务执行时，被评测模型推理和裁判模型评分均产生 Token 消耗——前者计入被评测模型用量，后者计入裁判模型用量，二者独立计量、分别计费。
+- **应用支持（Application Support）**：插件调用、RAG 检索、[流式输出](streaming-output.md)等能力本身不额外计 Token，但其触发的模型调用（如 LLM 生成响应、Embedding 向量化）仍遵循标准 Token 计量规则；`incremental_output=True` 不改变总 Token 数，仅影响传输方式。
 
-- 文本生成模型按**输入 Token** 和**输出 Token** 分别计量，思考模式下的输出 Token 同时包含「思维链 + 回答」两部分。
-- 不同模型类型的计量单位不同：大语言模型 / 全模态模型 / 向量模型按 **Token** 计量，图像生成按**张**，视频生成按**秒**，语音模型按**秒 / 字符 / Token**（视模型而定）。
+## 关键参数和配置
 
-## 在各场景中的使用
+| 参数 | 说明 | 注意事项 |
+|------|------|----------|
+| `input_tokens` | 模型接收到的 Prompt、上下文、工具描述、图片 Base64 编码等输入内容所占 Token 数 | 图片按分辨率折算（如 `qwen-image-2.0` 使用固定 token 开销 + 可变视觉 token）；系统自动去除冗余空格与换行，但不压缩语义 |
+| `output_tokens` | 模型实际生成的文本或结构化响应（含 function call 参数）所占 Token 数 | 流式响应中累计计数，`incremental_output` 不影响总量；截断（`max_tokens`）会限制此值上限 |
+| `cache_tokens` | 模型缓存 Prompt 或历史对话产生的额外开销（如 KV Cache 预分配） | 当前仅部分模型（如 `qwen3.7-plus`）在启用缓存优化时显式计量，多数场景隐含在 `input_tokens` 中 |
+| `total_tokens` | `input_tokens + output_tokens`（缓存通常不单独计入） | 计费与监控口径统一以此为准 |
+| `usage_type` | Prometheus 指标 `model_usage` 的关键 label | 必须显式指定 `input_tokens`/`output_tokens`/`total_tokens` 才能正确聚合 |
 
-### 1. 按量付费与免费额度
+> ⚠️ 重要约束：  
+> - Token 计量基于模型实际 tokenizer 行为，**不接受客户端预估**；开发者不可自行计算并传入 `token_count` 参数。  
+> - 所有计量均发生在服务端，调用返回的 `usage` 字段（如 OpenAI 兼容 API 中的 `"usage": {"prompt_tokens": ..., "completion_tokens": ...}`）为唯一可信来源。  
+> - 图像生成（`multimodal-generation` API）与视觉理解（多模态输入）的 Token 计算逻辑与纯文本模型不同，需查阅对应模型文档确认细则。
 
-- 首次开通时，各模型会发放新人专属免费额度（通常各 100 万 Token），仅抵扣**实时推理**费用，且不同模型（含同一模型不同快照版本）额度相互独立、不可合并。
-- 免费额度耗尽后默认转为**按量付费**，按输入 / 输出 Token 计费。部分模型采用**阶梯计费**：按单次请求的输入 Token 总量分档（如 `qwen3-max` 分 0–32K / 32K–128K / 128K–256K 三档），落在哪一档，该请求全部 Token 均按该档单价结算。
-- 同一模型在不同地域（北京、弗吉尼亚、新加坡、法兰克福、东京）单价不同。
+## 面向开发者，简洁实用
 
-### 2. 订阅制套餐
+- ✅ **必查返回值**：每次成功调用后，务必解析响应中的 `usage` 字段，用于本地日志记录、预算预警或用量上报。  
+- ✅ **善用监控工具**：在北京地域部署关键应用时，开启模型监控的「高级监控」并配置告警，当 `model_usage{usage_type="total_tokens"}` 异常飙升时快速定位问题模型或恶意请求。  
+- ✅ **成本优化实践**：  
+  - 对长上下文场景，优先启用 `cache_tokens` 支持的模型（查看模型文档支持列表）；  
+  - 评测任务中，用规则评估替代大模型评估可规避裁判模型 Token 费用；  
+  - Token Plan 用户应定期检查控制台「用量分析」，识别高消耗模型/成员，及时调整分配策略。  
+- ❌ **避免踩坑**：  
+  - 不要复用通用 API Key（`sk-`）调用 Token Plan 模型——将导致 401 错误或意外按量扣费；  
+  - 不要尝试通过修改 `max_tokens` 或 [prompt](../guides/prompt.md) 格式“欺骗”Token 计量——平台按真实 tokenizer 输出计费；  
+  - 不要依赖前端渲染逻辑（如 Markdown 解析）估算 Token——实际消耗由模型侧 tokenizer 决定。  
 
-- **Token Plan 团队版**：按 Token 消耗抵扣 Credits，工具调用（联网搜索、代码解释器等内置工具）产生的 Token 同样从套餐 Credits 抵扣，不额外收费。
-- **Coding Plan**：按模型调用**次数**计费（而非 Token），面向个人开发场景。
-
-### 3. 模型训练与部署
-
-- **训练**按训练 Token 计费，文本模型公式为 `（训练数据 Token + 混合训练数据 Token）× 循环次数 × 训练单价`；图像 / 视频模型的训练 Token 由 `max_steps`、`max_pixels`、`n_epochs` 等超参数推算。
-- **部署**（预置吞吐 TPM）按输入 / 输出 TPM 单价与时长计费，与 Token 用量间接相关。训练与部署**不能**用免费额度或节省计划抵扣。
-
-### 4. 监控与观测
-
-- 应用观测可查看每次调用的 Token 量，监控统计提供 Token 总量（全部 / 输入 / 输出）、平均单次请求 Token 量、平均首 Token 耗时等指标。
-- 模型监控将 Token 消耗归入「成本」类指标，首 Token 延时归入「性能」类指标，支持按分钟 / 小时 / 天聚合，并可配置告警。
-- 用量统计按业务空间维度归集，数据延迟约 1 小时。
-
-## 关键参数与配置
-
-| 项 | 说明 |
-| --- | --- |
-| `max_tokens` | 限制单次生成的最大输出 Token 数，用于控制成本、防止过度生成，也是降低幻觉的手段之一 |
-| 上下文缓存 | 命中缓存的**输入** Token 享折扣；缓存折扣与 Batch 折扣不可同时生效，价格表输入单价不含缓存单价 |
-| Batch 调用 | 支持的模型输入 / 输出单价按实时推理价的 50% 计费 |
-| 免费额度用完即停 | 开启后额度耗尽即停服（返回 403），避免意外扣费，但也会阻断节省计划继续抵扣 |
-
-## 成本优化建议
-
-- **优化 Prompt**：简洁清晰的 Prompt 可减少不必要的输入 Token 消耗。
-- **控制输出长度**：合理设置 `max_tokens`，避免冗长输出。
-- **按任务选模型**：分类、摘要等简单任务优先使用轻量级模型。
-- **批量推理**：非实时大批量任务走 Batch 接口，Token 单价更低。
-- **善用抵扣顺序**：`免费额度 > 资源包 > 其他模型节省计划 > AI 通用型节省计划 > 按量付费`，据此规划预付费方案。
-
-## 账单中的 Token
-
-大模型推理为分钟级出账（通常 2～10 分钟），批量推理与训练为小时级。账单「实例 ID」以英文分号分隔，包含 `ApiKeyID;业务空间ID;模型名称;输入/输出类型;调用渠道;免费额度用完即停标识`，可据此区分输入 / 输出 Token 的费用来源与调用渠道（`app` 代码调用、`bmp` 控制台体验、`assistant-api`）。
+Token 计量是百炼平台资源治理的基石。理解它，就是掌握成本、性能与合规的主动权。
 
 ## 关联主题页
 
 - [token plan guide](../guides/token-plan-guide.md)
-- [test 1](../guides/test-1.md)
-- [application monitoring](../guides/application-monitoring.md)
 - [model monitoring](../guides/model-monitoring.md)
-- [support](../guides/support.md)
+- [application monitoring](../guides/application-monitoring.md)
+- [model evaluation introduction](../guides/model-evaluation-introduction.md)
+- [application support](../guides/application-support.md)
 
 

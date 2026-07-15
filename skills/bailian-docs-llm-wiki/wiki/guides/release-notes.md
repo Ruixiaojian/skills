@@ -1,47 +1,42 @@
 # release notes
 
-本页汇总百炼平台的功能更新与模型上下架动态，帮助开发者快速跟踪平台能力演进、新模型可用性以及影响调用的变更（下线、降价、网关调整等）。内容分为两条主线：平台功能迭代（[模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)）与模型规格的上架/更新记录（[模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)）。建议在集成前先核对相关模型的最新状态与下线机制。
+百炼平台的 Release Notes 汇总了模型上下架、功能迭代、API 变更及平台能力演进等关键动态，面向开发者提供可落地的技术更新概览。内容覆盖模型支持范围、核心参数变更、调用方式升级、已知限制与兼容性注意事项。所有信息均基于平台近期正式发布版本，建议开发者结合自身场景关注模型生命周期状态与接口兼容性。
 
-## 两类更新说明
+## 支持的模型/功能
 
-- **平台功能更新**：记录计费方案、API 能力、模型调优/部署、知识库 RAG、多模态套件、接入工具（如 Codex、Kilo CLI）等模块的迭代，按年份和月份倒序排列。详见 [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)。
-- **模型上下架与更新**：记录各地域（如华北2/北京）新上架模型的类型、时间、服务部署范围（如「中国内地」）与模型规格。详见 [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)。
+- **新增模型**：2026年7月起，华北2（北京）地域陆续上线 `qwen-audio-3.0-realtime-plus`（实时多模态）、`vidu/viduq3-ad_reference2video`（参考生视频）、`happyhorse-1.1-t2v`（文生视频）、`fun-music-v1`（音乐生成）、`Tripo/Tripo-H3.1`（3D生成）等数十款模型，覆盖语音、图像、视频、3D、音乐及全模态场景。详见 [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)。
+- **模型能力扩展**：Qwen3.7系列全面增强多模态交互混合智能体能力；Kimi K2.7 Code 系列新增高速档位（`kimi/kimi-k2.7-code-highspeed`），推理速度提升5~6倍；GLM-5.1 支持200K上下文与128K最大输出；DeepSeek-V4-Pro 支持 `cached_token` 单价调整为1元/百万token（见[文档 2](../../raw/model-user-guide/release-notes/newly-released-models.md)）。
+- **功能模块上线**：6月新增知识检索服务与知识问答服务（支持多知识库联合检索与混合排序）；6月上线智能体托管运行时 API；5月起模型调优支持强化学习（RL）、0代码安全合规强化、视频/图像/视觉理解模型类型；4月起多模态交互开发套件覆盖 Android/iOS Lite、Linux C++、RTOS C 等全端 SDK。
 
-## 平台功能动态（要点）
+> **注意**：文档 1 中提及“Qwen3-VL-8B-Instruct/Thinking 支持 SFT 调优”（2025年10月），但文档 2 中未列出该模型上架记录，且其命名与当前主流 Qwen3.5/Qwen3.6/Qwen3.7 系列不一致，建议以 [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md) 中实际发布的模型列表为准，避免使用非公开快照模型。
 
-功能更新按「日期 / 功能模块 / 功能点 / 功能说明」组织，覆盖的主要方向包括：
+## 关键参数
 
-- **计费与套餐**：团队版共享用量包（跨坐席共享 Credits）、Coding Plan Pro 首月特惠、上下文缓存降价等。
-- **API 能力**：Responses API 异步调用（`background=true` 提交长耗时任务并轮询）、文本生成 API 聚合 OpenAI Responses 与 Anthropic Messages 接口、异步任务支持 EventBridge 回调与 RocketMQ、临时 API Key 生成、API Key 加密存储。
-- **模型调优与部署**：新增强化学习（RL）训练（邀约制）、图像/视频/视觉理解（VL）模型定制训练、DPO 偏好训练、模型压缩（量化降精度）、模型导入（从 OSS 导入 LoRA）、按模型单元（MU）时长计费、PTU 长输入与前缀缓存。
-- **知识库 RAG**：知识检索服务、知识问答服务、知识库日志与监控（投递至 SLS）。
-- **接入工具与生态**：新增 Codex、Kilo CLI 客户端接入，官方 MCP 服务，多模态交互开发套件（Java/Android/iOS/Linux C++/RTOS C SDK）。
+- **计费模式**：模型部署支持按模型单元（MU）时长计费（自2025年10月起），适用于 `qwen-flash`/`qwen-plus` 等预置模型；`deepseek-v4-pro` 的 `cached_token` 单价明确为 **1 元/百万 token**（标准 `input_token` 不变）。
+- **上下文与输出**：GLM-5.1 支持 200K 上下文与 128K 最大输出；Qwen3.5-OCR 上下文扩展至 128K；Qwen3.7-Max 系列仅支持纯文本输入，默认开启思考模式，支持显式缓存。
+- **性能指标**：`qwen-audio-3.0-tts-flash` 首包延时 ≤200ms；`qwen3.6-flash` 系列在代码智能体基准中大幅超越前代；`wan2.7-r2v` 支持单张多宫格故事板一键生成剧本化视频。
 
-上述条目的完整时间线请查阅 [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md) 中的「功能动态」章节。
+## 使用方式
 
-## 模型上架动态（要点）
+- **API 调用**：
+  - Responses API 新增异步调用模式（`background=true`），适用于长耗时任务；
+  - 异步任务支持通过事件总线 EventBridge 主动推送完成事件（HTTP 回调或 RocketMQ），替代轮询；
+  - 新增临时 API Key 生成机制，适用于不可信环境，规避永久密钥泄露风险；
+  - 智能体托管运行时、知识检索/问答、Prompt 工程、数据连接等模块均已提供完整 API 文档（参见 [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)）。
+- **SDK 与集成**：
+  - 多模态交互开发套件提供 Android/iOS Lite、Android、iOS、Linux C++、RTOS C 等 SDK；
+  - Spring AI Alibaba 框架已支持调用百炼智能体与工作流应用；
+  - Codex 终端 AI 编程助手、Kilo CLI 工具均完成百炼接入适配。
 
-模型上架记录覆盖多种模型类型，示例包括：
+## 限制和注意事项
 
-- **推理/文本模型**：qwen3.7-max 系列、qwen3.6 系列（flash/plus/max-preview/27b）、DeepSeek-V4 系列（pro/flash）、Kimi K2.6/K2.7-code、GLM-5/5.1、MiMo-V2.5-Pro、Step 3.7 Flash 等第三方直供模型。
-- **多模态与生成**：Qwen-Image-2.0（文生图/图像编辑融合）、万相 2.7（文生/图生/参考生视频、视频编辑、图像生成与编辑）、HappyHorse（有声视频，3~15 秒、720P/1080P）、Vidu / 爱诗（Pixverse）视频系列、Tripo 3D 生成、Fun-Music 音乐生成。
-- **语音与翻译**：Qwen-Audio-3.0（realtime/tts，Flash 版首包延时 <200ms）、Fun-ASR（覆盖 30 语种、七大方言）、qwen3.5-livetranslate（识别 60 种语言、翻译为 29 种语言音频）。
-- **文字提取**：qwen3.5-ocr（128K 上下文、多轮对话、卡证信息抽取）。
-
-## 关键字段与使用方式
-
-- **服务部署范围**：模型上架条目会标注部署范围（如「中国内地」）与地域（如华北2/北京）。集成前需确认目标模型在所需地域可用。平台已新增美国、德国、日本等地域与部署范围。
-- **模型规格命名**：带日期后缀的规格（如 `qwen3.7-max-2026-05-20`、`wan2.7-t2v-2026-06-12`）为快照版本，能力通常与主版本一致，用于锁定行为、便于灰度与回滚。
-- **第三方直供模型**：使用 `厂商/模型` 形式的 ID（如 `kimi/kimi-k2.7-code`、`ZHIPU/GLM-5.1`、`vidu/viduq3-fast_reference2image`），调用文档参见各模型对应指南。
-
-## 限制与注意事项
-
-- **模型下线**：平台持续发布老旧/长尾模型下线与延期下线通知。下线规则与完整清单请以 [模型下线机制说明](https://help.aliyun.com/zh/model-studio/model-depreciation) 为准，及时迁移以避免调用中断。
-- **网关变更**：存在网关变更通告与业务空间专属推理 API 域名升级，可能影响既有调用地址，需关注公告并同步更新配置。
-- **免费额度**：启用「免费额度用完即停」后，新人免费额度耗尽将无法继续调用（返回错误 `code: AllocationQuota.FreeTierOnly`），避免产生额外费用。
-- **能力约束**：部分推理模型（如 qwen3.6-max-preview、qwen3.7-max 系列）仅支持纯文本输入、默认或仅支持思考模式，不支持图像与视频输入，接入前需核对模态支持。
-
-> **注意**：两篇文档的日期跨度较大且更新频繁，部分记录已进入 2026 年。计费、模型可用性与下线时间以官方最新公告和控制台实际状态为准；本页为聚合快照，可能滞后于 [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md) 与 [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md) 的原始内容。
+- **模型下线**：2026年7月起分批下线部分老旧及长尾模型（如7月10日、7月9日通知），同时存在延期下线安排（7月6日通知）。具体清单与机制请严格参照 [模型下线机制说明](../../raw/model-user-guide/release-notes/model-release-notes.md)。
+- **地域与部署**：新模型（如 `qwen-audio-3.0-realtime-plus`、`vidu` 系列）当前仅部署于华北2（北京）地域，国际站用户需确认服务可用性；6月12日新增美国、德国、日本地域，但模型覆盖需单独验证。
+- **功能约束**：
+  - `qwen3.6-max-preview` 明确不支持图像与视频输入；
+  - `kimi/kimi-k2.7-code` 仅支持思考模式；
+  - `qwen3.5-omni-plus` 为全模态模型，但具体输入模态组合需查阅对应 API 文档；
+  - 免费额度用完即停功能启用后，将返回错误码 `AllocationQuota.FreeTierOnly`，需在客户端做好容错处理。
 
 ## 来源文档
 
