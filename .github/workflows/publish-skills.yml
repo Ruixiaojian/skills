@@ -2,7 +2,7 @@ name: publish-skills
 
 on:
   push:
-    branches: [main]
+    branches: [feat/bailian-docs-update]
     paths: ['skills/**']          # 只有技能目录变化才触发
 
 concurrency:
