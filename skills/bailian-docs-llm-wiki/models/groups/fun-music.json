@@ -19,6 +19,7 @@
         {
           "priceUnit": "每秒",
           "price": "0.002",
+          "timeBand": "standard",
           "type": "content_duration",
           "priceName": "音频时长"
         }
@@ -35,6 +36,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TTS"
       ],
@@ -70,6 +74,7 @@
         {
           "priceUnit": "每秒",
           "price": "0.005",
+          "timeBand": "standard",
           "type": "content_duration",
           "priceName": "音频时长"
         }
@@ -86,6 +91,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TTS"
       ],

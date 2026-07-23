@@ -19,12 +19,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.15",
+          "timeBand": "standard",
           "type": "embedding_image_token",
           "priceName": "图片输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.15",
+          "timeBand": "standard",
           "type": "embedding_token",
           "priceName": "文本输入"
         }
@@ -47,6 +49,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "ME"
       ],
@@ -82,12 +87,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.5",
+          "timeBand": "standard",
           "type": "embedding_image_token",
           "priceName": "图片输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.5",
+          "timeBand": "standard",
           "type": "embedding_token",
           "priceName": "文本输入"
         }
@@ -110,6 +117,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "ME"
       ],
@@ -145,12 +155,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.9",
+          "timeBand": "standard",
           "type": "embedding_image_token",
           "priceName": "图片输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.7",
+          "timeBand": "standard",
           "type": "embedding_token",
           "priceName": "文本输入"
         }
@@ -173,6 +185,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "ME"
       ],

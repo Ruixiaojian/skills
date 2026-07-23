@@ -1,57 +1,43 @@
 # Prompt 工程
 
-Prompt 工程是系统性设计、迭代与优化提示词（Prompt）的方法论与实践体系，旨在通过结构化框架、自动化增强和数据驱动反馈，显著提升大模型在特定任务上的准确性、稳定性与可控性。它不是一次性指令编写，而是覆盖定义、测试、评估、优化、部署与监控的全生命周期工程实践。
+Prompt 工程是百炼平台中系统化设计、管理与优化大语言模型输入指令（Prompt）的方法论与技术实践，旨在通过结构化模板、上下文增强、自动化调优和闭环反馈等手段，稳定提升模型输出的准确性、一致性、安全性与业务适配性。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-Prompt 工程在百炼平台中已深度产品化，贯穿智能体、工作流、高代码应用及知识库增强等核心场景：
+- **智能体（Agent 2.0）应用**：Prompt 是智能体行为的“操作系统”。通过配置 `system_prompt` 定义角色、任务边界与工具调用规范（如“你是一个电商导购助手，仅能调用商品查询和比价工具”），结合变量注入（如 `{{user_intent}}`）和可选的 RAG 检索片段，驱动模型完成多步推理与执行。  
+- **工作流（Workflow）应用**：在“大模型节点”中直接填写或引用 Prompt 模板，支持将上游节点输出（如意图分类结果、用户画像字段）作为变量动态填充，实现流程级 Prompt 编排。  
+- **高代码应用**：开发者可在 Python 服务中调用 `GetPromptTemplate` 接口获取模板内容，解析 `variables` 后安全填充业务数据，再构造标准 OpenAI 兼容请求体提交至百炼模型网关。  
+- **零代码构建**：控制台创建智能体/工作流时，“系统提示词”字段即为 Prompt 工程入口；支持一键启用“自动优化”，或上传样例数据触发“反馈优化”，无需编写代码即可获得工程级 Prompt。  
+- **多模态生成（文生图/文生视频）**：Prompt 工程体现为结构化公式（如图像：`主体 + 场景 + 风格 + 负向约束`），需分别配置正向 Prompt（期望内容）与负向 Prompt（需排除元素），并通过图片生成模板统一管理。
 
-- **智能体（Agent）应用**：作为角色定义与工具调用规则的载体。System Prompt 采用 ICIO 或 RASCEF 等结构化框架（如明确 Role、Action、Steps、Constraints），配合 `enable_thinking` 参数启用反思链路，使模型更可靠地规划并调用知识库、MCP 等工具。
-  
-- **工作流（Workflow）应用**：每个「大模型」节点均支持绑定 Prompt 模板。模板变量（如 `${sys.query}`、`${retrieved_content}`）可动态注入上下文、RAG 结果或前序节点输出，实现多步任务中提示词的精准定制与复用。
-
-- **知识库增强问答**：Prompt 工程直接决定知识检索结果的利用效果。例如，通过负向约束（如“禁止编造未提及的信息”）+ 引用标注指令（如“所有结论必须标注来源片段编号”），可显著提升回答可信度与可追溯性。
-
-- **图片/[多模态](multi-modal.md)生成**：支持正向 Prompt（描述目标内容）与负向 Prompt（排除干扰元素）双通道输入，需避免语义冲突（如正向写“高清”，负向写“模糊”），并通过 CRISPE 框架结构化控制风格、构图与细节层级。
-
-- **应用评测与迭代闭环**：Prompt 反馈优化功能依赖评测集（≥20 条）与样例集（5–10 条）驱动多轮自动重写，推荐使用 `qwen-max` 作为优化引擎；优化结果可一键保存为新模板，无缝接入已有应用。
-
-> ⚠️ 注意：Prompt 样例库功能已停止维护，新项目请统一使用 RAG 表格库或评测反馈机制替代。
+> ⚠️ 注意：Prompt 样例库（Few-shot）功能已停止维护，**所有新项目请迁移至 RAG 表格库或反馈优化方案**；历史依赖该功能的生产流程应尽快重构。
 
 ## 关键参数和配置
 
-| 参数 | 说明 | 开发建议 |
-|------|------|----------|
-| `promptTemplateId` + `workspaceId` | 模板唯一标识对，用于 API 获取模板内容 | 必须成对使用；`workspaceId` 需通过控制台或 `ListWorkspace` 接口获取，且仅华北2（北京）地域有效 |
-| `variables` | 模板中声明的占位符（如 `${topic}`、`${num1}`），运行时由业务逻辑填充 | 占位符名称应语义清晰；避免嵌套（如 `${${var}}`）；模板创建后不可新增变量，需提前规划 |
-| `max_tokens`（上下文） | 单次请求总 [Token](token.md) 上限（Prompt + 输入 + 输出） | 文本生成默认 ≤ 6144 字符（约 8K tokens）；图片生成需同时满足分辨率与提示词长度限制，建议正向 Prompt ≤ 300 字、负向 ≤ 150 字 |
-| `temperature` | 控制生成随机性（0.0–1.0），值越高越发散 | 对确定性任务（如格式化输出、代码生成）设为 `0.0–0.3`；创意类任务可设 `0.7–1.0`，但需配合 `top_p` 或 `stop` 参数约束边界 |
+| 参数 | 说明 | 使用位置 | 备注 |
+|------|------|----------|------|
+| `promptTemplateId` | Prompt 模板唯一标识符 | API（`GetPromptTemplate`）、智能体/工作流节点配置 | 必填，需与 `workspaceId` 配对使用 |
+| `workspaceId` | 业务空间 ID，所有 Prompt 资源的归属容器 | 所有 Prompt 相关 API 及控制台操作 | 必填，控制台“设置 > 工作空间”中查看 |
+| `variables` | 模板中声明的动态变量名列表（如 `["topic", "tone"]`） | `GetPromptTemplate` 响应体中返回 | 不可手动指定，由平台解析模板内容自动生成 |
+| `system_prompt` | 智能体/工作流中定义模型角色与行为准则的顶层指令 | 智能体配置页、“大模型节点”参数面板 | 推荐使用自动优化后的版本，避免模糊表述 |
+| `has_thoughts` | 启用样例检索调试信息的开关 | 智能体应用 API 请求体 | 设为 `true` 可在响应 `thoughts` 字段中查看召回的 RAG 片段详情 |
+| `召回片段数` | 单次请求从知识库/RAG 表格库中注入的上下文数量 | 智能体配置页 > 文件问答 > 切片检索设置 | 默认 5，最大 10；影响 Token 成本与效果平衡 |
 
 ## 面向开发者，简洁实用
 
-- ✅ **优先使用结构化模板**：新建 Prompt 时选择「基于 Prompt 工程创建」，内置 ICIO（Identity-Context-Instruction-Output）、CRISPE（Capacity-Role-Insight-Statement-Personality-Experiment）等框架，比纯自由文本更易调试与复用。
-  
-- ✅ **API 调用三步法**：
-  1. 调用 `GetPromptTemplate` 获取模板内容与 `variables` 列表；
-  2. 用业务数据替换 `${variable}` 占位符（推荐使用标准字符串模板引擎，如 Python 的 `string.Template`）；
-  3. 将生成的完整 Prompt 作为 `system` 或 `user` 消息发送至模型 API（如 `qwen-max`）。
-
-- ✅ **热更新不改代码**：Prompt 模板在控制台编辑保存后，所有绑定该模板的应用将自动生效，无需重新部署服务，适合 A/B 测试与灰度发布。
-
-- ✅ **安全合规**：自动优化过程中的输入数据**不会被存储或用于模型训练**，符合阿里云隐私政策；敏感字段（如用户 ID）建议通过变量注入而非硬编码进 Prompt。
-
-- ❌ **避坑提醒**：
-  - 不跨地域调用 Prompt 相关 API（仅支持华北2）；
-  - 单模板内容勿超 6144 字符（控制台有实时计数）；
-  - 图片生成负向 Prompt 避免与正向逻辑矛盾；
-  - 反馈优化任务中，样例数据需覆盖全部业务类别，评测数据越多效果越优。
+- ✅ **首选自动化**：新项目直接使用「Prompt 自动优化」（免费、不存数据、10 秒出结果），粘贴原始指令即可获得符合 ICIO/CRISPE 等框架的增强版 Prompt。  
+- ✅ **强业务适配用反馈优化**：当任务有明确输出格式（如 JSON 分类、表格抽取）时，上传 5–10 条高质量样例 + ≥20 条评测数据，启动反馈优化任务，推荐使用 `qwen-max` 模型。  
+- ✅ **模板即资产**：通过 `CreatePromptTemplate` API 创建模板，类型设为 `text_generation` 或 `image_generation`；后续所有应用均可复用同一 `promptTemplateId`，实现集中治理。  
+- ⚠️ **地域强约束**：所有 Prompt 功能（模板、自动优化、反馈优化）**仅支持华北2（北京）地域**，API Endpoint 必须为 `bailian.cn-beijing.aliyuncs.com`。  
+- ⚠️ **Token 成本敏感**：启用 RAG 注入或反馈优化会显著增加输入 Token（样例内容 + 用户 Query + 系统指令），建议在控制台调试面板中开启 `has_thoughts` 观察实际注入量，并权衡效果与成本。  
+- 🔐 **安全第一**：反馈优化中上传的样例与评测数据仅用于本次计算，请务必脱敏处理 PII/敏感业务字段；自动优化过程不存储、不训练、不共享用户输入。
 
 ## 关联主题页
 
 - [prompt](../guides/prompt.md)
+- [application component api reference](../api/application-component-api-reference.md)
 - [llm application](../guides/llm-application.md)
 - [start using](../guides/start-using.md)
-- [application component api reference](../api/application-component-api-reference.md)
-- [application evaluation](../guides/application-evaluation.md)
+- [use cases](../guides/use-cases.md)
 
 

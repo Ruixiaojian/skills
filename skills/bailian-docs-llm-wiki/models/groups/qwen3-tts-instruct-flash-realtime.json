@@ -20,6 +20,7 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "cosy_tts_number",
           "priceName": "语音合成"
         }
@@ -36,6 +37,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TTS"
       ],

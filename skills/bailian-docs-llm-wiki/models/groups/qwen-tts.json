@@ -19,12 +19,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "1.6",
+          "timeBand": "standard",
           "type": "text_input_token",
           "priceName": "输入：文本"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "10",
+          "timeBand": "standard",
           "type": "qwen_tts_multi_output_token",
           "priceName": "输出：音频"
         }
@@ -47,6 +49,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TTS"
       ],
@@ -90,12 +95,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "1.6",
+          "timeBand": "standard",
           "type": "text_input_token",
           "priceName": "输入：文本"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "10",
+          "timeBand": "standard",
           "type": "qwen_tts_multi_output_token",
           "priceName": "输出：音频"
         }
@@ -118,6 +125,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TTS"
       ],

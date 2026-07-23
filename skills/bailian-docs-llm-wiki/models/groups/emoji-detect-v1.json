@@ -17,9 +17,13 @@
         {
           "priceUnit": "每张",
           "price": "0.004",
+          "timeBand": "standard",
           "type": "image_detect_number",
           "priceName": "图片检测"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "VG"

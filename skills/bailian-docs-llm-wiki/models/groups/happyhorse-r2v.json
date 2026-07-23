@@ -52,6 +52,7 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [],
       "capabilities": [
         "VG"
       ],
@@ -90,6 +91,7 @@
         {
           "priceUnit": "每秒",
           "price": "0.9",
+          "timeBand": "standard",
           "discount": 0.8,
           "type": "video_ratio_720p",
           "priceName": "视频生成（720P）"
@@ -97,6 +99,7 @@
         {
           "priceUnit": "每秒",
           "price": "1.6",
+          "timeBand": "standard",
           "discount": 0.8,
           "type": "video_ratio_1080p",
           "priceName": "视频生成（1080P）"
@@ -120,6 +123,9 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],

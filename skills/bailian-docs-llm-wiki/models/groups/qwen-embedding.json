@@ -44,6 +44,7 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [],
       "capabilities": [
         "TR"
       ],
@@ -85,12 +86,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.25",
+          "timeBand": "standard",
           "type": "embedding_token_batch",
           "priceName": "向量输入（Batch File）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.5",
+          "timeBand": "standard",
           "type": "embedding_token",
           "priceName": "文本输入"
         }
@@ -113,6 +116,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TR"
       ],
@@ -148,12 +154,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.25",
+          "timeBand": "standard",
           "type": "embedding_token_batch",
           "priceName": "向量输入（Batch File）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.5",
+          "timeBand": "standard",
           "type": "embedding_token",
           "priceName": "文本输入"
         }
@@ -176,6 +184,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TR"
       ],
@@ -209,12 +220,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.35",
+          "timeBand": "standard",
           "type": "embedding_token_batch",
           "priceName": "向量输入（Batch File）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.7",
+          "timeBand": "standard",
           "type": "embedding_token",
           "priceName": "文本输入"
         }
@@ -237,6 +250,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TR"
       ],
@@ -270,12 +286,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.35",
+          "timeBand": "standard",
           "type": "embedding_token_batch",
           "priceName": "向量输入（Batch File）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.7",
+          "timeBand": "standard",
           "type": "embedding_token",
           "priceName": "文本输入"
         }
@@ -298,6 +316,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TR"
       ],
@@ -331,9 +352,13 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.7",
+          "timeBand": "standard",
           "type": "embedding_token",
           "priceName": "文本输入"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TR"
@@ -368,9 +393,13 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.7",
+          "timeBand": "standard",
           "type": "embedding_token",
           "priceName": "文本输入"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TR"

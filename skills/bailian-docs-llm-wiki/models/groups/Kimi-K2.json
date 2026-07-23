@@ -28,30 +28,35 @@
         {
           "priceUnit": "每百万tokens",
           "price": "6.5",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "27",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "1.3",
+          "timeBand": "standard",
           "type": "input_token_cache",
           "priceName": "输入（缓存命中）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "8.125",
+          "timeBand": "standard",
           "type": "input_token_cache_creation_5m",
           "priceName": "显式缓存创建"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.65",
+          "timeBand": "standard",
           "type": "input_token_cache_read",
           "priceName": "显式缓存命中"
         }
@@ -74,6 +79,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TG",
         "VU",
@@ -130,30 +138,35 @@
         {
           "priceUnit": "每百万tokens",
           "price": "6.5",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "27",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "1.3",
+          "timeBand": "standard",
           "type": "input_token_cache",
           "priceName": "输入（缓存命中）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "8.125",
+          "timeBand": "standard",
           "type": "input_token_cache_creation_5m",
           "priceName": "显式缓存创建"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.65",
+          "timeBand": "standard",
           "type": "input_token_cache_read",
           "priceName": "显式缓存命中"
         }
@@ -176,6 +189,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Reasoning",
         "VU",
@@ -231,30 +247,35 @@
         {
           "priceUnit": "每百万tokens",
           "price": "4",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "21",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.8",
+          "timeBand": "standard",
           "type": "input_token_cache",
           "priceName": "输入（缓存命中）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "5",
+          "timeBand": "standard",
           "type": "input_token_cache_creation_5m",
           "priceName": "显式缓存创建"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.4",
+          "timeBand": "standard",
           "type": "input_token_cache_read",
           "priceName": "显式缓存命中"
         }
@@ -277,6 +298,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Reasoning",
         "VU",
@@ -329,18 +353,21 @@
         {
           "priceUnit": "每百万tokens",
           "price": "4",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "16",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.8",
+          "timeBand": "standard",
           "type": "input_token_cache",
           "priceName": "输入（缓存命中）"
         }
@@ -363,6 +390,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TG",
         "Reasoning"
@@ -420,18 +450,21 @@
         {
           "priceUnit": "每百万tokens",
           "price": "4",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "16",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.8",
+          "timeBand": "standard",
           "type": "input_token_cache",
           "priceName": "输入（缓存命中）"
         }
@@ -454,6 +487,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TG"
       ],

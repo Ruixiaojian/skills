@@ -36,6 +36,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "multiPrices": [
         {
           "rangeStart": 0,
@@ -44,12 +47,14 @@
             {
               "priceUnit": "每百万tokens",
               "price": "1.5",
+              "timeBand": "standard",
               "type": "input_token",
               "priceName": "输入"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "6",
+              "timeBand": "standard",
               "type": "output_token",
               "priceName": "输出"
             }
@@ -63,12 +68,14 @@
             {
               "priceUnit": "每百万tokens",
               "price": "2.25",
+              "timeBand": "standard",
               "type": "input_token",
               "priceName": "输入"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "9",
+              "timeBand": "standard",
               "type": "output_token",
               "priceName": "输出"
             }
@@ -82,12 +89,14 @@
             {
               "priceUnit": "每百万tokens",
               "price": "3.75",
+              "timeBand": "standard",
               "type": "input_token",
               "priceName": "输入"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "15",
+              "timeBand": "standard",
               "type": "output_token",
               "priceName": "输出"
             }
@@ -101,12 +110,14 @@
             {
               "priceUnit": "每百万tokens",
               "price": "7.5",
+              "timeBand": "standard",
               "type": "input_token",
               "priceName": "输入"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "37.5",
+              "timeBand": "standard",
               "type": "output_token",
               "priceName": "输出"
             }

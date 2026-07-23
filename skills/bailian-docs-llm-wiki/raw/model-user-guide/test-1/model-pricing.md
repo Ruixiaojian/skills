@@ -16488,14 +16488,6 @@ qwen3.7-text-embedding
 
 100万Token
 
-qwen3.7-text-embedding
-
-中国内地
-
-0.5元
-
-100万Token
-
 text-embedding-v4
 
 > [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价

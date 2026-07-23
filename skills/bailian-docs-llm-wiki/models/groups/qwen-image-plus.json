@@ -21,6 +21,7 @@
         {
           "priceUnit": "每张",
           "price": "0.2",
+          "timeBand": "standard",
           "type": "image_number",
           "priceName": "图片生成"
         }
@@ -47,6 +48,9 @@
           "async_user_concurrency_limit": 2
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "IG"
       ],
@@ -88,6 +92,7 @@
         {
           "priceUnit": "每张",
           "price": "0.25",
+          "timeBand": "standard",
           "type": "image_number",
           "priceName": "图片生成"
         }
@@ -114,6 +119,9 @@
           "async_user_concurrency_limit": 2
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "IG"
       ],

@@ -110,6 +110,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "multiPrices": [
         {
           "rangeStart": 0,
@@ -118,48 +121,56 @@
             {
               "priceUnit": "每百万tokens",
               "price": "2.5",
+              "timeBand": "standard",
               "type": "input_token",
               "priceName": "输入"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "10",
+              "timeBand": "standard",
               "type": "output_token",
               "priceName": "输出"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "0.5",
+              "timeBand": "standard",
               "type": "input_token_cache",
               "priceName": "输入（缓存命中）"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "1.25",
+              "timeBand": "standard",
               "type": "input_token_batch",
               "priceName": "输入（Batch File）"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "5",
+              "timeBand": "standard",
               "type": "output_token_batch",
               "priceName": "输出（Batch File）"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "3.125",
+              "timeBand": "standard",
               "type": "input_token_cache_creation_5m",
               "priceName": "显式缓存创建"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "0.25",
+              "timeBand": "standard",
               "type": "input_token_cache_read",
               "priceName": "显式缓存命中"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "2.5",
+              "timeBand": "standard",
               "discount": 0.5,
               "type": "input_token_batch_chat",
               "priceName": "输入（Batch Chat)"
@@ -167,6 +178,7 @@
             {
               "priceUnit": "每百万tokens",
               "price": "10",
+              "timeBand": "standard",
               "discount": 0.5,
               "type": "output_token_batch_chat",
               "priceName": "输出（Batch Chat)"
@@ -181,48 +193,56 @@
             {
               "priceUnit": "每百万tokens",
               "price": "4",
+              "timeBand": "standard",
               "type": "input_token",
               "priceName": "输入"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "16",
+              "timeBand": "standard",
               "type": "output_token",
               "priceName": "输出"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "0.8",
+              "timeBand": "standard",
               "type": "input_token_cache",
               "priceName": "输入（缓存命中）"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "2",
+              "timeBand": "standard",
               "type": "input_token_batch",
               "priceName": "输入（Batch File）"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "8",
+              "timeBand": "standard",
               "type": "output_token_batch",
               "priceName": "输出（Batch File）"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "5",
+              "timeBand": "standard",
               "type": "input_token_cache_creation_5m",
               "priceName": "显式缓存创建"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "0.4",
+              "timeBand": "standard",
               "type": "input_token_cache_read",
               "priceName": "显式缓存命中"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "4",
+              "timeBand": "standard",
               "discount": 0.5,
               "type": "input_token_batch_chat",
               "priceName": "输入（Batch Chat)"
@@ -230,6 +250,7 @@
             {
               "priceUnit": "每百万tokens",
               "price": "16",
+              "timeBand": "standard",
               "discount": 0.5,
               "type": "output_token_batch_chat",
               "priceName": "输出（Batch Chat)"
@@ -244,48 +265,56 @@
             {
               "priceUnit": "每百万tokens",
               "price": "7",
+              "timeBand": "standard",
               "type": "input_token",
               "priceName": "输入"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "28",
+              "timeBand": "standard",
               "type": "output_token",
               "priceName": "输出"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "1.4",
+              "timeBand": "standard",
               "type": "input_token_cache",
               "priceName": "输入（缓存命中）"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "3.5",
+              "timeBand": "standard",
               "type": "input_token_batch",
               "priceName": "输入（Batch File）"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "14",
+              "timeBand": "standard",
               "type": "output_token_batch",
               "priceName": "输出（Batch File）"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "8.75",
+              "timeBand": "standard",
               "type": "input_token_cache_creation_5m",
               "priceName": "显式缓存创建"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "0.7",
+              "timeBand": "standard",
               "type": "input_token_cache_read",
               "priceName": "显式缓存命中"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "7",
+              "timeBand": "standard",
               "discount": 0.5,
               "type": "input_token_batch_chat",
               "priceName": "输入（Batch Chat)"
@@ -293,6 +322,7 @@
             {
               "priceUnit": "每百万tokens",
               "price": "28",
+              "timeBand": "standard",
               "discount": 0.5,
               "type": "output_token_batch_chat",
               "priceName": "输出（Batch Chat)"
@@ -396,6 +426,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "multiPrices": [
         {
           "rangeStart": 0,
@@ -404,18 +437,21 @@
             {
               "priceUnit": "每百万tokens",
               "price": "6",
+              "timeBand": "standard",
               "type": "input_token",
               "priceName": "输入"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "24",
+              "timeBand": "standard",
               "type": "output_token",
               "priceName": "输出"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "1.2",
+              "timeBand": "standard",
               "type": "input_token_cache",
               "priceName": "输入（缓存命中）"
             }
@@ -429,18 +465,21 @@
             {
               "priceUnit": "每百万tokens",
               "price": "10",
+              "timeBand": "standard",
               "type": "input_token",
               "priceName": "输入"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "40",
+              "timeBand": "standard",
               "type": "output_token",
               "priceName": "输出"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "2",
+              "timeBand": "standard",
               "type": "input_token_cache",
               "priceName": "输入（缓存命中）"
             }
@@ -454,18 +493,21 @@
             {
               "priceUnit": "每百万tokens",
               "price": "15",
+              "timeBand": "standard",
               "type": "input_token",
               "priceName": "输入"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "60",
+              "timeBand": "standard",
               "type": "output_token",
               "priceName": "输出"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "3",
+              "timeBand": "standard",
               "type": "input_token_cache",
               "priceName": "输入（缓存命中）"
             }

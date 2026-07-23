@@ -26,90 +26,105 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.4",
+          "timeBand": "standard",
           "type": "text_input_token",
           "priceName": "输入：文本"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "25",
+          "timeBand": "standard",
           "type": "audio_input_token",
           "priceName": "输入：音频"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "1.5",
+          "timeBand": "standard",
           "type": "vision_input_token",
           "priceName": "输入：图片/视频"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "1.6",
+          "timeBand": "standard",
           "type": "purein_text_output_token",
           "priceName": "输出：文本（输入仅包含文本时）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "4.5",
+          "timeBand": "standard",
           "type": "multiin_text_output_token",
           "priceName": "输出：文本（输入包含图片/音频/视频时）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "50",
+          "timeBand": "standard",
           "type": "multi_output_token",
           "priceName": "输出：文本+音频（输出的文本不计费）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.3",
+          "timeBand": "standard",
           "type": "vision_input_token_cache",
           "priceName": "输入：图片/视频（缓存命中）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.08",
+          "timeBand": "standard",
           "type": "text_input_token_cache",
           "priceName": "输入：文本（缓存命中）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "5",
+          "timeBand": "standard",
           "type": "audio_input_token_cache",
           "priceName": "输入：音频（缓存命中）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.2",
+          "timeBand": "standard",
           "type": "text_input_token_batch",
           "priceName": "输入：文本（Batch File）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "12.5",
+          "timeBand": "standard",
           "type": "audio_input_token_batch",
           "priceName": "输入：音频（Batch File）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.75",
+          "timeBand": "standard",
           "type": "vision_input_token_batch",
           "priceName": "输入：图片/视频（Batch File）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "25",
+          "timeBand": "standard",
           "type": "multi_output_token_batch",
           "priceName": "输出：文本+音频（Batch File）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "2.25",
+          "timeBand": "standard",
           "type": "multiin_text_output_token_batch",
           "priceName": "输出：文本（Batch File，输入包含图片/音频/视频时）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.8",
+          "timeBand": "standard",
           "type": "purein_text_output_token_batch",
           "priceName": "输出：文本（Batch File，输入仅包含文本时）"
         }
@@ -132,6 +147,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Multimodal-Omni"
       ],
@@ -183,36 +201,42 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.4",
+          "timeBand": "standard",
           "type": "text_input_token",
           "priceName": "输入：文本"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "25",
+          "timeBand": "standard",
           "type": "audio_input_token",
           "priceName": "输入：音频"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "1.5",
+          "timeBand": "standard",
           "type": "vision_input_token",
           "priceName": "输入：图片/视频"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "1.6",
+          "timeBand": "standard",
           "type": "purein_text_output_token",
           "priceName": "输出：文本（输入仅包含文本时）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "4.5",
+          "timeBand": "standard",
           "type": "multiin_text_output_token",
           "priceName": "输出：文本（输入包含图片/音频/视频时）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "50",
+          "timeBand": "standard",
           "type": "multi_output_token",
           "priceName": "输出：文本+音频（输出的文本不计费）"
         }
@@ -235,6 +259,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Multimodal-Omni"
       ],

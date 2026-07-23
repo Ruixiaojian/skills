@@ -19,9 +19,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -57,9 +61,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -95,9 +103,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -133,9 +145,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -171,9 +187,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -209,9 +229,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -247,9 +271,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -285,9 +313,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -323,9 +355,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -361,9 +397,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -399,9 +439,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -437,9 +481,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -475,9 +523,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -513,9 +565,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -551,9 +607,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -589,9 +649,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -627,9 +691,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -665,9 +733,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -703,9 +775,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -741,9 +817,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -779,9 +859,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -817,9 +901,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -855,9 +943,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -893,9 +985,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -931,9 +1027,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -969,9 +1069,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1007,9 +1111,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1045,9 +1153,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1083,9 +1195,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1121,9 +1237,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1159,9 +1279,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1197,9 +1321,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1235,9 +1363,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1273,9 +1405,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1311,9 +1447,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1349,9 +1489,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1387,9 +1531,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1425,9 +1573,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1463,9 +1615,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1501,9 +1657,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1539,9 +1699,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1577,9 +1741,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"
@@ -1615,9 +1783,13 @@
         {
           "priceUnit": "每万字符",
           "price": "1",
+          "timeBand": "standard",
           "type": "tts_text_number",
           "priceName": "Sambert 语音合成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "TTS"

@@ -20,6 +20,7 @@
         {
           "priceUnit": "每次",
           "price": "0.2",
+          "timeBand": "standard",
           "type": "tts_vc_model",
           "priceName": "声音复刻及声音设计"
         }
@@ -36,6 +37,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TTS"
       ],

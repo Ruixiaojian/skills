@@ -26,12 +26,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "2",
+          "timeBand": "standard",
           "type": "thinking_input_token",
           "priceName": "输入（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "20",
+          "timeBand": "standard",
           "type": "thinking_output_token",
           "priceName": "输出（思考）"
         }
@@ -54,6 +56,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VU",
         "Reasoning"
@@ -111,12 +116,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "2",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "8",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         }
@@ -139,6 +146,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VU"
       ],
@@ -198,12 +208,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.75",
+          "timeBand": "standard",
           "type": "thinking_input_token",
           "priceName": "输入（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "7.5",
+          "timeBand": "standard",
           "type": "thinking_output_token",
           "priceName": "输出（思考）"
         }
@@ -226,6 +238,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VU",
         "Reasoning"
@@ -286,12 +301,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.75",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "3",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         }
@@ -314,6 +331,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VU"
       ],
@@ -374,18 +394,21 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.5",
+          "timeBand": "standard",
           "type": "thinking_input_token",
           "priceName": "输入（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "5",
+          "timeBand": "standard",
           "type": "thinking_output_token",
           "priceName": "输出（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "12",
+          "timeBand": "standard",
           "type": "ft",
           "priceName": "调优"
         }
@@ -408,6 +431,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VU",
         "Reasoning"
@@ -475,18 +501,21 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.5",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "2",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "12",
+          "timeBand": "standard",
           "type": "ft",
           "priceName": "调优"
         }
@@ -509,6 +538,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VU"
       ],
@@ -574,12 +606,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "2",
+          "timeBand": "standard",
           "type": "thinking_input_token",
           "priceName": "输入（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "20",
+          "timeBand": "standard",
           "type": "thinking_output_token",
           "priceName": "输出（思考）"
         }
@@ -602,6 +636,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VU",
         "Reasoning"
@@ -662,12 +699,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "2",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "8",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         }
@@ -690,6 +729,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VU"
       ],
@@ -742,12 +784,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "1",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "4",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         }
@@ -770,6 +814,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TG"
       ],
@@ -824,12 +871,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "1",
+          "timeBand": "standard",
           "type": "thinking_input_token",
           "priceName": "输入（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "10",
+          "timeBand": "standard",
           "type": "thinking_output_token",
           "priceName": "输出（思考）"
         }
@@ -852,6 +901,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Reasoning",
         "TG"
@@ -911,12 +963,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.75",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "3",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         }
@@ -939,6 +993,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TG"
       ],
@@ -1004,12 +1061,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.75",
+          "timeBand": "standard",
           "type": "thinking_input_token",
           "priceName": "输入（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "7.5",
+          "timeBand": "standard",
           "type": "thinking_output_token",
           "priceName": "输出（思考）"
         }
@@ -1032,6 +1091,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Reasoning",
         "TG"
@@ -1087,12 +1149,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "2",
+          "timeBand": "standard",
           "type": "thinking_input_token",
           "priceName": "输入（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "20",
+          "timeBand": "standard",
           "type": "thinking_output_token",
           "priceName": "输出（思考）"
         }
@@ -1115,6 +1179,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Reasoning",
         "TG"
@@ -1171,12 +1238,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "2",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "8",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         }
@@ -1199,6 +1268,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TG"
       ],
@@ -1258,24 +1330,28 @@
         {
           "priceUnit": "每百万tokens",
           "price": "2",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "8",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "2",
+          "timeBand": "standard",
           "type": "thinking_input_token",
           "priceName": "输入（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "20",
+          "timeBand": "standard",
           "type": "thinking_output_token",
           "priceName": "输出（思考）"
         }
@@ -1298,6 +1374,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Reasoning",
         "TG"
@@ -1358,24 +1437,28 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.75",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "3",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.75",
+          "timeBand": "standard",
           "type": "thinking_input_token",
           "priceName": "输入（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "7.5",
+          "timeBand": "standard",
           "type": "thinking_output_token",
           "priceName": "输出（思考）"
         }
@@ -1398,6 +1481,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Reasoning",
         "TG"
@@ -1459,30 +1545,35 @@
         {
           "priceUnit": "每百万tokens",
           "price": "2",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "8",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "2",
+          "timeBand": "standard",
           "type": "thinking_input_token",
           "priceName": "输入（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "20",
+          "timeBand": "standard",
           "type": "thinking_output_token",
           "priceName": "输出（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "40",
+          "timeBand": "standard",
           "type": "ft",
           "priceName": "调优"
         }
@@ -1505,6 +1596,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Reasoning",
         "TG"
@@ -1579,30 +1673,35 @@
         {
           "priceUnit": "每百万tokens",
           "price": "1",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "4",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "1",
+          "timeBand": "standard",
           "type": "thinking_input_token",
           "priceName": "输入（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "10",
+          "timeBand": "standard",
           "type": "thinking_output_token",
           "priceName": "输出（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "30",
+          "timeBand": "standard",
           "type": "ft",
           "priceName": "调优"
         }
@@ -1625,6 +1724,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Reasoning",
         "TG"
@@ -1696,30 +1798,35 @@
         {
           "priceUnit": "每百万tokens",
           "price": "0.5",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "2",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "0.5",
+          "timeBand": "standard",
           "type": "thinking_input_token",
           "priceName": "输入（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "5",
+          "timeBand": "standard",
           "type": "thinking_output_token",
           "priceName": "输出（思考）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "6",
+          "timeBand": "standard",
           "type": "ft",
           "priceName": "调优"
         }
@@ -1742,6 +1849,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Reasoning",
         "TG"
@@ -1823,6 +1933,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "multiPrices": [
         {
           "rangeStart": 0,
@@ -1831,12 +1944,14 @@
             {
               "priceUnit": "每百万tokens",
               "price": "1",
+              "timeBand": "standard",
               "type": "input_token",
               "priceName": "输入"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "4",
+              "timeBand": "standard",
               "type": "output_token",
               "priceName": "输出"
             }
@@ -1850,12 +1965,14 @@
             {
               "priceUnit": "每百万tokens",
               "price": "1.5",
+              "timeBand": "standard",
               "type": "input_token",
               "priceName": "输入"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "6",
+              "timeBand": "standard",
               "type": "output_token",
               "priceName": "输出"
             }
@@ -1869,12 +1986,14 @@
             {
               "priceUnit": "每百万tokens",
               "price": "2.5",
+              "timeBand": "standard",
               "type": "input_token",
               "priceName": "输入"
             },
             {
               "priceUnit": "每百万tokens",
               "price": "10",
+              "timeBand": "standard",
               "type": "output_token",
               "priceName": "输出"
             }

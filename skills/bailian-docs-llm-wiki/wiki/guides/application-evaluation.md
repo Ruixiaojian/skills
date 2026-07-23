@@ -1,49 +1,52 @@
 # application evaluation
 
-application evaluation 是百炼平台用于系统化评估智能体/工作流应用输出质量的核心能力，支持自动与手动两种评测范式。它通过结构化评测集、可配置的评估器与人工标签协同，实现从数据构建、任务执行到归因分析的完整闭环，适用于模型迭代、知识库更新、Prompt调优等关键研发场景。
+application evaluation 是百炼平台提供的系统化应用质量评估能力，支持通过人工标注与自动评估相结合的方式，对智能体、工作流等大模型应用的输出效果进行多维度、可复现的量化分析。其核心流程包括评测集构建、评测任务创建、评估器配置与标签管理，覆盖从数据准备到结果分析的完整闭环。
 
 ## 支持的模型/功能
 
-- **自动评测**：基于大模型（当前仅支持 `qwen-max` 和 `qwen-plus`）自动生成评测集并执行端到端评分，适用于已发布且配置知识库的智能体应用 [自动评测](../../raw/application-user-guide/application-evaluation/application-auto-evaluation.md)。  
-- **手动评测**：支持人工构建评测集（`.xls`/`.xlsx` 格式），通过人工打标完成效果评估，适用于需强主观判断或无标准答案的业务场景 [手动评测](../../raw/application-user-guide/application-evaluation/evaluate-manual-application.md)。  
-- **新版评测体系**：引入「智能体」「工作流」「自定义」三类评测集，并支持多评估器（LLM/Code）+ 多标签（分类/布尔/数字/文本）混合评测模式，覆盖更细粒度的质量维度 [评测任务](../../raw/application-user-guide/application-evaluation/new-version-of-application-evaluation/evaluation-task.md)。  
-- **评估器能力**：提供预置模板（如问答相关性、格式校验、文本相似度）及自定义 LLM/Code 评估器；LLM 评估器支持基于历史标注任务反向生成（即“评估器蒸馏”），但该方式不支持试运行 [评估器](../../raw/application-user-guide/application-evaluation/new-version-of-application-evaluation/grader.md)。  
-> **注意**：文档 4（新版评测集）与文档 3（旧版评测集）存在类型定义冲突——前者将评测集按应用形态（智能体/工作流/自定义）分类，后者按数据语义（对话分析/知识问答）分类。实际使用中，**新版体系已取代旧版**，旧版文档内容已过时，应以 [新版评测集](../../raw/application-user-guide/application-evaluation/new-version-of-application-evaluation/new-version-of-evaluation-set.md) 为准。
+- **应用类型支持**：当前明确支持**智能体**和**工作流**两类应用的评测；[手动评测](../../raw/application-user-guide/application-evaluation/evaluate-manual-application.md)文档特别强调“当前仅支持选择已发布的**智能体应用**”，但[新版评测集](../../raw/application-user-guide/application-evaluation/new-version-of-application-evaluation/new-version-of-evaluation-set.md)和[评测任务](../../raw/application-user-guide/application-evaluation/new-version-of-application-evaluation/evaluation-task.md)文档均明确列出对“工作流”类型的支持，表明功能已扩展。
+- **评测模式**：支持**自动评估**（基于预置或自定义评估器）与**人工标注**（通过结构化标签）双轨并行；[评测集](../../raw/application-user-guide/application-evaluation/application-evaluation-dataset.md)文档指出知识问答类型适用于自动评测，而对话分析类型适用于人工评测，体现了能力分层设计。
+- **评估器类型**：提供预置模板（通用质量、智能体、文本匹配等）及两种自定义方式：**LLM评估器**（基于大模型语义理解）和**Code评估器**（基于Python规则判断），满足灵活与精确的不同需求。
+
+> **注意**：文档 1（手动评测）中“当前仅支持选择已发布的**智能体应用**”的描述与文档 3、4 中明确支持“工作流”应用存在矛盾。根据发布时间和上下文一致性，应以[新版评测集](../../raw/application-user-guide/application-evaluation/new-version-of-application-evaluation/new-version-of-evaluation-set.md)和[评测任务](../../raw/application-user-guide/application-evaluation/new-version-of-application-evaluation/evaluation-task.md)为准，该限制已解除。
 
 ## 关键参数
 
-| 参数 | 说明 | 约束 |
-|------|------|------|
-| **评测集类型** | 新版体系下必须在创建时选定：`智能体`（适配智能体出入参）、`工作流`（适配工作流出入参）、`自定义`（自由定义表结构） | 创建后不可修改 |
-| **评估器映射** | 所有变量（如 `query`, `response`, `referenceAnswer`）必须完成字段映射，否则无法保存评测任务 | 映射错误将导致评分结果为空或失真 |
-| **采样与规模** | 自动评测中，分类采样数（事实型/分析型等）决定最终评测用例总量；单次评测最多支持 8 个应用横向对比 | 多应用评测要求所有应用共享至少一个知识库 |
-| **标签类型** | 分类（多选枚举）、布尔（True/False）、数字（0–100 等）、文本（自由输入）四类，影响后续筛选与统计逻辑 | 数字标签需明确评分范围与通过阈值 |
+- **评测集字段**：不同评测集类型要求不同字段。`对话分析`需 `Prompt`、`Completion`、`SessionId`；`知识问答`需 `query`、`referenceAnswer`、`fineKeywords`、`coarseKeywords`；`智能体/工作流`类型则依据所选应用的出入参自动生成字段结构。
+- **评估器参数映射**：所有变量必须完成映射才能保存评测任务。常见参数如 `query`（用户输入）、`response`（应用输出）、`referenceAnswer`（标准答案）需准确绑定至评测集对应字段或应用输出。
+- **评分配置**：
+  - `评分范围`：决定打分尺度（如 0–1、1–5、0–100），影响评估器 Prompt 的生成逻辑；
+  - `通过阈值`：用于判定 Pass/Fail（如 ≥ 0.8 判定为通过）；
+  - `标签类型`：分类、布尔值、数字、文本四类，直接影响标注方式与后续统计维度。
 
 ## 使用方式
 
-1. **准备评测数据**：  
-   - 新版推荐：在[评测集](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/efm/app_evaluate/tabs?activeKey=evalSet)页面选择「智能体」类型 → 关联目标应用 → 下载模板 → 填写后上传；或直接从「应用观测」导入真实流量数据。  
-   - 旧版兼容：仍支持上传 `.jsonl`（知识问答）或 `.xlsx`（对话分析）文件，但字段需严格匹配 [评测集](../../raw/application-user-guide/application-evaluation/application-evaluation-dataset.md) 规范。
+1. **准备评测集**：  
+   - 选择类型（智能体/工作流/自定义），下载模板并填充数据；  
+   - 支持 `.xls`/`.xlsx`（对话分析）、`.jsonl`（知识问答）格式，单文件 ≤20MB；  
+   - 必须**发布**后才可用于评测任务（草稿状态不可用）。
 
 2. **创建评测任务**：  
-   - 在[评测任务](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/efm/app_evaluate/tabs?activeKey=task)页面新建任务 → 选择已发布评测集及版本 → 关联「智能体」应用 → 添加 1–10 个评估器（需完成全部参数映射）→ 可选添加人工标签。
+   - 选择已发布的评测集及版本；  
+   - 指定关联应用（智能体/工作流/不关联）；  
+   - 添加评估器（最多 10 个），完成全部参数映射；  
+   - 可选添加人工标签（支持分类、布尔值、数字、文本四类）。
 
-3. **执行与分析**：  
-   - 任务发起后不可修改配置；支持「快速标注」模式逐条人工校验；  
-   - 结果页分「数据明细」（含各评估器评分、人工标签）和「指标统计」（综合得分、通过率柱状图、数据分布）；  
-   - BadCase 归因由自动评测模块提供（如「检索无效」「切片不完整」），但新版评测任务需依赖评估器组合实现类似分析能力。
+3. **执行与标注**：  
+   - 任务发起后自动调用应用获取响应；  
+   - 进入任务详情页，在“数据明细”中使用**普通模式**或**快速标注**进行人工标注；  
+   - “指标统计”页实时展示综合得分、评测进度、各评估器通过率等。
 
 ## 限制和注意事项
 
-- **权限与依赖**：自动评测要求子账号具备 `管理员` 或 `应用评测-操作` 权限，且目标应用必须已开通「应用观测」并加入观测列表 [自动评测](../../raw/application-user-guide/application-evaluation/application-auto-evaluation.md)。  
-- **知识库强约束**：自动评测生成评测集及执行评估均依赖知识库内容，若知识库未配置或无公共交集，多应用评测将失败。  
-- **[Token](../concepts/token.md) 消耗不可逆**：评测任务分步执行（如评测集生成、模型推理），任一成功步骤均产生 [Token](../concepts/token.md) 费用，即使后续步骤失败亦不退费 [自动评测](../../raw/application-user-guide/application-evaluation/application-auto-evaluation.md)。  
-- **版本兼容性**：新版评测体系（文档 4/5/6/7）与旧版（文档 1/2/3）并存但不互通；旧版「自动评测」界面已标记为「返回旧版」入口，新项目应优先采用新版架构。  
-- **评估器试运行限制**：基于历史评测任务创建的评估器**不支持试运行**，必须部署至评测任务中实测效果 [评估器](../../raw/application-user-guide/application-evaluation/new-version-of-application-evaluation/grader.md)。
+- **评测集类型不可修改**：创建时选定“智能体”“工作流”或“自定义”后，无法变更类型。
+- **评测任务不可编辑**：创建完成后，应用、评测集、评估器配置均不可修改；如需调整，必须新建任务。
+- **费用说明**：自动评估调用大模型产生的 Tokens 将正常计费；使用公共资源部署模型会产生费用，独占资源部署不收费（详见[手动评测](../../raw/application-user-guide/application-evaluation/evaluate-manual-application.md)中的费用说明）。
+- **评估器依赖约束**：被评测任务引用的评估器无法删除；基于评测任务创建的评估器**不支持试运行**，需在实际任务中验证效果。
+- **字段兼容性**：使用预置评估器前，务必确认评测集包含其必选字段（如“问答相关性”评估器要求 `query` 和 `response` 字段），否则映射失败。
 
 ## 来源文档
 
-- [自动评测](../../raw/application-user-guide/application-evaluation/application-auto-evaluation.md)
 - [手动评测](../../raw/application-user-guide/application-evaluation/evaluate-manual-application.md)
 - [评测集](../../raw/application-user-guide/application-evaluation/application-evaluation-dataset.md)
 - [新版评测集](../../raw/application-user-guide/application-evaluation/new-version-of-application-evaluation/new-version-of-evaluation-set.md)

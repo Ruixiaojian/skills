@@ -21,6 +21,7 @@
         {
           "priceUnit": "每秒",
           "price": "0.00015",
+          "timeBand": "standard",
           "type": "content_duration",
           "priceName": "音频时长"
         }
@@ -37,6 +38,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Realtime-Audio-Translate"
       ],

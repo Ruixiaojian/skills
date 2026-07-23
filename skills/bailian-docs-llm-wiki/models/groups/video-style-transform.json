@@ -19,15 +19,20 @@
         {
           "priceUnit": "每秒",
           "price": "0.2",
+          "timeBand": "standard",
           "type": "video_ratio_540p",
           "priceName": "视频生成（540P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.5",
+          "timeBand": "standard",
           "type": "video_ratio_720p",
           "priceName": "视频生成（720P）"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "VG"

@@ -1,44 +1,69 @@
 # 函数调用
 
-函数调用（Function Calling）是百炼平台中大模型主动识别用户意图、自主选择并执行外部工具（如插件、Skill、代码解释器、搜索服务等）的核心能力机制。它不是简单的 API 转发，而是模型在推理过程中基于语义理解，按需生成结构化工具调用请求（含工具 ID 与参数），再由平台运行时安全调度、执行并注入结果回上下文，最终生成自然语言回复。
+函数调用（Function Calling）是百炼平台中大语言模型主动识别用户意图、生成结构化工具调用请求，并交由外部系统执行的能力。它使模型能突破纯文本生成边界，安全、可控地接入计算、搜索、多模态生成等真实世界能力，是构建智能体（Agent）、工作流（Workflow）和高阶 Assistant 应用的核心机制。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-函数调用在百炼平台并非单一接口能力，而是贯穿多个抽象层级的横切行为模式，具体体现为以下三类典型场景：
+函数调用在百炼平台中并非单一 API 特性，而是贯穿多个调用路径的**统一能力层**，具体使用方式取决于所选接口与模型：
 
-- **API 层显式声明调用**：在 DashScope 原生接口或 Anthropic 兼容 Messages 接口中，开发者通过 `tools` 字段传入工具定义（JSON Schema），并可选设置 `tool_choice` 控制调用策略（如 `"auto"`、`{"type": "function", "function": {"name": "calculator"}}`）。模型据此生成 `tool_calls` 输出，平台自动完成调用、结果注入与多轮续写。
-  
-- **智能体托管运行时（Managed Agents）中的隐式决策调用**：在 Managed Agents 中，函数调用完全由 Agent 运行时自主触发。开发者只需在 Agent 配置中挂载 Skill 或插件，无需在每次请求中重复声明 `tools`。Agent 根据 `SKILL.md` 的 `description` 或插件元数据，在会话中动态判断是否调用、调用哪个 Skill/插件，并处理其输入输出——整个过程对上层应用透明。
+- **DashScope 原生接口（推荐）**：通过 `tools` 参数声明可用函数列表（含 `name`、`description`、`parameters`），配合 `tool_choice`（如 `"auto"`、`"required"` 或指定 `{"type": "function", "function": {"name": "xxx"}}`）精确控制调用行为。模型返回 `tool_calls` 字段，包含函数名与参数 JSON；开发者需解析并同步/异步执行对应工具，再将结果以 `tool_message` 形式回传继续对话。这是功能最完整、参数最灵活的方式，支持 `parallel_tool_calls`、`response_format: { "type": "json_object" }` 等高级能力。
 
-- **插件与 Skill 的能力封装层调用**：插件（Plugin）和 Skill 是函数调用的“能力载体”。插件面向通用服务（如 `quark_search`, `code_interpreter`），支持业务透传参数与鉴权；Skill 面向文件/数据处理任务（如 `xlsx-parser`），依赖精准的 `description` 触发。二者均通过统一的工具调用协议被模型识别和调度，但生命周期、配置方式与安全约束不同（如 Skill ZIP 包禁止二进制，插件需通过安全扫描）。
+- **Anthropic 兼容 Messages 接口**：使用 `tool_use` 数组声明工具，模型在 `content` 中返回 `{"type": "tool_use", "name": "...", "input": {...}}` 结构。注意：Qwen 模型对 `stop_sequences` 的处理逻辑与 Anthropic 原生不同，实际行为请以官方文档为准。
 
-> ⚠️ 注意：OpenAI 兼容的 `/v1/chat/completions` 接口**不支持显式传入 `tools`**；其增强版 `/v1/chat/completions`（即 OpenAI 兼容-Responses）虽能自动启用搜索/代码解释器，但属于平台预置的全自动流水线，**不开放自定义工具注册与参数控制**，与 DashScope 和 Managed Agents 的可控性存在本质差异。
+- **OpenAI 兼容 Chat Completions 接口**：支持基础 `tools` 和 `tool_choice`，但**不支持 `parallel_tool_calls`、`response_format`（JSON mode）及细粒度 `tool_choice` 控制**。适用于快速迁移 OpenAI 项目，但复杂工具编排建议切换至 DashScope 原生接口。
+
+- **Responses API（智能体原生响应）**：内置联网搜索、代码解释器、网页提取等官方工具，无需显式声明 `tools`。通过 `enable_search: true` 或 `code_interpreter: true` 开关启用，模型自动规划调用流程并维护上下文状态，适合开箱即用的智能体场景。
+
+- **插件（Plug-in）体系**：函数调用是插件能力的底层支撑。官方插件（如 `quark_search`、`code_interpreter`）和自定义插件均被注册为标准化函数，可在智能体、工作流或 Assistant API 中按需启用。插件调用由模型自主触发（智能体模式）或人工编排（工作流节点），其输入/输出参数、鉴权配置均通过函数签名定义。
+
+> ✅ **关键提示**：  
+> - 所有通用文本/视觉模型（如 `qwen3.7-plus`、`qwen-vl-plus`）均支持函数调用，但 `deepseek-v4-pro` 等第三方模型明确标注“不支持内置工具”；  
+> - `qwen3.7-plus` 是当前结构化输出与函数调用能力最均衡的旗舰模型，推荐新项目首选；  
+> - 函数调用本身不计费，但**工具执行产生的资源消耗（如搜索API调用、图像生成Token）单独计费**。
 
 ## 关键参数和配置
 
-| 参数/配置项 | 所属场景 | 说明 | 是否必需 | 备注 |
-|-------------|----------|------|----------|------|
-| `tools` | DashScope / Anthropic Messages API | 工具定义数组，每个元素为符合 JSON Schema 的对象，描述工具名称、描述、参数类型与约束 | 否（启用函数调用时必需） | 不支持 [OpenAI 兼容接口](openai-compatible-interface.md)；Schema 中 `required` 字段必须准确声明必填参数 |
-| `tool_choice` | DashScope / Anthropic Messages API | 控制模型是否及如何调用工具：`"auto"`（默认）、`"none"`（禁用）、或指定工具名 | 否 | 指定工具名时，模型将强制调用该工具（即使不必要），适用于确定性流程 |
-| `biz_params` | Assistant API / 插件调用 | 业务系统透传的上下文参数（如用户 ID、会话 ID），供插件后端鉴权或个性化处理 | 否（按插件需求） | 仅对支持业务透传的插件生效；不参与模型推理，不暴露给模型 |
-| `description`（Skill） | Skill | Skill 的功能描述文本，是模型触发调用的唯一依据 | 是 | 必须包含适用输入、支持操作、典型关键词、**明确的不适用场景**；模糊描述将导致误调用 |
-| `enable_search` / `enable_code_interpreter` | DashScope 原生接口 | 布尔开关，快捷启用预置工具链 | 否 | 仅 DashScope 支持；与 `tools` 互斥，二者不可同时使用 |
+| 参数 | 类型 | 说明 | 是否必需 | 备注 |
+|------|------|------|----------|------|
+| `tools` | array | 工具函数定义列表，每个对象含 `name`（字符串）、`description`（字符串）、`parameters`（JSON Schema） | 否（但启用调用必须提供） | `parameters` 必须为合法 JSON Schema，`required` 字段需显式声明必填项 |
+| `tool_choice` | string / object | 控制模型是否及如何调用工具：<br>`"none"`：禁用调用<br>`"auto"`：模型自主决定（默认）<br>`"required"`：强制调用一个工具<br>`{"type": "function", "function": {"name": "xxx"}}`：指定调用某函数 | 否（默认 `"auto"`） | DashScope 原生接口支持全部值；[OpenAI 兼容接口](openai-compatible-api.md)仅支持 `"none"`/`"auto"`/`"required"` |
+| `enable_search` | boolean | Responses API 专用开关，启用内置联网搜索 | 否（默认 `false`） | 与 `quark_search` 插件功能重叠，但更轻量、无需插件授权 |
+| `code_interpreter` | boolean | Responses API 专用开关，启用内置 Python 执行环境 | 否（默认 `false`） | 禁止网络访问与文件上传，仅预装 `pandas`/`matplotlib`/`sympy` 等依赖 |
+
+- **工具执行后回传格式（必需）**：  
+  当模型返回 `tool_calls` 后，必须构造 `messages` 数组追加一条 `role: "tool"` 消息，格式为：  
+  ```json
+  {
+    "role": "tool",
+    "content": "<tool_execution_result>",
+    "tool_call_id": "<id_from_tool_calls>"
+  }
+  ```
+  缺少 `tool_call_id` 或内容格式错误将导致后续推理失败。
+
+- **安全与权限**：  
+  - 自定义插件需配置鉴权（Header/Query），Token 通过 `biz_params` 或控制台变量注入；  
+  - 子业务空间调用工具时，必须使用该空间专属 API Key，且工具需已在空间内显式授权。
 
 ## 面向开发者，简洁实用
 
-- ✅ **优先选 DashScope 接口**：若需精细控制工具调用（如自定义工具、指定参数、多工具协同），务必使用 DashScope 原生 endpoint（`/api/v1/services/aigc/text-generation/generation`），而非 [OpenAI 兼容接口](openai-compatible-interface.md)。
-- ✅ **Skill 描述要“防错”**：写 `SKILL.md` 的 `description` 时，用“当用户说……时可用，但当用户说……时**不可用**”句式，比单纯罗列功能更有效。
-- ✅ **插件调用前必验权限**：子账号首次使用插件，需主账号授予 `ram:CreateServiceLinkedRole` 权限，否则返回错误码 `140052`。
-- ❌ **勿在 [OpenAI 兼容接口](openai-compatible-interface.md)中传 `tools`**：该字段会被忽略，且可能引发 400 错误。
-- ❌ **勿在 Managed Agents Session 创建时传 `tools`**：Agent 已绑定 Skill/插件，工具集由 Agent 快照固化，请求体中添加 `tools` 字段无效。
-- 🔧 **调试技巧**：开启 `stream=true` 并监听 `tool_calls` 事件（DashScope）或 `event: tool_call`（Managed Agents SSE），可实时观察模型是否识别意图、参数是否正确生成。
+- **起步最快**：用 `qwen3.7-plus` + DashScope 原生接口，`tools` 定义清晰，`tool_choice: "auto"` 即可跑通首个调用闭环。  
+- **调试技巧**：开启 `stream: true` 观察模型思考过程；检查响应中的 `finish_reason` —— `"tool_calls"` 表示成功触发，`"stop"` 表示未调用。  
+- **错误排查**：  
+  - `130040` 错误 → `tools` 中 `parameters` 缺少 `description` 或 `type`；  
+  - `130022` 错误 → `Object` 类型参数在 GET 请求中被拒绝，改用 POST；  
+  - 工具无响应 → 确认 `tool_call_id` 严格匹配，且 `content` 为字符串（非 JSON 对象）。  
+- **生产建议**：  
+  - 工具执行超时需设置合理 `timeout` 并捕获异常，避免阻塞对话；  
+  - 敏感操作（如支付、删库）务必在工具实现层做二次确认，不可依赖模型判断；  
+  - 使用 `qwen3.7-plus-20240701` 等版本号锁定模型，避免因升级导致函数签名变更。
 
 ## 关联主题页
 
 - [qwen api reference](../api/qwen-api-reference.md)
-- [managed agents api](../api/managed-agents-api.md)
+- [model experience](../guides/model-experience.md)
+- [more about models](../api/more-about-models.md)
 - [plug in](../guides/plug-in.md)
-- [skill](../guides/skill.md)
-- [application component api reference](../api/application-component-api-reference.md)
+- [toolkits and frameworks](../api/toolkits-and-frameworks.md)
 
 

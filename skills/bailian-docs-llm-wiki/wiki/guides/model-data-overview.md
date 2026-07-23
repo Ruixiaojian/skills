@@ -1,60 +1,52 @@
 # model data overview
 
-百炼平台的模型数据管理功能为开发者提供统一的数据集创建、清洗、增强与回流能力，支撑大模型训练（SFT/DPO/CPT）、评测及[多模态](../concepts/multi-modal.md)任务。所有数据操作均通过控制台 [数据管理](https://bailian.console.aliyun.com/#/efm/model_data) 统一入口进行，当前功能**仅适用于华北2（北京）和新加坡地域**。本文档整合训练集、评测集、数据处理与日志回流的核心规范，面向开发者提供可直接落地的结构化参考。
+百炼平台的模型数据体系为模型调优与评测提供统一的数据管理能力，覆盖训练集构建、日志回流、数据清洗与增强等关键环节。所有功能当前仅支持华北2（北京）和新加坡地域，且不同数据类型对格式、规模及处理方式有明确约束。开发者需根据具体任务场景（如SFT、DPO、CPT或图生视频）选择匹配的数据结构与处理路径。
 
 ## 支持的模型/功能
 
-百炼支持以下模型类型与对应的数据功能：
+- **训练集类型**：支持文本生成（SFT、DPO、CPT）、多模态理解（千问VL）、图生视频（首帧/首尾帧）三类训练集；其中[SFT-文本生成训练集](../../raw/model-user-guide/model-data-overview/data-processing.md)是数据清洗与增强的唯一支持格式，[DPO-文本生成训练集](../../raw/model-user-guide/model-data-overview/data-processing.md)和[SFT-图片理解训练集](../../raw/model-user-guide/model-data-overview/data-processing.md)暂不支持数据处理功能。
+- **评测集类型**：支持文本生成评测集（Excel或JSONL格式），用于模型效果评估。
+- **日志回流**：支持将SLS推理日志转化为结构化训练集（SFT/DPO/CPT）或评测集，适用于文本生成场景，详见[日志回流](../../raw/model-user-guide/model-data-overview/model-log-backflow.md)。
+- **数据处理**：提供数据清洗（如敏感信息打码、特殊内容移除）与数据增强（通用/分类/抽取/创作四类场景）能力，仅作用于SFT-文本生成训练集（ChatML格式）。
 
-- **文本生成类模型**：全面支持 SFT（监督微调）、DPO（直接偏好优化）、CPT（持续预训练）三类训练方式，以及文本生成评测集构建；
-- **[多模态](../concepts/multi-modal.md)理解模型（如 Qwen-VL 系列）**：支持 SFT 训练，需遵循 ChatML 格式并严格满足图像/视频字段要求（如 `content` 必须为数组格式）；
-- **图生视频模型（如 wan-i2v / wan-kf2v）**：支持基于首帧或首尾帧的训练集与验证集构建，需按指定 ZIP 结构组织 `data.jsonl`、图像及视频文件；
-- **思考模型（Thinking）**：仅对最后一条 `assistant` 输出进行训练，且必须用 `<think>` 标签包裹思考内容，详见 [训练集与评测集](../../raw/model-user-guide/model-data-overview/training-set-and-evaluation-set.md)。
-
-> **注意**：文档 2 明确指出数据清洗与增强**暂不支持 SFT-图片理解训练集和 DPO 训练集**，而文档 1 中未限定该限制。实际使用时请以 [数据清洗或增强](../../raw/model-user-guide/model-data-overview/data-processing.md) 的说明为准——即仅支持 SFT-文本生成（ChatML 格式）训练集。
+> **注意**：文档1明确声明“暂不支持[SFT-图片理解训练集](../../raw/model-user-guide/model-data-overview/data-processing.md)和[DPO-文本生成训练集](../../raw/model-user-guide/model-data-overview/data-processing.md)”，而文档2中详细描述了DPO和多模态SFT的格式规范。这意味着DPO和多模态SFT可用于模型调优，但**不可通过控制台数据流进行清洗或增强**——该限制仅针对数据处理功能，不影响其作为原始训练集的使用。
 
 ## 关键参数
 
-| 参数 | 适用场景 | 类型 | 取值范围 | 说明 |
-|------|----------|------|-----------|------|
-| `loss_weight` | SFT（所有 assistant 行）、SFT-Thinking（仅最后 assistant 行）、DPO（`chosen` 字段） | float | `0.0 ~ 1.0` | 控制单条样本/输出在训练中的相对重要性；属邀测功能，需联系商务经理开通 |
-| `resized_width` / `resized_height` | [多模态](../concepts/multi-modal.md) SFT（图像/视频） | int | ≥ 1 | 图像/视频帧缩放目标尺寸（像素），影响坐标标注基准（Qwen2.5-VL 用绝对像素，Qwen3-VL 用 `[0,999]` 相对坐标） |
-| `fps` / `sample_fps` | 多模态 SFT（视频） | float | > 0 | 视频输入帧率（`fps`）或图片帧序列帧率（`sample_fps`），仅 Qwen3.5+ VL 模型支持 |
-| `foreignKey` | 数据增强节点输出 | string | 自动生成 | 增强后自动添加的标识字段，**无需删除，不影响训练** |
+- **ChatML格式要求**：
+  - SFT：`messages`数组必须包含`role`（`system`/`user`/`assistant`）和`content`字段；`assistant`行可选`loss_weight`（0.0–1.0，邀测参数）。
+  - DPO：除`messages`外，需包含`chosen`和`rejected`对象，二者均支持`loss_weight`。
+  - 多模态SFT：`content`为数组，含`text`或`image`/`video`对象；图像/视频需指定`resized_width`/`resized_height`等元信息。
+- **日志回流参数**：时间范围（最近30天）、API Key过滤（全部/其他/指定）、模型选择、训练方式（SFT/DPO/CPT）、存储方式（平台存储/OSS挂载）；其中存储方式、数据类型、训练方式创建后不可更改。
+- **数据增强节点参数**：
+  - `生成样本数`：单次任务最多2000条；
+  - `指令生成依赖样本数`：系统自动调整以避免超Token限制；
+  - `过滤相似度阈值`：控制增强结果去重强度（文档1未给出默认值，需参考控制台实际配置）。
 
 ## 使用方式
 
-1. **数据集创建**：  
-   - 训练集/评测集上传：ZIP 包（≤2 GB）或 Excel 文件（仅评测集），`data.jsonl` 必须位于 ZIP 根目录；  
-   - 日志回流：通过 [模型监控](https://bailian.console.aliyun.com/#/model-telemetry) 或 [数据管理](https://bailian.console.aliyun.com/#/efm/model_data) 入口配置时间范围、API Key、模型等参数，单次上限 10 万条，支持追加版本；详情见 [日志回流](../../raw/model-user-guide/model-data-overview/model-log-backflow.md)。
-
-2. **数据清洗与增强**：  
-   - 仅支持 SFT-文本生成训练集（ChatML 格式）；  
-   - 在控制台「数据流」中编排节点：先清洗（如敏感信息打码），再增强（如 Few-Shot 生成）；  
-   - 处理结果自动生成新版本（如 V1 → V2），原数据集不受影响。
-
-3. **格式校验要点**：  
-   - SFT ChatML：`system` 消息中 `content` 必须为 `[{ "text": "..." }]` 数组格式；  
-   - DPO：`chosen`/`rejected` 必须为单个 `{"role": "assistant", "content": "..."} ` 对象；  
-   - 图生视频：ZIP 内路径名仅支持 ASCII 字符（a-z, A-Z, 0-9, `_`, `-`），图片/视频文件名全局唯一。
+- **训练集/评测集上传**：通过[数据管理](https://bailian.console.aliyun.com/?tab=model#/efm/model_data)页面上传JSONL、Excel或ZIP包（图生视频需含`data.jsonl`及媒体文件），支持版本管理。
+- **日志回流**：在[模型监控](https://bailian.console.aliyun.com/#/model-telemetry)或[数据管理](https://bailian.console.aliyun.com/#/efm/data_ass)页发起，需先完成SLS审计日志与推理日志授权（见[日志回流](../../raw/model-user-guide/model-data-overview/model-log-backflow.md)）。
+- **数据清洗与增强**：通过控制台搭建数据流（含开始→数据清洗→数据增强→结束节点），基于预置模板或自定义算子编排；**目前不提供公开API**，仅支持控制台操作（见[数据清洗或增强](../../raw/model-user-guide/model-data-overview/data-processing.md)）。
+- **数据集追加**：OSS挂载数据集须通过“导入数据”页追加；平台存储数据集支持“新增版本”弹窗操作。
 
 ## 限制和注意事项
 
-- **地域限制**：所有功能（训练集管理、数据处理、日志回流）均**仅限华北2（北京）和新加坡 Region**，其他地域不可用；
-- **格式与容量**：  
-  - ZIP 包最大 2 GB（训练集）或 20 MB（图生视频 `data.jsonl`）；  
-  - 图片单张 ≤ 1024×1024 px 且 ≤ 10 MB；视频 ≤ 4096×4096 px；  
-  - 文本生成评测集仅支持单轮对话 Excel 格式（`.xlsx`），多轮不生效；
-- **版本与覆盖**：数据清洗/增强、日志回流均生成**独立新版本**，不会覆盖原始数据集，但需手动切换版本用于训练；
-- **模型兼容性**：  
-  - 视频参数（`fps`, `video_start` 等）仅 Qwen3.5+ VL 模型支持；  
-  - 思考模型训练后，若样本中存在无 `<think>` 标签的 `assistant` 输出，则**不建议开启思考模式调用**；
-- **权限与费用**：日志回流需提前开通 SLS 并授权服务角色；推理日志开启后将产生 SLS 存储与读写费用，长期不用应及时关闭。
+- **地域限制**：所有功能（数据处理、日志回流、训练集上传）均仅限华北2（北京）和新加坡Region；文档1与文档2多次强调“本文档仅适用于华北2（北京）地域”，文档3补充新加坡支持日志回流。
+- **格式硬性约束**：
+  - 数据处理仅接受SFT-ChatML格式（`.jsonl`），不支持OpenAI `name`/`weight`字段；
+  - 图生视频ZIP包内`data.jsonl`必须位于根目录，媒体文件名全局唯一，单张图≤10MB/1024px；
+  - 日志回流单次上限10万条，超量部分被截断。
+- **功能边界**：
+  - 数据清洗/增强不支持法律文件、医学记录、文学作品等高敏或非结构化文本（见[数据清洗或增强](../../raw/model-user-guide/model-data-overview/data-processing.md)）；
+  - 日志回流产出的数据集可后续进行数据清洗，但原始日志本身不参与清洗流程；
+  - OSS挂载数据集不支持“新增版本”，仅能通过“导入数据”页追加。
+- **版本管理**：数据处理、日志回流均自动生成新版本，原数据集不受影响；建议处理后人工校验清洗/增强结果的完整性与真实性。
 
 ## 来源文档
 
-- [训练集与评测集](../../raw/model-user-guide/model-data-overview/training-set-and-evaluation-set.md)
 - [数据清洗或增强](../../raw/model-user-guide/model-data-overview/data-processing.md)
+- [训练集与评测集](../../raw/model-user-guide/model-data-overview/training-set-and-evaluation-set.md)
 - [日志回流](../../raw/model-user-guide/model-data-overview/model-log-backflow.md)
 
 

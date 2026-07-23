@@ -19,6 +19,7 @@
         {
           "priceUnit": "每秒",
           "price": "0.00022",
+          "timeBand": "standard",
           "type": "content_duration",
           "priceName": "音频时长"
         }
@@ -35,6 +36,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "ASR"
       ],
@@ -68,6 +72,7 @@
         {
           "priceUnit": "每秒",
           "price": "0.00022",
+          "timeBand": "standard",
           "type": "content_duration",
           "priceName": "音频时长"
         }
@@ -84,6 +89,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "ASR"
       ],

@@ -44,48 +44,56 @@
         {
           "priceUnit": "每百万tokens",
           "price": "53",
+          "timeBand": "standard",
           "type": "omni_audio_input_token",
           "priceName": "输入：音频"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "213",
+          "timeBand": "standard",
           "type": "omni_audio_output_token",
           "priceName": "输出：文本+音频（输出的文本不计费）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "7",
+          "timeBand": "standard",
           "type": "omni_no_audio_input_token",
           "priceName": "输入：文本/图片/视频"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "40",
+          "timeBand": "standard",
           "type": "omni_no_audio_output_token",
           "priceName": "输出：文本"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "26.5",
+          "timeBand": "standard",
           "type": "omni_audio_input_token_batch",
           "priceName": "输入：音频（Batch File）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "3.5",
+          "timeBand": "standard",
           "type": "omni_no_audio_input_token_batch",
           "priceName": "输入：文本/图片/视频（Batch File）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "20",
+          "timeBand": "standard",
           "type": "omni_no_audio_output_token_batch",
           "priceName": "输出：文本（Batch File）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "53",
+          "timeBand": "standard",
           "discount": 0.5,
           "type": "omni_audio_input_token_batch_chat",
           "priceName": "输入：音频（Batch Chat）"
@@ -93,6 +101,7 @@
         {
           "priceUnit": "每百万tokens",
           "price": "7",
+          "timeBand": "standard",
           "discount": 0.5,
           "type": "omni_no_audio_input_token_batch_chat",
           "priceName": "输入：文本/图片/视频（Batch Chat）"
@@ -100,6 +109,7 @@
         {
           "priceUnit": "每百万tokens",
           "price": "40",
+          "timeBand": "standard",
           "discount": 0.5,
           "type": "omni_no_audio_output_token_batch_chat",
           "priceName": "输出：文本（Batch Chat）"
@@ -123,6 +133,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Multimodal-Omni"
       ],

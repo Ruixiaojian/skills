@@ -22,12 +22,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "2",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "6",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         }
@@ -50,6 +52,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TG"
       ],

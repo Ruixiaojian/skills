@@ -95,12 +95,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "1.8",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "10.8",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         }
@@ -123,6 +125,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VU",
         "TG",
@@ -188,12 +193,14 @@
         {
           "priceUnit": "每百万tokens",
           "price": "3",
+          "timeBand": "standard",
           "type": "input_token",
           "priceName": "输入"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "18",
+          "timeBand": "standard",
           "type": "output_token",
           "priceName": "输出"
         }
@@ -216,6 +223,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Reasoning",
         "VU",

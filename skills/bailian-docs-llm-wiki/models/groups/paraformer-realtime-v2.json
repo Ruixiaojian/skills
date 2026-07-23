@@ -21,9 +21,13 @@
         {
           "priceUnit": "每秒",
           "price": "0.00024",
+          "timeBand": "standard",
           "type": "content_duration",
           "priceName": "音频时长"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "Realtime-ASR"

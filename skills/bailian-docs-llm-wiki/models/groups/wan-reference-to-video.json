@@ -23,12 +23,14 @@
         {
           "priceUnit": "每秒",
           "price": "0.6",
+          "timeBand": "standard",
           "type": "video_ratio_720p",
           "priceName": "视频生成（720P）"
         },
         {
           "priceUnit": "每秒",
           "price": "1",
+          "timeBand": "standard",
           "type": "video_ratio_1080p",
           "priceName": "视频生成（1080P）"
         }
@@ -49,6 +51,9 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],
@@ -88,24 +93,28 @@
         {
           "priceUnit": "每秒",
           "price": "0.3",
+          "timeBand": "standard",
           "type": "video_ratio_720p",
           "priceName": "视频生成（720P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.5",
+          "timeBand": "standard",
           "type": "video_ratio_1080p",
           "priceName": "视频生成（1080P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.15",
+          "timeBand": "standard",
           "type": "720P_no_audio",
           "priceName": "视频生成（720P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.25",
+          "timeBand": "standard",
           "type": "1080P_no_audio",
           "priceName": "视频生成（1080P 无声）"
         }
@@ -126,6 +135,9 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],
@@ -163,12 +175,14 @@
         {
           "priceUnit": "每秒",
           "price": "0.6",
+          "timeBand": "standard",
           "type": "video_ratio_720p",
           "priceName": "视频生成（720P）"
         },
         {
           "priceUnit": "每秒",
           "price": "1",
+          "timeBand": "standard",
           "type": "video_ratio_1080p",
           "priceName": "视频生成（1080P）"
         }
@@ -189,6 +203,9 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],

@@ -22,24 +22,28 @@
         {
           "priceUnit": "每百万tokens",
           "price": "40",
+          "timeBand": "standard",
           "type": "translate_audio_input_token",
           "priceName": "输入：音频"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "3.3",
+          "timeBand": "standard",
           "type": "translate_vision_input_token",
           "priceName": "输入：图片"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "100",
+          "timeBand": "standard",
           "type": "translate_multi_text_output_token",
           "priceName": "输出：文本"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "160",
+          "timeBand": "standard",
           "type": "translate_multi_output_token",
           "priceName": "输出：音频"
         }
@@ -62,6 +66,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Realtime-Audio-Translate"
       ],

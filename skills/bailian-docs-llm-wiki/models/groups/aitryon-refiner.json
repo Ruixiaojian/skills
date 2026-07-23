@@ -15,6 +15,9 @@
       "features": [],
       "provider": "qwen",
       "model": "aitryon-refiner",
+      "priceTimeBands": [
+        "standard"
+      ],
       "multiPrices": [
         {
           "rangeStart": 0,
@@ -23,6 +26,7 @@
             {
               "priceUnit": "每张",
               "price": "0.3",
+              "timeBand": "standard",
               "type": "image_number",
               "priceName": "图片生成"
             }
@@ -36,6 +40,7 @@
             {
               "priceUnit": "每张",
               "price": "0.275",
+              "timeBand": "standard",
               "type": "image_number",
               "priceName": "图片生成"
             }
@@ -49,6 +54,7 @@
             {
               "priceUnit": "每张",
               "price": "0.25",
+              "timeBand": "standard",
               "type": "image_number",
               "priceName": "图片生成"
             }
@@ -62,6 +68,7 @@
             {
               "priceUnit": "每张",
               "price": "0.225",
+              "timeBand": "standard",
               "type": "image_number",
               "priceName": "图片生成"
             }
@@ -75,6 +82,7 @@
             {
               "priceUnit": "每张",
               "price": "0.2",
+              "timeBand": "standard",
               "type": "image_number",
               "priceName": "图片生成"
             }
@@ -88,6 +96,7 @@
             {
               "priceUnit": "每张",
               "price": "0.175",
+              "timeBand": "standard",
               "type": "image_number",
               "priceName": "图片生成"
             }
@@ -101,6 +110,7 @@
             {
               "priceUnit": "每张",
               "price": "0.15",
+              "timeBand": "standard",
               "type": "image_number",
               "priceName": "图片生成"
             }

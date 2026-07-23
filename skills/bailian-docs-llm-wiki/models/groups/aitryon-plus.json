@@ -21,9 +21,13 @@
         {
           "priceUnit": "每张",
           "price": "0.5",
+          "timeBand": "standard",
           "type": "image_number",
           "priceName": "图片生成"
         }
+      ],
+      "priceTimeBands": [
+        "standard"
       ],
       "capabilities": [
         "IG"

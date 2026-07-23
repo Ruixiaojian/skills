@@ -20,48 +20,56 @@
         {
           "priceUnit": "每秒",
           "price": "0.47",
+          "timeBand": "standard",
           "type": "video_ratio_360p",
           "priceName": "视频生成（360P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.47",
+          "timeBand": "standard",
           "type": "video_ratio_540p",
           "priceName": "视频生成（540P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.53",
+          "timeBand": "standard",
           "type": "video_ratio_720p",
           "priceName": "视频生成（720P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.7",
+          "timeBand": "standard",
           "type": "video_ratio_1080p",
           "priceName": "视频生成（1080P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.21",
+          "timeBand": "standard",
           "type": "360P_no_audio",
           "priceName": "视频生成（360P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.21",
+          "timeBand": "standard",
           "type": "540P_no_audio",
           "priceName": "视频生成（540P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.27",
+          "timeBand": "standard",
           "type": "720P_no_audio",
           "priceName": "视频生成（720P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.44",
+          "timeBand": "standard",
           "type": "1080P_no_audio",
           "priceName": "视频生成（1080P 无声）"
         }
@@ -82,6 +90,9 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],
@@ -118,48 +129,56 @@
         {
           "priceUnit": "每秒",
           "price": "0.47",
+          "timeBand": "standard",
           "type": "video_ratio_360p",
           "priceName": "视频生成（360P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.47",
+          "timeBand": "standard",
           "type": "video_ratio_540p",
           "priceName": "视频生成（540P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.53",
+          "timeBand": "standard",
           "type": "video_ratio_720p",
           "priceName": "视频生成（720P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.7",
+          "timeBand": "standard",
           "type": "video_ratio_1080p",
           "priceName": "视频生成（1080P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.21",
+          "timeBand": "standard",
           "type": "360P_no_audio",
           "priceName": "视频生成（360P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.21",
+          "timeBand": "standard",
           "type": "540P_no_audio",
           "priceName": "视频生成（540P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.27",
+          "timeBand": "standard",
           "type": "720P_no_audio",
           "priceName": "视频生成（720P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.44",
+          "timeBand": "standard",
           "type": "1080P_no_audio",
           "priceName": "视频生成（1080P 无声）"
         }
@@ -180,6 +199,9 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],
@@ -216,48 +238,56 @@
         {
           "priceUnit": "每秒",
           "price": "0.47",
+          "timeBand": "standard",
           "type": "video_ratio_360p",
           "priceName": "视频生成（360P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.47",
+          "timeBand": "standard",
           "type": "video_ratio_540p",
           "priceName": "视频生成（540P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.53",
+          "timeBand": "standard",
           "type": "video_ratio_720p",
           "priceName": "视频生成（720P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.7",
+          "timeBand": "standard",
           "type": "video_ratio_1080p",
           "priceName": "视频生成（1080P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.21",
+          "timeBand": "standard",
           "type": "360P_no_audio",
           "priceName": "视频生成（360P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.21",
+          "timeBand": "standard",
           "type": "540P_no_audio",
           "priceName": "视频生成（540P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.27",
+          "timeBand": "standard",
           "type": "720P_no_audio",
           "priceName": "视频生成（720P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.44",
+          "timeBand": "standard",
           "type": "1080P_no_audio",
           "priceName": "视频生成（1080P 无声）"
         }
@@ -278,6 +308,9 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],
@@ -314,48 +347,56 @@
         {
           "priceUnit": "每秒",
           "price": "0.47",
+          "timeBand": "standard",
           "type": "video_ratio_360p",
           "priceName": "视频生成（360P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.47",
+          "timeBand": "standard",
           "type": "video_ratio_540p",
           "priceName": "视频生成（540P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.53",
+          "timeBand": "standard",
           "type": "video_ratio_720p",
           "priceName": "视频生成（720P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.7",
+          "timeBand": "standard",
           "type": "video_ratio_1080p",
           "priceName": "视频生成（1080P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.21",
+          "timeBand": "standard",
           "type": "360P_no_audio",
           "priceName": "视频生成（360P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.21",
+          "timeBand": "standard",
           "type": "540P_no_audio",
           "priceName": "视频生成（540P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.27",
+          "timeBand": "standard",
           "type": "720P_no_audio",
           "priceName": "视频生成（720P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.44",
+          "timeBand": "standard",
           "type": "1080P_no_audio",
           "priceName": "视频生成（1080P 无声）"
         }
@@ -376,6 +417,9 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],

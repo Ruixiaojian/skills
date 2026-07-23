@@ -21,6 +21,7 @@
         {
           "priceUnit": "每秒",
           "price": "0.7",
+          "timeBand": "standard",
           "type": "video_ratio",
           "priceName": "视频生成（std）"
         }
@@ -41,6 +42,9 @@
           "async_user_concurrency_limit": 2
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],

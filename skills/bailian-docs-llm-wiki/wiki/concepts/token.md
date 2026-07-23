@@ -1,50 +1,46 @@
-# Token
+# Token 计量与管理
 
-Token 是百炼平台中用于计量模型调用资源消耗的核心单位，代表模型处理输入与生成输出所消耗的计算资源。它并非加密凭证，而是按字节、字符或语义单元（如子词）标准化统计的**计费与用量度量基准**，直接影响 Credits 扣减、性能监控和成本治理。
+Token 计量与管理是百炼平台对大模型调用资源进行精细化核算、配额控制与成本治理的核心横切能力。它以 Token（含输入、输出、缓存等维度）为统一计量单位，贯穿模型调用、监控、计费、订阅及评测全链路，为开发者提供可追溯、可配置、可优化的资源使用视图。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-- **计费计量**：Token 是 Token Plan 订阅服务的底层计费单元。每次调用（无论同步/异步）均按 `输入 Token 数 + 输出 Token 数` 动态折算 Credits，不同模型单价不同（如 `qwen3.6-plus` 约 3.18 Credits/次），思考模式（`enable_thinking`）或 Harness 工具调用会额外增加 Token 消耗。
-  
-- **性能观测**：在应用监控与模型监控中，`Token 总量` 是关键可观测指标，精确拆分为 `input_tokens` 和 `output_tokens`，用于分析首 Token 延时、TPS（Tokens Per Second）、单次请求成本效率，并支持按业务空间、API Key 或模型维度下钻分析。
+- **模型调用与计费**：所有按量推理请求均按实际消耗的输入 Token、输出 Token 及缓存 Token 进行计量；阶梯计价（如 0–32K、32K–128K）以单次请求中最高 Token 区间为准；免费额度（100万 Token）、资源包、节省计划等均基于 Token 消耗自动抵扣，且严格遵循「免费额度 > 资源包 > 其他节省计划 > 按量付费」的优先级顺序。
 
-- **能力约束**：部分模型通过 `max_output_tokens` 参数显式限制输出长度；上下文窗口（如 `qwen3.7-plus` 支持 1M Token）本质是输入 Token 的硬性上限；[多模态](multi-modal.md)输入（图像、视频、音频）会经预处理转换为等效 Token 量参与计费与限流。
+- **Token Plan 订阅服务**：采用 Credits 作为上层计费单位，但底层仍以 Token 为核算基础——Credits 消耗量 = f(模型类型, 输入 Token, 输出 Token, 缓存 Token, Harness 工具调用次数)；个人版受「5 小时限额 + 7 天限额」双窗口约束，团队版按月度 Token 额度分配（如标准席位 25,000 Credits/月），额度到期不结转。
 
-- **[安全与合规](security-and-compliance.md)**：内容安全拦截、限流错误（HTTP 429）等事件在模型监控中关联 Token 消耗记录，便于定位异常调用（如恶意长 [prompt](../guides/prompt.md)）或优化提示工程以降低无效 Token 开销。
+- **TPM 预留与快速模式**：TPM（Token Per Minute）预留直接以 kTPM（千 Token/分钟）为容量单位，支持输入/输出维度独立配置，并自动应用缓存折扣（如 glm-5.2 缓存部分按 25% 折算）；快速模式虽不显式暴露 TPM，但其 TPS 提升本质依赖底层 Token 级调度优化，且计费仍按实际 Token 数结算。
 
-- **开发调试**：SDK 和 API 返回中通常包含 `usage` 字段（如 `"input_tokens": 127, "output_tokens": 89`），开发者应主动解析该字段用于本地成本估算、缓存策略或用户用量展示。
+- **可观测性（监控与追踪）**：模型监控（Model Monitoring）在「调用详情」页精确展示每次请求的 `input_tokens`、`output_tokens`、`cached_tokens`；应用监控（Application Monitoring）在 `LLM` 节点中聚合统计 Token 消耗，并与延时、状态码联动分析；二者均支持按 API Key、业务空间、模型等维度下钻用量归属。
+
+- **模型评测**：当评测任务选择「评测数据集」作为数据源时，被测模型的每次推理将产生真实 Token 消耗并计入账单；裁判模型（如 `qwen-max`）执行大模型评估时，其自身调用也按 Token 单独计费；复用「推理结果集」可完全规避二次 Token 消耗。
+
+- **部署与训练**：Token 计量**不适用于**模型训练、模型部署、Batch 调用、自定义模型（调优后或已部署）等场景——这些环节按模型单元（MU）、GPU 小时、实例时长等其他单位计费，与 Token 无关。
 
 ## 关键参数和配置
 
-| 参数/字段 | 说明 | 开发者须知 |
-|-----------|------|------------|
-| `input_tokens` / `output_tokens` | API 响应 `usage` 对象中的标准字段，表示本次请求实际消耗的输入/输出 Token 数 | 必读字段，不可依赖估算值；流式响应中仅最终 completion 返回完整 usage |
-| `max_output_tokens` | 可选请求参数，控制模型最大生成长度（Token 数），超出将截断 | 并非所有模型支持；设置过小可能导致输出不完整，过大可能增加成本与延迟 |
-| `X-DashScope-OssResourceResolve: enable` | 使用 `oss://` URL 传入图片/视频时必需的 Header，否则平台无法解析资源并统计对应 Token | [多模态](multi-modal.md)调用必配，缺失将返回 400 错误 |
-| `enable_thinking` | 布尔参数（文本模型专用），启用深度推理模式时显著增加中间 Token 消耗 | 需权衡效果与成本，建议 A/B 测试后启用 |
-| `reasoning.effort` | 控制思考深度的数值参数（如 `"low"`/`"medium"`/`"high"`），影响 Token 消耗与响应时间 | 与 `enable_thinking` 协同生效，高 effort = 更高 Token 成本 |
-
-> ⚠️ 注意：Token 统计严格绑定地域（仅华北2北京有效）、API Key 类型（`sk-sp-` 专属 Key）及 Base URL；跨地域或混用 Key 将导致 Token 计量失效或调用失败。
+| 参数 | 说明 | 开发者须知 |
+|------|------|------------|
+| `input_tokens` / `output_tokens` | 请求中实际发送的 Prompt Token 数与模型返回的 Completion Token 数 | 在模型监控日志、应用监控 LLM 节点中可精确查看；`max_tokens` 参数直接影响输出 Token 上限，建议合理设置避免浪费。 |
+| `cached_tokens` | 缓存命中部分对应的 Token 数（如重复 Prompt 或 KV Cache 复用） | 仅部分模型（如 glm-5.2）支持缓存折扣，计费时按折扣率折算（如 0.25×cached_tokens）；非所有调用均触发缓存，需结合模型文档确认支持性。 |
+| `model` 字段（含 TPM 预留专属 code） | 决定 Token 计量规则与计费策略的唯一标识 | 使用 TPM 预留时，必须替换为生成的专属 model code（如 `qwen37max-tpm-xxxx`），否则按标准计费；Token Plan 必须使用 `sk-sp-` 开头 Key + 对应 Base URL，混用通用 Key 将导致额度无法抵扣。 |
+| `workspace_id` | 业务空间 ID，是 Token 用量归属、监控过滤、告警配置的基础维度 | 所有 Token 相关指标（监控、账单、评测）均默认按 workspace_id 维度聚合；跨空间调用需显式指定，否则可能归属错误。 |
+| `apikey_id` | API Key 的唯一标识（非密钥字符串），用于用量溯源 | 在账单明细与监控日志中均为关键字段；主账号与 RAM 子账号共享同一模型额度，但 `apikey_id` 可区分具体调用来源，便于成本分摊。 |
 
 ## 面向开发者，简洁实用
 
-- **不要估算，要实测**：不同模型、不同输入内容（尤其含 emoji、代码、多语言）的 Token 数差异极大。使用 [DashScope Tokenizer 工具](https://help.aliyun.com/zh/model-studio/token-calculator) 或 SDK 的 `count_tokens()` 方法本地预估，再以 API 实际返回 `usage` 为准。
-  
-- **监控必看三项**：在控制台模型监控页，重点关注 `model_usage`（总用量）、`model_first_token_duration_p99`（首 Token 延时）、`model_call_failure_count`（失败次数）——三者共同反映 Token 效率与稳定性。
-
-- **降本三技巧**：  
-  ① 对长文档 RAG，用 `TextRetriever` 默认 100 片段限制 + 精准 query 降低输入 Token；  
-  ② 图像理解任务优先用 `qwen3.7-plus` 原生支持，避免 Skill 中转带来的额外 Token 开销；  
-  ③ 异步任务（如视频生成）虽不实时返回 Token，但可在 `/api/v1/tasks/{task_id}` 查询结果中获取 `usage` 字段。
-
-- **调试黄金法则**：当遇到 `429 Too Many Requests` 或 `400 Bad Request`，第一检查点是 `usage` 字段是否超限（如输入超 1M Token）或 `max_output_tokens` 设置不合理。
+- ✅ **必查项**：调用后立即在「模型监控 → 日志」中核对 `input_tokens`/`output_tokens`，确认是否符合预期（如长 Prompt 是否被截断、`max_tokens` 是否生效）；  
+- ✅ **必配项**：开通 Token Plan 或启用 TPM 预留前，务必切换至正确地域（Token Plan 仅限华北2；TPM 预留需目标模型在对应地域可用）；  
+- ✅ **必控项**：对成本敏感场景，开启「免费额度用完即停」开关（控制台 → 免费额度页面），避免额度耗尽后自动转为按量付费；  
+- ⚠️ **避坑提示**：不同模型（含快照版本如 `qwen3.7-plus` 与 `qwen3.7-plus-2026-05-26`）的免费额度完全独立，不可合并；Token Plan 与 Coding Plan 的 Key、Base URL、额度三者严格隔离，禁止混用；  
+- 📈 **优化建议**：优先复用推理结果集做评测、启用缓存支持模型、压缩 Prompt 冗余内容、设置合理 `max_tokens`，可显著降低 Token 消耗与成本。
 
 ## 关联主题页
 
+- [test 1](../guides/test-1.md)
 - [token plan guide](../guides/token-plan-guide.md)
-- [model experience](../guides/model-experience.md)
-- [more about models](../api/more-about-models.md)
-- [application monitoring](../guides/application-monitoring.md)
+- [model high speed inference](../guides/model-high-speed-inference.md)
 - [model monitoring](../guides/model-monitoring.md)
+- [application monitoring](../guides/application-monitoring.md)
+- [model evaluation introduction](../guides/model-evaluation-introduction.md)
 
 

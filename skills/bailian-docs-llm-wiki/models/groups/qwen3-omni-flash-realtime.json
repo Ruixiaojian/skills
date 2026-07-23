@@ -24,36 +24,42 @@
         {
           "priceUnit": "每百万tokens",
           "price": "2.2",
+          "timeBand": "standard",
           "type": "text_input_token",
           "priceName": "输入：文本"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "18.9",
+          "timeBand": "standard",
           "type": "audio_input_token",
           "priceName": "输入：音频"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "3.9",
+          "timeBand": "standard",
           "type": "vision_input_token",
           "priceName": "输入：图片/视频"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "8.3",
+          "timeBand": "standard",
           "type": "purein_text_output_token",
           "priceName": "输出：文本（输入仅包含文本时）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "15.2",
+          "timeBand": "standard",
           "type": "multiin_text_output_token",
           "priceName": "输出：文本（输入包含图片/音频/视频时）"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "75.1",
+          "timeBand": "standard",
           "type": "multi_output_token",
           "priceName": "输出：文本+音频（输出的文本不计费）"
         }
@@ -76,6 +82,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Realtime-Omni"
       ],
