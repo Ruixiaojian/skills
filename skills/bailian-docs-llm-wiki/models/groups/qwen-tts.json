@@ -14,9 +14,6 @@
       "description": "千问系列首个语音合成模型，支持中文、英文、中英混合输入。自适应根据输入文本调整输出语气，音色真实自然，支持流式输出。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "qwen-tts",
       "prices": [
         {
@@ -67,7 +64,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Qwen-TTS",
       "docUrl": "https://help.aliyun.com/document_detail/2881635.html#dc02de8e5earc",
-      "predictConfig": [],
       "samples": {
         "dashscope": {
           "default": {
@@ -89,9 +85,6 @@
       "description": "模型是动态更新版本，等同于最新版本快照模型，模型更新时不会提前通知。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "qwen-tts-latest",
       "prices": [
         {
@@ -142,7 +135,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Qwen-TTS-Latest",
       "docUrl": "https://help.aliyun.com/document_detail/2881635.html#dc02de8e5earc",
-      "predictConfig": [],
       "samples": {
         "dashscope": {
           "default": {

@@ -16,9 +16,6 @@
         "model-experience"
       ],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "gummy-realtime-v1",
       "prices": [
         {
@@ -54,7 +51,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "实时语音识别及翻译V1.0",
       "docUrl": "https://help.aliyun.com/document_detail/2865393.html",
-      "predictConfig": [],
       "samples": {
         "dashscope": {
           "default": {

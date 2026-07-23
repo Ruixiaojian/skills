@@ -32,9 +32,6 @@
         "model-experience"
       ],
       "provider": "happyhorse",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "happyhorse-1.1-i2v",
       "prices": [
         {
@@ -79,36 +76,10 @@
       "name": "HappyHorse-1.1-I2V",
       "docUrl": "https://help.aliyun.com/document_detail/3029821.html",
       "category": "Visual",
-      "predictConfig": [
-        {
-          "name": "清晰度",
-          "key": "resolution",
-          "default": "1080P"
-        },
-        {
-          "name": "视频时长(秒)",
-          "key": "duration",
-          "default": 5,
-          "range": [
-            3,
-            15
-          ]
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
-            "curl": "curl --location 'https://llm-czal8nvvwb8d47ks.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis' \\\n    -H 'X-DashScope-Async: enable' \\\n    -H \"Authorization: Bearer $DASHSCOPE_API_KEY\" \\\n    -H 'Content-Type: application/json' \\\n    -d '{\n    \"model\": \"happyhorse-1.1-i2v\",\n    \"input\": {\n        \"prompt\": \"一只猫在草地上奔跑\",\n        \"media\": [\n            {\n                \"type\": \"first_frame\",\n                \"url\": \"https://cdn.translate.alibaba.com/r/wanx-demo-1.png\"\n            }\n        ]\n    },\n    \"parameters\": {\n        \"resolution\": \"720P\",\n        \"duration\": 5\n    }\n}'",
+            "curl": "curl --location 'https://[workspace-id].cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis' \\\n    -H 'X-DashScope-Async: enable' \\\n    -H \"Authorization: Bearer $DASHSCOPE_API_KEY\" \\\n    -H 'Content-Type: application/json' \\\n    -d '{\n    \"model\": \"happyhorse-1.1-i2v\",\n    \"input\": {\n        \"prompt\": \"一只猫在草地上奔跑\",\n        \"media\": [\n            {\n                \"type\": \"first_frame\",\n                \"url\": \"https://cdn.translate.alibaba.com/r/wanx-demo-1.png\"\n            }\n        ]\n    },\n    \"parameters\": {\n        \"resolution\": \"720P\",\n        \"duration\": 5\n    }\n}'",
             "docUrl": "https://help.aliyun.com/document_detail/3029821.html"
           }
         }
@@ -129,9 +100,6 @@
         "model-experience"
       ],
       "provider": "happyhorse",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "happyhorse-1.0-i2v",
       "prices": [
         {
@@ -153,7 +121,7 @@
         "model-default-actual": {
           "count_limit_period": 1,
           "async_user_queue_limit": 500,
-          "count_limit": 10,
+          "count_limit": 5,
           "async_task_timeout": 180,
           "type": "model-default",
           "async_user_concurrency_limit": 5
@@ -161,7 +129,7 @@
         "model-default": {
           "count_limit_period": 1,
           "async_user_queue_limit": 500,
-          "count_limit": 10,
+          "count_limit": 5,
           "async_task_timeout": 180,
           "type": "model-default",
           "async_user_concurrency_limit": 5
@@ -176,36 +144,10 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "HappyHorse-1.0-I2V",
       "docUrl": "https://help.aliyun.com/document_detail/3029821.html",
-      "predictConfig": [
-        {
-          "name": "清晰度",
-          "key": "resolution",
-          "default": "1080P"
-        },
-        {
-          "name": "视频时长(秒)",
-          "key": "duration",
-          "default": 5,
-          "range": [
-            3,
-            15
-          ]
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
-            "curl": "curl --location 'https://llm-czal8nvvwb8d47ks.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis' \\\n    -H 'X-DashScope-Async: enable' \\\n    -H \"Authorization: Bearer $DASHSCOPE_API_KEY\" \\\n    -H 'Content-Type: application/json' \\\n    -d '{\n    \"model\": \"happyhorse-1.0-i2v\",\n    \"input\": {\n        \"prompt\": \"一只猫在草地上奔跑\",\n        \"media\": [\n            {\n                \"type\": \"first_frame\",\n                \"url\": \"https://cdn.translate.alibaba.com/r/wanx-demo-1.png\"\n            }\n        ]\n    },\n    \"parameters\": {\n        \"resolution\": \"720P\",\n        \"duration\": 5\n    }\n}'",
+            "curl": "curl --location 'https://[workspace-id].cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis' \\\n    -H 'X-DashScope-Async: enable' \\\n    -H \"Authorization: Bearer $DASHSCOPE_API_KEY\" \\\n    -H 'Content-Type: application/json' \\\n    -d '{\n    \"model\": \"happyhorse-1.0-i2v\",\n    \"input\": {\n        \"prompt\": \"一只猫在草地上奔跑\",\n        \"media\": [\n            {\n                \"type\": \"first_frame\",\n                \"url\": \"https://cdn.translate.alibaba.com/r/wanx-demo-1.png\"\n            }\n        ]\n    },\n    \"parameters\": {\n        \"resolution\": \"720P\",\n        \"duration\": 5\n    }\n}'",
             "docUrl": "https://help.aliyun.com/document_detail/3029821.html"
           }
         }

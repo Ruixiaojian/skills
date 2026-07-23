@@ -14,9 +14,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhiyue-v1",
       "prices": [
         {
@@ -34,33 +31,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知悦",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -82,9 +52,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhiyuan-v1",
       "prices": [
         {
@@ -102,33 +69,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知媛",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -150,9 +90,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhiying-v1",
       "prices": [
         {
@@ -170,33 +107,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知颖",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -218,9 +128,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhiye-v1",
       "prices": [
         {
@@ -238,33 +145,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知晔",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -286,9 +166,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhiya-v1",
       "prices": [
         {
@@ -306,33 +183,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知雅",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -354,9 +204,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhixiao-v1",
       "prices": [
         {
@@ -374,33 +221,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知笑",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -422,9 +242,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhixiang-v1",
       "prices": [
         {
@@ -442,33 +259,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知祥",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -490,9 +280,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhiwei-v1",
       "prices": [
         {
@@ -510,33 +297,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知薇",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -558,9 +318,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhiting-v1",
       "prices": [
         {
@@ -578,33 +335,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知婷",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -626,9 +356,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhistella-v1",
       "prices": [
         {
@@ -646,33 +373,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知莎",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -694,9 +394,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhishuo-v1",
       "prices": [
         {
@@ -714,33 +411,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知硕",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -762,9 +432,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhishu-v1",
       "prices": [
         {
@@ -782,33 +449,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知树",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -830,9 +470,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhiru-v1",
       "prices": [
         {
@@ -850,33 +487,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知茹",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -898,9 +508,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhiqian-v1",
       "prices": [
         {
@@ -918,33 +525,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知倩",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -966,9 +546,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhiqi-v1",
       "prices": [
         {
@@ -986,33 +563,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知琪",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1034,9 +584,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhinan-v1",
       "prices": [
         {
@@ -1054,33 +601,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知楠",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1102,9 +622,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhina-v1",
       "prices": [
         {
@@ -1122,33 +639,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知娜",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1170,9 +660,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhimo-v1",
       "prices": [
         {
@@ -1190,33 +677,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知墨",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1238,9 +698,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhiming-v1",
       "prices": [
         {
@@ -1258,33 +715,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知茗",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1306,9 +736,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhimiao-emo-v1",
       "prices": [
         {
@@ -1326,33 +753,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知妙（多情感）",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1374,9 +774,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhimao-v1",
       "prices": [
         {
@@ -1394,33 +791,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知猫",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1442,9 +812,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhilun-v1",
       "prices": [
         {
@@ -1462,33 +829,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知伦",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1510,9 +850,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhijing-v1",
       "prices": [
         {
@@ -1530,33 +867,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知婧",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1578,9 +888,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhijia-v1",
       "prices": [
         {
@@ -1598,33 +905,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知佳",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1646,9 +926,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhihao-v1",
       "prices": [
         {
@@ -1666,33 +943,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知浩",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1714,9 +964,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhigui-v1",
       "prices": [
         {
@@ -1734,33 +981,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知柜",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1782,9 +1002,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhifei-v1",
       "prices": [
         {
@@ -1802,33 +1019,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知飞",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1850,9 +1040,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhide-v1",
       "prices": [
         {
@@ -1870,33 +1057,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知德",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1918,9 +1078,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhida-v1",
       "prices": [
         {
@@ -1938,33 +1095,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知达",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1986,9 +1116,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-zhichu-v1",
       "prices": [
         {
@@ -2006,33 +1133,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-知厨",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -2054,9 +1154,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-waan-v1",
       "prices": [
         {
@@ -2074,33 +1171,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-Waan",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -2122,9 +1192,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-perla-v1",
       "prices": [
         {
@@ -2142,33 +1209,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-Perla",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -2190,9 +1230,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-indah-v1",
       "prices": [
         {
@@ -2210,33 +1247,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-Indah",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -2258,9 +1268,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-hanna-v1",
       "prices": [
         {
@@ -2278,33 +1285,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-Hanna",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -2326,9 +1306,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-eva-v1",
       "prices": [
         {
@@ -2346,33 +1323,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-Eva",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -2394,9 +1344,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-donna-v1",
       "prices": [
         {
@@ -2414,33 +1361,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-Donna",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -2462,9 +1382,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-clara-v1",
       "prices": [
         {
@@ -2482,33 +1399,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-Clara",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -2530,9 +1420,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-cindy-v1",
       "prices": [
         {
@@ -2550,33 +1437,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-Cindy",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -2598,9 +1458,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-camila-v1",
       "prices": [
         {
@@ -2618,33 +1475,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-Camila",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -2666,9 +1496,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-cally-v1",
       "prices": [
         {
@@ -2686,33 +1513,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-Cally",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -2734,9 +1534,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-brian-v1",
       "prices": [
         {
@@ -2754,33 +1551,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-Brian",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -2802,9 +1572,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-betty-v1",
       "prices": [
         {
@@ -2822,33 +1589,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-Betty",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -2870,9 +1610,6 @@
       "description": "提供SAMBERT+NSFGAN深度神经网络算法与传统领域知识深度结合的文字转语音服务，兼具读音准确，韵律自然，声音还原度高，表现力强的特点。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "sambert-beth-v1",
       "prices": [
         {
@@ -2890,33 +1627,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Sambert语音合成-Beth",
       "docUrl": "https://help.aliyun.com/document_detail/2712458.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {

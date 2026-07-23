@@ -19,9 +19,6 @@
         "cache"
       ],
       "provider": "mini-max",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "MiniMax/MiniMax-M3",
       "prices": [
         {
@@ -74,33 +71,6 @@
       "inferenceProvider": "mini-max",
       "name": "MiniMax/MiniMax-M3",
       "docUrl": "https://bailian.console.aliyun.com/cn-beijing?tab=doc#/doc/?type=model&url=3021647",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "openai": {
           "completionsAPI": {
@@ -127,9 +97,6 @@
         "cache"
       ],
       "provider": "mini-max",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "MiniMax/MiniMax-M2.7",
       "prices": [
         {
@@ -183,37 +150,10 @@
       "inferenceProvider": "mini-max",
       "name": "MiniMax/MiniMax-M2.7",
       "docUrl": "https://help.aliyun.com/document_detail/3021647.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "openai": {
           "completionsAPI": {
-            "python": "from openai import OpenAI\nimport os\n\nclient = OpenAI(\n    api_key=\"sk-xxx\",  # 替换为你的百炼API Key\n    base_url=\"https://llm-czal8nvvwb8d47ks.cn-beijing.maas.aliyuncs.com/compatible-mode/v1\",\n)\n\ncompletion = client.chat.completions.create(\n    model=\"MiniMax/MiniMax-M2.7\",\n    messages=[{\"role\": \"user\", \"content\": \"你是谁\"}],\n    extra_body={\"enable_thinking\": True},\n    stream=True,\n)\n\nfor chunk in completion:\n    if not chunk.choices:\n        continue\n    delta = chunk.choices[0].delta\n    if hasattr(delta, \"reasoning_content\") and delta.reasoning_content:\n        print(delta.reasoning_content, end=\"\", flush=True)\n    if hasattr(delta, \"content\") and delta.content:\n        print(delta.content, end=\"\", flush=True)",
+            "python": "from openai import OpenAI\nimport os\n\nclient = OpenAI(\n    api_key=\"sk-xxx\",  # 替换为你的百炼API Key\n    base_url=\"https://[workspace-id].cn-beijing.maas.aliyuncs.com/compatible-mode/v1\",\n)\n\ncompletion = client.chat.completions.create(\n    model=\"MiniMax/MiniMax-M2.7\",\n    messages=[{\"role\": \"user\", \"content\": \"你是谁\"}],\n    extra_body={\"enable_thinking\": True},\n    stream=True,\n)\n\nfor chunk in completion:\n    if not chunk.choices:\n        continue\n    delta = chunk.choices[0].delta\n    if hasattr(delta, \"reasoning_content\") and delta.reasoning_content:\n        print(delta.reasoning_content, end=\"\", flush=True)\n    if hasattr(delta, \"content\") and delta.content:\n        print(delta.content, end=\"\", flush=True)",
             "docUrl": "https://help.aliyun.com/document_detail/3021647.html"
           }
         }
@@ -234,9 +174,6 @@
         "cache"
       ],
       "provider": "mini-max",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "MiniMax/MiniMax-M2.5",
       "iconUrl": "https://img.alicdn.com/imgextra/i1/O1CN01EFGi131NqT95FPDqc_!!6000000001621-2-tps-56-56.png",
       "prices": [
@@ -290,37 +227,10 @@
       "inferenceProvider": "mini-max",
       "name": "MiniMax/MiniMax-M2.5",
       "docUrl": "https://help.aliyun.com/document_detail/3021647.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "openai": {
           "completionsAPI": {
-            "python": "from openai import OpenAI\nimport os\n\nclient = OpenAI(\n    api_key=\"sk-xxx\",  # 替换为你的百炼API Key\n    base_url=\"https://llm-czal8nvvwb8d47ks.cn-beijing.maas.aliyuncs.com/compatible-mode/v1\",\n)\n\ncompletion = client.chat.completions.create(\n    model=\"MiniMax/MiniMax-M2.5\",\n    messages=[{\"role\": \"user\", \"content\": \"你是谁\"}],\n    extra_body={\"enable_thinking\": True},\n    stream=True,\n)\n\nfor chunk in completion:\n    if not chunk.choices:\n        continue\n    delta = chunk.choices[0].delta\n    if hasattr(delta, \"reasoning_content\") and delta.reasoning_content:\n        print(delta.reasoning_content, end=\"\", flush=True)\n    if hasattr(delta, \"content\") and delta.content:\n        print(delta.content, end=\"\", flush=True)",
+            "python": "from openai import OpenAI\nimport os\n\nclient = OpenAI(\n    api_key=\"sk-xxx\",  # 替换为你的百炼API Key\n    base_url=\"https://[workspace-id].cn-beijing.maas.aliyuncs.com/compatible-mode/v1\",\n)\n\ncompletion = client.chat.completions.create(\n    model=\"MiniMax/MiniMax-M2.5\",\n    messages=[{\"role\": \"user\", \"content\": \"你是谁\"}],\n    extra_body={\"enable_thinking\": True},\n    stream=True,\n)\n\nfor chunk in completion:\n    if not chunk.choices:\n        continue\n    delta = chunk.choices[0].delta\n    if hasattr(delta, \"reasoning_content\") and delta.reasoning_content:\n        print(delta.reasoning_content, end=\"\", flush=True)\n    if hasattr(delta, \"content\") and delta.content:\n        print(delta.content, end=\"\", flush=True)",
             "docUrl": "https://help.aliyun.com/document_detail/3021647.html"
           }
         }
@@ -341,9 +251,6 @@
         "cache"
       ],
       "provider": "mini-max",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "MiniMax/MiniMax-M2.1",
       "iconUrl": "https://img.alicdn.com/imgextra/i1/O1CN01EFGi131NqT95FPDqc_!!6000000001621-2-tps-56-56.png",
       "prices": [
@@ -397,37 +304,10 @@
       "inferenceProvider": "mini-max",
       "name": "MiniMax/MiniMax-M2.1",
       "docUrl": "https://help.aliyun.com/document_detail/3021647.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "openai": {
           "completionsAPI": {
-            "python": "from openai import OpenAI\nimport os\n\nclient = OpenAI(\n    api_key=\"sk-xxx\",  # 替换为你的百炼API Key\n    base_url=\"https://llm-czal8nvvwb8d47ks.cn-beijing.maas.aliyuncs.com/compatible-mode/v1\",\n)\n\ncompletion = client.chat.completions.create(\n    model=\"MiniMax/MiniMax-M2.1\",\n    messages=[{\"role\": \"user\", \"content\": \"你是谁\"}],\n    extra_body={\"enable_thinking\": True},\n    stream=True,\n)\n\nfor chunk in completion:\n    if not chunk.choices:\n        continue\n    delta = chunk.choices[0].delta\n    if hasattr(delta, \"reasoning_content\") and delta.reasoning_content:\n        print(delta.reasoning_content, end=\"\", flush=True)\n    if hasattr(delta, \"content\") and delta.content:\n        print(delta.content, end=\"\", flush=True)",
+            "python": "from openai import OpenAI\nimport os\n\nclient = OpenAI(\n    api_key=\"sk-xxx\",  # 替换为你的百炼API Key\n    base_url=\"https://[workspace-id].cn-beijing.maas.aliyuncs.com/compatible-mode/v1\",\n)\n\ncompletion = client.chat.completions.create(\n    model=\"MiniMax/MiniMax-M2.1\",\n    messages=[{\"role\": \"user\", \"content\": \"你是谁\"}],\n    extra_body={\"enable_thinking\": True},\n    stream=True,\n)\n\nfor chunk in completion:\n    if not chunk.choices:\n        continue\n    delta = chunk.choices[0].delta\n    if hasattr(delta, \"reasoning_content\") and delta.reasoning_content:\n        print(delta.reasoning_content, end=\"\", flush=True)\n    if hasattr(delta, \"content\") and delta.content:\n        print(delta.content, end=\"\", flush=True)",
             "docUrl": "https://help.aliyun.com/document_detail/3021647.html"
           }
         }

@@ -124,7 +124,7 @@ List\[str\]
     
     -   zh：中文
         
-    -   en：英文
+    -   en：英语
         
     -   fr：法语
         
@@ -146,7 +146,13 @@ List\[str\]
         
     -   it：意大利语
         
-    -   ms：马来语
+    -   es：西班牙语
+        
+    -   ms：马来西亚语
+        
+    -   fil：菲律宾语
+        
+    -   ar：阿拉伯语
         
 -   cosyvoice-v3-plus：
     

@@ -14,9 +14,6 @@
       "description": "图片精修是对AI试衣生成的效果图进行二次生成，输出还原度更高的精修试衣效果图。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "aitryon-refiner",
       "multiPrices": [
         {
@@ -124,24 +121,10 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "AI试衣OutfitAnyone-图片精修",
       "docUrl": "https://help.aliyun.com/document_detail/2796663.html",
-      "predictConfig": [
-        {
-          "name": "sample_models"
-        },
-        {
-          "name": "sample_suits"
-        },
-        {
-          "name": "sample_tops"
-        },
-        {
-          "name": "sample_bottoms"
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
-            "curl": "curl --location 'https://llm-czal8nvvwb8d47ks.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/image2image/image-synthesis/' \\\n--header 'X-DashScope-Async: enable' \\\n--header \"Authorization: Bearer $DASHSCOPE_API_KEY\" \\\n--header 'Content-Type: application/json' \\\n--data '{\n    \"model\": \"aitryon-refiner\",\n    \"input\": {\n        \"top_garment_url\": \"https://dashscope-swap.oss-cn-beijing.aliyuncs.com/aa-test/sample-top.jpg\",\n        \"bottom_garment_url\": \"https://dashscope-swap.oss-cn-beijing.aliyuncs.com/aa-test/sample-bottom.jpg\",\n        \"person_image_url\": \"https://dashscope-swap.oss-cn-beijing.aliyuncs.com/aa-test/sample-person.png\",\n        \"coarse_image_url\": \"https://dashscope-swap.oss-cn-beijing.aliyuncs.com/aa-test/result.png\"\n    },\n    \"parameters\": {\n        \"gender\": \"woman\"\n    }\n }'\n\ncurl -X GET https://llm-czal8nvvwb8d47ks.cn-beijing.maas.aliyuncs.com/api/v1/tasks/86ecf553-d340-4e21-xxxxxxxxx \\\n--header \"Authorization: Bearer $DASHSCOPE_API_KEY\""
+            "curl": "curl --location 'https://[workspace-id].cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/image2image/image-synthesis/' \\\n--header 'X-DashScope-Async: enable' \\\n--header \"Authorization: Bearer $DASHSCOPE_API_KEY\" \\\n--header 'Content-Type: application/json' \\\n--data '{\n    \"model\": \"aitryon-refiner\",\n    \"input\": {\n        \"top_garment_url\": \"https://dashscope-swap.oss-cn-beijing.aliyuncs.com/aa-test/sample-top.jpg\",\n        \"bottom_garment_url\": \"https://dashscope-swap.oss-cn-beijing.aliyuncs.com/aa-test/sample-bottom.jpg\",\n        \"person_image_url\": \"https://dashscope-swap.oss-cn-beijing.aliyuncs.com/aa-test/sample-person.png\",\n        \"coarse_image_url\": \"https://dashscope-swap.oss-cn-beijing.aliyuncs.com/aa-test/result.png\"\n    },\n    \"parameters\": {\n        \"gender\": \"woman\"\n    }\n }'\n\ncurl -X GET https://[workspace-id].cn-beijing.maas.aliyuncs.com/api/v1/tasks/86ecf553-d340-4e21-xxxxxxxxx \\\n--header \"Authorization: Bearer $DASHSCOPE_API_KEY\""
           }
         }
       }

@@ -18,7 +18,7 @@
 3.  推理结果回到接入地域存储，再响应给应用（用户静态数据始终存于所选地域）。
     
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7478182871/CAEQchiBgIDPq_PR9xkiIDJhZDdiNzAxMGFiODRhNmRiMDYxYjNjNGU2NTJkMDYw7466796_20260515102254.505.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5407814871/CAEQchiBgIDPq_PR9xkiIDJhZDdiNzAxMGFiODRhNmRiMDYxYjNjNGU2NTJkMDYw7466796_20260515102254.505.svg)
 
 ## 选择地域和服务部署范围
 
@@ -104,7 +104,7 @@
 
 推荐在生产环境中使用，具备更高并发承载能力与网络隔离性，保障大流量场景下的稳定、低延迟访问体验。
 
-存量业务兼容，建议[迁移至业务空间专属域名](#section-migrate-domain)。
+存量业务兼容，建议迁移至[业务空间专属域名](#section-migrate-domain)。
 
 快速体验、功能验证，不建议用于生产环境。
 
@@ -247,13 +247,9 @@ HTTP、SSE
 
 从 Dashscope 域名或试用域名迁移到业务空间专属域名只需两步，无需修改业务逻辑代码：
 
-1.  **获取业务空间专属域名**：
+1.  **获取业务空间专属域名**：在[业务空间管理](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management)页面，复制 **API Host** 列的内容。
     
-    -   方式一：在[API Key 创建](https://bailian.console.aliyun.com/cn-beijing#/api-key)后的弹窗中，复制 **API Host** 。
-        
-    -   方式二：在[业务空间管理](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management)页面，复制 **API Host** 列的内容。
-        
-2.  **替换 Base URL 中的域名**：将原域名替换为业务空间专属域名。以华北2（北京）地域为例，`llm-xxx` 为业务空间 ID：
+2.  **替换请求地址中的域名**：将复制的 API Host（如 `llm-xxx.cn-beijing.maas.aliyuncs.com`）替换代码中原有的域名部分，以华北2（北京）地域为例，`llm-xxx` 为业务空间 ID：
     
     -   OpenAI 兼容接口：从 `https://dashscope.aliyuncs.com/compatible-mode/v1` 替换为 `https://llm-xxx.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
         

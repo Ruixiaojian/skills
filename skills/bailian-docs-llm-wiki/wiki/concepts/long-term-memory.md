@@ -1,51 +1,47 @@
 # 长期记忆
 
-长期记忆是百炼平台提供的结构化、持久化用户上下文管理能力，用于突破大模型单次会话的上下文窗口限制，实现跨会话、跨请求的用户偏好、关键事件与结构化属性的自动提取、语义检索与全生命周期管理。
+长期记忆是百炼平台提供的结构化、持久化的用户信息管理能力，用于跨会话持续捕获、存储、检索和聚合用户偏好、习惯、意图与事实性信息（如“每天9点喝水”“喜欢咖啡因饮品”），使智能体具备真正的上下文连续性和个性化理解能力。
 
-## 在百炼平台的不同场景中，这个概念如何使用
+## 在百炼平台的不同场景中如何使用
 
-长期记忆不是被动存储，而是主动参与智能体决策闭环的核心组件，其使用方式因应用范式而异：
+- **智能体（Agent）应用**：通过 `AddMemory` 自动从对话中提取事件性/意图性内容（如提醒、偏好、承诺），或手动写入 `custom_content`；在后续调用中通过 `SearchMemory` 语义召回相关记忆，并注入提示词上下文，实现个性化响应。支持与新版智能体的工具调度体系深度集成（如作为 `memory_search` 工具被自动调用）。
+  
+- **OpenClaw Agent**：通过官方插件 `@modelstudio/modelstudio-memory-for-openclaw` 启用零代码自动捕获（`autoCapture`）与自动召回（`autoRecall`），无需修改业务逻辑即可获得长期记忆能力；插件内置 `memory_store`/`memory_search` 等标准工具，Agent 可在运行时动态调用。
 
-- **智能体（Agent 2.0）应用**：作为“有状态智能体”的基石，通过 `memory_search` 等运行时工具在 `before_agent_start` 钩子中自动注入相关记忆，或由 Agent 主动调用 `AddMemory` / `SearchMemory` 实现个性化响应（如“您上周提到要学习 Python，需要我推荐课程吗？”）。OpenClaw [插件](plugin.md)可实现零代码接入，自动捕获对话中的事实并召回历史上下文。
+- **工作流（Workflow）与高代码应用**：通过直接调用长期记忆 API（如 `/api/v2/apps/memory/add` 和 `/api/v2/apps/memory/memory_nodes/search`）实现细粒度控制；可结合 `biz_params` 或自定义节点，在流程中触发记忆写入、画像聚合（`GetUserProfile`）或条件性召回。
 
-- **工作流（Workflow）应用**：在节点编排中显式调用 `memory_store` 或 `memory_search` 工具，将流程中间结果写入长期记忆，或在条件分支前检索用户画像字段（如 `profile_schema="health_habits"`），驱动差异化路径执行。
+- **记忆库统一管理**：所有场景均基于同一套记忆基础设施——记忆库（Memory Library）。同一 `memory_library_id` 可被多个应用共享，`user_id` 作为核心隔离维度，确保数据边界清晰；支持在控制台统一配置规则（如过期策略、默认模板）、调试检索效果、查看记忆实体。
 
-- **高代码应用**：通过 `agentscope-runtime` SDK（≥1.1.5）直接集成，以编程方式控制记忆生命周期。例如，在 Python 函数中解析用户上传的体检报告后，调用 `AddMemory(user_id=uid, custom_content=summary, meta_data={"category": "health"})`；后续查询时传入 `meta_data={"category": "health"}` 进行精准过滤。
-
-- **RAG 增强场景**：与知识库检索正交协同——知识库提供通用领域知识，长期记忆提供专属用户事实（如“张三对青霉素过敏”），二者可在提示词中融合注入，显著提升回答准确性与个性化程度。
-
-- **Managed Agents 沙箱环境**：虽沙箱本身无状态，但可通过 `SearchMemory` 在会话启动时拉取用户历史配置（如“默认导出格式为 CSV”），再写入沙箱文件系统，实现“有状态行为”的模拟。
+- **用户画像构建**：配合 `CreateProfileSchema` 定义结构化属性（如 `age`, `diet_preference`, `timezone`），在 `AddMemory` 中传入 `profile_schema` ID，系统将自动从对话中抽取并归一化为 JSON 格式画像；后续可通过 `GetUserProfile` 获取完整聚合结果，供下游服务直接消费。
 
 ## 关键参数和配置
 
-| 参数名 | 类型 | 必填 | 说明 | 推荐值 |
-|--------|------|------|------|--------|
-| `user_id` | string | 是 | 用户唯一标识符（≤64 字符），所有操作均以此为隔离边界，**不可为空或重复复用** | `"u_abc123"` |
-| `messages` / `custom_content` | array / string | 互斥 | `messages`：自动提取（最多 50 条，一问一答计 2 条）；`custom_content`：直接写入文本（≤512 字符） | 优先用 `messages` 提升提取质量 |
-| `memory_library_id` | string | 否 | 显式指定记忆库 ID（≤32 字符），未传则使用默认库；可在控制台“记忆库”页获取 | 生产环境建议显式指定 |
-| `project_id` | string | 否 | 记忆片段规则 ID，控制提取逻辑（如仅提取提醒类内容）；未传则使用默认规则 | 规则需在控制台预先配置 |
-| `profile_schema` | string | 否 | 用户画像模板 ID，触发结构化字段抽取（如 `{"name":"string","age":"integer"}`） | 模板需先调用 `CreateProfileSchema` 创建 |
-| `top_k` | integer | 否 | `SearchMemory` 返回最大条数（1–100），影响召回精度与延迟 | 3–10（默认 10） |
-| `min_score` | double | 否 | 相似度阈值（0.0–1.0），低于此值的结果被过滤；**统一使用浮点值，非整数** | 0.5–0.7（默认 0.3） |
-| `meta_data` | object | 否 | 自定义元数据（≤1 KB），支持后续按字段过滤（如 `{"source": "wechat", "priority": "high"}`） | 用于分类、权限或业务路由 |
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| `user_id` | string | ✅ | 用户唯一标识（≤64 字符），所有操作以此为数据隔离粒度；不同 `user_id` 的记忆完全不可见。 |
+| `memory_library_id` | string | ❌ | 记忆库 ID（≤32 字符），不填则使用账号默认库；可在控制台 [记忆库列表](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/memory/list) 获取。 |
+| `messages` / `custom_content` | array / string | 互斥必填 | `messages`：最多 50 条对话消息（含 `user`/`assistant` 角色）；`custom_content`：纯文本（≤512 字符），优先级更高，适用于结构化输入。 |
+| `profile_schema` | string | ❌ | 用户画像模板 ID，仅当需触发结构化抽取时传入；需先调用 `CreateProfileSchema` 创建。 |
+| `top_k`（Search） | integer | ❌（默认 10） | 检索返回的最大记忆条数，推荐设为 `3–10` 平衡召回质量与性能。 |
+| `min_score`（Search） | double | ❌（默认 0.3） | 相似度阈值 `[0,1]`，低于此值的结果被过滤；OpenClaw 插件单位为百分制（需除以 100 转换）。 |
+| `enable_rerank` / `enable_judge` / `enable_rewrite`（Search） | boolean | ❌ | 分别启用重排序、意图判别、query 重写，提升语义召回精度；默认关闭，按需开启。 |
 
-> ⚠️ 注意：`profile_schema` 参数实际为**可选**，传入无效 ID 将静默忽略，不报错；`expire_at` 字段或控制台规则配置决定记忆有效期（支持 7/30/180 天或永不过期），**平台不提供自动过期清理，需开发者主动调用 `DeleteMemory` 管理生命周期**。
+> ⚠️ 注意：所有接口强制使用平台内置专用记忆模型（非通用大模型），不开放模型选择；`UpdateMemory` 当前未在 `agentscope-runtime` SDK 中封装（v1.1.5+），需手动 HTTP PATCH 调用。
 
-## 面向开发者，简洁实用
+## 面向开发者：简洁实用指南
 
-- **认证**：所有 API 请求必须携带 `Authorization: Bearer $DASHSCOPE_API_KEY` 和 `Content-Type: application/json`。
-- **SDK 优先**：安装 `agentscope-runtime>=1.1.5`，直接使用封装类（如 `AddMemory`, `SearchMemory`），避免手写 HTTP 请求。
-- **输入优化**：确保 `messages` 中 `role` 明确为 `"user"`/`"assistant"`，内容语义清晰（避免模糊指代），可显著提升自动提取准确率。
-- **检索技巧**：搜索时优先使用自然语言查询（`query` 字段），而非 `messages` 数组；若需高精度匹配，结合 `meta_data` 过滤 + `min_score=0.65`。
-- **限流应对**：账号级总 QPM ≤3000（`AddMemory` ≤120，`SearchMemory` ≤300），突发流量建议加本地缓存或队列削峰。
-- **调试建议**：首次集成时，先用 `ListMemory` 查看已写入内容，确认 `user_id` 和 `meta_data` 是否符合预期；再测试 `SearchMemory` 的召回效果。
+- **快速起步**：安装 `agentscope-runtime>=1.1.5`，调用 `AddMemory` 和 `SearchMemory` 异步方法，只需传入 `user_id` 和 `messages` 即可完成基础写入与检索。
+- **避免超限**：`AddMemory` QPM ≤ 120，`SearchMemory` QPM ≤ 300（阿里云账号级配额），高频场景建议批量合并写入、缓存高频查询结果。
+- **控制生命周期**：记忆本身永不过期，但可通过 `project_id` 绑定的规则配置 `memory_expiration_time`（仅对新写入生效）；业务侧需主动调用 `DeleteMemory` 清理敏感或过期数据。
+- **优化检索效果**：在控制台「记忆检索」页调试 `min_score`、`enable_rewrite` 等参数；对关键业务 query，建议预置 `custom_content` + 明确 `meta_data` 标签（如 `"category": "reminder"`）提升召回稳定性。
+- **生产就绪检查**：确保 `user_id` 符合长度与字符约束；`messages` 中角色必须为 `user`/`assistant`；HTTP 请求头必须包含 `Authorization: Bearer $DASHSCOPE_API_KEY` 和 `Content-Type: application/json`。
 
 ## 关联主题页
 
 - [long term memory new](../api/long-term-memory-new.md)
 - [memory library overview](../guides/memory-library-overview.md)
+- [application call](../api/application-call.md)
 - [managed agents](../guides/managed-agents.md)
-- [application support](../guides/application-support.md)
 - [llm application](../guides/llm-application.md)
 
 

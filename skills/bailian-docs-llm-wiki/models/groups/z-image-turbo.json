@@ -17,9 +17,6 @@
         "model-experience"
       ],
       "provider": "qwen-domain-model",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "z-image-turbo",
       "prices": [
         {
@@ -55,29 +52,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Z-Image-Turbo",
       "docUrl": "https://help.aliyun.com/document_detail/3002354.html",
-      "predictConfig": [
-        {
-          "name": "分辨率",
-          "key": "size",
-          "default": "1024*1024",
-          "tip": "请先选择输出分辨率，再选择输出宽高比"
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "range": [
-            1,
-            2147483647
-          ]
-        },
-        {
-          "name": "智能改写",
-          "key": "prompt_extend",
-          "default": false,
-          "tip": "开启后会使用大模型对输入prompt进行智能改写，仅对正向提示词有效。对于较短的输prompt生成效果提升明显，但会增加3-4秒耗时。"
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {

@@ -15,9 +15,6 @@
       "collectionTag": "qwen3",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "qwen3-tts-flash-realtime",
       "prices": [
         {
@@ -58,13 +55,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Qwen3-TTS-Flash-Realtime",
       "docUrl": "https://help.aliyun.com/document_detail/2938790.html",
-      "predictConfig": [
-        {
-          "name": "语言",
-          "key": "languageType",
-          "default": "Chinese"
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {

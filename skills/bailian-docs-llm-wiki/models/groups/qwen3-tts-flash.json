@@ -17,9 +17,6 @@
         "model-experience"
       ],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "qwen3-tts-flash",
       "prices": [
         {
@@ -52,13 +49,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Qwen3-TTS-Flash",
       "docUrl": "https://help.aliyun.com/document_detail/2879134.html",
-      "predictConfig": [
-        {
-          "name": "语言",
-          "key": "languageType",
-          "default": "Chinese"
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {

@@ -16,9 +16,6 @@
       "description": "Qwen3-LiveTranslate-Flash，一款高精度、高响应、高鲁棒性的多语言实时音视频同传大模型。依托Qwen3-Omni强大的基座能力、海量多模态数据、跨语言跨模态对齐和视觉增强等技术，Qwen3-LiveTranslate-Flash 实现了离线和实时两种音视频翻译能力，能听懂19种语言，会说10种语言以及8种中文方言。",
       "features": [],
       "provider": "qwen-domain-model",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "qwen3-livetranslate-flash",
       "prices": [
         {
@@ -74,40 +71,12 @@
       "maxInputTokens": 49152,
       "offlineInfo": {
         "inference": {
-          "announceUrl": "https://www.aliyun.com/notice/118434",
-          "offlineTime": "2026-10-10 00:00:00"
+          "announceUrl": ""
         }
       },
       "inferenceProvider": "aliyun-bailian",
       "name": "Qwen3-LiveTranslate-Flash",
-      "docUrl": "https://help.aliyun.com/document_detail/2999748.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ]
+      "docUrl": "https://help.aliyun.com/document_detail/2999748.html"
     }
   ]
 }

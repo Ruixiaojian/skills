@@ -16,9 +16,6 @@
         "model-experience"
       ],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "paraformer-realtime-v1",
       "prices": [
         {
@@ -42,13 +39,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Paraformer实时语音识别-v1",
       "docUrl": "https://help.aliyun.com/document_detail/2712536.html",
-      "predictConfig": [
-        {
-          "name": "过滤语气词",
-          "key": "disfluency_removal_enabled",
-          "tip": "过滤语气词，默认为关闭false。"
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {

@@ -1,6 +1,6 @@
 # Qwen Code
 
-Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Plan 或 Token Plan 团队版接入阿里云百炼。
+Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Plan、Token Plan 个人版或 Token Plan 团队版接入阿里云百炼。
 
 ## **安装 Qwen Code**
 
@@ -33,13 +33,107 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
 
 ## **配置接入凭证**
 
-启动 Qwen Code 后输入 `/auth` 命令进行可视化配置。阿里云百炼提供三种计费方案，根据需要选择：
+启动 Qwen Code 后输入 `/auth` 命令进行可视化配置。阿里云百炼提供四种计费方案，根据需要选择：
 
+-   **Token Plan 个人版**：按 token 消耗抵扣个人 Credits。
+    
 -   **Token Plan 团队版**：按坐席订阅，按 token 消耗抵扣 Credits。
     
 -   **Coding Plan**：固定月费订阅，按模型调用次数计量。
     
 -   **按量计费**：按实际调用量后付费。
+    
+
+### Token Plan 个人版
+
+启动 Qwen Code 后输入 `/auth`，依次选择 **订阅计划** > **阿里云百炼 Token Plan**，输入 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview) 即可完成配置。可用模型请参考 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
+
+高级配置：通过 settings.json 配置文件
+
+编辑或新建 `settings.json` 文件，将 `YOUR_API_KEY` 替换为 Token Plan 个人版专属 API Key。文件路径如下：
+
+-   macOS/Linux：`~/.qwen/settings.json`
+    
+-   Windows：`C:\Users\<Windows用户名>\.qwen\settings.json`
+    
+
+```
+{
+  "env": {
+    "BAILIAN_TOKEN_PLAN_API_KEY": "YOUR_API_KEY"
+  },
+  "modelProviders": {
+    "openai": [
+      {
+        "id": "qwen3.8-max-preview",
+        "name": "[Token Plan 个人版] qwen3.8-max-preview",
+        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": {
+            "enable_thinking": true
+          }
+        }
+      },
+      {
+        "id": "qwen3.7-max",
+        "name": "[Token Plan 个人版] qwen3.7-max",
+        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": {
+            "enable_thinking": true
+          }
+        }
+      },
+      {
+        "id": "qwen3.7-plus",
+        "name": "[Token Plan 个人版] qwen3.7-plus",
+        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": {
+            "enable_thinking": true
+          }
+        }
+      },
+      {
+        "id": "qwen3.6-flash",
+        "name": "[Token Plan 个人版] qwen3.6-flash",
+        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": {
+            "enable_thinking": true
+          }
+        }
+      },
+      {
+        "id": "glm-5.2",
+        "name": "[Token Plan 个人版] glm-5.2",
+        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY"
+      },
+      {
+        "id": "deepseek-v4-pro",
+        "name": "[Token Plan 个人版] deepseek-v4-pro",
+        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY"
+      }
+    ]
+  }
+}
+```
+
+**重要**
+
+**qwen3.8-max-preview 思考模式说明**：
+
+-   thinking：始终开启，不支持关闭。
+    
+-   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
+    
+-   reasoning\_effort：控制推理深度，可选 xhigh、high、low，默认 xhigh。
     
 
 ### Token Plan 团队版
@@ -62,6 +156,17 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
   },
   "modelProviders": {
     "openai": [
+      {
+        "id": "qwen3.8-max-preview",
+        "name": "[Token Plan 团队版] qwen3.8-max-preview",
+        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": {
+            "enable_thinking": true
+          }
+        }
+      },
       {
         "id": "qwen3.7-max",
         "name": "[Token Plan 团队版] qwen3.7-max",
@@ -207,11 +312,22 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
     "region": "china"
   },
   "model": {
-    "name": "qwen3.7-plus"
+    "name": "qwen3.8-max-preview"
   },
   "$version": 3
 }
 ```
+
+**重要**
+
+**qwen3.8-max-preview 思考模式说明**：
+
+-   thinking：始终开启，不支持关闭。
+    
+-   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
+    
+-   reasoning\_effort：控制推理深度，可选 xhigh、high、low，默认 xhigh。
+    
 
 ### Coding Plan
 
@@ -547,7 +663,7 @@ Qwen Code 支持在 VS Code 中以插件方式使用，在 IDE 中提供 AI 编�
 4.  输入以下内容安装 skill。
     
     ```
-    查看我是否有find skills，没有就直接帮我安装：npx skills add https://github.com/vercel-labs/skills --skill find-skills -y -a qwen-code，然后帮我安装 web-component-design 到当前目录qwen code skills中。
+    查看我是否有find skills，没有就直接帮我安装：npx skills add https://github.com/vercel-labs/skills --skill find-skills -y -a qwen-code，然后从 wshobson/agents 帮我安装 web-component-design 到当前目录：npx skills add https://github.com/wshobson/agents --skill web-component-design -y
     ```
     
 5.  下载[website.png](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260318/ymehla/website.png)到项目目录，输入以下内容，将自动识别截图的布局、样式，生成网页代码。
@@ -593,7 +709,9 @@ Qwen Code 支持在 VS Code 中以插件方式使用，在 IDE 中提供 AI 编�
     
 -   Coding Plan：[Coding Plan 常见问题](https://help.aliyun.com/zh/model-studio/coding-plan-faq)
     
--   Token Plan 团队版：[Token Plan 团队版常见问题](https://help.aliyun.com/zh/model-studio/token-plan-faq)
+-   Token Plan 个人版：[Token Plan 常见问题](https://help.aliyun.com/zh/model-studio/token-plan-team-faq)
+    
+-   Token Plan 团队版：[Token Plan 团队版常见问题](https://help.aliyun.com/zh/model-studio/token-plan-team-faq)
     
 
 ### **如何切换模型？**

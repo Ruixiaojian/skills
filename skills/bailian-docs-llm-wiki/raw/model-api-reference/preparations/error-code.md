@@ -767,13 +767,13 @@ AI 助理准确分析出原因，并给出解决方案：
 
 ### **request timeout after 23 seconds.**
 
-**原因：** 超过23秒未向服务发送数据。该报错信息在使用[实时语音合成（Sambert）](https://help.aliyun.com/zh/model-studio/sambert-speech-synthesis/)、[语音识别（Paraformer）](https://help.aliyun.com/zh/model-studio/paraformer-speech-recognition)和[实时语音合成（CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)时产生。
+**原因：** 超过23秒未向服务发送数据。该报错信息在使用[实时语音合成（Sambert）](https://help.aliyun.com/zh/model-studio/sambert-speech-synthesis/)、[语音识别（Paraformer）](https://help.aliyun.com/zh/model-studio/paraformer-speech-recognition)和[实时语音合成（Qwen-Audio-TTS/CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)时产生。
 
 **解决方案：** 请检查为什么长时间未向服务器发送数据。如果长时间（超过23秒）不向服务端发送消息，请及时结束任务。
 
 ### **Please ensure input text is valid.**
 
-**原因：** 若您使用[实时语音合成（CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)，此错误通常是由于未发送待合成文本引起的。可能原因包括：参数遗漏（未为 `text` 参数赋值）或代码异常（导致对 `text` 参数的赋值失败）。
+**原因：** 若您使用[实时语音合成（Qwen-Audio-TTS/CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)，此错误通常是由于未发送待合成文本引起的。可能原因包括：参数遗漏（未为 `text` 参数赋值）或代码异常（导致对 `text` 参数的赋值失败）。
 
 **解决方案：** 请排查代码，确保 `text` 参数被正确赋值并发送。
 
@@ -816,7 +816,7 @@ AI 助理准确分析出原因，并给出解决方案：
 
 ### **\[tts:\]Engine return error code: 418**
 
-**原因：** 使用[实时语音合成（CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)，请求参数 `voice`（音色）不正确，或 `model`（模型）与 `voice`（音色）版本不匹配。
+**原因：** 使用[实时语音合成（Qwen-Audio-TTS/CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)，请求参数 `voice`（音色）不正确，或 `model`（模型）与 `voice`（音色）版本不匹配。
 
 **解决方案：**
 
@@ -831,7 +831,7 @@ AI 助理准确分析出原因，并给出解决方案：
 
 ### **Request voice is invalid!**
 
-**原因：** 若您使用[实时语音合成（CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)，此错误通常是因为未设置音色。
+**原因：** 若您使用[实时语音合成（Qwen-Audio-TTS/CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)，此错误通常是因为未设置音色。
 
 **解决方案：** 请检查是否对`voice`参数赋值。若您使用[WebSocket API参考](https://help.aliyun.com/zh/model-studio/cosyvoice-websocket-api)，请参照API文档按照正确JSON格式配置参数。
 
@@ -1015,7 +1015,7 @@ AI 助理准确分析出原因，并给出解决方案：
 
 **解决方案：**前往[费用与成本](https://usercenter2.aliyun.com/home)查看是否欠费：
 
--   未欠费：请确认该 API Key 是否属于当前账号；
+-   未欠费：请确认该 API Key 是否属于当前账号。如果账号不存在欠费的情况，可能账户出现异常，详情请联系客服进一步排查。
     
 -   欠费：请及时充值。充值后，系统余额可能存在延迟，请稍等后重试。
     
@@ -1745,7 +1745,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
             
 -   **填写错误**：阿里云百炼的 API Key 以 `sk-` 开头，请确认未误填其他模型提供商的密钥，且复制时未包含多余空格或换行符。
     
--   **套餐专属 API Key（Coding Plan / Token Plan 团队版）**：Coding Plan 与 Token Plan 团队版均提供以 `sk-sp-` 开头的专属 API Key，**必须配合各自的专属 Base URL 使用**，不可与通用 API Key/Base URL 混用（混用会返回本鉴权错误）。其中 Coding Plan 的专属地址为 https://coding.dashscope.aliyuncs.com/v1；Token Plan 团队版的专属 Base URL 可在控制台**我的订阅**的 API Key 区域查看。请确认同时更新了 API Key 和 Base URL，具体配置方法请分别参见[接入AI工具](https://help.aliyun.com/zh/model-studio/use-coding-plan-in-ai-tools/)与[快速开始](https://help.aliyun.com/zh/model-studio/token-plan-quickstart)。
+-   **套餐专属 API Key（Coding Plan / Token Plan 团队版）**：Coding Plan 与 Token Plan 团队版均提供以 `sk-sp-` 开头的专属 API Key，**必须配合各自的专属 Base URL 使用**，不可与通用 API Key/Base URL 混用（混用会返回本鉴权错误）。其中 Coding Plan 的专属地址为 https://coding.dashscope.aliyuncs.com/v1；Token Plan 团队版的专属 Base URL 可在控制台**我的订阅**的 API Key 区域查看。请确认同时更新了 API Key 和 Base URL，具体配置方法请分别参见[接入AI工具](https://help.aliyun.com/zh/model-studio/use-coding-plan-in-ai-tools/)与[快速开始](https://help.aliyun.com/zh/model-studio/token-plan-team-quickstart)。
     
 -   **地域不匹配**：API Key 和 Base URL 属于不同的地域，例如使用了华北2（北京）地域的 API Key 和新加坡地域的 Base URL。请确认您使用的 API Key 位于[北京](https://bailian.console.aliyun.com/?tab=globalset#/efm/api_key)地域页面或[新加坡](https://modelstudio.console.aliyun.com/?tab=globalset#/efm/api_key)地域页面，或[美国](https://modelstudio.console.aliyun.com/us-east-1)地域页面。各地域对应的 Base URL 如下：
     
@@ -1957,6 +1957,8 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 -   请对照模型列表中的模型名称，检查您输入的模型名称（参数`model`的取值）是否正确。
     
 -   请前往模型广场开通模型服务。
+    
+-   如果您通过国际站 API 端点（如 `dashscope-us.aliyuncs.com`）发起调用，请注意不同地域可用的模型列表不同。调用前请确认目标模型是否在该地域可用，部分模型在美国地域需使用带 `-us` 后缀的模型名称（如 `qwen-max-us`）。
     
 
 ## **404-**model\_not\_supported
@@ -2186,7 +2188,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **原因：** 语音合成中使用的音色不存在。
 
-**解决方案：** 请检查`voice`参数，确保指定了正确的音色名称。可用音色请参见[实时语音合成（CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)。
+**解决方案：** 请检查`voice`参数，确保指定了正确的音色名称。可用音色请参见[实时语音合成（Qwen-Audio-TTS/CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)。
 
 ## **500-**InternalError.FileUpload
 
@@ -2438,7 +2440,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 ### **Cannot resolve symbol 'ttsv2'**
 
-**原因：** 若您使用[实时语音合成（CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)，出现该问题的原因是DashScope SDK版本过低。
+**原因：** 若您使用[实时语音合成（Qwen-Audio-TTS/CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)，出现该问题的原因是DashScope SDK版本过低。
 
 **解决方案：** 请[安装最新版 DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk#f80a232bb24v7)。
 
@@ -2458,7 +2460,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 ### **InputRequiredException: Parameter invalid: text is null**
 
-**原因**：使用[实时语音合成（CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)时未发送待合成文本。
+**原因**：使用[实时语音合成（Qwen-Audio-TTS/CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)时未发送待合成文本。
 
 **解决方案：**调用语音合成接口时为 `text` 参数赋值。
 

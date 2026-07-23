@@ -1,6 +1,6 @@
 # 百炼模型市场索引
 
-> 自动生成 · 共 165 个模型家族 · 359 个主干模型 · 更新于 2026-07-15
+> 自动生成 · 共 170 个模型家族 · 386 个主干模型 · 更新于 2026-07-23
 
 **机器查询走结构化文件**：
 
@@ -11,7 +11,7 @@
 
 join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].slug`。
 
-## 文本生成 `TG` — 34 个家族
+## 文本生成 `TG` — 35 个家族
 
 - [GLM](groups/glm-4.5.json) — GLM是由智谱提供的开源模型。
   - 模型：`glm-4.5`, `glm-4.5-air`, `glm-4.6`, `glm-4.7`, `glm-5`, `glm-5.1`, `glm-5.2`
@@ -20,7 +20,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [Kimi](groups/Kimi-K2.json) — Kimi是由月之暗面提供的开源模型，包含k2.7-code、k2.6、k2.5、k2-thinking、k2-instruct等多模态和大语言模型。
   - 模型：`kimi-k2-thinking`, `kimi-k2.5`, `kimi-k2.6`, `kimi-k2.7-code`, `Moonshot-Kimi-K2-Instruct`
 - [Kimi](groups/kimi-models-market-place.json) — 由月之暗面提供的Kimi系列模型的API服务。
-  - 模型：`kimi/kimi-k2.5`, `kimi/kimi-k2.6`, `kimi/kimi-k2.7-code`, `kimi/kimi-k2.7-code-highspeed`
+  - 模型：`kimi/kimi-k2.5`, `kimi/kimi-k2.6`, `kimi/kimi-k2.7-code`, `kimi/kimi-k2.7-code-highspeed`, `kimi/kimi-k3`
 - [MiMo文本模型](groups/xiaomi-models-market-place.json) — 由小米MiMo提供的MiMo文本模型API服务
   - 模型：`xiaomi/mimo-v2.5-pro`
 - [MiniMax文本模型](groups/minimax-models-market-place.json) — 由MiniMax提供的MiniMax-M系列文本模型API服务。
@@ -29,6 +29,8 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen-coder-plus`
 - [Qwen-Coder-Turbo](groups/qwen-coder-turbo.json) — Qwen-Coder-Turbo模型是专门用于编程和代码生成的语言模型，推理速度快，成本低。
   - 模型：`qwen-coder-turbo`
+- [qwen-deep-research](groups/qwen-deep-research.json) — 千问深入研究是一款面向复杂研究任务的高级智能体系统，具备多轮推理与全局规划能力，能够运用互联网搜索等多种工具，对任务进行精细化拆解，开展推理与分析，最终为用户生成可溯源、逻辑严谨的研究型报告。
+  - 模型：`qwen-deep-research`
 - [Qwen-Doc-Turbo](groups/qwen-doc-turbo.json) — 快速对文档进行精准信息抽取，打标分类，内容审核及摘要总结。
   - 模型：`qwen-doc-turbo`
 - [Qwen-Flash-Character](groups/qwen-flash-character.json) — 千问系列多语言角色扮演模型，本模型是动态更新版本，模型更新会提前通知，适合拟人化的角色扮演，同时优化了限定人设指令遵循、话题推进、倾听共情等能力，支持个性化角色的深度还原。
@@ -82,7 +84,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [通义法睿-Plus-32K](groups/farui-plus.json) — 通义法睿是以通义千问为基座经法律行业数据和知识专门训练的法律行业大模型产品，综合运用了模型精调、强化学习、 RAG检索增强、法律Agent技术，具有回答法律问题、推理法律适用、推荐裁判类案、辅助案情分…
   - 模型：`farui-plus`
 
-## 图像生成 `IG` — 29 个家族
+## 图像生成 `IG` — 31 个家族
 
 - [AI试衣-Plus版](groups/aitryon-plus.json) — aitryon-plus是一款效果出众的虚拟试衣图片生成模型，可基于服饰平拍图片以及人物正面全身照，输出服饰的人物试衣效果图片。 相较于aitryon模型，aitryon-plus模型在图片清晰度、服…
   - 模型：`aitryon-plus`
@@ -100,10 +102,14 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen-image-2.0`
 - [Qwen-Image-2.0-Pro](groups/qwen-image-2.0-pro.json) — Qwen-Image-2.0系列满血版模型，实现了图片生成和图片编辑的融合；具备更专业的文字渲染1k token指令支持能力、更细腻的真实质感，细腻刻画写实场景、更强的语义遵循能力。满血版具备2.0系…
   - 模型：`qwen-image-2.0-pro`
+- [Qwen-Image-3.0-Pro](groups/qwen-image-3.0-pro.json) — 内容丰实：支持最大 4.5k token 输入，支持图中图密集信息排版，让报纸、分镜、菜单、试卷等复杂版面一次生成。 细节真实：支持 10px 小字精准渲染，微表情、毛孔、发丝等细节生动还原，逼近真实…
+  - 模型：`qwen-image-3.0-pro`
 - [Qwen-Image-Edit-Max](groups/qwen-image-edit-max.json) — 千问图像编辑模型Max系列，提供更稳定、更丰富的编辑能力：提升工业设计与几何推理能力；提升角色一致性；减轻偏移问题；集成Lora能力，可以进行更多功能的图像编辑。此版本为2026年1月16日快照。
   - 模型：`qwen-image-edit-max`
 - [Qwen-Image-Edit-Plus](groups/qwen-image-edit.json) — 千问系列图像编辑Plus模型，在首版Edit模型基础上进一步优化了推理性能与系统稳定性，大幅缩短图像生成与编辑的响应时间；支持单次请求返回多张图片，显著提升用户体验。
   - 模型：`qwen-image-edit`, `qwen-image-edit-plus`
+- [Qwen-Image-Max](groups/qwen-image-max.json) — 千问图像生成模型Max系列，在各类生成任务中表现出色，相较Plus系列大幅度降低生成图片的AI感，提升图像真实性；具备更真实的人物质感、更细腻的自然纹理、更美观的文字渲染。
+  - 模型：`qwen-image-max`
 - [Qwen-Image-Plus](groups/qwen-image-plus.json) — 千问系列图像生成模型，参数规模200亿。具备卓越的文本渲染能力，在复杂文本渲染、各类生成与编辑任务重表现出色，在多个公开基准测试中获得SOTA，模型性能大幅提升。
   - 模型：`qwen-image`, `qwen-image-plus`
 - [Qwen-MT-Image](groups/qwen-mt-image.json) — 专注做图片翻译的模型服务，能将中、英、日等11个语言的图片翻译到指定的语言，精准还原图片排版和内容信息，支持术语定义、敏感词过滤、商品主体检测等自定义功能，提供灵活、准确、高效的图像本地化服务。
@@ -143,7 +149,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [鞋靴模特](groups/shoemodel-v1.json) — 鞋靴模特支持输入多视角鞋靴系列图片，同时对输入模特模板图的鞋子区域进行鞋靴AI试穿，实现模特鞋靴布局重绘生成，最终生成图片的效果, 布局自然、细节丰富、画面细腻、试穿结果逼真。可用于模特商品图设计、新…
   - 模型：`shoemodel-v1`
 
-## 视频生成 `VG` — 24 个家族
+## 视频生成 `VG` — 26 个家族
 
 - [HappyHorse-I2V](groups/happyhorse-i2v.json) — HappyHorse系列最新图生视频模型，具备高度还原的动态画面生成能力，能够稳定保持与图像一致性，输出流畅自然、细节丰富的高质量视频。
   - 模型：`happyhorse-1.0-i2v`, `happyhorse-1.1-i2v`
@@ -155,10 +161,14 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`happyhorse-1.0-video-edit`
 - [PixVerse C1](groups/pixverse-c1-market-place.json) — 由爱诗科技提供的PixVerse C系列视频大模型API服务。
   - 模型：`pixverse/pixverse-c1-it2v`, `pixverse/pixverse-c1-kf2v`, `pixverse/pixverse-c1-r2v`, `pixverse/pixverse-c1-t2v`
+- [PixVerse Capabilities](groups/pixverse-capability-market-place.json) — 由爱诗科技提供的视频原子能力大模型API服务。
+  - 模型：`pixverse/pixverse-lipsync`, `pixverse/pixverse-motioncontrol`, `pixverse/pixverse-upscale`
 - [PixVerse V5.6](groups/pixverse-market-place.json) — 由爱诗科技提供的PixVerse V系列视频大模型API服务。
   - 模型：`pixverse/pixverse-v5.6-it2v`, `pixverse/pixverse-v5.6-kf2v`, `pixverse/pixverse-v5.6-r2v`, `pixverse/pixverse-v5.6-t2v`
 - [PixVerse V6](groups/pixverse-v6-market-place.json) — 由爱诗科技提供的PixVerse V系列视频大模型API服务。
   - 模型：`pixverse/pixverse-v6-it2v`, `pixverse/pixverse-v6-kf2v`, `pixverse/pixverse-v6-r2v`, `pixverse/pixverse-v6-t2v`
+- [Vidu AI生视频](groups/vidu-models-market-place.json) — 由生数科技提供Vidu系列视频生成API服务，电影级画质、一致性保持、精准可控。
+  - 模型：`vidu/viduq2_reference2video`, `vidu/viduq2_text2video`, `vidu/viduq2-pro_img2video`, `vidu/viduq2-pro_reference2video`, `vidu/viduq2-pro_start-end2video`, `vidu/viduq2-pro-fast_img2video`, `vidu/viduq2-turbo_img2video`, `vidu/viduq2-turbo_start-end2video`, `vidu/viduq3_reference2video`, `vidu/viduq3-ad_reference2video`, `vidu/viduq3-drama_reference2video`, `vidu/viduq3-mix_reference2video`, `vidu/viduq3-pro_img2video`, `vidu/viduq3-pro_start-end2video`, `vidu/viduq3-pro_text2video`, `vidu/viduq3-pro-fast_img2video`, `vidu/viduq3-turbo_img2video`, `vidu/viduq3-turbo_reference2video`, `vidu/viduq3-turbo_start-end2video`, `vidu/viduq3-turbo_text2video`
 - [Wan-I2V](groups/wan-image-to-video.json) — 图片生成视频内容，稳定保持图像主体、风格和文字等细节信息
   - 模型：`wan2.2-animate-mix`, `wan2.2-animate-move`, `wan2.2-i2v-flash`, `wan2.2-i2v-plus`, `wan2.2-kf2v-flash`, `wan2.2-s2v`, `wan2.2-s2v-detect`, `wan2.5-i2v-preview`, `wan2.6-i2v`, `wan2.6-i2v-flash`, `wan2.7-i2v`, `wanx2.1-i2v-plus`, `wanx2.1-i2v-turbo`, `wanx2.1-kf2v-plus`
 - [Wan-R2V](groups/wan-reference-to-video.json) — 参考视频中的人或物，精准保持形象和声音，支持多参考合拍
@@ -287,7 +297,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [语音识别热词](groups/speech-biasing.json) — 热词是指用户可以预先定义的一组特定词汇或短语，这些词汇或短语在识别、翻译过程中会被赋予更高的优先级。针对您的特定业务领域，如果有部分词汇的语音识别、翻译效果不够好，可以将这些关键词或短语添加为热词进行…
   - 模型：`speech-biasing`
 
-## 视觉理解 `VU` — 8 个家族
+## 视觉理解 `VU` — 9 个家族
 
 - [GUI-Plus](groups/gui-plus.json) — GUI系列图形界面交互基础模型，针对手机端与电脑端图形界面理解与交互任务，性能优于开源版同类GUI模型。全面升级跨平台界面理解与多步任务规划，支持跨应用复杂任务；具备精细化动作执行与多角色多智能体协作…
   - 模型：`gui-plus`
@@ -295,6 +305,8 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen-vl-max`
 - [Qwen-VL-OCR](groups/qwen-vl-ocr.json) — Qwen-VL-OCR，即基于Qwen-VL训练的OCR识别大模型。通过统一模型的方式聚合多种图文识别、解析、处理类任务，提供强大的图文识别能力。
   - 模型：`qwen-vl-ocr`, `qwen-vl-ocr-1028`, `qwen-vl-ocr-latest`
+- [Qwen-VL-Plus](groups/qwen-vl-plus.json) — Qwen-VL-Plus，即千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。在广泛的视觉任务上提供卓越的性能。
+  - 模型：`qwen-vl-plus`
 - [Qwen3-VL-Flash](groups/qwen3-vl-flash.json) — Qwen3系列小尺寸视觉理解模型，实现思考模式和非思考模式的有效融合，效果优于开源版Qwen3-VL-30B-A3B，响应速度快。全面升级图像/视频理解，支持长视频长文档等超长上下文、空间感知与万物识…
   - 模型：`qwen3-vl-flash`
 - [Qwen3-VL-Plus](groups/qwen3-vl-plus.json) — Qwen3系列视觉理解模型，实现思考模式和非思考模式的有效融合，视觉智能体能力在OS World等公开测试集上达到世界顶尖水平。此版本在视觉coding、空间感知、多模态思考等方向全面升级；视觉感知与…
@@ -380,11 +392,6 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 ## 翻译 `TR` — 2 个家族
 
 - [Qwen-Embedding](groups/qwen-embedding.json) — 基于Qwen模型基座训练的多语言文本统一向量模型，文本检索、聚类、分类性能大幅提升，多语言支持，适用于向量检索、向量化等等场景，可搭配检索增强、文档处理场景使用，支持64~2048维用户自定义向量维度…
-  - 模型：`text-embedding-async-v1`, `text-embedding-async-v2`, `text-embedding-v1`, `text-embedding-v2`, `text-embedding-v3`, `text-embedding-v4`
+  - 模型：`qwen3.7-text-embedding`, `text-embedding-async-v1`, `text-embedding-async-v2`, `text-embedding-v1`, `text-embedding-v2`, `text-embedding-v3`, `text-embedding-v4`
 - [Qwen-Rerank](groups/qwen-rerank.json) — 基于Qwen LLM底座训练的文本排序模型，对输入的Query和候选Docs进行相关性排序，支持100+语种和长文本输入，适用于文本检索、RAG等场景，效果对齐Qwen家族开源Rerank系列模型。
   - 模型：`gte-rerank-v2`, `qwen3-rerank`, `qwen3-vl-rerank`
-
-## 3D 生成 `3D-generation` — 1 个家族
-
-- [Tripo](groups/tripo-models-market-place.json) — AI驱动的3D通用大模型Tripo，支持文本或图片输入，数秒内一键生成高质量3D模型。
-  - 模型：`Tripo/Tripo-H3.1`, `Tripo/Tripo-P1.0`

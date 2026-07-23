@@ -4,16 +4,18 @@
 
 ## **步骤一：订阅 Token Plan 团队版**
 
-访问 [Token Plan 团队版购买页面](https://common-buy.aliyun.com/token-plan/)，选择坐席类型、数量和订阅周期（按月或按年）并完成订阅，主账号和 RAM 账号均可订阅。
+访问 [Token Plan 团队版购买页面](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)，选择套餐档位和订阅周期并完成订阅，主账号和 RAM 账号均可订阅。
 
-购买须知：
-
--   RAM 子账号订阅前，需主账号在 RAM 控制台授予 AliyunBailianFullAccess 权限。
+-   **RAM 用户授权**：RAM 用户使用 Token Plan 前，需由主账号完成以下授权：
     
+    1.  在 [RAM 控制台](https://ram.console.aliyun.com/)为该 RAM 用户授予 `AliyunTokenPlanReadOnlyAccess`（只读）或 `AliyunTokenPlanFullAccess`（管理）系统策略，同时授予 `AliyunBSSReadOnlyAccess` 系统策略。
+        
+    2.  在百炼控制台[账号管理](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/uac-admin/organization/members/list)页面，为该 RAM 用户分配管理员或订阅套餐权限。
+        
 
 ## **步骤二：获取 API Key 和 Base URL**
 
--   **API Key**：在 Token Plan 控制台的[成员管理页面](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/uac-admin/organization/members/list)或管理平台创建成员账号，分配席位后，为成员生成 API Key。详见[团队管理](https://help.aliyun.com/zh/model-studio/token-plan-team)。
+-   **API Key**：在 Token Plan 控制台的成员管理页面或管理平台创建成员账号，分配席位后，为成员生成 API Key。详见团队管理。
     
     API Key 使用须知：
     
@@ -53,6 +55,8 @@ Token Plan、Coding Plan 和按量付费的 API Key 与 Base URL 完全隔离，
 
 ## **步骤三：接入 AI 工具**
 
+将 API Key 和 Base URL 配置到 AI 工具中，即可开始使用。
+
 [**OpenClaw**开源、自托管个人 AI 助手](https://help.aliyun.com/zh/model-studio/openclaw)
 
 [**Hermes Agent**开源 AI 代理框架，内置自学习循环](https://help.aliyun.com/zh/model-studio/hermes-agent)
@@ -83,17 +87,10 @@ Token Plan、Coding Plan 和按量付费的 API Key 与 Base URL 完全隔离，
 
 [··· **更多工具**其他编程工具](https://help.aliyun.com/zh/model-studio/more-tools)
 
-## **可选：接入图像生成模型**
+## **可选：接入多模态生成模型**
 
-Token Plan 团队版支持图像生成模型（qwen-image-2.0、wan2.7-image 等）。图像生成模型使用独立的接口，需要通过 AI 工具的 Skill 或扩展机制接入。具体配置方法请参见[接入多模态生成模型](https://help.aliyun.com/zh/model-studio/token-plan-multimodal-gen)。
+Token Plan 团队版支持图像生成模型（qwen-image-2.0、wan2.7-image 等）。图像生成模型使用独立的接口，需要通过工具的 Skill 或扩展机制接入。详见[接入多模态生成模型](https://help.aliyun.com/zh/document_detail/6546109.html)。
 
-## **可选：工具调用**
+## **可选：接入 Harness 工具**
 
-通过接入工具调用，模型可以在对话中调用联网搜索、代码解释器等扩展能力。
-
--   qwen3.7-max、qwen3.7-plus、qwen3.6-plus、qwen3.6-flash：内置联网搜索、代码解释器、网页抓取、以图搜图、文搜图 5 个工具，通过 Responses API 直接调用。内置工具不额外收费，产生的 token 消耗统一从套餐 Credits 中抵扣。
-    
--   其他模型：通过 MCP 服务接入工具。
-    
-
-详细说明请参见[工具调用](https://help.aliyun.com/zh/model-studio/token-plan-tool)。
+部分模型支持通过 Responses API 调用联网搜索、代码解释器等扩展能力。详见[接入 Harness 工具](https://help.aliyun.com/zh/document_detail/6528494.html)。

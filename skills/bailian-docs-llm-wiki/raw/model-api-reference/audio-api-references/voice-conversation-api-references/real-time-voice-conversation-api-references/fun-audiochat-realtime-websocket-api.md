@@ -127,7 +127,7 @@ Qwen-Audio Realtime API 支持三种交互模式，通过 `session.update` 事�
 
 下图展示了 server\_vad 模式下的典型交互时序：
 
-服务端 客户端 服务端 客户端 会话初始化 语音输入 loop \[用户说话中\] loop \[用户说话中\] 响应生成 loop \[流式输出\] loop \[多轮交互\] connect session.created session.update session.updated input\_audio\_buffer.append input\_audio\_buffer.speech\_started input\_audio\_buffer.append conversation.item.input\_audio\_transcription.delta input\_audio\_buffer.speech\_stopped conversation.item.input\_audio\_transcription.completed commit audio buffer input\_audio\_buffer.committed conversation.item.created response.created response.output\_item.added conversation.item.created response.content\_part.added response.audio\_transcript.delta response.audio.delta response.audio\_transcript.done response.audio.done response.content\_part.done response.output\_item.done response.done
+![111](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7268354871/p1088432.svg)
 
 按时间顺序，客户端与服务端的交互流程如下：
 
@@ -148,7 +148,7 @@ Qwen-Audio Realtime API 支持三种交互模式，通过 `session.update` 事�
 
 模型播报期间，若 VAD 检测到用户开始说话，服务端会取消当前响应（返回 `response.done`，状态为 `cancelled`），随后开始新一轮语音输入和响应。下图展示了用户打断的交互时序：
 
-服务端 客户端 服务端 客户端 服务端正在流式输出 loop \[流式输出中\] 用户打断 新一轮语音输入 loop \[用户说话中\] 新一轮推理 response.audio.delta input\_audio\_buffer.append（用户开始说话） response.done（status=cancelled） input\_audio\_buffer.speech\_started input\_audio\_buffer.append conversation.item.input\_audio\_transcription.delta input\_audio\_buffer.speech\_stopped conversation.item.input\_audio\_transcription.completed commit audio buffer input\_audio\_buffer.committed conversation.item.created response.created
+![111](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7268354871/p1088435.svg)
 
 ### **smart\_turn 模式**
 
@@ -160,7 +160,7 @@ Qwen-Audio Realtime API 支持三种交互模式，通过 `session.update` 事�
 
 下图展示了 smart\_turn 模式下的典型交互时序：
 
-服务端 客户端 服务端 客户端 会话初始化 loop \[用户说话中\] 无效语音（可能出现 0~N 次） loop \[用户说话中\] loop \[用户说话中\] 响应生成 loop \[流式输出\] loop \[多轮交互\] connect session.created session.update session.updated input\_audio\_buffer.append conversation.item.ambient\_audio\_transcription.delta conversation.item.ambient\_audio\_transcription.completed input\_audio\_buffer.append input\_audio\_buffer.speech\_started input\_audio\_buffer.append conversation.item.input\_audio\_transcription.delta input\_audio\_buffer.speech\_stopped conversation.item.input\_audio\_transcription.completed commit audio buffer input\_audio\_buffer.committed conversation.item.created response.created response.output\_item.added conversation.item.created response.content\_part.added response.audio\_transcript.delta response.audio.delta response.audio\_transcript.done response.audio.done response.content\_part.done response.output\_item.done response.done
+![111](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7268354871/p1088441.svg)
 
 与 server\_vad 模式的主要区别：
 
@@ -175,13 +175,13 @@ Qwen-Audio Realtime API 支持三种交互模式，通过 `session.update` 事�
 
 与 server\_vad 模式的打断处理基本一致。下图展示了用户打断的交互时序：
 
-服务端 客户端 服务端 客户端 服务端正在流式输出 loop \[流式输出中\] 用户打断 新一轮语音输入 loop \[用户说话中\] 新一轮推理 response.audio.delta input\_audio\_buffer.append（用户开始说话） response.done（status=cancelled） input\_audio\_buffer.speech\_started input\_audio\_buffer.append conversation.item.input\_audio\_transcription.delta conversation.item.input\_audio\_transcription.completed input\_audio\_buffer.speech\_stopped commit audio buffer input\_audio\_buffer.committed conversation.item.created response.created
+![111](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7268354871/p1088443.svg)
 
 ## **无效轮次**
 
 已判定有效的语音可能被撤回（`input_audio_buffer.speech_stopped` 返回 `reason=turn_invalid`），此时不触发推理，客户端应继续发送音频等待下一轮有效语音。下图展示了无效轮次的交互时序：
 
-服务端 客户端 服务端 客户端 loop \[用户说话中\] loop \[用户说话中\] 轮次无效 继续发送音频，等待下一轮 input\_audio\_buffer.append input\_audio\_buffer.speech\_started input\_audio\_buffer.append conversation.item.input\_audio\_transcription.delta input\_audio\_buffer.speech\_stopped（reason=turn\_invalid）
+![111](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7268354871/p1088444.svg)
 
 ### **说话人增强配置流程**
 
@@ -216,7 +216,7 @@ Qwen-Audio Realtime API 支持三种交互模式，通过 `session.update` 事�
 
 下图展示了 push-to-talk 模式下的典型交互时序：
 
-服务端 客户端 服务端 客户端 会话初始化 语音输入 loop \[用户说话中\] 响应生成 loop \[流式输出\] loop \[多轮交互\] connect session.created session.update session.updated input\_audio\_buffer.append conversation.item.input\_audio\_transcription.delta input\_audio\_buffer.commit（用户松开按键） conversation.item.input\_audio\_transcription.completed input\_audio\_buffer.committed conversation.item.created response.create（手动触发推理） response.created response.output\_item.added conversation.item.created response.content\_part.added response.audio\_transcript.delta response.audio.delta response.audio\_transcript.done response.audio.done response.content\_part.done response.output\_item.done response.done
+![111](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7268354871/p1088447.svg)
 
 按时间顺序，客户端与服务端的交互流程如下：
 
@@ -233,7 +233,7 @@ Qwen-Audio Realtime API 支持三种交互模式，通过 `session.update` 事�
 
 客户端发送 `response.cancel` 取消当前响应，服务端返回 `response.done`（状态为 `cancelled`，原因为 `client_cancelled`）。下图展示了用户打断的交互时序：
 
-服务端 客户端 服务端 客户端 服务端正在流式输出 loop \[流式输出中\] 用户打断 新一轮语音输入 loop \[用户说话中\] 新一轮推理 response.audio\_transcript.delta response.audio.delta response.cancel response.done（status=cancelled, reason=client\_cancelled） input\_audio\_buffer.append conversation.item.input\_audio\_transcription.delta input\_audio\_buffer.commit conversation.item.input\_audio\_transcription.completed input\_audio\_buffer.committed conversation.item.created response.create response.created
+![111](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7268354871/p1088449.svg)
 
 ## **各模式操作约束**
 

@@ -14,9 +14,6 @@
       "description": "MiniMax 语音大模型能够根据上下文，智能预测文本的情绪、语调等信息，并生成超自然、高保真、个性化的语音。在社交、播客、有声书、新闻资讯、教育、数字人等多种场景中展现出强大的实力。",
       "features": [],
       "provider": "mini-max",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "MiniMax/speech-2.8-turbo",
       "iconUrl": "",
       "prices": [
@@ -60,7 +57,6 @@
       "maxInputTokens": 10000,
       "inferenceProvider": "mini-max",
       "name": "speech-2.8-turbo",
-      "predictConfig": [],
       "samples": {
         "dashscope": {
           "default": {
@@ -82,9 +78,6 @@
       "description": "MiniMax 语音大模型能够根据上下文，智能预测文本的情绪、语调等信息，并生成超自然、高保真、个性化的语音。在社交、播客、有声书、新闻资讯、教育、数字人等多种场景中展现出强大的实力。",
       "features": [],
       "provider": "mini-max",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "MiniMax/speech-2.8-hd",
       "iconUrl": "",
       "prices": [
@@ -128,7 +121,6 @@
       "maxInputTokens": 10000,
       "inferenceProvider": "mini-max",
       "name": "speech-2.8-hd",
-      "predictConfig": [],
       "samples": {
         "dashscope": {
           "default": {
@@ -150,9 +142,6 @@
       "description": "MiniMax 语音大模型能够根据上下文，智能预测文本的情绪、语调等信息，并生成超自然、高保真、个性化的语音。在社交、播客、有声书、新闻资讯、教育、数字人等多种场景中展现出强大的实力。",
       "features": [],
       "provider": "mini-max",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "MiniMax/speech-02-turbo",
       "iconUrl": "",
       "prices": [
@@ -196,7 +185,6 @@
       "maxInputTokens": 10000,
       "inferenceProvider": "mini-max",
       "name": "speech-02-turbo",
-      "predictConfig": [],
       "samples": {
         "dashscope": {
           "default": {
@@ -218,9 +206,6 @@
       "description": "MiniMax 语音大模型能够根据上下文，智能预测文本的情绪、语调等信息，并生成超自然、高保真、个性化的语音。在社交、播客、有声书、新闻资讯、教育、数字人等多种场景中展现出强大的实力。",
       "features": [],
       "provider": "mini-max",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "MiniMax/speech-02-hd",
       "iconUrl": "",
       "prices": [
@@ -264,7 +249,6 @@
       "maxInputTokens": 10000,
       "inferenceProvider": "mini-max",
       "name": "speech-02-hd",
-      "predictConfig": [],
       "samples": {
         "dashscope": {
           "default": {

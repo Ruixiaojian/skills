@@ -72,33 +72,6 @@
       "inferenceProvider": "vanchin",
       "name": "vanchin/deepseek-v4-pro",
       "docUrl": "https://help.aliyun.com/document_detail/3027089.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "openai": {
           "completionsAPI": {
@@ -181,49 +154,6 @@
       "inferenceProvider": "vanchin",
       "name": "Vanchin/DeepSeek-V3.2-think",
       "docUrl": "https://help.aliyun.com/document_detail/3027089.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.95,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.6,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        },
-        {
-          "name": "enable_thinking",
-          "key": "enable_thinking",
-          "default": false,
-          "tip": "推理模式"
-        },
-        {
-          "name": "thinking_budget",
-          "key": "thinking_budget",
-          "default": 4000,
-          "tip": "思维链的最大输出tokens数量",
-          "range": [
-            1,
-            32768
-          ]
-        }
-      ],
       "samples": {
         "openai": {
           "completionsAPI": {
@@ -304,49 +234,6 @@
       "inferenceProvider": "vanchin",
       "name": "Vanchin/DeepSeek-V3.1-Terminus",
       "docUrl": "https://help.aliyun.com/document_detail/3027089.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.95,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.6,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        },
-        {
-          "name": "enable_thinking",
-          "key": "enable_thinking",
-          "default": false,
-          "tip": "推理模式"
-        },
-        {
-          "name": "thinking_budget",
-          "key": "thinking_budget",
-          "default": 4000,
-          "tip": "思维链的最大输出tokens数量",
-          "range": [
-            1,
-            32768
-          ]
-        }
-      ],
       "samples": {
         "openai": {
           "completionsAPI": {
@@ -428,33 +315,6 @@
       "inferenceProvider": "vanchin",
       "name": "Vanchin/DeepSeek-V3",
       "docUrl": "https://help.aliyun.com/document_detail/3027089.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "openai": {
           "completionsAPI": {
@@ -536,33 +396,6 @@
       "inferenceProvider": "vanchin",
       "name": "Vanchin/DeepSeek-R1",
       "docUrl": "https://help.aliyun.com/document_detail/3027089.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "openai": {
           "completionsAPI": {
@@ -636,33 +469,6 @@
       "maxInputTokens": 8192,
       "inferenceProvider": "vanchin",
       "name": "Vanchin/DeepSeek-OCR",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "openai": {
           "completionsAPI": {

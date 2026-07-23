@@ -1,8 +1,30 @@
 # 更多工具
 
-除已列出的工具外，阿里云百炼还支持接入兼容 OpenAI / Anthropic API 协议且支持自定义服务端点的第三方编程工具。可通过按量计费、Coding Plan 或 Token Plan 团队版接入。
+除已列出的工具外，阿里云百炼还支持接入兼容 OpenAI / Anthropic API 协议且支持自定义服务端点的第三方编程工具。可通过按量计费、Coding Plan、Token Plan 个人版或 Token Plan 团队版接入。
 
 ## **配置接入凭证**
+
+### Token Plan 个人版
+
+**API 协议**
+
+**Base URL**
+
+**API Key**
+
+**支持模型**
+
+OpenAI
+
+`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
+
+Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)
+
+[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)（仅文本生成类）
+
+Anthropic
+
+`https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic`
 
 ### Token Plan 团队版
 
@@ -97,7 +119,7 @@ Trae 支持接入自定义模型，无需安装插件即可直接配置上述任
 
 ## **不支持的工具类型**
 
-Token Plan 团队版和 Coding Plan 仅限在 AI 编程工具和 OpenClaw 类型 Agent 中使用，以下类型的工具**不支持**接入：
+Token Plan 个人版、Token Plan 团队版和 Coding Plan 仅限在 AI 编程工具和 OpenClaw 类型 Agent 中使用，以下类型的工具**不支持**接入：
 
 -   **工作流/自动化平台**：如 Dify、n8n、Coze 等。
     

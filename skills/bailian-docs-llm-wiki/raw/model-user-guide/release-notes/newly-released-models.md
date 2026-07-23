@@ -14,6 +14,56 @@
 
 **功能说明**
 
+图像生成
+
+2026-07-21
+
+中国内地
+
+qwen-image-3.0-pro
+
+Qwen-Image-3.0-Pro 系列模型邀测上线，支持长文本输入与图中图密集排版，能够一次性精准生成报纸、分镜、菜单及试卷等复杂版面；具备10像素小字精准渲染能力，生动还原微表情、毛孔与发丝等摄影级细节，并支持 12 国语言、多种字体及主流网页、游戏界面的高保真仿真。[千问-图像生成与编辑3.0](https://help.aliyun.com/zh/model-studio/qwen-image-generation-and-editing-api-reference)
+
+文生文与视觉理解
+
+2026-07-17
+
+中国内地
+
+kimi/kimi-k3
+
+Kimi K3 是 Kimi 迄今能力最强的旗舰模型，拥有 2.8 万亿参数，原生支持视觉理解，并拥有 100 万 token 上下文窗口，面向长程编程、知识工作和推理等前沿智能场景而设计。[Kimi-月之暗面](https://help.aliyun.com/zh/model-studio/kimi-api-by-moonshot-ai)
+
+视频对口型
+
+2026-07-15
+
+中国内地
+
+pixverse/pixverse-lipsync
+
+爱诗视频对口型模型，输入视频和音频，生成口型与音频同步的视频。
+
+视频动作模仿
+
+2026-07-15
+
+中国内地
+
+pixverse/pixverse-motioncontrol
+
+爱诗视频动作模仿模型，输入视频和参考动作视频，生成模仿参考动作的视频。
+
+视频超清
+
+2026-07-15
+
+中国内地
+
+pixverse/pixverse-upscale
+
+爱诗视频超清模型，将低分辨率视频提升至更高分辨率。
+
 实时多模态
 
 2026-07-14
@@ -32,7 +82,7 @@ Qwen-Audio端到端实时语音大模型兼顾语音推理能力与双工对话�
 
 qwen-audio-3.0-tts-plus、qwen-audio-3.0-tts-flash
 
-Qwen-Audio-TTS语音合成模型上线，新增更多小语种和中文方言支持，增强了指令遵循与细粒度标签控制能力，音质和表现力全面提升。其中 Plus 版本面向高品质专业场景，Flash 版本面向低延迟实时交互场景，首包延时控制在 200ms 以内。[实时语音合成](https://help.aliyun.com/zh/model-studio/realtime-tts-user-guide)
+Qwen-Audio-TTS语音合成模型上线，新增更多小语种和中文方言支持，增强了指令遵循与细粒度标签控制能力，音质和表现力全面提升。其中 Plus 版本面向高品质专业场景，Flash 版本面向低延迟实时交互场景。[实时语音合成](https://help.aliyun.com/zh/model-studio/realtime-tts-user-guide)
 
 文生图/参考生图
 
@@ -2898,6 +2948,16 @@ qwen1.5-110b-chat
 
 **功能说明**
 
+图像生成
+
+2026-07-21
+
+国际
+
+qwen-image-3.0-pro
+
+Qwen-Image-3.0-Pro 系列模型邀测上线，支持长文本输入与图中图密集排版，能够一次性精准生成报纸、分镜、菜单及试卷等复杂版面；具备10像素小字精准渲染能力，生动还原微表情、毛孔与发丝等摄影级细节，并支持 12 国语言、多种字体及主流网页、游戏界面的高保真仿真。[千问-图像生成与编辑3.0](https://help.aliyun.com/zh/model-studio/qwen-image-generation-and-editing-api-reference)
+
 语音合成
 
 2026-07-14
@@ -2906,7 +2966,7 @@ qwen1.5-110b-chat
 
 qwen-audio-3.0-tts-plus、qwen-audio-3.0-tts-flash
 
-Qwen-Audio-TTS语音合成模型上线，新增更多小语种和中文方言支持，增强了指令遵循与细粒度标签控制能力，音质和表现力全面提升。其中 Plus 版本面向高品质专业场景，Flash 版本面向低延迟实时交互场景，首包延时控制在 200ms 以内。[实时语音合成](https://help.aliyun.com/zh/model-studio/realtime-tts-user-guide)
+Qwen-Audio-TTS语音合成模型上线，新增更多小语种和中文方言支持，增强了指令遵循与细粒度标签控制能力，音质和表现力全面提升。其中 Plus 版本面向高品质专业场景，Flash 版本面向低延迟实时交互场景。[实时语音合成](https://help.aliyun.com/zh/model-studio/realtime-tts-user-guide)
 
 参考生视频
 
@@ -2926,7 +2986,7 @@ wan2.7-r2v-2026-06-12
 
 kimi-k2.7-code
 
-Kimi K2.7 Code 模型新加坡地域上线。以编码为中心的智能体模型，专为长程软件工程任务优化，仅支持思考模式。[](#)
+Kimi K2.7 Code 模型新加坡地域上线。以编码为中心的智能体模型，专为长程软件工程任务优化，仅支持思考模式。[Kimi-阿里云](https://help.aliyun.com/zh/model-studio/kimi-api)
 
 图像生成
 
@@ -3821,6 +3881,16 @@ qwen3-asr-flash-realtime、qwen3-asr-flash-realtime-2025-10-27
 **模型规格**
 
 **功能说明**
+
+推理模型
+
+2026-07-17
+
+美国
+
+qwen3.6-flash-us
+
+Qwen3.6 原生视觉语言 Flash 系列模型，在整体性能上较 Qwen3.5-Flash 显著提升。重点增强了智能体编程能力（在多项代码智能体基准上大幅超越前代）、数学推理和代码推理能力；在视觉能力方面，空间智能显著增强，其中物体定位和目标检测表现尤为突出。
 
 文生文
 
