@@ -4,7 +4,7 @@
 
 **说明**
 
-本文介绍的是百炼按量付费的 API Key。如果您使用的是 Token Plan 或 Coding Plan，请使用对应的专属 API Key（以`sk-sp-`开头），获取方式请参见[Token Plan API Key](https://help.aliyun.com/zh/model-studio/token-plan-quickstart#tp04-h-step2)和[Coding Plan 的 API Key](https://help.aliyun.com/zh/model-studio/coding-plan#2531c37fd64f9)。
+本文介绍的是百炼按量付费的 API Key。如果您使用的是 Token Plan 或 Coding Plan，请使用对应的专属 API Key（以`sk-sp-`开头），获取方式请参见[Token Plan API Key](https://help.aliyun.com/zh/model-studio/token-plan-team-quickstart#tp04-h-step2)和[Coding Plan 的 API Key](https://help.aliyun.com/zh/model-studio/coding-plan#2531c37fd64f9)。
 
 ## **获取API Key**
 

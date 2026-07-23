@@ -1,81 +1,54 @@
 # start using
 
-阿里云百炼提供零代码方式快速构建基于私有知识的问答应用，同时持续迭代应用、[知识库](../concepts/knowledge-base.md)、[工作流](../concepts/workflow.md)等核心能力。本页汇总从创建第一个[智能体应用](../concepts/agent-application.md)到跟踪功能动态所需的关键信息，帮助开发者快速上手并了解平台最新能力。
+阿里云百炼平台提供低门槛、高灵活性的 AI 应用构建能力，开发者可通过零代码配置或 API 集成快速启动智能体、工作流及高代码应用。核心路径包括：选择模型与 Prompt 定义角色、接入知识库增强领域理解、配置技能与参数后发布应用。所有操作均在控制台可视化完成，亦支持全链路 API 调用。
 
-## 快速构建私有知识问答应用
+## 支持的模型/功能
 
-借助百炼的[智能体应用](../concepts/agent-application.md)构建能力，可在约 5 分钟内零代码完成一个能回答私有领域问题的大模型问答应用，完整流程见 [0代码构建私有知识问答应用](../../raw/application-user-guide/start-using/build-knowledge-base-qa-assistant-without-coding.md)。整体分为三步：
+- **模型支持**：  
+  - 智能体应用支持 `qwen-max`、`qwq-plus`、`qwq-32b`、`qwen-vl-plus-latest`、`qwen-vl-plus-2025-01-25` 及 DeepSeek 系列模型（如 DeepSeek-V2、DeepSeek-Coder）；  
+  - 工作流应用支持 `qwq-plus`、`qwq-32b`、DeepSeek 系列及[多模态](../concepts/multi-modal.md)生成节点（图像/视频/音频生成）；  
+  - 知识库向量化默认使用 `text-embedding-v4`，兼容 `v3`，图片解析可选 `qwen-vl-max` 或 `qwen-vl-plus` [原文标题](../../raw/application-user-guide/start-using/application-release-notes.md)。  
+- **核心功能**：  
+  - 零代码构建私有知识问答应用，含 Prompt 设计、欢迎语/预设问题配置、知识库绑定与发布全流程 [原文标题](../../raw/application-user-guide/start-using/build-knowledge-base-qa-assistant-without-coding.md)；  
+  - 知识库类型覆盖**文档**、**数据**（RDS/DMS/自建 MySQL）、**图片**、**音视频**四类，支持 HTML、Excel、PDF、DOCX、MP4、MP3 等格式；  
+  - 新版智能体应用（Agent 2.0）统一知识库与 MCP 为工具，支持自主规划调用顺序与过程可视化 [原文标题](../../raw/application-user-guide/start-using/application-release-notes.md)。
 
-1. **构建第一个[智能体应用](../concepts/agent-application.md)（约 1 分钟）**：在应用管理页面创建空白[智能体应用](../concepts/agent-application.md)，选择大语言模型（建议千问-Max），编写 System Prompt 定义角色与任务，并配置欢迎语和预设问题。此阶段由于缺少私有知识，回答较为笼统甚至可能无中生有。
-2. **构建[知识库](../concepts/knowledge-base.md)（约 3 分钟）**：在数据连接页面创建文件类型连接器并上传知识文档（如 docx），等待 1~6 分钟解析完成；随后在[知识库](../concepts/knowledge-base.md)页面创建标准版知识库，选择默认类目与智能切分策略，等待 1~2 分钟完成解析。智能切分为系统预置策略，经[评测](../concepts/evaluation.md)对多数文档可获得最佳检索效果。
-3. **添加知识库并发布应用（约 1 分钟）**：进入应用配置界面，通过「技能 > 知识库」旁的「+」按钮为应用挂载知识库，验证检索增强效果后点击「发布」。
+> **注意**：文档 1 中提及“建议选择千问-Max 模型”，但文档 2 明确指出智能体应用已支持 `qwq-plus`、`qwen-vl-plus-latest` 等更多模型，且 `qwq` 系列具备更强推理能力（数学/代码/IFEval 指标达 DeepSeek-R1 满血版水平）。实际选型应以控制台实时可用模型为准，旧文档中“仅推荐千问-Max”的表述已过时。
 
-> **注意**：使用大模型会产生[计费](../concepts/billing.md)，百炼提供限时免费额度，可在模型广场查看；知识库服务自 2026 年 1 月 4 日起正式[计费](../concepts/billing.md)，费用由规格费用和模型调用费用两部分组成。
+## 关键参数
 
-## 支持的模型与功能
+- **知识库检索参数**：  
+  - `初步向量检索 TopK` 与 `初步关键词检索 TopK` 可手动调低，以减少送入排序模型的 [Token](../concepts/token.md) 量，显著降低模型调用费用 [原文标题](../../raw/application-user-guide/start-using/application-release-notes.md)；  
+  - 多知识库场景下支持按信息源重要性设置**权重**，系统优先召回高权重知识库内容；  
+  - 检索配置中可开启“[多模态](../concepts/multi-modal.md)回复增强”，启用后智能体可解析知识库内图表/图像并结合视觉信息生成回答。  
+- **应用级参数**：  
+  - System Prompt（角色定义）直接影响模型行为边界，需明确任务范围与输出约束；  
+  - “知识检索增强”开关启用后，可配置回答范围（如“仅基于知识库回答”）、是否展示引用来源等；  
+  - 工作流应用支持异步运行模式：请求中设置 `background=true`，立即返回 Task ID，后续通过 [任务中心](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/app-task-center) 查询结果。
 
-百炼应用支持多种模型系列，详见 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)：
+## 使用方式
 
-- **千问系列**：千问-Max 为构建问答应用的推荐模型；[智能体应用](../concepts/agent-application.md)与[工作流](../concepts/workflow.md)应用均支持 QwQ 系列（具备强推理能力，先输出思考过程再输出回答，数学/代码能力达 DeepSeek-R1 满血版水平，但不包括插件、流程、音视频交互能力）；视觉模型支持 qwen-vl-plus-latest、qwen-vl-plus-0125（Qwen2.5-VL 系列，128k 上下文）以及 qwen-vl-max/plus 用于图片解析。
-- **DeepSeek 系列**：[智能体应用](../concepts/agent-application.md)与[工作流](../concepts/workflow.md)应用均可集成 DeepSeek 系列模型，结合知识库、长期记忆和 Prompt 模板构建私有知识问答应用。
-- **嵌入模型**：知识库支持 text-embedding-v3、v4 模型，v4 在语种支持、代码片段向量化效果和向量维度选择上较 v3 全面升级。
+1. **零代码快速启动（推荐入门）**：  
+   - 访问 [应用管理](https://bailian.console.aliyun.com/?tab=app#/app-center) → 创建智能体应用 → 选择模型 → 设置 System Prompt → 配置欢迎语与预设问题 → 发布前绑定知识库（支持直接上传文件创建，无需预导入数据连接器）[原文标题](../../raw/application-user-guide/start-using/build-knowledge-base-qa-assistant-without-coding.md)；  
+   - 知识库创建流程已简化：进入 [知识库](https://bailian.console.aliyun.com/?tab=app#/knowledge-base) 页面 → 选择类型（文档/数据/图片）→ 直接上传文件或配置数据源 → 启用“智能切分” → 完成。  
 
-## 应用类型与关键能力
+2. **API 集成调用**：  
+   - 同步调用：使用 Responses API（兼容 OpenAI 格式），适用于实时交互场景；  
+   - 异步调用：设置 `background=true`，通过 Task ID 轮询结果；  
+   - 知识库管理：支持 `CreateIndex`（含音视频）、`UpdateIndex`、`GetIndexMonitor` 等 API；  
+   - [长期记忆](../concepts/long-term-memory.md)：新版[长期记忆](../concepts/long-term-memory.md) API 支持多应用共享、自动信息提取与语义检索 [原文标题](../../raw/application-user-guide/start-using/application-release-notes.md)。
 
-百炼提供多种应用类型以适配不同场景：
+## 限制和注意事项
 
-- **[智能体应用](../concepts/agent-application.md)**：2025 年 12 月 26 日上线新版[智能体应用](../concepts/agent-application.md)（Agent 2.0），将知识库、MCP 统一为工具，由智能体自主规划调用时机与顺序，并完整展示模型思考与工具调用全过程。文件问答支持全文引用、切片检索和自定义处理三种模式。
-- **工作流应用**：支持批量节点、[多模态](../concepts/multimodal.md)生成节点（生成图像/视频/音频）、异步运行模式（文本生成模式下后台执行并返回 Task ID）、Dify 工作流一键导入、[多模态](../concepts/multimodal.md)数据节点（文档/图片/视频/音频解析）等。
-- **高代码应用**：2025 年 9 月 24 日上线，支持基于 Python 项目结构部署 AI 后端服务，内置自动化运维、可观测性及日志服务等企业级能力。
-- **MCP 服务**：2025 年 4 月 9 日新增 MCP 市场与 MCP 管理功能，可开通预置 MCP 服务或部署自定义 MCP 服务；8 月 13 日新增外部调用功能，支持一键配置到第三方应用或通过 MCP SDK 调用。
-
-## 知识库核心能力
-
-知识库是构建私有知识问答应用的关键，能力持续扩展：
-
-- **类型与数据源**：分为文档、数据、图片三类；结构化知识库数据源支持云数据库 RDS、自建 MySQL、DMS；非结构化知识库支持导入 docx、pdf、Excel、离线 HTML，并支持自定义 metadata 与标签分类。
-- **音视频知识库**：2025 年 12 月 25 日上线，支持上传音视频文件实现智能检索问答（直播回放问答、课程助教、客服质检）与二次创作（脚本、字幕、剪辑建议）；2026 年 1 月 30 日支持通过 API 创建音视频知识库。
-- **检索与调优**：知识库节点支持必定调用、智能调用和旧版调用三种方式；支持权重设置（多知识库按重要性召回）；支持调整初步向量检索 TopK 和关键词检索 TopK 以降低成本；提供在线调试面板实时验证召回效果；支持图文检索与[多模态](../concepts/multimodal.md)回复增强。
-- **监控与管理 API**：2026 年 1 月新增 GetIndexMonitor（监控数据）、UpdateIndex（更新配置）等 API，并支持子账号开通知识库与基于标签的分账管理。
-
-## 应用调用与发布
-
-- **API 调用**：2025 年 11 月 3 日起支持通过 Responses API 调用百炼应用，提供同步调用 API（实时交互，可复用 OpenAI 代码库）与[异步调用](../concepts/async-invocation.md) API（设置 `background=true` 立即返回任务 ID）。调用工作流和[智能体编排](../concepts/agent-orchestration.md)应用时需传入自定义参数。
-- **发布渠道**：支持微信、钉钉分享渠道（创建钉钉 AI 机器人或微信公众号 AI 机器人）；支持音视频实时互动（将图文对话应用转为音视频实时互动应用，提供 H5/APP 调试窗口，通过音视频 SDK 发布到 WEB/iOS/Android）。
-- **应用观测**：2024 年 10 月 24 日新增应用观测能力，支持端到端查看应用处理流程；2026 年 2 月 6 日上线新版应用[评测](../concepts/evaluation.md)，支持智能体、工作流和自定义三种类型[评测](../concepts/evaluation.md)集。
-- **长期记忆**：2026 年 1 月 31 日上线新版长期记忆与用户画像管理 API，支持多应用共享同一记忆库、自动提取关键信息、语义检索优化及完整用户画像管理。
-
-## 限制与注意事项
-
-- 知识库自 2026 年 1 月 4 日起正式[计费](../concepts/billing.md)，提供后付费（按量付费）和资源包两种方式，总费用由规格费用与模型调用费用组成，详情参见 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md) 中的[计费](../concepts/billing.md)公告。
-- 大模型调用产生[计费](../concepts/billing.md)，平台提供限时免费额度，可在模型广场查看各模型系列详情。
-- QwQ 系列模型在[智能体应用](../concepts/agent-application.md)中不支持插件、流程、音视频交互能力。
-- 文档解析耗时与文档大小相关，知识文档导入通常 1~6 分钟，知识库解析通常 1~2 分钟，需耐心等待。
-- [智能体编排](../concepts/agent-orchestration.md)应用已于 2025 年 8 月 12 日随工作流应用界面升级而下线，相关需求请使用新版智能体应用或工作流应用。
-- Assistant API 处于下线中状态，如需全代码开发高度定制化 RAG 应用请关注官方公告。
+- **计费变更**：知识库服务自 2026 年 1 月 4 日起正式计费，费用 = 规格费 + 模型调用费；支持后付费与 RAG 资源包（标准版/旗舰版）两种模式 [原文标题](../../raw/application-user-guide/start-using/application-release-notes.md)；  
+- **权限与隔离**：知识库支持子账号开通与标签分账，便于部门级成本归属；  
+- **调试与验证**：编辑智能体应用时，可使用内置**调试面板**在线调整知识库参数并实时验证召回效果；  
+- **模型能力边界**：QwQ 系列模型虽推理能力强，但当前不支持插件、流程编排及音视频交互能力（见文档 2 2026 年 4 月条目）；  
+- **文件处理限制**：非结构化知识库导入 Excel 时，若含复杂公式或宏，可能无法完整解析；音视频知识库依赖 ASR/OCR 能力，原始音画质量直接影响检索精度。
 
 ## 来源文档
 
 - [0代码构建私有知识问答应用](../../raw/application-user-guide/start-using/build-knowledge-base-qa-assistant-without-coding.md)
 - [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

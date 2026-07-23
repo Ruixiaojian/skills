@@ -56,33 +56,6 @@
       "name": "ViduQ3-Ad_reference2video",
       "docUrl": "https://help.aliyun.com/document_detail/3045891.html",
       "category": "Third-party",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -140,33 +113,6 @@
       "name": "ViduQ3-Drama_reference2video",
       "docUrl": "https://help.aliyun.com/document_detail/3045892.html",
       "category": "Third-party",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -230,33 +176,6 @@
       "name": "ViduQ3-Pro-fast_img2video",
       "docUrl": "https://help.aliyun.com/document_detail/3026198.html",
       "category": "Third-party",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -327,37 +246,6 @@
       "latestOnlineAt": "2026-03-26T13:47:00.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ3-Pro_img2video",
-      "predictConfig": [
-        {
-          "name": "清晰度",
-          "key": "resolution",
-          "default": "1080P"
-        },
-        {
-          "name": "视频时长",
-          "key": "duration",
-          "default": 5,
-          "range": [
-            1,
-            16
-          ]
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        },
-        {
-          "name": "生成音频",
-          "key": "audio",
-          "default": true
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -427,37 +315,6 @@
       "latestOnlineAt": "2026-03-26T13:45:57.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ3-Pro_text2video",
-      "predictConfig": [
-        {
-          "name": "清晰度",
-          "key": "resolution",
-          "default": "1080P"
-        },
-        {
-          "name": "视频时长",
-          "key": "duration",
-          "default": 5,
-          "range": [
-            1,
-            16
-          ]
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        },
-        {
-          "name": "生成音频",
-          "key": "audio",
-          "default": true
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -530,33 +387,6 @@
       "latestOnlineAt": "2026-03-26T13:46:33.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ3-Pro_start-end2video",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -627,37 +457,6 @@
       "latestOnlineAt": "2026-03-26T13:46:46.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ3-Turbo_img2video",
-      "predictConfig": [
-        {
-          "name": "清晰度",
-          "key": "resolution",
-          "default": "1080P"
-        },
-        {
-          "name": "视频时长",
-          "key": "duration",
-          "default": 5,
-          "range": [
-            1,
-            16
-          ]
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        },
-        {
-          "name": "生成音频",
-          "key": "audio",
-          "default": true
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -727,37 +526,6 @@
       "latestOnlineAt": "2026-03-26T13:46:51.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ3-Turbo_text2video",
-      "predictConfig": [
-        {
-          "name": "清晰度",
-          "key": "resolution",
-          "default": "1080P"
-        },
-        {
-          "name": "视频时长",
-          "key": "duration",
-          "default": 5,
-          "range": [
-            1,
-            16
-          ]
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        },
-        {
-          "name": "生成音频",
-          "key": "audio",
-          "default": true
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -830,33 +598,6 @@
       "latestOnlineAt": "2026-03-26T13:46:28.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ3-Turbo_start-end2video",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -927,32 +668,6 @@
       "latestOnlineAt": "2026-03-26T13:46:18.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ2-Pro_img2video",
-      "predictConfig": [
-        {
-          "name": "清晰度",
-          "key": "resolution",
-          "default": "1080P"
-        },
-        {
-          "name": "视频时长",
-          "key": "duration",
-          "default": 5,
-          "range": [
-            1,
-            10
-          ]
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1023,33 +738,6 @@
       "latestOnlineAt": "2026-03-26T13:46:02.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ2-Pro_start-end2video",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1121,32 +809,6 @@
       "latestOnlineAt": "2026-03-26T13:46:23.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ2-Pro_reference2video",
-      "predictConfig": [
-        {
-          "name": "清晰度",
-          "key": "resolution",
-          "default": "1080P"
-        },
-        {
-          "name": "视频时长",
-          "key": "duration",
-          "default": 5,
-          "range": [
-            1,
-            10
-          ]
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1217,32 +879,6 @@
       "latestOnlineAt": "2026-03-26T13:46:08.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ2-Turbo_img2video",
-      "predictConfig": [
-        {
-          "name": "清晰度",
-          "key": "resolution",
-          "default": "1080P"
-        },
-        {
-          "name": "视频时长",
-          "key": "duration",
-          "default": 5,
-          "range": [
-            1,
-            10
-          ]
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1312,32 +948,6 @@
       "latestOnlineAt": "2026-03-26T13:45:21.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ2_text2video",
-      "predictConfig": [
-        {
-          "name": "清晰度",
-          "key": "resolution",
-          "default": "1080P"
-        },
-        {
-          "name": "视频时长",
-          "key": "duration",
-          "default": 5,
-          "range": [
-            1,
-            10
-          ]
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1410,33 +1020,6 @@
       "latestOnlineAt": "2026-03-26T13:46:14.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ2-Turbo_start-end2video",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1507,32 +1090,6 @@
       "latestOnlineAt": "2026-03-26T13:45:51.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ2_reference2video",
-      "predictConfig": [
-        {
-          "name": "清晰度",
-          "key": "resolution",
-          "default": "1080P"
-        },
-        {
-          "name": "视频时长",
-          "key": "duration",
-          "default": 5,
-          "range": [
-            1,
-            10
-          ]
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1602,33 +1159,6 @@
       "latestOnlineAt": "2026-04-27T08:35:14.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ3_reference2video",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1698,33 +1228,6 @@
       "latestOnlineAt": "2026-04-27T08:33:07.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ3-Turbo_reference2video",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1788,33 +1291,6 @@
       "latestOnlineAt": "2026-04-28T02:40:03.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ3-mix_reference2video",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -1878,32 +1354,6 @@
       "latestOnlineAt": "2026-04-27T12:09:25.000+00:00",
       "inferenceProvider": "vidu",
       "name": "ViduQ2-Pro-fast_img2video",
-      "predictConfig": [
-        {
-          "name": "清晰度",
-          "key": "resolution",
-          "default": "1080P"
-        },
-        {
-          "name": "视频时长",
-          "key": "duration",
-          "default": 5,
-          "range": [
-            1,
-            10
-          ]
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {

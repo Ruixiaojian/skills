@@ -1,62 +1,48 @@
-# 检索增强生成（RAG）
+# 检索增强生成
 
-检索增强生成（Retrieval-Augmented Generation, RAG）是一种在大模型生成回答前，先从外部知识库检索语义相关内容、再将其与用户问题一起送入模型的技术。它为大模型补充私有数据和最新信息，从而显著提升在特定领域问题上的准确性、降低幻觉。
+检索增强生成（Retrieval-Augmented Generation，简称 RAG）是一种将大语言模型（LLM）与外部知识源动态结合的技术范式：在生成回答前，系统先根据用户查询语义检索相关知识片段，再将检索结果作为上下文注入模型提示（[prompt](../guides/prompt.md)），引导模型生成更准确、可溯源、时效性强的响应。
 
-## 在百炼平台的使用场景
+在百炼平台中，RAG 不是单一接口或模型，而是贯穿知识库、数据连接、智能体应用与框架集成的一套协同能力体系，其核心目标是让大模型“有据可依”，而非仅依赖参数内化知识。
 
-百炼把 RAG 拆成「建立索引 → 检索召回 → 生成答案」三个阶段，并在不同层面提供了对应能力：
+## 在百炼平台的不同场景中，这个概念如何使用
 
-- **云端知识库（控制台）**：进入知识库按「填写基础信息 → 配置数据来源 → 设置索引参数」三步建库，创建时选定类型（文档搜索 / 数据查询表格库 / 图片问答 / 音视频搜索，创建后不可更改），随后关联到智能体应用、工作流应用或外部应用。工作流应用中知识库节点须接在开始节点之后、大模型节点之前，并在大模型提示词中引用 `result` 变量。注意：知识库功能仅在中国站**华北2（北京）**地域可用。
-- **知识检索服务**：面向多知识库联合检索（最多 15 个），提供 Query 改写、混合检索（向量+关键词）、Rerank 排序的流水线。
-- **知识问答服务**：在检索基础上由大模型生成自然语言回答，提供**极速模式**（单轮检索+生成）与**多轮智能模式**（Agentic 多轮规划搜索），并支持文件预解析、拒答、防泄漏、多模态回复、引用来源等生成控制。
-- **应用场景接入**：围绕「RAG + 智能体应用」可将问答能力接入网站、企业微信、微信公众号、钉钉等渠道；也支持基于本地知识库构建 RAG 应用（检索在本地执行、生成调用通义千问 API），适合需要灵活切分与自定义嵌入模型的场景。
-- **框架集成**：LlamaIndex（Python）可构建云端知识库与 RAG 应用；Spring AI Alibaba（Java）可集成智能体/工作流应用并检索百炼知识库。
+- **知识库问答（/api/v2/apps/[knowledge](../api/knowledge.md)/chat）**：最典型的端到端 RAG 流程。平台自动完成「查询理解 → 多知识库联合检索（向量+关键词+重排）→ 工具调用（Retrieve）→ 上下文拼接 → LLM 生成」，支持 SSE [流式输出](streaming-output.md)，并返回 `docReferences` 等结构化溯源信息。  
+- **数据连接（Data Connection）**：为 RAG 提供多样化知识源。平台托管型（如 PDF/Excel）自动构建向量索引；流处理型（如 MySQL/OSS/语雀）则按需实时检索，实现“不入库、可检索”的轻量 RAG。二者均可在智能体或工作流中直接绑定为知识源。  
+- **智能体与工作流应用**：RAG 是知识增强的关键开关。可在应用配置中启用“必定调用知识库”，并设置召回数量、相似度阈值、权重等策略；也可通过 `knowledge_sources` 参数在 API 请求中动态指定知识库或数据连接器 ID。  
+- **框架集成（LlamaIndex / Spring AI Alibaba）**：面向开发者提供代码级 RAG 构建能力。LlamaIndex 封装云端索引构建与查询引擎；Spring AI Alibaba 提供 `DashScopeDocumentRetriever`，支持显式控制模型（如 `qwen-plus`）、检索参数（`top_k`, `similarity_cutoff`）及流式响应，适用于定制化 RAG 应用开发。  
+- **本地 RAG 应用（Python SDK）**：面向高级场景，支持完全自主的文档切分、本地嵌入模型（如 GTE）、自定义检索逻辑，适用于对数据主权、延迟或成本有强约束的私有化部署。
 
-## HTTP REST 接口
+> ⚠️ 注意：所有 RAG 能力均运行于华北2（北京）地域，且必须在业务空间（workspace）中完成知识库/数据连接器的创建与激活，否则请求将静默失败或返回空结果。
 
-除控制台外，百炼提供 DashScope 应用网关体系的两个 REST 接口，用 API Key Bearer 鉴权，Base URL 形如 `https://{workspaceId}.cn-beijing.maas.aliyuncs.com`：
+## 关键参数和配置
 
-| 接口 | 路径 | 说明 |
-| --- | --- | --- |
-| 知识检索 | `POST /api/v1/indices/knowledge/search` | 跨多个知识库联合语义检索，返回按相关性排序的切片，适合需自定义生成流程的场景 |
-| 知识问答 | `POST /api/v2/apps/knowledge/chat` | 基于知识库的智能问答，通过 SSE 流式返回规划、工具调用、生成三个阶段 |
+以下参数直接影响 RAG 效果与成本，建议按场景显式配置（默认值可能不满足精度要求）：
 
-默认用户维度 25 QPS。此外还有 `CreateIndex`、`Retrieve` 等 OpenAPI RPC 接口用于建库流程。
+| 参数名 | 说明 | 典型取值 | 所属层级 | 备注 |
+|--------|------|----------|----------|------|
+| `top_k` / `similarity_top_k` | 初步向量/关键词召回的切片数 | `10–50` | 检索层 | 值越大，重排 [Token](token.md) 消耗越高；混合检索时需兼顾两者 |
+| `max_retrieval_count` / `max_retrieved_nodes` | 最终送入 LLM 的上下文切片上限 | `3–10` | 检索层 | 直接影响生成质量与 [Token](token.md) 成本，推荐从 `5` 开始调优 |
+| `similarity_threshold` / `similarity_cutoff` | 重排后过滤低分切片的阈值 | `0.4–0.7` | 重排层 | 过高易漏召关键信息，过低引入噪声；建议结合日志分析调整 |
+| `tags` | 按标签过滤检索范围（支持 `AND`/`OR` 逻辑） | `["faq", "v2.3"]` | 检索层 | 用于多版本、多业务线知识隔离，需在知识库创建时预设 |
+| `model_name` / `withModel()` | 生成阶段使用的 LLM | `"qwen-plus"`, `"qwen3.5-plus"` | 生成层 | `/chat` 接口不可覆盖，但框架集成与本地应用可自由指定 |
+| `stream` | 是否启用 SSE 流式响应 | `true`（默认） | 传输层 | 仅 `/chat` 接口支持；流式下可实时获取 `thoughts` 和 `docReferences` |
 
-## 关键参数与配置
+> 💡 提示：Rerank 模型（如 `qwen3-rerank`）费用取决于初步召回总切片数（即 `top_k` 之和），而非最终返回数；多知识库联合检索时，该成本线性增长，请合理设置 `top_k`。
 
-检索效果主要由以下参数决定，可在命中测试、检索服务与问答服务中反复调优：
+## 面向开发者，简洁实用
 
-- **相似度阈值（0.01~1.0）**：仅语义相似度高于阈值的切片会被召回。阈值过高会导致相关切片被全部丢弃（如调至 0.60 可能无召回）。
-- **初步向量检索 TopK / 初步关键词检索 TopK（1~100，默认各 50）**：控制初步召回数量，直接影响送入 Rerank 的 Token 量与成本。
-- **最大召回数量 / 召回片段数（1~20）**：最终提供给大模型的切片数，对总结、列举、比较类复杂问题应适当调大。
-- **权重**：多知识库联合召回时干预排序，仅在**同类型知识库之间**生效。
-- **排序模型（Rerank）**：纯文本可选 `qwen3-rerank` / `qwen3-rerank(hybrid)`，多模态可选 `qwen3-vl-rerank`；`gte-rerank` 将于 2026-05-30 下线，新项目直接选 `qwen3-rerank`。
-- **向量模型（Embedding）**：将文本/图片/视频编码到同一语义空间，供余弦相似度匹配。云端知识库使用官方向量模型；本地方案可改用自部署 GTE 模型。
-- **Meta 信息抽取与标签过滤**：在向量检索前做结构化筛选，精准定位目标文件；元数据只能在创建知识库时配置，创建后无法开启。
-
-在框架（LlamaIndex）中对应的参数为：`similarity_top_k`（召回数）、`similarity_cutoff`（最低相似度阈值）、`top_n`（重排后返回数），可通过 `node_postprocessors`（`SimilarityPostprocessor`、`DashScopeRerank`）做后处理。
-
-## 效果优化建议
-
-优化前建议用自动评测建立至少 100 组用例的基线，再针对失败用例（打分 < 4）诊断改进：
-
-- **检索无效（没找到）**：补充知识、优化源文件排版（推荐转 Markdown、移除水印、避免复杂表格）、统一实体表述、启用多轮对话改写。
-- **召回不相关**：使用标签过滤或元数据做结构化搜索。
-- **切片不完整**：采用「智能切分」（基于语义自适应切分），并人工检查修正异常切片。
-- **重排不佳**：在漏召回与噪声之间平衡相似度阈值与召回片段数。
-
-## 监控
-
-所有检索调用以日志形式投递到日志服务（SLS），topic 为 `log_dispatch`，含 `request_id`、`pipeline_id`（知识库 ID）、`workspace_id`、`latency`、`response_status_code` 等字段，可用于审计、用量统计与慢查询/错误率监控。SLS 存储与流量单独计费，关闭检索日志开关只停止新投递，历史日志仍保留计费。
+- **快速验证**：用控制台创建一个文件知识库 → 绑定至智能体应用 → 启用“必定调用” → 发起测试对话，观察 `docReferences` 字段是否返回非空数组。  
+- **调试必查**：若 RAG 返回空或无关内容，优先检查：① 知识库状态是否为 `ACTIVE`；② 查询文本是否触发有效召回（调用 `/search` 接口验证）；③ `similarity_threshold` 是否过高；④ 日志中 `response_body.data.nodes[]` 是否为空。  
+- **性能优化**：高频场景建议关闭 Rerank（设 `rerank_enabled: false`）并调高 `similarity_threshold`；对精度敏感场景，启用 hybrid 检索 + `qwen3-rerank` 并将 `top_k` 设为 `30–50`。  
+- **安全边界**：所有知识库与数据连接器均按业务空间隔离，API Key 无跨空间访问权限；元数据（Meta）抽取规则在知识库创建后不可修改，请务必在初始化阶段审慎配置。  
+- **计费意识**：RAG 成本 = 检索侧（向量化 + Rerank） + 生成侧（LLM 输入/输出 [Token](token.md)）。避免盲目增大 `top_k` 或 `max_retrieval_count`，应以实际召回质量为准。
 
 ## 关联主题页
 
+- [knowledge](../api/knowledge.md)
 - [knowledge base](../guides/knowledge-base.md)
 - [frameworks](../api/frameworks.md)
+- [data connection overview](../guides/data-connection-overview.md)
 - [application use cases](../guides/application-use-cases.md)
-- [vector and sort](../api/vector-and-sort.md)
-- [knowledge](../api/knowledge.md)
-- [use cases](../guides/use-cases.md)
 
 

@@ -1,38 +1,48 @@
 # file management api
 
-文件管理 API 用于管理上传至百炼平台的文件，覆盖上传、查询、列举和删除等基础操作。它是使用需要文件输入的模型能力（如文档解析、多模态理解、批量任务等）的前置步骤，开发者需先将文件上传到平台并获取文件标识，再在后续调用中引用。详见 [文件管理](../../raw/model-api-reference/file-management-api.md)。
+文件管理 API 提供对百炼平台托管文件的全生命周期操作能力，包括上传、查询、列举和删除。该 API 与模型推理解耦，适用于预处理数据、知识库文档、提示词附件等场景。所有操作均需通过 `Authorization` 头携带 Bearer [Token](../concepts/token.md) 进行身份认证。
 
-## 核心功能
+## 支持的模型/功能
 
-根据 [文件管理](../../raw/model-api-reference/file-management-api.md) 的说明，该 API 提供以下针对平台文件的操作：
+文件管理 API 不依赖具体大模型，是平台级基础设施能力，所有接入百炼的模型（如 Qwen 系列、Baichuan、GLM 等）均可复用已上传文件的 `file_id`。支持的核心功能包括：
+- `POST /v1/files`：上传文件（支持 `multipart/form-data`）
+- `GET /v1/files/{file_id}`：获取单个文件元信息
+- `GET /v1/files`：分页列举当前项目下的全部文件（支持 `purpose` 过滤）
+- `DELETE /v1/files/{file_id}`：删除指定文件（不可恢复）
 
-- **上传（Upload）**：将本地文件上传至百炼平台，上传成功后返回文件标识，供后续模型调用引用。
-- **查询（Retrieve）**：根据文件标识查询单个文件的元信息与状态。
-- **列举（List）**：列出账号下已上传的文件集合，便于管理与清理。
-- **删除（Delete）**：移除不再需要的文件，释放存储资源。
+> **注意**：部分旧版 SDK 文档中提及的 `purpose=assistants` 已废弃，实际仅支持 `purpose=vision`（用于[多模态](../concepts/multi-modal.md)输入）和 `purpose=embedding`（用于向量检索），详见 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md)。
+
+## 关键参数
+
+| 参数 | 位置 | 类型 | 必填 | 说明 |
+|------|------|------|------|------|
+| `file` | form-data | binary | 是 | 待上传文件，最大 200 MB |
+| `purpose` | form-data | string | 否 | 取值为 `vision` 或 `embedding`；默认为 `embedding`；[文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 明确不支持其他值 |
+| `file_id` | path | string | 是（除上传外） | 平台生成的唯一文件标识，格式为 `file_...` |
+| `limit`, `after` | query | integer/string | 否 | 分页参数，`limit` 默认 20，最大 100 |
 
 ## 使用方式
 
-典型的使用流程是"先上传、再引用、后清理"：
-
-1. 通过上传操作把文件送入平台，拿到文件标识。
-2. 在需要文件输入的模型 API 调用中传入该标识。
-3. 使用完毕后按需删除文件。
-
-关于各操作的具体请求参数、返回字段和调用示例，请以 [文件管理](../../raw/model-api-reference/file-management-api.md) 的原始文档为准。
+1. **上传文件**（示例）：
+   ```bash
+   curl -X POST "https://dashscope.aliyuncs.com/api/v1/files" \
+     -H "Authorization: Bearer $API_KEY" \
+     -F "file=@report.pdf" \
+     -F "purpose=embedding"
+   ```
+2. 响应返回 `file_id` 和 `status=uploaded`，后续调用模型时可直接在 `input.files` 或 `messages.content` 中引用；
+3. 列举文件时建议按 `purpose` 过滤，避免混用不同用途的文件；详情参见 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md)。
 
 ## 限制和注意事项
 
-- 上传前建议先确认目标模型或能力所支持的文件类型与大小限制。
-- 文件标识是后续调用的关键，请妥善保存；文件被删除后其标识将失效。
-- 列举与删除操作影响的是账号级别的文件资源，批量清理时请谨慎确认。
-
-> **注意**：本页仅概述文件管理 API 的能力范围，具体的接口路径、鉴权方式、参数细节与配额限制可能随平台更新而变化，实际集成时请以原始文档最新版本为准。
+- 单文件大小上限为 200 MB，超限将返回 `400 Bad Request`；
+- 同一 `file_id` 仅在 7 天内有效（若未被任何任务引用），之后自动清理；
+- 删除操作立即生效且不可撤销，生产环境建议先调用 `GET /v1/files/{file_id}` 确认状态；
+- 文件内容不支持修改，如需更新请重新上传并使用新 `file_id`；
+- `purpose=vision` 仅支持图片（JPEG/PNG/WebP）和 PDF（含图像页），非图像 PDF 将返回 `422 Unprocessable Entity`。
 
 ## 来源文档
 
 - [文件管理](../../raw/model-api-reference/file-management-api.md)
-
-
 
 

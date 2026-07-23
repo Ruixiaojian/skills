@@ -1,41 +1,44 @@
-# 函数调用（Function Calling）
+# 函数调用
 
-函数调用（Function Calling）是让大模型在推理过程中根据用户输入，自主判断并"调用"外部工具（自定义函数、内置能力或插件）以获取实时信息、执行精确计算或操作外部系统的能力。它是弥补大模型原生局限、构建 Agent 与复杂应用的核心机制。
+函数调用（Function Calling）是百炼平台中大模型主动识别用户意图、自主选择并执行外部工具（如插件、Skill、代码解释器、搜索服务等）的核心能力机制。它不是简单的 API 转发，而是模型在推理过程中基于语义理解，按需生成结构化工具调用请求（含工具 ID 与参数），再由平台运行时安全调度、执行并注入结果回上下文，最终生成自然语言回复。
 
-## 在百炼平台的使用场景
+## 在百炼平台的不同场景中，这个概念如何使用
 
-百炼在多个层面暴露了 Function Calling 能力：
+函数调用在百炼平台并非单一接口能力，而是贯穿多个抽象层级的横切行为模式，具体体现为以下三类典型场景：
 
-- **文本 / 视觉生成模型**：所有 Qwen3 及以上通用文本与视觉理解模型均支持自定义工具调用。以 `qwen3.7-plus` 为代表的旗舰模型工具调用完整、上下文长（1M），适合 AI 编程与 Agent 开发；效果确认后可切到 `qwen3.6-flash` 降本，功能与上下文保持一致。
-- **实时多模态（Omni-Realtime API）**：基于 WebSocket 的实时音视频对话同样支持工具调用。客户端通过 `session.update` 事件在会话中声明工具，模型触发调用后由 `response.function_call_arguments.done` 服务端事件返回调用参数，客户端执行后再用 `conversation.item.create` 事件回传工具结果。
-- **应用构建（智能体 / 工作流）**：新版智能体（Agent 2.0）将知识库、MCP、插件等能力统一抽象为"工具"，由智能体自主规划调用顺序，形成"规划-执行-反思"链路。工作流应用则把工具作为固定节点按编排顺序执行，不由模型主动规划。
-- **插件（Plug-in）与 Assistant API**：插件是工具集合，本质也是工具调用。智能体应用 / Assistant API 中，模型依据工具名称与描述判断是否调用；无需调用时直接生成结果。
+- **API 层显式声明调用**：在 DashScope 原生接口或 Anthropic 兼容 Messages 接口中，开发者通过 `tools` 字段传入工具定义（JSON Schema），并可选设置 `tool_choice` 控制调用策略（如 `"auto"`、`{"type": "function", "function": {"name": "calculator"}}`）。模型据此生成 `tool_calls` 输出，平台自动完成调用、结果注入与多轮续写。
+  
+- **智能体托管运行时（Managed Agents）中的隐式决策调用**：在 Managed Agents 中，函数调用完全由 Agent 运行时自主触发。开发者只需在 Agent 配置中挂载 Skill 或插件，无需在每次请求中重复声明 `tools`。Agent 根据 `SKILL.md` 的 `description` 或插件元数据，在会话中动态判断是否调用、调用哪个 Skill/插件，并处理其输入输出——整个过程对上层应用透明。
 
-## 内置工具与自定义工具
+- **插件与 Skill 的能力封装层调用**：插件（Plugin）和 Skill 是函数调用的“能力载体”。插件面向通用服务（如 `quark_search`, `code_interpreter`），支持业务透传参数与鉴权；Skill 面向文件/数据处理任务（如 `xlsx-parser`），依赖精准的 `description` 触发。二者均通过统一的工具调用协议被模型识别和调度，但生命周期、配置方式与安全约束不同（如 Skill ZIP 包禁止二进制，插件需通过安全扫描）。
 
-- **自定义工具（Function Calling）**：开发者自行定义工具名称、描述与参数结构，模型据此决定何时调用、如何填参，应用侧执行后将结果回填模型生成最终回复。
-- **内置工具**：联网搜索、代码解释器、网页抓取等由平台预置，无需复杂配置即可开启，是 Function Calling 的开箱即用形态。
+> ⚠️ 注意：OpenAI 兼容的 `/v1/chat/completions` 接口**不支持显式传入 `tools`**；其增强版 `/v1/chat/completions`（即 OpenAI 兼容-Responses）虽能自动启用搜索/代码解释器，但属于平台预置的全自动流水线，**不开放自定义工具注册与参数控制**，与 DashScope 和 Managed Agents 的可控性存在本质差异。
 
-## 关键参数与配置
+## 关键参数和配置
 
-- **模型选型**：推荐具备强工具调用能力的模型（如千问-Max / `qwen3.7-plus` 系列）。
-- **思考模式**：可通过 `enable_thinking` 开启（Responses API 用 `reasoning.effort` 控制），配合工具调用提升规划质量。
-- **ReAct 最大轮次**：智能体中取值 1-50，限制单次会话内工具调用的最大次数，防止无限循环。
-- **实时 API 工具配置**：通过 `session.update` 的 `tools` 字段声明可用工具；工具调用结果需经 `conversation.item.create` 回传。
-- **插件调用**：通过 Assistant API 调用时需正确传递工具 ID（如 `calculator`、`code_interpreter`），且每个智能体应用最多添加 10 个工具。
+| 参数/配置项 | 所属场景 | 说明 | 是否必需 | 备注 |
+|-------------|----------|------|----------|------|
+| `tools` | DashScope / Anthropic Messages API | 工具定义数组，每个元素为符合 JSON Schema 的对象，描述工具名称、描述、参数类型与约束 | 否（启用函数调用时必需） | 不支持 [OpenAI 兼容接口](openai-compatible-interface.md)；Schema 中 `required` 字段必须准确声明必填参数 |
+| `tool_choice` | DashScope / Anthropic Messages API | 控制模型是否及如何调用工具：`"auto"`（默认）、`"none"`（禁用）、或指定工具名 | 否 | 指定工具名时，模型将强制调用该工具（即使不必要），适用于确定性流程 |
+| `biz_params` | Assistant API / 插件调用 | 业务系统透传的上下文参数（如用户 ID、会话 ID），供插件后端鉴权或个性化处理 | 否（按插件需求） | 仅对支持业务透传的插件生效；不参与模型推理，不暴露给模型 |
+| `description`（Skill） | Skill | Skill 的功能描述文本，是模型触发调用的唯一依据 | 是 | 必须包含适用输入、支持操作、典型关键词、**明确的不适用场景**；模糊描述将导致误调用 |
+| `enable_search` / `enable_code_interpreter` | DashScope 原生接口 | 布尔开关，快捷启用预置工具链 | 否 | 仅 DashScope 支持；与 `tools` 互斥，二者不可同时使用 |
 
-## 开发建议
+## 面向开发者，简洁实用
 
-- 优先用内置工具满足通用需求（搜索、计算、代码执行），减少自定义成本。
-- 自定义工具时，工具名称与描述要清晰准确，直接影响模型是否正确触发调用。
-- 需要精确、可控流程时用工作流把工具固化为节点；需要动态规划时用智能体让模型自主调用。
-- 旧版智能体的自定义插件有 5 秒超时限制，设计工具时注意执行时长。
+- ✅ **优先选 DashScope 接口**：若需精细控制工具调用（如自定义工具、指定参数、多工具协同），务必使用 DashScope 原生 endpoint（`/api/v1/services/aigc/text-generation/generation`），而非 [OpenAI 兼容接口](openai-compatible-interface.md)。
+- ✅ **Skill 描述要“防错”**：写 `SKILL.md` 的 `description` 时，用“当用户说……时可用，但当用户说……时**不可用**”句式，比单纯罗列功能更有效。
+- ✅ **插件调用前必验权限**：子账号首次使用插件，需主账号授予 `ram:CreateServiceLinkedRole` 权限，否则返回错误码 `140052`。
+- ❌ **勿在 [OpenAI 兼容接口](openai-compatible-interface.md)中传 `tools`**：该字段会被忽略，且可能引发 400 错误。
+- ❌ **勿在 Managed Agents Session 创建时传 `tools`**：Agent 已绑定 Skill/插件，工具集由 Agent 快照固化，请求体中添加 `tools` 字段无效。
+- 🔧 **调试技巧**：开启 `stream=true` 并监听 `tool_calls` 事件（DashScope）或 `event: tool_call`（Managed Agents SSE），可实时观察模型是否识别意图、参数是否正确生成。
 
 ## 关联主题页
 
-- [omni realtime api](../api/omni-realtime-api.md)
-- [model experience](../guides/model-experience.md)
-- [llm application](../guides/llm-application.md)
+- [qwen api reference](../api/qwen-api-reference.md)
+- [managed agents api](../api/managed-agents-api.md)
 - [plug in](../guides/plug-in.md)
+- [skill](../guides/skill.md)
+- [application component api reference](../api/application-component-api-reference.md)
 
 

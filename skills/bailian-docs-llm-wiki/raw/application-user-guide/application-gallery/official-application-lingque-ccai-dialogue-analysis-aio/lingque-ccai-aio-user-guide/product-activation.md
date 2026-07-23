@@ -6,7 +6,7 @@
 
 **重要**
 
-使用子账号开通服务时若出现报错提示，是需要主账号对其子账号进行授予其相应RAM权限。具体权限以及相关操作请参考[通义晓蜜CCAI-对话分析RAM子账号使用方式和授权操作](https://help.aliyun.com/zh/model-studio/lingque-ccai-dialogue-analytics-ram-subaccount-usage-and-authorization-procedures)
+使用子账号开通服务时若出现报错提示，是需要主账号对其子账号进行授予其相应RAM权限。具体权限以及相关操作请参考[通义晓蜜CCAI-对话分析RAM子账号使用方式和授权操作](https://help.aliyun.com/zh/model-studio/use-and-authorize-ram-users-for-ccai-dialogue-analysis)
 
 -   路径：进入[应用广场](https://bailian.console.aliyun.com/#/app-market)→点击[全部应用](https://bailian.console.aliyun.com/cn-beijing#/app-market/all)→选择**伶鹊CCAI-对话分析AIO**
     

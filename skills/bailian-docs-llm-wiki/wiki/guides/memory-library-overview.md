@@ -1,166 +1,68 @@
 # memory library overview
 
-百炼记忆库（Memory Library）通过长期记忆 API 解决大模型跨会话上下文丢失的问题：自动从对话中提取关键信息并持久化存储，再在后续对话中基于语义检索召回相关记忆注入 Prompt，使智能体能够持续理解用户偏好与历史信息。该能力既可在百炼控制台可视化管理，也提供开放的 HTTP API 接入任意应用，并支持通过 OpenClaw 插件以"自动捕获 / 自动召回"的方式零侵入接入 Agent。详见 [记忆库](../../raw/application-user-guide/memory-library-overview/memory-library.md)、[长期记忆 API](../../raw/application-user-guide/memory-library-overview/long-term-memory-2-0.md) 与 [为 OpenClaw 配置长期记忆插件](../../raw/application-user-guide/memory-library-overview/modelstudio-memory-for-openclaw.md)。
+记忆库是百炼平台提供的[长期记忆](../concepts/long-term-memory.md)能力核心组件，用于解决大模型跨会话上下文丢失问题。它通过自动从对话中提取关键信息并结构化存储为“记忆片段”和“用户画像”，支持语义检索与跨会话上下文注入，使智能体具备持续理解用户偏好与历史的能力。该能力以开放 API 形式提供，适用于自研应用、OpenClaw Agent 等各类集成场景。
 
-## 核心能力
+## 支持的模型/功能
 
-记忆库提供两类持久化记忆内容，二者可独立或组合使用：
+- **记忆片段（Memory Nodes）**：自动从 `messages` 中提炼事件性、意图性内容（如“每天上午9点提醒我喝水”），支持手动写入 `custom_content`；适用于通用[长期记忆](../concepts/long-term-memory.md)场景。  
+- **用户画像（User Profile）**：基于预定义的 `profile_schema` 从对话中抽取结构化属性（如年龄、职业、兴趣），需先调用 `CreateProfileSchema` 创建模板，再在 `AddMemory` 中传入 `profile_schema` ID 触发抽取。  
+- **双模式接入**：既可通过直接调用 [长期记忆 API (新)](../../raw/application-user-guide/memory-library-overview/long-term-memory-2-0.md) 实现细粒度控制，也支持通过 [为 OpenClaw 配置长期记忆插件](../../raw/application-user-guide/memory-library-overview/modelstudio-memory-for-openclaw.md) 实现零代码自动捕获与召回。  
+- **多应用共享**：同一 `memory_library_id` 可被多个应用共用，`user_id` 作为隔离维度保障数据边界。
 
-- **记忆片段**：从对话中自动提取的关键事件和信息（如"用户每天上午9点需要喝水提醒"），适用于大多数长期记忆场景。支持自动去重、动态更新，也可通过 `custom_content` 直接写入指定内容。
-- **用户画像**：基于自定义画像模板从对话中提取的结构化属性（如年龄、职业、偏好等），适用于需要固定属性持久化存储的场景。属性字段及描述应清晰具体，避免"姓名/名称/名字"等同义字段并存，且不应期望一次对话就提取全部信息。
-
-> **注意**：记忆有效期在不同入口存在差异。[长期记忆 API](../../raw/application-user-guide/memory-library-overview/long-term-memory-2-0.md) 文档指出"生成的记忆片段与用户画像暂无失效日期"，而 [记忆库](../../raw/application-user-guide/memory-library-overview/memory-library.md) 控制台的默认记忆片段规则预置了"默认有效期 180 天"，并支持按规则配置 7/30/180 天或永不过期。以控制台记忆规则配置为准；通过 API 直写且不指定 `project_id` 时使用默认规则。
-
-## 接入方式
-
-### 方式一：API 直连
-
-通过 HTTPS 调用 `https://dashscope.aliyuncs.com/api/v2/apps/memory/*` 系列接口，需在环境变量中配置 `DASHSCOPE_API_KEY`。典型流程为：对话结束调用 `AddMemory` 写入记忆 → 调用 `SearchMemory` 语义检索 → 将结果注入 Prompt。
-
-```bash
-# 写入记忆（从对话自动提取）
-curl -X POST https://dashscope.aliyuncs.com/api/v2/apps/memory/add \
-  --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
-  --header "Content-Type: application/json" \
-  --data '{
-    "messages": [
-      {"role": "user", "content": "每天上午9点提醒我喝水"},
-      {"role": "assistant", "content": "好的，已记录"}
-    ],
-    "user_id": "user_001"
-  }'
-
-# 语义检索记忆
-curl -X POST https://dashscope.aliyuncs.com/api/v2/apps/memory/memory_nodes/search \
-  --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
-  --header "Content-Type: application/json" \
-  --data '{
-    "user_id": "user_001",
-    "messages": [{"role": "user", "content": "我需要做什么？"}],
-    "top_k": 5
-  }'
-```
-
-Python 用户可安装 `agentscope-runtime`，使用 `AddMemory`、`SearchMemory`、`ListMemory`、`CreateProfileSchema`、`GetUserProfile` 等封装类（均需在 `finally` 中调用 `close()`）。
-
-### 方式二：OpenClaw 记忆插件
-
-OpenClaw Agent 可通过插件实现零侵入的[跨会话记忆](../concepts/cross-session-memory.md)。插件在 Gateway 内通过 `before_agent_start`（自动召回）和 `agent_end`（自动捕获）两个生命周期钩子与长期记忆 API 交互，所有读写均由百炼服务端完成提炼、向量化和语义检索。
-
-```bash
-# 安装
-openclaw plugins install @modelstudio/modelstudio-memory-for-openclaw
-
-# 验证
-openclaw plugins info modelstudio-memory-for-openclaw
-openclaw modelstudio-memory stats
-openclaw gateway restart
-```
-
-插件配置写入 `~/.openclaw/openclaw.json`，关键项：`slots.memory` 注册为记忆槽位（会自动禁用内置 `memory-core` 和 `memory-lancedb`）；`apiKey` 填 DashScope [API Key](../concepts/api-key.md)；`userId` 用于隔离不同用户记忆空间。
-
-> **注意**：OpenClaw 记忆插件为统一配置，所有 Agent 共享同一记忆，暂不支持按 Agent 独立配置；不支持阿里云百炼 Coding Plan 的 [API Key](../concepts/api-key.md)。
+> **注意**：文档 3 提到默认记忆库中“默认项目”规则“默认有效期 180 天”，而文档 1 明确说明“生成的记忆片段与用户画像暂无失效日期”。该矛盾源于规则配置项（`memory_expiration_time`）与实际存储行为的差异——**记忆本身永不过期，但规则可配置过期策略，且仅对新写入生效；已存在的记忆不受影响**。详见 [记忆库](../../raw/application-user-guide/memory-library-overview/memory-library.md) 中“配置记忆片段规则”部分。
 
 ## 关键参数
 
-### AddMemory 请求参数
+| 参数名 | 类型 | 是否必填 | 说明 |
+|--------|------|----------|------|
+| `user_id` | string | ✅ | 用户唯一标识，用于隔离记忆空间；不同 `user_id` 数据完全隔离 |
+| `memory_library_id` | string | ❌ | 记忆库 ID；不填则使用默认记忆库（每个账号自带一个） |
+| `project_id` | string | ❌ | 记忆片段规则 ID；不填则使用默认规则或记忆库内首个可用规则 |
+| `profile_schema` | string | ❌ | 用户画像规则 ID；仅当需触发画像抽取时传入 |
+| `top_k` | number | ❌（默认 5） | 检索返回的最大记忆条数；OpenClaw 插件默认为 `5`，API 推荐设为 `3–10` 平衡效果与性能 |
+| `min_score` | number | ❌（默认 0） | 相似度阈值（0–100），低于此值的结果将被过滤；OpenClaw 插件单位为百分制，API 返回分数范围为 `[0,1]`，需注意单位转换 |
 
-| 参数 | 必填 | 说明 |
-| --- | --- | --- |
-| `messages` | 与 `custom_content` 二选一 | 对话内容，系统自动从中提取记忆片段 |
-| `custom_content` | 与 `messages` 二选一 | 直接指定要存入的记忆内容，不经过对话提炼 |
-| `user_id` | 是 | 记忆空间用户标识，同 `user_id` 共享命名空间，不同 `user_id` 完全隔离 |
-| `memory_library_id` | 否 | 记忆库 ID，不填使用默认记忆库 |
-| `project_id` | 否 | 记忆片段规则 ID，不填使用默认规则 |
-| `profile_schema` | 否 | 用户画像规则 ID，传入后同时提取画像 |
-| `meta_data` | 否 | 自定义元数据，用于分类管理 |
+## 使用方式
 
-### SearchMemory 请求参数
+### 1. 基础 API 调用（推荐用于自研应用）
+- **写入记忆**：调用 `POST /api/v2/apps/memory/add`，传入 `messages` 或 `custom_content` + `user_id`。  
+- **检索记忆**：调用 `POST /api/v2/apps/memory/memory_nodes/search`（推荐）或 `/api/v2/apps/memory/search`（旧路径，功能一致），传入 `user_id` 和 `messages` 或 `query`。  
+- **管理记忆**：支持 `GET /memory_nodes`（分页列表）、`PATCH /memory_nodes/{id}`（更新）、`DELETE /memory_nodes/{id}`（删除）。  
+- **用户画像流程**：`CreateProfileSchema` → `AddMemory`（含 `profile_schema`）→ `GetUserProfile`（需等待约 3 秒后查询）。
 
-| 参数 | 必填 | 说明 |
-| --- | --- | --- |
-| `user_id` | 是 | 记忆空间用户标识 |
-| `messages` | 是 | 查询对话内容 |
-| `memory_library_id` | 否 | 限定检索的记忆库 |
-| `top_k` | 否 | 返回记忆条数，建议 3–10 |
+### 2. OpenClaw 插件集成（推荐用于 OpenClaw Agent）
+- 安装插件：`openclaw plugins install @modelstudio/modelstudio-memory-for-openclaw`  
+- 配置 `~/.openclaw/openclaw.json`，设置 `apiKey` 和 `userId`，启用 `autoCapture`/`autoRecall`（默认开启）  
+- 插件自动注册工具：`memory_search`、`memory_store`、`memory_list`、`memory_forget`，Agent 可在运行时动态调用  
 
-### OpenClaw 插件配置项
+### 3. 控制台操作（调试与验证）
+- 在 [记忆库](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/memory/list) 页面查看/编辑记忆库、配置规则、调试检索效果  
+- “记忆详情”页按 `user_id` 查看记忆实体，“记忆检索”页模拟语义查询并调整 `改写`、`排序`、`相似度阈值` 等参数优化召回质量  
 
-| 配置项 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `apiKey` | string | - | 必填，以 `sk-` 开头 |
-| `userId` | string | - | 必填，记忆空间用户标识 |
-| `autoCapture` | boolean | `true` | 对话后自动提取并存储记忆 |
-| `autoRecall` | boolean | `true` | 对话前自动检索并注入记忆 |
-| `topK` | number | `5` | 每次召回返回的记忆条数 |
-| `minScore` | number | `0` | 最小相似度阈值（0–100） |
-| `profileSchema` | string | - | 用户画像 ID |
-| `memoryLibraryId` | string | - | 记忆库 ID |
-| `projectId` | string | - | 记忆片段规则 ID |
+## 限制和注意事项
 
-## 记忆库与记忆规则管理
+- **配额限制**（阿里云账号级别）：  
+  - 所有 API 合计 ≤ 3000 QPM  
+  - `AddMemory` ≤ 120 QPM  
+  - `SearchMemory` ≤ 300 QPM  
+  （详见 [长期记忆 API (新)](../../raw/application-user-guide/memory-library-overview/long-term-memory-2-0.md)）
 
-每个账号自带一个无法删除的默认记忆库，预置一条"默认项目"记忆片段规则（默认有效期 180 天，可编辑但不可删除）。可按业务场景创建新记忆库并配置记忆规则，每个记忆库最多 50 条记忆片段规则和 50 条用户画像规则。
+- **延迟表现**：  
+  - `SearchMemory` 端到端延迟：200–500ms  
+  - `AddMemory` 延迟：500–1000ms；OpenClaw 插件中 `autoCapture` 为异步执行，不影响主响应流  
 
-- **记忆片段规则**：定义从对话中提取关键事件和信息的策略，可选择默认或自定义规则指令，支持自动更新和过期时间（7/30/180 天或永不过期）。
-- **用户画像规则**：定义画像字段名称、描述和初始值。当用户尚未通过对话提供信息时，系统使用初始值作为属性值。
+- **元数据与分类**：建议在 `AddMemory` 的 `meta_data` 字段中添加业务标签（如 `"category": "reminder"`），便于后续 `ListMemory` 过滤与管理  
 
-控制台记忆检索页支持配置最大召回数量（1–100）、意图判别召回（建议开启）、查询改写（口语化提问时开启）和排序（使用 `gte-rerank-v2` 模型，相似度阈值建议 0.5–0.7）。
+- **用户画像最佳实践**：  
+  - 字段名需语义唯一（避免同时定义“年龄”“年纪”“岁数”）  
+  - 不应期望单轮对话提取全部画像字段，需通过多轮交互逐步完善  
 
-## OpenClaw 插件工具
-
-除自动捕获/召回外，插件向 Agent 注册四个可主动调用的工具：
-
-- **memory_search**：语义检索记忆库，返回相似度最高的记忆列表，适用于"之前讨论过什么"等回顾性问题。
-- **memory_store**：直接写入记忆，不经过对话提炼，适用于"记住我的服务器 IP 是 192.168.1.x"等显式记忆请求。
-- **memory_list**：分页列出当前 `userId` 下所有记忆条目。
-- **memory_forget**：按记忆 ID 删除指定记忆，通常先 `memory_search` 定位再删除。
-
-CLI 等效：`openclaw modelstudio-memory search|list|stats`。
-
-## 配额与限制
-
-长期记忆 API 速率限制（阿里云账号级别）：
-
-| API 操作 | 速率上限 |
-| --- | --- |
-| AddMemory（写入） | 120 次/分钟 |
-| SearchMemory（查询） | 300 次/分钟 |
-| 所有操作合计 | 3000 次/分钟 |
-
-性能指标：SearchMemory 端到端延迟 200–500ms；AddMemory 延迟 500–1000ms；自动捕获异步执行，不影响响应速度。该功能与 API 调用限时免费。
-
-## 排错要点
-
-- **OpenClaw 插件重启后状态为 not loaded**：检查 `openclaw.json` 中 `plugins.entries.modelstudio-memory-for-openclaw.enabled` 是否为 `true`，以及 `plugins.slots.memory` 是否指向该插件，修正后重新 `openclaw gateway restart`。
-- **日志出现 InvalidApiKey**：DashScope [API Key](../concepts/api-key.md) 无效或过期，到百炼控制台确认状态或重新创建；若用环境变量引用，确认 `DASHSCOPE_API_KEY` 已设置且 Gateway 进程可读取。
-- **查看插件日志**：日志按日期存储在系统临时目录，文件名 `openclaw-YYYY-MM-DD.log`，可用 `grep modelstudio-memory` 过滤。
-
-> **注意**：[长期记忆 API](../../raw/application-user-guide/memory-library-overview/long-term-memory-2-0.md) 为新版本，相比旧版长期记忆 API 在延迟、自动提取、语义检索准确性和用户画像能力上均有改进，建议新接入直接使用新版接口。
+- **环境依赖**：所有方式均需配置 `DASHSCOPE_API_KEY` 环境变量或显式传入 `apiKey`，且 Key 必须为百炼平台生成的有效密钥（**不支持 Coding Plan 的 API Key**）
 
 ## 来源文档
 
+- [长期记忆 API](../../raw/application-user-guide/memory-library-overview/long-term-memory-2-0.md)
 - [为 OpenClaw 配置长期记忆插件](../../raw/application-user-guide/memory-library-overview/modelstudio-memory-for-openclaw.md)
 - [记忆库](../../raw/application-user-guide/memory-library-overview/memory-library.md)
-- [长期记忆 API](../../raw/application-user-guide/memory-library-overview/long-term-memory-2-0.md)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

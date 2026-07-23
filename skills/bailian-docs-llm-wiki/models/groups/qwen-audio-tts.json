@@ -45,37 +45,10 @@
       "name": "qwen-audio-3.0-tts-plus",
       "docUrl": "https://help.aliyun.com/document_detail/2938790.html",
       "category": "Audio",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
-            "python": "# coding=utf-8\n\nimport dashscope\nfrom dashscope.audio.tts_v2 import *\n\n# If the API Key is not configured in the environment variable, your-api-key needs to be replaced with your own API Key\n# dashscope.api_key = \"your-api-key\"\n\ndashscope.base_websocket_api_url='wss://[workspace-id].cn-beijing.maas.aliyuncs.com/api-ws/v1/inference'\n\nmodel = \"qwen-audio-3.0-tts-plus\"\nvoice = \"longanfengyue\"\n\nsynthesizer = SpeechSynthesizer(model=model, voice=voice)\naudio = synthesizer.call(\"How is the weather today?\")\n\nwith open('output.mp3', 'wb') as f:\n    f.write(audio)",
+            "python": "# coding=utf-8\n\nimport dashscope\nfrom dashscope.audio.tts_v2 import *\n\n# If the API Key is not configured in the environment variable, your-api-key needs to be replaced with your own API Key\n# dashscope.api_key = \"your-api-key\"\n\ndashscope.base_websocket_api_url='wss://[workspace-id].cn-beijing.maas.aliyuncs.com/api-ws/v1/inference'\n\nmodel = \"qwen-audio-3.0-tts-plus\"\n\n#Please enter the correct voice below.\nvoice = \"\"\n\nsynthesizer = SpeechSynthesizer(model=model, voice=voice)\naudio = synthesizer.call(\"How is the weather today?\")\n\nwith open('output.mp3', 'wb') as f:\n    f.write(audio)",
             "docUrl": "https://help.aliyun.com/document_detail/2938790.html"
           }
         }
@@ -124,37 +97,10 @@
       "name": "qwen-audio-3.0-tts-flash",
       "docUrl": "https://help.aliyun.com/document_detail/2938790.html",
       "category": "Audio",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
-            "python": "# coding=utf-8\n\nimport dashscope\nfrom dashscope.audio.tts_v2 import *\n\n# If the API Key is not configured in the environment variable, your-api-key needs to be replaced with your own API Key\n# dashscope.api_key = \"your-api-key\"\n\ndashscope.base_websocket_api_url='wss://[workspace-id].cn-beijing.maas.aliyuncs.com/api-ws/v1/inference'\n\nmodel = \"qwen-audio-3.0-tts-flash\"\nvoice = \"longanfengyue\"\n\nsynthesizer = SpeechSynthesizer(model=model, voice=voice)\naudio = synthesizer.call(\"How is the weather today?\")\n\nwith open('output.mp3', 'wb') as f:\n    f.write(audio)",
+            "python": "# coding=utf-8\n\nimport dashscope\nfrom dashscope.audio.tts_v2 import *\n\n# If the API Key is not configured in the environment variable, your-api-key needs to be replaced with your own API Key\n# dashscope.api_key = \"your-api-key\"\n\ndashscope.base_websocket_api_url='wss://[workspace-id].cn-beijing.maas.aliyuncs.com/api-ws/v1/inference'\n\nmodel = \"qwen-audio-3.0-tts-flash\"\n\n#Please enter the correct voice below.\nvoice = \"\"\n\nsynthesizer = SpeechSynthesizer(model=model, voice=voice)\naudio = synthesizer.call(\"How is the weather today?\")\n\nwith open('output.mp3', 'wb') as f:\n    f.write(audio)",
             "docUrl": "https://help.aliyun.com/document_detail/2938790.html"
           }
         }

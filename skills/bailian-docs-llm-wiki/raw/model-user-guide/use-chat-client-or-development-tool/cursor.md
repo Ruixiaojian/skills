@@ -1,6 +1,6 @@
 # Cursor
 
-Cursor 是一款 AI 编程 IDE，可以通过按量计费、Coding Plan 或 Token Plan 团队版接入阿里云百炼。
+Cursor 是一款 AI 编程 IDE，可以通过按量计费、Coding Plan、Token Plan 个人版或 Token Plan 团队版接入阿里云百炼。
 
 ## **安装 Cursor**
 
@@ -12,12 +12,28 @@ Cursor 是一款 AI 编程 IDE，可以通过按量计费、Coding Plan 或 Toke
 
 阿里云百炼提供三种计费方案，根据需要选择：
 
+-   **Token Plan 个人版**：按 token 消耗抵扣个人 Credits。
+    
 -   **Token Plan 团队版**：按坐席订阅，按 token 消耗抵扣 Credits。
     
 -   **Coding Plan**：固定月费订阅，按模型调用次数计量。
     
 -   **按量计费**：按实际调用量后付费。
     
+
+### Token Plan 个人版
+
+**API Key**
+
+Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)
+
+**Base URL**
+
+`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
+
+**可用模型**
+
+Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)
 
 ### Token Plan 团队版
 
@@ -110,7 +126,9 @@ Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-pla
     
 -   Coding Plan：[Coding Plan 常见问题](https://help.aliyun.com/zh/model-studio/coding-plan-faq)
     
--   Token Plan 团队版：[Token Plan 团队版常见问题](https://help.aliyun.com/zh/model-studio/token-plan-faq)
+-   Token Plan 个人版：[Token Plan 常见问题](https://help.aliyun.com/zh/model-studio/token-plan-team-faq)
+    
+-   Token Plan 团队版：[Token Plan 团队版常见问题](https://help.aliyun.com/zh/model-studio/token-plan-team-faq)
     
 
 ### 在 Cursor 中无法调用已添加的模型

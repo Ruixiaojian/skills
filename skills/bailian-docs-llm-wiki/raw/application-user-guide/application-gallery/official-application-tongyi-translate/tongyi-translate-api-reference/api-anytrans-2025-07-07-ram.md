@@ -136,7 +136,7 @@ none
 
 anytrans:BatchTranslateForHtml
 
-[BatchTranslateForHtml](https://help.aliyun.com/zh/model-studio/api-anytrans-2025-07-07-batchtranslateforhtml)
+[BatchTranslateForHtml](https://help.aliyun.com/zh/document_detail/3037877.html)
 
 none
 

@@ -14,45 +14,23 @@
       "description": "Paraformer最新中文语音识别模型，模型结构升级，具有更好的识别效果,支持8kHz电话语音识别，仅支持中文热词。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "paraformer-8k-v2",
+      "prices": [
+        {
+          "priceUnit": "每秒",
+          "price": "0.00008",
+          "type": "content_duration",
+          "priceName": "音频时长"
+        }
+      ],
       "capabilities": [
         "ASR"
       ],
       "versionTag": "MAJOR",
       "latestOnlineAt": "2024-12-19T11:29:28.000+00:00",
-      "inferenceProvider": "bailian",
+      "inferenceProvider": "aliyun-bailian",
       "name": "Paraformer语音识别-8k-v2",
       "docUrl": "https://help.aliyun.com/document_detail/2712535.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {

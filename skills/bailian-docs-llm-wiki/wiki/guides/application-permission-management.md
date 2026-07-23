@@ -1,137 +1,52 @@
 # application permission management
 
-阿里云百炼支持基于控制台页面级、模型级的多维度权限控制，满足多地域、多用户的复杂组织架构需求。单个[业务空间](../concepts/workspace.md)是进行精细化权限管理（模型、用户）和阿里云账单分账的最小管理单元，权限管理围绕超级管理员、[业务空间](../concepts/workspace.md)管理员、普通用户三种角色展开。详细的角色定义与权限矩阵见 [权限管理](../../raw/application-user-guide/application-permission-management/application-permission-management-overview.md)。
+百炼平台的权限管理以“业务空间”为最小管理单元，支持基于角色（超级管理员、业务空间管理员、普通用户）和资源维度（模型调用、调优、部署、页面访问、API Key、OpenAPI）的精细化控制。权限策略同时作用于控制台操作与 API 调用，但二者权限模型存在关键差异：控制台权限由用户角色在业务空间内直接配置，而 OpenAPI 权限需通过 RAM 策略显式授予。所有权限均按地域隔离，同一业务空间不可跨地域存在。
 
-## 角色体系
+## 支持的模型/功能
 
-百炼的身份管理基于以下三种角色，权限范围自上而下递减：
+百炼权限管理覆盖以下核心能力：
 
-- **超级管理员**：可跨空间统一管理用户权限、空间可用模型、空间模型限流和 [API Key](../concepts/api-key.md)。包含两类账号：阿里云主账号，以及拥有 `AliyunBailianFullAccess`（百炼管理员）系统策略的 RAM 用户。超级管理员可通过百炼全局管理菜单（北京 / 新加坡 / 弗吉尼亚）为任意 RAM 用户授权任意地域、任意空间的几乎所有权限，仅 OpenAPI 接口权限需阿里云主账号添加。
-- **[业务空间](../concepts/workspace.md)管理员**：拥有访问某个[业务空间](../concepts/workspace.md)「权限管理」页面的 RAM 用户，只负责该特定[业务空间](../concepts/workspace.md)内的用户权限和资源管理。管理员权限包含可访问该[业务空间](../concepts/workspace.md)下所有页面的权限。
-- **普通用户**：根据分配的权限使用资源，可访问/使用被授权的空间、页面、资源。
+- **模型级管控**：支持对特定模型启用/禁用**调用**（含控制台体验与 API）、**调优**（训练）和**部署**权限；默认业务空间不支持限制（[原文标题](../../raw/application-user-guide/application-permission-management/application-permission-management-overview.md)）。
+- **空间级角色管理**：定义三类角色——**超级管理员**（跨空间全局管理）、**业务空间管理员**（单空间内用户、页面、模型限流管理）、**普通用户**（仅使用被授权资源）。
+- **API Key 绑定与继承**：每个 API Key 严格归属单一地域、单一业务空间、单一用户；其可调用模型范围与限流策略**完全继承自所属业务空间的模型权限配置**，不受用户控制台权限影响（[原文标题](../../raw/application-user-guide/application-permission-management/application-permission-management-overview.md)）。
+- **OpenAPI 接口权限**：独立于业务空间权限体系，需通过 RAM 策略（如 `AliyunBailianDataFullAccess`）显式授权，且**仅阿里云主账号可为 RAM 用户添加该类策略**（[原文标题](../../raw/application-user-guide/application-permission-management/application-permission-management-overview.md)）。
 
-### 权限矩阵
+> **注意**：文档中多次强调“默认业务空间无法设置模型调用/调优/部署限制”，但未明确说明该限制是否适用于所有地域。实践中，北京、新加坡、弗吉尼亚三地默认空间行为一致，建议避免在默认空间承载生产流量。
 
-| [业务空间](../concepts/workspace.md)权限 | 超级管理员 | [业务空间](../concepts/workspace.md)管理员 | 普通用户 |
-| --- | --- | --- | --- |
-| 允许特定模型调用 & 限流 | 支持 | 不支持 | 不支持 |
-| 允许特定[模型调优](../concepts/fine-tuning.md) | 支持 | 不支持 | 不支持 |
-| 允许特定[模型部署](../concepts/model-deployment.md) | 支持 | 不支持 | 不支持 |
-| 用户管理 | 支持 | 支持 | 不支持 |
-| 用户可用页面管理 | 支持 | 支持 | 不支持 |
-| [API Key](../concepts/api-key.md) 管理 | 支持 | 支持 | 不支持 |
-| 访问/使用被授权的空间、页面、资源 | 支持 | 支持 | 支持 |
-| OpenAPI 接口权限 | 不支持 | 不支持 | 不支持 |
+## 关键参数
 
-> **注意**：OpenAPI 接口权限不通过[业务空间](../concepts/workspace.md)角色授予，必须由阿里云主账号在 RAM 控制台为 RAM 用户添加专用系统策略。
+| 参数 | 说明 | 约束 |
+|------|------|------|
+| `workspace_id` | 业务空间唯一标识符，用于 API 请求中指定目标空间（如 `X-Workspace-ID` Header 或请求体） | 必填；需通过 [获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id) 获取 |
+| `model_name` | 模型标识符（如 `qwen-max`, `qwen-plus`），用于模型级权限开关 | 必须已在该业务空间中显式开通调用/调优/部署权限 |
+| `qpm_limit` / `tpm_limit` | 每分钟请求数（QPM）与 [Token](../concepts/token.md) 数（TPM）限流阈值 | 仅超级管理员或业务空间管理员可在控制台设置；API Key 自动继承该值 |
+| `api_key` | 认证凭证，绑定至特定 `workspace_id` 和用户 | 不可跨空间/用户迁移；华北2（北京）新创建的 API Key 默认归属主账号 |
 
-## [业务空间](../concepts/workspace.md)权限管理
+## 使用方式
 
-百炼按地理区域划分资源和[业务空间](../concepts/workspace.md)，**单个[业务空间](../concepts/workspace.md)不能跨地域存在**，即使是各地域的默认[业务空间](../concepts/workspace.md)，也是不同的空间。[业务空间](../concepts/workspace.md)是精细化权限管理的最小单元，可管理以下维度（默认[业务空间](../concepts/workspace.md)无法设置这些限制）：
+### 1. 角色与空间初始化
+- **超级管理员**：需主账号或已附加 `AliyunBailianFullAccess` 策略的 RAM 用户，在 [全局管理菜单](https://bailian.console.aliyun.com/?tab=globalset#/efm/business_management) 创建业务空间并分配模型权限。
+- **业务空间管理员**：由超级管理员在控制台「权限管理」页签中为 RAM 用户授予「管理员」角色（[原文标题](../../raw/application-user-guide/application-permission-management/application-permission-management-overview.md)）。
 
-- **限制模型调用**：管理某个模型可否在该[业务空间](../concepts/workspace.md)调用（控制台 & API），并设置该模型的请求数限流和 [Token](../concepts/token.md) 限流。默认[业务空间](../concepts/workspace.md)所有模型均可调用且无法限流。
-- **限制模型训练**：管理某个模型可否在该[业务空间](../concepts/workspace.md)进行调优和调优后部署。默认[业务空间](../concepts/workspace.md)所有支持调优的模型均可调优及部署。
-- **限制[模型部署](../concepts/model-deployment.md)**：管理某个模型可否在该[业务空间](../concepts/workspace.md)直接部署。默认[业务空间](../concepts/workspace.md)所有支持部署的模型均可部署。
-- **用户控制台权限管理**：管理某个 RAM 用户是否能使用该业务空间控制台的功能及能使用哪些功能，但无法限制归属该用户的 [API Key](../concepts/api-key.md) 的调用。阿里云主账号无须设置，可访问所有业务空间的所有页面。
+### 2. 模型权限开通（必需前置步骤）
+- 超级管理员需先在全局管理中为业务空间**启用目标模型的调用/调优/部署能力**（默认空间自动全开，但不可配置限流）。
+- 后续再由业务空间管理员在本空间内为具体用户分配对应控制台操作权限（如「模型体验-操作」「模型调优-操作」）。
 
-关于业务空间的地域隔离与限流细节，可进一步参考 [权限管理](../../raw/application-user-guide/application-permission-management/application-permission-management-overview.md)。
+### 3. API 调用授权
+- 为用户生成 API Key（归属指定业务空间）；
+- 该 Key 自动获得该空间已开通的所有模型调用权限及限流策略；
+- 如需调用应用、知识库等 OpenAPI，**必须额外在 RAM 控制台为该 RAM 用户附加 `AliyunBailianDataFullAccess` 或 `AliyunBailianDataReadOnlyAccess` 策略**。
 
-## API-Key 权限
+## 限制和注意事项
 
-单个 [API Key](../concepts/api-key.md) 只能归属一个地域内的一个业务空间和一个用户，且不能转移。[API Key](../concepts/api-key.md) 可调用的功能和模型限流与**归属业务空间**的权限保持一致，不受用户控制台权限管理的影响，也无需为不同模型（如文生文、文生图、语音合成）创建不同的 [API Key](../concepts/api-key.md)。
-
-[API Key](../concepts/api-key.md) 的状态随归属用户操作变化：
-
-| 触发操作 | 主账号的 [API Key](../concepts/api-key.md) | RAM 账号的 [API Key](../concepts/api-key.md) |
-| --- | --- | --- |
-| 主动删除 [API Key](../concepts/api-key.md) | 失效，不可恢复 | 失效，不可恢复 |
-| 将账号移出业务空间 | — | 失效（重新加入后恢复生效） |
-| 在 RAM 控制台删除账号/角色 | — | 失效，不可恢复 |
-| 为 [API Key](../concepts/api-key.md) 设置 IP 访问白名单 | 华北2（北京）地域支持 | 华北2（北京）地域支持 |
-
-> **注意**：自 2026 年 3 月 25 日起，华北2（北京）地域的所有新创建的 [API Key](../concepts/api-key.md) 均归属主账号。
-
-可通过百炼控制台左侧导航栏「权限管理」页签为 RAM 用户添加 API-Key 权限，赋予其创建、删除、查看该空间下所有 API-Key 的权限。
-
-## OpenAPI 接口权限
-
-RAM 用户默认无权调用百炼应用的数据、[知识库](../concepts/knowledge-base.md)、Prompt 工程及长期记忆等功能的 Open API。需由阿里云主账号在 RAM 控制台为 RAM 用户添加以下权限之一：
-
-- `AliyunBailianDataFullAccess`：可调用百炼应用 API 目录下的所有 API。
-- `AliyunBailianDataReadOnlyAccess`：可调用百炼应用 API 目录下的只读类 API，如 `DescribeFile`、`GetIndexJobStatus` 等。
-
-## 账单与预付费权限
-
-RAM 用户默认无权查看阿里云账单和购买预付费产品，需在 RAM 控制台添加特定权限。这两项权限会授予 RAM 用户查看**所有产品**账单或购买**所有预付费产品**的权限，请谨慎授权。
-
-- 查看阿里云账单：添加 `AliyunBSSReadOnlyAccess`。
-- 购买阿里云预付费产品：添加 `AliyunBSSOrderAccess`。
-
-## 常用配置流程
-
-### 设置超级管理员
-
-需要阿里云主账号或具备 `AliyunRAMFullAccess` 系统策略的 RAM 用户操作。前往 RAM 控制台为 RAM 用户添加 `AliyunBailianFullAccess` 和 `AliyunBSSOrderAccess` 权限后，即可通过百炼全局管理菜单授权任意地域、空间的权限并购买预付费产品。
-
-### 设置业务空间管理员
-
-需超级管理员或业务空间管理员操作。在百炼控制台左侧导航栏「权限管理」页签内为 RAM 用户添加「管理员」权限。
-
-### 设置模型调用权限
-
-1. 不使用默认业务空间时，需先由超级管理员为业务空间开通特定模型的模型调用权限。
-2. 通过控制台调用时，需由超级管理员或业务空间管理员为 RAM 用户添加：**模型体验-操作**（控制台调用模型）、**批量推理-操作**（支持批量推理）、**模型观测-操作**（查看 [Token](../concepts/token.md) 消耗量）。
-3. 通过 API 调用时，需为 RAM 用户在对应业务空间创建或分配 API Key。
-
-### 设置[模型调优](../concepts/fine-tuning.md)权限
-
-1. 不使用默认业务空间时，需先由超级管理员为业务空间开通特定模型的[模型调优](../concepts/fine-tuning.md)（训练）权限。
-2. 在「权限管理」页签内为 RAM 用户添加以下权限：**模型体验-操作**、**模型调优-操作**、**我的模型-操作**（管理调优后模型快照）、**[模型部署](../concepts/model-deployment.md)-操作**（部署调优后的模型）、**模型[评测](../concepts/evaluation.md)-操作**、**数据管理-操作**（管理调优数据集）、**模型观测-操作**。
-3. 通过 API 调优时，无需额外控制台权限，只需为 RAM 用户分配 API Key 即可。
-
-完整的权限配置流程与截图说明见 [权限管理](../../raw/application-user-guide/application-permission-management/application-permission-management-overview.md)。
-
-## 生产环境实践
-
-- **空间规划策略**：推荐按环境划分（开发 `project-dev-workspace`、测试 `project-test-workspace`、预发与生产 `project-prod-workspace`），实现严格的环境隔离；也可按业务线划分（如 `marketing-team-workspace`、`customer-team-workspace`），便于权限和成本管理。
-- **限流策略**：将主账号总配额按比例分配给各业务空间并预留缓冲。例如账号总配额 1000 QPM，可分配生产 600 QPM（60%）、测试 200 QPM（20%）、开发 100 QPM（10%）、预留缓冲 100 QPM（10%），以应对突发流量。
-
-## 限制与注意事项
-
-- 业务空间不能跨地域存在；不同地域的默认业务空间也是不同空间。
-- 默认业务空间无法设置模型调用、调优、部署限制，所有模型均按默认策略可用且无法限流。
-- API Key 不可跨业务空间或跨用户转移；账号移出业务空间后其 API Key 失效，重新加入后恢复。
-- OpenAPI 接口权限、账单与预付费权限必须由阿里云主账号在 RAM 控制台授权，业务空间管理员无法授予。
-- `AliyunBSSReadOnlyAccess` / `AliyunBSSOrderAccess` 为全产品级权限，授权范围远超百炼本身，需谨慎。
-- 开通 AI 安全护栏、模型监控、应用观测等功能，建议使用阿里云主账号在控制台一次性授权开通。
-
-## 常见问题
-
-- **如何获取业务空间 ID**：参考应用开发的「获取 Workspace ID」文档。
-- **如何使用子业务空间调用模型**：无需特殊设置，使用子业务空间的 API Key 即可。
-- **如何使用特定业务空间的应用**：使用 API 管理和调用特定业务空间的应用时，需同时设置 APP ID 和 Workspace ID。
+- **地域强隔离**：业务空间与资源严格绑定地域，北京空间的模型权限配置对新加坡空间无影响；跨地域需分别配置。
+- **默认空间不可控**：默认业务空间无法设置模型调用/调优/部署开关及限流，仅可用于快速体验，**严禁用于生产环境**。
+- **API Key 与用户权限解耦**：用户控制台权限（如能否访问「模型调优」页面）不影响其 API Key 的实际调用能力；API Key 权限仅取决于所属业务空间的模型开通状态与限流配置。
+- **OpenAPI 权限独立授权**：即使用户拥有业务空间管理员权限，若未被授予 `AliyunBailianDataFullAccess` 等 RAM 策略，仍无法调用 `/v1/applications/*` 等应用相关 OpenAPI。
+- **账单与预付费权限需单独配置**：查看账单需 `AliyunBSSReadOnlyAccess`，购买预付费产品需 `AliyunBSSOrderAccess`，二者均需在 RAM 控制台手动附加，不随百炼角色自动继承。
 
 ## 来源文档
 
 - [权限管理](../../raw/application-user-guide/application-permission-management/application-permission-management-overview.md)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

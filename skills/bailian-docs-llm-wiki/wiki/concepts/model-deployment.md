@@ -1,92 +1,68 @@
-# 模型部署与高速推理
+# 模型部署
 
-模型部署是将百炼平台的预置模型、微调模型或导入模型发布为独立、资源专享的在线推理服务的过程；高速推理则是在部署之上（或独立）为调用提供容量刚性兑付与更高输出速度的一组能力。两者共同解决生产环境对高并发、低延迟和确定性吞吐的需求。
+模型部署是将训练或微调完成的模型（包括基础模型、LoRA 微调模型、量化模型等）发布为高可用、可计量、可管理的生产级推理服务的过程。在百炼平台中，模型部署是连接模型开发与业务调用的关键环节，提供统一 API 接口、多维度资源模型和细粒度控制能力，确保模型在真实场景中稳定、高效、合规地对外提供服务。
 
-## 在百炼平台的使用场景
+## 在百炼平台的不同场景中，这个概念如何使用
 
-模型生产的完整链路为：**模型调优（Fine-tuning）→ 模型压缩（可选量化）→ 模型部署 → 推理调用**。开发者可通过调优 API 定制专属模型，用模型压缩降低部署规格与成本，再通过部署 API 发布为在线服务，最后调用端点进行推理。
+- **面向基础模型直接推理**：无需微调，可直接选择 `qwen3.7-plus-2026-05-26`、`glm-5.1`、`deepseek-v4-pro` 等官方模型，按 PTU、MU 或 LoRA（仅限已导入 LoRA）方式部署，快速获得生产就绪 endpoint。
+- **面向微调模型上线**：通过 `model production` 流程完成微调后，使用生成的 `fine_tuned_model_id` 创建部署实例，支持绑定 `version_id` 实现版本可追溯，并自动分配专属 `endpoint_url`。
+- **面向高性能推理需求**：结合 `model high speed inference` 能力，在 MU 部署中启用 `enable_thinking`，或为 PTU 实例配置长输入与前缀缓存；也可单独选用 TPM 预留或快速模式（如 `glm-5.2-fast-preview`），实现吞吐保障或低延迟响应。
+- **面向成本与资源优化**：对已完成微调的模型，先执行 `model compression` 生成量化版本（如 `my-qwen-ft-awq`），再以该压缩模型 ID 进行 MU 部署，显著降低所需算力规格（如从 MU3→MU1），从而节省部署成本。
+- **面向[多模态](multi-modal.md)与定制化场景**：图像/视频/语音类微调模型（如 `wan2.7-image-pro`、`cosyvoice-v3-flash`）同样支持部署，但需注意其仅支持 LoRA 微调路径，且部署时必须使用对应模型 ID 及兼容的 `instance_type`（如 GPU 类型）。
 
-围绕"部署 + 推理"，平台提供多种资源与容量形态，按业务诉求选型：
+> ⚠️ 注意：所有部署均强制要求地域为 **华北2（北京）**；API Key 所属业务空间须具备目标模型的部署权限；部署成功（状态变为 `RUNNING`）即开始计费，与是否发起请求无关。
 
-- **需要私有推理服务、资源独占**：用模型部署（PTU / 模型单元 / 按 Token）创建专属服务。
-- **只需锁定容量、抵御公共限流**：用 **TPM 预留**，为指定模型预留专属吞吐量。
-- **只需更快出字、计费不变**：用**快速模式（Fast mode）**，把输出速度提升到标准 API 的 1.5~2 倍。
-- **需要降低部署成本**：先对微调模型做**模型压缩（量化）**，再部署。
+## 关键参数和配置
 
-## 部署的三种计费方式
+| 参数名 | 适用部署类型 | 说明 | 示例值 |
+|--------|--------------|------|--------|
+| `plan` | 全部 | 必填，指定部署策略：`"ptu"` / `"mu"` / `"lora"` | `"plan": "mu"` |
+| `model_id` | 全部 | 必填，模型唯一标识（基础模型 ID、微调产出 ID 或 LoRA 导入 ID） | `"model_id": "qwen3.7-plus-2026-05-26"` |
+| `endpoint_name` | 全部 | 必填，全局唯一服务标识（3–63 字符，小写字母/数字/连字符） | `"endpoint_name": "qa-bot-prod"` |
+| `ptu_capacity.input_tpm` / `output_tpm` | PTU | 预置吞吐量（token/min），决定容量购买与计费基线 | `"input_tpm": 5000, "output_tpm": 2000` |
+| `deploy_spec` / `capacity` | MU | 算力规格（`MU1`/`MU3`/`MU8`）与副本数，直接影响并发与首 [Token](token.md) 延迟 | `"deploy_spec": "MU3", "capacity": 2` |
+| `enable_thinking` | MU | 是否启用思考模式（影响推理逻辑、计费单价及输出结构） | `"enable_thinking": true` |
+| `max_context_length` | MU（部分模型） | 显式设置最大上下文长度（单位：token），覆盖模型默认值 | `"max_context_length": 128000` |
+| `rpm_limit` / `tpm_limit` | MU | 服务级限流阈值，用于保护服务质量 | `"rpm_limit": 300, "tpm_limit": 10000` |
+| `instance_type` | [model production](../api/model-production.md)（通用部署） | 可选，指定底层计算资源（默认 `gpu-a10`；测试可用 `cpu-small`） | `"instance_type": "gpu-v100"` |
 
-计费方式在服务创建时选定，创建后不可更改（需下线后重新部署）：
+> ✅ 提示：  
+> - LoRA 部署时，`capacity` 字段必须填写（如 `1`），但实际无效；`model_id` 必须为已成功导入的 LoRA 模型 ID（含 `adapter_config.json` 和 `adapter_model.safetensors`）。  
+> - TPM 预留（TPM Reservation）属于 PTU 的增强形态，使用时需替换 API 请求中的 `model` 字段为专属 `dedicated model code`，而非通用模型 ID。  
+> - 快速模式（Fast Mode）为独立部署形态，需使用专属域名和固定模型 ID（如 `glm-5.2-fast-preview`），不参与 MU/PTU/LoRA 的统一部署流程。
 
-- **预置吞吐（PTU）**：预留资源保障特定 TPM，额度内不限速，TPS 通常较按 Token 提升约 1.5~2.0 倍。适合流量稳定、需并发/延迟确定性的高负载场景。支持按小时后付费与按天预付费。
-- **模型单元（MU）**：按时长 × 单元数计费，资源独占、性能可自定义，支持 PD 分离（拆分 Prefill/Decode 降低首 Token 延迟）。适合私有微调模型与长时任务。支持按分钟后付费与按月预付费。
-- **按 Token 使用量**：仅对 SFT 高效训练（LoRA）后的自定义模型开放，主要用于调优效果验证。
+## 面向开发者，简洁实用
 
-> 预付费无法提前退费，首月内提前退订按单价 1.2 倍计费；PTU 超出购买吞吐或输入超模型上限时，自动切换为按量付费（响应头 `x-dashscope-ptu-overflow:true`）。
-
-## PTU 长输入与前缀缓存
-
-- **长输入阶梯系数**：部分模型对超过 32K 的输入按更高系数折算 TPM（如 glm-5.1 在 [32K, 200K] 区间输入 1.33 / 输出 1.17），部分模型无阶梯（1.0）。
-- **前缀缓存折扣**：命中缓存的输入 token 按折扣系数消耗额度（glm-5.1 为 0.2，deepseek-v4-pro 低至 0.08），显著降低多轮对话与重复前缀场景成本。
-- **额度识别字段**：`service_tier`（`ptu-standard` 走 PTU 额度）、`provisioned_tokens`（折算后实际消耗）、`cached_tokens`（缓存命中数）。这些字段在 OpenAI Chat 兼容、OpenAI Responses、Anthropic 兼容、DashScope 四种协议下的 JSON 路径不同，需分别读取；Anthropic 兼容格式暂不返回 `cached_tokens`。
-
-建议创建或扩容前用控制台**容量计算器**（依据 RPM、平均输入/输出长度、预估缓存命中率）估算所需 TPM，避免额度不足产生意外按量费用。
-
-## 模型导入（LoRA）
-
-部署自训练模型前需从 OSS 导入 LoRA 微调版本，核心要求：
-
-- 仅支持 **LoRA**，不支持全参微调；必需文件 `adapter_model.safetensors` 与 `adapter_config.json`。
-- **rank** 必须为 8/16/32/64 之一，且同模型各 LoRA 层 rank 一致。
-- 不得新增 token、修改 vocab 或 chat_template，须与开源基础模型完全一致；VL 模型必须冻结 VIT（含 `visual` 权重则无法导入）。
-- **OSS 前提**：Bucket 需添加 `bailian-datahub-access` 标签（值 `read`）、文件须放子目录、不支持归档类存储；首次导入需完成服务关联角色授权。
-
-支持基础模型涵盖千问3、千问3-VL、千问2.5、千问2.5-VL 系列。
-
-## 使用 API / 命令行部署
-
-部署接口统一为 `POST https://dashscope.aliyuncs.com/api/v1/deployments`（仅华北2·北京，需先配置 `DASHSCOPE_API_KEY`），通过 `plan` 字段区分计费方式：
-
-- **PTU**：`"plan": "ptu"`，配合 `ptu_capacity.input_tpm` / `output_tpm`。
-- **模型单元**：`"plan": "mu"`，配合 `deploy_spec`（如 `MU1`）、`capacity`（副本数）、`enable_thinking`、`max_context_length`、`rpm_limit`、`tpm_limit` 等。
-- **按 Token（LoRA）**：`"plan": "lora"`，`capacity` 必填但无效，扩缩容需在控制台申请。
-
-部署自定义模型时 `model_name` 使用**模型 ID**（在"我的模型"页面获取）。查询状态用 `GET /deployments/{id}`。
-
-## 模型压缩（量化）降本
-
-模型压缩特指量化（不含剪枝/蒸馏），将全精度微调模型转为低精度版本以降低部署所需 MU 规格。例如 qwen3.5-flash 微调模型压缩前 MU1*2（108 元/小时），压缩后 MU8*1（47 元/小时），成本节省约 56%。压缩不可逆，压缩后不支持继续微调或二次压缩，仅华北2（北京）可用。量化模板中 MU 编号越大规格越小、成本越低但精度损失可能越大；校准数据应选择与推理场景语义相近的数据集。
-
-## 高速推理能力
-
-### TPM 预留：锁定专属容量
-
-- **专属模型 code**：创建预留后系统生成专属 `model` code，需将请求中的 `model` 替换为该 code 才命中预留容量。
-- **超额不中断**：超出预留自动降级为公共池按量计费，无需改代码，可在详情页查看超额降级统计。
-- **计费**：按 kTPM（1 kTPM = 1000 Tokens/分钟）预付费，部署成功即计费。
-- **管理**：支持在线扩缩容；退订不可恢复，缩容/退订退费按已用部分 1.5 倍系数结算；到期后 2 小时内可调用，2~14 小时转已停止（可续费），14 小时后删除。
-
-### 快速模式（Fast mode）：更高输出速度
-
-当前处于 **preview 阶段**，面向 AI 编程助手、Agent 多步推理、实时对话等对输出速度敏感的场景：
-
-- **高速输出**：TPS 达标准 API 的 1.5~2 倍（约 80~100 TPS）。
-- **计费不变**：仍按输入/输出 token 计费。
-- **特殊限流**：超出 TPM 不立即限流，请求进入排队队列（区别于 TPM 预留的"超额降级按量"）。
-- **使用方式**：将 `model` 指定为支持快速模式的 model ID（如 `glm-5.2-fast-preview`），域名格式为 `https://{workspace_id}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`。`glm-5.2` 默认返回 `reasoning_content`，[流式输出](streaming.md)时思考与回答分别通过 `delta.reasoning_content` 与 `delta.content` 推送。
-
-## 选型建议
-
-- 追求成本优化且流量波动大：**按量付费**。
-- 流量可预估、不能接受公共限流：**TPM 预留**。
-- 高吞吐 + 高性能确定性：**PTU 专属部署**。
-- 只想更快出字、代码改动最小：**快速模式**。
-- 私有微调模型且要降本：先**模型压缩**再按 **MU** 部署。
+- **一句话启动**：用 DashScope SDK 一行代码部署（以 MU 为例）：
+  ```python
+  from dashscope import Deployments
+  res = Deployments.create(
+      model_id="qwen3.7-plus-2026-05-26",
+      endpoint_name="my-llm-api",
+      plan="mu",
+      deploy_spec="MU1",
+      capacity=2,
+      enable_thinking=False
+  )
+  print(res.output.endpoint_url)  # 获取调用地址
+  ```
+- **状态检查**：部署后立即轮询 `GET /api/v1/deployments/{endpoint_name}`，直到 `status == "RUNNING"` 再发起推理请求。
+- **错误速查**：
+  - `Workspace xxx does not have deployment privilege for model xxxx` → 检查业务空间模型授权；
+  - HTTP 429 + `x-dashscope-ptu-overflow:true` → PTU 已溢出，转为按量计费；
+  - `health_check` 返回 503 → 实例仍在初始化（通常 2–5 分钟），请实现指数退避重试。
+- **最佳实践**：
+  - 高并发可预测业务 → 优先选 PTU，配前缀缓存 + 自动溢出；
+  - 需独占资源/低首 [Token](token.md) 延迟 → 选 MU，调优 `deploy_spec` + `enable_thinking`；
+  - LoRA 微调后轻量上线 → 选 LoRA 模式，严格校验 adapter 格式；
+  - 成本敏感且精度可接受 → 先压缩再部署，对比多个量化模板效果。
 
 ## 关联主题页
 
 - [model deployment 1](../guides/model-deployment-1.md)
 - [model production](../api/model-production.md)
-- [model compression](../guides/model-compression.md)
 - [model high speed inference](../guides/model-high-speed-inference.md)
+- [fine tuning](../guides/fine-tuning.md)
+- [model compression](../guides/model-compression.md)
 
 

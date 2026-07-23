@@ -48,7 +48,7 @@
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3.7-max
 
@@ -278,7 +278,7 @@ qwen3-max-preview
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-max
 
@@ -902,7 +902,7 @@ qwen3.7-max-2026-05-20
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **非思考模式**
 
@@ -1296,7 +1296,7 @@ qwen-plus-2025-04-28
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-plus-2025-01-25
 
@@ -2486,7 +2486,7 @@ qwen3.6-plus-2026-04-02
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3.6-flash
 
@@ -2705,6 +2705,24 @@ qwen3.6-flash-2026-04-16
 4.8元
 
 28.8元
+
+qwen3.6-flash-us
+
+美国
+
+非思考和思考模式
+
+0<Token≤256K
+
+1.87355元
+
+11.2413元
+
+256K<Token≤1M
+
+7.4942元
+
+29.9758元
 
 qwen3.5-flash
 
@@ -3070,6 +3088,8 @@ qwen3.5-flash
 
 非思考和思考模式
 
+0<Token≤1M
+
 0.749元
 
 2.998元
@@ -3103,6 +3123,8 @@ qwen3.5-flash-2026-02-23
 欧盟
 
 非思考和思考模式
+
+0<Token≤1M
 
 0.749元
 
@@ -3242,7 +3264,7 @@ qwen3.6-flash-2026-04-16
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **非思考模式**
 
@@ -3316,7 +3338,7 @@ qwen-turbo
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwq-plus
 
@@ -3370,7 +3392,7 @@ qwq-plus
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-long
 
@@ -3424,7 +3446,7 @@ qwen-long-2025-01-25
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **文本/图片/视频**
 
@@ -3512,7 +3534,7 @@ qwen3.5-omni-flash-2026-03-15
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **文本**
 
@@ -3912,7 +3934,7 @@ qwen-omni-turbo-2025-03-26
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **文本/图片**
 
@@ -3998,7 +4020,7 @@ qwen3.5-omni-flash-realtime-2026-03-15
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **文本**
 
@@ -4352,7 +4374,7 @@ qwen-omni-turbo-realtime-2025-05-08
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qvq-max
 
@@ -4420,7 +4442,7 @@ qvq-max
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-vl-plus
 
@@ -4604,7 +4626,7 @@ qwen3-vl-flash-2025-10-15
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-vl-max
 
@@ -5294,7 +5316,7 @@ qwen3-vl-plus-2025-09-23
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3.5-ocr
 
@@ -5474,7 +5496,7 @@ qwen-vl-ocr-2025-11-20
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-audio-turbo
 
@@ -5506,7 +5528,7 @@ qwen-audio-turbo-latest
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-math-plus
 
@@ -5550,7 +5572,7 @@ qwen-math-turbo
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-coder-plus
 
@@ -5722,7 +5744,7 @@ qwen3-coder-flash-2025-07-28
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-coder-plus
 
@@ -6236,7 +6258,7 @@ qwen3-coder-flash-2025-07-28
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-mt-plus
 
@@ -6474,7 +6496,7 @@ qwen-deep-research-2025-12-15
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 tongyi-xiaomi-analysis-flash
 
@@ -6520,7 +6542,7 @@ tongyi-xiaomi-analysis-pro
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **非思考模式**
 
@@ -6672,7 +6694,7 @@ qwen3.6-35b-a3b
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **非思考模式**
 
@@ -7044,7 +7066,7 @@ qwen3.5-35b-a3b
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **非思考模式**
 
@@ -7366,7 +7388,7 @@ qwen3-8b
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **非思考模式**
 
@@ -7694,7 +7716,7 @@ qwen3-8b
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **文本**
 
@@ -7796,7 +7818,7 @@ qwen2.5-omni-7b
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-omni-30b-a3b-captioner
 
@@ -7850,7 +7872,7 @@ qwen3-omni-30b-a3b-captioner
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-vl-235b-a22b-thinking
 
@@ -8246,7 +8268,7 @@ qwen3-vl-8b-instruct
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen2-audio-instruct
 
@@ -8284,7 +8306,7 @@ qwen-audio-chat
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-coder-next
 
@@ -8596,7 +8618,7 @@ qwen3-coder-next
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 deepseek-v4-pro
 
@@ -9058,7 +9080,7 @@ vanchin/deepseek-ocr
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 kimi-k2.7-code
 
@@ -9246,6 +9268,18 @@ kimi-k2.7-code
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
+kimi/kimi-k3
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+中国内地
+
+20元
+
+100元
+
+无
+
 kimi/kimi-k2.7-code-highspeed
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
@@ -9255,8 +9289,6 @@ kimi/kimi-k2.7-code-highspeed
 13元
 
 54元
-
-无
 
 kimi/kimi-k2.7-code
 
@@ -9314,7 +9346,7 @@ kimi/kimi-k2.5
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 glm-5.2
 
@@ -9540,7 +9572,7 @@ glm-5.1
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 glm-5.2
 
@@ -9742,7 +9774,7 @@ ZHIPU/GLM-5
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 MiniMax-M2.5
 
@@ -9940,7 +9972,13 @@ stepfun/step-3.7-flash
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
+
+qwen-image-3.0-pro
+
+中国内地
+
+限时免费
 
 qwen-image-2.0-pro
 
@@ -10046,6 +10084,12 @@ qwen-image
 
 **输出单价**
 
+qwen-image-3.0-pro
+
+国际
+
+限时免费
+
 qwen-image-2.0-pro
 
 > 当前能力等同于qwen-image-2.0-pro-2026-04-22
@@ -10138,7 +10182,13 @@ qwen-image
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
+
+qwen-image-3.0-pro
+
+中国内地
+
+限时免费
 
 qwen-image-2.0-pro
 
@@ -10252,6 +10302,12 @@ qwen-image-edit
 
 **输出单价**
 
+qwen-image-3.0-pro
+
+国际
+
+限时免费
+
 qwen-image-2.0-pro
 
 > 当前能力等同于qwen-image-2.0-pro-2026-04-22
@@ -10346,7 +10402,7 @@ qwen-image-edit
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-mt-image
 
@@ -10374,7 +10430,7 @@ qwen-mt-image
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 z-image-turbo
 
@@ -10420,7 +10476,7 @@ z-image-turbo
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.6-t2i
 
@@ -10576,7 +10632,7 @@ wan2.6-t2i
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.7-image-pro
 
@@ -10674,7 +10730,7 @@ wan2.6-image
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.5-i2i-preview
 
@@ -10720,7 +10776,7 @@ wan2.5-i2i-preview
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wanx-sketch-to-image-lite
 
@@ -10744,7 +10800,7 @@ wanx-sketch-to-image-lite
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wanx-x-painting
 
@@ -10770,7 +10826,7 @@ wanx-x-painting
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wanx-style-repaint-v1
 
@@ -10794,7 +10850,7 @@ wanx-style-repaint-v1
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wanx-background-generation-v2
 
@@ -10818,7 +10874,7 @@ wanx-background-generation-v2
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 image-out-painting
 
@@ -10842,7 +10898,7 @@ image-out-painting
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 image-instance-segmentation
 
@@ -10868,7 +10924,7 @@ image-instance-segmentation
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 image-erase-completion
 
@@ -10894,7 +10950,7 @@ image-erase-completion
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wanx-virtualmodel
 
@@ -10924,7 +10980,7 @@ virtualmodel-v2
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 shoemodel-v1
 
@@ -10950,7 +11006,7 @@ shoemodel-v1
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wanx-poster-generation-v1
 
@@ -10997,7 +11053,7 @@ facechain-finetune
 
 50次
 
-有效期：申请通过后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 facechain-generation
 
@@ -11007,7 +11063,7 @@ facechain-generation
 
 500张
 
-有效期：申请通过后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 ### **创意文字生成-WordArt锦书**
 
@@ -11023,7 +11079,7 @@ facechain-generation
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wordart-texture
 
@@ -11058,7 +11114,7 @@ wordart-semantic
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 aitryon
 
@@ -11308,7 +11364,7 @@ vidu/viduq2-fast\_reference2image
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 fun-music-preview
 
@@ -11344,7 +11400,7 @@ fun-music-v1
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-audio-3.0-tts-plus
 
@@ -11404,7 +11460,7 @@ qwen-audio-3.0-tts-flash
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-tts-instruct-flash
 
@@ -11442,7 +11498,7 @@ qwen3-tts-instruct-flash-2026-01-26
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-tts-vd-2026-01-26
 
@@ -11468,7 +11524,7 @@ qwen3-tts-vd-2026-01-26
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-tts-vc-2026-01-22
 
@@ -11494,7 +11550,7 @@ qwen3-tts-vc-2026-01-22
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-tts-flash
 
@@ -11542,7 +11598,7 @@ qwen3-tts-flash-2025-09-18
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-tts-flash
 
@@ -11694,7 +11750,7 @@ qwen3-tts-flash-2025-09-18
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-tts-instruct-flash-realtime
 
@@ -11732,7 +11788,7 @@ qwen3-tts-instruct-flash-realtime-2026-01-22
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-tts-vd-realtime-2026-01-15
 
@@ -11768,7 +11824,7 @@ qwen3-tts-vd-realtime-2025-12-16
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-tts-vc-realtime-2026-01-15
 
@@ -11800,7 +11856,7 @@ qwen3-tts-vc-realtime-2025-11-27
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-tts-flash-realtime
 
@@ -11846,7 +11902,7 @@ qwen3-tts-flash-realtime-2025-09-18
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-tts-realtime
 
@@ -11994,7 +12050,7 @@ qwen3-tts-flash-realtime-2025-09-18
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-voice-enrollment
 
@@ -12036,7 +12092,7 @@ qwen-voice-enrollment
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-voice-design
 
@@ -12078,7 +12134,7 @@ qwen-voice-design
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 cosyvoice-v3.5-plus
 
@@ -12240,7 +12296,7 @@ MiniMax/speech-02-turbo
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **输入：音频**
 
@@ -12396,7 +12452,7 @@ qwen3-livetranslate-flash-realtime-2025-09-22
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **输入：音频**
 
@@ -12496,7 +12552,7 @@ qwen3-livetranslate-flash-2025-12-01
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-asr-flash-filetrans
 
@@ -12624,7 +12680,7 @@ qwen3-asr-flash-2025-09-08
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-asr-flash-realtime
 
@@ -12692,7 +12748,7 @@ qwen3-asr-flash-realtime-2025-10-27
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 fun-asr
 
@@ -12788,7 +12844,7 @@ fun-asr-flash-2026-06-15
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 fun-asr-realtime
 
@@ -12979,7 +13035,7 @@ paraformer-realtime-8k-v1
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **文本**
 
@@ -13056,7 +13112,7 @@ qwen-audio-3.0-realtime-flash
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 happyhorse-1.1-t2v
 
@@ -13208,7 +13264,7 @@ happyhorse-1.0-t2v
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 happyhorse-1.1-i2v
 
@@ -13360,7 +13416,7 @@ happyhorse-1.0-i2v
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 happyhorse-1.1-r2v
 
@@ -13512,7 +13568,7 @@ happyhorse-1.0-r2v
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 happyhorse-1.0-video-edit
 
@@ -13620,7 +13676,7 @@ happyhorse-1.0-video-edit
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.7-t2v-2026-06-12
 
@@ -13918,7 +13974,7 @@ wan2.6-t2v
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.7-i2v-2026-04-25
 
@@ -14014,7 +14070,7 @@ wan2.7-i2v
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.6-i2v-flash
 
@@ -14356,7 +14412,7 @@ wan2.6-i2v
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.2-kf2v-flash
 
@@ -14429,7 +14485,7 @@ wan2.1-kf2v-plus
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.7-r2v-2026-06-12
 
@@ -14663,7 +14719,7 @@ wan2.6-r2v
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.7-videoedit
 
@@ -14691,7 +14747,7 @@ wan2.7-videoedit
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wanx2.1-vace-plus
 
@@ -14762,7 +14818,7 @@ wan2.1-vace-plus
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.2-s2v-detect
 
@@ -14805,7 +14861,7 @@ wan2.2-s2v
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.2-animate-move
 
@@ -14817,7 +14873,7 @@ wan2.2-animate-move
 
 50秒
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 专业模式`wan-pro`
 
@@ -14865,7 +14921,7 @@ wan2.2-animate-move
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.2-animate-mix
 
@@ -14877,7 +14933,7 @@ wan2.2-animate-mix
 
 50秒
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 专业模式`wan-pro`
 
@@ -14924,7 +14980,7 @@ wan2.2-animate-mix
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 animate-anyone-detect-gen2
 
@@ -14967,7 +15023,7 @@ animate-anyone-gen2
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 emo-detect-v1
 
@@ -15007,7 +15063,7 @@ emo-v1
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 liveportrait-detect
 
@@ -15042,7 +15098,7 @@ liveportrait
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 emoji-detect-v1
 
@@ -15074,7 +15130,7 @@ emoji-v1
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 videoretalk
 
@@ -15100,7 +15156,7 @@ videoretalk
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 video-style-transform
 
@@ -16422,7 +16478,7 @@ Tripo/Tripo-P1.0
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3.7-text-embedding
 
@@ -16522,7 +16578,7 @@ text-embedding-v3
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 **文本**
 
@@ -16594,7 +16650,7 @@ multimodal-embedding-v1
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-vl-rerank
 
@@ -16680,7 +16736,7 @@ farui-plus
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 tongyi-intent-detect-v3
 
@@ -16712,7 +16768,7 @@ tongyi-intent-detect-v3
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-plus-character
 
@@ -16858,7 +16914,7 @@ qwen-plus-character
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-有效期：阿里云百炼开通后90天内
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 gui-plus
 
