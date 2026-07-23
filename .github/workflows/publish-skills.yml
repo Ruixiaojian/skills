@@ -1,0 +1,32 @@
+name: publish-skills
+
+on:
+  push:
+    branches: [main]
+    paths: ['skills/**']          # 只有技能目录变化才触发
+
+concurrency:
+  group: publish-skills           # 串行化：避免连续 push 并发触发对账
+  cancel-in-progress: false
+
+jobs:
+  poke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Poke FC publisher (publish-skills)
+        run: |
+          # FC 侧为对账式发布：请求体不可信也不需要，action 通过 URL 路径声明。
+          # curl -f 只能捕获 HTTP 层错误；FC 业务失败时仍返回 200 + success:false，
+          # 所以额外解析响应体，把业务失败也变成 workflow 失败（红叉可见）。
+          RESP=$(curl -fsS --retry 3 --retry-delay 5 -X POST \
+            "${{ vars.FC_TRIGGER_URL }}/publish-skills")
+          echo "$RESP" | jq .
+          if [ "$(echo "$RESP" | jq -r '.success')" != "true" ]; then
+            echo "::error::publish-skills failed: $(echo "$RESP" | jq -r '.error // "unknown"')"
+            exit 1
+          fi
+
+          echo "### publish-skills result" >> "$GITHUB_STEP_SUMMARY"
+          echo '```json' >> "$GITHUB_STEP_SUMMARY"
+          echo "$RESP" | jq '{upserted, deleted, unchanged: (.unchanged | length), durationMs}' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
