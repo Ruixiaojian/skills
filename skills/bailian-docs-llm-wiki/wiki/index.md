@@ -4,7 +4,7 @@
 
 ## 使用指南
 
-- [application evaluation](guides/application-evaluation.md) — 6 篇源文档
+- [application evaluation](guides/application-evaluation.md) — 7 篇源文档
 - [application monitoring](guides/application-monitoring.md) — 1 篇源文档
 - [application permission management](guides/application-permission-management.md) — 1 篇源文档
 - [application publishing and sharing](guides/application-publishing-and-sharing.md) — 3 篇源文档
@@ -21,7 +21,7 @@
 - [model compression](guides/model-compression.md) — 1 篇源文档
 - [model context protocol](guides/model-context-protocol.md) — 5 篇源文档
 - [model data overview](guides/model-data-overview.md) — 3 篇源文档
-- [model deployment 1](guides/model-deployment-1.md) — 4 篇源文档
+- [model deployment 1](guides/model-deployment-1.md) — 3 篇源文档
 - [model evaluation introduction](guides/model-evaluation-introduction.md) — 2 篇源文档
 - [model experience](guides/model-experience.md) — 11 篇源文档
 - [model high speed inference](guides/model-high-speed-inference.md) — 2 篇源文档
@@ -29,7 +29,7 @@
 - [plug in](guides/plug-in.md) — 3 篇源文档
 - [prompt](guides/prompt.md) — 5 篇源文档
 - [release notes](guides/release-notes.md) — 2 篇源文档
-- [security and compliance](guides/security-and-compliance.md) — 11 篇源文档
+- [security and compliance](guides/security-and-compliance.md) — 12 篇源文档
 - [skill](guides/skill.md) — 1 篇源文档
 - [start using](guides/start-using.md) — 2 篇源文档
 - [support](guides/support.md) — 3 篇源文档
@@ -45,41 +45,40 @@
 - [application component api reference](api/application-component-api-reference.md) — 56 篇源文档
 - [file management api](api/file-management-api.md) — 1 篇源文档
 - [frameworks](api/frameworks.md) — 3 篇源文档
-- [image generation](api/image-generation.md) — 26 篇源文档
+- [image generation](api/image-generation.md) — 27 篇源文档
 - [knowledge](api/knowledge.md) — 1 篇源文档
 - [long term memory new](api/long-term-memory-new.md) — 1 篇源文档
 - [managed agents api](api/managed-agents-api.md) — 7 篇源文档
 - [model production](api/model-production.md) — 2 篇源文档
 - [more](api/more.md) — 3 篇源文档
 - [more about models](api/more-about-models.md) — 6 篇源文档
-- [more models](api/more-models.md) — 5 篇源文档
+- [more models](api/more-models.md) — 6 篇源文档
 - [omni realtime api](api/omni-realtime-api.md) — 6 篇源文档
 - [preparations](api/preparations.md) — 4 篇源文档
 - [qwen api reference](api/qwen-api-reference.md) — 1 篇源文档
 - [realtime api user guide](api/realtime-api-user-guide.md) — 15 篇源文档
-- [toolkits and frameworks](api/toolkits-and-frameworks.md) — 10 篇源文档
+- [toolkits and frameworks](api/toolkits-and-frameworks.md) — 9 篇源文档
 - [vector and sort](api/vector-and-sort.md) — 4 篇源文档
 - [video generation api](api/video-generation-api.md) — 34 篇源文档
 
 ## 横切概念
 
-- [OpenAI 兼容接口](concepts/openai-compatible-api.md) — 关联 6 个主题
-- [Prompt 工程](concepts/prompt-engineering.md) — 关联 5 个主题
-- [Token 计量与管理](concepts/token.md) — 关联 6 个主题
-- [函数调用](concepts/function-calling.md) — 关联 5 个主题
-- [工具集成](concepts/tool-integration.md) — 关联 6 个主题
-- [异步处理](concepts/asynchronous-processing.md) — 关联 5 个主题
+- [OpenAI 兼容接口](concepts/openai-compatible-api.md) — 关联 4 个主题
+- [Token](concepts/token.md) — 关联 5 个主题
+- [函数调用](concepts/function-calling.md) — 关联 3 个主题
+- [异步任务](concepts/asynchronous-task.md) — 关联 4 个主题
+- [提示词工程](concepts/prompt-engineering.md) — 关联 4 个主题
+- [文件处理](concepts/file-processing.md) — 关联 4 个主题
 - [检索增强生成](concepts/rag.md) — 关联 6 个主题
-- [模型上下文协议](concepts/mcp.md) — 关联 5 个主题
-- [流式输出](concepts/streaming-output.md) — 关联 5 个主题
-- [长期记忆](concepts/long-term-memory.md) — 关联 5 个主题
+- [模型上下文协议](concepts/mcp.md) — 关联 3 个主题
+- [流式输出](concepts/streaming-output.md) — 关联 4 个主题
+- [长期记忆](concepts/long-term-memory.md) — 关联 3 个主题
 
 ## 对比分析
 
-- [多模态生成 API 对比：图像生成 vs 视频生成 vs 3D 生成](comparisons/generation-api-comparison.md) — 对比 3 个主题
-- [实时 API 对比：Realtime API vs Omni Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
-- [应用编排能力对比：Managed Agents API vs Application Component API vs Application Call](comparisons/application-orchestration-comparison.md) — 对比 3 个主题
-- [开发工具与框架对比：Frameworks vs Toolkits and Frameworks vs Model Context Protocol](comparisons/tooling-frameworks-comparison.md) — 对比 3 个主题
-- [模型部署与推理方案对比：Model High-Speed Inference vs Model Deployment vs Model Production](comparisons/model-deployment-and-inference-comparison.md) — 对比 3 个主题
-- [知识能力方案对比：Knowledge API vs Knowledge Base vs Memory Library](comparisons/knowledge-solutions-comparison.md) — 对比 3 个主题
+- [图像、视频与3D生成能力对比](comparisons/image-video-3d-generation.md) — 对比 3 个主题
+- [实时API方案对比：Omni Realtime vs Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
+- [应用调用方式对比：Application Call、Managed Agents 与 Bailian Application Calling](comparisons/application-calling-methods.md) — 对比 3 个主题
+- [模型部署方式对比：Model Production、Model Deployment 1 与 High-Speed Inference](comparisons/model-deployment-options.md) — 对比 3 个主题
+- [记忆与知识管理方案对比：Knowledge Base、Long Term Memory 与 Memory Library](comparisons/memory-knowledge-longterm.md) — 对比 3 个主题
 

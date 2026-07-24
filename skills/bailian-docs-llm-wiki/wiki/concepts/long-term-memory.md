@@ -1,56 +1,75 @@
 # 长期记忆
 
-长期记忆是百炼平台提供的结构化、持久化用户上下文管理能力，用于突破大模型单次会话的上下文窗口限制，实现跨会话、跨应用的用户偏好、习惯、意图与关键事件的自动沉淀、语义检索与动态更新。
+长期记忆是百炼平台提供的结构化、持久化用户上下文管理能力，用于突破大模型单次对话的上下文窗口限制，实现跨会话、跨对话的关键信息沉淀与语义化召回。它不依赖特定大模型，而是通过专用记忆库、向量引擎与规则引擎协同工作，自动提取事实、构建画像，并支持完整的 CRUD 与语义搜索操作。
 
-## 在百炼平台的不同场景中，这个概念如何使用
+## 在百炼平台的不同场景中如何使用
 
-- **智能体（Agent）应用**：作为个性化基础能力，长期记忆可被 Agent 主动调用（如通过 `memory_search` 工具），或由 OpenClaw 等框架自动注入（启用 `autoRecall` 后，在会话开始前将匹配的记忆片段作为系统提示补充）。适用于需记住用户历史指令（如“我常点辣子鸡”）、待办事项（如“明天10点开会”）或设备偏好（如“默认用蓝牙耳机播放”）的对话型智能体。
+- **智能体（Agent）应用**：在 Agent 2.0 中，长期记忆作为可规划工具接入，支持对话结束自动写入（`AddMemory`）、对话开始前按需检索并注入 Prompt（`SearchMemory`），显著增强智能体的持续理解与个性化响应能力；可通过 `meta_data` 标记来源（如 `{"source": "meeting_summary"}`）实现精准过滤。
+  
+- **工作流（Workflow）应用**：在可视化编排中，可将 `AddMemory`、`SearchMemory` 等作为独立节点插入流程，例如在“日程确认”节点后调用 `AddMemory` 记录用户偏好，在“任务提醒”节点前调用 `SearchMemory` 获取历史安排，实现状态驱动的自动化决策。
 
-- **工作流（Workflow）应用**：可通过「记忆检索」节点接入 `SearchMemory` 接口，在流程中按需召回用户画像或历史事件，驱动条件分支（例如：若 `GetUserProfile` 返回 `occupation == "医生"`，则启用医学术语优化提示词）。
+- **高代码应用**：开发者可直接集成 `agentscope-runtime>=1.1.5` 提供的 SDK 工具类（`AddMemory`、`SearchMemory`、`ListMemory`），或调用 REST API 实现细粒度控制；适用于需自定义生命周期管理（如定时清理过期记忆）、多租户隔离（按 `user_id` + `memory_library_id` 分库）或与业务数据库联动的复杂场景。
 
-- **高代码应用**：开发者可直接集成 `agentscope-runtime` SDK 或调用 REST API，在自定义服务逻辑中完成记忆的写入（`AddMemory`）、聚合（`GetUserProfile`）与清理（`DeleteMemory`），实现与业务系统深度耦合的记忆生命周期管理（如订单完成后自动归档用户服务诉求）。
-
-- **RAG 增强场景**：长期记忆可与知识库协同使用——知识库承载通用/静态知识（如产品文档），长期记忆承载个性化/动态信息（如用户上次咨询的订单号），二者在推理时分层注入，提升响应精准度与亲和力。
-
-- **Managed Agents 沙箱环境**：虽不直接内置记忆能力，但可通过调用外部长期记忆 API，在 Bash 工具脚本或 Python 代码中读写 `user_id` 关联的记忆，实现沙箱内任务与用户长期状态的联动（例如：分析完销售数据后，自动将结论存为用户记忆：“已为您生成2024Q3销售趋势报告”）。
+> ⚠️ 注意：长期记忆与短期记忆（即对话历史轮数）完全正交——前者持久化存储于服务端记忆库，后者仅保留在当前会话 [Token](token.md) 上下文中，二者应协同使用而非替代。
 
 ## 关键参数和配置
 
-| 参数名 | 类型 | 必填 | 说明 | 实用建议 |
-|--------|------|------|------|----------|
-| `user_id` | `string` | 是 | 用户唯一标识（≤64 字符），所有操作均以此隔离数据空间。同一用户不同设备/会话应复用相同 `user_id`。 | 建议使用业务侧用户主键（如 `uid_12345`），避免使用临时 token 或 session_id。 |
-| `messages` / `custom_content` | `array` / `string` | 互斥必填 | `messages`：传入最多 50 条对话消息，由平台自动提取关键事件；`custom_content`：直接传入 ≤512 字符的纯文本（绕过解析，适合结构化摘要）。 | 对话类场景优先用 `messages`；已预处理的结构化数据（如 JSON 序列化后的偏好设置）用 `custom_content` 更高效。 |
-| `memory_library_id` | `string` | 否 | 目标记忆库 ID（≤32 字符）。不填则使用默认记忆库。可在控制台「记忆库列表」获取。 | 多租户或多业务线场景建议显式指定，便于权限隔离与配额管理。 |
-| `project_id` | `string` | 否 | 记忆片段提取规则 ID。不填则使用记忆库默认规则。规则决定如何从对话中提炼事件（如是否忽略问候语、如何识别时间表达式）。 | 新建业务时建议创建专属 `project_id` 并配置定制化规则，避免与默认规则冲突。 |
-| `profile_schema` | `string` | 否 | 用户画像模板 ID。传入后触发结构化字段抽取（如 `age`, `preference`），结果可通过 `GetUserProfile` 获取。 | 需先调用 `CreateProfileSchema` 定义模板；适用于需要固定字段的 CRM、会员系统等场景。 |
-| `top_k` | `integer` | 否（`SearchMemory`） | 检索返回的最大条数，默认 `10`，范围 `1–100`。 | 生产环境推荐设为 `3–5`：兼顾召回率与模型输入长度，避免噪声干扰。 |
-| `min_score` / `similarity_threshold` | `double` | 否（默认 `0.0`） | 相似度阈值，范围 `[0.0, 1.0]`；低于此值的结果被过滤。 | 初期调试建议设 `0.5`，稳定后可升至 `0.6–0.7` 提升精度；设 `0.0` 可用于调试全量召回结果。 |
-| `meta_data` | `object` | 否 | 自定义 JSON 对象，支持任意键值对（如 `{"channel": "wechat", "device": "ios"}`），用于后续过滤或分析。 | 建议统一约定 key 命名（如全部小写+下划线），避免嵌套过深（≤3 层）。 |
+| 参数名 | 类型 | 必填 | 说明 | 常用值 |
+|--------|------|------|------|--------|
+| `user_id` | string | 是 | 用户唯一标识（≤64 字符），用于数据空间隔离；建议与业务系统用户 ID 对齐 | `"u_123456"` |
+| `messages` / `custom_content` | array / string | 互斥必填 | `messages`：最多 50 条对话记录，触发自动事件提取；`custom_content`：≤512 字符纯文本，绕过提取逻辑，直存为记忆片段 | `{"role":"user","content":"我过敏源是花生"}` 或 `"过敏源：花生"` |
+| `memory_library_id` | string | 否 | 目标记忆库 ID（≤32 字符）；不传则使用默认库；多租户/多业务线建议显式指定 | `"lib_prod_user_prefs"` |
+| `project_id` | string | 否 | 记忆片段提取规则 ID；不传则使用该库默认规则；可在控制台配置规则（如提取时效、字段白名单） | `"rule_v2_daily_habits"` |
+| `profile_schema` | string | 否 | 用户画像 Schema ID；配合 `CreateProfileSchema` 定义后，可触发结构化属性抽取（如年龄、饮食禁忌） | `"schema_health_profile"` |
+| `top_k` | integer | 否（Search/List） | 搜索/列表返回最大条数；平衡效果与性能，推荐 3–10 | `5`（默认） |
+| `min_score` / `similarity_threshold` | double | 否（Search） | 相似度阈值（0.0–1.0）；低于此值的结果被过滤；注意：SDK 使用 `min_score`，部分旧接口文档称 `similarity_threshold`，语义相同 | `0.4`（推荐起点） |
+| `meta_data` | object | 否 | 自定义 JSON 键值对，随记忆持久化；可用于分类、权限控制或后续业务逻辑路由 | `{"category": "health", "priority": 1}` |
+| `expire_after_days` | integer | 否 | 记忆有效期（天）；不传则按规则默认值（控制台可设 7/30/180 天或 -1 表示永不过期） | `-1`（永不过期） |
 
-> ⚠️ 注意：`UpdateMemory` 当前**未被 `agentscope-runtime` SDK 封装**，需直接调用 REST API 的 `PATCH /api/v2/apps/memory/update`。其他 CRUD 操作均有 SDK 异步封装，推荐优先使用。
+> ✅ 最佳实践：  
+> - 写入时优先用 `messages` 触发语义提取，确保信息结构化；  
+> - 检索时传 `messages`（而非 `query`）更稳定，因平台会自动构造高质量查询向量；  
+> - 所有 `user_id` 应做标准化（如小写、去空格），避免同一用户产生多个记忆空间。
 
-## 面向开发者，简洁实用
+## 面向开发者的快速上手
 
-- **快速起步**：安装 `agentscope-runtime>=1.1.5`，设置 `DASHSCOPE_API_KEY` 环境变量，即可用 3 行代码添加记忆：
-  ```python
-  from agentscope_runtime.tools.modelstudio_memory import AddMemory
-  await AddMemory(user_id="user_001", messages=[{"role":"user","content":"帮我订明早8点的咖啡"}])
-  ```
+```python
+# Python SDK（需 agentscope-runtime>=1.1.5）
+from agentscope_runtime.tools.modelstudio_memory import AddMemory, SearchMemory, ListMemory
 
-- **检索即用**：搜索时无需构造复杂 query，直接传自然语言问题（如 `"我之前订过什么？"`），平台自动做语义理解与匹配。
+# 添加记忆（自动提取）
+await AddMemory().arun({
+    "user_id": "u1",
+    "messages": [{"role":"user","content":"我每天早上7点喝咖啡"}],
+    "meta_data": {"category": "habit"}
+})
 
-- **无过期陷阱**：记忆本身**无内置有效期**，其生命周期完全由 `project_id` 关联的规则控制（如默认规则设为 180 天）。如需永久保存，创建规则时将过期时间设为 `0`。
+# 语义搜索（基于当前对话意图）
+await SearchMemory().arun({
+    "user_id": "u1",
+    "messages": [{"role":"user","content":"我早上一般做什么？"}],
+    "top_k": 3,
+    "min_score": 0.35
+})
 
-- **性能预期**：`AddMemory` 端到端延迟约 500–1000ms，`SearchMemory` 约 200–500ms；高并发场景注意配额限制（`SearchMemory` ≤ 300 QPM/账号）。
+# 分页查看（调试/审计用）
+await ListMemory().arun({
+    "user_id": "u1",
+    "page_num": 1,
+    "page_size": 20
+})
+```
 
-- **错误排查**：常见失败原因包括 `user_id` 超长、`messages` 格式错误、API Key 权限不足。所有接口均返回标准 HTTP 状态码与 `error_code`，建议捕获 `429`（限流）、`401`（鉴权失败）并重试。
+- **认证**：所有 API 请求需携带 `Authorization: Bearer $DASHSCOPE_API_KEY`  
+- **限流**：`AddMemory` ≤120 QPM，`SearchMemory` ≤300 QPM（阿里云账号级）  
+- **生命周期管理**：记忆无自动过期，需业务侧主动调用 `DeleteMemory` 或按 `expire_after_days` 规则清理  
+
+完整接口定义、错误码及更多语言 SDK 示例，请参考 [长期记忆（新）API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)。
 
 ## 关联主题页
 
 - [long term memory new](../api/long-term-memory-new.md)
 - [memory library overview](../guides/memory-library-overview.md)
-- [managed agents](../guides/managed-agents.md)
-- [application support](../guides/application-support.md)
 - [llm application](../guides/llm-application.md)
 
 

@@ -1,6 +1,6 @@
 # 百炼模型市场索引
 
-> 自动生成 · 共 170 个模型家族 · 387 个主干模型 · 更新于 2026-07-23
+> 自动生成 · 共 170 个模型家族 · 386 个主干模型 · 更新于 2026-07-24
 
 **机器查询走结构化文件**：
 
@@ -11,7 +11,7 @@
 
 join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].slug`。
 
-## 文本生成 `TG` — 35 个家族
+## 文本生成 `TG` — 34 个家族
 
 - [GLM](groups/glm-4.5.json) — GLM是由智谱提供的开源模型。
   - 模型：`glm-4.5`, `glm-4.5-air`, `glm-4.6`, `glm-4.7`, `glm-5`, `glm-5.1`, `glm-5.2`
@@ -35,8 +35,6 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen-doc-turbo`
 - [Qwen-Flash-Character](groups/qwen-flash-character.json) — 千问系列多语言角色扮演模型，本模型是动态更新版本，模型更新会提前通知，适合拟人化的角色扮演，同时优化了限定人设指令遵循、话题推进、倾听共情等能力，支持个性化角色的深度还原。
   - 模型：`qwen-flash-character`
-- [Qwen-Long](groups/qwen-long.json) — Qwen-Long是在通义实验室针对超长上下文处理场景的大语言模型，支持中文、英文等不同语言输入，支持最长1000万tokens(约1500万字或1.5万页文档)的超长上下文对话。配合同步上线的文档服…
-  - 模型：`qwen-long`, `qwen-long-latest`
 - [Qwen-Math-Plus](groups/qwen-math-plus.json) — Qwen-Math-Plus模型具有强大的数学解题能力,擅长处理中英文数学题，包括方程、计算、证明等方向。
   - 模型：`qwen-math-plus`, `qwen-math-plus-0816`, `qwen-math-plus-0919`, `qwen-math-plus-latest`
 - [Qwen-Math-Turbo](groups/qwen-math-turbo.json) — Qwen-Math-Turbo模型是专门用于数学解题的语言模型，推理速度快，成本低。
@@ -335,6 +333,19 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [Qwen3-LiveTranslate-Flash](groups/qwen3-livetranslate-flash.json) — Qwen3-LiveTranslate-Flash，一款高精度、高响应、高鲁棒性的多语言实时音视频同传大模型。依托Qwen3-Omni强大的基座能力、海量多模态数据、跨语言跨模态对齐和视觉增强等技术，…
   - 模型：`qwen3-livetranslate-flash`
 
+## 全模态 `Multimodal-Omni` — 5 个家族
+
+- [Qwen-Omni-Turbo](groups/qwen-omni-turbo.json) — 千问全新多模态理解生成大模型，支持文本, 图像，语音，视频输入理解和混合输入理解，具备文本和语音同时流式生成能力，多模态内容理解速度显著提升，提供了4种自然对话音色。
+  - 模型：`qwen-omni-turbo`, `qwen-omni-turbo-latest`
+- [Qwen2.5-开源模型](groups/qwen2.5.json) — Qwen2.5系列开源模型，包含文本生成模型、视觉理解模型、多模态模型等多个领域领先模型。
+  - 模型：`qwen2.5-omni-7b`
+- [Qwen3-Omni-Flash](groups/qwen3-omni-flash.json) — Qwen3-Omni-Flash多模态大模型，基于Thinker–Talker混合专家（MoE）架构，支持文本、图像、音频、视频的高效理解与语音生成能力，可进行119种语言文本交互和20种语言语音交互…
+  - 模型：`qwen3-omni-flash`
+- [Qwen3.5-Omni-Flash](groups/qwen3.5-omni-flash.json) — Qwen3.5-Omni是Qwen最新一代全模态大模型，支持文本，图片，音频，音视频理解与交互。作为 Qwen3-Omni 的全面进化版本， 支持超过 10 小时的音频理解及超过 400 秒的 720…
+  - 模型：`qwen3.5-omni-flash`
+- [Qwen3.5-Omni-Plus](groups/qwen3.5-omni-plus.json) — Qwen3.5-Omni是Qwen最新一代全模态大模型，支持文本，图片，音频，音视频理解与交互。作为 Qwen3-Omni 的全面进化版本， 支持超过 10 小时的音频理解及超过 400 秒的 720…
+  - 模型：`qwen3.5-omni-plus`
+
 ## 实时全模态 `Realtime-Omni` — 4 个家族
 
 - [Qwen-Omni-Turbo-Realtime](groups/qwen-omni-turbo-realtime.json) — 千问全新多模态理解生成大模型实时版，适合实时音频交互场景。支持音频伴随文本、图像、视频混合输入理解，具备语音和文本同时流式生成能力，提供了4种自然对话音色。
@@ -345,17 +356,6 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen3.5-omni-flash-realtime`
 - [Qwen3.5-Omni-Plus-Realtime](groups/qwen3.5-omni-plus-realtime.json) — Qwen3.5-Omni是Qwen最新一代全模态大模型，支持文本，图片，音频，音视频理解与交互。作为 Qwen3-Omni 的全面进化版本，支持60+种语言音频输入，30+语言语音输出以及可控语音对话…
   - 模型：`qwen3.5-omni-plus-realtime`
-
-## 全模态 `Multimodal-Omni` — 4 个家族
-
-- [Qwen-Omni-Turbo](groups/qwen-omni-turbo.json) — 千问全新多模态理解生成大模型，支持文本, 图像，语音，视频输入理解和混合输入理解，具备文本和语音同时流式生成能力，多模态内容理解速度显著提升，提供了4种自然对话音色。
-  - 模型：`qwen-omni-turbo`, `qwen-omni-turbo-latest`
-- [Qwen2.5-开源模型](groups/qwen2.5.json) — Qwen2.5系列开源模型，包含文本生成模型、视觉理解模型、多模态模型等多个领域领先模型。
-  - 模型：`qwen2.5-omni-7b`
-- [Qwen3-Omni-Flash](groups/qwen3-omni-flash.json) — Qwen3-Omni-Flash多模态大模型，基于Thinker–Talker混合专家（MoE）架构，支持文本、图像、音频、视频的高效理解与语音生成能力，可进行119种语言文本交互和20种语言语音交互…
-  - 模型：`qwen3-omni-flash`
-- [Qwen3.5-Omni-Plus](groups/qwen3.5-omni-plus.json) — Qwen3.5-Omni是Qwen最新一代全模态大模型，支持文本，图片，音频，音视频理解与交互。作为 Qwen3-Omni 的全面进化版本， 支持超过 10 小时的音频理解及超过 400 秒的 720…
-  - 模型：`qwen3.5-omni-plus`
 
 ## 实时音频翻译 `Realtime-Audio-Translate` — 3 个家族
 

@@ -1,26 +1,26 @@
 # long term memory new
 
-[长期记忆](../concepts/long-term-memory.md)（新）是百炼平台提供的结构化用户记忆管理能力，支持将对话自动提炼为可检索、可更新的记忆片段，并支持基于画像模板的用户画像构建。该功能通过 REST API 和 Python SDK 提供完整 CRUD 能力，适用于需要持久化用户偏好、习惯、意图等上下文信息的智能体应用。详细接口定义与行为规范见 [长期记忆（新）API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)。
+[长期记忆](../concepts/long-term-memory.md)（新）是百炼平台提供的结构化用户记忆管理能力，支持自动从对话中提取关键信息、构建用户画像，并提供语义搜索、增删改查等完整生命周期操作。该功能基于专用记忆库和规则引擎实现，适用于需要持久化用户偏好、习惯、任务等上下文的智能体应用。详细接口定义与行为规范请参见 [长期记忆（新）API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)。
 
 ## 支持的模型/功能
 
-- **记忆片段管理**：支持 `AddMemory`、`SearchMemory`、`ListMemory`、`DeleteMemory`、`UpdateMemory` 五类核心操作，覆盖记忆的创建、语义搜索、分页查询、删除与内容更新。
-- **用户画像构建**：通过 `CreateProfileSchema` 等画像模板相关接口，定义结构化字段（如 `age`, `occupation`, `preference`），并关联至 `GetUserProfile` 获取聚合画像。
-- **多规则混合检索**：`SearchMemory` 支持传入 `project_ids` 数组，在多个记忆片段规则下联合召回，提升跨场景记忆覆盖度。
-- **端到端 SDK 封装**：`agentscope-runtime>=1.1.5` 提供 `AddMemory`、`SearchMemory`、`ListMemory`、`DeleteMemory` 的异步 Python 工具类封装；但 `UpdateMemory` 当前未被 SDK 封装，需直接调用 REST API —— 此限制已在 [长期记忆（新）API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md) 的 UpdateMemory 章节明确说明。
-
-> **注意**：原始文档中 `UpdateMemory` 的 Python 示例使用 `requests.patch` 手动调用，而其他接口均提供 `agentscope-runtime` 封装。SDK 文档未声明对该接口的未来支持计划，开发者应避免依赖未封装接口的抽象层一致性。
+- **核心能力**：记忆片段自动提取（基于对话 `messages` 或自定义文本 `custom_content`）、多维度语义搜索、分页列表、单条更新/删除。
+- **画像支持**：通过 `CreateProfileSchema` 等接口定义用户画像模板，并关联至记忆库；支持按模板获取聚合画像（`GetUserProfile`）。
+- **模型无关性**：本功能为独立服务，不依赖特定大模型，所有语义理解与检索由平台底层向量引擎与规则引擎完成。  
+- **SDK 封装**：Python 客户端通过 `agentscope-runtime>=1.1.5` 提供 `AddMemory`、`SearchMemory`、`ListMemory`、`DeleteMemory` 四个封装工具类；`UpdateMemory` 暂未封装，需直接调用 REST API —— 具体实现细节见 [长期记忆（新）API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)。
 
 ## 关键参数
 
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|------|------|
-| `user_id` | `string` | 是 | 记忆归属实体 ID（≤64 字符），所有接口均需指定，用于隔离不同用户数据。 |
-| `messages` / `custom_content` | `array` / `string` | 互斥必填 | `AddMemory` 中二选一：`messages` 支持最多 50 条对话（一问一答计为 2 条），自动提取；`custom_content` 为纯文本（≤512 字符），绕过自动解析。详见 [长期记忆（新）API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)。 |
-| `memory_library_id` | `string` | 否 | 显式指定记忆库 ID（≤32 字符）；不传则使用默认记忆库。可在控制台 [记忆库列表页](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/memory/list) 获取。 |
-| `top_k` | `integer` | 否（`SearchMemory`） | 搜索召回数量，默认 `10`，取值范围 `1–100`。 |
-| `min_score` | `double` | 否（`SearchMemory`） | 相似度阈值，默认 `0.3`，范围 `[0,1]`；设为 `0` 可返回全部匹配项（受 `top_k` 限制）。 |
-| `meta_data` | `object` | 否 | 用户自定义键值对，支持任意 JSON 对象，用于扩展元信息（如地理位置、设备类型等）。 |
+| `user_id` | string | 是 | 记忆归属实体 ID（≤64 字符），用于隔离不同用户的数据空间 |
+| `messages` / `custom_content` | array / string | 互斥必填 | `messages` 支持最多 50 条对话记录（一问一答计为 2 条），自动提取事件；`custom_content` 为纯文本输入（≤512 字符），绕过提取逻辑 |
+| `memory_library_id` | string | 否 | 记忆库 ID（≤32 字符），不传则使用默认库；必须与调用方权限匹配 |
+| `top_k`, `min_score` | integer, double | 否（SearchMemory） | 搜索召回控制：`top_k` ∈ [1,100]（默认 10），`min_score` ∈ [0,1]（默认 0.3） |
+| `page_num`, `page_size` | integer | 否（ListMemory） | 分页参数，默认 `page_num=1`, `page_size=10` |
+| `meta_data` | object | 否 | 用户自定义键值对，随记忆片段持久化存储，支持任意 JSON 结构 |
+
+> **注意**：`project_id`（记忆片段规则 ID）在 AddMemory/ListMemory/SearchMemory 中均为可选参数，文档明确说明“如不传则自动选择默认规则 ID”；但部分旧版控制台文档曾暗示其为必填，该描述已过时，请以 [长期记忆（新）API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md) 为准。
 
 ## 使用方式
 
@@ -30,68 +30,40 @@
 Authorization: Bearer $DASHSCOPE_API_KEY
 Content-Type: application/json
 ```
-API Key 获取方式见 [获取 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
+API Key 获取方式详见 [获取 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
 
-### 2. 接口调用示例（REST）
-- **添加记忆**（自动解析对话）：
-  ```bash
-  curl -X POST https://dashscope.aliyuncs.com/api/v2/apps/memory/add \
-    -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
-    -H "Content-Type: application/json" \
-    -d '{
-      "user_id": "user_001",
-      "messages": [{"role":"user","content":"明天10点提醒我开会"}]
-    }'
-  ```
-- **语义搜索**（带过滤）：
-  ```bash
-  curl -X POST https://dashscope.aliyuncs.com/api/v2/apps/memory/memory_nodes/search \
-    -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
-    -H "Content-Type: application/json" \
-    -d '{
-      "user_id": "user_001",
-      "messages": [{"role":"user","content":"我有什么待办？"}],
-      "top_k": 5,
-      "min_score": 0.5
-    }'
-  ```
+### 2. 典型流程示例
+- **添加记忆**：调用 `POST /add`，传入 `user_id` + `messages`（或 `custom_content`）；
+- **搜索记忆**：调用 `POST /memory_nodes/search`，传入 `user_id` + 当前对话上下文 `messages`，获取语义相关片段；
+- **列出/分页查看**：调用 `GET /memory_nodes?user_id=xxx&page_num=1&page_size=20`；
+- **更新/删除**：调用 `PATCH /memory_nodes/{id}` 或 `DELETE /memory_nodes/{id}`，路径中必须指定 `memory_node_id`。
 
-### 3. Python SDK 调用（推荐）
-安装依赖：
-```bash
-pip install agentscope-runtime>=1.1.5
-```
-使用封装工具（以 `AddMemory` 为例）：
+### 3. SDK 快速接入（Python）
 ```python
-from agentscope_runtime.tools.modelstudio_memory import AddMemory, Message, AddMemoryInput
+from agentscope_runtime.tools.modelstudio_memory import AddMemory, SearchMemory, ListMemory
 import asyncio
 
-async def main():
-    tool = AddMemory()
-    try:
-        res = await tool.arun(AddMemoryInput(
-            user_id="user_001",
-            messages=[Message(role="user", content="每天9点提醒我吃药")],
-            meta_data={"source": "mobile_app"}
-        ))
-        print(f"生成 {len(res.memory_nodes)} 条记忆")
-    finally:
-        await tool.close()
+# 添加
+await AddMemory().arun({"user_id": "u1", "messages": [{"role":"user","content":"明天开会"}]})
+
+# 搜索
+await SearchMemory().arun({"user_id": "u1", "messages": [{"role":"user","content":"我明天有什么安排？"}], "top_k": 5})
+
+# 列表
+await ListMemory().arun({"user_id": "u1", "page_size": 20})
 ```
-> **注意**：`UpdateMemory` 无对应 SDK 封装，必须使用 `requests.patch` 手动调用，具体参数格式请严格参照 [长期记忆（新）API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)。
+完整代码示例及错误处理请参考 [长期记忆（新）API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md) 中的 Python 片段。
 
 ## 限制和注意事项
 
-- **限流策略**（阿里云账号级别）：
-  - 全部接口总 QPM ≤ 3000；
-  - `AddMemory` 单独限流 120 QPM；
-  - `SearchMemory` 单独限流 300 QPM。
-- **数据生命周期**：当前生成的记忆片段与用户画像**无自动失效机制**，需业务侧自行管理过期逻辑。
-- **内容长度约束**：
-  - `custom_content` 最大 512 字符；
-  - `messages` 中单条 `content` 无明确长度限制，但整组 `messages` 不得超过 50 条。
-- **默认行为**：`memory_library_id` 和 `project_id` 等参数若未显式传入，系统将自动选择默认值，但生产环境建议显式指定以避免配置漂移。
-- **时间戳精度**：`UpdateMemory` 的 `timestamp` 字段为秒级 Unix 时间戳；若未提供，则使用请求发起时刻。
+- **限流策略（阿里云账号级别）**：
+  - 所有接口合计 ≤ 3000 QPM；
+  - `AddMemory` 单独限流 ≤ 120 QPM；
+  - `SearchMemory` 单独限流 ≤ 300 QPM。
+- **数据时效性**：当前生成的记忆片段与用户画像**无自动失效机制**，需业务侧自行管理生命周期（如通过定时任务调用 `DeleteMemory`）。
+- **内容长度**：`custom_content` 最大 512 字符；`messages` 中单条 `content` 无显式长度限制，但整组 `messages` 不得超过 50 条。
+- **ID 约束**：`user_id` 和 `memory_library_id` 均有字符长度上限（64 和 32），超长将导致 400 错误。
+- **更新语义**：`UpdateMemory` 接口仅替换 `custom_content` 字段，`meta_data` 为增量更新（即与原值 merge），非全量覆盖。
 
 ## 来源文档
 

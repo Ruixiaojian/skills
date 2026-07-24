@@ -1,47 +1,47 @@
 # 模型上下文协议
 
-模型上下文协议（Model Context Protocol，简称 MCP）是百炼平台提供的标准化、生产就绪的[工具集成](tool-integration.md)协议，用于在大语言模型与外部能力（如地图、搜索、数据库、爬虫等）之间建立安全、可扩展、可编排的信息通道。它抽象了通信细节与调用范式，使模型能以统一方式发现、规划并执行工具调用，无需为每个服务定制适配逻辑。
+模型上下文协议（Model Context Protocol，简称 MCP）是百炼平台提供的标准化工具调用协议，用于在大语言模型与外部能力（如搜索、地图、计算、自定义 API 等）之间建立安全、声明式、可编排的上下文交互通道。它将工具抽象为统一语义接口，使模型能基于自然语言意图自主规划调用，同时支持开发者在工作流中精确控制执行逻辑。
 
-## 在百炼平台的不同场景中，这个概念如何使用
+## 在百炼平台的不同场景中如何使用
 
-MCP 不是独立运行的服务，而是深度集成于百炼应用架构中的**协议层能力**，其使用严格绑定以下两类核心场景：
+MCP 是百炼平台统一的工具集成标准，已全面替代旧版“插件”机制（尤其在 Agent 2.0 中），具体使用方式依应用形态而异：
 
 - **智能体应用（Agent 2.0）**：  
-  在提示词驱动下，模型自动判断是否需要调用工具、选择哪个 MCP 工具（如 `maps_weather`）、提取参数并生成结构化调用请求。开发者只需在智能体编辑页的「工具」区域添加已开通的 MCP 服务（最多 5 个），无需编写调度逻辑。整个“思考-调用-反思”链路全程可观测，支持调试回溯。
+  在创建智能体时，于「工具」配置区勾选已开通的 MCP 服务（最多 5 个）。模型根据用户输入自动识别意图、选择工具、生成参数并调用——全程无需显式提示词指令或硬编码工具名。例如：“查上海明天天气”会自动触发 `maps_weather` 工具；“规划从杭州东站到西湖的步行路线”可能协同调用 `amap_geocoding` + `amap_directions`。所有调用过程以 ReAct 形式可视化展示（思考→调用→观察→推理）。
 
 - **工作流应用（Workflow）**：  
-  开发者通过可视化画布显式拖入「MCP 节点」，手动绑定具体工具（如 `web_search`）、配置输入变量（如从上一节点 `intent_extractor/query` 取值）和输出变量（如将 `result` 写入 `search_result`）。适用于流程确定、需强控制的自动化任务，如“用户提问 → 提取地点 → 查询天气 → 生成摘要”。
+  拖入「MCP 节点」，从下拉列表中选择已开通的 MCP 服务，并指定具体工具 ID（如 `web_search`、`firecrawl_fetch`）。输入参数需由上游节点（如大模型节点或变量节点）提供结构化 JSON，支持动态拼接与类型校验。适用于确定性任务，如“先搜索最新政策 → 再提取关键条款 → 最后生成摘要”。
 
-> ⚠️ 注意：MCP **不支持直连 DashScope Qwen API**（如 `qwen-turbo` 的 `/v1/chat/completions` 接口）。它仅在百炼平台内托管的应用（智能体/工作流/高代码应用）中生效，不可作为通用插件 SDK 直接注入第三方 LLM 调用。
+- **高代码应用（Rich Code）**：  
+  可通过 SDK（如 `mcp.client.streamable_http`）直接集成 MCP 服务，兼容 OpenAI-style 工具调用格式（`tools`, `tool_calls`, `tool_responses`）。适合需要细粒度控制、多轮状态管理或与自有业务逻辑深度耦合的场景。
+
+> ⚠️ 注意：MCP 服务**不可通过千问原始 API（如 `/v1/chat/completions`）直接调用**，仅限百炼平台内上述三类应用使用。
 
 ## 关键参数和配置
 
-MCP 服务的接入与调用依赖以下关键配置项，均需在百炼控制台或 SDK 中明确设置：
+MCP 服务在百炼控制台配置时需设置以下核心字段（均在「MCP 服务管理」页填写）：
 
-| 参数类别 | 参数名 | 说明 | 必填 | 示例值 |
-|----------|--------|------|------|--------|
-| **协议类型** | `type` | 决定通信协议与端点路径，**必须严格匹配**：<br>• `"streamableHttp"` → 对应 `/mcp` 端点（当前唯一支持的生产协议）<br>• `"sse"` → 已淘汰，配置将触发错误码 `11200058` 或 `11200059` | ✅ | `"streamableHttp"` |
-| **部署方式** | `安装方式` | 指定运行环境：<br>• `"npx"`（Node.js）或 `"uvx"`（Python）→ 托管至函数计算（FC），免运维<br>• `"http"` → 连接自建远程服务（需公网可达） | ✅ | `"npx"` |
-| **计费模式** | `部署方式` | 影响成本与延迟：<br>• `"基础模式"`：按调用时长计费（0.000156 元/秒），有冷启动延迟<br>• `"极速模式"`：额外收取常驻内存费（0.000036 元/秒），毫秒级响应 | ✅ | `"基础模式"` |
-| **安全凭证** | `KMS 凭据` | 所有敏感配置（如 API Key、Secret）**必须通过 KMS 加密 URI 引用**，禁止明文填写 | ✅ | `kms://acs:kms:cn-beijing:1234567890:alias/mcp-amap-key` |
-| **服务元信息** | `服务名称` / `描述` | 仅用于控制台识别与管理，不影响模型调度逻辑 | ❌ | `"高德天气"` / `"查询实时城市天气"` |
+| 参数 | 必填 | 说明 | 示例 |
+|------|------|------|------|
+| `service_name` | ✅ | 服务唯一标识，仅用于控制台显示与区分 | `"高德天气查询"` |
+| `type` | ✅ | 通信协议类型，决定连接方式与端点路径 | `"sse"`（对应 `/sse` GET）、`"streamableHttp"`（对应 `/mcp` POST）、`"stdio"`（本地进程） |
+| `command` / `url` | ✅ | 启动命令（`stdio`）或远程服务地址（`sse`/`streamableHttp`） | `"npx @aliyun/mcp-amap-weather"` 或 `"https://my-mcp-service.com"` |
+| `env` | ❌（但强烈建议） | 敏感环境变量（API Key、[Token](token.md) 等），**必须通过 KMS 凭据加密注入**，禁止明文填写 | `{"AMAP_API_KEY": "{{kms:xxx}}"}` |
+| `deployment_mode` | ❌（默认 `basic`） | 部署模式，影响冷启动与计费 | `"basic"`（按次计费，有延迟）、`"ultra"`（常驻实例，低延迟，额外费用） |
 
-## 面向开发者，简洁实用
+> 🔑 配置要点：  
+> - `type` 必须与服务端实现的协议严格匹配，否则返回错误码 `11200058`；  
+> - 自定义 MCP 服务部署在函数计算（FC），无固定公网出口 IP，访问云数据库等资源需配置 VPC 或白名单；  
+> - 所有工具参数定义需符合 [MCP Schema 规范](https://modelcontextprotocol.io/spec)（JSON Schema 格式），百炼控制台提供在线校验。
 
-- **快速接入**：前往 [MCP 广场](https://bailian.console.aliyun.com/?tab=mcp#/mcp-market)，点击「立即开通」任一官方服务（如 WebSearch、Amap Maps），然后在智能体或工作流中直接添加即可使用。
-- **自定义服务**：确保服务实现符合 [MCP 官方规范](https://modelcontextprotocol.io/)，部署时选择 `npx` 或 `uvx` 方式，**发布后不会自动更新**——上游包升级需手动重新部署。
-- **外部调用（IDE/第三方项目）**：使用 `pip install mcp`，通过 `streamablehttp_client` 连接百炼 MCP endpoint（如 `https://dashscope.aliyuncs.com/api/v1/mcps/WebSearch/mcp`），调用 `list_tools()` 获取工具列表，并转换为 OpenAI 兼容格式传入 `tools` 参数。
-- **排障要点**：  
-  • 报错 `11200058` 或 `11200059`？→ 检查 `type` 是否为 `"streamableHttp"` 且端点路径为 `/mcp`；  
-  • 工具无响应？→ 确认服务状态为「已发布」且 KMS 凭据有效；  
-  • 自建服务访问云资源失败？→ 函数计算无固定出口 IP，需配置 VPC 打通或白名单。
+## 面向开发者：一句话实践指南
+
+> **用 MCP，不是写适配器，而是声明能力**：开通服务 → 配置 `type`+`url`+`env` → 在智能体中勾选，或在工作流中拖入节点并指定工具 ID —— 模型即刻获得该能力，你只需专注 Prompt 设计与业务编排。
 
 ## 关联主题页
 
 - [model context protocol](../guides/model-context-protocol.md)
 - [plug in](../guides/plug-in.md)
-- [managed agents api](../api/managed-agents-api.md)
 - [llm application](../guides/llm-application.md)
-- [application component api reference](../api/application-component-api-reference.md)
 
 

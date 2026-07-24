@@ -1,50 +1,40 @@
 # file management api
 
-文件管理 API 提供对百炼平台托管文件的全生命周期操作能力，包括上传、查询详情、列举账户下所有文件及删除指定文件。该 API 与模型调用解耦，不参与推理流程，仅用于文件资源管理。所有操作均需通过 HTTP REST 接口调用，并使用标准的 `Authorization: Bearer <api_key>` 认证。
+文件管理 API 用于在百炼平台中对用户上传的文件进行生命周期管理，支持上传、查询、列举和删除等核心操作。所有文件需先通过该 API 上传后，方可被其他模型（如大模型推理、RAG 等）引用。API 设计为 RESTful 风格，基于 HTTP + JSON 协议，需携带有效的 `Authorization` 请求头。
 
 ## 支持的模型/功能
 
-文件管理 API **不依赖任何大模型**，也不关联特定模型版本；其功能独立于 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 所述的底层存储服务。当前支持四项核心功能：  
-- `POST /v1/files`：上传文件（支持 `text/plain`、`application/json`、`application/pdf`、`.csv`、`.xlsx` 等格式）  
-- `GET /v1/files/{file_id}`：查询单个文件元信息（含状态、大小、上传时间等）  
-- `GET /v1/files`：分页列举当前 API Key 所属账户下的全部文件  
-- `DELETE /v1/files/{file_id}`：永久删除指定文件（不可恢复）
-
-> **注意**：部分旧版文档中提及“文件可绑定至特定模型实例”，该描述已过时；实际文件为全局账户级资源，与模型实例无绑定关系，详见 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md)。
+- **上传文件**：支持 `multipart/form-data` 方式上传单个文件（最大 2GB），返回唯一 `file_id`；  
+- **查询文件详情**：根据 `file_id` 获取文件元信息（名称、大小、状态、上传时间等）；  
+- **列举文件列表**：分页获取当前项目下所有已上传文件（默认按创建时间倒序）；  
+- **删除文件**：永久移除指定 `file_id` 的文件（不可恢复）。  
+> **注意**：该 API 不直接支持模型推理或内容解析，仅提供文件托管能力；如需文本提取，请配合 [文档解析 API](../../raw/model-api-reference/document-parsing-api.md) 使用。
 
 ## 关键参数
 
-| 参数 | 位置 | 类型 | 必填 | 说明 |
-|------|------|------|------|------|
-| `file` | `multipart/form-data` body | File | 是 | 待上传的二进制文件对象（`POST /v1/files` 专用） |
-| `purpose` | `multipart/form-data` body | string | 否 | 当前仅支持 `"assistants"`（用于后续与助手功能集成），其他值将被忽略 |
-| `file_id` | URL path | string | 是（`GET/DELETE /v1/files/{file_id}`） | 文件唯一标识符，由平台生成并返回于上传响应中 |
-| `limit` | query | integer | 否 | 列举时每页最大条目数，默认 20，上限 100 |
-| `after` | query | string | 否 | 分页游标，值为上一页响应中的 `last_file_id` |
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `file` | binary | 是（上传时） | 原始文件二进制流，`Content-Type` 应与文件实际类型一致 |
+| `file_id` | string | 是（查询/删除时） | 由上传接口返回的唯一标识符，格式为 `file-xxx` |
+| `limit` / `offset` | integer | 否（列举时） | 分页参数，默认 `limit=20`, `offset=0` |
+| `project_id` | string | 否 | 指定项目 ID；若未传，则使用请求凭证绑定的默认项目 |
+
+详细字段定义与响应结构请参见 [文件管理](../../raw/model-api-reference/file-management-api.md) 文档。
 
 ## 使用方式
 
-1. **上传文件**（示例 cURL）：  
-   ```bash
-   curl -X POST "https://dashscope.aliyuncs.com/api/v1/files" \
-     -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
-     -F "file=@/path/to/document.pdf" \
-     -F "purpose=assistants"
-   ```
-   成功响应返回 `200 OK` 及包含 `id`、`filename`、`status`（通常为 `"uploaded"`）的 JSON 对象。
-
-2. **查询与列举**：直接构造 GET 请求，无需额外 body；响应中 `status` 字段可能为 `"uploaded"`、`"processing"` 或 `"error"`，仅 `uploaded` 状态文件可用于后续功能（如知识库构建）。  
-   > **注意**：`processing` 状态表示文件正在解析（如 PDF 文本提取），此过程异步完成，轮询间隔建议 ≥2s；详见 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md)。
-
-3. **删除文件**：发送 DELETE 请求后，文件立即从列表中移除且无法恢复，但后台清理可能延迟数秒。
+1. **上传**：`POST /v1/files`，`Content-Type: multipart/form-data`；  
+2. **查询**：`GET /v1/files/{file_id}`；  
+3. **列举**：`GET /v1/files?limit=10&offset=0`；  
+4. **删除**：`DELETE /v1/files/{file_id}`。  
+所有请求需在 `Authorization` 头中携带 Bearer [Token](../concepts/token.md)（格式：`Bearer <api_key>`）。完整调用示例可参考 [文件管理](../../raw/model-api-reference/file-management-api.md) 中的「请求示例」章节。
 
 ## 限制和注意事项
 
-- 单文件大小上限为 **512 MB**；超出将返回 `413 Payload Too Large`  
-- 每个账户最多保留 **10,000 个文件**；达到上限后上传新文件将失败（`400 Bad Request`）  
-- 文件名中禁止包含 `/`, `\`, `..` 等路径遍历字符，否则返回 `400`  
-- 已删除文件的 `file_id` 不可复用，且无法通过 API 恢复  
-- 所有文件默认保留 **90 天**（自最后访问或操作时间起），超期后自动清理（此策略可能调整，以实际平台公告为准）
+- 单文件上限为 **2 GB**，超出将返回 `400 Bad Request`；  
+- 文件保留期默认为 **永久**，但平台可能因合规要求清理超 365 天未访问的冷数据（具体策略以 [文件管理](../../raw/model-api-reference/file-management-api.md) 公告为准）；  
+- 删除操作立即生效且不可撤销，建议业务层做好二次确认；  
+- `file_id` 仅在当前 `project_id` 下有效，跨项目不可复用。
 
 ## 来源文档
 

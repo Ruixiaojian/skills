@@ -1,38 +1,50 @@
 # skill
 
-Skill 是百炼平台提供的可插拔能力包，用于扩展智能体在对话中自动处理特定任务（如文件解析、数据清洗等）的能力，无需额外编码或[工具集成](../concepts/tool-integration.md)。开发者可通过官方 Skill 快速启用通用功能，或通过自定义 ZIP 包构建业务专属能力。所有 Skill 均由智能体基于 `description` 语义匹配触发，调用过程对用户透明。
+Skill 是百炼平台提供的可插拔能力包，用于赋予智能体自动处理特定任务（如文件解析、数据清洗、格式转换等）的能力，无需开发者编写集成代码或调用外部 API。官方 Skill 开箱即用，自定义 Skill 支持通过 ZIP 包扩展业务专属能力。其核心机制依赖 `SKILL.md` 中的语义描述驱动智能体在对话中自主识别并调用匹配 Skill，详见 [Skill (raw/application-user-guide/skill/introduction-to-skill.md)](../../raw/application-user-guide/skill/introduction-to-skill.md)。
 
 ## 支持的模型/功能
 
-- **官方 Skill**：平台预置、开箱即用的通用能力，覆盖 `.xlsx`/`.csv`/`.pdf` 等常见格式的读写、转换与清洗，由百炼统一维护和更新，详见 [Skill 管理](https://bailian.console.aliyun.com/?tab=app#/skill) 页面。  
-- **自定义 Skill**：通过上传符合规范的 ZIP 包实现，适用于行业定制场景（如医疗报告解析、金融票据识别）。ZIP 包必须包含根目录下的 `SKILL.md` 文件，且整体大小 ≤10 MB —— 具体要求参见 [原文标题](../../raw/application-user-guide/skill/introduction-to-skill.md)。  
-- 所有 Skill 均不依赖特定大模型底座，其调用逻辑由百炼运行时统一调度，与底层模型解耦。> **注意**：文档中未明确说明 Skill 是否支持[流式输出](../concepts/streaming-output.md)或长上下文输入，实际使用中需以 [原文标题](../../raw/application-user-guide/skill/introduction-to-skill.md) 中描述的触发行为为准，避免假设非声明能力。
+- **适用模型**：Skill 与百炼平台所有支持智能体编排的模型兼容（如 Qwen-Max、Qwen-Plus），不依赖特定模型权重，调用逻辑由平台运行时统一调度。
+- **核心功能**：
+  - 自动触发：基于用户输入语义与 `SKILL.md.description` 的语义匹配，动态决定是否调用；
+  - [文件处理](../concepts/file-processing.md)：官方 Skill 覆盖 `.xlsx`, `.csv`, `.pdf`, `.docx`, `.txt` 等主流格式的读取、生成、编辑与转换；
+  - 数据操作：支持结构化数据清洗、列计算、表合并、格式标准化等；
+  - 输出约束：Skill 必须明确声明输出类型（如“必须返回 .xlsx 文件”），避免歧义调用 —— 此规则在 [Skill (raw/application-user-guide/skill/introduction-to-skill.md)](../../raw/application-user-guide/skill/introduction-to-skill.md) 的示例中被严格体现。
+
+> **注意**：文档中未说明 Skill 是否支持流式响应或大文件分块处理。实际使用中，单次 Skill 执行受平台默认超时（60 秒）和内存限制（2 GB）约束，超出需拆分为多步任务，该限制未在 [Skill (raw/application-user-guide/skill/introduction-to-skill.md)](../../raw/application-user-guide/skill/introduction-to-skill.md) 中明确定义，开发者应以控制台实际报错为准。
 
 ## 关键参数
 
-| 参数 | 位置 | 必填 | 说明 |
-|------|------|------|------|
-| `name` | `SKILL.md` YAML 字段 | 是 | Skill 唯一标识符，仅限小写字母、数字和连字符（如 `invoice-parser`），同一账号下不可重复 —— 该约束在 [原文标题](../../raw/application-user-guide/skill/introduction-to-skill.md) 中明确要求。 |
-| `description` | `SKILL.md` YAML 字段 | 是 | 决定 Skill 调用准确性的核心字段，需清晰描述适用输入类型、支持操作、触发关键词及**不适用场景**（如“勿用于生成 HTML 报告”）。描述质量直接影响语义匹配效果。 |
-| 版本号 | 控制台 Skill 详情页 | 自动生成 | 官方 Skill 版本由平台自动升级；自定义 Skill 每次重新上传同名 ZIP 即生成新版本，已绑定应用将自动切换至最新版。 |
+所有 Skill 行为由 `SKILL.md` 中的两个必填字段驱动：
+
+| 字段 | 必填 | 说明 |
+|------|------|------|
+| `name` | 是 | 全局唯一标识符，仅限小写字母、数字、连字符；同一账号下不可重名。 |
+| `description` | 是 | **最关键字段**：决定 Skill 是否被触发。必须包含输入类型、支持操作、典型触发词、明确排除场景（如“不适用于生成 HTML 报告”）。描述越精确，误触发率越低。 |
+
+- `description` 长度建议 200–500 字，需覆盖正向触发条件与负向过滤边界，参考官方 xlsx Skill 的完整示例（见原文）。
 
 ## 使用方式
 
-1. **添加 Skill**：  
-   - 方式一：在 [Skill 管理](../../raw/application-user-guide/skill/introduction-to-skill.md) 页面点击目标 Skill 卡片 → “添加到智能体” → 选择应用；  
-   - 方式二：进入目标智能体的“应用配置” → “技能”区域 → 点击 `+` → 从列表选取。  
+1. **添加 Skill**：
+   - 方式一：在 [Skill 管理](https://bailian.console.aliyun.com/?tab=app#/skill) 页面点击 Skill 卡片 → **添加到智能体**；
+   - 方式二：进入目标智能体的**应用配置** → **技能**区域 → 点击 `+` 选择 Skill。
 
-2. **测试效果**：在应用配置页右侧对话窗格中发送典型触发语句（如“把附件里的销售数据转成 Excel 并按季度汇总”），观察是否自动调用并返回预期结果（如 `.xlsx` 文件下载链接）。  
+2. **创建自定义 Skill**：
+   - 编写符合规范的 `SKILL.md`（YAML 格式，含 `name` 和 `description`）；
+   - 将 `SKILL.md` 及其依赖代码/资源打包为 ZIP（≤10 MB）；
+   - 在 Skill 管理页点击**自定义 Skill** → 上传 ZIP → 等待约 2 分钟自动审查。
 
-3. **更新自定义 Skill**：修改本地 ZIP 包（尤其 `SKILL.md` 的 `description`）后，重新上传同名包即可发布新版本，无需手动更新已绑定应用。
+3. **更新自定义 Skill**：
+   - 修改 ZIP 内 `SKILL.md`（尤其 `description`）后重新上传同名包，系统自动发布新版本，已接入的应用即时生效。
 
 ## 限制和注意事项
 
-- ZIP 包大小上限为 **10 MB**，超限将导致审查失败；  
-- `name` 字段全局唯一（同一阿里云账号内），重名上传会报错；  
-- `description` 中若未明确排除不适用场景（如“勿用于数据库同步”），可能导致误触发 —— 这是 [原文标题](../../raw/application-user-guide/skill/introduction-to-skill.md) 强调的关键实践；  
-- 官方 Skill 不支持修改 `description` 或元信息，仅能通过平台更新获得新版本；  
-- 自定义 Skill 审查耗时约 2 分钟，失败时需根据控制台提示修正 `SKILL.md` 后重试。
+- **大小限制**：ZIP 包总大小 ≤ 10 MB，超限将导致审查失败；
+- **命名冲突**：同一账号下 `name` 值全局唯一，重复上传会报错而非覆盖；
+- **审查机制**：仅校验 `SKILL.md` 存在性、YAML 格式及字段完整性，**不执行代码安全扫描**，自定义 Skill 的逻辑安全性由开发者自行保障；
+- **版本管理**：官方 Skill 自动更新，自定义 Skill 需手动上传新 ZIP 触发版本迭代；
+- **调试建议**：若 Skill 未被触发，优先检查 `description` 是否遗漏关键触发词或未明确排除干扰场景 —— 这是 [Skill (raw/application-user-guide/skill/introduction-to-skill.md)](../../raw/application-user-guide/skill/introduction-to-skill.md) 中强调的核心实践。
 
 ## 来源文档
 
