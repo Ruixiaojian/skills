@@ -76,7 +76,7 @@ Token Plan 团队版的常见问题解答，包括产品选择、Credits 计费�
 
 ### **Token Plan 团队版支持哪些模型？**
 
-团队版支持文本生成、推理、视觉理解、图片生成和语音模型。具体模型列表和抵扣系数请参见控制台的模型列表页面。
+团队版支持文本生成、推理、视觉理解、图片生成和视频生成模型。具体模型列表和抵扣系数请参见控制台的模型列表页面。
 
 ### **支持 Cursor / Claude Code / Cline 等第三方工具吗？**
 
@@ -191,6 +191,12 @@ Harness 工具是模型内置的扩展能力，包括联网搜索、文搜图、
 输入内容超出模型最大上下文长度
 
 新建会话清空历史，或使用工具的上下文压缩命令
+
+400 调用图像/视频生成模型报错（如 qwen-image-2.0、wan2.7-image）
+
+图像、视频生成模型使用独立接口，无法通过文本模型的 Base URL 直接调用
+
+通过工具的 Skill、Slash Command 或 Agent 扩展机制接入，详见[接入多模态生成模型](https://help.aliyun.com/zh/document_detail/6546109.html)
 
 429 Requests rate limit exceeded
 

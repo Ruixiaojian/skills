@@ -59,7 +59,7 @@
     
 6.  **为什么我的 MCP 服务无法访问远程资源（例如云数据库）？**
     
-    因为 MCP 服务托管在[函数计算 FC](https://www.aliyun.com/product/fc)，无固定出口公网 IP。请为远程资源（如云数据库）配置[函数计算 FC 的 IP 白名单或进行 VPC 网络打通](https://help.aliyun.com/zh/functioncompute/fc/how-to-configure-an-ip-address-whitelist-when-i-access-a-database)。
+    因为 MCP 服务托管在[函数计算 FC](https://www.aliyun.com/product/fc)，无固定出口公网 IP。请为远程资源（如云数据库）配置[函数计算 FC 的 IP 白名单或进行 VPC 网络打通](https://help.aliyun.com/zh/functioncompute/how-to-configure-an-ip-address-whitelist-when-i-access-a-database)。
     
 7.  **我的 MCP Server 保存在私有 npm 仓库中，可以部署到阿里云百炼吗？**
     

@@ -89,8 +89,8 @@ Token Plan、Coding Plan 和按量付费的 API Key 与 Base URL 完全隔离，
 
 ## **可选：接入多模态生成模型**
 
-Token Plan 团队版支持图像生成模型（qwen-image-2.0、wan2.7-image 等）。图像生成模型使用独立的接口，需要通过工具的 Skill 或扩展机制接入。详见[接入多模态生成模型](https://help.aliyun.com/zh/document_detail/6546109.html)。
+Token Plan 团队版支持多模态生成模型（wan2.7-image、happyhorse-1.1-t2v 等）。多模态生成模型使用独立的接口，需要通过 AI 工具的 Skill 或扩展机制接入，详见[接入多模态生成模型](https://help.aliyun.com/zh/model-studio/token-plan-multimodal-gen)。
 
 ## **可选：接入 Harness 工具**
 
-部分模型支持通过 Responses API 调用联网搜索、代码解释器等扩展能力。详见[接入 Harness 工具](https://help.aliyun.com/zh/document_detail/6528494.html)。
+通过 Harness 工具调用，模型可以在对话中调用联网搜索、文搜图、图搜图、网页抓取、代码解释器等扩展能力。当前仅 qwen3.7、qwen3.8 支持原生工具调用，通过 Responses API 直接调用，Harness 工具按抵扣系数消耗 Credits。详见[接入 Harness 工具](https://help.aliyun.com/zh/model-studio/token-plan-harness-tool)。

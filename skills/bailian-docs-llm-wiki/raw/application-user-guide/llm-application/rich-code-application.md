@@ -76,7 +76,7 @@
     
     根据需要配置**规格方案**（vCPU、内存、磁盘大小）、**最小实例数**、**单实例并发度**和**部署地域**。初次体验保持默认即可。
     
-    > 时延敏感业务建议最小实例数 ≥ 1，可实现毫秒级热启动、保障服务不中断。详见[实例类型和规格](https://help.aliyun.com/zh/functioncompute/fc/product-overview/instance-types-and-specifications#section-mfv-5fb-ehw)。
+    > 时延敏感业务建议最小实例数 ≥ 1，可实现毫秒级热启动、保障服务不中断。详见[实例类型和规格](https://help.aliyun.com/zh/functioncompute/instance-types-and-specifications#section-mfv-5fb-ehw)。
     
     配置完成后，单击**立即部署**开始部署。
     

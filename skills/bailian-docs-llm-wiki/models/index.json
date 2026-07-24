@@ -1,11 +1,11 @@
 {
   "updatedAt": "2026-07-24",
-  "totalFamilies": 170,
-  "totalModels": 386,
+  "totalFamilies": 171,
+  "totalModels": 385,
   "capabilityDistribution": {
-    "TG": 34,
+    "TG": 36,
     "IG": 31,
-    "VG": 26,
+    "VG": 25,
     "TTS": 16,
     "Reasoning": 14,
     "ASR": 12,
@@ -21,14 +21,14 @@
     "3D-generation": 1
   },
   "providerDistribution": {
-    "qwen": 102,
-    "qwen-domain-model": 33,
+    "qwen": 103,
+    "qwen-domain-model": 34,
     "wan": 13,
     "happyhorse": 4,
-    "pixverse": 4,
     "mini-max": 3,
     "deepseek": 3,
     "zhipu-ai": 3,
+    "pixverse": 3,
     "moonshot-ai": 2,
     "vidu": 2,
     "kling": 1,
@@ -910,24 +910,6 @@
       ]
     },
     {
-      "slug": "pixverse-v6-market-place",
-      "name": "PixVerse V6",
-      "primaryCapability": "VG",
-      "capabilities": [
-        "VG"
-      ],
-      "providers": [
-        "pixverse"
-      ],
-      "itemCount": 4,
-      "items": [
-        "pixverse/pixverse-v6-it2v",
-        "pixverse/pixverse-v6-kf2v",
-        "pixverse/pixverse-v6-r2v",
-        "pixverse/pixverse-v6-t2v"
-      ]
-    },
-    {
       "slug": "qvq-max",
       "name": "QVQ-Max",
       "primaryCapability": "Reasoning",
@@ -1235,6 +1217,23 @@
         "qwen-image",
         "qwen-image-plus"
       ]
+    },
+    {
+      "slug": "qwen-long",
+      "name": "Qwen-Long",
+      "primaryCapability": "TG",
+      "capabilities": [
+        "TG"
+      ],
+      "providers": [
+        "qwen-domain-model"
+      ],
+      "itemCount": 2,
+      "items": [
+        "qwen-long",
+        "qwen-long-latest"
+      ],
+      "maxContextWindow": 10000000
     },
     {
       "slug": "qwen-math-plus",
@@ -2203,6 +2202,24 @@
         "qwen3.6-35b-a3b"
       ],
       "maxContextWindow": 262144
+    },
+    {
+      "slug": "qwen3.7-flash",
+      "name": "Qwen3.7-Flash",
+      "primaryCapability": "TG",
+      "capabilities": [
+        "TG",
+        "VU",
+        "Reasoning"
+      ],
+      "providers": [
+        "qwen"
+      ],
+      "itemCount": 1,
+      "items": [
+        "qwen3.7-flash"
+      ],
+      "maxContextWindow": 1000000
     },
     {
       "slug": "qwen3.7-max",

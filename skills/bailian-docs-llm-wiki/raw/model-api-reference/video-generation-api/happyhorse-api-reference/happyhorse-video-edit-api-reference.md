@@ -50,6 +50,10 @@ HappyHorse 视频编辑模型支持输入视频与参考图，结合文本指令
 
 `POST https://{WorkspaceId}.eu-central-1.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis`
 
+## **日本（东京）**
+
+`POST https://{WorkspaceId}.ap-northeast-1.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis`
+
 调用时请将`{WorkspaceId}`替换为真实的[业务空间ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
 
 **说明**
@@ -378,6 +382,10 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 `GET https://{WorkspaceId}.eu-central-1.maas.aliyuncs.com/api/v1/tasks/{task_id}`
 
+## **日本（东京）**
+
+`GET https://{WorkspaceId}.ap-northeast-1.maas.aliyuncs.com/api/v1/tasks/{task_id}`
+
 **说明**
 
 -   **轮询建议**：视频编辑过程约需数分钟，建议采用**轮询**机制，并设置合理的查询间隔（如 15 秒）来获取结果。
@@ -552,7 +560,7 @@ task\_id查询有效期为 24 小时，超时后将无法查询，返回以下�
 
 **属性**
 
-**duration** `_float_`
+**duration** `_float_`
 
 生成视频的总视频时长，用于计费。
 

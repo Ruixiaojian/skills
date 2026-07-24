@@ -1,44 +1,57 @@
 # 流式输出
 
-流式输出（Streaming Output）是指模型响应以增量方式、分块（chunk）持续返回给客户端，而非等待整个响应生成完毕后一次性返回。这种方式显著降低端到端延迟，提升用户体验，并支持实时渲染、语音合成、前端逐字显示等交互场景。
+流式输出（Streaming Output）是指模型响应以增量方式、分块逐次返回，而非等待完整结果生成后一次性返回。它通过持续推送 token 或事件片段，显著降低端到端延迟，提升用户感知的实时性与交互自然度，是语音对话、长文本生成、实时翻译等低延迟场景的核心能力。
 
-## 在百炼平台的不同场景中如何使用
+## 在百炼平台的不同场景中，这个概念如何使用
 
-流式输出是百炼平台多项核心能力的默认或可选传输模式，具体应用如下：
+流式输出在百炼平台中并非统一机制，而是根据接入协议和应用类型差异化实现，开发者需按场景选择并正确配置：
 
-- **知识问答（`/api/v2/apps/knowledge/chat`）**：默认启用流式输出（`stream=true`），通过 Server-Sent Events（SSE）协议返回三阶段事件（`plan` → `tool_call` → `answer`），便于前端分阶段展示思考过程与最终答案，并支持引用溯源。
-  
-- **Qwen 文本生成 API（OpenAI 兼容 / DashScope 原生）**：  
-  - DashScope 原生接口默认流式（`stream=true`）；  
-  - [OpenAI 兼容接口](openai-compatible-api.md)默认非流式（`stream=false`），需显式设置 `stream=true` 才启用；  
-  - 启用后，响应为 SSE 格式，每块包含 `delta.content` 字段，需按 `data:` 行解析并累积拼接。
+- **Realtime API（WebSocket/WebRTC/AOQ）**：  
+  所有实时[多模态](multi-modal.md)模型（如 `qwen3.5-omni-plus-realtime`）**默认启用流式输出**，无需显式开关。客户端通过监听 `response.text.delta`（文本增量）、`response.audio.chunk`（音频 PCM 块）、`response.tool_calls.delta`（工具调用片段）等事件，实时消费数据。这是真正的双向流式——输入音频流式上传，输出文本/音频流式下发，端到端延迟可控制在 300ms 内。
 
-- **Omni Realtime API（WebSocket）**：本质即为全链路流式交互——音频输入流、文本/音频输出流均实时双向传输。无需额外配置 `stream` 参数，但需正确处理 `text_delta` 和 `audio_delta` 类型的 WebSocket 消息帧。
+- **Application Call（应用调用）**：  
+  仅支持**同步调用**启用流式（`stream=true`），且**仅对工作流应用生效**（智能体应用暂不支持）。需在应用发布时提前开启“流式输出”开关，否则即使请求携带 `stream=true` 也会降级为非流式响应。异步调用（`background=true`）**完全不支持流式**。
 
-- **Realtime API（WebRTC/AOQ）**：底层协议天然支持低延迟流式，文本输出以 `text_delta` 事件推送，语音输出以 PCM 音频流分片下发，开发者需在客户端实现缓冲与播放同步逻辑。
+- **Qwen 系列基础模型 API（DashScope / OpenAI 兼容）**：  
+  通过 `stream=true` 参数启用。[OpenAI 兼容接口](openai-compatible-api.md)返回 `delta.content` 字段；DashScope 原生接口返回 `output.text` 字段（含增量内容）。注意：`OpenAI 兼容-Responses` 模式下，流式响应会包含工具调用中间状态（如 `delta.tool_calls`），便于前端动态渲染思考过程。
 
-> ⚠️ 注意：流式响应要求客户端主动声明接收格式（如 HTTP 请求头 `Accept: text/event-stream` 或 WebSocket 消息监听机制），否则可能因解析失败导致连接中断或数据丢失。
+- **Application Support（应用增强能力）**：  
+  当同时启用 `stream=true` 和 `incremental_output=true` 时，实现**真正增量式流式**：每个 chunk 仅包含本次新增内容（非全量重发），避免前端重复渲染。该参数对 SDK 版本敏感，建议使用 DashScope SDK ≥ v1.2.0 并显式设置。
+
+> ⚠️ 注意：流式能力受模型限制。例如 `qwen-omni-turbo-realtime` 禁止修改 `temperature`/`top_p` 等参数，但流式本身不受影响；而 `qwen-turbo` 的流式调用不享受免费额度。
 
 ## 关键参数和配置
 
-| 参数名 | 类型 | 说明 | 默认值 | 适用接口 |
-|--------|------|------|--------|----------|
-| `stream` | boolean | 控制是否启用流式响应 | DashScope 原生：`true`；OpenAI 兼容：`false`；Knowledge Chat：`true` | `/api/v2/apps/knowledge/chat`, `/v1/chat/completions`, `/api/v1/services/aigc/text-generation/generation` |
-| `Accept: text/event-stream` | HTTP Header | 必须设置，用于告知服务端返回 SSE 格式 | — | 所有基于 HTTP 的流式接口（非 WebSocket） |
-| `output_modalities` | array | 指定输出模态（如 `["text", "audio"]`），决定流式内容类型 | `["text"]` | Omni Realtime / Realtime API（WebSocket/WebRTC） |
-| `smooth_output` | boolean | （仅 `qwen3-omni-flash-realtime`）控制文本输出是否口语化、适合语音流式播报 | `null`（自动选择） | Omni Realtime API |
+| 参数 | 类型 | 说明 | 是否必需 | 备注 |
+|------|------|------|----------|------|
+| `stream` | `boolean` | 启用流式响应模式 | 是（流式场景下） | 所有支持流式的 API 均需显式设为 `true`；默认为 `false` |
+| `incremental_output` | `boolean` | 启用增量式流式（仅返回新增内容） | 否（推荐启用） | 仅 Application Call 和部分 DashScope 接口支持；旧版 SDK 可能失效 |
+| `modalities` | `array<string>` | 指定输出模态（如 `["text"]` 或 `["text","audio"]`） | 是（Realtime API） | Realtime API 中决定是否流式输出音频块；`["text"]` 时仅流式文本 |
+| `voice` / `output_audio_format` | `string` | 音色与音频格式 | Realtime API 必需 | 影响音频流式 chunk 的编码（当前仅支持 `pcm`） |
 
-> ✅ 最佳实践：  
-> - 开发者应始终检查响应状态码（如 `200 OK`）后再开始解析流；  
-> - 对 SSE 响应，需忽略空行、跳过注释行（以 `:` 开头）、按 `data:` 提取 JSON；  
-> - 对 WebSocket 流，建议使用 SDK 封装的消息处理器（如 `onTextDelta`, `onAudioDelta`），避免手动解析二进制帧；  
-> - 流式调用不改变计费逻辑：仍按实际输出 token 数量计费，与是否流式无关。
+- **Realtime API 特有事件驱动字段**（非请求参数，但需客户端处理）：
+  - `response.text.delta`: 文本增量（UTF-8 字符串）
+  - `response.audio.chunk`: 音频二进制 chunk（`Uint8Array`，PCM 格式）
+  - `response.progress`: 生成进度百分比（部分模型支持）
+  - `response.done`: 表示该响应单元结束（非整个会话）
+
+## 面向开发者，简洁实用
+
+- ✅ **必做**：流式调用前，务必确认目标模型/应用明确支持流式（参考各文档“支持的模型/功能”章节），并检查地域与 Workspace ID 是否符合要求。
+- ✅ **推荐**：Realtime API 客户端使用 DashScope SDK 的 `onEvent` 回调；Qwen/OpenAI 接口使用 `SSE` 解析器（如 `eventsource-parser`），避免手动解析 raw stream。
+- ✅ **避坑**：
+  - 不要对 `stream=true` 的请求设置过短的 HTTP 超时（建议 ≥ 60s）；
+  - Realtime API 中 `modalities` 缺失或非法值会导致连接立即关闭；
+  - Application Call 的 `stream=true` 对智能体无效，误用将返回 400 错误；
+  - `incremental_output=true` 在未更新 SDK 时可能导致前端重复追加文本，建议先验证行为。
+- ✅ **调试技巧**：使用控制台「API 调试」页或 `curl -N` 命令直接观察原始 SSE 流，确认 `data:` 字段结构与预期一致。
 
 ## 关联主题页
 
-- [knowledge](../api/knowledge.md)
-- [qwen api reference](../api/qwen-api-reference.md)
 - [omni realtime api](../api/omni-realtime-api.md)
 - [realtime api user guide](../api/realtime-api-user-guide.md)
+- [application call](../api/application-call.md)
+- [qwen api reference](../api/qwen-api-reference.md)
+- [application support](../guides/application-support.md)
 
 

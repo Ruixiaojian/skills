@@ -1,73 +1,50 @@
 # 检索增强生成
 
-检索增强生成（Retrieval-Augmented Generation，RAG）是一种将大语言模型（LLM）的生成能力与外部知识源的精准检索能力相结合的技术范式。它通过在模型推理前动态召回相关知识片段，并将其作为上下文注入提示词，显著提升回答的准确性、时效性、可解释性与领域专业性，同时降低幻觉风险。
+检索增强生成（Retrieval-Augmented Generation，简称 RAG）是一种将大语言模型（LLM）与外部知识源动态结合的技术范式：在模型生成响应前，先从结构化或非结构化知识库中语义检索相关片段，并将其作为上下文注入提示词，从而提升回答的准确性、事实性、专业性与可溯源性。该技术有效缓解大模型幻觉、知识陈旧和领域泛化不足等问题。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-在百炼平台中，RAG 不是单一接口，而是贯穿多个能力层的**统一技术架构**，支持从底层基础设施到上层应用的全栈集成：
+在百炼平台，RAG 不是单一功能，而是贯穿多个能力层的横切架构，开发者可根据需求选择不同抽象层级的实现方式：
 
-- **知识库服务（核心 RAG 实现）**：  
-  通过「知识库」功能，将 PDF/DOCX/XLSX/PPTX/图片/音视频等多模态数据解析、切片、向量化并构建语义索引；在问答时自动执行“检索 → 重排 → 注入 → 生成”四步流程，支持极速模式（单次检索+生成）和智能模式（Agentic 规划式多轮检索）。
+- **零代码应用层（控制台）**：在智能体或工作流应用中直接绑定已创建的知识库，配置相似度阈值、权重、TopK 等参数；平台自动完成查询改写、多路检索（向量+关键词）、Rerank 排序，并将结果注入模型提示词。适用于快速上线业务问答机器人。
+  
+- **托管服务层（Knowledge API）**：通过 `/api/v2/apps/knowledge/chat`（知识问答）或 `/api/v1/indices/knowledge/search`（知识检索）等 RESTful 接口调用，无需管理索引生命周期。平台自动完成端到端 RAG 流程（规划→检索→生成），支持 SSE 流式响应，适合需快速集成、轻运维的 SaaS 场景。
 
-- **应用级知识问答（面向业务）**：  
-  使用 `/api/v2/apps/knowledge/chat` 接口，以流式 SSE 方式返回 `plan`（规划）、`tool_call`（检索调用）、`answer`（生成结果）三阶段事件，天然支持引用溯源、拒答控制与上下文感知，适用于客服、文档助手等生产场景。
+- **基础设施层（Application Component API）**：通过 `CreateIndex`、`SubmitIndexJob`、`Retrieve` 等 OpenAPI 手动构建和管理知识库全生命周期，支持自定义文档解析、切片策略、元数据过滤及 Chunk 级精细操作。适用于对数据主权、索引质量、成本控制有强要求的企业级场景。
 
-- **框架集成（开发者友好）**：  
-  LlamaIndex 和 Spring AI Alibaba 提供开箱即用的 `DashScopeCloudIndex` / `DashScopeDocumentRetriever`，自动对接云端知识库，无需管理向量模型或重排逻辑，仅需配置 `cloud_index_name` 和 `model_name` 即可启用 RAG。
+- **框架集成层（LlamaIndex / Spring AI Alibaba）**：使用官方 SDK 将百炼知识库作为远程检索后端（如 `DashScopeCloudIndex` 或 `DashScopeDocumentRetriever`），复用本地框架的 Query Engine、Postprocessor、Agent 编排能力，实现跨云/混合部署的 RAG 应用开发。
 
-- **低代码渠道集成（快速落地）**：  
-  在网站、企业微信、钉钉、微信公众号等渠道中，通过 AppFlow 连接流一键绑定已发布的百炼应用与知识库，启用「必定调用」策略，实现零代码 RAG 助手部署。
-
-- **本地 RAG 扩展（灵活可控）**：  
-  对于有自定义需求的场景（如私有嵌入模型、特殊切分逻辑），平台提供基于 Gradio 的本地 RAG 模板，支持替换 `text-embedding-v4` 为开源模型（如 `gte-chinese-large`），并精细调节 `chunk_size`、`chunk_overlap` 等参数。
-
-> ⚠️ 注意：所有 RAG 能力均依赖「已发布」状态的知识库；草稿或停用的知识库不参与检索。当前仅华北2（北京）地域可用。
+- **数据连接层（Data Connection）**：将文件、表格、数据库、OSS、语雀等外部数据源接入后，自动构建向量索引或提供实时工具调用（如 `searchSQL`），使 RAG 能力延伸至动态、结构化、[多模态](multi-modal.md)数据源，支撑“检索增强 + 工具调用”的 Agentic RAG 架构。
 
 ## 关键参数和配置
 
-RAG 效果由检索与生成两个环节协同决定，以下为开发者最常调整的核心参数（按作用域分类）：
+RAG 效果与成本高度依赖以下关键参数，需按场景合理配置：
 
-| 类别 | 参数名 | 说明 | 推荐值范围 | 生效位置 |
-|------|--------|------|-------------|-----------|
-| **检索控制** | `retrieval_top_k` / `max_retrieved_chunks` | 最终注入 LLM 的知识片段数量 | `3–5`（平衡精度与 token 开销） | 应用配置页、API 请求体、LlamaIndex `similarity_top_k` |
-| | `similarity_threshold` | 过滤重排后分数低于该阈值的片段 | `0.2–0.6`（过低引入噪声，过高漏召） | 控制台知识库设置、API 请求体 |
-| | `vector_top_k` / `keyword_top_k` | 向量/关键词初检召回数（影响重排 [Token](token.md) 消耗） | `10–50` | 控制台高级设置、`application-component-api-reference` 中 `Retrieve` 接口 |
-| **生成控制** | `temperature` | 控制生成随机性（越低越确定） | `0.1–0.5`（RAG 场景建议偏保守） | 所有生成接口通用参数 |
-| | `max_tokens` | 限制输出长度，避免截断关键信息 | `512–2048` | 所有生成接口通用参数 |
-| **知识库元数据** | `weight` | 多知识库联合检索时的优先级权重 | 数值型（如 `1.0`, `2.0`） | 控制台知识库绑定页（仅同类型知识库间生效） |
-| | `meta_filters` | 基于预设 Meta 字段（如 `filename`, `date`）结构化过滤 | JSON 对象，如 `{"filename": "user_manual_v2.pdf"}` | API 请求体（`/api/v1/indices/knowledge/search`） |
+| 参数 | 作用域 | 类型 | 常用范围 | 说明 |
+|------|--------|------|----------|------|
+| `top_k` / `max_retrieve_count` | 知识问答、工作流节点、Retrieve API | integer | 1–20 | 最终送入大模型的文本切片数量。增大可提升答案完整性，但易触发输入 [Token](token.md) 超限（尤其长文档）。建议从 3–5 开始调优。 |
+| `initial_retrieve_top_k` | 知识库全局配置（控制台/API） | integer | 1–100 | 向量/关键词初步召回数，直接影响 Rerank 阶段 [Token](token.md) 消耗与延迟。是成本优化核心杠杆。 |
+| `similarity_threshold` | 知识库全局配置（控制台/API） | float | 0.01–1.0 | 过滤低相关性切片的阈值。设为 0.4–0.5 可平衡召回率与噪声；设过高（如 >0.6）可能导致空结果。务必通过命中测试验证。 |
+| `knowledge_config.indices` | Knowledge API、工作流节点 | array of string | ≤5 个 ID | 指定参与联合检索的知识库 ID 列表。多库场景下支持按权重干预排序（仅同类型知识库间生效）。 |
+| `metadata_filter` / `tags` | Retrieve API、工作流节点、数据连接工具 | object / array | — | 结构化过滤条件，用于精准限定检索范围（如 `{"category": "finance", "version": "2024Q3"}`），解决混杂数据召回不相关问题。 |
+| `model` | 知识问答、LlamaIndex、Spring AI Alibaba | string | `qwen-max`, `qwen-plus`, `qwen3.7-plus` 等 | 指定生成阶段所用大模型。注意：知识检索接口不接受该参数；部分模型（如 `qwen-turbo`）当前不支持知识问答，以控制台可用列表为准。 |
 
-> ✅ 提示：`qwen3-rerank` 是百炼默认且唯一支持的文本重排模型；第三方生成模型（如 DeepSeek-R1）可作为 LLM 使用，但**不可替代重排模型**。
+> ⚠️ 注意：所有 RAG 调用均强制要求知识库状态为 `ACTIVE`；`PENDING` 或 `FAILED` 状态将被静默跳过。地域固定为 `cn-beijing`（华北2），URL 中 region 不可替换。
 
 ## 面向开发者，简洁实用
 
-- **快速起步**：  
-  1. 在控制台创建并发布一个知识库（支持 15 个知识库联合检索）；  
-  2. 创建智能体应用 → 绑定该知识库 → 启用「必定调用」；  
-  3. 调用 `/api/v2/apps/knowledge/chat`，传入 `query` 即可获得带溯源的流式回答。
-
-- **调试技巧**：  
-  - 先用 `/api/v1/indices/knowledge/search` 单独测试检索质量，确认 `chunks` 内容相关；  
-  - 若召回不准，优先检查 `similarity_threshold` 和 `meta_filters`，而非直接调高 `retrieval_top_k`；  
-  - 流式响应中 `event: tool_call` 消息包含实际召回的 `chunk_ids`，可用于日志分析与效果归因。
-
-- **避坑指南**：  
-  - API Key 必须与 `workspaceId` 绑定，跨 workspace 调用必失败；  
-  - Base URL 固定为 `https://{workspaceId}.cn-beijing.maas.aliyuncs.com`，不可替换地域；  
-  - 第三方模型仅支持作为生成器，向量/重排模型必须使用百炼官方 `qwen3-*` 系列。
-
-- **进阶优化**：  
-  - 利用 Meta 信息抽取（如正则提取 `version`、`author`）实现精准过滤；  
-  - 在 Prompt 中显式声明“请严格依据以下知识片段作答，并标注来源编号”，强化模型遵循性；  
-  - 结合 `enable_thinking` 参数开启推理模式，让模型对检索结果进行交叉验证与逻辑整合。
+- **快速起步**：优先使用 Knowledge API（`/api/v2/apps/knowledge/chat`），传入 `knowledge_config.indices` 和 `model` 即可获得流式问答响应，无需索引管理。
+- **调试技巧**：开启 `stream=false` 获取完整 JSON 响应，检查 `retrieval_results` 字段验证检索质量；若结果为空，先检查知识库状态、`similarity_threshold` 是否过高、`initial_retrieve_top_k` 是否过低。
+- **成本控制**：`initial_retrieve_top_k × 平均 chunk token 数` 决定 Rerank 成本；`top_k × 平均 chunk token 数 + query token 数` 决定大模型输入成本。二者需协同压测。
+- **安全合规**：所有上传数据独立存储于百炼平台，与原始源无关联；不用于模型训练或商业用途；敏感数据建议启用私有 OSS + STS 临时凭证访问。
+- **错误处理**：常见错误包括 `model_not_supported`（模型不在知识问答白名单）、`429 Too Many Requests`（QPS 超限，需指数退避重试）、`index_not_found`（ID 错误或状态非 ACTIVE）。
 
 ## 关联主题页
 
 - [knowledge](../api/knowledge.md)
 - [knowledge base](../guides/knowledge-base.md)
-- [application component api reference](../api/application-component-api-reference.md)
 - [frameworks](../api/frameworks.md)
-- [use cases](../guides/use-cases.md)
-- [application use cases](../guides/application-use-cases.md)
+- [data connection overview](../guides/data-connection-overview.md)
+- [application component api reference](../api/application-component-api-reference.md)
 
 

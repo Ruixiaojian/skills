@@ -1,50 +1,48 @@
-# 提示词工程
+# Prompt 工程
 
-提示词工程（Prompt Engineering）是系统性设计、优化和管理大语言模型输入提示（Prompt）的方法论与实践体系，旨在通过结构化表达、上下文注入、迭代反馈等技术手段，提升模型输出的准确性、一致性、可控性与业务适配度。它不是一次性技巧，而是贯穿模型应用全生命周期的工程化能力。
+Prompt 工程是系统性设计、构建、优化和复用提示词（Prompt）的方法论与技术实践，旨在精准引导大语言模型完成特定任务、提升输出一致性、可控性与业务适配度。在百炼平台中，它不是简单的文本输入，而是可配置、可版本化、可集成的工程化组件，支撑从零代码应用到高代码系统的全链路 AI 行为编排。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-在百炼平台中，提示词工程已深度集成到多个核心能力模块，支撑从快速原型到生产级应用的演进：
+- **智能体（Agent 2.0）应用**：通过 `System Prompt` 定义角色、任务边界与工具调用规范；支持将 Prompt 模板直接绑定至智能体，实现角色指令与知识库/MCP 工具调度逻辑的解耦。例如，客服智能体可复用“多轮意图澄清 + 术语约束 + 格式化回复”模板，无需重复编写系统指令。
 
-- **智能体（Agent）应用**：系统提示词（System Prompt）是 Agent 的“角色设定”与“行为契约”，直接影响其意图理解、工具规划与反思能力。开发者需结合 Agent 2.0 的 ReAct 链路，设计支持多步推理与错误恢复的提示结构（如 CRISPE 或 RASCEF 框架），并配合知识库、MCP 工具等上下文动态增强提示效果。
+- **工作流（Workflow）应用**：在大模型节点中引用 Prompt 模板 ID 或内联变量化 Prompt（如 `${query}`、`${retrieved_knowledge}`），实现动态上下文注入；结合 `messages` 输入结构，使 Prompt 成为工作流状态传递与条件分支决策的关键媒介。
 
-- **工作流（Workflow）应用**：每个大模型节点均需独立配置提示词模板。可通过变量插值（如 `${user_query}`、`${product_info}`）实现业务数据动态注入，结合条件分支与变量处理节点，构建可复用、可测试的提示逻辑单元。
+- **高代码应用**：通过 SDK 调用 `GetPromptTemplate` 获取结构化模板内容，再结合业务变量实时渲染，嵌入 Python 服务逻辑；支持将 Prompt 作为配置项与模型参数（`temperature`、`max_output_tokens`）统一管理，实现灰度发布与 A/B 测试。
 
-- **高代码应用**：开发者可在 Python 代码中程序化生成 Prompt——例如基于用户画像动态拼接角色指令、从 RAG 检索结果中提取关键片段注入上下文、或调用 `GetPromptTemplate` API 获取预置模板后进行运行时渲染。提示词成为可版本化、可 A/B 测试的代码资产。
+- **RAG 增强场景**：Prompt 与知识库协同——模板中预留 `${retrieved_chunks}` 占位符，由检索结果自动填充；避免硬编码样例，转向以模板驱动的“检索→填充→生成”标准化流程（替代已停用的 Prompt 样例库）。
 
-- **Prompt 模板管理（核心载体）**：百炼将提示词工程落地为标准化组件。支持文本/图片双模态模板，内置 ICIO、CRISPE 等结构化框架；变量语法统一为 `${variableName}`，无需额外模板引擎；所有模板均归属业务空间（Workspace），支持创建、更新、列表、删除等全生命周期 API（`CreatePromptTemplate` 等），便于 CI/CD 集成。
+- **模型微调前奏**：利用反馈优化生成高质量 few-shot 示例集，作为监督微调（SFT）数据的种子样本，缩短人工标注周期。
 
-> ⚠️ 注意：Prompt 样例库（Few-shot）功能已正式下线，官方明确要求迁移至 RAG 表格库。新项目不应依赖该能力，应优先使用知识库（RAG）实现上下文增强。
+> ⚠️ 注意：Prompt 样例库（few-shot 样例库）功能已正式停止维护，所有新项目请迁移至 RAG 表格库或通过反馈优化生成带样例的 Prompt，不得在生产环境中继续使用。
 
 ## 关键参数和配置
 
-| 参数 | 说明 | 实际用途 |
+| 参数 | 说明 | 开发建议 |
 |------|------|----------|
-| `workspaceId` | 业务空间唯一标识 | 所有 Prompt 相关 API（如 `GetPromptTemplate`）的必需路径参数，用于资源隔离与权限校验 |
-| `promptTemplateId` | 模板唯一 ID | 用于获取、更新、调用指定模板；控制台创建后自动生成，格式如 `cfec40c311f14f3e976403059d8f0116` |
-| `variables` | 模板变量列表 | 由 `GetPromptTemplate` 接口返回（如 `["topic", "tone", "length"]`），指导运行时数据填充逻辑 |
-| `content`（模板内容） | 带 `${variable}` 占位符的字符串 | 直接字符串替换即可渲染，非 Jinja2 等复杂语法，轻量可靠 |
-| `has_thoughts`（仅限历史样例库场景） | 控制是否返回检索过程详情 | 已弃用，新项目请忽略；RAG 场景请使用 `Retrieve` 接口的 `retrieval_results` 字段替代 |
+| `workspaceId` | 业务空间唯一标识，所有 Prompt 相关 API 的必需路径参数 | 必须提前获取并持久化存储，不可硬编码；推荐从环境变量或配置中心加载。 |
+| `promptTemplateId` | 模板唯一 ID，用于 `GetPromptTemplate` 等接口 | 控制台模板卡片右上角「复制 ID」；API 调用时需确保该模板处于「已发布」状态。 |
+| `variables` | 模板中声明的占位符列表（如 `["topic", "tone"]`），由 `GetPromptTemplate` 接口返回 | **禁止手动构造**；应解析接口响应中的 `variables` 字段，按需填充，避免字段缺失导致渲染失败。 |
+| `content` | 模板主体内容，支持 ICIO/CRISPE/RASCEF 等结构化框架 | 单模板最大 6144 字符；建议拆分复杂逻辑为多个轻量模板，通过工作流串联复用。 |
+| `type` | 模板类型，取值 `text`（文本生成）或 `image`（图片生成） | 图片生成模板需额外提供 `positive_prompt` 和 `negative_prompt` 字段，二者均参与渲染控制。 |
 
-- **地域约束**：所有 Prompt 工程能力（模板管理、自动优化）仅支持 **华北2（北京）** 地域，跨地域调用将失败。
-- **长度限制**：单个 Prompt 模板内容 ≤ 6144 字符（含占位符）；变量名仅支持 ASCII 字母、数字、下划线。
-- **[Token](token.md) 成本提示**：启用复杂提示结构（如长样例、多轮上下文）会显著增加输入 [Token](token.md)，直接影响计费——建议在效果验证后精简冗余描述。
+- **地域强制约束**：所有 Prompt 功能（模板管理、自动优化、反馈优化）**仅支持华北2（北京）地域**，调用时必须使用 `bailian.cn-beijing.aliyuncs.com` 接入点，跨地域请求将返回 `InvalidRegionId` 错误。
 
 ## 面向开发者，简洁实用
 
-- ✅ **起步最快方式**：控制台 →「组件管理 > 提示词」→「创建提示词」→ 选择「基于 Prompt 工程创建」，使用预置模板（如“营销文案生成”）快速启动，再逐步替换变量与调整结构。
-- ✅ **API 集成三步法**：
-  1. 调用 `ListPromptTemplates` 获取可用模板 ID；
-  2. 调用 `GetPromptTemplate` 获取 `content` 与 `variables`；
-  3. 将业务数据填入 `${...}` 占位符，生成最终 Prompt 字符串，作为 `system` 或 `user` 消息提交至应用 API。
-- ✅ **调试建议**：在智能体/工作流调试面板中开启「思考模式」（`enable_thinking=true`），直观观察模型如何解析提示、规划步骤、调用工具——这是验证提示有效性的最直接方式。
-- ✅ **避坑提醒**：不要硬编码提示词；避免在代码中拼接长文本；禁止将敏感信息（如密钥、内部 URL）写入模板内容——应通过环境变量或 RAG 动态注入。
+- ✅ **优先用模板，而非硬编码 Prompt**：创建自定义模板后，在智能体/工作流中直接引用 `promptTemplateId`，便于统一维护与灰度切换。
+- ✅ **变量命名语义化**：使用 `user_query`、`product_name` 等清晰名称，避免 `var1`、`input` 等模糊占位符，降低协作理解成本。
+- ✅ **自动优化免费试用**：对新 Prompt 初稿，先调用 `/api/v1/prompt/optimize` 进行结构增强（角色注入、指令明确化），再人工校验，节省 30%+ 编写时间。
+- ✅ **反馈优化需最小数据集**：提交 `CreatePromptFeedbackOptimizationTask` 时，确保样例 ≥5 条（覆盖典型 case）、评测数据 ≥20 条（含正负例），否则任务失败。
+- ❌ **禁用已停用能力**：勿调用 `AddPromptCaseLibrary` 或 `RetrieveFromPromptCaseLibrary` 等样例库相关接口；历史项目请尽快迁移到 RAG 表格库或反馈优化流程。
+- 📦 **注意 [Token](token.md) 开销**：启用反馈优化或在 Prompt 中内嵌长知识片段会显著增加输入 [Token](token.md)，建议监控 `usage.input_tokens` 并设置 `max_output_tokens` 防止超限。
 
 ## 关联主题页
 
 - [prompt](../guides/prompt.md)
 - [application component api reference](../api/application-component-api-reference.md)
+- [start using](../guides/start-using.md)
 - [llm application](../guides/llm-application.md)
-- [model experience](../guides/model-experience.md)
+- [bailian application calling](../guides/bailian-application-calling.md)
 
 

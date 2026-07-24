@@ -1,76 +1,69 @@
 # use cases
 
-百炼平台的 use cases 覆盖从基础文本生成到多模态智能体构建的全栈能力，支持开发者快速落地 RAG、AI 智能体、深度研究、影视创作、教育辅学等典型场景。所有用例均基于平台统一 API 接口与模型服务，可直接集成至现有系统，无需自建基础设施。
+百炼平台的 use cases 覆盖从[多模态](../concepts/multi-modal.md)内容生成、智能体构建到深度研究与教育辅助等核心场景，支持开发者基于预置模型或第三方模型快速落地生产级应用。所有方案均依托函数计算等免运维基础设施，强调开箱即用与成本可控，适用于初创团队、中大型企业及教育机构等不同规模客户。
 
 ## 支持的模型/功能
 
-百炼提供两类核心能力：**原生模型服务**与**第三方模型直供**。
+百炼提供两类模型能力：**阿里云自研模型**（如 Qwen 系列、Wan2.7、HappyHorse、Qwen3-VL）和**第三方直供模型**（如 DeepSeek、Kimi、GLM、MiniMax、MiMo、Stepfun、Vidu）。  
+- **视觉生成**：万相（Wan2.7/Wan2.6）支持文生图、图生视频、多镜头叙事；HappyHorse 专注高质量视频生成；Vidu 提供差异化运镜与风格控制能力 [Vidu视频生成Prompt指南](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/vidu-video-generation-prompt-guide.md)。  
+- **文本与[多模态](../concepts/multi-modal.md)理解**：Qwen3-VL 系列在 MathVista、MMMU 等评测中达 SOTA，支撑解题与批改场景 [AI 解题 + 批改：推动课程教学智变](../../raw/model-user-guide/use-cases/ai-homework-helper.md)；Qwen-Deep-Research 实现多源交叉验证与结构化报告生成 [深度研究：生成你的独家洞察报告](../../raw/model-user-guide/use-cases/deep-research.md)。  
+- **智能体与工作流**：通过节点式编排（如无限画布）、RAG、Function Call 和对话流，支持电商客服、影视创作等复杂任务自动化 [高效搭建 AI 智能体与工作流应用](../../raw/model-user-guide/use-cases/build-ai-applications-based-on-alibaba-cloud-model-studio.md)。  
+- **第三方模型集成**：DeepSeek、Kimi、GLM 等均支持 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)调用，并提供 `enable_thinking` 或 `reasoning_effort` 等参数控制推理过程；部分模型（如 GLM-5.2）支持 1M 上下文 [GLM-智谱](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/glm-zhipu.md)。
 
-- **原生模型**：Qwen 系列（如 `qwen3.7-plus`、`qwen3-vl-plus`）、Wan2.7（文生图/视频）、HappyHorse（视频生成）等，具备完整功能链路，如 Wan2.7 支持多镜头叙事与声音控制 [文生视频/图生视频Prompt指南](../../raw/model-user-guide/use-cases/text-to-video-prompt.md)，HappyHorse 支持节点式无限画布编排 [HappyHorse 打造一站式影视创作平台](../../raw/model-user-guide/use-cases/infinite-canvas.md)。
-  
-- **第三方模型直供**：DeepSeek（硅基流动、阿里云、快手万擎三路接入）、Kimi（月之暗面）、GLM（智谱）、MiniMax、Stepfun、MiMo（小米）等。各供应商模型在上下文长度、限流策略、思考模式参数（如 `enable_thinking` 或 `reasoning_effort`）上存在差异，需按文档配置。例如，硅基流动版 DeepSeek 支持更长上下文，而阿里云版支持联网搜索与缓存 [DeepSeek-硅基流动](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/siliconflow-deepseek-api.md)。
-
-> **注意**：多个第三方模型文档（如 [DeepSeek-阿里云](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/deepseek-api.md)、[Kimi](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/kimi-api.md)、[MiniMax](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/minimax-api.md)）均标注了明确的下架时间（2026年7月或10月），且推荐迁移至 Qwen 系列。此为平台统一演进策略，开发者应优先选用 Qwen 新版本模型。
+> **注意**：文档 14（Kimi）、16（GLM）、18（MiniMax）和 24（DeepSeek-阿里云）均明确标注了模型下架时间（2026年7月9日或10月10日），但文档 15（Kimi-月之暗面）、17（GLM-智谱）、19（MiniMax）、21（MiMo）、22（Stepfun）及 13（DeepSeek-硅基流动）未提下架计划，建议优先采用后者以保障长期可用性。
 
 ## 关键参数
 
-不同任务类型依赖特定参数组合，需严格遵循规范：
-
-- **文本生成**：`enable_thinking`（开启思考模式，返回 `reasoning_content` 字段）、`reasoning_effort`（控制推理深度，值为 `"max"`/`"high"`/`"none"`）、`stream`（[流式输出](../concepts/streaming-output.md)开关）。非 OpenAI 标准参数须通过 `extra_body`（Python SDK）或顶层字段（Node.js SDK）传入。
-  
-- **文生图**：`prompt`（正向提示词）、`negative_prompt`（反向提示词）、`prompt_extend`（是否启用大模型智能改写，默认 `true`）[文生图Prompt指南](../../raw/model-user-guide/use-cases/text-to-image-prompt.md)。
-  
-- **文生视频**：除基础 `prompt` 外，支持 `shot_type`（单/多镜头）、`sound_description`（人声/音效/BGM）、`time_stamp`（分镜时间戳）等结构化参数，详见多镜头公式 [文生视频/图生视频Prompt指南](../../raw/model-user-guide/use-cases/text-to-video-prompt.md)。
-  
-- **限流控制**：`X-DashScope-Wait-Timeout`（服务端排队等待秒数，仅对 Traffic Burst 有效）[限流应对最佳实践](../../raw/model-user-guide/use-cases/rate-limiting-best-practices.md)。
-  
-- **缓存控制**：`cache_control`（显式缓存标记，需通过 Anthropic 兼容协议调用）[显式缓存最佳实践](../../raw/model-user-guide/use-cases/explicit-cache-guide.md)。
+不同模型类型对应关键参数如下：  
+- **文生图（万相）**：`prompt`（正向提示词）、`negative_prompt`（反向提示词）、`prompt_extend`（是否启用大模型智能改写，默认 `true`）[文生图Prompt指南](../../raw/model-user-guide/use-cases/text-to-image-prompt.md)。  
+- **文生/图生视频（万相）**：`prompt` 需按基础公式（主体+场景+运动）或进阶公式（含美学控制、风格化）组织；多镜头需显式指定时间戳与分镜内容；声音控制需分离人声、音效、BGM 描述 [文生视频/图生视频Prompt指南](../../raw/model-user-guide/use-cases/text-to-video-prompt.md)。  
+- **思考模式模型（DeepSeek/Kimi/GLM/MiMo/Stepfun）**：非 OpenAI 标准参数需通过 `extra_body`（Python SDK）或顶层字段（Node.js SDK）传入，如 `{"enable_thinking": true}` 或 `{"reasoning_effort": "max"}`。  
+- **限流控制**：`X-DashScope-Wait-Timeout` 请求头用于服务端排队等待，仅对 Traffic Burst 有效；需同步延长客户端超时时间 [限流应对最佳实践](../../raw/model-user-guide/use-cases/rate-limiting-best-practices.md)。  
+- **显式缓存**：通过 `cache_control` 标记（Anthropic 协议）实现确定性命中，适用于 Agent 长上下文管理 [显式缓存最佳实践](../../raw/model-user-guide/use-cases/explicit-cache-guide.md)。
 
 ## 使用方式
 
-1. **API 调用**：所有模型均支持 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)（`base_url` 需按地域配置）与 DashScope 原生 SDK。华北2（北京）地域多数第三方模型（如 SiliconFlow DeepSeek、Moonshot Kimi）要求使用专属业务空间域名 `https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com` 以获得更高稳定性 [GLM-智谱](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/glm-zhipu.md)。
-   
-2. **RAG 构建**：通过 LlamaIndex 集成百炼知识库服务，使用 `DashScopeCloudIndex` 创建索引，`DashScopeCloudRetriever` 获取检索器，再结合 `DashScope` LLM 实例构建 Query Engine [基于LlamaIndex构建RAG应用](../../raw/model-user-guide/use-cases/build-rag-applications-based-on-llamaindex.md)。
-   
-3. **工作流编排**：电商客服等复杂场景需组合智能体（Agent）、RAG、[函数调用](../concepts/function-calling.md)（Function Call）与对话流（Dialog Flow），通过百炼可视化流程编排工具实现 [高效搭建 AI 智能体与工作流应用](../../raw/model-user-guide/use-cases/build-ai-applications-based-on-alibaba-cloud-model-studio.md)。
-   
-4. **文档转视频**：采用分阶段流水线：文档切片 → 生成演示文稿图片 → 合成讲解语音与字幕 → 剪辑合成视频，依赖 FFmpeg 与 Marp 工具链 [借助大模型将文档转换为视频](../../raw/model-user-guide/use-cases/use-llm-to-convert-document-to-video.md)。
+1. **模型开通与配置**：在百炼控制台模型市场开通目标模型（如 HappyHorse、Kimi、GLM），获取 API Key 并配置环境变量；第三方模型需注意地域限制（多数仅支持华北2北京）及业务空间 ID 绑定。  
+2. **[Prompt 工程](../concepts/prompt-engineering.md)**：遵循结构化公式编写提示词——文生图用“主体+场景+风格”，文生视频用“主体+场景+运动+美学控制”，图生视频聚焦“运动+运镜”；Vidu 等模型需结合提示词词典选择运镜、风格、特效关键词。  
+3. **SDK 调用**：推荐使用 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)（`base_url` 指向 `compatible-mode/v1`），第三方模型需在 `model` 参数中指定完整命名（如 `"kimi/kimi-k3"`、`"ZHIPU/GLM-5.2"`）；思考模式结果需解析 `reasoning_content` 与 `content` 字段。  
+4. **高级能力集成**：  
+   - RAG 应用：通过 LlamaIndex + DashScopeCloudIndex 构建知识库，调用 `as_retriever()` 或 `as_query_engine()` [基于LlamaIndex构建RAG应用](../../raw/model-user-guide/use-cases/build-rag-applications-based-on-llamaindex.md)；  
+   - 文档转视频：结合大模型切片、[多模态](../concepts/multi-modal.md)生成、FFmpeg 剪辑与 Marp 渲染 [借助大模型将文档转换为视频](../../raw/model-user-guide/use-cases/use-llm-to-convert-document-to-video.md)；  
+   - 自定义模型：完成训练数据准备（Prompt-Completion 格式）、模型调优、部署与评测闭环 [自定义模型调优、部署与评测](../../raw/model-user-guide/use-cases/model-training-best-practices.md)。
 
 ## 限制和注意事项
 
-- **地域限制**：多数第三方模型（SiliconFlow DeepSeek、Moonshot Kimi、Stepfun、MiMo）仅在华北2（北京）地域可用，且必须使用该地域的 API Key；部分模型（如 GLM、MiniMax）在海外地域（美国、新加坡等）亦有部署，但需替换对应 `base_url` [GLM](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/glm.md)。
-  
-- **限流维度**：百炼 API 同时受请求数（RPM/RPS）、[Token](../concepts/token.md) 用量（TPM/TPS）及增速（Traffic Burst）三重约束。单纯重试无效，需结合服务端排队（`X-DashScope-Wait-Timeout`）、客户端令牌桶或架构层 MQ 削峰 [限流应对最佳实践](../../raw/model-user-guide/use-cases/rate-limiting-best-practices.md)。
-  
-- **缓存生效条件**：显式缓存仅在 Anthropic 兼容协议下自动启用（如 Claude Code、OpenCode），且需确保 `cache_control` 标记被正确注入 system [prompt](prompt.md) 或 user message；普通 OpenAI 协议调用不触发此机制 [显式缓存最佳实践](../../raw/model-user-guide/use-cases/explicit-cache-guide.md)。
-  
-- **模型生命周期**：第三方模型存在明确下架计划（如 DeepSeek 系列于 2026 年 10 月下架），平台持续推荐迁移至 Qwen 新版本。开发者应避免在生产环境长期绑定已标注下架日期的模型。
+- **地域与域名约束**：Kimi、GLM-智谱、MiniMax、MiMo、Stepfun、DeepSeek（硅基流动/快手万擎）等第三方模型仅支持华北2（北京）地域，且 GLM-智谱强烈推荐使用业务空间专属域名 `https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com` 以获得更高稳定性。  
+- **限流维度**：百炼 API 同时受 RPM/TPM（分钟级配额）、RPS/TPS（瞬时频率）和 Traffic Burst（增速限制）三重约束；`X-DashScope-Wait-Timeout` 仅缓解后一种，不可替代客户端流控 [限流应对最佳实践](../../raw/model-user-guide/use-cases/rate-limiting-best-practices.md)。  
+- **缓存适用性**：显式缓存要求请求内容完全一致（含 `cache_control` 标记），适用于高频复用 Prompt 场景；首次写入有 25% 额外开销，但后续命中可节省 90% 成本。  
+- **模型兼容性**：DashScope SDK 与 OpenAI SDK 调用方式存在差异（如 `base_url` 设置、思考参数传递位置），需严格参照各模型文档示例代码，避免因参数位置错误导致静默失败。  
+- **废弃风险**：多个第三方模型（Kimi、GLM、MiniMax）已明确标注下架日期，新项目应优先选用 Qwen 系列或未标注下架的第三方模型（如 Vidu、Stepfun），并关注控制台公告。
 
 ## 来源文档
 
-- [高效搭建 AI 智能体与工作流应用](../../raw/model-user-guide/use-cases/build-ai-applications-based-on-alibaba-cloud-model-studio.md)
-- [深度研究：生成你的独家洞察报告](../../raw/model-user-guide/use-cases/deep-research.md)
 - [HappyHorse 打造一站式影视创作平台](../../raw/model-user-guide/use-cases/infinite-canvas.md)
-- [文生文Prompt指南](../../raw/model-user-guide/use-cases/prompt-engineering-guide.md)
+- [深度研究：生成你的独家洞察报告](../../raw/model-user-guide/use-cases/deep-research.md)
+- [高效搭建 AI 智能体与工作流应用](../../raw/model-user-guide/use-cases/build-ai-applications-based-on-alibaba-cloud-model-studio.md)
+- [AI 解题 + 批改：推动课程教学智变](../../raw/model-user-guide/use-cases/ai-homework-helper.md)
 - [文生图Prompt指南](../../raw/model-user-guide/use-cases/text-to-image-prompt.md)
+- [文生文Prompt指南](../../raw/model-user-guide/use-cases/prompt-engineering-guide.md)
 - [文生视频/图生视频Prompt指南](../../raw/model-user-guide/use-cases/text-to-video-prompt.md)
 - [基于LlamaIndex构建RAG应用](../../raw/model-user-guide/use-cases/build-rag-applications-based-on-llamaindex.md)
 - [自定义模型调优、部署与评测](../../raw/model-user-guide/use-cases/model-training-best-practices.md)
 - [借助大模型将文档转换为视频](../../raw/model-user-guide/use-cases/use-llm-to-convert-document-to-video.md)
 - [限流应对最佳实践 ](../../raw/model-user-guide/use-cases/rate-limiting-best-practices.md)
 - [显式缓存最佳实践](../../raw/model-user-guide/use-cases/explicit-cache-guide.md)
-- [AI 解题 + 批改：推动课程教学智变](../../raw/model-user-guide/use-cases/ai-homework-helper.md)
 - [DeepSeek-硅基流动](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/siliconflow-deepseek-api.md)
-- [DeepSeek-阿里云](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/deepseek-api.md)
 - [Kimi](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/kimi-api.md)
-- [DeepSeek](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/deepseek-api-by-vanchin.md)
 - [Kimi-月之暗面](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/kimi-api-by-moonshot-ai.md)
+- [GLM](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/glm.md)
 - [GLM-智谱](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/glm-zhipu.md)
 - [MiniMax](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/minimax-api.md)
-- [GLM](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/glm.md)
 - [MiniMax](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/minimax-api-by-minimax.md)
 - [Vidu视频生成Prompt指南](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/vidu-video-generation-prompt-guide.md)
-- [Stepfun-阶跃星辰](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/stepfun.md)
 - [MiMo-小米](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/mimo.md)
+- [Stepfun-阶跃星辰](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/stepfun.md)
+- [DeepSeek](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/deepseek-api-by-vanchin.md)
+- [DeepSeek-阿里云](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/deepseek-api.md)
 
 

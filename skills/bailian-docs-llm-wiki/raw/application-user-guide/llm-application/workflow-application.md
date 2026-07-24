@@ -1049,7 +1049,7 @@
     
     服务配置
     
-    选择要调用的函数计算服务。您需要先[创建函数](https://help.aliyun.com/zh/functioncompute/fc/function-instance-1/)计算服务。
+    选择要调用的函数计算服务。您需要先[创建函数](https://help.aliyun.com/zh/functioncompute/function-instance-1/)计算服务。
     
     创建函数计算服务的账号需与当前登录的阿里云百炼平台账号一致，或隶属于同一阿里云主账号。
     

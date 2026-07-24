@@ -28,13 +28,11 @@
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **模式**
 
@@ -58,8 +56,6 @@ qwen3.7-max
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 非思考和思考模式
 
 0<Token≤1M
@@ -72,8 +68,6 @@ qwen3.7-max
 
 qwen3.7-max-2026-06-08
 
-中国内地
-
 非思考和思考模式
 
 0<Token≤1M
@@ -85,8 +79,6 @@ qwen3.7-max-2026-06-08
 100万Token
 
 qwen3.7-max-2026-05-20
-
-中国内地
 
 非思考和思考模式
 
@@ -102,8 +94,6 @@ qwen3.7-max-preview
 
 > 当前能力等同于qwen3.7-max-2026-05-17
 
-中国内地
-
 仅思考模式
 
 0<Token≤1M
@@ -115,8 +105,6 @@ qwen3.7-max-preview
 100万Token
 
 qwen3.7-max-2026-05-17
-
-中国内地
 
 仅思考模式
 
@@ -131,8 +119,6 @@ qwen3.7-max-2026-05-17
 qwen3.6-max-preview
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
-
-中国内地
 
 非思考和思考模式
 
@@ -158,8 +144,6 @@ qwen3-max
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 非思考和思考模式
 
 0<Token≤32K
@@ -184,8 +168,6 @@ qwen3-max
 
 qwen3-max-2026-01-23
 
-中国内地
-
 非思考和思考模式
 
 0<Token≤32K
@@ -209,8 +191,6 @@ qwen3-max-2026-01-23
 28元
 
 qwen3-max-2025-09-23
-
-中国内地
 
 仅非思考模式
 
@@ -238,8 +218,6 @@ qwen3-max-preview
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 非思考和思考模式
 
 0<Token≤32K
@@ -266,8 +244,6 @@ qwen3-max-preview
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **模式**
 
 **单次请求的输入Token数**
@@ -281,8 +257,6 @@ qwen3-max-preview
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-max
-
-中国内地
 
 仅非思考模式
 
@@ -886,13 +860,11 @@ qwen3.7-max-2026-05-20
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **单次请求的输入Token范围**
 
@@ -916,8 +888,6 @@ qwen3.7-plus
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 0<Token≤256K
 
 原价2元 限时8折
@@ -939,8 +909,6 @@ qwen3.7-plus
 qwen3.7-plus-2026-05-26
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
-
-中国内地
 
 0<Token≤256K
 
@@ -964,8 +932,6 @@ qwen3.6-plus
 
 > 当前能力等同于qwen3.6-plus-2026-04-02
 
-中国内地
-
 0<Token≤256K
 
 2元
@@ -985,8 +951,6 @@ qwen3.6-plus
 48元
 
 qwen3.6-plus-2026-04-02
-
-中国内地
 
 0<Token≤256K
 
@@ -1009,8 +973,6 @@ qwen3.6-plus-2026-04-02
 qwen3.5-plus
 
 > 当前能力等同于qwen3.5-plus-2026-02-15
-
-中国内地
 
 0<Token≤128K
 
@@ -1040,8 +1002,6 @@ qwen3.5-plus
 
 qwen3.5-plus-2026-04-20
 
-中国内地
-
 0<Token≤128K
 
 0.8元
@@ -1069,8 +1029,6 @@ qwen3.5-plus-2026-04-20
 24元
 
 qwen3.5-plus-2026-02-15
-
-中国内地
 
 0<Token≤128K
 
@@ -1104,8 +1062,6 @@ qwen-plus
 
 > [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价
 
-中国内地
-
 0<Token≤128K
 
 0.8元
@@ -1136,8 +1092,6 @@ qwen-plus-latest
 
 > [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价
 
-中国内地
-
 0<Token≤128K
 
 0.8元
@@ -1165,8 +1119,6 @@ qwen-plus-latest
 64元
 
 qwen-plus-2025-12-01
-
-中国内地
 
 0<Token≤128K
 
@@ -1196,8 +1148,6 @@ qwen-plus-2025-12-01
 
 qwen-plus-2025-09-11
 
-中国内地
-
 0<Token≤128K
 
 0.8元
@@ -1225,8 +1175,6 @@ qwen-plus-2025-09-11
 64元
 
 qwen-plus-2025-07-28
-
-中国内地
 
 0<Token≤128K
 
@@ -1256,8 +1204,6 @@ qwen-plus-2025-07-28
 
 qwen-plus-2025-07-14
 
-中国内地
-
 无阶梯计价
 
 0.8元
@@ -1269,8 +1215,6 @@ qwen-plus-2025-07-14
 100万Token
 
 qwen-plus-2025-04-28
-
-中国内地
 
 无阶梯计价
 
@@ -1286,8 +1230,6 @@ qwen-plus-2025-04-28
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **单次请求的输入Token范围**
 
 **输入单价（每百万Token）**
@@ -1300,8 +1242,6 @@ qwen-plus-2025-04-28
 
 qwen-plus-2025-01-25
 
-中国内地
-
 无阶梯计价
 
 0.8元
@@ -1312,8 +1252,6 @@ qwen-plus-2025-01-25
 
 qwen-plus-2025-01-12
 
-中国内地
-
 无阶梯计价
 
 0.8元
@@ -1323,8 +1261,6 @@ qwen-plus-2025-01-12
 100万Token
 
 qwen-plus-2024-12-20
-
-中国内地
 
 无阶梯计价
 
@@ -2466,13 +2402,11 @@ qwen3.6-plus-2026-04-02
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **模式**
 
@@ -2496,8 +2430,6 @@ qwen3.6-flash
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 非思考和思考模式
 
 0<Token≤256K
@@ -2515,8 +2447,6 @@ qwen3.6-flash
 28.8元
 
 qwen3.6-flash-2026-04-16
-
-中国内地
 
 非思考和思考模式
 
@@ -2542,8 +2472,6 @@ qwen3.5-flash
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 非思考和思考模式
 
 0<Token≤128K
@@ -2567,8 +2495,6 @@ qwen3.5-flash
 12元
 
 qwen3.5-flash-2026-02-23
-
-中国内地
 
 非思考和思考模式
 
@@ -2600,8 +2526,6 @@ qwen-flash
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 非思考和思考模式
 
 0<Token≤128K
@@ -2625,8 +2549,6 @@ qwen-flash
 12元
 
 qwen-flash-2025-07-28
-
-中国内地
 
 非思考和思考模式
 
@@ -3248,13 +3170,11 @@ qwen3.6-flash-2026-04-16
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **模式**
 
@@ -3271,8 +3191,6 @@ qwen3.6-flash-2026-04-16
 **思考模式（思维链+回答）**
 
 qwen-turbo
-
-中国内地
 
 非思考和思考模式
 
@@ -3322,13 +3240,11 @@ qwen-turbo
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **模式**
 
@@ -3341,8 +3257,6 @@ qwen-turbo
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwq-plus
-
-中国内地
 
 仅思考模式
 
@@ -3384,8 +3298,6 @@ qwq-plus
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
@@ -3398,8 +3310,6 @@ qwen-long
 
 > [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价
 
-中国内地
-
 0.5元
 
 2元
@@ -3408,8 +3318,6 @@ qwen-long
 
 qwen-long-latest
 
-中国内地
-
 0.5元
 
 2元
@@ -3417,8 +3325,6 @@ qwen-long-latest
 100万Token
 
 qwen-long-2025-01-25
-
-中国内地
 
 0.5元
 
@@ -3432,13 +3338,11 @@ qwen-long-2025-01-25
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -3464,8 +3368,6 @@ qwen3.5-omni-plus
 
 > 当前能力等同于qwen3.5-omni-plus-2026-03-15
 
-中国内地
-
 7元
 
 53元
@@ -3477,8 +3379,6 @@ qwen3.5-omni-plus
 100万Token
 
 qwen3.5-omni-plus-2026-03-15
-
-中国内地
 
 7元
 
@@ -3494,8 +3394,6 @@ qwen3.5-omni-flash
 
 > 当前能力等同于qwen3.5-omni-flash-2026-03-15
 
-中国内地
-
 2.2元
 
 18元
@@ -3507,8 +3405,6 @@ qwen3.5-omni-flash
 100万Token
 
 qwen3.5-omni-flash-2026-03-15
-
-中国内地
 
 2.2元
 
@@ -3523,8 +3419,6 @@ qwen3.5-omni-flash-2026-03-15
 ##### 更多模型
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **模式**
 
@@ -3558,8 +3452,6 @@ qwen3-omni-flash
 
 > 当前能力等同于qwen3-omni-flash-2025-12-01
 
-中国内地
-
 非思考和思考模式
 
 1.8元
@@ -3578,8 +3470,6 @@ qwen3-omni-flash
 
 qwen3-omni-flash-2025-12-01
 
-中国内地
-
 非思考和思考模式
 
 1.8元
@@ -3597,8 +3487,6 @@ qwen3-omni-flash-2025-12-01
 100万Token
 
 qwen3-omni-flash-2025-09-15
-
-中国内地
 
 非思考和思考模式
 
@@ -3620,8 +3508,6 @@ qwen-omni-turbo
 
 > 当前能力等同于qwen-omni-turbo-2025-03-26
 
-中国内地
-
 非思考模式
 
 0.4元
@@ -3639,8 +3525,6 @@ qwen-omni-turbo
 100万Token
 
 qwen-omni-turbo-latest
-
-中国内地
 
 非思考模式
 
@@ -3660,8 +3544,6 @@ qwen-omni-turbo-latest
 
 qwen-omni-turbo-2025-03-26
 
-中国内地
-
 非思考模式
 
 0.4元
@@ -3679,8 +3561,6 @@ qwen-omni-turbo-2025-03-26
 100万Token
 
 qwen-omni-turbo-2025-01-19
-
-中国内地
 
 非思考模式
 
@@ -3920,13 +3800,11 @@ qwen-omni-turbo-2025-03-26
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -3952,8 +3830,6 @@ qwen3.5-omni-plus-realtime
 
 > 当前能力等同于qwen3.5-omni-plus-realtime-2026-03-15
 
-中国内地
-
 10元
 
 80元
@@ -3965,8 +3841,6 @@ qwen3.5-omni-plus-realtime
 100万Token
 
 qwen3.5-omni-plus-realtime-2026-03-15
-
-中国内地
 
 10元
 
@@ -3982,8 +3856,6 @@ qwen3.5-omni-flash-realtime
 
 > 当前能力等同于qwen3.5-omni-flash-realtime-2026-03-15
 
-中国内地
-
 3.3元
 
 27元
@@ -3995,8 +3867,6 @@ qwen3.5-omni-flash-realtime
 100万Token
 
 qwen3.5-omni-flash-realtime-2026-03-15
-
-中国内地
 
 3.3元
 
@@ -4011,8 +3881,6 @@ qwen3.5-omni-flash-realtime-2026-03-15
 ##### 更多模型
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -4044,8 +3912,6 @@ qwen3-omni-flash-realtime
 
 > 当前能力等同于qwen3-omni-flash-realtime-2025-12-01
 
-中国内地
-
 2.2元
 
 18.9元
@@ -4062,8 +3928,6 @@ qwen3-omni-flash-realtime
 
 qwen3-omni-flash-realtime-2025-12-01
 
-中国内地
-
 2.2元
 
 18.9元
@@ -4079,8 +3943,6 @@ qwen3-omni-flash-realtime-2025-12-01
 100万Token
 
 qwen3-omni-flash-realtime-2025-09-15
-
-中国内地
 
 2.2元
 
@@ -4100,8 +3962,6 @@ qwen-omni-turbo-realtime
 
 > 当前能力等同于qwen-omni-turbo-realtime-2025-05-08
 
-中国内地
-
 1.6元
 
 25元
@@ -4118,8 +3978,6 @@ qwen-omni-turbo-realtime
 
 qwen-omni-turbo-realtime-latest
 
-中国内地
-
 1.6元
 
 25元
@@ -4135,8 +3993,6 @@ qwen-omni-turbo-realtime-latest
 100万Token
 
 qwen-omni-turbo-realtime-2025-05-08
-
-中国内地
 
 1.6元
 
@@ -4360,13 +4216,11 @@ qwen-omni-turbo-realtime-2025-05-08
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -4378,8 +4232,6 @@ qwen-omni-turbo-realtime-2025-05-08
 
 qvq-max
 
-中国内地
-
 8元
 
 32元
@@ -4387,8 +4239,6 @@ qvq-max
 100万Token
 
 qvq-plus
-
-中国内地
 
 2元
 
@@ -4422,13 +4272,11 @@ qvq-max
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **模式**
 
@@ -4451,8 +4299,6 @@ qwen3-vl-plus
 > [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
-
-中国内地
 
 非思考和思考模式
 
@@ -4478,8 +4324,6 @@ qwen3-vl-plus
 
 qwen3-vl-plus-2025-12-19
 
-中国内地
-
 非思考和思考模式
 
 0<Token≤32K
@@ -4503,8 +4347,6 @@ qwen3-vl-plus-2025-12-19
 30元
 
 qwen3-vl-plus-2025-09-23
-
-中国内地
 
 非思考和思考模式
 
@@ -4536,8 +4378,6 @@ qwen3-vl-flash
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 非思考和思考模式
 
 0<Token≤32K
@@ -4562,8 +4402,6 @@ qwen3-vl-flash
 
 qwen3-vl-flash-2026-01-22
 
-中国内地
-
 非思考和思考模式
 
 0<Token≤32K
@@ -4587,8 +4425,6 @@ qwen3-vl-flash-2026-01-22
 6元
 
 qwen3-vl-flash-2025-10-15
-
-中国内地
 
 非思考和思考模式
 
@@ -4616,8 +4452,6 @@ qwen3-vl-flash-2025-10-15
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **单次请求的输入Token数**
 
 **输入单价（每百万Token）**
@@ -4632,8 +4466,6 @@ qwen-vl-max
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 无阶梯计价
 
 1.6元
@@ -4645,8 +4477,6 @@ qwen-vl-max
 qwen-vl-plus
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
-
-中国内地
 
 无阶梯计价
 
@@ -5302,13 +5132,11 @@ qwen3-vl-plus-2025-09-23
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -5319,8 +5147,6 @@ qwen3-vl-plus-2025-09-23
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3.5-ocr
-
-中国内地
 
 0.5元
 
@@ -5334,8 +5160,6 @@ qwen-vl-ocr
 
 > [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价
 
-中国内地
-
 0.3元
 
 0.5元
@@ -5346,8 +5170,6 @@ qwen-vl-ocr-latest
 
 > [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价
 
-中国内地
-
 0.3元
 
 0.5元
@@ -5355,8 +5177,6 @@ qwen-vl-ocr-latest
 100万Token
 
 qwen-vl-ocr-2025-11-20
-
-中国内地
 
 0.3元
 
@@ -5366,8 +5186,6 @@ qwen-vl-ocr-2025-11-20
 
 qwen-vl-ocr-2025-08-28
 
-中国内地
-
 5元
 
 5元
@@ -5376,8 +5194,6 @@ qwen-vl-ocr-2025-08-28
 
 qwen-vl-ocr-2025-04-13
 
-中国内地
-
 5元
 
 5元
@@ -5385,8 +5201,6 @@ qwen-vl-ocr-2025-04-13
 100万Token
 
 qwen-vl-ocr-2024-10-28
-
-中国内地
 
 5元
 
@@ -5488,8 +5302,6 @@ qwen-vl-ocr-2025-11-20
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
@@ -5500,8 +5312,6 @@ qwen-vl-ocr-2025-11-20
 
 qwen-audio-turbo
 
-中国内地
-
 目前仅供免费体验。
 
 > 免费额度用完后不可调用，推荐使用[全模态（Qwen-Omni）](https://help.aliyun.com/zh/model-studio/qwen-omni)作为替代模型
@@ -5510,8 +5320,6 @@ qwen-audio-turbo
 
 qwen-audio-turbo-latest
 
-中国内地
-
 ### 千问数学模型
 
 计费规则：按输入Token和输出Token计费。
@@ -5519,8 +5327,6 @@ qwen-audio-turbo-latest
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -5532,8 +5338,6 @@ qwen-audio-turbo-latest
 
 qwen-math-plus
 
-中国内地
-
 4元
 
 12元
@@ -5541,8 +5345,6 @@ qwen-math-plus
 100万Token
 
 qwen-math-turbo
-
-中国内地
 
 2元
 
@@ -5556,13 +5358,11 @@ qwen-math-turbo
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **单次请求的输入Token数**
 
@@ -5579,8 +5379,6 @@ qwen3-coder-plus
 > 当前能力等同于qwen3-coder-plus-2025-09-23
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
-
-中国内地
 
 0<Token≤32K
 
@@ -5610,8 +5408,6 @@ qwen3-coder-plus
 
 qwen3-coder-plus-2025-09-23
 
-中国内地
-
 0<Token≤32K
 
 4元
@@ -5639,8 +5435,6 @@ qwen3-coder-plus-2025-09-23
 200元
 
 qwen3-coder-plus-2025-07-22
-
-中国内地
 
 0<Token≤32K
 
@@ -5672,8 +5466,6 @@ qwen3-coder-flash
 
 > 当前能力等同于qwen3-coder-flash-2025-07-28
 
-中国内地
-
 0<Token≤32K
 
 1元
@@ -5701,8 +5493,6 @@ qwen3-coder-flash
 25元
 
 qwen3-coder-flash-2025-07-28
-
-中国内地
 
 0<Token≤32K
 
@@ -5734,8 +5524,6 @@ qwen3-coder-flash-2025-07-28
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **单次请求的输入Token数**
 
 **输入单价（每百万Token）**
@@ -5748,8 +5536,6 @@ qwen3-coder-flash-2025-07-28
 
 qwen-coder-plus
 
-中国内地
-
 无阶梯计价
 
 3.5元
@@ -5759,8 +5545,6 @@ qwen-coder-plus
 100万Token
 
 qwen-coder-turbo
-
-中国内地
 
 无阶梯计价
 
@@ -6244,13 +6028,11 @@ qwen3-coder-flash-2025-07-28
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -6262,8 +6044,6 @@ qwen3-coder-flash-2025-07-28
 
 qwen-mt-plus
 
-中国内地
-
 1.8元
 
 5.4元
@@ -6271,8 +6051,6 @@ qwen-mt-plus
 100万Token
 
 qwen-mt-flash
-
-中国内地
 
 0.7元
 
@@ -6282,8 +6060,6 @@ qwen-mt-flash
 
 qwen-mt-lite
 
-中国内地
-
 0.6元
 
 1.6元
@@ -6291,8 +6067,6 @@ qwen-mt-lite
 100万Token
 
 qwen-mt-turbo
-
-中国内地
 
 0.7元
 
@@ -6426,8 +6200,6 @@ qwen-mt-lite
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
@@ -6435,8 +6207,6 @@ qwen-mt-lite
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 qwen-doc-turbo
-
-中国内地
 
 0.6元
 
@@ -6452,8 +6222,6 @@ qwen-doc-turbo
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
@@ -6462,8 +6230,6 @@ qwen-doc-turbo
 
 qwen-deep-research
 
-中国内地
-
 54元
 
 163元
@@ -6471,8 +6237,6 @@ qwen-deep-research
 无免费额度
 
 qwen-deep-research-2025-12-15
-
-中国内地
 
 79元
 
@@ -6488,8 +6252,6 @@ qwen-deep-research-2025-12-15
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
@@ -6500,8 +6262,6 @@ qwen-deep-research-2025-12-15
 
 tongyi-xiaomi-analysis-flash
 
-中国内地
-
 0.2元
 
 0.4元
@@ -6509,8 +6269,6 @@ tongyi-xiaomi-analysis-flash
 100万Token
 
 tongyi-xiaomi-analysis-pro
-
-中国内地
 
 1.0元
 
@@ -6526,13 +6284,11 @@ tongyi-xiaomi-analysis-pro
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **单次请求的输入Token范围**
 
@@ -6550,8 +6306,6 @@ tongyi-xiaomi-analysis-pro
 
 qwen3.6-35b-a3b
 
-中国内地
-
 0<Token≤256K
 
 1.8元
@@ -6563,8 +6317,6 @@ qwen3.6-35b-a3b
 100万Token
 
 qwen3.6-27b
-
-中国内地
 
 0<Token≤256K
 
@@ -6678,13 +6430,11 @@ qwen3.6-35b-a3b
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **单次请求的输入Token范围**
 
@@ -6701,8 +6451,6 @@ qwen3.6-35b-a3b
 **思考模式（思维链+回答）**
 
 qwen3.5-397b-a17b
-
-中国内地
 
 0<Token≤128K
 
@@ -6724,8 +6472,6 @@ qwen3.5-397b-a17b
 
 qwen3.5-122b-a10b
 
-中国内地
-
 0<Token≤128K
 
 0.8元
@@ -6746,8 +6492,6 @@ qwen3.5-122b-a10b
 
 qwen3.5-27b
 
-中国内地
-
 0<Token≤128K
 
 0.6元
@@ -6767,8 +6511,6 @@ qwen3.5-27b
 14.4元
 
 qwen3.5-35b-a3b
-
-中国内地
 
 0<Token≤128K
 
@@ -7050,13 +6792,11 @@ qwen3.5-35b-a3b
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **模式**
 
@@ -7074,8 +6814,6 @@ qwen3.5-35b-a3b
 
 qwen3-next-80b-a3b-thinking
 
-中国内地
-
 仅思考模式
 
 1元
@@ -7087,8 +6825,6 @@ qwen3-next-80b-a3b-thinking
 100万Token
 
 qwen3-next-80b-a3b-instruct
-
-中国内地
 
 仅非思考模式
 
@@ -7102,8 +6838,6 @@ qwen3-next-80b-a3b-instruct
 
 qwen3-235b-a22b-thinking-2507
 
-中国内地
-
 仅思考模式
 
 2元
@@ -7115,8 +6849,6 @@ qwen3-235b-a22b-thinking-2507
 100万Token
 
 qwen3-235b-a22b-instruct-2507
-
-中国内地
 
 仅非思考模式
 
@@ -7130,8 +6862,6 @@ qwen3-235b-a22b-instruct-2507
 
 qwen3-30b-a3b-thinking-2507
 
-中国内地
-
 仅思考模式
 
 0.75元
@@ -7143,8 +6873,6 @@ qwen3-30b-a3b-thinking-2507
 100万Token
 
 qwen3-30b-a3b-instruct-2507
-
-中国内地
 
 仅非思考模式
 
@@ -7158,8 +6886,6 @@ qwen3-30b-a3b-instruct-2507
 
 qwen3-235b-a22b
 
-中国内地
-
 非思考和思考模式
 
 2元
@@ -7171,8 +6897,6 @@ qwen3-235b-a22b
 100万Token
 
 qwen3-32b
-
-中国内地
 
 非思考和思考模式
 
@@ -7186,8 +6910,6 @@ qwen3-32b
 
 qwen3-30b-a3b
 
-中国内地
-
 非思考和思考模式
 
 0.75元
@@ -7200,8 +6922,6 @@ qwen3-30b-a3b
 
 qwen3-14b
 
-中国内地
-
 非思考和思考模式
 
 1元
@@ -7213,8 +6933,6 @@ qwen3-14b
 100万Token
 
 qwen3-8b
-
-中国内地
 
 非思考和思考模式
 
@@ -7702,13 +7420,11 @@ qwen3-8b
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -7737,8 +7453,6 @@ qwen3-8b
 > 仅音频计费
 
 qwen2.5-omni-7b
-
-中国内地
 
 0.6元
 
@@ -7804,13 +7518,11 @@ qwen2.5-omni-7b
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -7821,8 +7533,6 @@ qwen2.5-omni-7b
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-omni-30b-a3b-captioner
-
-中国内地
 
 15.8元
 
@@ -7854,13 +7564,11 @@ qwen3-omni-30b-a3b-captioner
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **模式**
 
@@ -7876,8 +7584,6 @@ qwen3-omni-30b-a3b-captioner
 
 qwen3-vl-235b-a22b-thinking
 
-中国内地
-
 仅思考模式
 
 2元
@@ -7887,8 +7593,6 @@ qwen3-vl-235b-a22b-thinking
 100万 Token
 
 qwen3-vl-235b-a22b-instruct
-
-中国内地
 
 仅非思考模式
 
@@ -7900,8 +7604,6 @@ qwen3-vl-235b-a22b-instruct
 
 qwen3-vl-32b-thinking
 
-中国内地
-
 仅思考模式
 
 2元
@@ -7911,8 +7613,6 @@ qwen3-vl-32b-thinking
 100万 Token
 
 qwen3-vl-32b-instruct
-
-中国内地
 
 仅非思考模式
 
@@ -7924,8 +7624,6 @@ qwen3-vl-32b-instruct
 
 qwen3-vl-30b-a3b-thinking
 
-中国内地
-
 仅思考模式
 
 0.75元
@@ -7935,8 +7633,6 @@ qwen3-vl-30b-a3b-thinking
 100万 Token
 
 qwen3-vl-30b-a3b-instruct
-
-中国内地
 
 仅非思考模式
 
@@ -7948,8 +7644,6 @@ qwen3-vl-30b-a3b-instruct
 
 qwen3-vl-8b-thinking
 
-中国内地
-
 仅思考模式
 
 0.5元
@@ -7959,8 +7653,6 @@ qwen3-vl-8b-thinking
 100万 Token
 
 qwen3-vl-8b-instruct
-
-中国内地
 
 仅非思考模式
 
@@ -8260,8 +7952,6 @@ qwen3-vl-8b-instruct
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
@@ -8272,8 +7962,6 @@ qwen3-vl-8b-instruct
 
 qwen2-audio-instruct
 
-中国内地
-
 目前仅供免费体验。
 
 > 免费额度用完后不可调用，推荐使用[全模态（Qwen-Omni）](https://help.aliyun.com/zh/model-studio/qwen-omni)作为替代模型。
@@ -8282,21 +7970,17 @@ qwen2-audio-instruct
 
 qwen-audio-chat
 
-中国内地
-
 ### **Qwen-Coder**
 
 计费规则：按输入Token和输出Token计费。
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **单次请求的输入Token数**
 
@@ -8309,8 +7993,6 @@ qwen-audio-chat
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-coder-next
-
-中国内地
 
 0<Token≤32K
 
@@ -8334,8 +8016,6 @@ qwen3-coder-next
 
 qwen3-coder-480b-a35b-instruct
 
-中国内地
-
 0<Token≤32K
 
 6元
@@ -8357,8 +8037,6 @@ qwen3-coder-480b-a35b-instruct
 60元
 
 qwen3-coder-30b-a3b-instruct
-
-中国内地
 
 0<Token≤32K
 
@@ -8602,13 +8280,11 @@ qwen3-coder-next
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -8624,8 +8300,6 @@ deepseek-v4-pro
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 12元
 
 24元
@@ -8635,8 +8309,6 @@ deepseek-v4-pro
 deepseek-v4-flash
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
-
-中国内地
 
 1元
 
@@ -8648,8 +8320,6 @@ deepseek-v3.2
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 2元
 
 3元
@@ -8658,8 +8328,6 @@ deepseek-v3.2
 
 deepseek-v3.2-exp
 
-中国内地
-
 2元
 
 3元
@@ -8667,8 +8335,6 @@ deepseek-v3.2-exp
 100万Token
 
 deepseek-v3.1
-
-中国内地
 
 4元
 
@@ -8680,8 +8346,6 @@ deepseek-r1
 
 > [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价
 
-中国内地
-
 4元
 
 16元
@@ -8689,8 +8353,6 @@ deepseek-r1
 100万Token
 
 deepseek-r1-0528
-
-中国内地
 
 4元
 
@@ -8702,8 +8364,6 @@ deepseek-v3
 
 > [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价
 
-中国内地
-
 2元
 
 8元
@@ -8712,13 +8372,9 @@ deepseek-v3
 
 deepseek-r1-distill-qwen-1.5b
 
-中国内地
-
 限时免费
 
 deepseek-r1-distill-qwen-7b
-
-中国内地
 
 0.5元
 
@@ -8728,8 +8384,6 @@ deepseek-r1-distill-qwen-7b
 
 deepseek-r1-distill-qwen-14b
 
-中国内地
-
 1元
 
 3元
@@ -8737,8 +8391,6 @@ deepseek-r1-distill-qwen-14b
 100万Token
 
 deepseek-r1-distill-qwen-32b
-
-中国内地
 
 2元
 
@@ -8748,15 +8400,11 @@ deepseek-r1-distill-qwen-32b
 
 deepseek-r1-distill-llama-8b
 
-中国内地
-
 已下线
 
 > 该模型已下线，推荐使用[深度思考](https://help.aliyun.com/zh/model-studio/deep-thinking)、[DeepSeek-阿里云](https://help.aliyun.com/zh/model-studio/deepseek-api)、[Kimi-阿里云](https://help.aliyun.com/zh/model-studio/kimi-api)作为替代模型。
 
 deepseek-r1-distill-llama-70b
-
-中国内地
 
 目前仅供免费体验
 
@@ -8948,8 +8596,6 @@ deepseek-v4-flash
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
@@ -8960,8 +8606,6 @@ deepseek-v4-flash
 
 siliconflow/deepseek-v3.2
 
-中国内地
-
 2元
 
 3元
@@ -8970,23 +8614,17 @@ siliconflow/deepseek-v3.2
 
 siliconflow/deepseek-v3.1-terminus
 
-中国内地
-
 4元
 
 12元
 
 siliconflow/deepseek-r1-0528
 
-中国内地
-
 4元
 
 16元
 
 siliconflow/deepseek-v3-0324
-
-中国内地
 
 2元
 
@@ -8997,8 +8635,6 @@ siliconflow/deepseek-v3-0324
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -9012,8 +8648,6 @@ vanchin/deepseek-v3.2-think
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 2元
 
 3元
@@ -9024,8 +8658,6 @@ vanchin/deepseek-v3.1-terminus
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 4元
 
 12元
@@ -9033,8 +8665,6 @@ vanchin/deepseek-v3.1-terminus
 vanchin/deepseek-r1
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
-
-中国内地
 
 4元
 
@@ -9044,15 +8674,11 @@ vanchin/deepseek-v3
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 2元
 
 8元
 
 vanchin/deepseek-ocr
-
-中国内地
 
 0.216元
 
@@ -9064,13 +8690,11 @@ vanchin/deepseek-ocr
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **模式**
 
@@ -9084,8 +8708,6 @@ vanchin/deepseek-ocr
 
 kimi-k2.7-code
 
-中国内地
-
 仅思考模式
 
 6.5元
@@ -9095,8 +8717,6 @@ kimi-k2.7-code
 100万Token
 
 kimi-k2.6
-
-中国内地
 
 非思考和思考模式
 
@@ -9108,8 +8728,6 @@ kimi-k2.6
 
 kimi-k2.5
 
-中国内地
-
 非思考和思考模式
 
 4元
@@ -9120,8 +8738,6 @@ kimi-k2.5
 
 kimi-k2-thinking
 
-中国内地
-
 仅思考模式
 
 4元
@@ -9131,8 +8747,6 @@ kimi-k2-thinking
 100万Token
 
 Moonshot-Kimi-K2-Instruct
-
-中国内地
 
 非思考模式
 
@@ -9258,8 +8872,6 @@ kimi-k2.7-code
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
@@ -9272,8 +8884,6 @@ kimi/kimi-k3
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 20元
 
 100元
@@ -9284,8 +8894,6 @@ kimi/kimi-k2.7-code-highspeed
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 13元
 
 54元
@@ -9293,8 +8901,6 @@ kimi/kimi-k2.7-code-highspeed
 kimi/kimi-k2.7-code
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
-
-中国内地
 
 6.5元
 
@@ -9304,8 +8910,6 @@ kimi/kimi-k2.6
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 6.5元
 
 27元
@@ -9313,8 +8917,6 @@ kimi/kimi-k2.6
 kimi/kimi-k2.5
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
-
-中国内地
 
 4元
 
@@ -9326,13 +8928,11 @@ kimi/kimi-k2.5
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **模式**
 
@@ -9350,8 +8950,6 @@ kimi/kimi-k2.5
 
 glm-5.2
 
-中国内地
-
 非思考和思考模式
 
 不区分阶梯
@@ -9364,8 +8962,6 @@ glm-5.2
 
 glm-5.2-fast-preview
 
-中国内地
-
 非思考和思考模式
 
 不区分阶梯
@@ -9377,8 +8973,6 @@ glm-5.2-fast-preview
 无
 
 glm-5.1
-
-中国内地
 
 非思考和思考模式
 
@@ -9398,8 +8992,6 @@ glm-5.1
 
 glm-5
 
-中国内地
-
 非思考和思考模式
 
 0<Token≤32K
@@ -9417,8 +9009,6 @@ glm-5
 22元
 
 glm-4.7
-
-中国内地
 
 非思考和思考模式
 
@@ -9438,8 +9028,6 @@ glm-4.7
 
 glm-4.6
 
-中国内地
-
 非思考和思考模式
 
 0<Token≤32K
@@ -9458,8 +9046,6 @@ glm-4.6
 
 glm-4.5
 
-中国内地
-
 非思考和思考模式
 
 0<Token≤32K
@@ -9477,8 +9063,6 @@ glm-4.5
 16元
 
 glm-4.5-air
-
-中国内地
 
 非思考和思考模式
 
@@ -9706,8 +9290,6 @@ glm-5.1
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **模式**
 
 **输入单价（每百万Token）**
@@ -9720,8 +9302,6 @@ glm-5.1
 
 ZHIPU/GLM-5.2
 
-中国内地
-
 非思考和思考模式
 
 8元
@@ -9732,8 +9312,6 @@ ZHIPU/GLM-5.2
 
 ZHIPU/GLM-5.1
 
-中国内地
-
 非思考和思考模式
 
 8元
@@ -9743,8 +9321,6 @@ ZHIPU/GLM-5.1
 无
 
 ZHIPU/GLM-5
-
-中国内地
 
 非思考和思考模式
 
@@ -9762,8 +9338,6 @@ ZHIPU/GLM-5
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **模式**
 
 **输入单价（每百万Token）**
@@ -9778,8 +9352,6 @@ ZHIPU/GLM-5
 
 MiniMax-M2.5
 
-中国内地
-
 仅思考模式
 
 2.1元
@@ -9789,8 +9361,6 @@ MiniMax-M2.5
 100万Token
 
 MiniMax-M2.1
-
-中国内地
 
 仅思考模式
 
@@ -9806,8 +9376,6 @@ MiniMax-M2.1
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **模式**
 
 **输入单价（每百万Token）**
@@ -9822,8 +9390,6 @@ MiniMax/MiniMax-M3
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 非思考和思考模式
 
 4.2元
@@ -9836,8 +9402,6 @@ MiniMax/MiniMax-M2.7
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 仅思考模式
 
 2.1元
@@ -9848,8 +9412,6 @@ MiniMax/MiniMax-M2.5
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-中国内地
-
 仅思考模式
 
 2.1元
@@ -9859,8 +9421,6 @@ MiniMax/MiniMax-M2.5
 MiniMax/MiniMax-M2.1
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
-
-中国内地
 
 仅思考模式
 
@@ -9876,8 +9436,6 @@ MiniMax/MiniMax-M2.1
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入Token数量**
 
 **输入单价（每百万Token）**
@@ -9889,8 +9447,6 @@ MiniMax/MiniMax-M2.1
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 xiaomi/mimo-v2.5-pro
-
-中国内地
 
 0<Token≤256K
 
@@ -9912,8 +9468,6 @@ xiaomi/mimo-v2.5-pro
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
@@ -9923,8 +9477,6 @@ xiaomi/mimo-v2.5-pro
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 stepfun/step-3.7-flash
-
-中国内地
 
 1.35元
 
@@ -9960,13 +9512,11 @@ stepfun/step-3.7-flash
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出单价**
 
@@ -9976,15 +9526,11 @@ stepfun/step-3.7-flash
 
 qwen-image-3.0-pro
 
-中国内地
-
 限时免费
 
 qwen-image-2.0-pro
 
 > 当前能力等同于qwen-image-2.0-pro-2026-04-22
-
-中国内地
 
 0.5元/张
 
@@ -9992,23 +9538,17 @@ qwen-image-2.0-pro
 
 qwen-image-2.0-pro-2026-06-22
 
-中国内地
-
 0.5元/张
 
 100张
 
 qwen-image-2.0-pro-2026-04-22
 
-中国内地
-
 0.5元/张
 
 100张
 
 qwen-image-2.0-pro-2026-03-03
-
-中国内地
 
 0.5元/张
 
@@ -10018,15 +9558,11 @@ qwen-image-2.0
 
 > 当前能力等同于qwen-image-2.0-2026-03-03
 
-中国内地
-
 0.2元/张
 
 100张
 
 qwen-image-2.0-2026-03-03
-
-中国内地
 
 0.2元/张
 
@@ -10036,15 +9572,11 @@ qwen-image-max
 
 > 当前能力等同于qwen-image-max-2025-12-30
 
-中国内地
-
 0.5元/张
 
 100张
 
 qwen-image-max-2025-12-30
-
-中国内地
 
 0.5元/张
 
@@ -10054,23 +9586,17 @@ qwen-image-plus
 
 > 当前能力等同于qwen-image
 
-中国内地
-
 0.2元/张
 
 100张
 
 qwen-image-plus-2026-01-09
 
-中国内地
-
 0.2元/张
 
 100张
 
 qwen-image
-
-中国内地
 
 0.25元/张
 
@@ -10170,13 +9696,11 @@ qwen-image
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出单价**
 
@@ -10186,15 +9710,11 @@ qwen-image
 
 qwen-image-3.0-pro
 
-中国内地
-
 限时免费
 
 qwen-image-2.0-pro
 
 > 当前能力等同于qwen-image-2.0-pro-2026-04-22
-
-中国内地
 
 0.5元/张
 
@@ -10202,23 +9722,17 @@ qwen-image-2.0-pro
 
 qwen-image-2.0-pro-2026-06-22
 
-中国内地
-
 0.5元/张
 
 100张
 
 qwen-image-2.0-pro-2026-04-22
 
-中国内地
-
 0.5元/张
 
 100张
 
 qwen-image-2.0-pro-2026-03-03
-
-中国内地
 
 0.5元/张
 
@@ -10228,15 +9742,11 @@ qwen-image-2.0
 
 > 当前能力等同于qwen-image-2.0-2026-03-03
 
-中国内地
-
 0.2元/张
 
 100张
 
 qwen-image-2.0-2026-03-03
-
-中国内地
 
 0.2元/张
 
@@ -10246,15 +9756,11 @@ qwen-image-edit-max
 
 > 当前能力等同于qwen-image-edit-max-2026-01-16
 
-中国内地
-
 0.5元/张
 
 100张
 
 qwen-image-edit-max-2026-01-16
-
-中国内地
 
 0.5元/张
 
@@ -10264,15 +9770,11 @@ qwen-image-edit-plus
 
 > 当前能力等同于qwen-image-edit-plus-2025-10-30
 
-中国内地
-
 0.2元/张
 
 100张
 
 qwen-image-edit-plus-2025-12-15
-
-中国内地
 
 0.2元/张
 
@@ -10280,15 +9782,11 @@ qwen-image-edit-plus-2025-12-15
 
 qwen-image-edit-plus-2025-10-30
 
-中国内地
-
 0.2元/张
 
 100张
 
 qwen-image-edit
-
-中国内地
 
 0.3元/张
 
@@ -10396,8 +9894,6 @@ qwen-image-edit
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -10405,8 +9901,6 @@ qwen-image-edit
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-mt-image
-
-中国内地
 
 0.003元/张
 
@@ -10418,13 +9912,11 @@ qwen-mt-image
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出单价**
 
@@ -10433,8 +9925,6 @@ qwen-mt-image
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 z-image-turbo
-
-中国内地
 
 关闭提示词改写（`prompt_extend=false`）：0.1元/张
 
@@ -10464,13 +9954,11 @@ z-image-turbo
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出单价**
 
@@ -10480,15 +9968,11 @@ z-image-turbo
 
 wan2.6-t2i
 
-中国内地
-
 0.20元/张
 
 50张
 
 wan2.5-t2i-preview
-
-中国内地
 
 0.20元/张
 
@@ -10496,15 +9980,11 @@ wan2.5-t2i-preview
 
 wan2.2-t2i-plus
 
-中国内地
-
 0.20元/张
 
 100张
 
 wan2.2-t2i-flash
-
-中国内地
 
 0.14元/张
 
@@ -10512,15 +9992,11 @@ wan2.2-t2i-flash
 
 wanx2.1-t2i-plus
 
-中国内地
-
 0.20元/张
 
 500张
 
 wanx2.1-t2i-turbo
-
-中国内地
 
 0.14元/张
 
@@ -10528,15 +10004,11 @@ wanx2.1-t2i-turbo
 
 wanx2.0-t2i-turbo
 
-中国内地
-
 0.04元/张
 
 500张
 
 wanx-v1
-
-中国内地
 
 0.16元/张
 
@@ -10620,13 +10092,11 @@ wan2.6-t2i
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出单价**
 
@@ -10636,23 +10106,17 @@ wan2.6-t2i
 
 wan2.7-image-pro
 
-中国内地
-
 0.50元/张
 
 50张
 
 wan2.7-image
 
-中国内地
-
 0.20元/张
 
 50张
 
 wan2.6-image
-
-中国内地
 
 0.20元/张
 
@@ -10718,13 +10182,11 @@ wan2.6-image
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出单价**
 
@@ -10734,15 +10196,11 @@ wan2.6-image
 
 wan2.5-i2i-preview
 
-中国内地
-
 0.20元/张
 
 50张
 
 wanx2.1-imageedit
-
-中国内地
 
 0.14元/张
 
@@ -10770,8 +10228,6 @@ wan2.5-i2i-preview
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -10779,8 +10235,6 @@ wan2.5-i2i-preview
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wanx-sketch-to-image-lite
-
-中国内地
 
 0.06元/张
 
@@ -10794,8 +10248,6 @@ wanx-sketch-to-image-lite
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -10803,8 +10255,6 @@ wanx-sketch-to-image-lite
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wanx-x-painting
-
-中国内地
 
 目前仅供免费体验。
 
@@ -10820,8 +10270,6 @@ wanx-x-painting
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -10829,8 +10277,6 @@ wanx-x-painting
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wanx-style-repaint-v1
-
-中国内地
 
 0.12元/张
 
@@ -10844,8 +10290,6 @@ wanx-style-repaint-v1
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -10853,8 +10297,6 @@ wanx-style-repaint-v1
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wanx-background-generation-v2
-
-中国内地
 
 0.08元/张
 
@@ -10868,8 +10310,6 @@ wanx-background-generation-v2
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -10877,8 +10317,6 @@ wanx-background-generation-v2
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 image-out-painting
-
-中国内地
 
 0.18元/张
 
@@ -10892,8 +10330,6 @@ image-out-painting
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -10901,8 +10337,6 @@ image-out-painting
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 image-instance-segmentation
-
-中国内地
 
 目前仅供免费体验。
 
@@ -10918,8 +10352,6 @@ image-instance-segmentation
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -10927,8 +10359,6 @@ image-instance-segmentation
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 image-erase-completion
-
-中国内地
 
 目前仅供免费体验。
 
@@ -10944,8 +10374,6 @@ image-erase-completion
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -10953,8 +10381,6 @@ image-erase-completion
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wanx-virtualmodel
-
-中国内地
 
 目前仅供免费体验。
 
@@ -10964,8 +10390,6 @@ wanx-virtualmodel
 
 virtualmodel-v2
 
-中国内地
-
 ### **鞋靴模特**
 
 > 仅输出计费，计费规则请参见[图像生成](#26310bc5cf4do)。
@@ -10974,8 +10398,6 @@ virtualmodel-v2
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -10983,8 +10405,6 @@ virtualmodel-v2
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 shoemodel-v1
-
-中国内地
 
 目前仅供免费体验。
 
@@ -11000,8 +10420,6 @@ shoemodel-v1
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -11009,8 +10427,6 @@ shoemodel-v1
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wanx-poster-generation-v1
-
-中国内地
 
 目前仅供免费体验。
 
@@ -11031,23 +10447,17 @@ wanx-poster-generation-v1
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 facechain-facedetect
 
-中国内地
-
 限时免费
 
 限时免费
 
 facechain-finetune
-
-中国内地
 
 2.5元/次
 
@@ -11056,8 +10466,6 @@ facechain-finetune
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 facechain-generation
-
-中国内地
 
 0.18元/张
 
@@ -11073,8 +10481,6 @@ facechain-generation
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -11083,15 +10489,11 @@ facechain-generation
 
 wordart-texture
 
-中国内地
-
 0.08元/张
 
 500张
 
 wordart-semantic
-
-中国内地
 
 0.24元/张
 
@@ -11110,41 +10512,29 @@ wordart-semantic
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 aitryon
 
-中国内地
-
 400张
 
 aitryon-plus
-
-中国内地
 
 400张
 
 aitryon-parsing-v1
 
-中国内地
-
 400张
 
 aitryon-refiner
-
-中国内地
 
 100张
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **单价**
 
@@ -11154,8 +10544,6 @@ aitryon-refiner
 
 aitryon
 
-中国内地
-
 0.20元/张
 
 无
@@ -11163,8 +10551,6 @@ aitryon
 无
 
 aitryon-plus
-
-中国内地
 
 0.50元/张
 
@@ -11174,8 +10560,6 @@ aitryon-plus
 
 aitryon-parsing-v1
 
-中国内地
-
 0.004元/张
 
 无
@@ -11183,8 +10567,6 @@ aitryon-parsing-v1
 无
 
 aitryon-refiner
-
-中国内地
 
 0.30元/张
 
@@ -11238,8 +10620,6 @@ aitryon-refiner
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出图像分辨率**
 
 **输出单价**
@@ -11247,8 +10627,6 @@ aitryon-refiner
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 kling/kling-v3-image-generation
-
-中国内地
 
 1K
 
@@ -11261,8 +10639,6 @@ kling/kling-v3-image-generation
 0.2元/张
 
 kling/kling-v3-omni-image-generation
-
-中国内地
 
 1K
 
@@ -11284,8 +10660,6 @@ kling/kling-v3-omni-image-generation
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出图像分辨率**
 
 **输出单价**
@@ -11293,8 +10667,6 @@ kling/kling-v3-omni-image-generation
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 vidu/vidu-image\_reference2image
-
-中国内地
 
 1K
 
@@ -11312,8 +10684,6 @@ vidu/vidu-image\_reference2image
 
 vidu/viduq3-fast\_reference2image
 
-中国内地
-
 1K
 
 0.46875元/张
@@ -11327,8 +10697,6 @@ vidu/viduq3-fast\_reference2image
 1.09375元/张
 
 vidu/viduq2-pro\_reference2image
-
-中国内地
 
 1K
 
@@ -11344,8 +10712,6 @@ vidu/viduq2-pro\_reference2image
 
 vidu/viduq2-fast\_reference2image
 
-中国内地
-
 1K
 
 0.28125元/张
@@ -11358,8 +10724,6 @@ vidu/viduq2-fast\_reference2image
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价（每秒）**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -11368,15 +10732,11 @@ vidu/viduq2-fast\_reference2image
 
 fun-music-preview
 
-中国内地
-
 0.005元
 
 1,000秒
 
 fun-music-v1
-
-中国内地
 
 0.002元
 
@@ -11388,13 +10748,11 @@ fun-music-v1
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每万字符）**
 
@@ -11404,15 +10762,11 @@ fun-music-v1
 
 qwen-audio-3.0-tts-plus
 
-中国内地
-
 1.4元
 
 1万字符
 
 qwen-audio-3.0-tts-flash
-
-中国内地
 
 1元
 
@@ -11442,7 +10796,7 @@ qwen-audio-3.0-tts-flash
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
@@ -11451,8 +10805,6 @@ qwen-audio-3.0-tts-flash
 计费规则：按输入文本的字符数计费，输出不计费。
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每万字符）**
 
@@ -11466,8 +10818,6 @@ qwen3-tts-instruct-flash
 
 > 当前能力等同于qwen3-tts-instruct-flash-2026-01-26
 
-中国内地
-
 0.8元
 
 不计费
@@ -11475,8 +10825,6 @@ qwen3-tts-instruct-flash
 1万字符
 
 qwen3-tts-instruct-flash-2026-01-26
-
-中国内地
 
 0.8元
 
@@ -11490,8 +10838,6 @@ qwen3-tts-instruct-flash-2026-01-26
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每万字符）**
 
 **输出单价**
@@ -11501,8 +10847,6 @@ qwen3-tts-instruct-flash-2026-01-26
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-tts-vd-2026-01-26
-
-中国内地
 
 0.8元
 
@@ -11516,8 +10860,6 @@ qwen3-tts-vd-2026-01-26
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每万字符）**
 
 **输出单价**
@@ -11527,8 +10869,6 @@ qwen3-tts-vd-2026-01-26
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3-tts-vc-2026-01-22
-
-中国内地
 
 0.8元
 
@@ -11542,8 +10882,6 @@ qwen3-tts-vc-2026-01-22
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每万字符）**
 
 **输出单价**
@@ -11556,8 +10894,6 @@ qwen3-tts-flash
 
 > 当前能力等同于qwen3-tts-flash-2025-11-27
 
-中国内地
-
 0.8元
 
 不计费
@@ -11566,8 +10902,6 @@ qwen3-tts-flash
 
 qwen3-tts-flash-2025-11-27
 
-中国内地
-
 0.8元
 
 不计费
@@ -11575,8 +10909,6 @@ qwen3-tts-flash-2025-11-27
 1万字符
 
 qwen3-tts-flash-2025-09-18
-
-中国内地
 
 0.8元
 
@@ -11590,8 +10922,6 @@ qwen3-tts-flash-2025-09-18
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
@@ -11602,8 +10932,6 @@ qwen3-tts-flash-2025-09-18
 
 qwen-tts-flash
 
-中国内地
-
 1.6元
 
 10元
@@ -11611,8 +10939,6 @@ qwen-tts-flash
 100万Token
 
 qwen-tts-latest
-
-中国内地
 
 1.6元
 
@@ -11622,8 +10948,6 @@ qwen-tts-latest
 
 qwen-tts-2025-05-22
 
-中国内地
-
 1.6元
 
 10元
@@ -11631,8 +10955,6 @@ qwen-tts-2025-05-22
 100万Token
 
 qwen-tts-2025-04-10
-
-中国内地
 
 1.6元
 
@@ -11732,7 +11054,7 @@ qwen3-tts-flash-2025-09-18
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
@@ -11741,8 +11063,6 @@ qwen3-tts-flash-2025-09-18
 计费规则：按输入文本的字符数计费，输出不计费。
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每万字符）**
 
@@ -11756,8 +11076,6 @@ qwen3-tts-instruct-flash-realtime
 
 > 当前能力等同于qwen3-tts-instruct-flash-realtime-2026-01-22
 
-中国内地
-
 1元
 
 不计费
@@ -11765,8 +11083,6 @@ qwen3-tts-instruct-flash-realtime
 1万字符
 
 qwen3-tts-instruct-flash-realtime-2026-01-22
-
-中国内地
 
 1元
 
@@ -11780,8 +11096,6 @@ qwen3-tts-instruct-flash-realtime-2026-01-22
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每万字符）**
 
 **输出单价**
@@ -11792,8 +11106,6 @@ qwen3-tts-instruct-flash-realtime-2026-01-22
 
 qwen3-tts-vd-realtime-2026-01-15
 
-中国内地
-
 1元
 
 不计费
@@ -11801,8 +11113,6 @@ qwen3-tts-vd-realtime-2026-01-15
 1万字符
 
 qwen3-tts-vd-realtime-2025-12-16
-
-中国内地
 
 1元
 
@@ -11816,8 +11126,6 @@ qwen3-tts-vd-realtime-2025-12-16
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每万字符）**
 
 **输出单价**
@@ -11828,8 +11136,6 @@ qwen3-tts-vd-realtime-2025-12-16
 
 qwen3-tts-vc-realtime-2026-01-15
 
-中国内地
-
 1元
 
 不计费
@@ -11838,8 +11144,6 @@ qwen3-tts-vc-realtime-2026-01-15
 
 qwen3-tts-vc-realtime-2025-11-27
 
-中国内地
-
 1万字符
 
 #### 千问3-TTS-Flash-Realtime
@@ -11847,8 +11151,6 @@ qwen3-tts-vc-realtime-2025-11-27
 计费规则：按输入文本的字符数计费，输出不计费。
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每万字符）**
 
@@ -11860,8 +11162,6 @@ qwen3-tts-vc-realtime-2025-11-27
 
 qwen3-tts-flash-realtime
 
-中国内地
-
 1元
 
 不计费
@@ -11870,8 +11170,6 @@ qwen3-tts-flash-realtime
 
 qwen3-tts-flash-realtime-2025-11-27
 
-中国内地
-
 1元
 
 不计费
@@ -11879,8 +11177,6 @@ qwen3-tts-flash-realtime-2025-11-27
 1万字符
 
 qwen3-tts-flash-realtime-2025-09-18
-
-中国内地
 
 1元
 
@@ -11894,8 +11190,6 @@ qwen3-tts-flash-realtime-2025-09-18
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
@@ -11906,8 +11200,6 @@ qwen3-tts-flash-realtime-2025-09-18
 
 qwen-tts-realtime
 
-中国内地
-
 2.4元
 
 12元
@@ -11916,8 +11208,6 @@ qwen-tts-realtime
 
 qwen-tts-realtime-latest
 
-中国内地
-
 2.4元
 
 12元
@@ -11925,8 +11215,6 @@ qwen-tts-realtime-latest
 100万Token
 
 qwen-tts-realtime-2025-07-15
-
-中国内地
 
 2.4元
 
@@ -12038,13 +11326,11 @@ qwen3-tts-flash-realtime-2025-09-18
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **单价（每个音色）**
 
@@ -12053,8 +11339,6 @@ qwen3-tts-flash-realtime-2025-09-18
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-voice-enrollment
-
-中国内地
 
 0.01元
 
@@ -12080,13 +11364,11 @@ qwen-voice-enrollment
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **单价（每个音色）**
 
@@ -12095,8 +11377,6 @@ qwen-voice-enrollment
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen-voice-design
-
-中国内地
 
 0.2元
 
@@ -12120,15 +11400,13 @@ qwen-voice-design
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 计费规则：按输入文本的字符数计费，输出不计费。
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每万字符）**
 
@@ -12138,15 +11416,11 @@ qwen-voice-design
 
 cosyvoice-v3.5-plus
 
-中国内地
-
 1.5元
 
 1万字符
 
 cosyvoice-v3.5-flash
-
-中国内地
 
 0.8元
 
@@ -12154,15 +11428,11 @@ cosyvoice-v3.5-flash
 
 cosyvoice-v3-plus
 
-中国内地
-
 2元
 
 1万字符
 
 cosyvoice-v3-flash
-
-中国内地
 
 1元
 
@@ -12170,15 +11440,11 @@ cosyvoice-v3-flash
 
 cosyvoice-v2
 
-中国内地
-
 2元
 
 1万字符
 
 cosyvoice-v1
-
-中国内地
 
 2元
 
@@ -12214,15 +11480,11 @@ cosyvoice-v3-flash
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每万字符）**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 参见[模型列表](https://help.aliyun.com/zh/model-studio/sambert-java-sdk#57d33631f7doi)
-
-中国内地
 
 1元
 
@@ -12236,8 +11498,6 @@ cosyvoice-v3-flash
 
 **模型名称**
 
-**服务部署范围**
-
 **语音合成单价（每万字符）**
 
 [复刻一个音色](https://help.aliyun.com/zh/model-studio/mini-clone-api)
@@ -12245,8 +11505,6 @@ cosyvoice-v3-flash
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 MiniMax/speech-2.8-hd
-
-中国内地
 
 3.5元
 
@@ -12258,19 +11516,13 @@ MiniMax/speech-2.8-hd
 
 MiniMax/speech-02-hd
 
-中国内地
-
 3.5元
 
 MiniMax/speech-2.8-turbo
 
-中国内地
-
 2元
 
 MiniMax/speech-02-turbo
-
-中国内地
 
 2元
 
@@ -12282,13 +11534,11 @@ MiniMax/speech-02-turbo
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -12308,8 +11558,6 @@ MiniMax/speech-02-turbo
 
 qwen3.5-livetranslate-flash-realtime
 
-中国内地
-
 40元
 
 3.3元
@@ -12321,8 +11569,6 @@ qwen3.5-livetranslate-flash-realtime
 100万Token
 
 qwen3.5-livetranslate-flash-realtime-2026-05-19
-
-中国内地
 
 40元
 
@@ -12338,8 +11584,6 @@ qwen3-livetranslate-flash-realtime
 
 > 当前能力等同于qwen3-livetranslate-flash-realtime-2025-09-22
 
-中国内地
-
 64元
 
 8元
@@ -12351,8 +11595,6 @@ qwen3-livetranslate-flash-realtime
 100万Token
 
 qwen3-livetranslate-flash-realtime-2025-09-22
-
-中国内地
 
 64元
 
@@ -12438,13 +11680,11 @@ qwen3-livetranslate-flash-realtime-2025-09-22
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -12464,8 +11704,6 @@ qwen3-livetranslate-flash-realtime-2025-09-22
 
 qwen3-livetranslate-flash
 
-中国内地
-
 10元
 
 4元
@@ -12477,8 +11715,6 @@ qwen3-livetranslate-flash
 100万Token
 
 qwen3-livetranslate-flash-2025-12-01
-
-中国内地
 
 10元
 
@@ -12536,15 +11772,13 @@ qwen3-livetranslate-flash-2025-12-01
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 计费规则：按输入音频的秒数计费，输出不计费。
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价**
 
@@ -12556,8 +11790,6 @@ qwen3-livetranslate-flash-2025-12-01
 
 qwen3-asr-flash-filetrans
 
-中国内地
-
 0.00022元/秒
 
 不计费
@@ -12566,27 +11798,19 @@ qwen3-asr-flash-filetrans
 
 qwen3-asr-flash-filetrans-2025-11-17
 
-中国内地
-
 36,000秒（10小时）
 
 qwen3-asr-flash
 
 > 当前能力等同于qwen3-asr-flash-2025-09-08
 
-中国内地
-
 36,000秒（10小时）
 
 qwen3-asr-flash-2026-02-10
 
-中国内地
-
 36,000秒（10小时）
 
 qwen3-asr-flash-2025-09-08
-
-中国内地
 
 36,000秒（10小时）
 
@@ -12668,13 +11892,11 @@ qwen3-asr-flash-2025-09-08
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价**
 
@@ -12686,21 +11908,15 @@ qwen3-asr-flash-realtime
 
 > 当前能力等同于qwen3-asr-flash-realtime-2025-10-27
 
-中国内地
-
 0.00033元/秒
 
 36,000秒（10小时）
 
 qwen3-asr-flash-realtime-2026-02-10
 
-中国内地
-
 36,000秒（10小时）
 
 qwen3-asr-flash-realtime-2025-10-27
-
-中国内地
 
 36,000秒（10小时）
 
@@ -12736,13 +11952,11 @@ qwen3-asr-flash-realtime-2025-10-27
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价**
 
@@ -12754,39 +11968,27 @@ fun-asr
 
 > 当前能力等同于fun-asr-2025-11-07
 
-中国内地
-
 0.00022元/秒
 
 36,000秒（10小时）
 
 fun-asr-2025-11-07
 
-中国内地
-
 36,000秒（10小时）
 
 fun-asr-2025-08-25
-
-中国内地
 
 36,000秒（10小时）
 
 fun-asr-mtl
 
-中国内地
-
 36,000秒（10小时）
 
 fun-asr-mtl-2025-08-25
 
-中国内地
-
 36,000秒（10小时）
 
 fun-asr-flash-2026-06-15
-
-中国内地
 
 0.00022元/秒
 
@@ -12838,8 +12040,6 @@ fun-asr-flash-2026-06-15
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -12848,39 +12048,27 @@ fun-asr-flash-2026-06-15
 
 fun-asr-realtime
 
-中国内地
-
 0.00033元/秒
 
 36,000秒（10小时）
 
 fun-asr-realtime-2026-02-28
 
-中国内地
-
 36,000秒（10小时）
 
 fun-asr-realtime-2025-11-07
-
-中国内地
 
 36,000秒（10小时）
 
 fun-asr-realtime-2025-09-15
 
-中国内地
-
 36,000秒（10小时）
 
 fun-asr-mtl-realtime
 
-中国内地
-
 36,000秒（10小时）
 
 fun-asr-mtl-realtime-2025-12-10
-
-中国内地
 
 36,000秒（10小时）
 
@@ -12888,15 +12076,11 @@ fun-asr-flash-8k-realtime
 
 > 当前能力等同于fun-asr-flash-8k-realtime-2026-01-28
 
-中国内地
-
 0.00022元/秒
 
 36,000秒（10小时）
 
 fun-asr-flash-8k-realtime-2026-01-28
-
-中国内地
 
 36,000秒（10小时）
 
@@ -12928,15 +12112,11 @@ fun-asr-realtime-2025-11-07
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 paraformer-v2
-
-中国内地
 
 0.00008元/秒
 
@@ -12948,19 +12128,11 @@ paraformer-v2
 
 paraformer-8k-v2
 
-中国内地
-
 paraformer-v1
-
-中国内地
 
 paraformer-8k-v1
 
-中国内地
-
 paraformer-mtl-v1
-
-中国内地
 
 #### **实时语音识别**
 
@@ -12970,15 +12142,11 @@ paraformer-mtl-v1
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 paraformer-realtime-v2
-
-中国内地
 
 0.00024元/秒
 
@@ -12990,15 +12158,9 @@ paraformer-realtime-v2
 
 paraformer-realtime-v1
 
-中国内地
-
 paraformer-realtime-8k-v2
 
-中国内地
-
 paraformer-realtime-8k-v1
-
-中国内地
 
 ## **语音对话**
 
@@ -13021,13 +12183,11 @@ paraformer-realtime-8k-v1
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -13047,8 +12207,6 @@ paraformer-realtime-8k-v1
 
 qwen-audio-3.0-realtime-plus
 
-中国内地
-
 5元
 
 40元
@@ -13060,8 +12218,6 @@ qwen-audio-3.0-realtime-plus
 100万Token
 
 qwen-audio-3.0-realtime-flash
-
-中国内地
 
 3元
 
@@ -13098,13 +12254,11 @@ qwen-audio-3.0-realtime-flash
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出视频分辨率**
 
@@ -13115,8 +12269,6 @@ qwen-audio-3.0-realtime-flash
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 happyhorse-1.1-t2v
-
-中国内地
 
 720P
 
@@ -13129,8 +12281,6 @@ happyhorse-1.1-t2v
 原价1.2元/秒 限时6折
 
 happyhorse-1.0-t2v
-
-中国内地
 
 720P
 
@@ -13243,6 +12393,28 @@ happyhorse-1.0-t2v
 1080P
 
 原价1.6元/秒 限时8折
+
+#### 日本（东京）
+
+**模型 ID（Model ID）**
+
+**服务部署范围**
+
+**输出视频分辨率**
+
+**输出单价**
+
+happyhorse-1.1-t2v
+
+全球
+
+720P
+
+原价0.9元/秒 限时6折
+
+1080P
+
+原价1.2元/秒 限时6折
 
 ### **HappyHorse-图生视频-基于首帧**
 
@@ -13250,13 +12422,11 @@ happyhorse-1.0-t2v
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出视频分辨率**
 
@@ -13267,8 +12437,6 @@ happyhorse-1.0-t2v
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 happyhorse-1.1-i2v
-
-中国内地
 
 720P
 
@@ -13281,8 +12449,6 @@ happyhorse-1.1-i2v
 原价1.2元/秒 限时6折
 
 happyhorse-1.0-i2v
-
-中国内地
 
 720P
 
@@ -13395,6 +12561,28 @@ happyhorse-1.0-i2v
 1080P
 
 原价1.6元/秒 限时8折
+
+#### 日本（东京）
+
+**模型 ID（Model ID）**
+
+**服务部署范围**
+
+**输出视频分辨率**
+
+**输出单价**
+
+happyhorse-1.1-i2v
+
+全球
+
+720P
+
+原价0.9元/秒 限时6折
+
+1080P
+
+原价1.2元/秒 限时6折
 
 ### **HappyHorse-参考生视频**
 
@@ -13402,13 +12590,11 @@ happyhorse-1.0-i2v
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出视频分辨率**
 
@@ -13419,8 +12605,6 @@ happyhorse-1.0-i2v
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 happyhorse-1.1-r2v
-
-中国内地
 
 720P
 
@@ -13433,8 +12617,6 @@ happyhorse-1.1-r2v
 原价1.2元/秒 限时6折
 
 happyhorse-1.0-r2v
-
-中国内地
 
 720P
 
@@ -13548,19 +12730,39 @@ happyhorse-1.0-r2v
 
 原价1.6元/秒 限时8折
 
+#### 日本（东京）
+
+**模型 ID（Model ID）**
+
+**服务部署范围**
+
+**输出视频分辨率**
+
+**输出单价**
+
+happyhorse-1.1-r2v
+
+全球
+
+720P
+
+原价0.9元/秒 限时6折
+
+1080P
+
+原价1.2元/秒 限时6折
+
 ### **HappyHorse-视频编辑**
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 计费规则：输入视频和输出视频均计费，按**视频秒数**计费，失败不计费也不占用免费额度。
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出视频分辨率**
 
@@ -13571,8 +12773,6 @@ happyhorse-1.0-r2v
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 happyhorse-1.0-video-edit
-
-中国内地
 
 720P
 
@@ -13633,6 +12833,30 @@ happyhorse-1.0-video-edit
 原价1.798608元/秒 限时8折
 
 #### 德国（法兰克福）
+
+计费规则：输入视频和输出视频均计费，按**视频秒数**计费，失败不计费也不占用免费额度。
+
+**模型 ID（Model ID）**
+
+**服务部署范围**
+
+**输出视频分辨率**
+
+**输入和输出单价**
+
+happyhorse-1.0-video-edit
+
+全球
+
+720P
+
+原价0.9元/秒 限时8折
+
+1080P
+
+原价1.6元/秒 限时8折
+
+#### 日本（东京）
 
 计费规则：输入视频和输出视频均计费，按**视频秒数**计费，失败不计费也不占用免费额度。
 
@@ -13662,13 +12886,11 @@ happyhorse-1.0-video-edit
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出视频分辨率**
 
@@ -13679,8 +12901,6 @@ happyhorse-1.0-video-edit
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.7-t2v-2026-06-12
-
-中国内地
 
 720P
 
@@ -13694,8 +12914,6 @@ wan2.7-t2v-2026-06-12
 
 wan2.7-t2v-2026-04-25
 
-中国内地
-
 720P
 
 0.6元/秒
@@ -13707,8 +12925,6 @@ wan2.7-t2v-2026-04-25
 1元/秒
 
 wan2.7-t2v
-
-中国内地
 
 720P
 
@@ -13722,8 +12938,6 @@ wan2.7-t2v
 
 wan2.6-t2v
 
-中国内地
-
 720P
 
 0.6元/秒
@@ -13735,8 +12949,6 @@ wan2.6-t2v
 1元/秒
 
 wan2.5-t2v-preview
-
-中国内地
 
 480P
 
@@ -13754,8 +12966,6 @@ wan2.5-t2v-preview
 
 wan2.2-t2v-plus
 
-中国内地
-
 480P
 
 0.14元/秒
@@ -13768,8 +12978,6 @@ wan2.2-t2v-plus
 
 wanx2.1-t2v-turbo
 
-中国内地
-
 480P
 
 0.24元/秒
@@ -13781,8 +12989,6 @@ wanx2.1-t2v-turbo
 0.24元/秒
 
 wanx2.1-t2v-plus
-
-中国内地
 
 720P
 
@@ -13958,13 +13164,11 @@ wan2.6-t2v
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出视频类型**
 
@@ -13977,8 +13181,6 @@ wan2.6-t2v
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.7-i2v-2026-04-25
-
-中国内地
 
 有声视频
 
@@ -13993,8 +13195,6 @@ wan2.7-i2v-2026-04-25
 1元/秒
 
 wan2.7-i2v
-
-中国内地
 
 有声视频
 
@@ -14054,13 +13254,11 @@ wan2.7-i2v
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出视频类型**
 
@@ -14073,8 +13271,6 @@ wan2.7-i2v
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.6-i2v-flash
-
-中国内地
 
 有声视频
 
@@ -14104,8 +13300,6 @@ wan2.6-i2v-flash
 
 wan2.6-i2v
 
-中国内地
-
 有声视频
 
 720P
@@ -14119,8 +13313,6 @@ wan2.6-i2v
 1元/秒
 
 wan2.5-i2v-preview
-
-中国内地
 
 有声视频
 
@@ -14140,8 +13332,6 @@ wan2.5-i2v-preview
 
 wan2.2-i2v-flash
 
-中国内地
-
 无声视频
 
 480P
@@ -14160,8 +13350,6 @@ wan2.2-i2v-flash
 
 wan2.2-i2v-plus
 
-中国内地
-
 无声视频
 
 480P
@@ -14176,8 +13364,6 @@ wan2.2-i2v-plus
 
 wanx2.1-i2v-turbo
 
-中国内地
-
 无声视频
 
 480P
@@ -14191,8 +13377,6 @@ wanx2.1-i2v-turbo
 0.24元/秒
 
 wanx2.1-i2v-plus
-
-中国内地
 
 无声视频
 
@@ -14398,13 +13582,11 @@ wan2.6-i2v
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出视频分辨率**
 
@@ -14415,8 +13597,6 @@ wan2.6-i2v
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.2-kf2v-flash
-
-中国内地
 
 480P
 
@@ -14433,8 +13613,6 @@ wan2.2-kf2v-flash
 0.48元/秒
 
 wanx2.1-kf2v-plus
-
-中国内地
 
 720P
 
@@ -14475,8 +13653,6 @@ wan2.1-kf2v-plus
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出视频类型**
 
 **输出视频分辨率**
@@ -14488,8 +13664,6 @@ wan2.1-kf2v-plus
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.7-r2v-2026-06-12
-
-中国内地
 
 有声视频
 
@@ -14505,8 +13679,6 @@ wan2.7-r2v-2026-06-12
 
 wan2.7-r2v
 
-中国内地
-
 有声视频
 
 720P
@@ -14520,8 +13692,6 @@ wan2.7-r2v
 1元/秒
 
 wan2.6-r2v-flash
-
-中国内地
 
 有声视频
 
@@ -14550,8 +13720,6 @@ wan2.6-r2v-flash
 0.25元/秒
 
 wan2.6-r2v
-
-中国内地
 
 有声视频
 
@@ -14703,15 +13871,13 @@ wan2.6-r2v
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 计费规则：输入视频和输出视频均计费，按**视频秒数**计费，失败不计费也不占用免费额度。
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出视频分辨率**
 
@@ -14722,8 +13888,6 @@ wan2.6-r2v
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.7-videoedit
-
-中国内地
 
 720P
 
@@ -14739,8 +13903,6 @@ wan2.7-videoedit
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出视频分辨率**
 
 **输出单价**
@@ -14750,8 +13912,6 @@ wan2.7-videoedit
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wanx2.1-vace-plus
-
-中国内地
 
 720P
 
@@ -14812,8 +13972,6 @@ wan2.1-vace-plus
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -14822,15 +13980,11 @@ wan2.1-vace-plus
 
 wan2.2-s2v-detect
 
-中国内地
-
 输入图像：0.004元/张
 
 200张
 
 wan2.2-s2v
-
-中国内地
 
 输出视频：
 
@@ -14847,13 +14001,11 @@ wan2.2-s2v
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出视频模式**
 
@@ -14864,8 +14016,6 @@ wan2.2-s2v
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.2-animate-move
-
-中国内地
 
 标准模式`wan-std`
 
@@ -14907,13 +14057,11 @@ wan2.2-animate-move
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输出视频模式**
 
@@ -14924,8 +14072,6 @@ wan2.2-animate-move
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 wan2.2-animate-mix
-
-中国内地
 
 标准模式`wan-std`
 
@@ -14974,8 +14120,6 @@ wan2.2-animate-mix
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -14984,23 +14128,17 @@ wan2.2-animate-mix
 
 animate-anyone-detect-gen2
 
-中国内地
-
 输入图像：0.004元/张
 
 200张
 
 animate-anyone-template-gen2
 
-中国内地
-
 输出视频：0.08元/秒
 
 1800秒（30分钟）
 
 animate-anyone-gen2
-
-中国内地
 
 输出视频：0.08元/秒
 
@@ -15017,8 +14155,6 @@ animate-anyone-gen2
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -15027,15 +14163,11 @@ animate-anyone-gen2
 
 emo-detect-v1
 
-中国内地
-
 输入图像：0.004元/张
 
 200张
 
 emo-v1
-
-中国内地
 
 输出视频：
 
@@ -15057,8 +14189,6 @@ emo-v1
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -15067,15 +14197,11 @@ emo-v1
 
 liveportrait-detect
 
-中国内地
-
 输入图像：0.004元/张
 
 200张
 
 liveportrait
-
-中国内地
 
 输出视频：0.02元/秒
 
@@ -15092,8 +14218,6 @@ liveportrait
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -15102,15 +14226,11 @@ liveportrait
 
 emoji-detect-v1
 
-中国内地
-
 输入图像：0.004元/张
 
 200张
 
 emoji-v1
-
-中国内地
 
 输出视频：0.08元/秒
 
@@ -15124,8 +14244,6 @@ emoji-v1
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -15133,8 +14251,6 @@ emoji-v1
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 videoretalk
-
-中国内地
 
 0.08元/秒
 
@@ -15148,8 +14264,6 @@ videoretalk
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出视频分辨率**
 
 **输出单价**
@@ -15159,8 +14273,6 @@ videoretalk
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 video-style-transform
-
-中国内地
 
 540P
 
@@ -15182,8 +14294,6 @@ video-style-transform
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出视频类型**
 
 **输出视频分辨率**
@@ -15193,8 +14303,6 @@ video-style-transform
 **免费额度**[**（注）**](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 pixverse/pixverse-c1-t2v
-
-中国内地
 
 有声视频
 
@@ -15240,8 +14348,6 @@ pixverse/pixverse-c1-t2v
 
 pixverse/pixverse-v6-t2v
 
-中国内地
-
 有声视频
 
 `audio=true`
@@ -15286,8 +14392,6 @@ pixverse/pixverse-v6-t2v
 
 pixverse/pixverse-v5.6-t2v
 
-中国内地
-
 有声视频
 
 `audio=true`
@@ -15331,8 +14435,6 @@ pixverse/pixverse-v5.6-t2v
 0.44元/秒
 
 pixverse/pixverse-v5.6-it2v
-
-中国内地
 
 有声视频
 
@@ -15384,8 +14486,6 @@ pixverse/pixverse-v5.6-it2v
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出视频类型**
 
 **输出视频分辨率**
@@ -15395,8 +14495,6 @@ pixverse/pixverse-v5.6-it2v
 **免费额度**[**（注）**](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 pixverse/pixverse-c1-it2v
-
-中国内地
 
 有声视频
 
@@ -15442,8 +14540,6 @@ pixverse/pixverse-c1-it2v
 
 pixverse/pixverse-v6-it2v
 
-中国内地
-
 有声视频
 
 `audio=true`
@@ -15487,8 +14583,6 @@ pixverse/pixverse-v6-it2v
 0.53元/秒
 
 pixverse/pixverse-v5.6-it2v
-
-中国内地
 
 有声视频
 
@@ -15540,8 +14634,6 @@ pixverse/pixverse-v5.6-it2v
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出视频类型**
 
 **输出视频分辨率**
@@ -15551,8 +14643,6 @@ pixverse/pixverse-v5.6-it2v
 **免费额度**[**（注）**](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 pixverse/pixverse-c1-kf2v
-
-中国内地
 
 有声视频
 
@@ -15598,8 +14688,6 @@ pixverse/pixverse-c1-kf2v
 
 pixverse/pixverse-v6-kf2v
 
-中国内地
-
 有声视频
 
 `audio=true`
@@ -15643,8 +14731,6 @@ pixverse/pixverse-v6-kf2v
 0.53元/秒
 
 pixverse/pixverse-v5.6-kf2v
-
-中国内地
 
 有声视频
 
@@ -15696,8 +14782,6 @@ pixverse/pixverse-v5.6-kf2v
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出视频类型**
 
 **输出视频分辨率**
@@ -15707,8 +14791,6 @@ pixverse/pixverse-v5.6-kf2v
 **免费额度**[**（注）**](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 pixverse/pixverse-c1-r2v
-
-中国内地
 
 有声视频
 
@@ -15753,8 +14835,6 @@ pixverse/pixverse-c1-r2v
 0.56元/秒
 
 pixverse/pixverse-v5.6-r2v
-
-中国内地
 
 有声视频
 
@@ -15806,15 +14886,11 @@ pixverse/pixverse-v5.6-r2v
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[**（注）**](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 pixverse/pixverse-lipsync
-
-中国内地
 
 0.12元/秒
 
@@ -15828,8 +14904,6 @@ pixverse/pixverse-lipsync
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出视频分辨率**
 
 **输出单价**
@@ -15837,8 +14911,6 @@ pixverse/pixverse-lipsync
 **免费额度**[**（注）**](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 pixverse/pixverse-motioncontrol
-
-中国内地
 
 360P
 
@@ -15862,15 +14934,11 @@ pixverse/pixverse-motioncontrol
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出单价**
 
 **免费额度**[**（注）**](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 pixverse/pixverse-upscale
-
-中国内地
 
 0.15元/秒
 
@@ -15884,8 +14952,6 @@ pixverse/pixverse-upscale
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出视频类型**
 
 **输出视频分辨率**
@@ -15895,8 +14961,6 @@ pixverse/pixverse-upscale
 **免费额度**[**（注）**](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 kling/kling-v3-video-generation
-
-中国内地
 
 无声视频
 
@@ -15921,8 +14985,6 @@ kling/kling-v3-video-generation
 1.2元/秒
 
 kling/kling-v3-omni-video-generation
-
-中国内地
 
 无声视频（无参考视频）
 
@@ -15964,8 +15026,6 @@ kling/kling-v3-omni-video-generation
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出视频分辨率**
 
 **输出单价**
@@ -15973,8 +15033,6 @@ kling/kling-v3-omni-video-generation
 **免费额度**[**（注）**](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 vidu/viduq3-pro\_text2video
-
-中国内地
 
 540P
 
@@ -15992,8 +15050,6 @@ vidu/viduq3-pro\_text2video
 
 vidu/viduq3-turbo\_text2video
 
-中国内地
-
 540P
 
 0.25元/秒
@@ -16009,8 +15065,6 @@ vidu/viduq3-turbo\_text2video
 0.4375元/秒
 
 vidu/viduq2\_text2video
-
-中国内地
 
 540P
 
@@ -16034,8 +15088,6 @@ vidu/viduq2\_text2video
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出视频分辨率**
 
 **输出单价**
@@ -16043,8 +15095,6 @@ vidu/viduq2\_text2video
 **免费额度**[**（注）**](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 vidu/viduq3-pro-fast\_img2video
-
-中国内地
 
 720P
 
@@ -16057,8 +15107,6 @@ vidu/viduq3-pro-fast\_img2video
 0.46875元/秒
 
 vidu/viduq3-pro\_img2video
-
-中国内地
 
 540P
 
@@ -16076,8 +15124,6 @@ vidu/viduq3-pro\_img2video
 
 vidu/viduq3-turbo\_img2video
 
-中国内地
-
 540P
 
 0.25元/秒
@@ -16093,8 +15139,6 @@ vidu/viduq3-turbo\_img2video
 0.4375元/秒
 
 vidu/viduq2-pro\_img2video
-
-中国内地
 
 540P
 
@@ -16112,8 +15156,6 @@ vidu/viduq2-pro\_img2video
 
 vidu/viduq2-turbo\_img2video
 
-中国内地
-
 540P
 
 0.0875元/秒
@@ -16129,8 +15171,6 @@ vidu/viduq2-turbo\_img2video
 0.46875元/秒
 
 vidu/viduq2-pro-fast\_img2video
-
-中国内地
 
 720P
 
@@ -16150,8 +15190,6 @@ vidu/viduq2-pro-fast\_img2video
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出视频分辨率**
 
 **输出单价**
@@ -16159,8 +15197,6 @@ vidu/viduq2-pro-fast\_img2video
 **免费额度**[**（注）**](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 vidu/viduq3-pro\_start-end2video
-
-中国内地
 
 540P
 
@@ -16178,8 +15214,6 @@ vidu/viduq3-pro\_start-end2video
 
 vidu/viduq3-turbo\_start-end2video
 
-中国内地
-
 540P
 
 0.25元/秒
@@ -16196,8 +15230,6 @@ vidu/viduq3-turbo\_start-end2video
 
 vidu/viduq2-pro\_start-end2video
 
-中国内地
-
 540P
 
 0.15625元/秒
@@ -16213,8 +15245,6 @@ vidu/viduq2-pro\_start-end2video
 0.71875元/秒
 
 vidu/viduq2-turbo\_start-end2video
-
-中国内地
 
 540P
 
@@ -16238,8 +15268,6 @@ vidu/viduq2-turbo\_start-end2video
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输出视频分辨率**
 
 **输出单价**
@@ -16247,8 +15275,6 @@ vidu/viduq2-turbo\_start-end2video
 **免费额度**[**（注）**](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 vidu/viduq3-ad\_reference2video
-
-中国内地
 
 720P
 
@@ -16262,8 +15288,6 @@ vidu/viduq3-ad\_reference2video
 
 vidu/viduq3-drama\_reference2video
 
-中国内地
-
 1080P
 
 0.875元/秒
@@ -16271,8 +15295,6 @@ vidu/viduq3-drama\_reference2video
 无免费额度
 
 vidu/viduq3-mix\_reference2video
-
-中国内地
 
 720P
 
@@ -16285,8 +15307,6 @@ vidu/viduq3-mix\_reference2video
 0.9375元/秒
 
 vidu/viduq3\_reference2video
-
-中国内地
 
 540P
 
@@ -16304,8 +15324,6 @@ vidu/viduq3\_reference2video
 
 vidu/viduq3-turbo\_reference2video
 
-中国内地
-
 540P
 
 0.15625元/秒
@@ -16322,8 +15340,6 @@ vidu/viduq3-turbo\_reference2video
 
 vidu/viduq2-pro\_reference2video
 
-中国内地
-
 540P
 
 0.25元/秒
@@ -16339,8 +15355,6 @@ vidu/viduq2-pro\_reference2video
 0.78125元/秒
 
 vidu/viduq2\_reference2video
-
-中国内地
 
 540P
 
@@ -16366,8 +15380,6 @@ vidu/viduq2\_reference2video
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **3D任务类型**
 
 **输出规格**
@@ -16375,8 +15387,6 @@ vidu/viduq2\_reference2video
 **输出单价**
 
 Tripo/Tripo-H3.1
-
-中国内地
 
 文生3D
 
@@ -16432,8 +15442,6 @@ Tripo/Tripo-H3.1
 
 Tripo/Tripo-P1.0
 
-中国内地
-
 文生3D
 
 无贴图
@@ -16472,8 +15480,6 @@ Tripo/Tripo-P1.0
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -16481,8 +15487,6 @@ Tripo/Tripo-P1.0
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 qwen3.7-text-embedding
-
-中国内地
 
 0.5元
 
@@ -16492,8 +15496,6 @@ text-embedding-v4
 
 > [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价
 
-中国内地
-
 0.5元
 
 100万Token
@@ -16501,8 +15503,6 @@ text-embedding-v4
 text-embedding-v3
 
 > [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价
-
-中国内地
 
 0.5元
 
@@ -16512,8 +15512,6 @@ text-embedding-v2
 
 > [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价
 
-中国内地
-
 0.7元
 
 50万Token
@@ -16522,23 +15520,17 @@ text-embedding-v1
 
 > [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价
 
-中国内地
-
 0.7元
 
 50万Token
 
 text-embedding-async-v2
 
-中国内地
-
 0.7元
 
 2000万Token
 
 text-embedding-async-v1
-
-中国内地
 
 0.7元
 
@@ -16572,8 +15564,6 @@ text-embedding-v3
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
@@ -16586,8 +15576,6 @@ text-embedding-v3
 
 qwen3-vl-embedding
 
-中国内地
-
 0.7元
 
 1.8元
@@ -16596,13 +15584,9 @@ qwen3-vl-embedding
 
 qwen2.5-vl-embedding
 
-中国内地
-
 100万Token
 
 tongyi-embedding-vision-plus
-
-中国内地
 
 0.5元
 
@@ -16612,8 +15596,6 @@ tongyi-embedding-vision-plus
 
 tongyi-embedding-vision-flash
 
-中国内地
-
 0.15元
 
 0.15元
@@ -16621,8 +15603,6 @@ tongyi-embedding-vision-flash
 100万Token
 
 multimodal-embedding-v1
-
-中国内地
 
 0.7元
 
@@ -16638,13 +15618,11 @@ multimodal-embedding-v1
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -16654,8 +15632,6 @@ multimodal-embedding-v1
 
 qwen3-vl-rerank
 
-中国内地
-
 文本输入：0.7元
 
 图片输入：1.8元
@@ -16664,15 +15640,11 @@ qwen3-vl-rerank
 
 qwen3-rerank
 
-中国内地
-
 文本输入：0.5元
 
 100万Token
 
 gte-rerank-v2
-
-中国内地
 
 文本输入：0.8元
 
@@ -16702,8 +15674,6 @@ qwen3-rerank
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
@@ -16711,8 +15681,6 @@ qwen3-rerank
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
 farui-plus
-
-中国内地
 
 20元
 
@@ -16728,8 +15696,6 @@ farui-plus
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
@@ -16739,8 +15705,6 @@ farui-plus
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
 tongyi-intent-detect-v3
-
-中国内地
 
 0.4元
 
@@ -16754,13 +15718,11 @@ tongyi-intent-detect-v3
 
 **说明**
 
-以下模型仅在中国内地服务部署范围下有免费额度，其他服务部署范围下均无免费额度。
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
-
-**服务部署范围**
 
 **输入单价（每百万Token）**
 
@@ -16774,8 +15736,6 @@ qwen-plus-character
 
 > [Session Cache](https://help.aliyun.com/zh/model-studio/role-play#6034f997cde74)享有折扣
 
-中国内地
-
 0.8元
 
 2元
@@ -16786,8 +15746,6 @@ qwen-flash-character
 
 > [Session Cache](https://help.aliyun.com/zh/model-studio/role-play#6034f997cde74)享有折扣
 
-中国内地
-
 0.25元
 
 1.5元
@@ -16797,8 +15755,6 @@ qwen-flash-character
 qwen-flash-character-2026-02-26
 
 > [Session Cache](https://help.aliyun.com/zh/model-studio/role-play#6034f997cde74)享有折扣
-
-中国内地
 
 0.18元
 
@@ -16906,8 +15862,6 @@ qwen-plus-character
 
 **模型 ID（Model ID）**
 
-**服务部署范围**
-
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
@@ -16918,8 +15872,6 @@ qwen-plus-character
 
 gui-plus
 
-中国内地
-
 1.5元
 
 4.5元
@@ -16927,8 +15879,6 @@ gui-plus
 100万Token
 
 gui-plus-2026-02-26
-
-中国内地
 
 ## 错误码
 
