@@ -1,51 +1,43 @@
 # Token
 
-Token 是百炼平台中用于计量模型输入与输出内容的基本单位，代表模型处理的最小语义单元（如子词、标点、图像 patch 或音频帧等）。在计费、限流、性能监控与资源调度中，Token 是统一的量化基准——所有模态模型的用量均以 Token 为单位统计和结算。
+Token 是大语言模型处理文本的基本单位，通常对应一个词、子词或标点符号。在百炼平台中，Token 是计量模型计算资源消耗、计费、限流与性能监控的核心原子单位，贯穿模型调用、推理加速、可观测性及服务治理全流程。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-- **模型调用计费**：每次 API 调用的总 Token 消耗 = `输入 Token 数 + 输出 Token 数`。文本模型按字符/子词切分；视觉模型（如 `qwen3.7-plus`）将图像转为视觉 Token（单图最高约 1600 万像素 → 数万 Token）；语音/视频模型按时间分辨率与编码粒度映射为 Token。计费单价按模型维度独立设定（如 `qwen3.7-plus` 输入 0.0002 元/Token，输出 0.0004 元/Token）。
-
-- **上下文长度约束**：模型能力明确标注最大支持 Token 数（如 `qwen3.7-plus` 支持 1000 万 Token 上下文），该值限制 [prompt](../guides/prompt.md) + history + 生成 output 的总长度。超出将触发截断或报错（HTTP 400，`context_length_exceeded`）。
-
-- **性能监控指标**：  
-  - `model_usage`（模型监控）：业务空间级 Token 总消耗量；  
-  - `Token 总量`（应用观测）：单次 Span 中 LLM 节点的输入+输出 Token 数，用于成本归因与链路优化；  
-  - `usage.prompt_tokens_details.cached_tokens`（高吞吐推理）：缓存命中 Token 数，参与 TPM 折扣计算（如 `glm-5.2` 缓存折扣率 0.25，即仅按 25% 计入预留容量）。
-
-- **资源控制与限流**：  
-  - TPM（Tokens Per Minute）预留机制以 kTPM 为单位锁定吞吐能力，保障高峰期容量；  
-  - Coding Plan 等套餐虽不按 Token 计费，但内部仍以 Token 为调度单元实施请求级限流；  
-  - 快速模式（Fast mode）通过提升 TPS（Tokens Per Second）优化首 Token 延迟，直接受 Token 处理效率影响。
-
-- **思考模式预算控制**：在 OpenCode 配置中，`budgetTokens` 明确指定思考过程允许消耗的最大 Token 数（如 `1024`），超限则终止推理步骤。
+- **计费与配额**：Token 是 Token Plan 服务的底层计量单元。实际消耗 = 输入 Token 数 + 输出 Token 数，并受模型类型、思考模式（如 Reasoning）、Harness 工具调用次数等动态影响。Credits 消耗按此精确折算，控制台用量明细可逐次查看。
+- **限流控制**：平台以 TPM（Tokens Per Minute）为关键限流维度，区分输入/输出方向。例如 `qwen3.7-plus` 默认享有 5,000,000 TPM 配额，超限返回 `429` 错误；TPM 预留服务则允许用户预购专属 kTPM 容量，保障吞吐确定性。
+- **性能监控**：模型监控与应用观测均将 Token 总量（input + output）作为核心指标上报，支持按业务空间、API Key、模型 ID 等多维归因分析；同时支撑首 Token 耗时（TTFT）、非首 Token 延时（ITL）等关键性能诊断。
+- **多模态扩展**：图像、视频、语音等非文本模态输入需先经编码器转换为视觉/音频 Token 序列，再送入大模型联合处理。例如 `qwen3.7-plus` 接收图片时，系统自动提取视觉 Token 并计入总输入 Token 数。
+- **调试与优化**：通过监控中的 Token 分布（如长上下文输入占比、输出冗余度），开发者可识别 [prompt](../guides/prompt.md) 设计缺陷、截断风险或生成低效问题，针对性优化提示工程或选择更适配的模型（如 `qwen3.7-flash` 适合短响应场景）。
 
 ## 关键参数和配置
 
-| 参数名 | 所属场景 | 说明 | 示例值 |
-|--------|----------|------|--------|
-| `usage.input_tokens` / `usage.output_tokens` | API 响应体 | 每次调用实际消耗的输入/输出 Token 数，位于响应 `usage` 字段中 | `{"input_tokens": 128, "output_tokens": 42}` |
-| `usage.prompt_tokens_details.cached_tokens` | 高吞吐推理 | 缓存命中 Token 数，仅当启用缓存且模型支持时返回 | `24` |
-| `options.thinking.budgetTokens` | OpenCode 配置 | 思考模式 Token 预算上限，硬性截断阈值 | `1024` |
-| `model_usage`（监控指标） | 模型监控 | Prometheus 指标名，标签含 `model`、`workspace_id`，单位：Token | `model_usage{model="qwen3.7-plus", workspace_id="ws-abc"} 125000` |
-| `Token 总量`（Span 字段） | 应用观测 | 控制台可观测字段，等于 `input_tokens + output_tokens`，用于筛选与分析 | `168` |
-
-> ⚠️ 注意：Token 统计严格区分模态——文本 Token 不与图像 Token 互换；同一请求中[多模态](multi-modal.md)输入（如图文混合）的 Token 分别计算并累加。缓存 Token 仅在支持缓存的模型（如 `glm-5.2`）和启用缓存的部署中生效，需通过监控验证实际命中率。
+- **Token 计数规则**：
+  - 文本 Token 数由模型专用 tokenizer 统一计算（如 Qwen 使用 tiktoken 兼容分词器），与 OpenAI 标准一致；
+  - [多模态输入](multimodal-input.md)（图片/音频）的 Token 消耗由平台自动估算并计入总量，无需手动计算；
+  - Harness 工具调用本身不额外计费 Token，但工具返回结果作为新输入参与后续推理，其 Token 会计入总消耗。
+- **限流相关参数**：
+  - `max_tokens`：控制模型最大输出长度，直接影响输出 Token 上限（默认值因模型而异，如 `qwen3.7-plus` 为 8192）；
+  - `input_tpm` / `output_tpm`：TPM 预留服务的必需配置项，单位为千 Token/分钟（kTPM），需在控制台购买并绑定专属模型 code；
+  - 流式响应中，`usage.prompt_tokens` 和 `usage.completion_tokens` 字段在 `choices[0].delta` 结束后完整返回，可用于实时成本跟踪。
+- **可观测性字段**：
+  - 应用监控中 `Token 总量` 字段直接展示该 Span 的双向 Token 消耗；
+  - 模型监控日志中 `prompt_tokens` 和 `completion_tokens` 字段提供原始计数，支持与账单对齐。
 
 ## 面向开发者，简洁实用
 
-- **调试建议**：调用后必查响应 `usage` 字段，确认 Token 消耗是否符合预期（尤其长上下文或复杂[多模态](multi-modal.md)输入）；  
-- **成本优化**：对重复性 [prompt](../guides/prompt.md)，优先启用缓存；对长输出，设置 `max_output_tokens` 避免无意义生成；  
-- **限流规避**：TPM 预留需按峰值输入+输出 Token 速率预估 kTPM 值（例如：每秒 50 请求 × 平均 200 Token/请求 = 600kTPM）；  
-- **监控告警**：在模型监控中配置 `model_usage` 告警规则，阈值建议设为日额度的 80%，避免突发流量超支；  
-- **兼容性注意**：`*-fast-preview` 等加速变体 Token 计费逻辑与基线模型一致，但 `cached_tokens` 字段解析方式需参考对应文档。
+- ✅ **务必校验 Token 消耗**：首次集成时，用 `qwen3.7-plus` 发起含 100 字中文的请求，观察响应中 `usage.total_tokens` 值（通常约 130–150），建立直观感知。
+- ✅ **长文本场景必设 `max_tokens`**：避免意外超限触发限流或高额费用，尤其在 RAG 场景中，应结合检索结果长度动态约束。
+- ✅ **监控告警建议配置**：在模型监控中为关键业务设置「Token 消耗突增 300%」或「TPM 使用率 > 90%」告警，提前发现异常调用。
+- ❌ **不要跨地域混用 API Key 与 Base URL**：北京地域的 Token Plan Key（`sk-sp-`）必须搭配 `cn-beijing.maas.aliyuncs.com` 域名，否则鉴权失败且 Token 计数异常。
+- ❌ **避免在生产环境滥用试用域名**：`trial.cn-beijing.maas.aliyuncs.com` 有严格 Token 限流（如 1000 TPM），仅用于快速验证，不可用于压测或上线。
 
 ## 关联主题页
 
-- [model experience](../guides/model-experience.md)
 - [token plan guide](../guides/token-plan-guide.md)
+- [get started with models](../guides/get-started-with-models.md)
+- [model high speed inference](../guides/model-high-speed-inference.md)
 - [application monitoring](../guides/application-monitoring.md)
 - [model monitoring](../guides/model-monitoring.md)
-- [model high speed inference](../guides/model-high-speed-inference.md)
 
 

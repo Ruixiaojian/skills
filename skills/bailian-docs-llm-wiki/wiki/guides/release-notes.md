@@ -1,68 +1,34 @@
 # release notes
 
-百炼平台的 Release Notes 汇总了模型、API、平台功能及计费策略的最新变更，面向开发者提供可落地的技术更新信息。内容涵盖新增模型支持、关键能力上线、参数调整、使用方式变更及下线计划，所有信息均以实际生效日期为准。建议开发者定期查阅本页，并结合 [原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md) 和 [原文标题](../../raw/model-user-guide/release-notes/newly-released-models.md) 获取原始公告与技术细节。
+本页汇总百炼平台近期模型与功能更新，涵盖新模型上线、已有模型能力演进、平台功能增强及关键使用约束。所有信息均基于官方发布内容整理，面向开发者提供可直接落地的参考依据。建议结合具体业务场景选择模型与功能，并关注下线通知以规避服务中断风险。
 
 ## 支持的模型/功能
 
-- **新增模型（2026年7月起）**：  
-  - `qwen-image-3.0-pro`（图像生成，支持长文本输入与图中图密集排版）  
-  - `kimi/kimi-k3`（100万 token 上下文，原生视觉理解）  
-  - `qwen-audio-3.0-realtime-plus` / `qwen-audio-3.0-realtime-flash`（端到端实时语音大模型，双工交互优化）  
-  - `vidu/viduq3-ad_reference2video` 等 Vidu 参考生视频系列（广告/短剧方向）  
-  - `pixverse/pixverse-lipsync`（视频对口型）、`pixverse/pixverse-motioncontrol`（动作模仿）  
-  - `qwen3.5-ocr`（128K上下文，多轮对话支持，卡证识别增强）  
-
-- **核心功能上线**：  
-  - 知识检索服务与知识问答服务（2026年6月23日）[原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md)  
-  - 智能体托管运行时 API（2026年6月29日），支持平台托管会话与工具执行  
-  - Responses API 异步调用模式（`background=true`，2026年6月1日）  
-  - 模型评测排行榜与综合评测能力（2026年6月9日），支持 BLEU_4 等评分方法  
-  - [多模态](../concepts/multi-modal.md)翻译 API 全面覆盖（文本/图片/文档/网页翻译，2026年5月26日）  
-
-> **注意**：文档2中 `kimi/kimi-k2.6` 与 `kimi-k2.6` 为同一模型不同命名，但文档1未提及该模型；文档2中 `qwen3.6-max-preview` 明确标注“不支持图像与视频输入”，而文档1中同日发布的 `qwen3.7-plus` 则明确支持视觉-语言能力——请以模型文档页（如 [原文标题](../../raw/model-user-guide/release-notes/newly-released-models.md)）中具体模型规格说明为准，避免混淆。
+- **新增模型**：2026年7月起，华北2（北京）地域陆续上线 Qwen3.7-Flash 系列（`qwen3.7-flash`）、Qwen-Image-3.0-Pro（`qwen-image-3.0-pro`）、Kimi K3（`kimi/kimi-k3`）、PixVerse 多模态视频模型（`pixverse/pixverse-lipsync`、`pixverse/pixverse-motioncontrol`、`pixverse/pixverse-upscale`）、Qwen-Audio-Realtime 系列（`qwen-audio-3.0-realtime-plus`）、Vidu 参考生视频系列（`vidu/viduq3-ad_reference2video`）等。完整列表详见 [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)。
+- **平台功能扩展**：2026年6月起，新增知识检索服务与知识问答服务（支持多知识库联合检索与混合排序）、智能体托管运行时 API、Skill 能力包、数据连接模块（支持 MySQL/语雀/OSS）、模型导入 API（含 LoRA 微调模型 OSS 导入）、Responses API 异步调用模式（`background=true`）等。详情参见 [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)。
+- **调优与部署能力**：自2025年10月起，千问3-VL系列（`qwen3-vl-8b-instruct` 等）支持 SFT 微调；2026年5月起，模型调优新增强化学习（RL）训练（邀约制）及 0 代码安全合规强化流程；2026年4月起，支持图像生成、视觉理解、视频生成三类模型的定制训练。相关能力说明见 [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)。
 
 ## 关键参数
 
-- **模型单元（MU）计费**：自2026年1月起，模型部署 API 支持按 MU 时长计费，适用于 `qwen-flash`/`qwen-plus` 等预置模型，提供可预测的固定成本与性能弹性调节能力。  
-- **缓存相关参数**：  
-  - `cached_token` 单价已调整（如 `deepseek-v4-pro` 为 1元/百万 token，2026年4月29日）  
-  - PTU 部署支持前缀缓存（2026年6月15日）  
-- **上下文长度**：  
-  - `glm-5.1` 支持 200K 输入上下文（2026年4月14日）  
-  - `qwen3.5-ocr` 扩展至 128K（2026年6月16日）  
-- **异步任务回调**：支持通过事件总线 EventBridge 主动推送完成事件（HTTP 回调或 RocketMQ），替代轮询（2026年4月23日）。
+- **上下文长度**：Kimi K3 支持 100 万 token 上下文窗口；Qwen3.5-OCR 扩展至 128K；GLM-5.1 支持 200K 输入 + 128K 输出；Qwen3.7-Max 系列仅支持纯文本输入，不支持图像/视频（[模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md) 中明确标注）。
+- **计费粒度**：DeepSeek-V4-Pro 的 `cached_token` 单价为 1 元/百万 token（2026-04-29 更新），标准 `input_token` 不变；[模型部署](../concepts/model-deployment.md)支持按模型单元（MU）时长计费（2025-10-24 起）；部分资源包（如 qwen-turbo）已启动退市流程（2026-06-28）。
+- **输入模态限制**：Qwen3.7-Max 系列（含 `qwen3.7-max-preview`、`qwen3.7-max-2026-05-20`）明确标注“> 不支持图像与视频输入”；而 Qwen3.7-Plus、Qwen3.7-Flash 等则原生支持视觉-语言[多模态输入](../concepts/multimodal-input.md)。
 
 ## 使用方式
 
-- **API 调用**：  
-  - 新增 DashScope 智能体应用 API（2026年5月11日），支持单轮/多轮、流式、文件问答、视觉理解  
-  - Responses API 启用 `background=true` 参数提交异步任务，后续通过 `GET /v1/async/{task_id}` 轮询结果  
-  - 模型导入 API 已上线（2026年6月3日），支持从 OSS 导入 LoRA 微调模型  
-- **SDK 接入**：  
-  - [多模态](../concepts/multi-modal.md)交互开发套件提供 Linux C++ SDK（2026年2月28日）、Android/iOS Lite SDK（2026年2月6日）、RTOS C SDK（2026年4月9日）  
-  - Codex 客户端接入（2026年6月24日），支持终端 AI 编程助手直连  
-- **安全与鉴权**：  
-  - API Key 支持加密存储与业务空间专属推理域名（2026年6月29日）  
-  - 新增生成临时 API Key 文档（2026年6月3日），适用于不可信环境  
+- **API 调用**：文本生成统一入口支持 OpenAI Responses 与 Anthropic Messages 接口分类（2025-05-15）；异步任务可通过事件总线 EventBridge 主动推送完成事件，避免轮询（2026-04-23）；新版智能体应用 DashScope API 支持单轮/多轮、流式、文件问答与视觉理解（2025-05-11）。
+- **SDK 接入**：多模态交互开发套件已提供 Linux C++ SDK（2026-02-28）、Android/iOS Lite SDK（2026-02-06）、服务端 Java SDK（2026-04-28）及移动端 Android SDK（2026-04-14）；Spring AI Alibaba 框架调用百炼应用文档已上线（2026-06-01）。
+- **[模型部署](../concepts/model-deployment.md)与调优**：预置吞吐部署（PTU）支持长输入与前缀缓存（2026-06-15）；模型导入支持从 OSS 加载 LoRA 微调模型（2026-06-05）；视觉理解与视频生成模型均支持定制训练（2025-01-22 / 2025-01-21）。
 
 ## 限制和注意事项
 
-- **模型下线计划**：  
-  - 2026年7月起分批下线部分老旧模型（7月10日、7月9日通知），含长尾模型与 `qwen-turbo` 资源包（6月28日启动退市）  
-  - 企业知识库（旧）已于2026年7月16日下线，需迁移至新版知识库 RAG 服务  
-  - 记忆库于2026年7月21日启动商业化，旧版免费额度不再适用  
-- **地域与部署限制**：  
-  - 新增美国、德国、日本地域（2026年6月12日），但部分模型（如 `qwen-audio-3.0-realtime-plus`）当前仅限华北2（北京）可用，详见各模型文档  
-- **功能兼容性**：  
-  - `qwen3.6-max-preview` 仅支持纯文本输入，不支持图像/视频（2026年4月20日）  
-  - `kimi/kimi-k2.7-code-highspeed` 仅支持思考模式（2026年6月18日）  
-- **免费额度策略**：  
-  - 免费额度用完即停功能已启用（2025年7月29日），超额调用返回 `AllocationQuota.FreeTierOnly` 错误码  
-  - 新人免费额度有效期已调整，详情见 [原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md)
+> **注意**：文档1中 `kimi/kimi-k2.6`（2026-04-26）与 `kimi-k2.6`（2026-04-21）模型标识不一致（前者带斜杠，后者无），且功能描述存在细微差异（前者强调“文本、图片与视频输入”，后者未明确提及视频输入），实际调用请以控制台或 API 文档为准。  
+> **注意**：文档1中 `qwen3.7-max-preview`（2026-05-25）与 `qwen3.7-max`（2026-05-21）均标注“仅支持纯文本输入”，但文档1同节 `qwen3.7-max-2026-06-08` 却注明“增加了视觉模态理解能力”，存在明显矛盾。建议优先采用 `qwen3.7-max-2026-06-08` 及之后版本，并通过 [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md) 中最新快照确认能力边界。  
+> **注意**：企业知识库（旧）已于2026-07-16下线，用户需迁移至新版知识库；部分老旧模型（含长尾模型）于2026-07-09起分批下线，具体清单需查阅 [模型下线机制说明](https://help.aliyun.com/zh/model-studio/model-depreciation)，该机制在两篇原始文档中均被引用，是判断模型生命周期的核心依据。
 
 ## 来源文档
 
-- [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)
 - [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)
+- [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)
 
 

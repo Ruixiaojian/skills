@@ -2422,6 +2422,60 @@ qwen3.6-plus-2026-04-02
 
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
+qwen3.7-flash
+
+> 当前能力等同于qwen3.7-flash-2026-07-15
+
+> [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+非思考和思考模式
+
+0<Token≤32K
+
+0.2元
+
+0.8元
+
+100万Token
+
+32K<Token≤256K
+
+0.6元
+
+2.4元
+
+256K<Token≤1M
+
+1.2元
+
+4.8元
+
+qwen3.7-flash-2026-07-15
+
+非思考和思考模式
+
+0<Token≤32K
+
+0.2元
+
+0.8元
+
+100万Token
+
+32K<Token≤256K
+
+0.6元
+
+2.4元
+
+256K<Token≤1M
+
+1.2元
+
+4.8元
+
 qwen3.6-flash
 
 > 当前能力等同于qwen3.6-flash-2026-04-16
@@ -2805,6 +2859,58 @@ qwen-flash-2025-07-28-us
 **输出单价（每百万Token）**
 
 > **思维链+回答**
+
+qwen3.7-flash
+
+> 当前能力等同于qwen3.7-flash-2026-07-15
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+国际
+
+非思考和思考模式
+
+0<Token≤32K
+
+0.225元
+
+0.974元
+
+32K<Token≤256K
+
+0.749元
+
+2.998元
+
+256K<Token≤1M
+
+1.499元
+
+5.995元
+
+qwen3.7-flash-2026-07-15
+
+国际
+
+非思考和思考模式
+
+0<Token≤32K
+
+0.225元
+
+0.974元
+
+32K<Token≤256K
+
+0.749元
+
+2.998元
+
+256K<Token≤1M
+
+1.499元
+
+5.995元
 
 qwen3.6-flash
 

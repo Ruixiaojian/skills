@@ -213,6 +213,17 @@ AI 助理准确分析出原因，并给出解决方案：
 -   **使用正确的模型名称：**请对照模型列表中的模型名称，检查输入的`model`是否正确。请勿混用开源社区的模型名与百炼模型ID，如应该使用`qwen3-235b-a22b-instruct-2507`，而非`Qwen/Qwen3-235B-A22B-Instruct-2507`。
     
 
+### **The product is not activated, please confirm that you have activated products and try again after activation.**
+
+**原因：** 所调用的模型服务未开通（未激活）。通过 OpenAI 兼容接口调用时，若目标模型未在模型市场开通，网关会返回该错误，错误码为 `invalid_parameter_error`。
+
+**解决方案：**
+
+-   **开通模型服务：**请前往阿里云百炼控制台[模型市场](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market)，确认所调用的模型（如 `kimi-k3`）处于已开通状态后再行调用。
+    
+-   **开通百炼服务：**若尚未开通阿里云百炼服务，请先开通百炼服务后再调用。
+    
+
 ### The result\_format parameter must be \\"message\\" when enable\_thinking is tru**e**
 
 **原因：** 调用思考模式模型，`result_format`参数未设置为`"message"`。

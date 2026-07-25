@@ -1059,7 +1059,7 @@
     
 -   **节点示例：**
     
-    1.  在北京地域，参考[使用函数计算部署千问大模型实现AI对话](https://help.aliyun.com/zh/functioncompute/fc/use-cases/use-function-compute-to-realize-ai-dialogue)创建并测试函数计算服务，确保函数计算服务正常运行。
+    1.  在北京地域，参考[使用函数计算部署千问大模型实现AI对话](https://help.aliyun.com/zh/functioncompute/use-function-compute-to-realize-ai-dialogue)创建并测试函数计算服务，确保函数计算服务正常运行。
         
     2.  配置函数计算节点。
         

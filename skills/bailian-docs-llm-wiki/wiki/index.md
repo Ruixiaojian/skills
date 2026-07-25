@@ -36,7 +36,7 @@
 - [test 1](guides/test-1.md) — 5 篇源文档
 - [token plan guide](guides/token-plan-guide.md) — 14 篇源文档
 - [use cases](guides/use-cases.md) — 24 篇源文档
-- [use chat client or development tool](guides/use-chat-client-or-development-tool.md) — 16 篇源文档
+- [use chat client or development tool](guides/use-chat-client-or-development-tool.md) — 17 篇源文档
 
 ## API 参考
 
@@ -59,26 +59,26 @@
 - [realtime api user guide](api/realtime-api-user-guide.md) — 15 篇源文档
 - [toolkits and frameworks](api/toolkits-and-frameworks.md) — 10 篇源文档
 - [vector and sort](api/vector-and-sort.md) — 4 篇源文档
-- [video generation api](api/video-generation-api.md) — 34 篇源文档
+- [video generation api](api/video-generation-api.md) — 33 篇源文档
 
 ## 横切概念
 
-- [OpenAI 兼容接口](concepts/openai-compatible-api.md) — 关联 5 个主题
+- [OpenAI 兼容接口](concepts/openai-compatible-interface.md) — 关联 5 个主题
 - [Prompt 工程](concepts/prompt-engineering.md) — 关联 5 个主题
 - [Token](concepts/token.md) — 关联 5 个主题
-- [函数调用](concepts/function-calling.md) — 关联 4 个主题
-- [多模态](concepts/multi-modal.md) — 关联 5 个主题
-- [插件](concepts/plugin.md) — 关联 5 个主题
-- [文件处理](concepts/file-processing.md) — 关联 5 个主题
-- [检索增强生成](concepts/rag.md) — 关联 5 个主题
+- [函数调用](concepts/function-calling.md) — 关联 6 个主题
+- [向量嵌入](concepts/vector-embedding.md) — 关联 5 个主题
+- [多模态输入](concepts/multimodal-input.md) — 关联 6 个主题
+- [检索增强生成](concepts/rag.md) — 关联 6 个主题
+- [模型部署](concepts/model-deployment.md) — 关联 5 个主题
 - [流式输出](concepts/streaming-output.md) — 关联 5 个主题
-- [长期记忆](concepts/memory.md) — 关联 5 个主题
+- [长期记忆](concepts/long-term-memory.md) — 关联 4 个主题
 
 ## 对比分析
 
-- [多模态生成能力对比：图像生成、3D生成、视频生成](comparisons/generation-apis.md) — 对比 3 个主题
-- [实时 API 方案对比：Realtime API vs Omni Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
-- [应用开发框架对比：Managed Agents vs Application Component API](comparisons/application-frameworks.md) — 对比 2 个主题
-- [模型部署方式对比：高并发推理、模型压缩、模型监控](comparisons/model-deployment-options.md) — 对比 3 个主题
-- [长期记忆与知识库方案对比](comparisons/memory-solutions.md) — 对比 2 个主题
+- [图像生成与视频生成对比](comparisons/image-vs-video-generation.md) — 对比 2 个主题
+- [实时 API 方案对比：Omni Realtime vs Realtime User Guide](comparisons/realtime-api-variants.md) — 对比 2 个主题
+- [应用调用方式对比：Bailian 应用调用 vs Application Call API](comparisons/application-calling-methods.md) — 对比 2 个主题
+- [模型部署方式对比：高并发推理、生产部署与压缩优化](comparisons/model-deployment-options.md) — 对比 3 个主题
+- [知识库与长期记忆对比](comparisons/knowledge-base-vs-long-term-memory.md) — 对比 2 个主题
 

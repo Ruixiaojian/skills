@@ -1,48 +1,51 @@
 # Prompt 工程
 
-Prompt 工程是系统性设计、构建、优化和复用提示词（Prompt）的方法论与技术实践，旨在精准引导大语言模型完成特定任务、提升输出一致性、可控性与业务适配度。在百炼平台中，它不是简单的文本输入，而是可配置、可版本化、可集成的工程化组件，支撑从零代码应用到高代码系统的全链路 AI 行为编排。
+Prompt 工程是系统性设计、优化与管理大语言模型输入提示（Prompt）的方法论与实践体系，旨在通过结构化模板、自动化增强和反馈驱动迭代等手段，显著提升模型输出的准确性、一致性、可控性与业务适配度。它不是一次性编写指令，而是覆盖开发、测试、部署与持续演进全生命周期的工程化能力。
 
-## 在百炼平台的不同场景中，这个概念如何使用
+## 在百炼平台的不同场景中如何使用
 
-- **智能体（Agent 2.0）应用**：通过 `System Prompt` 定义角色、任务边界与工具调用规范；支持将 Prompt 模板直接绑定至智能体，实现角色指令与知识库/MCP 工具调度逻辑的解耦。例如，客服智能体可复用“多轮意图澄清 + 术语约束 + 格式化回复”模板，无需重复编写系统指令。
+- **智能体（Agent）与工作流应用**：将 Prompt 模板作为系统提示词（system [prompt](../guides/prompt.md)）注入，通过变量（如 `${user_intent}`、`${knowledge_snippet}`）动态拼接上下文、知识库召回结果或工具调用反馈，实现角色设定、任务约束与格式控制。推荐使用 `千问-Max` 等支持思考模式的模型，并配合 `enable_thinking: true` 以增强推理链可解释性。
 
-- **工作流（Workflow）应用**：在大模型节点中引用 Prompt 模板 ID 或内联变量化 Prompt（如 `${query}`、`${retrieved_knowledge}`），实现动态上下文注入；结合 `messages` 输入结构，使 Prompt 成为工作流状态传递与条件分支决策的关键媒介。
+- **高代码应用与 API 集成**：通过 `GetPromptTemplate` 接口拉取模板内容，在 SDK 或 HTTP 请求中填充 `variables` 字段后，作为 `messages[0].content` 提交至 `/v1/applications/{app_id}/invoke`。适用于需精细控制请求体、支持多轮状态管理或与自有前端深度集成的场景。
 
-- **高代码应用**：通过 SDK 调用 `GetPromptTemplate` 获取结构化模板内容，再结合业务变量实时渲染，嵌入 Python 服务逻辑；支持将 Prompt 作为配置项与模型参数（`temperature`、`max_output_tokens`）统一管理，实现灰度发布与 A/B 测试。
+- **Managed Agents 托管运行时**：在创建 Agent 时，直接将优化后的 Prompt 字符串赋值给 `system`（控制台）或 `instructions`（SDK）字段。该 Prompt 将作为沙箱内模型的全局行为锚点，协同内置工具（如 `read`/`write`）完成文件解析、代码执行等复杂操作——此时 Prompt 需明确声明工具能力边界与调用规范（例如“仅当用户要求生成图表时才调用 `plot` 工具”）。
 
-- **RAG 增强场景**：Prompt 与知识库协同——模板中预留 `${retrieved_chunks}` 占位符，由检索结果自动填充；避免硬编码样例，转向以模板驱动的“检索→填充→生成”标准化流程（替代已停用的 Prompt 样例库）。
+- **Skill 能力封装**：虽 Skill 本身不依赖显式 Prompt 调用，但其触发完全由 `SKILL.md` 中的 `description` 字段驱动。该描述本质是面向模型的轻量级 Prompt，需遵循 Prompt 工程原则：清晰定义输入类型、支持动作、典型触发词及排除场景，避免模糊表述（如“处理数据”应改为“从上传的 CSV 文件中提取销售额前 5 的城市并生成 Markdown 表格”）。
 
-- **模型微调前奏**：利用反馈优化生成高质量 few-shot 示例集，作为监督微调（SFT）数据的种子样本，缩短人工标注周期。
+- **RAG 增强场景**：Prompt 工程与知识库深度协同。在模板中预留 `${retrieved_chunks}` 占位符，由平台自动注入检索结果；同时通过 Prompt 明确指令模型“仅基于以下内容回答，禁止编造”，并指定引用格式（如 `[1]`），确保事实准确性与可追溯性。
 
-> ⚠️ 注意：Prompt 样例库（few-shot 样例库）功能已正式停止维护，所有新项目请迁移至 RAG 表格库或通过反馈优化生成带样例的 Prompt，不得在生产环境中继续使用。
+> ⚠️ 注意：所有 Prompt 功能（模板、自动优化、反馈优化）**仅支持华北2（北京）地域**，跨地域调用将失败。
 
 ## 关键参数和配置
 
 | 参数 | 说明 | 开发建议 |
 |------|------|----------|
-| `workspaceId` | 业务空间唯一标识，所有 Prompt 相关 API 的必需路径参数 | 必须提前获取并持久化存储，不可硬编码；推荐从环境变量或配置中心加载。 |
-| `promptTemplateId` | 模板唯一 ID，用于 `GetPromptTemplate` 等接口 | 控制台模板卡片右上角「复制 ID」；API 调用时需确保该模板处于「已发布」状态。 |
-| `variables` | 模板中声明的占位符列表（如 `["topic", "tone"]`），由 `GetPromptTemplate` 接口返回 | **禁止手动构造**；应解析接口响应中的 `variables` 字段，按需填充，避免字段缺失导致渲染失败。 |
-| `content` | 模板主体内容，支持 ICIO/CRISPE/RASCEF 等结构化框架 | 单模板最大 6144 字符；建议拆分复杂逻辑为多个轻量模板，通过工作流串联复用。 |
-| `type` | 模板类型，取值 `text`（文本生成）或 `image`（图片生成） | 图片生成模板需额外提供 `positive_prompt` 和 `negative_prompt` 字段，二者均参与渲染控制。 |
+| `workspaceId` | 业务空间唯一标识，所有 Prompt 相关 API（如 `GetPromptTemplate`）必需 | 控制台首页左上角点击业务空间图标获取；建议存为环境变量，避免硬编码 |
+| `promptTemplateId` | 模板唯一 ID，用于引用或复用 | 自定义模板 ID 可重命名，但不可变更；预置模板 ID 固定，可在控制台模板卡片上一键复制 |
+| `variables` | 模板中声明的占位符列表（如 `["topic", "tone"]`），运行时需传入对应值 | 变量名须为合法字符串，**不支持嵌套语法**（如 `${user.profile.name}`）；填充前务必对输入值做 XSS/注入过滤 |
+| `temperature` / `max_tokens` | 模型生成参数，影响输出多样性与长度 | 在智能体或工作流配置中统一设置；`temperature=0.3` 适合确定性任务，`0.7` 适合创意生成；`max_tokens` 建议设为 2048 以内以控成本 |
+| `enable_thinking` | 开启模型内部规划-反思链路（仅限 `千问-Max` 等支持模型） | 对复杂任务（如多步骤分析、工具编排）强烈推荐启用，便于调试与审计 |
 
-- **地域强制约束**：所有 Prompt 功能（模板管理、自动优化、反馈优化）**仅支持华北2（北京）地域**，调用时必须使用 `bailian.cn-beijing.aliyuncs.com` 接入点，跨地域请求将返回 `InvalidRegionId` 错误。
+## 面向开发者的关键实践建议
 
-## 面向开发者，简洁实用
+- **优先使用模板而非硬编码 Prompt**：将结构（指令、角色、格式）与变量（业务数据、上下文）分离，提升复用性与协作效率。控制台支持 ICIO/CRISPE/RASCEF 等主流框架一键生成模板。
 
-- ✅ **优先用模板，而非硬编码 Prompt**：创建自定义模板后，在智能体/工作流中直接引用 `promptTemplateId`，便于统一维护与灰度切换。
-- ✅ **变量命名语义化**：使用 `user_query`、`product_name` 等清晰名称，避免 `var1`、`input` 等模糊占位符，降低协作理解成本。
-- ✅ **自动优化免费试用**：对新 Prompt 初稿，先调用 `/api/v1/prompt/optimize` 进行结构增强（角色注入、指令明确化），再人工校验，节省 30%+ 编写时间。
-- ✅ **反馈优化需最小数据集**：提交 `CreatePromptFeedbackOptimizationTask` 时，确保样例 ≥5 条（覆盖典型 case）、评测数据 ≥20 条（含正负例），否则任务失败。
-- ❌ **禁用已停用能力**：勿调用 `AddPromptCaseLibrary` 或 `RetrieveFromPromptCaseLibrary` 等样例库相关接口；历史项目请尽快迁移到 RAG 表格库或反馈优化流程。
-- 📦 **注意 [Token](token.md) 开销**：启用反馈优化或在 Prompt 中内嵌长知识片段会显著增加输入 [Token](token.md)，建议监控 `usage.input_tokens` 并设置 `max_output_tokens` 防止超限。
+- **快速启动用自动优化**：粘贴模糊原始 Prompt（如“帮我写个文案”），点击「自动优化」获得结构化版本，再人工微调——该功能免费、不计费、不用于训练。
+
+- **高精度任务用反馈优化**：当分类、JSON 输出等任务准确率不足时，准备 5–10 条高质量输入-输出样例 + ≥20 条评测数据，调用 `/prompt/feedback-optimize` 接口，让大模型自我反思迭代。
+
+- **弃用样例库，迁移到 RAG 表格库**：`has_thoughts` 等旧参数已失效；知识增强请统一使用结构化表格知识库，通过 `${table_data}` 插值 + 显式指令控制。
+
+- **图片生成需专用模板**：仅支持「图片生成」类型模板，必须分别定义正向 Prompt（期望内容）与负向 Prompt（排除元素），且**不支持变量插值**，需静态填写。
+
+- **安全第一**：所有变量填充必须自行过滤恶意内容；模板内容最大 6144 字符，超长 Prompt 可能导致截断或优化失败。
 
 ## 关联主题页
 
 - [prompt](../guides/prompt.md)
 - [application component api reference](../api/application-component-api-reference.md)
-- [start using](../guides/start-using.md)
 - [llm application](../guides/llm-application.md)
-- [bailian application calling](../guides/bailian-application-calling.md)
+- [managed agents](../guides/managed-agents.md)
+- [skill](../guides/skill.md)
 
 

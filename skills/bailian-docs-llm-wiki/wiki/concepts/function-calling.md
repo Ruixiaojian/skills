@@ -1,48 +1,53 @@
 # 函数调用
 
-函数调用（Function Calling）是百炼平台中模型主动识别用户意图、结构化提取参数，并按需触发外部工具或服务执行确定性操作的核心能力。它使大模型从“文本生成器”升级为“可执行智能体”，在保持自然语言交互体验的同时，精准对接计算、搜索、图像生成等现实世界能力。
+函数调用（Function Calling）是百炼平台中模型与外部能力协同的核心机制，指大语言模型在推理过程中，根据用户输入自主识别、规划并触发预定义工具（如搜索、代码执行、图像生成等）的结构化交互过程。该能力不依赖客户端主动发起，而是由模型基于语义理解动态决策是否调用、调用哪个工具及传入何种参数，最终将工具返回结果融入生成回复，实现“感知—决策—执行—合成”的闭环智能。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-函数调用在百炼平台中并非独立功能模块，而是贯穿于多个技术路径的底层能力机制，具体体现为以下三类典型使用方式：
+函数调用在百炼平台并非单一接口功能，而是贯穿多个抽象层级的横切能力，其具体形态和控制粒度因使用场景而异：
 
-- **模型原生支持（Function Calling 原生模式）**：  
-  `qwen3.7-plus`、`qwen3.7-max`、`qwen-audio-3.0-realtime-plus` 等旗舰模型在推理过程中**自主解析用户输入**，自动判断是否需要调用函数、选择合适工具、生成符合 Schema 的参数 JSON，并将执行结果无缝注入后续生成。该模式无需工作流编排，适用于 Assistant API 或智能体应用中的轻量级工具链（如计算器、实时搜索、代码解释器）。
+- **基础模型 API（Qwen 系列）**：通过 DashScope 原生接口或 OpenAI 兼容 `chat/completions` 的 `tools` 字段声明可用工具，模型返回 `tool_calls` 结构（含 `function.name` 和 `function.arguments`），开发者需自行解析、执行工具、拼接结果并再次请求模型完成终稿。适用于需完全掌控工具调度逻辑的高级场景。
 
-- **[插件](plugin.md)系统驱动（Plugin-Driven 调用）**：  
-  当使用官方/三方/自定义[插件](plugin.md)时，函数调用表现为模型对[插件](plugin.md)工具的**语义化调度**。模型基于插件注册时提供的 `name`、`description` 和 `parameters` 描述，动态生成调用请求；平台负责参数校验、鉴权转发、结果归一化。此方式解耦模型与工具实现，支持复杂业务逻辑（如 GitHub 检索、二维码生成、文生图），且所有插件调用均通过统一的函数调用协议完成。
+- **Responses API 与 Managed Agents**：函数调用被深度封装为平台托管能力。模型自动完成工具选择、参数提取、并发调用与结果聚合；开发者仅需配置工具（插件或 MCP 服务）并启用对应能力（如 `enable_search: true`），无需处理中间响应。平台负责沙箱隔离、超时控制、错误重试与上下文注入。
 
-- **[OpenAI 兼容接口](openai-compatible-api.md)显式声明（OpenAI-style Tool Calling）**：  
-  使用 `/chat/completions` 等 [OpenAI 兼容接口](openai-compatible-api.md)时，开发者需在请求中显式传入 `tools` 数组（含工具定义）和 `tool_choice` 策略（如 `"auto"` 或指定 `{"type": "function", "function": {"name": "calculator"}}`）。百炼后端将模型输出的 `tool_calls` 字段解析为标准函数调用指令，并返回结构化响应。该方式便于 LangChain 等框架快速集成，兼容性强。
+- **Application Call（应用调用）**：当调用已发布的智能体或工作流时，“函数调用”表现为应用内部的自动行为。若该应用已挂载插件或 MCP 工具，整个调用链路对调用方透明——输入一句话，输出最终答案，中间所有工具调用均由平台在后台完成。
 
-> ⚠️ 注意：并非所有模型均支持函数调用。例如 `qwen3.7-max` 支持函数调用但**不支持结构化 JSON 输出**（即无法强制返回纯 JSON 格式），而部分轻量模型（如 `qwen-turbo`）可能仅支持有限工具集。实际使用前请以控制台模型详情页或 [model experience](model-experience.md) 文档为准。
+- **插件（Plug-in）与 MCP 协议**：这是函数调用的基础设施层。“插件”定义工具能力元信息（ID、输入/输出 Schema、鉴权方式）；“MCP”提供标准化通信协议（Streamable HTTP），使任意符合规范的外部服务可被统一接入并参与模型的函数调用决策。二者共同构成百炼的工具生态底座。
+
+- **工作流（Workflow）**：函数调用以显式节点形式存在。开发者手动拖拽插件或 MCP 节点到画布，配置输入来源（如上一节点输出、用户输入）与输出映射，形成确定性执行路径。此时调用非模型自主决策，而是流程编排驱动。
 
 ## 关键参数和配置
 
-| 参数 | 位置 | 类型 | 说明 | 示例值 |
-|------|------|------|------|--------|
-| `tools` | 请求体顶层 | array | 定义可用函数列表，每个元素包含 `type="function"`、`function.name`、`function.description`、`function.parameters`（JSON Schema） | `[{"type":"function","function":{"name":"calculator","description":"执行数学运算","parameters":{"type":"object","properties":{"expression":{"type":"string"}}}}}]` |
-| `tool_choice` | 请求体顶层 | string / object | 控制调用策略：`"none"`（禁用）、`"auto"`（模型自主决策）、或指定函数对象 | `"auto"` 或 `{"type":"function","function":{"name":"quark_search"}}` |
-| `enable_search` | 请求体顶层（旧版） | boolean | 已逐步被 `tools` 替代；若启用，模型可能隐式调用联网搜索，但**不返回原始搜索结果**（与 `quark_search` 插件有本质区别） | `true`（不推荐，优先用 `tools`） |
-| `parameters.tool_call_timeout_ms` | `parameters` 内（异步/高级场景） | integer | 函数调用超时时间（毫秒），影响整体响应延迟 | `15000` |
+函数调用的实际生效依赖以下关键配置项，需按所选场景正确设置：
 
-- **工具注册要求**：自定义插件需在控制台完整填写 `parameters` 输入字段（含类型、描述、是否必填）及 `output` 字段映射，否则函数调用会因参数解析失败而中断。
-- **Schema 规范**：`function.parameters` 必须为合法 JSON Schema（支持 `string`/`number`/`boolean`/`array`/`object`），嵌套层级建议 ≤2 层，避免模型误解析。
-- **错误处理**：当模型生成非法 `tool_calls`（如参数缺失、类型错误）时，API 返回 `400 Bad Request` 并附带 `error.code=130011`，需检查工具定义与用户输入匹配度。
+| 场景 | 关键参数 | 说明 | 注意事项 |
+|------|----------|------|----------|
+| **模型 API（OpenAI/DashScope）** | `tools`（array） | 工具定义列表，每个对象含 `function.name`、`function.description`、`function.parameters`（JSON Schema） | `parameters` 必须为有效 JSON Schema，缺失或格式错误将导致工具不可见；DashScope 接口还支持 `tool_choice` 控制调用强制性（`auto`/`required`/`none`） |
+| | `tool_choice` | 模型调用策略 | `required` 强制调用（至少一个）、`none` 禁用调用；默认 `auto`（模型自主判断） |
+| **Responses API / Managed Agents** | `enable_search`、`enable_code_interpreter` 等开关 | 启用内置工具链 | 开关为布尔值，启用后模型自动决定是否及何时调用，无需声明 `tools` |
+| **插件集成** | `tool_id` | 插件内工具唯一标识 | 必须在控制台发布成功且状态为 `active`；同一智能体最多关联 10 个工具 |
+| **MCP 服务** | `tool.name` | MCP Server 提供的工具名 | 必须与 MCP Server `/tools` 接口返回的 `name` 字段严格一致；不支持通配符或模糊匹配 |
+| **Application Call** | `biz_params`（异步） / `input` 中嵌套结构 | 透传业务参数至插件或工作流节点 | 键名必须与插件配置的输入参数名完全一致，否则参数丢失 |
+
+> ⚠️ 通用约束：所有工具调用均受安全沙箱限制（如 `code_interpreter` 禁止网络访问）、配额限制（单次调用耗时上限、并发数）及计费规则约束，详见各服务文档。
 
 ## 面向开发者，简洁实用
 
-- ✅ **首选方案**：新项目统一使用 `tools` + `tool_choice` 方式，兼容 OpenAI 生态，调试清晰，权限可控。
-- ✅ **生产建议**：对稳定性要求高的场景，显式指定 `tool_choice`（而非 `"auto"`），避免模型跳过必要工具。
-- ✅ **调试技巧**：开启 `stream=true` 时，函数调用信息在 `delta.tool_calls` 中分块返回；非流式响应中直接查看 `choices[0].message.tool_calls`。
-- ❌ **避坑提示**：勿混用 `enable_search` 与 `tools`；`qwen3.7-max` 支持函数调用但不返回结构化 JSON，如需 JSON 输出请改用 `qwen3.7-plus` 或启用 `response_format={"type": "json_object"}`（若模型支持）。
-- 📦 **SDK 提示**：Python SDK 中，`dashscope.Generation.call()` 不直接支持 `tools`，请改用 `dashscope.ChatCompletion.create()`；LangChain 推荐使用 `ChatTongyi` 而非 `ChatOpenAI` 以获得完整函数调用支持。
+- **快速验证**：优先使用 Responses API 或 Application Call，开启 `enable_search` 即可体验联网问答，无需写工具解析逻辑。
+- **精细控制**：若需自定义工具行为（如调用私有 API、组合多个工具结果），选用 DashScope 原生接口 + `tools` 参数，按 `tool_calls` → 执行 → `tool_responses` → 再请求的三步循环实现。
+- **避免陷阱**：
+  - 不要混用参数命名：`max_tokens`（OpenAI） ≠ `max_output_tokens`（DashScope）；`tool_choice`（DashScope） ≠ `function_call`（旧版 OpenAI）。
+  - 工具参数描述（`description`）必须清晰准确，直接影响模型参数提取成功率。
+  - MCP 自定义服务必须部署在函数计算 FC 并配置 VPC（如需访问云资源），本地服务无法被平台调用。
+- **调试建议**：开启 `debug` 模式（如 `debug: {"enable": true}`）或查看 `usage` 字段中的 `tool_calls` 计数，确认调用是否触发；流式响应中注意 `delta.tool_calls` 的增量更新。
 
 ## 关联主题页
 
-- [model experience](../guides/model-experience.md)
-- [plug in](../guides/plug-in.md)
+- [qwen api reference](../api/qwen-api-reference.md)
+- [managed agents api](../api/managed-agents-api.md)
+- [application call](../api/application-call.md)
 - [toolkits and frameworks](../api/toolkits-and-frameworks.md)
-- [more about models](../api/more-about-models.md)
+- [plug in](../guides/plug-in.md)
+- [model context protocol](../guides/model-context-protocol.md)
 
 

@@ -279,6 +279,20 @@ qwen3.6-plus-2026-04-02
 
 1,000,000
 
+qwen3.7-flash
+
+> 用[Batch API](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)调用服务时，不受限流限制。
+
+30,000
+
+5,000,000
+
+qwen3.7-flash-2026-07-15
+
+600
+
+1,000,000
+
 qwen3.6-flash
 
 > 用[Batch API](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)调用服务时，不受限流限制。
@@ -820,6 +834,22 @@ qwen3.6-plus
 5,000,000
 
 qwen3.6-plus-2026-04-02
+
+国际
+
+60
+
+1,000,000
+
+qwen3.7-flash
+
+国际
+
+15,000
+
+5,000,000
+
+qwen3.7-flash-2026-07-15
 
 国际
 

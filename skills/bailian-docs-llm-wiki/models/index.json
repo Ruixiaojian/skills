@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-07-24",
-  "totalFamilies": 171,
-  "totalModels": 385,
+  "updatedAt": "2026-07-25",
+  "totalFamilies": 172,
+  "totalModels": 389,
   "capabilityDistribution": {
     "TG": 36,
     "IG": 31,
-    "VG": 25,
+    "VG": 26,
     "TTS": 16,
     "Reasoning": 14,
     "ASR": 12,
@@ -25,10 +25,10 @@
     "qwen-domain-model": 34,
     "wan": 13,
     "happyhorse": 4,
+    "pixverse": 4,
     "mini-max": 3,
     "deepseek": 3,
     "zhipu-ai": 3,
-    "pixverse": 3,
     "moonshot-ai": 2,
     "vidu": 2,
     "kling": 1,
@@ -907,6 +907,24 @@
         "pixverse/pixverse-v5.6-kf2v",
         "pixverse/pixverse-v5.6-r2v",
         "pixverse/pixverse-v5.6-t2v"
+      ]
+    },
+    {
+      "slug": "pixverse-v6-market-place",
+      "name": "PixVerse V6",
+      "primaryCapability": "VG",
+      "capabilities": [
+        "VG"
+      ],
+      "providers": [
+        "pixverse"
+      ],
+      "itemCount": 4,
+      "items": [
+        "pixverse/pixverse-v6-it2v",
+        "pixverse/pixverse-v6-kf2v",
+        "pixverse/pixverse-v6-r2v",
+        "pixverse/pixverse-v6-t2v"
       ]
     },
     {
