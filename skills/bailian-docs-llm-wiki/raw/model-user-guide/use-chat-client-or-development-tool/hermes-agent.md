@@ -42,7 +42,7 @@ Hermes Agent 是一款终端 AI 编程工具，可以通过按量计费、Coding
 
 **说明**
 
-本文示例均使用 **Anthropic 兼容协议**：Base URL 以 `/apps/anthropic` 结尾，并将 `api_mode` 设为 `anthropic_messages`。Hermes Agent 同样支持 **OpenAI 兼容协议**：将 Base URL 结尾的 `/apps/anthropic` 替换为 `/compatible-mode/v1`，并删除 `api_mode` 配置项即可。例如按量计费（华北2·北京）的 OpenAI 兼容 Base URL 为 `https://dashscope.aliyuncs.com/compatible-mode/v1`。
+本文示例均使用 **Anthropic 兼容协议**：Base URL 以 `/apps/anthropic` 结尾，并将 `api_mode` 设为 `anthropic_messages`。Hermes Agent 同样支持 **OpenAI 兼容协议**：将 Base URL 结尾的 `/apps/anthropic` 替换为 `/compatible-mode/v1`，并删除 `api_mode` 配置项即可。例如按量计费（华北2·北京）的 OpenAI 兼容 Base URL 为 `https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`。
 
 除命令行版外，Hermes Agent 还提供桌面版（Hermes Desktop）。可从 [Hermes 官网](https://hermes-agent.nousresearch.com/) 下载安装包，或在命令行版安装完成后运行 `hermes desktop` 启动。桌面版与命令行版共用同一份 `~/.hermes/config.yaml` 配置文件，接入参数与本文一致；在桌面版中以自定义端点（Custom Endpoint）方式接入时，请使用上述 OpenAI 兼容 Base URL。
 
@@ -147,16 +147,16 @@ model:
 
 将 `YOUR_API_KEY` 替换为[阿里云百炼 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。可用模型请参考[Anthropic 兼容 API](https://help.aliyun.com/zh/model-studio/anthropic-api-messages#07833dedefft7)。
 
-`base_url` 按地域设置，API Key 需与所选地域对应：
+`base_url` 按地域设置，API Key 需与所选地域对应，并将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)：
 
--   华北2（北京）：`https://dashscope.aliyuncs.com/apps/anthropic`
+-   华北2（北京）：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic`
     
--   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/apps/anthropic`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/apps/anthropic`
     
 
 ```
 hermes config set model.provider alibaba
-hermes config set model.base_url https://dashscope.aliyuncs.com/apps/anthropic
+hermes config set model.base_url https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic
 hermes config set model.api_mode anthropic_messages
 hermes config set model.api_key YOUR_API_KEY
 hermes config set model.default qwen3.7-max
@@ -170,7 +170,7 @@ config.yaml 配置示例
 model:
   default: qwen3.7-max
   provider: alibaba
-  base_url: https://dashscope.aliyuncs.com/apps/anthropic
+  base_url: https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic
   api_mode: anthropic_messages
   api_key: YOUR_API_KEY
 ```

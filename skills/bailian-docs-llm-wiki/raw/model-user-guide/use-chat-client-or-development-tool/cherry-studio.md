@@ -87,11 +87,11 @@ Cherry Studio 是一款开源 AI 桌面客户端，可以通过 Token Plan 个�
 
 **API 地址**
 
-根据地域，填入对应 URL：
+根据地域，填入对应 URL（请将 URL 中的 `{WorkspaceId}` 替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)）：
 
--   华北2（北京）：`https://dashscope.aliyuncs.com/compatible-mode/v1`
+-   华北2（北京）：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
     
--   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
     
 -   美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
     
@@ -131,7 +131,7 @@ Cherry Studio 是一款开源 AI 桌面客户端，可以通过 Token Plan 个�
 
 可能的原因：
 
--   **地域不匹配**：免费额度仅适用于华北2（北京）地域（[中国内地服务部署范围](https://help.aliyun.com/zh/model-studio/regions/#080da663a75xh)）的模型。使用其他地域和部署范围的模型会产生费用。请检查**API 地址**是否与目标地域匹配，详情请参见[新人免费额度](https://help.aliyun.com/zh/model-studio/new-free-quota)。
+-   **地域不匹配**：免费额度仅适用于华北2（北京）地域的模型。使用其他地域的模型会产生费用。请检查**API 地址**是否与目标地域匹配，详情请参见[新人免费额度](https://help.aliyun.com/zh/model-studio/new-free-quota)。
     
 -   **额度按模型独立计算**：各模型的免费额度相互独立，不可跨模型共享。
     

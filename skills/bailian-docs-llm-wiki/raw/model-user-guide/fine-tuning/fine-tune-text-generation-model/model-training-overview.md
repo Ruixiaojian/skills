@@ -25,7 +25,7 @@
 
 ### **模型调优流程**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/1901684871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/1432315871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
 
 详情参见：
 
@@ -682,6 +682,170 @@ qwen2.5-7b-instruct
 qwen-plus-character-2025-11-06
 
 ¥0.15/千Token
+
+**点击此处查看更多千问 VL 模型使用限制**
+
+##### **使用限制**
+
+###### **输入文件限制**
+
+**图像限制**
+
+-   **图像分辨率：**
+    
+    -   最小尺寸：图像的宽度和高度均须大于`10`像素。
+        
+    -   宽高比：原图及缩放后的图像，长边与短边的比值不得超过 `200:1`。
+        
+        > 图像缩放逻辑请参见 [计算图像的Token](https://help.aliyun.com/zh/model-studio/vision#ea146aaca47ng) 中 `smart_resize` 函数。
+        
+    -   像素上限：
+        
+        -   推荐将图像分辨率控制在`8K(7680x4320)`以内。超过此分辨率的图像可能因文件过大、网络传输耗时过长而导致API调用超时。
+            
+        -   自动缩放机制：模型可通过`max_pixels`和`min_pixels`调整图像大小；因此，提供超高分辨率的图像并不会提升识别精度，反而会增加调用失败的风险，建议在客户端提前将图像缩放至合理大小。
+            
+-   **支持的图像格式**
+    
+    -   分辨率在4K `(3840x2160)`以下，支持的图像格式如下：
+        
+        **图像格式**
+        
+        **常见扩展名**
+        
+        **MIME Type**
+        
+        BMP
+        
+        .bmp
+        
+        image/bmp
+        
+        JPEG
+        
+        .jpe, .jpeg, .jpg
+        
+        image/jpeg
+        
+        PNG
+        
+        .png
+        
+        image/png
+        
+        TIFF
+        
+        .tif, .tiff
+        
+        image/tiff
+        
+        WEBP
+        
+        .webp
+        
+        image/webp
+        
+        HEIC
+        
+        .heic
+        
+        image/heic
+        
+    -   分辨率处于`4K(3840x2160)`到`8K(7680x4320)`范围，仅支持 JPEG、JPG 、PNG 格式
+        
+-   **图像大小：**
+    
+    -   以公网URL传入时：Qwen3.7系列、Qwen3.6系列、Qwen3.5系列单个图像不超过 `20MB`，其他模型单个图像不超过`10MB`
+        
+    -   以本地路径传入时：单个图像不超过`10MB`
+        
+    -   以 Base64 编码传入时：编码后的字符串不超过`10MB`
+        
+    
+    > 如需压缩文件体积请参见 [如何将图像或视频压缩到满足要求的大小](https://help.aliyun.com/zh/model-studio/vision#ec8e0a8e03moe) 。
+    
+-   **图片数量限制：**多图输入时根据传入方式不同，支持的图片数量上限有所区别：
+    
+    -   以公网URL或本地路径传入时：
+        
+        -   Qwen3.7-Plus：最多 2048 张
+            
+        -   Qwen3.7-Flash、Qwen3.6-Plus、Qwen3.6-Flash、Qwen3.5-Plus、Qwen3.5-Flash、Qwen3-VL、Qwen-VL、QVQ系列：最多 256 张
+            
+    -   以 Base64 编码传入时：最多 250 张
+        
+    
+    Qwen-Omni系列模型请参考[全模态](https://help.aliyun.com/zh/model-studio/omni/)。
+    
+
+> 同时受模型图文总 Token 上限（即最大输入）的限制，所有图片的总 Token 数必须小于模型的最大输入。
+
+**视频限制**
+
+-   **以图像列表传入，图像列表的数量有如下限制：**
+    
+    -   `qwen3.7`系列、`qwen3.6`系列、`qwen3.5` 系列：最少传入 4 张图片，最多 8000 张图片
+        
+    -   `qwen3-vl-plus` 系列、`qwen3-vl-flash` 系列、`qwen3-vl-235b-a22b-thinking`、`qwen3-vl-235b-a22b-instruct`：最少传入 4 张图片，最多 2000 张图片
+        
+    -   其他`Qwen3-VL`开源、`Qwen2.5-VL`（包括商业版和开源版）和`QVQ`系列模型：最少传入 4 张图片，最多 512 张图片
+        
+    -   其他模型：最少传入 4 张图片，最多 80 张图片
+        
+-   **以视频文件传入时：**
+    
+    -   **视频大小：**
+        
+        -   以公网URL传入时：
+            
+            -   `qwen3.7`系列、`qwen3.6`系列、`qwen3.5` 系列、`Qwen3-VL`系列、`qwen-vl-max` ：不超过 2GB；
+                
+            -   `qwen-vl-plus` 系列、其他`qwen-vl-max`模型、`Qwen2.5-VL`开源系列及`QVQ`系列模型：不超过 1GB；
+                
+            -   其他模型不超过 150MB
+                
+        -   以 Base64 编码传入时：编码后的字符串小于 10MB；
+            
+        -   以本地文件路径传入时：视频本身不超过 100MB。
+            
+        
+        > 如需压缩文件体积请参见 [如何将图像或视频压缩到满足要求的大小](https://help.aliyun.com/zh/model-studio/vision#ec8e0a8e03moe) 。
+        
+    -   **视频时长：**
+        
+        -   `qwen3.7`系列、`qwen3.6`系列、`qwen3.5` 系列：2秒至2小时；
+            
+        -   `qwen3-vl-plus`系列、`qwen3-vl-flash`系列、`qwen3-vl-235b-a22b-thinking`、`qwen3-vl-235b-a22b-instruct`：2 秒至 1 小时；
+            
+        -   其他`Qwen3-VL`开源系列、`qwen-vl-max` ：2 秒至 20 分钟；
+            
+        -   `qwen-vl-plus`系列、 其他`qwen-vl-max`模型、`Qwen2.5-VL`开源系列及`QVQ`系列模型：2 秒至 10 分钟；
+            
+        -   其他模型：2 秒至 40 秒。
+            
+    -   **视频格式：** MP4、AVI、MKV、MOV、FLV、WMV 等。
+        
+    -   **视频尺寸：**无特定限制，模型可通过`max_pixels`和`min_pixels`自动调整视频尺寸，更大尺寸的视频文件不会有更好的理解效果。
+        
+    -   **视频数量限制：**最多可传入 64 个视频。
+        
+    -   **音频理解：**不支持对视频文件的音频进行理解。
+        
+
+###### **文件传入方式**
+
+-   **公网URL**：提供一个公网可访问的文件地址，支持HTTP或HTTPS协议。为获得最佳稳定性和性能，可将文件[上传至OSS](https://help.aliyun.com/zh/oss/user-guide/console-quick-start)或[上传文件获取临时URL](https://help.aliyun.com/zh/model-studio/get-temporary-file-url)，获取公网 URL。
+    
+    **重要**
+    
+    为确保模型能成功下载文件，提供的公网URL的响应头中**必须**包含 Content-Length（文件大小）和 Content-Type（媒体类型，如 image/jpeg）。任一字段缺失或者错误将会导致文件下载失败。
+    
+-   **Base64编码传入：**将文件转换为 Base64 编码字符串再传入。
+    
+-   **本地文件路径传入（仅限 DashScope SDK）：**传入本地文件的路径。
+    
+
+> 关于文件传入方式的建议，请参见 [如何选择文件上传方式？](https://help.aliyun.com/zh/model-studio/vision#dc4e7260aauuo)
 
 **计算图像与视频的Token**
 

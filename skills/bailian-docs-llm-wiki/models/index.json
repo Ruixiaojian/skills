@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-07-25",
-  "totalFamilies": 172,
-  "totalModels": 389,
+  "updatedAt": "2026-07-27",
+  "totalFamilies": 170,
+  "totalModels": 385,
   "capabilityDistribution": {
     "TG": 36,
     "IG": 31,
-    "VG": 26,
-    "TTS": 16,
+    "VG": 25,
+    "TTS": 15,
     "Reasoning": 14,
     "ASR": 12,
     "VU": 9,
@@ -21,14 +21,14 @@
     "3D-generation": 1
   },
   "providerDistribution": {
-    "qwen": 103,
+    "qwen": 102,
     "qwen-domain-model": 34,
     "wan": 13,
     "happyhorse": 4,
-    "pixverse": 4,
     "mini-max": 3,
     "deepseek": 3,
     "zhipu-ai": 3,
+    "pixverse": 3,
     "moonshot-ai": 2,
     "vidu": 2,
     "kling": 1,
@@ -875,23 +875,6 @@
       ]
     },
     {
-      "slug": "pixverse-capability-market-place",
-      "name": "PixVerse Capabilities",
-      "primaryCapability": "VG",
-      "capabilities": [
-        "VG"
-      ],
-      "providers": [
-        "pixverse"
-      ],
-      "itemCount": 3,
-      "items": [
-        "pixverse/pixverse-lipsync",
-        "pixverse/pixverse-motioncontrol",
-        "pixverse/pixverse-upscale"
-      ]
-    },
-    {
       "slug": "pixverse-market-place",
       "name": "PixVerse V5.6",
       "primaryCapability": "VG",
@@ -1602,21 +1585,6 @@
       "itemCount": 1,
       "items": [
         "qwen-voice-design"
-      ]
-    },
-    {
-      "slug": "qwen-voice-enrollment",
-      "name": "Qwen-声音复刻",
-      "primaryCapability": "TTS",
-      "capabilities": [
-        "TTS"
-      ],
-      "providers": [
-        "qwen"
-      ],
-      "itemCount": 1,
-      "items": [
-        "qwen-voice-enrollment"
       ]
     },
     {

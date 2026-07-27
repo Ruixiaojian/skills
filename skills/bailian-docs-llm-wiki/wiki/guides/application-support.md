@@ -1,44 +1,43 @@
 # application [support](support.md)
 
-application [support](support.md) 指阿里云百炼平台为开发者提供的模型服务使用保障体系，涵盖售后响应、功能支持边界、技术接入规范及常见问题处理机制。该支持体系以百炼平台自身服务（API、控制台、计费系统、模型推理能力）为核心责任范围，明确区分阿里云侧与用户侧/第三方侧的责任边界。所有支持均以服务协议和官方文档为准，不覆盖非百炼原生组件的运维与开发。
+`application support` 指百炼平台为开发者在构建和运行 AI 应用过程中提供的能力支撑与服务保障，涵盖插件集成、RAG 增强、[流式输出](../concepts/streaming-output.md)等核心功能，以及售后响应、协议约束与使用边界。该支持体系面向生产环境，强调可配置性、可观测性和责任边界划分。开发者需结合具体场景选择合适的能力组合，并严格遵循平台限制。
 
 ## 支持的模型/功能
 
-- **官方插件能力**：当前提供 Python 代码解释器、计算器、图片生成、夸克搜索、生成二维码、GitHub 搜索六类插件；部分需申请开通 [常见问题](../../raw/application-user-guide/application-support/application-faq.md)。
-- **RAG（知识检索增强）**：支持多知识库并行检索、topN 聚合排序，适用于问答、客服、教育等场景 [常见问题](../../raw/application-user-guide/application-support/application-faq.md)。
-- **Agent 与 Assistant API**：Agent 提供插件编排与上下文理解能力；Assistant API 提供标准化接口与调优类支持，二者在模型调度与开发自由度上存在差异 [常见问题](../../raw/application-user-guide/application-support/application-faq.md)。
-- **[流式输出](../concepts/streaming-output.md)**：支持 `stream=True` 全量流式与 `incremental_output=True` 增量式[流式输出](../concepts/streaming-output.md)，适用于前端实时渲染场景。
+- **内置插件**：当前官方支持六类插件：Python 代码解释器、计算器、图片生成、夸克搜索、生成二维码、GitHub 搜索。部分插件需申请开通 [常见问题](../../raw/application-user-guide/application-support/application-faq.md)。  
+- **自定义插件**：支持通过 API 接入自定义函数，大模型可理解其参数结构并参与推理调度；但**不支持透传自定义 Header**，仅允许 `Authorization` 字段 [常见问题](../../raw/application-user-guide/application-support/application-faq.md)。  
+- **RAG（知识检索增强）**：支持多知识库并行检索，按得分聚合后选取 topN 结果用于生成；广泛应用于问答系统、客服对话、教育辅助等场景 [常见问题](../../raw/application-user-guide/application-support/application-faq.md)。  
+- **[流式输出](../concepts/streaming-output.md)**：支持两种模式：`stream=True`（全量流式）、`incremental_output=True`（增量式流式），适用于前端实时渲染场景。
 
-> **注意**：文档 3 中“自定义插件服务目前暂时不收费”与实际计费策略可能存在时效偏差——配置智能体 API 时涉及 [prompt](prompt.md) 优化、应用调用及测试窗测试均按标准 API 调用量计费，建议以[阿里云百炼服务协议](../../raw/application-user-guide/application-support/application-related-agreements.md)及控制台最新计费说明为准。
+> **注意**：文档 1 中“Agent 和 Assistant API 的最大区别”描述模糊且缺乏技术细节（如调用协议、状态管理差异），未明确区分二者在插件编排、上下文维护或重试机制上的实际差异，建议以 [阿里云百炼平台售后服务范围说明](../../raw/application-user-guide/application-support/application-after-sales-service-scope.md) 中定义的服务边界为准，避免依赖该条目做架构选型。
 
 ## 关键参数
 
-| 参数 | 类型 | 说明 | 示例 |
-|------|------|------|------|
-| `stream` | bool | 启用[流式输出](../concepts/streaming-output.md)（逐 token 返回） | `True` |
-| `incremental_output` | bool | 启用增量式流式输出（仅返回新增内容） | `True` |
-| `authorization` | string | 唯一支持透传的 HTTP Header，用于身份认证 | `Bearer <token>` |
-| `MD5` | string | 文件上传必填校验参数，用于完整性验证 | `d41d8cd98f00b204e9800998ecf8427e` |
-
-> **注意**：自定义插件调用**不支持透传任意 header**，仅 `Authorization` 可被识别；其他 header（如 `X-User-ID`、`X-Tenant`）将被忽略 [常见问题](../../raw/application-user-guide/application-support/application-faq.md)。
+| 参数名 | 类型 | 说明 | 来源 |
+|--------|------|------|------|
+| `stream` | bool | 启用流式响应（逐 token 返回） | [常见问题](../../raw/application-user-guide/application-support/application-faq.md) |
+| `incremental_output` | bool | 启用增量式[流式输出](../concepts/streaming-output.md)（仅返回新增内容） | [常见问题](../../raw/application-user-guide/application-support/application-faq.md) |
+| `MD5` | string | 文件上传必填，用于校验文件完整性 | [常见问题](../../raw/application-user-guide/application-support/application-faq.md) |
 
 ## 使用方式
 
-- **基础支持渠道**：7×24 小时电话（95187 / 400）、智能在线客服、标准工单，覆盖模型功能咨询、API/SDK 故障诊断、控制台操作、账号与计费问题 [阿里云百炼平台售后服务范围说明](../../raw/application-user-guide/application-support/application-after-sales-service-scope.md)。
-- **第三方集成建议**：阿里云可提供方向性指导，包括确认百炼 API 可用性、提供官方 SDK 示例、协助核查调用明细与计费记录、建议基础连通性测试（如 `curl` 测试 endpoint） [阿里云百炼平台售后服务范围说明](../../raw/application-user-guide/application-support/application-after-sales-service-scope.md)。
-- **问题反馈路径**：RAG 回复不准确时，可通过界面“问题反馈”按钮提交，或复制 `RequestId` 提交工单 [常见问题](../../raw/application-user-guide/application-support/application-faq.md)。
+- 插件调用：通过 `tools` 字段声明插件列表，模型自动选择并填充参数；自定义插件需符合 OpenAI-style function calling 协议。  
+- RAG 配置：在应用设置中绑定知识库，支持按权重调整各库检索优先级；测试阶段若结果不准，可通过回复下方反馈按钮提交问题，或复制 `RequestId` 提交工单。  
+- 文件上传：仅支持 `.pdf`（小写后缀）、`.doc`、`.docx`；结构化数据导入时需确保无空行，否则后续行将被忽略。  
+- 增量渲染：前端需解析模型返回的 Markdown 格式（如 `**text**` 表示加粗），自行实现渲染逻辑。
 
 ## 限制和注意事项
 
-- **责任边界明确**：阿里云仅对百炼服务端（API 接口、计量计费、控制台、模型推理服务）负责；第三方工具（如 Cursor、Windsurf 等）的安装、配置、升级、故障排查均由用户或其提供方承担 [阿里云百炼平台售后服务范围说明](../../raw/application-user-guide/application-support/application-after-sales-service-scope.md)。
-- **本地环境免责**：因用户本地网络（代理、VPN、防火墙）、操作系统、内网策略或业务代码导致的问题，不在标准支持范围内。
-- **文件上传限制**：PDF 文件后缀必须为小写 `pdf`；结构化数据导入时，空行将导致后续行被截断；单业务空间上限 10 万文档，超限需提交工单申请扩容 [常见问题](../../raw/application-user-guide/application-support/application-faq.md)。
-- **合规要求**：接入通义千问模型并上架应用市场/小程序，须完成[应用合规备案](https://help.aliyun.com/zh/model-studio/compliance-and-launch-filing-guide-for-ai-apps-powered-by-the-tongyi-model)并单独申请合作协议 [常见问题](../../raw/application-user-guide/application-support/application-faq.md)。
+- **插件限制**：自定义插件不支持除 `Authorization` 外的任何 HTTP Header 透传；非官方插件的稳定性、安全性及计费由用户自行负责。  
+- **数据规模**：单业务空间最多上传 10 万个文档；超限时需提交工单申请扩容。  
+- **服务边界**：阿里云百炼售后仅覆盖平台自身服务（API、控制台、计费系统等），**不提供第三方工具（如 Cursor、Windsurf）的部署、调试或兼容性支持**，也不承担其行为导致的问题 [阿里云百炼平台售后服务范围说明](../../raw/application-user-guide/application-support/application-after-sales-service-scope.md)。  
+- **协议约束**：使用前须阅读并接受《阿里云百炼服务协议》及《开源模型协议条款说明》等法律文件 [相关协议](../../raw/application-user-guide/application-support/application-related-agreements.md)。  
+- **备案要求**：若应用拟上架至应用市场或小程序平台，须完成[应用合规备案](https://help.aliyun.com/zh/model-studio/compliance-and-launch-filing-guide-for-ai-apps-powered-by-the-tongyi-model)，并单独申请通义千问合作协议。
 
 ## 来源文档
 
+- [常见问题](../../raw/application-user-guide/application-support/application-faq.md)
 - [相关协议](../../raw/application-user-guide/application-support/application-related-agreements.md)
 - [阿里云百炼平台售后服务范围说明](../../raw/application-user-guide/application-support/application-after-sales-service-scope.md)
-- [常见问题](../../raw/application-user-guide/application-support/application-faq.md)
 
 

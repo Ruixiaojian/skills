@@ -1057,11 +1057,11 @@ Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-pla
 
 **Base URL**
 
-请确保 Base URL、API Key 和模型归属同一地域：
+请确保 Base URL、API Key 和模型归属同一地域，并将 `WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
 
--   华北2（北京）：`https://dashscope.aliyuncs.com/apps/anthropic`
+-   华北2（北京）：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic`
     
--   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/apps/anthropic`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/apps/anthropic`
     
 
 **可用模型**
@@ -1100,7 +1100,7 @@ Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-pla
         "mode": "merge",
         "providers": {
           "bailian": {
-            "baseUrl": "https://dashscope.aliyuncs.com/apps/anthropic",
+            "baseUrl": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic",
             "apiKey": "YOUR_API_KEY",
             "api": "anthropic-messages",
             "models": [
@@ -1208,7 +1208,7 @@ Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-pla
         "mode": "merge",
         "providers": {
           "bailian": {
-            "baseUrl": "https://dashscope.aliyuncs.com/apps/anthropic",
+            "baseUrl": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic",
             "apiKey": "YOUR_API_KEY",
             "api": "anthropic-messages",
             "models": [

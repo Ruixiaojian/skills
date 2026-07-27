@@ -464,11 +464,11 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
 -   Windows：`C:\Users\<Windows用户名>\.qwen\settings.json`
     
 
-`baseUrl` 按地域设置，API Key 需与所选地域对应：
+`baseUrl` 按地域设置（URL 中的 `{WorkspaceId}` 需替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)），API Key 需与所选地域对应：
 
--   华北2（北京）：`https://dashscope.aliyuncs.com/compatible-mode/v1`
+-   华北2（北京）：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
     
--   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
     
 -   美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
     
@@ -483,7 +483,7 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
       {
         "id": "qwen3.6-plus",
         "name": "[Bailian] qwen3.6-plus",
-        "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "baseUrl": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
         "envKey": "BAILIAN_API_KEY",
         "generationConfig": {
           "extra_body": {
@@ -528,6 +528,27 @@ Qwen Code 支持在 VS Code 中以插件方式使用，在 IDE 中提供 AI 编�
 2.  CLI 和 IDE 插件共用同一个 `settings.json`。如果已按上方步骤完成配置，请跳过此步。否则请按照上方[配置接入凭证](#qc-config-h)章节进行配置。
     
 3.  点击右上角图标启动 Qwen Code，通过输入或点击`/`，选择`Switch model`切换模型。
+    
+
+## **Qwen Code 桌面版**
+
+Qwen Code Desktop 是 Qwen Code 的图形界面应用，内置 CLI 运行时，无需额外安装命令行工具。桌面版与 CLI 共用同一份 `settings.json` 配置文件，如果已通过 CLI 完成配置，桌面版打开即可直接使用，无需重复配置。
+
+如果尚未配置，可通过桌面版图形界面完成：
+
+1.  打开 Qwen Code Desktop，点击左侧**设置**，选择 **AI** 页签。
+    
+2.  在**模型 Provider**区域点击**\+ 连接**。
+    
+3.  在弹窗中选择 **Alibaba ModelStudio** 页签，根据计费方案选择对应项：
+    
+    -   **Coding Plan**：个人开发者，按次计量。
+        
+    -   **Token Plan**：团队使用，按 token 消耗抵扣。
+        
+    -   **Standard API Key**：使用已有的百炼 API Key 按量计费。
+        
+4.  按照页面提示输入 API Key，完成配置。
     
 
 ## **常见命令**

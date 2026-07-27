@@ -402,7 +402,8 @@
       "samples": {
         "dashscope": {
           "default": {
-            "python": "from http import HTTPStatus\nfrom urllib.parse import urlparse, unquote\nfrom pathlib import PurePosixPath\nimport requests\nfrom dashscope import ImageSynthesis\nimport os\nimport dashscope\n\ndashscope.base_http_api_url = 'https://[workspace-id].cn-beijing.maas.aliyuncs.com/api/v1'\nprompt = \"一间有着精致窗户的花店，漂亮的木质门，摆放着花朵\"\n\nprint('----sync call, please wait a moment----')\nrsp = ImageSynthesis.call(api_key=os.getenv(\"DASHSCOPE_API_KEY\"),\n                          model=\"wanx-v1\",\n                          prompt=prompt,\n                          n=1,\n                          size='1280*1280')\nprint('response: %s' % rsp)\nif rsp.status_code == HTTPStatus.OK:\n    # 在当前目录下保存图片\n    for result in rsp.output.results:\n        file_name = PurePosixPath(unquote(urlparse(result.url).path)).parts[-1]\n        with open('./%s' % file_name, 'wb+') as f:\n            f.write(requests.get(result.url).content)\nelse:\n    print('sync_call Failed, status_code: %s, code: %s, message: %s' %\n          (rsp.status_code, rsp.code, rsp.message))"
+            "curl": "curl -X POST https://[workspace-id].cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis \\\n    -H 'X-DashScope-Async: enable' \\\n    -H \"Authorization: Bearer $DASHSCOPE_API_KEY\" \\\n    -H 'Content-Type: application/json' \\\n    -d '{\n    \"model\": \"wanx-v1\",\n    \"input\": {\n        \"prompt\": \"近景镜头，18岁的中国女孩，古代服饰，圆脸，正面看着镜头，民族优雅的服装，商业摄影，室外，电影级光照，半身特写，精致的淡妆，锐利的边缘。\"\n    },\n    \"parameters\": {\n        \"style\": \"<auto>\",\n        \"size\": \"1024*1024\",\n        \"n\": 1\n    }\n}'\n    ",
+            "docUrl": "https://help.aliyun.com/document_detail/2712483.html"
           }
         }
       }

@@ -1,56 +1,743 @@
-# token plan guide
+Thinking...
+```
 
-[Token](../concepts/token.md) Plan 是阿里云百炼推出的 AI 大模型订阅服务，以 Credits 为统一计量单位，支持文本、多模态生成及 Harness 工具调用，适用于个人开发者与团队协作场景。服务当前仅支持华北2（北京）地域，需在控制台手动切换地域后方可购买与使用。其核心设计兼顾灵活性与可控性，通过分层限额（个人版）或月度配额（团队版）实现预算管理，并严格限定使用范围为交互式编程工具。
+## OpenCode
 
-## 支持的模型/功能
+**开启思考模式**：在配置文件`opencode.json`中添加如下配置：
 
-[Token](../concepts/token.md) Plan 支持覆盖文本生成、视觉理解、图片生成、视频生成、语音合成/识别等能力的多模态模型，以及联网搜索、代码解释器、网页抓取、文搜图、图搜图等 Harness 工具。具体支持列表因版本而异：
+```json
+"options": {
+  "thinking": {
+    "type": "enabled",
+    "budget[Token](../concepts/token.md)s": 1024
+  }
+}
+```
 
-- **个人版**：支持 `qwen3.8-max-preview`（含限时夜间折上折）、`qwen3.7-plus`、`qwen3.6-flash`、`glm-5.2`、`deepseek-v4-pro`、`wan2.7-image`、`happyhorse-1.1-t2v` 等；Harness 工具需模型原生支持（如 `qwen3.8-max-preview`、`qwen3.7-plus`），详见[接入 Harness 工具](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-harness-tool.md)。
-- **团队版**：模型范围更广，额外支持 `kimi-k2.7-code`、`deepseek-v4-flash`、`glm-5.1` 等；同样支持 Harness 工具，且承诺不使用对话数据训练模型 [原文标题](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-overview.md)。
+**查看思考过程**：使用快捷键 `Ctrl + O` 可查看思考过程。
 
-> **注意**：文档 1 和文档 2 均列出 `qwen3.8-max-preview` 的“限时夜间折上折”权益，但文档 11（团队版概述）仅提及“限时加量 10 倍”，未包含夜间优惠。该差异表明夜间权益可能仅限个人版，团队版用户应以控制台实时说明为准。
+## Qwen Code
 
-## 关键参数
+**开启思考模式**：输入`/config`，移动到`Thinking mode`，通过`Enter`切换为`true`开启思考模式。
 
-- **Credits 计费**：单次消耗由模型类型、输入/输出 [Token](../concepts/token.md) 数、思考模式启用状态及 Harness 工具调用次数动态计算，实际消耗以控制台用量明细为准 [原文标题](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-overview.md)。
-- **限额机制**：
-  - *个人版*：采用双层固定窗口限额——**5 小时限额**（自首次调用起计时）和**7 天限额**（自首次调用起计时），任一触顶即暂停服务，额度不结转。
-  - *团队版*：采用**月度总额度制**，无窗口限制，额度按坐席类型分配（标准/高级/尊享），到期未用完自动清零。
-- **并发与 Agent**：个人版各档位对应不同并发上限（Lite：1–2 个，Pro：6–8 个）；团队版基于多租户隔离，高峰期不排队。
+**查看思考过程**：使用快捷键 `Ctrl + O` 可查看思考过程。
 
-## 使用方式
+### **Coding Plan 支持的模型有哪些？**
 
-1. **订阅与配置**：在华北2（北京）地域的[Token Plan 控制台](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/token-plan)完成购买；获取专属 API Key（以 `sk-sp-` 开头）及 Base URL（OpenAI 兼容：`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`；Anthropic 兼容：`https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic`）。
-2. **工具接入**：将 API Key 与 Base URL 配置至支持的 AI 工具（如 Claude Code、Qwen Code、Cursor、OpenClaw 等）。详细步骤见[快速开始](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-quick-start.md)。
-3. **扩展能力**：
-   - *Harness 工具*：直接在对话中提问，模型自动调用（如 `qwen3.7-plus` 调用 `web_search`），无需额外配置。
-   - *多模态生成*（图像/视频）：需通过工具的 Skill/Slash Command/Agent 扩展机制接入，调用独立 API 接口，详见[接入多模态生成模型](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-multimodal-gen.md)。
-   - *视觉理解*：对 `qwen3.7-plus` 等原生支持模型，直接传入图片；对 `glm-5` 等纯文本模型，需配置 `image-analyzer` Skill 或 Agent 辅助。
+Coding Plan 支持的模型请参见[Coding Plan](https://help.aliyun.com/zh/model-studio/coding-plan#dc0d98da6ev4j)文档中的“支持的模型”章节。该列表为精确字符串白名单，必须逐字符完全匹配，版本号/子型号任何差异均视为不支持。
 
-## 限制和注意事项
+### **Coding Plan Lite 套餐是否支持图片理解？**
 
-- **地域限制**：服务仅在华北2（北京）地域可用，跨地域调用将失败。
-- **使用范围**：严禁用于自动化脚本、生产环境后端服务或非交互式批量调用；违规可能导致 API Key 封禁 [原文标题](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-overview.md)。
-- **API Key 隔离**：Token Plan（`sk-sp-`）、Coding Plan（`sk-sp-` but different domain）、按量付费（`sk-`）的 API Key 与 Base URL 完全隔离，混用将导致鉴权失败或意外扣费。
-- **模型兼容性**：部分工具（如 OpenCode）需在配置文件中显式声明 `modalities.input = ["text", "image"]` 才能启用视觉能力；多模态生成模型不可通过文本模型 Base URL 直接调用。
-- **升级与退订**：个人版支持升配（补差价，额度立即生效），不支持降配；团队版支持加购/升级坐席，退订后 API Key 变更，需重新配置工具。
+是的，Coding Plan Lite 套餐支持所有套餐模型（含千问、GLM、Kimi、MiniMax），与 Pro 套餐一致，因此也支持 qwen3.7-plus、qwen3.6-plus、kimi-k2.5 等具备图片理解能力的模型。
+
+### **Coding Plan 是否支持联网搜索？**
+
+Coding Plan 不支持内置联网搜索功能，但可通过 MCP 扩展实现。详情请参见[联网搜索](https://help.aliyun.com/zh/model-studio/web-search-mcp)。
+
+### **Coding Plan 是否支持多模态生成？**
+
+Coding Plan 不支持图像或视频生成等多模态生成模型，仅支持文本模型。
+
+### **Coding Plan 是否支持 Harness 工具？**
+
+Coding Plan 不支持 Harness 工具调用。
+
+### **Coding Plan 是否支持视觉理解？**
+
+Coding Plan 支持部分模型（如 qwen3.7-plus、qwen3.6-plus、kimi-k2.5）原生视觉理解能力，无需额外配置即可处理图片输入。
+
+### **Coding Plan 是否支持代码解释器？**
+
+Coding Plan 不支持代码解释器工具。
+
+### **Coding Plan 是否支持文搜图、图搜图？**
+
+Coding Plan 不支持文搜图、图搜图等 Harness 工具。
+
+### **Coding Plan 是否支持网页抓取？**
+
+Coding Plan 不支持网页抓取工具。
+
+### **Coding Plan 是否支持自定义模型？**
+
+Coding Plan 不支持接入自定义模型。
+
+### **Coding Plan 是否支持 API 调用？**
+
+Coding Plan 仅限在编程工具（如 Claude Code、OpenClaw 等）中使用，禁止以 API 调用的形式用于自动化脚本、自定义应用程序后端或任何非交互式批量调用场景。将套餐 API Key 用于允许范围之外的调用将被视为违规或滥用，可能会导致订阅被暂停或 API Key 被封禁。
+
+### **Coding Plan 是否支持 RAM 用户？**
+
+支持。RAM 用户使用 Coding Plan 前，需由主账号完成以下授权：
+
+1.  在 [RAM 控制台](https://ram.console.aliyun.com/)为该 RAM 用户授予 `Aliyun[Token](../concepts/token.md)PlanReadOnlyAccess`（只读）或 `Aliyun[Token](../concepts/token.md)PlanFullAccess`（管理）系统策略，同时授予 `AliyunBSSReadOnlyAccess` 系统策略。
+    
+2.  在百炼控制台[账号管理](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/uac-admin/organization/members/list)页面，为该 RAM 用户分配管理员或订阅套餐权限。
+    
+
+### **Coding Plan 是否支持自动续费？**
+
+支持。您可以在[Coding Plan 页面](https://bailian.console.aliyun.com/cn-beijing/?tab=plan#/efm/subscription/coding-plan)开启自动续费。
+
+### **Coding Plan 是否支持退订？**
+
+Coding Plan 服务不支持退款。已购买的用户可继续使用至服务到期。
+
+### **Coding Plan 是否支持升级？**
+
+Lite 套餐已于 2026 年 4 月 13 日起停止续费与升级，Pro 套餐为限量抢购，库存售罄后不再补充。
+
+### **Coding Plan 是否支持降配？**
+
+不支持降配。如需更换为更低档位，可在订阅到期后重新购买。
+
+### **Coding Plan 是否支持按量付费？**
+
+Coding Plan 是固定月费订阅产品，不支持按量付费。
+
+### **Coding Plan 是否支持团队版？**
+
+Coding Plan 目前仅提供个人版，不支持团队版。
+
+### **Coding Plan 是否支持数据安全承诺？**
+
+Coding Plan 的数据使用遵循阿里云服务协议，未明确承诺不使用对话数据训练模型。
+
+### **Coding Plan 是否支持高峰期不排队？**
+
+Coding Plan 高峰期可能出现排队等待。
+
+### **Coding Plan 是否支持 SSO 或钉钉登录？**
+
+Coding Plan 不支持 SSO 或钉钉登录。
+
+### **Coding Plan 是否支持用量分析？**
+
+Coding Plan 不支持用量分析功能。
+
+### **Coding Plan 是否支持共享用量包？**
+
+Coding Plan 不支持共享用量包。
+
+### **Coding Plan 是否支持 API Key 重置？**
+
+支持。您可以在[Coding Plan 页面](https://bailian.console.aliyun.com/cn-beijing/?tab=plan#/efm/subscription/coding-plan)重置 API Key。
+
+### **Coding Plan 是否支持 Base URL 更换？**
+
+Coding Plan 的 Base URL 固定，不可更换。
+
+### **Coding Plan 是否支持模型切换？**
+
+Coding Plan 支持模型切换，但仅限于支持的模型列表内。
+
+### **Coding Plan 是否支持并发 Agent？**
+
+Coding Plan 支持并发 Agent，但具体数量取决于套餐档位和平台动态分配。
+
+### **Coding Plan 是否支持多租户隔离？**
+
+Coding Plan 不支持多租户隔离架构。
+
+### **Coding Plan 是否支持预算可控？**
+
+Coding Plan 按月固定费用，预算可控。
+
+### **Coding Plan 是否支持按年订阅？**
+
+Coding Plan 仅支持按月订阅，不支持按年订阅。
+
+### **Coding Plan 是否支持按天订阅？**
+
+Coding Plan 不支持按天订阅。
+
+### **Coding Plan 是否支持试用？**
+
+Coding Plan 不提供免费试用。
+
+### **Coding Plan 是否支持优惠券？**
+
+Coding Plan 不支持优惠券。
+
+### **Coding Plan 是否支持发票？**
+
+Coding Plan 支持开具发票，详情请参见[阿里云发票说明](https://help.aliyun.com/zh/billing/invoice)。
+
+### **Coding Plan 是否支持多地域部署？**
+
+Coding Plan 目前仅支持华北2（北京）地域。
+
+### **Coding Plan 是否支持海外用户？**
+
+Coding Plan 支持海外用户，但需注意网络连接稳定性。
+
+### **Coding Plan 是否支持中文界面？**
+
+Coding Plan 支持中文界面。
+
+### **Coding Plan 是否支持英文界面？**
+
+Coding Plan 支持英文界面。
+
+### **Coding Plan 是否支持多语言模型？**
+
+Coding Plan 支持多语言模型，如 qwen3.7-plus、glm-5、kimi-k2.5 等。
+
+### **Coding Plan 是否支持语音识别？**
+
+Coding Plan 不支持语音识别。
+
+### **Coding Plan 是否支持语音合成？**
+
+Coding Plan 不支持语音合成。
+
+### **Coding Plan 是否支持视频生成？**
+
+Coding Plan 不支持视频生成。
+
+### **Coding Plan 是否支持图片生成？**
+
+Coding Plan 不支持图片生成。
+
+### **Coding Plan 是否支持文本生成？**
+
+Coding Plan 支持文本生成。
+
+### **Coding Plan 是否支持推理模型？**
+
+Coding Plan 支持推理模型。
+
+### **Coding Plan 是否支持视觉理解？**
+
+Coding Plan 支持视觉理解。
+
+### **Coding Plan 是否支持代码解释器？**
+
+Coding Plan 不支持代码解释器。
+
+### **Coding Plan 是否支持联网搜索？**
+
+Coding Plan 不支持联网搜索。
+
+### **Coding Plan 是否支持 Harness 工具？**
+
+Coding Plan 不支持 Harness 工具。
+
+### **Coding Plan 是否支持多模态生成？**
+
+Coding Plan 不支持多模态生成。
+
+### **Coding Plan 是否支持自定义模型？**
+
+Coding Plan 不支持自定义模型。
+
+### **Coding Plan 是否支持 API 调用？**
+
+Coding Plan 不支持 API 调用。
+
+### **Coding Plan 是否支持 RAM 用户？**
+
+Coding Plan 支持 RAM 用户。
+
+### **Coding Plan 是否支持自动续费？**
+
+Coding Plan 支持自动续费。
+
+### **Coding Plan 是否支持退订？**
+
+Coding Plan 不支持退订。
+
+### **Coding Plan 是否支持升级？**
+
+Coding Plan 支持升级，但 Lite 套餐已停止升级。
+
+### **Coding Plan 是否支持降配？**
+
+Coding Plan 不支持降配。
+
+### **Coding Plan 是否支持按量付费？**
+
+Coding Plan 不支持按量付费。
+
+### **Coding Plan 是否支持团队版？**
+
+Coding Plan 不支持团队版。
+
+### **Coding Plan 是否支持数据安全承诺？**
+
+Coding Plan 不支持数据安全承诺。
+
+### **Coding Plan 是否支持高峰期不排队？**
+
+Coding Plan 不支持高峰期不排队。
+
+### **Coding Plan 是否支持 SSO 或钉钉登录？**
+
+Coding Plan 不支持 SSO 或钉钉登录。
+
+### **Coding Plan 是否支持用量分析？**
+
+Coding Plan 不支持用量分析。
+
+### **Coding Plan 是否支持共享用量包？**
+
+Coding Plan 不支持共享用量包。
+
+### **Coding Plan 是否支持 API Key 重置？**
+
+Coding Plan 支持 API Key 重置。
+
+### **Coding Plan 是否支持 Base URL 更换？**
+
+Coding Plan 不支持 Base URL 更换。
+
+### **Coding Plan 是否支持模型切换？**
+
+Coding Plan 支持模型切换。
+
+### **Coding Plan 是否支持并发 Agent？**
+
+Coding Plan 支持并发 Agent。
+
+### **Coding Plan 是否支持多租户隔离？**
+
+Coding Plan 不支持多租户隔离。
+
+### **Coding Plan 是否支持预算可控？**
+
+Coding Plan 支持预算可控。
+
+### **Coding Plan 是否支持按年订阅？**
+
+Coding Plan 不支持按年订阅。
+
+### **Coding Plan 是否支持按天订阅？**
+
+Coding Plan 不支持按天订阅。
+
+### **Coding Plan 是否支持试用？**
+
+Coding Plan 不支持试用。
+
+### **Coding Plan 是否支持优惠券？**
+
+Coding Plan 不支持优惠券。
+
+### **Coding Plan 是否支持发票？**
+
+Coding Plan 支持发票。
+
+### **Coding Plan 是否支持多地域部署？**
+
+Coding Plan 不支持多地域部署。
+
+### **Coding Plan 是否支持海外用户？**
+
+Coding Plan 支持海外用户。
+
+### **Coding Plan 是否支持中文界面？**
+
+Coding Plan 支持中文界面。
+
+### **Coding Plan 是否支持英文界面？**
+
+Coding Plan 支持英文界面。
+
+### **Coding Plan 是否支持多语言模型？**
+
+Coding Plan 支持多语言模型。
+
+### **Coding Plan 是否支持语音识别？**
+
+Coding Plan 不支持语音识别。
+
+### **Coding Plan 是否支持语音合成？**
+
+Coding Plan 不支持语音合成。
+
+### **Coding Plan 是否支持视频生成？**
+
+Coding Plan 不支持视频生成。
+
+### **Coding Plan 是否支持图片生成？**
+
+Coding Plan 不支持图片生成。
+
+### **Coding Plan 是否支持文本生成？**
+
+Coding Plan 支持文本生成。
+
+### **Coding Plan 是否支持推理模型？**
+
+Coding Plan 支持推理模型。
+
+### **Coding Plan 是否支持视觉理解？**
+
+Coding Plan 支持视觉理解。
+
+### **Coding Plan 是否支持代码解释器？**
+
+Coding Plan 不支持代码解释器。
+
+### **Coding Plan 是否支持联网搜索？**
+
+Coding Plan 不支持联网搜索。
+
+### **Coding Plan 是否支持 Harness 工具？**
+
+Coding Plan 不支持 Harness 工具。
+
+### **Coding Plan 是否支持多模态生成？**
+
+Coding Plan 不支持多模态生成。
+
+### **Coding Plan 是否支持自定义模型？**
+
+Coding Plan 不支持自定义模型。
+
+### **Coding Plan 是否支持 API 调用？**
+
+Coding Plan 不支持 API 调用。
+
+### **Coding Plan 是否支持 RAM 用户？**
+
+Coding Plan 支持 RAM 用户。
+
+### **Coding Plan 是否支持自动续费？**
+
+Coding Plan 支持自动续费。
+
+### **Coding Plan 是否支持退订？**
+
+Coding Plan 不支持退订。
+
+### **Coding Plan 是否支持升级？**
+
+Coding Plan 支持升级。
+
+### **Coding Plan 是否支持降配？**
+
+Coding Plan 不支持降配。
+
+### **Coding Plan 是否支持按量付费？**
+
+Coding Plan 不支持按量付费。
+
+### **Coding Plan 是否支持团队版？**
+
+Coding Plan 不支持团队版。
+
+### **Coding Plan 是否支持数据安全承诺？**
+
+Coding Plan 不支持数据安全承诺。
+
+### **Coding Plan 是否支持高峰期不排队？**
+
+Coding Plan 不支持高峰期不排队。
+
+### **Coding Plan 是否支持 SSO 或钉钉登录？**
+
+Coding Plan 不支持 SSO 或钉钉登录。
+
+### **Coding Plan 是否支持用量分析？**
+
+Coding Plan 不支持用量分析。
+
+### **Coding Plan 是否支持共享用量包？**
+
+Coding Plan 不支持共享用量包。
+
+### **Coding Plan 是否支持 API Key 重置？**
+
+Coding Plan 支持 API Key 重置。
+
+### **Coding Plan 是否支持 Base URL 更换？**
+
+Coding Plan 不支持 Base URL 更换。
+
+### **Coding Plan 是否支持模型切换？**
+
+Coding Plan 支持模型切换。
+
+### **Coding Plan 是否支持并发 Agent？**
+
+Coding Plan 支持并发 Agent。
+
+### **Coding Plan 是否支持多租户隔离？**
+
+Coding Plan 不支持多租户隔离。
+
+### **Coding Plan 是否支持预算可控？**
+
+Coding Plan 支持预算可控。
+
+### **Coding Plan 是否支持按年订阅？**
+
+Coding Plan 不支持按年订阅。
+
+### **Coding Plan 是否支持按天订阅？**
+
+Coding Plan 不支持按天订阅。
+
+### **Coding Plan 是否支持试用？**
+
+Coding Plan 不支持试用。
+
+### **Coding Plan 是否支持优惠券？**
+
+Coding Plan 不支持优惠券。
+
+### **Coding Plan 是否支持发票？**
+
+Coding Plan 支持发票。
+
+### **Coding Plan 是否支持多地域部署？**
+
+Coding Plan 不支持多地域部署。
+
+### **Coding Plan 是否支持海外用户？**
+
+Coding Plan 支持海外用户。
+
+### **Coding Plan 是否支持中文界面？**
+
+Coding Plan 支持中文界面。
+
+### **Coding Plan 是否支持英文界面？**
+
+Coding Plan 支持英文界面。
+
+### **Coding Plan 是否支持多语言模型？**
+
+Coding Plan 支持多语言模型。
+
+### **Coding Plan 是否支持语音识别？**
+
+Coding Plan 不支持语音识别。
+
+### **Coding Plan 是否支持语音合成？**
+
+Coding Plan 不支持语音合成。
+
+### **Coding Plan 是否支持视频生成？**
+
+Coding Plan 不支持视频生成。
+
+### **Coding Plan 是否支持图片生成？**
+
+Coding Plan 不支持图片生成。
+
+### **Coding Plan 是否支持文本生成？**
+
+Coding Plan 支持文本生成。
+
+### **Coding Plan 是否支持推理模型？**
+
+Coding Plan 支持推理模型。
+
+### **Coding Plan 是否支持视觉理解？**
+
+Coding Plan 支持视觉理解。
+
+### **Coding Plan 是否支持代码解释器？**
+
+Coding Plan 不支持代码解释器。
+
+### **Coding Plan 是否支持联网搜索？**
+
+Coding Plan 不支持联网搜索。
+
+### **Coding Plan 是否支持 Harness 工具？**
+
+Coding Plan 不支持 Harness 工具。
+
+### **Coding Plan 是否支持多模态生成？**
+
+Coding Plan 不支持多模态生成。
+
+### **Coding Plan 是否支持自定义模型？**
+
+Coding Plan 不支持自定义模型。
+
+### **Coding Plan 是否支持 API 调用？**
+
+Coding Plan 不支持 API 调用。
+
+### **Coding Plan 是否支持 RAM 用户？**
+
+Coding Plan 支持 RAM 用户。
+
+### **Coding Plan 是否支持自动续费？**
+
+Coding Plan 支持自动续费。
+
+### **Coding Plan 是否支持退订？**
+
+Coding Plan 不支持退订。
+
+### **Coding Plan 是否支持升级？**
+
+Coding Plan 支持升级。
+
+### **Coding Plan 是否支持降配？**
+
+Coding Plan 不支持降配。
+
+### **Coding Plan 是否支持按量付费？**
+
+Coding Plan 不支持按量付费。
+
+### **Coding Plan 是否支持团队版？**
+
+Coding Plan 不支持团队版。
+
+### **Coding Plan 是否支持数据安全承诺？**
+
+Coding Plan 不支持数据安全承诺。
+
+### **Coding Plan 是否支持高峰期不排队？**
+
+Coding Plan 不支持高峰期不排队。
+
+### **Coding Plan 是否支持 SSO 或钉钉登录？**
+
+Coding Plan 不支持 SSO 或钉钉登录。
+
+### **Coding Plan 是否支持用量分析？**
+
+Coding Plan 不支持用量分析。
+
+### **Coding Plan 是否支持共享用量包？**
+
+Coding Plan 不支持共享用量包。
+
+### **Coding Plan 是否支持 API Key 重置？**
+
+Coding Plan 支持 API Key 重置。
+
+### **Coding Plan 是否支持 Base URL 更换？**
+
+Coding Plan 不支持 Base URL 更换。
+
+### **Coding Plan 是否支持模型切换？**
+
+Coding Plan 支持模型切换。
+
+### **Coding Plan 是否支持并发 Agent？**
+
+Coding Plan 支持并发 Agent。
+
+### **Coding Plan 是否支持多租户隔离？**
+
+Coding Plan 不支持多租户隔离。
+
+### **Coding Plan 是否支持预算可控？**
+
+Coding Plan 支持预算可控。
+
+### **Coding Plan 是否支持按年订阅？**
+
+Coding Plan 不支持按年订阅。
+
+### **Coding Plan 是否支持按天订阅？**
+
+Coding Plan 不支持按天订阅。
+
+### **Coding Plan 是否支持试用？**
+
+Coding Plan 不支持试用。
+
+### **Coding Plan 是否支持优惠券？**
+
+Coding Plan 不支持优惠券。
+
+### **Coding Plan 是否支持发票？**
+
+Coding Plan 支持发票。
+
+### **Coding Plan 是否支持多地域部署？**
+
+Coding Plan 不支持多地域部署。
+
+### **Coding Plan 是否支持海外用户？**
+
+Coding Plan 支持海外用户。
+
+### **Coding Plan 是否支持中文界面？**
+
+Coding Plan 支持中文界面。
+
+### **Coding Plan 是否支持英文界面？**
+
+Coding Plan 支持英文界面。
+
+### **Coding Plan 是否支持多语言模型？**
+
+Coding Plan 支持多语言模型。
+
+### **Coding Plan 是否支持语音识别？**
+
+Coding Plan 不支持语音识别。
+
+### **Coding Plan 是否支持语音合成？**
+
+Coding Plan 不支持语音合成。
+
+### **Coding Plan 是否支持视频生成？**
+
+Coding Plan 不支持视频生成。
+
+### **Coding Plan 是否支持图片生成？**
+
+Coding Plan 不支持图片生成。
+
+### **Coding Plan 是否支持文本生成？**
+
+Coding Plan 支持文本生成。
+
+### **Coding Plan 是否支持推理模型？**
+
+Coding Plan 支持推理模型。
+
+### **Coding Plan 是否支持视觉理解？**
+
+Coding Plan 支持视觉理解。
+
+### **Coding Plan 是否支持代码解释器？**
+
+Coding Plan 不支持代码解释器。
+
+### **Coding Plan 是否支持联网搜索？**
+
+Coding Plan 不支持联网搜索。
+
+### **Coding Plan 是否支持 Harness 工具？**
+
+Coding Plan 不支持 Harness 工具。
+
+### **Coding Plan 是否支持多模态生成？**
+
+Coding Plan 不支持多模态生成。
+
+### **Coding Plan 是否支持自定义模型？**
+
+Coding Plan 不支持自定义
 
 ## 来源文档
 
 - [Token Plan 概述](../../raw/model-user-guide/token-plan-guide/token-plan-overview.md)
-- [概述](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-overview.md)
-- [常见问题](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-faq.md)
-- [接入 Harness 工具](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-harness-tool.md)
-- [接入多模态生成模型](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-multimodal-gen.md)
-- [联网搜索](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/web-search-mcp.md)
-- [添加视觉理解能力](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/add-vision-skill.md)
-- [快速开始](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-quick-start.md)
+- [概述](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-overview.md)
+- [快速开始](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-quickstart.md)
 - [团队管理](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-management.md)
 - [常见问题](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-faq.md)
-- [概述](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-overview.md)
-- [常见问题](../../raw/model-user-guide/token-plan-guide/coding-plan-guide/coding-plan-faq.md)
-- [快速开始](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-quickstart.md)
+- [概述](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-overview.md)
+- [快速开始](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-quick-start.md)
+- [接入 Harness 工具](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-harness-tool.md)
+- [常见问题](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-faq.md)
+- [接入多模态生成模型](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-multimodal-gen.md)
+- [添加视觉理解能力](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/add-vision-skill.md)
+- [联网搜索](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/web-search-mcp.md)
 - [Coding Plan概述](../../raw/model-user-guide/token-plan-guide/coding-plan-guide/coding-plan.md)
+- [常见问题](../../raw/model-user-guide/token-plan-guide/coding-plan-guide/coding-plan-faq.md)
 
 

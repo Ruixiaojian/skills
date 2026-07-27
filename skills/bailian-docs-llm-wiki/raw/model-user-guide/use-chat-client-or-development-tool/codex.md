@@ -428,11 +428,11 @@ wire_api = "chat"
 
 将`OPENAI_API_KEY`环境变量设置为[百炼 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。可用模型参见[支持的模型](https://help.aliyun.com/zh/model-studio/compatibility-of-openai-with-dashscope#7f9c78ae99pwz)。
 
-根据地域设置`base_url`，API Key 须与所选地域对应：
+根据地域设置`base_url`，API Key 须与所选地域对应，请将 URL 中的 `{WorkspaceId}` 替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)：
 
--   华北2（北京）：`https://dashscope.aliyuncs.com/compatible-mode/v1`
+-   华北2（北京）：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
     
--   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
     
 
 按量计费支持 Responses API 和 Chat/Completions API 两种接入方式，请根据使用的模型选择：
@@ -446,7 +446,7 @@ model_provider = "Model_Studio"
 model = "qwen3.7-max"
 [model_providers.Model_Studio]
 name = "Model_Studio"
-base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+base_url = "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
 env_key = "OPENAI_API_KEY"
 wire_api = "responses"
 ```
@@ -463,7 +463,7 @@ model_provider = "Model_Studio"
 model = "qwen3.6-plus"
 [model_providers.Model_Studio]
 name = "Model_Studio"
-base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+base_url = "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
 env_key = "OPENAI_API_KEY"
 wire_api = "chat"
 ```

@@ -1,49 +1,51 @@
 # long term memory new
 
-[长期记忆](../concepts/long-term-memory.md)（新）是百炼平台提供的结构化用户记忆管理能力，支持自动从对话中提取关键信息、构建用户画像，并提供语义搜索、增删改查等完整生命周期操作。该功能基于专用记忆库和规则引擎实现，适用于需要持久化用户偏好、习惯、意图等上下文的智能体应用。详细接口定义与行为规范请参见 [长期记忆（新）API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)。
+[长期记忆](../concepts/long-term-memory.md)（新）是百炼平台提供的结构化用户状态持久化能力，支持自动从对话中提取关键信息生成记忆片段，并提供语义搜索、增删改查等完整生命周期管理。该功能基于专用记忆库和画像模板机制，适用于需要跨会话维持用户上下文的智能体应用。所有接口均需通过 `Authorization: Bearer $DASHSCOPE_API_KEY` 认证，Base URL 为 `https://dashscope.aliyuncs.com/api/v2/apps/memory/`。
 
 ## 支持的模型/功能
 
-- **核心能力**：记忆片段自动提取（基于对话 `messages` 或自定义文本 `custom_content`）、多维度语义搜索、分页列表、单条更新/删除、用户画像模板（Profile Schema）管理及画像获取。
-- **模型无关性**：底层不依赖特定大模型，所有语义理解、提取与检索逻辑由平台统一服务封装，开发者无需自行调用 LLM。
-- **画像支持**：通过 `CreateProfileSchema` 等接口定义结构化画像模板，并关联至记忆库；后续可通过 `GetUserProfile` 获取聚合后的用户画像快照。该机制在 [长期记忆（新）API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md) 中有完整说明。
+- **核心能力**：自动从多轮对话（`messages`）中提取结构化记忆片段；也支持直接提交自定义文本（`custom_content`）。
+- **画像建模**：通过 `CreateProfileSchema` 等接口定义用户画像模板，并关联至记忆库，实现结构化元数据管理。
+- **语义检索**：`SearchMemory` 基于向量相似度召回，支持 `top_k`、`min_score`、重排序（`enable_rerank`）及 query 重写（`enable_rewrite`）等控制参数。
+- **全量 CRUD**：除基础记忆操作外，还提供 `ListMemory` 分页查询、`UpdateMemory` 内容与元数据增量更新、`DeleteMemory` 物理删除。
+- **SDK 封装**：Python 客户端已通过 `agentscope-runtime>=1.1.5` 提供 `AddMemory`、`SearchMemory`、`ListMemory`、`DeleteMemory` 四个封装工具类；`UpdateMemory` 暂未封装，需直接调用 HTTP API [原文标题](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)。
 
 ## 关键参数
 
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|------|------|
-| `user_id` | string | 是 | 记忆归属实体 ID（≤64 字符），用于隔离不同用户数据。所有接口均需传入。 |
-| `messages` / `custom_content` | array / string | 互斥必填 | `AddMemory` 和 `SearchMemory` 中，`messages` 为对话数组（最多 50 条，一问一答计 2 条），`custom_content` 为纯文本（≤512 字符），二者不可共存。 |
-| `memory_library_id` | string | 否 | 记忆库 ID（≤32 字符）。未传时使用默认记忆库，详见 [长期记忆（新）API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)。 |
-| `top_k`, `min_score` | integer, double | 否 | `SearchMemory` 专属：控制召回数量（1–100，默认 10）和最小相似度阈值（[0,1]，默认 0.3）。 |
-| `page_num`, `page_size` | integer | 否 | `ListMemory` 分页参数（默认 page_num=1, page_size=10）。 |
+| `user_id` | string | 是 | 记忆归属实体 ID（≤64 字符），用于隔离不同用户的数据空间 |
+| `messages` / `custom_content` | array / string | 互斥 | `messages` 最多 50 条（一问一答计 2 条）；`custom_content` ≤512 字符 |
+| `memory_library_id` | string | 否 | 显式指定记忆库 ID（≤32 字符），不传则使用默认库 [原文标题](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md) |
+| `profile_schema` | string | 否 | 画像模板 ID，需提前通过 `CreateProfileSchema` 创建并获取 |
+| `top_k` | integer | 否 | `SearchMemory` 最大召回数（1–100，默认 10） |
+| `min_score` | double | 否 | `SearchMemory` 相似度阈值 [0,1]（默认 0.3） |
+| `meta_data` | object | 否 | 用户自定义键值对，支持在 `AddMemory`、`UpdateMemory` 中传入，`ListMemory` 返回时包含该字段 |
 
-> **注意**：`project_id`（记忆片段规则 ID）在文档中描述为“如不传则自动选择默认规则”，但实际调用中若记忆库未配置任何规则，将返回 400 错误。建议显式传入或确保记忆库已启用默认规则。
+> **注意**：`AddMemory` 接口文档中明确说明 `messages` 与 `custom_content` 互斥，且填 `custom_content` 后会忽略 `messages`；但部分旧版示例代码曾同时携带二者，实际以 [原文标题](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md) 为准。
 
 ## 使用方式
 
-- **HTTP 直接调用**：Base URL 为 `https://dashscope.aliyuncs.com/api/v2/apps/memory/`，所有请求需携带 `Authorization: Bearer $DASHSCOPE_API_KEY` 和 `Content-Type: application/json`。各接口路径见下表：
-
-  | 接口 | 方法 | 路径 | 用途 |
-  |------|------|------|------|
-  | AddMemory | POST | `/add` | 添加记忆片段（自动提取） |
-  | SearchMemory | POST | `/memory_nodes/search` | 语义搜索记忆片段 |
-  | ListMemory | GET | `/memory_nodes` | 分页列出记忆片段 |
-  | DeleteMemory | DELETE | `/memory_nodes/{memory_node_id}` | 删除指定记忆片段 |
-  | UpdateMemory | PATCH | `/memory_nodes/{memory_node_id}` | 更新记忆片段内容 |
-
-- **Python SDK 封装**：推荐使用 `agentscope-runtime>=1.1.5` 提供的工具类（如 `AddMemory`, `SearchMemory`, `ListMemory`, `DeleteMemory`），简化异步调用与错误处理。`UpdateMemory` 当前未封装，需自行用 `requests.patch` 调用（示例见原始文档）。
+1. **初始化认证**：在请求 Header 中设置 `Authorization: Bearer $DASHSCOPE_API_KEY` 和 `Content-Type: application/json`。
+2. **添加记忆**：
+   - 推荐使用 `AddMemory` 工具类（Python SDK），传入 `user_id` + `messages` 或 `custom_content`；
+   - 若需强控制，可直接调用 `/add` 接口，参考 cURL 示例 [原文标题](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)。
+3. **检索记忆**：调用 `SearchMemory`，传入当前对话上下文（`messages`）触发语义匹配；建议设置 `min_score ≥ 0.4` 避免低质召回。
+4. **管理记忆**：
+   - 列表分页：`ListMemory` 支持 `page_num`/`page_size`；
+   - 更新内容：`UpdateMemory` 仅接受 `PATCH` 请求，路径含 `memory_node_id`，Body 必须含 `custom_content`；
+   - 删除操作：`DeleteMemory` 为 `DELETE` 请求，路径含 `memory_node_id`。
 
 ## 限制和注意事项
 
 - **限流策略**（阿里云账号级别）：
-  - 全部接口总计 ≤ 3000 QPM；
-  - `AddMemory` ≤ 120 QPM；
-  - `SearchMemory` ≤ 300 QPM。
-- **数据时效性**：生成的记忆片段与用户画像**无自动过期机制**，需业务侧自行管理生命周期。
-- **内容长度**：`custom_content` 严格限制为 ≤512 字符；`messages` 中单条 `content` 长度未明确定义，但整体 `messages` 数组上限为 50 条。
-- **元数据（meta_data）**：仅 `AddMemory` 和 `UpdateMemory` 支持写入，`ListMemory` 返回时包含完整 `meta_data` 对象，其他接口不透出。
-- **ID 唯一性**：`user_id` 由业务方保证全局唯一；`memory_node_id` 由平台生成，不可自定义。
+  - 所有接口总 QPM ≤ 3000；
+  - `AddMemory` 单独限流 120 QPM；
+  - `SearchMemory` 单独限流 300 QPM。
+- **数据时效性**：生成的记忆片段与用户画像暂无自动过期机制，需业务侧自行维护生命周期。
+- **ID 约束**：`user_id`、`memory_library_id`、`memory_node_id` 均为字符串，长度分别 ≤64、≤32、长度未明确定义但实践中为 UUID 格式。
+- **SDK 兼容性**：`agentscope-runtime>=1.1.5` 是最低要求；`UpdateMemory` 尚未封装，需手动构造 PATCH 请求。
+- **错误处理**：所有接口返回 `request_id`，可用于问题排查；HTTP 429 表示限流，需退避重试。
 
 ## 来源文档
 

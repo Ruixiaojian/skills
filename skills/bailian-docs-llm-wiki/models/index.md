@@ -1,6 +1,6 @@
 # 百炼模型市场索引
 
-> 自动生成 · 共 172 个模型家族 · 389 个主干模型 · 更新于 2026-07-25
+> 自动生成 · 共 170 个模型家族 · 385 个主干模型 · 更新于 2026-07-27
 
 **机器查询走结构化文件**：
 
@@ -151,7 +151,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [鞋靴模特](groups/shoemodel-v1.json) — 鞋靴模特支持输入多视角鞋靴系列图片，同时对输入模特模板图的鞋子区域进行鞋靴AI试穿，实现模特鞋靴布局重绘生成，最终生成图片的效果, 布局自然、细节丰富、画面细腻、试穿结果逼真。可用于模特商品图设计、新…
   - 模型：`shoemodel-v1`
 
-## 视频生成 `VG` — 26 个家族
+## 视频生成 `VG` — 25 个家族
 
 - [HappyHorse-I2V](groups/happyhorse-i2v.json) — HappyHorse系列最新图生视频模型，具备高度还原的动态画面生成能力，能够稳定保持与图像一致性，输出流畅自然、细节丰富的高质量视频。
   - 模型：`happyhorse-1.0-i2v`, `happyhorse-1.1-i2v`
@@ -163,8 +163,6 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`happyhorse-1.0-video-edit`
 - [PixVerse C1](groups/pixverse-c1-market-place.json) — 由爱诗科技提供的PixVerse C系列视频大模型API服务。
   - 模型：`pixverse/pixverse-c1-it2v`, `pixverse/pixverse-c1-kf2v`, `pixverse/pixverse-c1-r2v`, `pixverse/pixverse-c1-t2v`
-- [PixVerse Capabilities](groups/pixverse-capability-market-place.json) — 由爱诗科技提供的视频原子能力大模型API服务。
-  - 模型：`pixverse/pixverse-lipsync`, `pixverse/pixverse-motioncontrol`, `pixverse/pixverse-upscale`
 - [PixVerse V5.6](groups/pixverse-market-place.json) — 由爱诗科技提供的PixVerse V系列视频大模型API服务。
   - 模型：`pixverse/pixverse-v5.6-it2v`, `pixverse/pixverse-v5.6-kf2v`, `pixverse/pixverse-v5.6-r2v`, `pixverse/pixverse-v5.6-t2v`
 - [PixVerse V6](groups/pixverse-v6-market-place.json) — 由爱诗科技提供的PixVerse V系列视频大模型API服务。
@@ -206,7 +204,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [表情包Emoji-detect](groups/emoji-detect-v1.json) — 表情包Emoji-Detect是辅助表情包Emoji生成的图像检测模型，用于检测图片中的人物形象是否符合视频生成要求。
   - 模型：`emoji-detect-v1`
 
-## 语音合成 `TTS` — 16 个家族
+## 语音合成 `TTS` — 15 个家族
 
 - [CosyVoice大模型](groups/cosyvoice.json) — 基于新一代生成式语音大模型，CosyVoice将文本理解和语音生成技术深度融合，能够精准解析并诠释各种文本内容，将其转化为如同真人发声般的自然语音，带来高度拟人化的自然语音合成体验。
   - 模型：`cosyvoice-clone-v1`, `cosyvoice-v1`, `cosyvoice-v2`, `cosyvoice-v3-flash`, `cosyvoice-v3-plus`, `cosyvoice-v3.5-flash`, `cosyvoice-v3.5-plus`
@@ -214,8 +212,6 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`MiniMax/speech-02-hd`, `MiniMax/speech-02-turbo`, `MiniMax/speech-2.8-hd`, `MiniMax/speech-2.8-turbo`
 - [Qwen-TTS](groups/qwen-tts.json) — 千问系列首个语音合成模型，支持中文、英文、中英混合输入。自适应根据输入文本调整输出语气，音色真实自然，支持输入输出全流式。
   - 模型：`qwen-tts`, `qwen-tts-latest`
-- [Qwen-声音复刻](groups/qwen-voice-enrollment.json) — 千问voice-enrollment模型是千问语音模型的声音复刻系列模型，仅需5s以上的音频，即可迅速复刻高相似度声音。结合qwen3-tts-vc-realtime模型使用，可将一个人的声音高保真复…
-  - 模型：`qwen-voice-enrollment`
 - [Qwen-声音设计](groups/qwen-voice-design.json) — Qwen-Voice-Design模型是千问语音模型的声音设计系列模型，仅需输入简单的文字描述，即可迅速设计出符合要求的相关声音。结合qwen3-tts-vd-realtime模型使用，可设计输出11…
   - 模型：`qwen-voice-design`
 - [Qwen3-TTS-Flash](groups/qwen3-tts-flash.json) — Qwen3-TTS-Flash模型是通义实验室最新推出的离线语音合成大模型，不仅拥有17种高表现力的拟人音色，且能低延迟高稳定地合成音频；同时支持多种语言，方言，支持同一音色多语言输出。该模型经过海量…

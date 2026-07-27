@@ -129,18 +129,18 @@ npm install -g @anthropic-ai/claude-code
 
 将 YOUR\_API\_KEY 替换为[阿里云百炼API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。可用模型参见[Anthropic 兼容 API](https://help.aliyun.com/zh/model-studio/anthropic-api-messages#07833dedefft7)。
 
-`ANTHROPIC_BASE_URL` 按地域设置，API Key 需与所选地域对应：
+`ANTHROPIC_BASE_URL` 按地域设置，API Key 需与所选地域对应，并将`WorkspaceId`替换为真实的 [Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)：
 
--   华北2（北京）：`https://dashscope.aliyuncs.com/apps/anthropic`
+-   华北2（北京）：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic`
     
--   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/apps/anthropic`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/apps/anthropic`
     
 
 ```
 {
     "env": {
         "ANTHROPIC_AUTH_TOKEN": "YOUR_API_KEY",
-        "ANTHROPIC_BASE_URL": "https://dashscope.aliyuncs.com/apps/anthropic",
+        "ANTHROPIC_BASE_URL": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic",
         "ANTHROPIC_MODEL": "qwen3.7-max",
         "ANTHROPIC_DEFAULT_HAIKU_MODEL": "qwen3.6-flash",
         "ANTHROPIC_DEFAULT_SONNET_MODEL": "qwen3.7-max",
@@ -164,7 +164,7 @@ Claude Code 默认使用 200K 上下文窗口。如果需要处理大型代码�
 {
     "env": {
         "ANTHROPIC_AUTH_TOKEN": "YOUR_API_KEY",
-        "ANTHROPIC_BASE_URL": "https://dashscope.aliyuncs.com/apps/anthropic",
+        "ANTHROPIC_BASE_URL": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic",
         "ANTHROPIC_MODEL": "qwen3.7-plus",
         "CLAUDE_CODE_MAX_CONTEXT_TOKENS": "1000000"
     }
@@ -179,7 +179,7 @@ Claude Code 默认使用 200K 上下文窗口。如果需要处理大型代码�
 {
     "env": {
         "ANTHROPIC_AUTH_TOKEN": "YOUR_API_KEY",
-        "ANTHROPIC_BASE_URL": "https://dashscope.aliyuncs.com/apps/anthropic",
+        "ANTHROPIC_BASE_URL": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic",
         "ANTHROPIC_MODEL": "qwen3.7-plus[1m]",
         "ANTHROPIC_DEFAULT_SONNET_MODEL": "qwen3.7-plus[1m]",
         "ANTHROPIC_DEFAULT_OPUS_MODEL": "qwen3.7-plus[1m]",
@@ -241,7 +241,7 @@ Claude Code 默认使用 200K 上下文窗口。如果需要处理大型代码�
     
     API Key：[百炼API Key](https://help.aliyun.com/zh/model-studio/get-api-key)
     
-    请求地址：`https://dashscope.aliyuncs.com/apps/anthropic`
+    请求地址：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic`
     
 2.  展开**高级选项**配置模型映射，将主模型与 Haiku、Sonnet、Opus 默认模型设置为对应套餐[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-overview)。映射关系按需选择，示例如下：
     
