@@ -30,18 +30,40 @@ jobs:
         run: |
           # Squash-merging PRs rewrites history on main, so this branch
           # diverges from main after every merge and later PRs conflict.
-          # Merge main back in first, preferring the branch (crawler output
-          # is the source of truth for skills/**) on conflicting hunks.
+          # Merge main back in first. Conflicts are resolved by ownership:
+          #   - skills/bailian-docs-llm-wiki/** : crawler output wins (ours)
+          #   - everything else                 : main wins (theirs), since
+          #     humans edit other skills and repo files on main.
           # Pushing with the default GITHUB_TOKEN does NOT retrigger this
           # workflow (recursive triggers are suppressed), so no loop.
           BRANCH="${{ github.ref_name }}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin main
-          if ! git merge-base --is-ancestor origin/main HEAD; then
-            git merge -X ours --no-edit origin/main
-            git push origin "HEAD:${BRANCH}"
+          if git merge-base --is-ancestor origin/main HEAD; then
+            echo "Branch already contains main, nothing to sync."
+            exit 0
           fi
+          if ! git merge --no-edit origin/main; then
+            echo "Resolving conflicts by path ownership..."
+            git diff --name-only --diff-filter=U -z |
+            while IFS= read -r -d '' f; do
+              case "$f" in
+                skills/bailian-docs-llm-wiki/*) side=2; flag=--ours ;;
+                *)                              side=3; flag=--theirs ;;
+              esac
+              # side present in index -> take that version; absent -> it was
+              # deleted on the winning side, so delete the file.
+              if git ls-files -u -- "$f" | awk '{print $3}' | grep -qx "$side"; then
+                git checkout "$flag" -- "$f"
+                git add -- "$f"
+              else
+                git rm -f --quiet -- "$f"
+              fi
+            done
+            git commit --no-edit
+          fi
+          git push origin "HEAD:${BRANCH}"
 
       - name: Create or update PR to main
         id: pr
