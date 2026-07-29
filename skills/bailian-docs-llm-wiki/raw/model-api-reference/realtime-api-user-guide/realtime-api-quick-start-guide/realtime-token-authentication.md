@@ -2,13 +2,11 @@
 
 介绍 Realtime API 的 Token 鉴权机制，包括 API Key 的获取方式以及 WebSocket、WebRTC、AOQ 三种协议的建连鉴权方法。
 
-## **概述**
+Realtime API 使用 API Key 进行身份认证。无论选择 AOQ、WebRTC 还是 WebSocket 协议接入，均通过 HTTP 请求头中的 `Authorization` 字段携带 Bearer Token 完成身份验证。
 
-Realtime API 使用 **API Key** 进行身份认证。无论您选择 WebSocket、WebRTC 还是 AOQ 协议接入，均通过 HTTP 请求头中的 `Authorization` 字段携带 Bearer Token 完成身份验证。
+鉴权仅发生在**建连阶段**，连接建立后的数据传输无需重复鉴权。
 
-鉴权发生在**建连阶段**，连接建立后的音视频/数据传输无需重复鉴权。
-
-三种协议的鉴权差异：
+三种协议的鉴权方式对比如下：
 
 **协议**
 
@@ -18,13 +16,13 @@ Realtime API 使用 **API Key** 进行身份认证。无论您选择 WebSocket�
 
 **说明**
 
-WebSocket
+AOQ
 
-WebSocket 连接握手时
+业务 AppServer 请求网关时
 
 HTTP Header `Authorization: Bearer <API_KEY>`
 
-客户端或服务端直接携带 API Key 建连
+API Key 仅在服务端使用，客户端使用网关返回的 Token
 
 WebRTC
 
@@ -34,13 +32,13 @@ HTTP Header `Authorization: Bearer <API_KEY>`
 
 客户端或服务端携带 API Key 发起 SDP 交换
 
-AOQ
+WebSocket
 
-业务 AppServer 请求网关时
+WebSocket 连接握手时
 
 HTTP Header `Authorization: Bearer <API_KEY>`
 
-API Key 仅在服务端使用，客户端使用网关返回的 Token
+客户端或服务端直接携带 API Key 建连
 
 ## **获取 API Key**
 
@@ -51,9 +49,9 @@ API Key 仅在服务端使用，客户端使用网关返回的 Token
 2.  如果是首次使用，按照页面提示完成服务开通。
     
 
-### **步骤 2：创建 API Key**
+### **步骤 2：创建** [API Key](https://help.aliyun.com/zh/model-studio/get-api-key)
 
-1.  在控制台左侧导航栏中，选择 **API Key 管理**。
+1.  在控制台左侧导航栏中，选择 **API Key**。
     
 2.  点击 **创建 API Key**，选择关联的业务空间。
     
@@ -68,11 +66,11 @@ API Key 仅在服务端使用，客户端使用网关返回的 Token
 
 ### **AOQ 协议鉴权**
 
-AOQ 采用**服务端代理鉴权**模式：API Key 仅在业务 AppServer 侧使用，客户端使用网关返回的临时 Token 建连，避免 API Key 暴露在客户端。
+AOQ 采用**服务端代理鉴权**模式：API Key 仅在业务 AppServer 侧使用，客户端通过网关返回的临时 Token 建连，避免 API Key 暴露在客户端。
 
 ![Token鉴权](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3935914871/p1088069.jpg)
 
-#### **百炼网关请求 curl 示例**
+#### **curl 示例**
 
 ```
 curl -X POST \
@@ -83,7 +81,7 @@ curl -X POST \
   -d '{"clientIp": ${客户端真实IP}}'
 ```
 
-#### **请求字段说明**
+#### **参数说明**
 
 **配置项**
 
@@ -95,31 +93,31 @@ endpoint
 
 根据业务情况选择接入域名
 
-指定对应的接入域名，详情请参见[选择地域、服务部署范围和接入域名](https://help.aliyun.com/zh/model-studio/regions/)
+指定对应的接入域名，详情请参见[地域及接入域名](https://help.aliyun.com/zh/model-studio/regions/)
 
 Content-Type
 
 `application/json`
 
-\-
+指定消息类型
 
 Authorization
 
-`Bearer <API_KEY>`
+`Bearer <YOUR_API_KEY>`
 
-必填
+填写API Key
 
 x-dashscope-rtc-transport
 
 `moq`
 
-**指定使用 AOQ 协议**
+指定使用 AOQ 协议
 
 clientIp
 
-选填。客户端真实公网 IP
+客户端真实公网 IP
 
-不填写时，使用请求百炼网关的 IP 作为客户端 IP；若填写，则以 clientIp 作为客户端 IP。Realtime API 会参考客户端 IP 提供最佳的 Relay 接入点信息
+选填。不填写时，默认使用请求百炼网关的 IP；填写后以 clientIp 为准。Realtime API 会根据客户端 IP 分配最佳的 Relay 接入点
 
 #### **响应示例**
 
@@ -134,7 +132,7 @@ clientIp
 }
 ```
 
-#### **响应字段说明**
+#### **响应参数说明**
 
 **字段**
 
@@ -165,6 +163,10 @@ extraInfo.workspaceIdHash
 工作区 ID 哈希
 
 #### **AOQ Client SDK 连接示例**
+
+**说明**
+
+`clientIp` 为请求体中的选填字段。不填写时，默认使用请求百炼网关的 IP 作为客户端 IP；填写后则以指定的 clientIp 为准。建议由业务 AppServer 获取客户端真实 IP 后填入，以获得最佳的 Relay 接入点。
 
 ## **iOS (Swift)**
 
@@ -253,13 +255,13 @@ const cfg: AoqConnectConfig = {
 engine.connect(cfg);
 ```
 
-**说明**
+### **WebRTC 协议鉴权**
 
-`clientIp` 为请求体中的非必填字段。不填写时，使用请求百炼网关的 IP 作为客户端 IP；若填写，则以 clientIp 作为客户端 IP。建议由业务 AppServer 在服务端获取客户端真实 IP 后填入，以获得最佳的 Relay 接入点。
+WebRTC 通过 HTTP POST 请求完成 SDP 交换，鉴权在此阶段完成。客户端将 Offer SDP 发送至服务端，服务端返回 Answer SDP。
 
-## **WebRTC 协议鉴权**
+**重要**
 
-WebRTC 通过 HTTP POST 请求完成 SDP 交换，鉴权在此阶段完成。客户端将 Offer SDP 发送给服务端，服务端返回 Answer SDP。
+WebRTC 功能目前为白名单开放，请联系商务经理获取 Endpoint。
 
 **配置项**
 
@@ -277,7 +279,7 @@ POST
 
 `https://{endpoint}/api/v1/webrtc/realtime?model={model_name}`
 
-替换 endpoint 和 model\_name
+使用时替换 endpoint 和 model\_name，不同模型的连接地址不同，详情请参见[WebRTC 接入](https://help.aliyun.com/zh/model-studio/realtime-connect-model#conn-rtc-title)
 
 Content-Type
 
@@ -289,17 +291,13 @@ Authorization
 
 `Bearer <API_KEY>`
 
-必填
+填写API Key
 
 响应
 
 HTTP 200，返回 Answer SDP
 
 失败返回 4xx
-
-**说明**
-
-WebRTC 功能目前为白名单开放，请联系商务经理获取 Endpoint。
 
 ```
 const pc = new RTCPeerConnection();
@@ -323,9 +321,9 @@ const answerSdp = await resp.text();
 await pc.setRemoteDescription({ type: 'answer', sdp: answerSdp });
 ```
 
-## **WebSocket 协议鉴权**
+### **WebSocket 协议鉴权**
 
-WebSocket 鉴权最为简单，客户端在建立 WebSocket 连接时直接通过 HTTP Header 携带 API Key。
+WebSocket 的鉴权方式最为简单，在建立连接时直接通过 HTTP Header 携带 API Key 即可。
 
 **配置项**
 
@@ -337,22 +335,19 @@ WebSocket 鉴权最为简单，客户端在建立 WebSocket 连接时直接通�
 
 `wss://dashscope.aliyuncs.com/api-ws/v1/realtime?model={model_name}`
 
-华北2（北京）
+不同模型的连接地址不同，详情请参见[WebSocket 接入](https://help.aliyun.com/zh/model-studio/realtime-connect-model#conn-ws-title)
 
 Authorization
 
 `Bearer <API_KEY>`
 
-必填
+填写API Key
 
 ```
 import websocket, os
+
 API_KEY = os.getenv("DASHSCOPE_API_KEY")
 URL = "wss://dashscope.aliyuncs.com/api-ws/v1/realtime?model=qwen3.5-omni-plus-realtime"
 ws = websocket.WebSocketApp(URL, header=["Authorization: Bearer " + API_KEY])
 ws.run_forever()
 ```
-
-**说明**
-
-您也可以使用 [DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk) 方式接入。

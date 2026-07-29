@@ -1,10 +1,17 @@
-# 实现接通模型/应用
+# 接入模型与应用
 
 介绍如何通过 AOQ、WebRTC、WebSocket 三种协议接入 Realtime API 模型或应用，包含各协议的连接流程、时序图和代码示例。
 
+## **前提条件**
+
+-   接入前请先确认[模型/应用支持力度](https://help.aliyun.com/zh/model-studio/realtime-api-overview#rtov-s02h2)
+    
+-   了解如何进行[Token鉴权](https://help.aliyun.com/zh/model-studio/realtime-token-authentication)
+    
+
 ## **AOQ 接入**
 
-AOQ 基于 QUIC 协议深度定制，适合移动端原生应用，支持音频/视频/数据混合传输，内置极致抗弱网能力。以下以 iOS Demo 为例。
+AOQ 基于 QUIC 协议深度定制，适合移动端原生应用，支持音频/视频/数据混合传输，内置极致抗弱网能力。以下以实时全模态（Omni）的 iOS Demo 为例介绍 AOQ 接入流程。AOQ SDK API 详情请参见[AOQ客户端API](https://help.aliyun.com/zh/model-studio/realtime-api-aoq-api/)。
 
 ### **整体流程时序图**
 
@@ -42,7 +49,7 @@ engine.startVideoCapture(vidCfg)
 
 ### **获取连接凭证**
 
-由业务 AppServer 代理百炼请求，参考 [Token 鉴权](https://help.aliyun.com/zh/model-studio/realtime-token-authentication) 章节。
+由业务 AppServer 代理百炼请求，参见[Token鉴权](https://help.aliyun.com/zh/model-studio/realtime-token-authentication)。
 
 ### **设置编解码及建立连接**
 
@@ -71,11 +78,11 @@ engine.connect(config)
 
 **重要**
 
-**重要**：AOQ SDK 在建联后会默认发送媒体数据，此示例演示了连接模型时关闭媒体发送的能力。
+**重要**：AOQ SDK 在建连后会默认发送媒体数据，此示例演示了在连接模型时先关闭媒体发送，待会话就绪后再开启的流程。
 
 ### **配置 AI 会话**
 
-连接成功后发送 `session.update` 的示例，详见[模型客户端事件参考](https://help.aliyun.com/zh/model-studio/client-events)：
+连接成功后发送 `session.update` 的示例，详见[客户端事件](https://help.aliyun.com/zh/model-studio/client-events)：
 
 ```
 func onConnectionStatusChange(_ status: AoqConnectionStatus) {
@@ -107,7 +114,7 @@ private func sendSessionUpdate() {
           // 是否开启语音活动检测。若需启用，需传入一个配置对象，服务端将据此自动检测语音起止。
           // 设置为null表示由客户端决定何时发起模型响应。
           "turn_detection": {
-              // VAD类型，取值为server_vad或semantic_vad。使用qwen3.5-omni-realtime模型时推荐设为semantic_vad。
+              // VAD类型，取值为server_vad或semantic_vad。使用qwen3.5-omni-realtime系列模型时推荐设为semantic_vad。
               "type": "semantic_vad",
               // VAD检测阈值。建议在嘈杂的环境中增加，在安静的环境中降低。
               "threshold": 0.5,
@@ -125,7 +132,7 @@ private func sendSessionUpdate() {
 
 ### **收到 session.updated 后开启媒体发送**
 
-收到模型回复 `session.updated` 的示例，详见[模型服务器事件参考](https://help.aliyun.com/zh/model-studio/server-events)：
+收到模型回复 `session.updated` 的示例，详见[服务端事件](https://help.aliyun.com/zh/model-studio/server-events)：
 
 ```
 func onDataMsg(_ msg: AoqDataMsg) {
@@ -140,9 +147,7 @@ func onDataMsg(_ msg: AoqDataMsg) {
 
 **重要**
 
-**重要**：
-
-1.  模型必须在收到 `session.updated` 后才开启媒体流发送，否则 AI 侧可能还未准备好接收数据。
+1.  必须在收到 `session.updated` 后才开启媒体流发送，否则服务端可能尚未准备好接收数据。
     
 2.  建连时添加的音频轨道和视频轨道（即 AOQ 媒体通道）会自动将数据传输到服务端。
     
@@ -160,7 +165,7 @@ AoqClientEngine.destroy()
 
 ## **WebRTC 接入**
 
-WebRTC 协议不提供 SDK，Web 端可以通过 JavaScript，其他端可以通过开源项目或者第三方支持标准 WebRTC 协议的 RTC 服务商进行接入。以下文档以 Web 端 JavaScript 为例进行介绍。
+WebRTC 不提供专用 SDK。Web 端可直接使用浏览器原生 JavaScript API 接入，其他端可通过开源 WebRTC 库或支持标准 WebRTC 协议的第三方 RTC 服务接入。以下以 Web 端 JavaScript 为例进行介绍。
 
 ### **整体流程图**
 
@@ -218,7 +223,7 @@ async def connect():
 
 ### **配置目标模型参数**
 
-监听模型返回的 DataChannel 消息保证交互时序：
+监听模型通过 DataChannel 返回的消息，确保交互时序正确：
 
 ```
 pc.ondatachannel = (event) => {
@@ -260,7 +265,7 @@ WebRTC 仅支持服务端 VAD 模式（`server_vad` 或 `semantic_vad`），不�
     
 -   浏览器需要麦克风权限。
     
--   浏览器无法直接向服务端发起建立连接的请求（受浏览器跨域安全策略限制），因此需要通过终端执行 curl 命令来完成连接建立。
+-   浏览器受跨域安全策略限制，无法直接向服务端发起建连请求，因此需要通过终端执行 curl 命令完成连接建立。
     
 
 #### **运行示例**
@@ -280,7 +285,7 @@ WebRTC 仅支持服务端 VAD 模式（`server_vad` 或 `semantic_vad`），不�
 
 ## **WebSocket 接入**
 
-可以通过 DashScope SDK 或者模型的 API 进行接入，详见：
+不同模型的接入方式和流程不同，详情请参见：
 
 -   [实时全模态](https://help.aliyun.com/zh/model-studio/realtime#bdaa43cdd7hsd)
     

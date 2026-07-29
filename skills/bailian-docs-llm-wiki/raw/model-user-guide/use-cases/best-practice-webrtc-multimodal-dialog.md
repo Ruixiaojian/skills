@@ -510,3 +510,5 @@ function endSession() {
 -   [多模态交互 SDK（Python/Java）GitHub 示例代码](https://github.com/aliyun/alibabacloud-bailian-speech-demo/tree/master/samples/conversation/multimodal_dialog)
     
 -   [WebRTC API (MDN)](https://developer.mozilla.org/zh-CN/docs/Web/API/WebRTC_API)
+    
+-   [WebRTC 接入模型/应用](https://help.aliyun.com/zh/model-studio/realtime-connect-model#conn-rtc-title)

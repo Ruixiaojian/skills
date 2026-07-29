@@ -386,3 +386,5 @@ function endSession(silent = false) {
 -   qwen3.5-omni-plus-realtime 模型客户端事件：[客户端事件](https://help.aliyun.com/zh/model-studio/client-events)
     
 -   qwen3.5-omni-plus-realtime 模型服务端事件：[服务端事件](https://help.aliyun.com/zh/model-studio/server-events)
+    
+-   [WebRTC 接入模型/应用](https://help.aliyun.com/zh/model-studio/realtime-connect-model#conn-rtc-title)

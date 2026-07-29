@@ -1,10 +1,16 @@
 # Dify
 
-Dify 是一个开源的大模型应用开发平台，您可以基于阿里云百炼提供的模型 API（按量付费或 Token Plan 个人版）来构建大模型应用。
+Dify 是一个开源的大模型应用开发平台，您可以基于阿里云百炼提供的模型 API 来构建大模型应用。
 
 ## **前提条件**
 
 您需要[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，并确保已开通阿里云百炼的模型服务。
+
+**重要**
+
+Dify 属于工作流/自动化平台，**不支持**使用 Token Plan 个人版、Token Plan 团队版和 Coding Plan 接入。这些套餐仅限在 AI 编程工具和 OpenClaw 类型 Agent 中使用，详见[不支持的工具类型](https://help.aliyun.com/zh/model-studio/more-tools)。
+
+在 Dify 中请使用按量付费的 API Key。将套餐 API Key 用于允许范围之外的调用将被视为违规或滥用，可能会导致订阅被暂停或 API Key 被封禁。
 
 ## **1\. 配置模型**
 

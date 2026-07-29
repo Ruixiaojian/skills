@@ -283,11 +283,11 @@
 
 [text-embedding-v4](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/text-embedding-v4)等
 
-文档类知识库的文本向量化
+文档搜索类、音视频搜索类等文本类知识库的文本向量化（音视频搜索类知识库先将音视频解析为文本，再对文本切片向量化）
 
 [qwen3-vl-embedding](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen3-vl-embedding)
 
-图片问答类、音视频搜索类知识库的多模态向量化
+图片问答类知识库，以及使用场景选择「视觉理解」的文档搜索类知识库的多模态向量化
 
 **排序模型**
 
@@ -297,7 +297,7 @@
 
 [qwen3-vl-rerank](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen3-vl-rerank)
 
-图片问答类、音视频搜索类知识库检索结果的二次排序（可选）
+图片问答类知识库，以及使用场景选择「视觉理解」的文档搜索类知识库检索结果的二次排序（可选）
 
 **路由模型**
 
@@ -327,9 +327,9 @@
     
 -   **调用的模型：**
     
-    -   文档搜索类知识库：[text-embedding-v4](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/text-embedding-v4) 或 [text-embedding-v3](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/text-embedding-v3)（文本向量模型）。
+    -   文档搜索类、音视频搜索类知识库：[text-embedding-v4](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/text-embedding-v4) 或 [text-embedding-v3](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/text-embedding-v3)（文本向量模型）。音视频搜索类知识库先将音视频文件解析为文本，再对文本切片向量化，因此调用文本向量模型。
         
-    -   图片问答类、音视频搜索类知识库：[qwen3-vl-embedding](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen3-vl-embedding)（多模态向量模型）。
+    -   图片问答类知识库，以及使用场景选择「视觉理解」的文档搜索类知识库：[qwen3-vl-embedding](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen3-vl-embedding)（多模态向量模型）。
         
 
 #### **2.2.2 知识检索**
@@ -340,7 +340,7 @@
         
     2.  **知识库路由（可选）：**若应用关联了多个知识库并开启了知识库路由功能，系统会调用 [qwen-plus](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen-plus-latest) 判断用户查询应路由至哪些知识库，该调用按 qwen-plus 的 Token 用量计费。
         
-    3.  **排序（可选）：**调用排序模型对初步检索到的结果进行重新排序，以提升最终答案的精准度。文档搜索类知识库使用 [qwen3-rerank](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen3-rerank)，图片问答类和音视频搜索类知识库使用 [qwen3-vl-rerank](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen3-vl-rerank)。
+    3.  **排序（可选）：**调用排序模型对初步检索到的结果进行重新排序，以提升最终答案的精准度。文本类知识库使用 [qwen3-rerank](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen3-rerank)，图片问答类知识库以及使用场景选择「视觉理解」的文档搜索类知识库使用 [qwen3-vl-rerank](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen3-vl-rerank)。
         
 -   **计费说明**
     
@@ -350,7 +350,7 @@
         
 -   **检索流程与计费关系详解**
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6004524871/CAEQaxiBgMCFrtjd3BkiIDA2ZWRiNzYxYzZiNzRkNGM5Mzg4NGQ5ZjhlODBlOWZj6139615_20260107153729.136.svg)
+    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3354925871/CAEQaxiBgMCFrtjd3BkiIDA2ZWRiNzYxYzZiNzRkNGM5Mzg4NGQ5ZjhlODBlOWZj6139615_20260107153729.136.svg)
     1.  **初步召回**
         
         系统根据以下参数从知识库中召回文本切片：
@@ -470,7 +470,7 @@
 
 ### 3.2 创建、更新与检索知识库
 
-以下示例基于文档搜索类知识库，使用 [**text-embedding-v4**](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/text-embedding-v4)（向量模型）与 [**qwen3-rerank**](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen3-rerank)（排序模型），价格均为 **0.0005 元/千 Token**。图片问答类和音视频搜索类知识库使用的多模态模型（[qwen3-vl-embedding](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen3-vl-embedding)、[qwen3-vl-rerank](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen3-vl-rerank)）价格请参见对应模型详情页。
+以下示例基于文档搜索类知识库，使用 [**text-embedding-v4**](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/text-embedding-v4)（向量模型）与 [**qwen3-rerank**](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen3-rerank)（排序模型），价格均为 **0.0005 元/千 Token**。图片问答类知识库，以及使用场景选择「视觉理解」的文档搜索类知识库使用的多模态模型（[qwen3-vl-embedding](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen3-vl-embedding)、[qwen3-vl-rerank](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/qwen3-vl-rerank)）价格请参见对应模型详情页。
 
 **计费逻辑**：费用 = Token 消耗量（以“千 Token”为单位） × 模型单价
 
