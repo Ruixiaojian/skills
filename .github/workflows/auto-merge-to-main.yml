@@ -26,19 +26,26 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Sync main back into branch (prevent squash-merge conflicts)
+      - name: Sync main back into branch (prevent merge conflicts)
         run: |
-          # Squash-merging PRs rewrites history on main, so this branch
-          # diverges from main after every merge and later PRs conflict.
+          # Merge commits keep history aligned, but the feature branch still
+          # gets new commits from the crawler that main doesn't have yet.
           # Merge main back in first. Conflicts are resolved by ownership:
           #   - skills/bailian-docs-llm-wiki/** : crawler output wins (ours)
           #   - everything else                 : main wins (theirs), since
           #     humans edit other skills and repo files on main.
-          # Pushing with the default GITHUB_TOKEN does NOT retrigger this
-          # workflow (recursive triggers are suppressed), so no loop.
+          # Pushing with GITHUB_TOKEN does NOT retrigger this workflow
+          # (recursive triggers are suppressed by default), so no loop.
           BRANCH="${{ github.ref_name }}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Clean up stale state from a previous failed run
+          rm -f .git/index.lock
+          if [ -d .git/MERGE_HEAD ] || [ -f .git/MERGE_HEAD ]; then
+            git merge --abort 2>/dev/null || true
+          fi
+
           git fetch origin main
           if git merge-base --is-ancestor origin/main HEAD; then
             echo "Branch already contains main, nothing to sync."
@@ -49,17 +56,27 @@ jobs:
             git diff --name-only --diff-filter=U -z |
             while IFS= read -r -d '' f; do
               case "$f" in
-                skills/bailian-docs-llm-wiki/*) side=2; flag=--ours ;;
-                *)                              side=3; flag=--theirs ;;
+                skills/bailian-docs-llm-wiki/*)
+                  # Crawler output wins — always take ours
+                  if git ls-files -u -- "$f" | awk '{print $2}' | grep -qx 2; then
+                    git checkout --ours -- "$f"
+                    git add -- "$f"
+                  else
+                    # ours deleted it → delete
+                    git rm -f --quiet -- "$f"
+                  fi
+                  ;;
+                *)
+                  # Main wins — always take theirs
+                  if git ls-files -u -- "$f" | awk '{print $2}' | grep -qx 3; then
+                    git checkout --theirs -- "$f"
+                    git add -- "$f"
+                  else
+                    # theirs deleted it → delete
+                    git rm -f --quiet -- "$f"
+                  fi
+                  ;;
               esac
-              # side present in index -> take that version; absent -> it was
-              # deleted on the winning side, so delete the file.
-              if git ls-files -u -- "$f" | awk '{print $3}' | grep -qx "$side"; then
-                git checkout "$flag" -- "$f"
-                git add -- "$f"
-              else
-                git rm -f --quiet -- "$f"
-              fi
             done
             git commit --no-edit
           fi
@@ -106,7 +123,7 @@ jobs:
         run: |
           PR_NUMBER="${{ steps.pr.outputs.number }}"
           echo "Merging PR #$PR_NUMBER..."
-          gh pr merge "$PR_NUMBER" --squash --delete-branch=false
+          gh pr merge "$PR_NUMBER" --merge --delete-branch=false
 
           echo "### PR #$PR_NUMBER merged" >> "$GITHUB_STEP_SUMMARY"
           echo "Branch \`${{ github.ref_name }}\` has been merged into \`main\`." >> "$GITHUB_STEP_SUMMARY"
