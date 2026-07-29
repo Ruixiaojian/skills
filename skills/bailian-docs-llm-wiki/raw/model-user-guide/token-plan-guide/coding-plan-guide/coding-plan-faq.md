@@ -1,7 +1,5 @@
 # 常见问题
 
-汇总 Token Plan 团队版 Coding Plan 使用过程中的常见问题与解决方法。
-
 ## **使用阿里云 AI 助理**
 
 推荐使用[阿里云 AI 助理](https://www.aliyun.com/ai-assistant/)，其知识库整合了阿里云官方帮助文档。
@@ -44,7 +42,7 @@
 3.  API Key 复制不完整、有空格或拼写错误
     
 
-1.  [使用套餐专属 API Key](https://help.aliyun.com/zh/model-studio/coding-plan-quickstart#2782cf93b1w8h)
+1.  [使用套餐 API Key](https://help.aliyun.com/zh/model-studio/coding-plan-quickstart#2782cf93b1w8h)
     
 2.  前往[Coding Plan 页面](https://bailian.console.aliyun.com/cn-beijing/?tab=plan#/efm/subscription/coding-plan)确认订阅是否过期
     
@@ -512,7 +510,7 @@ OpenClaw 开启思考模式的步骤。
     
     -   确保已填写有效的 API Key（非空、无多余空格）。
         
-    -   若使用 Coding Plan，请确保使用的是专属 Key（`sk-sp-xxx`）。
+    -   若使用 Coding Plan，请确保使用的是套餐 Key（`sk-sp-xxx`）。
         
     -   若 Web UI 中显示的是 `__OPENCLAW_REDACTED__`，表示 API Key 已保存，无需重填；若显示为空或 `YOUR_API_KEY`，则需重新填写。
         
@@ -535,11 +533,11 @@ OpenClaw 开启思考模式的步骤。
 
 1.  OpenClaw 配置错误
     
-    若 Base URL 或模型提供商配置有误，导致请求未进入 Coding Plan 专属通道，而是被路由到了 通用的API 调用，从而触发限流。
+    若 Base URL 或模型提供商配置有误，导致请求未进入 Coding Plan 通道，而是被路由到了 通用的API 调用，从而触发限流。
     
     -   若使用 Coding Plan 套餐，请核对[OpenClaw配置文件](https://help.aliyun.com/zh/model-studio/openclaw#0c6a73ae73mqr)中的 `models`、`agents`、`gateway`（含嵌套字段），确保与文档配置一致。例如：模型服务提供商的结构为`{ "models": { "providers": { "bailian": {...} } } }` 。
         
-    -   若当前未使用 Coding Plan 套餐，建议切换至 Coding Plan 以获取专属额度。
+    -   若当前未使用 Coding Plan 套餐，建议切换至 Coding Plan 以获取套餐额度。
         
 2.  超出套餐限额：在[Coding Plan 页面](https://bailian.console.aliyun.com/cn-beijing/?tab=plan#/efm/subscription/coding-plan)查看套餐用量情况。
     
@@ -596,6 +594,10 @@ OpenClaw 启动时出现以下报错信息：
 2.  确认 Coding Plan 的 API Key 配置在 `models.providers.bailian.apiKey`，详情请参见[OpenClaw](https://help.aliyun.com/zh/model-studio/openclaw)。
     
 
+### **Coding Plan 支持 Claude Code 的** [**Agent Teams**](https://code.claude.com/docs/en/agent-teams) **功能吗？**
+
+暂不支持。使用时会报错"model `claude-opus-4-6` is not supported."。
+
 ### **Coding Plan 支持 OpenAI Responses API 吗？**
 
 不支持。Coding Plan 仅支持 OpenAI Chat Completions 协议和 Anthropic Messages 协议，不支持 OpenAI Responses API。
@@ -604,11 +606,11 @@ OpenClaw 启动时出现以下报错信息：
 
 可能原因：
 
--   **API Key 格式错误**：API Key 填写为空、格式不正确、复制不完整，或在复制时误带了多余的空格。请确认 API Key 为 Coding Plan 专属 [API Key](https://bailian.console.aliyun.com/cn-beijing/?tab=plan#/efm/subscription/coding-plan)（以 `sk-sp-` 开头），复制完整且无空格。
+-   **API Key 格式错误**：API Key 填写为空、格式不正确、复制不完整，或在复制时误带了多余的空格。请确认 API Key 为 Coding Plan [API Key](https://bailian.console.aliyun.com/cn-beijing/?tab=plan#/efm/subscription/coding-plan)（以 `sk-sp-` 开头），复制完整且无空格。
     
--   **Coding Plan 订阅状态已过期或失效：** Coding Plan 专属 API Key依赖于套餐的订阅状态。如果 Coding Plan 套餐已到期或失效，对应的专属 Key 将无法继续使用。请确保Coding Plan 订阅状态是否仍然有效。
+-   **Coding Plan 订阅状态已过期或失效：** Coding Plan API Key 依赖于套餐的订阅状态。如果 Coding Plan 套餐已到期或失效，对应的 API Key 将无法继续使用。请确保Coding Plan 订阅状态是否仍然有效。
     
--   **使用了错误的Base URL**：配置了 Coding Plan 专属 API Key（以 `sk-sp-` 开头），但 Base URL 仍保留为阿里云百炼通用地址（如 [https://dashscope](https://dashscope).aliyuncs.com/compatible-mode/v1）。请根据[接入的AI工具](https://help.aliyun.com/zh/model-studio/use-chat-client-or-development-tool/)，将 Base URL 替换为下表中Coding Plan 专属地址。
+-   **使用了错误的Base URL**：配置了 Coding Plan API Key（以 `sk-sp-` 开头），但 Base URL 仍保留为阿里云百炼通用地址（如 [https://dashscope](https://dashscope).aliyuncs.com/compatible-mode/v1）。请根据[接入的AI工具](https://help.aliyun.com/zh/model-studio/use-chat-client-or-development-tool/)，将 Base URL 替换为下表中 Coding Plan 地址。
     
     **工具**
     
@@ -652,7 +654,7 @@ OpenClaw 启动时出现以下报错信息：
     
     https://coding\-intl.dashscope.aliyuncs.com/v1
     
--   **使用了错误的 API Key**：配置了 Coding Plan 的专属 Base URL，但 API Key 误填了阿里云百炼的通用 API Key（以 `sk-` 开头）。请将 API Key 更新为 Coding Plan 专属 [API Key](https://bailian.console.aliyun.com/cn-beijing/?tab=plan#/efm/subscription/coding-plan)。
+-   **使用了错误的 API Key**：配置了 Coding Plan 的 Base URL，但 API Key 误填了阿里云百炼的通用 API Key（以 `sk-` 开头）。请将 API Key 更新为 Coding Plan [API Key](https://bailian.console.aliyun.com/cn-beijing/?tab=plan#/efm/subscription/coding-plan)。
     
 -   **OpenClaw历史配置缓存导致配置错误：**请删除`~/.openclaw/agents/main/agent/models.json`文件中的`providers.bailian`配置项，并重启OpenClaw。
     
@@ -680,11 +682,11 @@ Coding Plan 仅限在编程工具（如 Claude Code、Qwen Code 等）中使用�
 
 如果开通 Coding Plan 后仍产生扣费或欠费，可能有以下原因：
 
-1.  **未正确配置专属 API Key 和 Base URL（最常见原因）**
+1.  **未正确配置套餐 API Key 和 Base URL（最常见原因）**
     
     -   原因：如果在 AI 工具中配置的是通用 API Key（格式为`sk-xxx`）和通用 Base URL（不含 coding 关键字），系统会将其识别为按量计费调用，产生按量计费的账单。
         
-    -   解决方案：请务必使用 Coding Plan 专属配置。**API Key** 的格式必须为 `sk-sp-xxx`，**Base URL** 必须包含 `coding` 关键字（如 `https://coding.dashscope.aliyuncs.com/xxx`）。详情请参见[获取套餐专属 API Key 和 Base URL](https://help.aliyun.com/zh/model-studio/coding-plan-quickstart#2782cf93b1w8h)。
+    -   解决方案：请务必使用 Coding Plan 套餐配置。**API Key** 的格式必须为 `sk-sp-xxx`，**Base URL** 必须包含 `coding` 关键字（如 `https://coding.dashscope.aliyuncs.com/xxx`）。详情请参见[获取套餐专属 API Key 和 Base URL](https://help.aliyun.com/zh/model-studio/coding-plan-quickstart#2782cf93b1w8h)。
         
 2.  **账单结算延时导致欠费（费用产生于开通Coding Plan套餐前）**
     
@@ -694,7 +696,7 @@ Coding Plan 仅限在编程工具（如 Claude Code、Qwen Code 等）中使用�
         
 3.  **同时配置了 Coding Plan和通用API调用凭证，但误用了通用API调用**
     
-    -   原因：若工具中同时保留了通用和专属两套配置，部分工具（如 OpenClaw）会自动路由到通用凭证进行请求，从而产生扣费。
+    -   原因：若工具中同时保留了通用和套餐两套配置，部分工具（如 OpenClaw）会自动路由到通用凭证进行请求，从而产生扣费。
         
     -   解决方案：建议在工具中移除通用 API 配置，并确保选用[Coding Plan 支持的模型](https://help.aliyun.com/zh/model-studio/coding-plan#2bbc4faf2ej0e)。例如在 OpenCode 中，请选择供应商标为 **Model Studio Coding Plan** 的模型。
         
@@ -940,7 +942,7 @@ Coding Plan 套餐中包含的模型（如 glm-5、qwen3.5-plus 等）均为完�
 
 API Key 格式
 
-`sk-sp-xxx`（专属 Key）
+`sk-sp-xxx`（套餐 Key）
 
 `sk-xxx`（百炼通用 Key）
 

@@ -1,41 +1,44 @@
 # model production
 
-model production 是百炼平台中用于将基础模型转化为可交付、可服务化模型的关键流程，涵盖微调训练与在线部署两个核心阶段。开发者可通过 API 或控制台完成模型定制与服务发布，整个流程支持端到端的生命周期管理。该能力依赖于 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 和 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 两套独立但协同的 API。
+`model production` 是百炼平台中用于将训练/微调完成的模型投入实际推理服务的关键流程，涵盖模型部署与微调作业管理两大核心能力。开发者可通过统一 API 接口完成从训练到上线的闭环操作。该模块不提供训练数据托管或自动超参搜索，仅聚焦于生产就绪模型的生命周期管理。
 
 ## 支持的模型/功能
 
-- 支持对百炼托管的基础模型（如 Qwen 系列）进行监督微调（Supervised Fine-tuning），不支持 RLHF 或持续预训练；
-- 支持将微调完成的模型或通过 `import_model` 导入的第三方模型（需符合 ONNX/Triton 格式要求）部署为 HTTP 推理服务；
-- 提供异步任务管理：微调任务（`fine_tuning_job`）与部署实例（`deployment`）均为独立资源，支持状态轮询与日志获取。
-
-> **注意**：文档 1 中“通过微调训练定制专属模型”未明确限定仅支持监督微调；而文档 2 的实际 API 实现和错误码说明（见 `deployments-api.md` 的 `400 Bad Request` 响应示例）明确拒绝非 SFT 类型的训练产物。因此，当前仅 SFT 模型可进入部署流程，其他微调方式暂不受支持。
+- **模型部署**：支持将已微调（fine-tuned）或手动导入的模型发布为 HTTP 可调用的在线推理服务，具备自动扩缩容与健康检查能力 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)  
+- **微调作业管理**：支持创建、查询、终止微调任务，可指定基础模型、训练数据集、超参配置等；微调完成后模型自动进入待部署状态 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)  
+- **不支持**：零样本/少样本即时推理（需调用 `inference` 模块）、模型权重直接下载、跨区域模型复制
 
 ## 关键参数
 
-| 参数 | 说明 | 示例值 | 来源 |
-|------|------|--------|------|
-| `base_model` | 微调所用的基础模型 ID | `qwen2-7b-chat` | [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) |
-| `training_file` | 训练数据集文件 ID（需已上传至百炼对象存储） | `ft-dataset-abc123` | [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) |
-| `model_id` | 部署时指定的模型唯一标识（微调成功后生成的 `fine_tuned_model_id` 或导入模型 ID） | `ft-qwen2-7b-chat-xyz789` | [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) |
-| `instance_type` | 推理实例规格（如 `gpu.2xlarge`、`cpu.medium`） | `gpu.2xlarge` | [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) |
+| 参数 | 说明 | 必填 | 示例 |
+|------|------|------|------|
+| `model_id` | 微调后生成的唯一模型 ID（如 `ft-xxx`）或导入模型 ID | 是 | `ft-abc123` |
+| `deployment_name` | 部署服务的唯一标识符，全局唯一 | 是 | `prod-qa-bot-v2` |
+| `instance_type` | 推理实例规格（`gpu.t4.1x` / `gpu.a10.2x` 等） | 是 | `gpu.a10.2x` |
+| `max_concurrency` | 单实例最大并发请求数（1–100） | 否，默认 10 | `50` |
+
+> **注意**：文档 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 中提及 `instance_type` 支持 `cpu.small`，但当前 API 实际返回 `400 Unsupported instance type` 错误；该参数仅接受 GPU 规格，CPU 类型已下线，请以 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 中“部署兼容性说明”附录为准。
 
 ## 使用方式
 
-1. **微调启动**：调用 `POST /v1/fine_tuning_jobs`，传入 `base_model`、`training_file` 及超参（如 `epoch`、`learning_rate`）；
-2. **等待完成**：轮询 `GET /v1/fine_tuning_jobs/{job_id}`，直到 `status == "succeeded"`，提取返回中的 `fine_tuned_model_id`；
-3. **部署服务**：调用 `POST /v1/deployments`，以 `fine_tuned_model_id` 作为 `model_id`，指定 `instance_type` 与 `scaling_config`；
-4. **调用推理**：部署成功后，使用返回的 `endpoint_url` 发送 `POST /v1/chat/completions` 请求（兼容 OpenAI 格式）。
+1. **启动微调**：调用 `POST /v1/fine_tuning_jobs` 提交训练任务  
+2. **等待完成**：轮询 `GET /v1/fine_tuning_jobs/{job_id}` 直至 `status == "succeeded"`，获取输出 `model_id`  
+3. **部署模型**：调用 `POST /v1/deployments`，传入 `model_id` 与 `deployment_name` 等参数  
+4. **调用服务**：使用返回的 `endpoint_url` 发起 `POST /v1/chat/completions` 请求（需携带 `Authorization: Bearer <token>`）
+
+完整示例见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 的「快速开始」章节。
 
 ## 限制和注意事项
 
-- 单次微调任务最大训练时长为 72 小时，超时自动终止且不退款；
-- 同一 `model_id` 最多允许 5 个并发部署实例（按 `deployment_name` 区分），超出需先删除旧实例；
-- 微调输出模型不可直接用于多模态推理——即使基础模型支持视觉输入，SFT 流程默认冻结非文本模态权重，此行为在 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 中未声明，但在实际 API 响应中会返回 `multimodal_enabled: false` 字段；
-- 部署实例启动后不可变更 `instance_type`，如需调整，必须删除重建。
+- 单个账号最多同时运行 5 个活跃部署（`status == "running"`），超出需先删除闲置部署  
+- 微调作业最长运行时限为 72 小时，超时自动终止且不计费  
+- 部署服务启动后不可修改 `instance_type` 或 `max_concurrency`，如需调整须先 `DELETE /v1/deployments/{name}` 再重建  
+- 所有部署默认启用 TLS 1.2+，不支持 HTTP 明文访问  
+- 模型 ID 一旦部署成功即绑定至该 deployment，不可复用至其他 deployment 名称
 
 ## 来源文档
 
-- [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)
 - [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)
+- [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)
 
 

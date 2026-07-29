@@ -20,8 +20,6 @@
 
 -   **创建会话时挂载**：在 `resources` 字段中指定资源列表和挂载路径。
     
--   **运行时追加**：通过 **POST** `/sessions/{session_id}/resources` 追加，实时生效，无需重启会话。
-    
 
 ### 路径约定
 
@@ -30,11 +28,3 @@
 ### 会话隔离
 
 挂载资源时，平台做一份内部拷贝放入会话沙箱。会话内的修改不影响原始资源，也不影响挂载了同一资源的其他会话。卸载后会话内的副本被清理，原始资源不受影响。
-
-## 下一步
-
--   [文件上传与挂载](https://help.aliyun.com/zh/model-studio/managed-agents-file)：上传文件并挂载到会话。
-    
--   [发起会话](https://help.aliyun.com/zh/model-studio/managed-agents-session-event)：创建会话时指定挂载资源。
-    
--   [定义 Agent](https://help.aliyun.com/zh/model-studio/managed-agents-agent-definition)：配置系统提示词和工具。

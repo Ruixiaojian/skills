@@ -74,7 +74,7 @@ npm install -g @anthropic-ai/claude-code
     
 -   **temperature**：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
     
--   **reasoning\_effort**：控制推理深度，可选 xhigh、high、low，默认 xhigh。
+-   **reasoning\_effort**：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
     
 
 ### Token Plan 团队版
@@ -104,7 +104,7 @@ npm install -g @anthropic-ai/claude-code
     
 -   **temperature**：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
     
--   **reasoning\_effort**：控制推理深度，可选 xhigh、high、low，默认 xhigh。
+-   **reasoning\_effort**：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
     
 
 ### Coding Plan

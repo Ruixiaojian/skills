@@ -101,23 +101,6 @@ Dify 具有多种大模型应用类型，请选择您使用的类型进行参考
 
 > Embedding 模型暂时无法选择multimodal-embedding-v1模型，敬请关注后续动态。
 
-## **Token Plan 个人版**
-
-如果您已订阅 Token Plan 个人版，可通过 OpenAI-API-compatible 插件接入，无需使用千问插件。
-
-1.  在 [Dify 市场](https://cloud.dify.ai/plugins?category=discover)安装 **OpenAI-API-compatible** 插件。
-    
-2.  在插件设置中配置以下信息：
-    
-    -   **API endpoint URL**：`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
-        
-    -   **API Key**：填入 Token Plan 个人版专属 API Key。[获取 API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)
-        
-3.  在模型列表中选择 Token Plan 个人版支持的模型，即可开始使用。支持的模型请参考[Token Plan 个人版支持模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
-    
-
-常见问题请参考[Token Plan 常见问题](https://help.aliyun.com/zh/model-studio/token-plan-team-faq)。
-
 ## **常见问题**
 
 ### **Q1：在千问插件内配置 API Key 报错？**

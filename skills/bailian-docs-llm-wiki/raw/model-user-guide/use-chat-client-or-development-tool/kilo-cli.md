@@ -112,7 +112,7 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
     
 -   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
     
--   reasoning\_effort：控制推理深度，可选 xhigh、high、low，默认 xhigh。
+-   reasoning\_effort：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
     
 
 ### Token Plan 团队版
@@ -261,7 +261,7 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
     
 -   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
     
--   reasoning\_effort：控制推理深度，可选 xhigh、high、low，默认 xhigh。
+-   reasoning\_effort：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
     
 
 ### Coding Plan
@@ -350,11 +350,11 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
 
 将 `YOUR_API_KEY` 替换为[阿里云百炼 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。可用模型请参考[OpenAI 兼容 - 支持的模型](https://help.aliyun.com/zh/model-studio/anthropic-api-messages#07833dedefft7)。
 
-`baseURL` 按地域设置，API Key 需与所选地域对应：
+`baseURL` 按地域设置（请将 URL 中的 `{WorkspaceId}` 替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)），API Key 需与所选地域对应：
 
--   华北2（北京）：`https://dashscope.aliyuncs.com/compatible-mode/v1`
+-   华北2（北京）：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
     
--   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
     
 -   美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
     
@@ -367,7 +367,7 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
       "npm": "@ai-sdk/openai-compatible",
       "name": "Alibaba Cloud Model Studio",
       "options": {
-        "baseURL": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "baseURL": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
         "apiKey": "YOUR_API_KEY"
       },
       "models": {

@@ -1,6 +1,6 @@
 # 接入多模态生成模型
 
-Token Plan 中的图像生成、视频生成模型需通过工具的扩展机制（Skill、Slash Command 或 Agent）接入。
+Token Plan 中的图像生成、视频生成、语音合成模型需通过工具的扩展机制（Skill、Slash Command 或 Agent）接入。
 
 ## **示例：在 Claude Code 中接入图像生成模型**
 
@@ -8,7 +8,7 @@ Token Plan 中的图像生成、视频生成模型需通过工具的扩展机制
 
 ### **步骤一：创建 Slash Command**
 
-将套餐专属 API Key（以 `sk-sp-` 为前缀）配置为环境变量 `$ANTHROPIC_AUTH_TOKEN`，供后续 curl 鉴权使用。
+将套餐 API Key（以 `sk-sp-` 为前缀）配置为环境变量 `$ANTHROPIC_AUTH_TOKEN`，供后续 curl 鉴权使用。
 
 在项目根目录创建 `.claude/commands/text-to-image.md`，写入以下内容：
 
@@ -53,7 +53,7 @@ curl -s -X POST "https://token-plan.cn-beijing.maas.aliyuncs.com/api/v1/services
 
 ### **步骤一：创建 Slash Command**
 
-将套餐专属 API Key（以 `sk-sp-` 为前缀）配置为环境变量 `$ANTHROPIC_AUTH_TOKEN`，供后续 curl 鉴权使用。
+将套餐 API Key（以 `sk-sp-` 为前缀）配置为环境变量 `$ANTHROPIC_AUTH_TOKEN`，供后续 curl 鉴权使用。
 
 在项目根目录创建 `.claude/commands/text-to-video.md`，写入以下内容：
 
@@ -110,6 +110,50 @@ done
 ### **步骤二：生成视频**
 
 在 Claude Code 中输入 `/text-to-video 一只白色的猫在阳台上晒太阳`。如需使用其他视频生成模型，在指令中写明模型名即可，例如 `/text-to-video 用 happyhorse-1.1-r2v 生成一只猫跳跃的视频`。
+
+## **示例：在 Claude Code 中接入语音合成模型**
+
+以 Claude Code 为例，通过 Slash Command 接入语音合成模型。语音合成为同步接口，支持非流式和流式两种调用模式。
+
+### **步骤一：创建 Slash Command**
+
+将套餐 API Key（以 `sk-sp-` 为前缀）配置为环境变量 `$ANTHROPIC_AUTH_TOKEN`，供后续 curl 鉴权使用。
+
+在项目根目录创建 `.claude/commands/text-to-speech.md`，写入以下内容：
+
+```
+调用 Token Plan 语音合成 API，将文本转为语音文件。
+
+用户需求：$ARGUMENTS
+
+## 步骤
+
+1. 从用户需求中提取 text（待合成文本）、voice（音色，默认 longanhuan_v3.6）、format（音频格式，默认 mp3）、sample_rate（采样率，默认 24000）。若用户明确指定了模型，使用用户指定的模型名；否则默认使用 qwen-audio-3.0-tts-plus。
+
+2. 调用 API 合成语音（使用 Bash 工具执行 curl）：
+
+```
+curl -s -X POST "https://token-plan.cn-beijing.maas.aliyuncs.com/api/v1/services/audio/tts/SpeechSynthesizer" \
+  -H "Authorization: Bearer $ANTHROPIC_AUTH_TOKEN" \
+  -H "Content-Type: application/json" \
+  -o "speech_$(date +%Y%m%d_%H%M%S).<format>" \
+  -d '{
+    "model": "<model>",
+    "input": {
+      "text": "<text>",
+      "voice": "<voice>",
+      "format": "<format>",
+      "sample_rate": <sample_rate>
+    }
+  }'
+```
+
+3. 向用户展示生成的音频文件路径。
+```
+
+### **步骤二：合成语音**
+
+在 Claude Code 中输入 `/text-to-speech 你好，欢迎使用百炼`。
 
 ## **其他工具**
 

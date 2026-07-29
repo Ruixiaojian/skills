@@ -2053,7 +2053,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 -   如需更高调用频率，可参考[限流](https://help.aliyun.com/zh/model-studio/rate-limit)申请提额。
     
 
-## **429-**Throttling.RateQuota/LimitRequests/limit\_requests
+## **429-**Throttling.RateQuota/LimitRequests/limit\_requests/ResourceExhausted/Too many requests
 
 ### **You have exceeded your request limit./Requests rate limit exceeded, please try again later.** /You exceeded your current requests list.
 
@@ -2116,21 +2116,6 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 ### **The postpaid bill is overdue.**
 
 **原因：** 模型推理商品已失效。
-
-## **429-**ResourceExhausted
-
-### Throttling.ResourceExhausted、Too many requests.
-
-**原因：**[TPM 预留](https://help.aliyun.com/zh/model-studio/tpm-reservation)或[模型部署](https://help.aliyun.com/zh/model-studio/model-deployment-introduction)的模型调用触发限流。
-
-**解决方案**：
-
-1.  模型调用重试时设置指数退避延迟。
-    
-2.  根据[模型监控](https://help.aliyun.com/zh/model-studio/model-telemetry)指标扩容 TPM 预留或部署的模型。
-    
-3.  针对 TPM 预留，可以通过开启 “自动溢出至按 token 付费”的[溢出策略](https://help.aliyun.com/zh/model-studio/tpm-reservation#tpm-params-table)，提升 TPM 预留性能。
-    
 
 ## **430-Audio.**DecoderError
 

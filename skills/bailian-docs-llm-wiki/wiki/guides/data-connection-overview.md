@@ -1,39 +1,52 @@
 # data connection overview
 
-[数据连接](../concepts/data-connection.md)是阿里云百炼平台统一管理外部数据源的核心能力，为应用提供安全、可控的数据接入通道。它支持结构化与非结构化数据的接入，并通过平台托管或流处理两种模式实现数据访问，是构建知识增强型智能体（Agent）和 RAG 应用的基础依赖。所有连接器均需在业务空间内创建并绑定至具体应用才能生效。
+数据连接是阿里云百炼平台统一管理外部数据源的核心能力，为应用提供安全、可控的数据接入通道。它支持结构化与非结构化数据的接入，并通过平台托管或流处理两种模式实现数据访问与实时查询。所有连接器均需在控制台创建并配置权限后方可被智能体或API调用。
 
 ## 支持的模型/功能
 
-[数据连接](../concepts/data-connection.md)器按数据访问模式分为两类：
+数据连接器按数据访问方式分为两类：
 
-- **平台托管类**：适用于文件（PDF/Word/Markdown 等）、表格（CSV/Excel 等）数据，数据被导入百炼平台或自有 OSS 存储后进行向量化索引，支持语义检索（`searchFile`、`searchTable` 等工具）。详见 [数据连接](../../raw/application-user-guide/data-connection-overview/data-connection.md) 中“连接器类型”表格。
-- **流处理类**：适用于 MySQL、PostgreSQL、PolarDB-X 2.0、语雀、OSS 等实时数据源，数据保留在原系统，应用通过 SQL 查询或 API 调用按需拉取，支持 `executeSQL`（仅 DMS 导入方式）、`searchOSSFile` 等动态工具。该能力依赖底层服务集成，具体支持范围请参考 [数据连接](../../raw/application-user-guide/data-connection-overview/data-connection.md) 的“前置条件”章节。
+- **平台托管型**：适用于文件（PDF/Word/Markdown等）和表格（CSV/Excel等）类非实时数据。数据导入后由百炼平台统一向量化并构建知识库索引，支持语义检索、标签过滤及多模态解析（如[文档理解](https://help.aliyun.com/zh/document-mind/product-overview/overview-of-document-understanding#9a4f5fb91fpps)中描述的Qwen VL解析、音视频解析等）。详见 [原文标题](../../raw/application-user-guide/data-connection-overview/data-connection.md) 中“导入文件”与“导入表格”章节。
 
-> **注意**：MySQL、PostgreSQL 和 PolarDB-X 2.0 连接器中，“执行 SQL 查询”功能**仅限通过 DMS 导入数据源方式创建的连接器**；自定义数据源方式创建的连接器不支持 `executeSQL` 工具调用。该限制在 [数据连接](../../raw/application-user-guide/data-connection-overview/data-connection.md) 多处明确强调，开发者须严格遵循。
+- **流处理型**：适用于需实时访问的数据库与在线服务，包括 MySQL、PostgreSQL、PolarDB-X 2.0、语雀和 OSS。其中仅通过 **DMS 导入数据源** 方式创建的 MySQL/PostgreSQL/PolarDB-X 连接器支持执行 SQL 查询；其余方式（如自定义数据源）仅支持元数据发现与基础连接验证。OSS 连接器需开通[向量检索服务](https://help.aliyun.com/zh/oss/user-guide/vector-retrieval/)才可使用 `searchOSSFile` 等工具。该设计细节在 [原文标题](../../raw/application-user-guide/data-connection-overview/data-connection.md) 的各连接器说明中明确区分。
+
+> **注意**：语雀连接器**仅支持公网版本语雀**，不兼容私有部署版；OSS 连接器**不支持归档、冷归档或深度冷归档存储类型**的 Bucket —— 这些限制在 [原文标题](../../raw/application-user-guide/data-connection-overview/data-connection.md) “OSS连接器”小节末尾有明确标注，开发者须提前校验存储类型。
 
 ## 关键参数
 
-| 参数 | 说明 | 必填性 | 备注 |
-|------|------|--------|------|
-| `connectorName` | 连接器唯一标识名称，建议语义化命名（如 `hr-policy-pdf`） | 是 | 控制台创建时必填，API 创建时亦为必需字段 |
-| `description` | 描述数据内容与用途，直接影响智能体对连接器的调用准确性 | 是 | 建议包含数据范围、更新频率、关键字段说明等信息 |
-| `storageType` | 平台托管类连接器特有：`platform`（百炼内置存储）或 `oss`（自有 Bucket） | 是（平台托管类） | OSS 存储需提前添加 `bailian-connector-access` 标签（值 `ReadAndWrite`） |
-| `dataSourceType` | 流处理类连接器特有：`rds` / `self-built` / `dms` 等 | 是（流处理类） | PolarDB-X 2.0 仅支持 `rds`（阿里云实例），不支持自建 |
-| `networkType` | 流处理类网络策略：`public` / `private` | 是（流处理类） | PolarDB-X 2.0 **仅支持 `private`**；MySQL/PostgreSQL 公网需配置白名单 IP 段 `100.64.0.0/16` |
+| 参数类别 | 关键字段 | 说明 |
+|----------|----------|------|
+| **通用** | 连接器名称、描述 | 名称需唯一且易识别；描述影响智能体调用准确度，建议包含数据内容与用途（如“财务部2024Q1销售报表”）。 |
+| **平台托管（文件/表格）** | 存储位置（平台存储 / 自有OSS） | 平台存储提供免费额度（文件：200,000个/1TB；表格：1TB），超限后转按量付费；自有OSS需添加 `bailian-connector-access` 标签（值 `ReadAndWrite`）。 |
+| **流处理（数据库）** | 数据库地址、端口、用户名、密码、dbName（PostgreSQL必填） | MySQL 默认端口 3306，PostgreSQL 默认 5432；PolarDB-X 2.0 **仅支持私网**，且必须选择所属地域。 |
+| **流处理（语雀/OSS）** | Tenant access token（语雀）、Bucket 名称（OSS） | 语雀 [Token](../concepts/token.md) 需从[语雀开放 API](https://www.yuque.com/yuque/developer/api) 获取；OSS Bucket 需添加 `bailian-datahub-access` 标签（值 `read`），并确保当前账号具备访问权限。 |
 
 ## 使用方式
 
-1. **控制台创建**：进入 [数据连接](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/connector/list) 页面 → 单击“创建连接器” → 选择类型 → 填写基本信息与连接参数 → 完成授权与连通性检测 → 点击确认。  
-2. **API 创建**：调用 `CreateConnector` 接口（需 RAM 权限 `bailian:CreateConnector`），请求体需按连接器类型携带对应 schema 字段（如 `mysqlConfig` 或 `ossConfig`）。完整参数定义见 [数据连接](../../raw/application-user-guide/data-connection-overview/data-connection.md) “创建连接器”各小节。  
-3. **绑定应用**：创建成功后，在应用编辑页的「知识库」或「工具」模块中显式启用该连接器，方可被智能体调用。  
-4. **调用工具**：在 Agent 提示词或 Function Calling 配置中引用对应工具名（如 `searchFile`、`executeSQL`），参数需符合连接器类型约束（例如 `executeSQL` 仅对 DMS 方式创建的 MySQL/PostgreSQL/PolarDB-X 连接器有效）。
+1. **创建连接器**：进入 [数据连接](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/connector/list) 页面 → 单击“创建连接器” → 选择类型 → 填写基本信息与连接参数 → （可选）点击“开始检测”或“连接检测”验证连通性 → 确认创建。
+
+2. **导入数据（仅平台托管型）**：
+   - 文件连接器：进入详情页 → 选择类目 → “导入数据” → 本地上传 → 选择解析方式（默认/自定义）→ 配置标签（可选）→ 确认。
+   - 表格连接器：进入详情页 → 数据表管理 → 新建或选择数据表 → 上传 Excel 或自定义表头（列名、类型必填，描述建议填写）→ 确认。
+
+3. **调用数据**：
+   - 平台托管型：通过知识库检索接口（如 `retrieveFromKnowledgeBase`）或智能体内置工具自动触发；
+   - 流处理型：MySQL/PostgreSQL/PolarDB-X 需通过 DMS 导入方式创建后，方可使用 `executeSQL` 工具；语雀/OSS 使用对应工具（如 `searchYuQueDoc`、`searchOSSFile`）。
+
+完整操作流程与界面指引见 [原文标题](../../raw/application-user-guide/data-connection-overview/data-connection.md)。
 
 ## 限制和注意事项
 
-- **容量与时效**：平台托管文件连接器中，导入文件仅保留最近 **90 天** 的查看权限（后台存储仍存在）；表格连接器无此限制，但列结构一旦创建**不可修改**（见 [数据连接](../../raw/application-user-guide/data-connection-overview/data-connection.md) “导入表格”章节）。
-- **OSS 特殊要求**：使用 OSS 连接器前，目标 Bucket **必须开通向量检索服务**，否则 `searchOSSFile` 等工具将不可用；且不支持归档/冷归档/深度冷归档存储类型。
-- **权限与网络**：所有流处理类连接器均依赖 SLR（服务关联角色）授权，首次创建时需完成 DTS、DMS、RDS 等多角色授权；MySQL/PostgreSQL 公网访问需将百炼服务 IP 段 `100.64.0.0/16` 加入数据库白名单。
-- **解析能力边界**：文件连接器的“电子文档解析”**不支持插图与图表识别**；若需理解图像内容，必须选用“大模型文档解析”或“Qwen VL 解析”，且需应用已配置支持视觉理解的模型（如 Qwen-VL）。
+- **权限要求**：RAM 用户需主账号授予 `AliyunBailianFullAccess` 或最小权限策略（含 `bailian:CreateConnector`、`bailian:DescribeConnectors` 等动作），授权方法参见[权限管理](https://help.aliyun.com/zh/model-studio/application-permission-management-overview)。
+- **网络与配置依赖**：
+  - PostgreSQL 必须将 `wal_level` 设置为 `logical`，且自建实例需配置 `listen_addresses` 允许 `100.64.0.0/16` 访问；
+  - MySQL/PolarDB-X 自建实例需确保网络可达，并将百炼服务 IP 段加入白名单；
+  - PolarDB-X 2.0 **不支持公网连接**，且仅限阿里云实例。
+- **文件处理限制**：
+  - 不支持直接导入 JSON、CSV、YAML；需先转为 XLSX/XLS；
+  - 导入文件仅保留最近 90 天的查看记录（但数据本身不删除）；
+  - 电子文档解析不支持插图与图表识别；如需图文理解，必须选用“大模型文档解析”或“Qwen VL解析”。
+- **OSS 特别说明**：若 Bucket 启用 Referer 防盗链，须将 `*.console.aliyun.com` 加入白名单 Referer，否则连接失败。
 
 ## 来源文档
 

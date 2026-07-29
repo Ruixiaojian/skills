@@ -49,17 +49,7 @@ curl -X POST "https://{workspace_id}.cn-beijing.maas.aliyuncs.com/api/v1/agentst
     "name": "data-analyst",
     "model": {"id": "qwen3-max"},
     "system": "你是数据分析专家，使用 pandas 处理 CSV 文件。",
-    "tools": [
-      {
-        "type": "builtin_toolkit",
-        "default_config": {"enabled": true},
-        "configs": [
-          {"name": "bash", "enabled": true},
-          {"name": "read", "enabled": true},
-          {"name": "write", "enabled": true}
-        ]
-      }
-    ]
+    "tools": [{"type": "builtin_toolkit"}]
   }'
 ```
 
@@ -70,15 +60,7 @@ agent = client.agents.create(
     name="data-analyst",
     model="qwen3-max",
     system_prompt="你是数据分析专家，使用 pandas 处理 CSV 文件。",
-    tools=[
-        {"type": "builtin_toolkit",
-         "default_config": {"enabled": True},
-         "configs": [
-             {"name": "bash", "enabled": True},
-             {"name": "read", "enabled": True},
-             {"name": "write", "enabled": True},
-         ]}
-    ],
+    tools=[{"type": "builtin_toolkit"}],
 )
 print(agent.id)       # "agent_xxx"
 print(agent.version)  # 1
@@ -303,13 +285,3 @@ try (AgentStudioEventStream stream = client.sessions().events().stream("sesn_xxx
 ```
 
 调试完成后，点击**返回智能体列表**进入管理页面。前三步创建的智能体、环境、会话均已保存，可随时在对应菜单中查看和编辑。
-
-## 下一步
-
-**[管理会话与事件](t6679527.xdita#)** 创建会话、发送消息与事件流
-
-**[智能体](t6679515.xdita#)** 配置模型、提示词与工具
-
-**[配置运行环境](t6679519.xdita#)** 沙箱类型、预装包与网络策略
-
-**[API 总览与认证](t6645508.xdita#)** 在业务代码中集成 Managed Agents

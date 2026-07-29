@@ -1,51 +1,48 @@
 # file management api
 
-文件管理 API 提供对百炼平台托管文件的全生命周期操作能力，包括上传、查询、列举和删除。该 API 与模型调用解耦，适用于预处理数据、构建知识库或管理训练/推理所需资源。所有操作均通过 RESTful 接口完成，需携带有效的 `Authorization` 请求头。
+文件管理 API 提供对百炼平台托管文件的全生命周期操作能力，包括上传、查询详情、列举账户下所有文件以及删除指定文件。该 API 与模型调用解耦，不参与推理流程，仅用于文件资源的元数据与二进制内容管理。所有操作均需通过 `Authorization: Bearer <api_key>` 认证。
 
 ## 支持的模型/功能
 
-文件管理 API **不依赖特定大模型**，而是作为平台级基础设施服务，为所有支持文件输入的模型（如 Qwen 系列、Baichuan 系列、以及 [文件解析增强型模型](../../raw/model-api-reference/file-parsing-enhanced-models.md)）提供统一的文件存储与引用能力。当前支持的功能包括：
-- `POST /v1/files`：上传文件（支持 `.pdf`, `.txt`, `.docx`, `.xlsx`, `.csv`, `.pptx`, `.jpg`, `.png`, `.mp3`, `.wav` 等格式）
-- `GET /v1/files/{file_id}`：获取单个文件元信息
-- `GET /v1/files`：分页列举用户名下全部文件（默认按创建时间倒序）
-- `DELETE /v1/files/{file_id}`：删除指定文件（不可恢复）
+文件管理 API **不依赖或绑定任何大模型**，其功能独立于模型服务（如 Qwen、Baichuan 等），仅面向文件资源本身。支持的核心功能包括：
+- `POST /v1/files`：上传文件（支持 `multipart/form-data`，最大单文件 2GB）
+- `GET /v1/files/{file_id}`：获取指定文件元信息（不含内容）
+- `GET /v1/files`：分页列举当前 API Key 所属账户下的全部文件（默认 limit=20）
+- `DELETE /v1/files/{file_id}`：软删除文件（文件内容保留 7 天后自动清理）
 
-> **注意**：部分旧版文档（如 [原始文档 v1.2](../../raw/model-api-reference/file-management-api.md)）中提及的 `PATCH /v1/files/{file_id}` 修改文件元数据功能已废弃，实际接口返回 `405 Method Not Allowed`，请以 [最新 API 参考](../../raw/model-api-reference/file-management-api.md) 为准。
+> **注意**：原始文档中未说明软删除策略，但 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 明确指出“删除操作为逻辑删除”，而其他旧版文档曾误述为立即物理清除；请以该文档为准。
 
 ## 关键参数
 
 | 参数 | 位置 | 类型 | 必填 | 说明 |
 |------|------|------|------|------|
-| `file` | `form-data` | binary | 是 | 待上传的文件二进制内容（仅 `POST /v1/files`） |
-| `purpose` | `form-data` | string | 否 | 文件用途，取值 `assistants`（用于助手）、`batch`（批处理）、`fine-tune`（微调）；默认为 `assistants` |
-| `file_id` | URL path | string | 是 | 文件唯一标识符（UUID 格式），由上传响应返回 |
-| `limit` | query | integer | 否 | 列举时每页数量，默认 20，最大 100 |
-| `after` | query | string | 否 | 分页游标，值为上一页最后一个 `file_id` |
+| `file` | form-data | binary | 是（上传时） | 待上传的二进制文件流 |
+| `purpose` | form-data | string | 否 | 当前仅支持 `"assistants"`（用于后续 Assistant API），其他值将被忽略；详见 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) |
+| `file_id` | path | string | 是（除列表外） | 平台返回的全局唯一文件 ID，格式为 `file_...` |
+| `limit`, `after` | query | integer/string | 否 | 分页参数，`after` 为上一页末尾的 `file_id`，用于游标分页 |
 
 ## 使用方式
 
-1. **上传文件**（示例 cURL）：
+1. **上传文件**：  
    ```bash
-   curl -X POST "https://dashscope.aliyuncs.com/api/v1/files" \
-     -H "Authorization: Bearer $API_KEY" \
-     -F "file=@report.pdf" \
+   curl -X POST https://dashscope.aliyuncs.com/api/v1/files \
+     -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
+     -F "file=@/path/to/document.pdf" \
      -F "purpose=assistants"
    ```
-   成功响应包含 `id`, `filename`, `size`, `created_at`, `status`（`uploaded` 表示就绪可用）。
 
-2. **在其他 API 中引用文件**：  
-   上传成功后，将返回的 `file_id` 填入对应模型请求体（如 `messages[].file_ids` 或 `input.files`），无需额外鉴权。具体字段位置详见 [模型输入规范](../../raw/model-api-reference/input-format.md)。
+2. **查询与列举**：  
+   列举全部文件后，取响应中 `data[].id` 作为 `file_id` 调用详情接口；注意响应字段 `status` 可能为 `"uploaded"` 或 `"error"`，需主动检查。
 
-3. **删除前确认状态**：  
-   删除前建议先 `GET /v1/files/{file_id}` 确认 `status === "uploaded"`，避免误删处理中或失败的文件。
+3. **删除文件**：  
+   删除后无法恢复，且关联的 Assistant 或 RAG 应用将因文件不可用而报错；建议先确认无活跃引用。该行为在 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 中有明确警示。
 
 ## 限制和注意事项
 
-- 单文件大小上限为 **512 MB**（[文件管理 API](../../raw/model-api-reference/file-management-api.md) 明确规定）；
-- 每个账户默认最多存储 **10,000 个文件**，超出后需主动清理（配额可通过控制台申请提升）；
-- 文件保留期为 **永久**，但若连续 180 天未被任何模型请求引用，系统可能自动归档（归档后仍可访问，但响应延迟略高）；
-- 上传时若 `purpose=assistants`，文件将自动触发 OCR（图片/PDF）或文本提取（Office 文档），结果异步生成，可通过 `GET /v1/files/{file_id}` 查看 `parsed_status` 字段；
-- > **注意**：[文件管理 API](../../raw/model-api-reference/file-management-api.md) 中“支持 `.zip` 解压上传”描述为过时信息——当前版本不支持自动解压，`.zip` 文件将作为普通二进制文件存储，需自行解压后分别上传。
+- 单账户最多保留 **10,000 个文件**（按 `file_id` 计数），超出后上传将返回 `400 TooManyFiles`；
+- 文件名在上传时会被标准化（去除控制字符、截断超长部分），原始文件名仅存于 `filename` 字段，不保证路径语义；
+- 不支持断点续传、分片上传或并行上传同一文件；重复上传相同内容会生成新 `file_id`；
+- `purpose=assistants` 是当前唯一有效值，设置为 `batch` 或 `fine-tune` 将静默忽略——此行为与早期文档描述不一致，以最新 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 为准。
 
 ## 来源文档
 

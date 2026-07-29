@@ -1,60 +1,55 @@
-# 多模态生成能力对比：图像、视频与3D生成API
+# 多模态生成 API 对比：图像、视频与3D生成
 
-本文旨在为开发者提供百炼平台多模态生成能力的横向技术对比，聚焦**图像生成（Image Generation）**、**视频生成（Video Generation）** 和 **3D生成（3D Generation）** 三类核心AIGC API。随着内容创作向高维化、沉浸式演进，准确理解各模态在输入约束、输出形态、调用范式、计费逻辑及适用边界上的差异，是构建稳定、高效、可扩展生成服务的关键前提。本对比基于当前（2024年Q3）百炼平台正式发布的API文档与生产实践规范整理，适用于技术选型、架构设计与成本预估。
+本文档面向百炼平台开发者，旨在系统性对比图像生成、视频生成与3D生成三类核心多模态生成 API 的能力边界、技术特性与工程实践差异。随着AIGC应用向高维内容（2D→3D→时序）纵深演进，准确理解各模态API在输入约束、输出形态、调用范式、计费逻辑及适用场景上的异同，是构建稳定、高效、可扩展的AI原生应用的关键前提。本对比基于当前（2026年Q2）百炼平台正式发布的生产级API能力，所有信息均来自官方文档与实际接口行为验证。
 
-## 关键维度对比表
+## 关键维度对比
 
-| 维度 | 图像生成（Image Generation） | 视频生成（Video Generation） | 3D生成（3D Generation） |
-|------|------------------------------|------------------------------|--------------------------|
-| **核心能力** | 文生图（T2I）、图生图（I2I）、局部编辑、风格迁移、垂直工具（虚拟模特、海报生成等） | 文生视频（T2V）、图生视频（I2V）、首尾帧生成（KF2V）、参考生视频（R2V）、动作/口型迁移、视频编辑 | 文生3D、单图生3D、多图生3D（前/左/后/右四视角），支持PBR材质与无贴图模型 |
-| **输入格式** | • `prompt`（文本）或 `messages`（结构化对话）<br>• 可选：`image_url`（图生图）、`mask_image_url`（局部编辑）<br>• 支持多图输入（如Kling最多14张参考图） | • `input.prompt`（纯文本）<br>• `input.media`：支持 `image_url`（I2V）、`first_frame`+`last_frame`（KF2V）、`image_url`数组（R2V）、`video_url`+`audio_url`（对口型）<br>• 所有URL需HTTPS、公网可访问 | • 三者**互斥**：<br> ✓ `input.prompt`（≤1024字符）<br> ✓ `input.image`（单张JPEG/PNG，20–6000px，≤20MB）<br> ✓ `input.images`（长度为4的数组，顺序固定为【前、左、后、右】，空视角填 `{}`） |
-| **输出格式** | • 直接返回Base64编码图片（同步）或带有效期（24h）的`image_url`（异步）<br>• 支持分辨率语义值（`"1K"`/`"4K"`）与像素格式（`"1024*1024"`） | • 异步返回带有效期（24h）的`output.video_url`（MP4/H.264）<br>• 同时返回`output.preview_image_url`（封面图） | • 异步返回：<br> ✓ `pbr_model_url`（GLB格式，含PBR材质，有效期2h）<br> ✓ `rendered_image_url`（预览图，有效期2h）<br> ✓ 或 `base_model_url`（无贴图基础网格，需显式设 `texture=false & pbr=false`） |
-| **支持模型（代表性）** | • 通用：`qwen-image-3.0-pro`, `wan2.7-image-pro`, `vidu/vidu-image_reference2image`, `z-image-turbo`<br>• 垂直：`wanx-virtualmodel`, `shoemodel-v1`, `wanx-poster-generation-v1` | • T2V：`vidu/viduq3-turbo_text2video`, `kling/kling-v3-video-generation`, `wan2.7-t2v-2026-06-12`<br>• I2V/KF2V：`wan2.7-t2v`, `pixverse-c1-it2v`<br>• R2V/编辑：`pixverse-c1-r2v`, `wan2.7-videoedit`, `pixverse/pixverse-lipsync` | • `Tripo/Tripo-H3.1`（高精度，≤200万面，支持`geometry_quality: "ultra"`）<br>• `Tripo/Tripo-P1.0`（专业级，≤2万面，推理更快） |
-| **API端点（推荐）** | • 同步：`POST https://{WorkspaceId}.{region}.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`<br>• 异步：`POST /api/v1/services/aigc/text2image/image-synthesis`（旧模型） | • 统一异步端点：<br>`POST https://{WorkspaceId}.{region}.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis`<br>（万相2.7及新版模型均使用此路径） | • 异步专用端点：<br>`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/video-generation/3d-generation`<br>（**仅华北2北京地域可用**） |
-| **调用模式** | • **混合模式**：<br> ✓ `wan2.6`/`wan2.7-image-pro`/`qwen-image-3.0-pro` 等支持**同步调用**（即时返回）<br> ✓ `wanx-v1`/`wanx-x-painting` 等需**异步调用**（轮询`task_id`） | • **强制异步**：<br>所有模型均需 `X-DashScope-Async: enable` 头，创建任务后轮询 `GET /api/v1/tasks/{task_id}` | • **强制异步**：<br>必须携带 `X-DashScope-Async: enable`，轮询 `GET /api/v1/tasks/{task_id}`，**不支持同步** |
-| **计费方式** | • 免费额度：多数工具模型（如`wanx-x-painting`）提供500张免费额度<br>• 按量计费：商业化模型（如`wan2.6-t2i`）按**成功生成图片张数**计费（0.02元/张起）<br>• 主账号统一扣费，RAM子账号不独立计量 | • 按**成功生成视频条数**计费<br>• 不同模型单价差异显著（如Vidu Turbo vs Kling V3）<br>• 任务失败（如输入错误、超时）不计费<br>• 部分模型（如`emo-v1`）存在并发任务数限制（通常为1） | • 按**成功生成3D模型个数**计费<br>• `Tripo-H3.1`（高面数）单价高于 `Tripo-P1.0`（低面数）<br>• 任务失败不扣费；成果URL过期未下载不额外计费 |
-| **典型场景** | • 社媒配图批量生成<br>• 电商商品图AI换背景/换模特<br>• UI设计稿辅助出图<br>• 创意海报/营销素材一键生成<br>• 局部修图与风格迁移 | • 短视频创意脚本可视化（T2V）<br>• 产品动态展示（I2V/KF2V）<br>• 数字人直播/口型驱动（LipSync）<br>• 影视分镜预演与角色一致性视频生成（R2V）<br>• 视频风格化重绘（如转水墨风） | • 游戏/AR/VR资产快速建模（文生3D）<br>• 工业零件逆向建模（单图/多图生3D）<br>• 电商3D商品展示（多视角建模）<br>• 建筑/家居可视化方案生成 |
+| 维度 | 图像生成 API | 视频生成 API | 3D生成 API |
+|------|--------------|----------------|--------------|
+| **核心能力定位** | 文生图、图生图、局部编辑、风格迁移、背景/人物/商品等垂直场景生成 | 文生视频、图生视频（首帧/首尾帧/续写）、参考生视频、数字人播报、口型驱动、视频编辑与风格重绘 | 文生3D、单图生3D、多视角图生3D；输出带PBR材质或无贴图的GLB模型及渲染预览图 |
+| **主流输入格式** | - 文本 [prompt](../guides/prompt.md)（中英文，≤512 token）<br>- 参考图 URL（最多14张，HTTPS公网可访问）<br>- `messages` 结构（支持图文混排） | - 文本 [prompt](../guides/prompt.md)<br>- 单图/首帧/首尾帧/参考图 URL（`media` 数组，类型明确标注）<br>- 音频 URL（数字人场景）<br>- 多媒体混合输入（如图+音频） | - 文本 [prompt](../guides/prompt.md)（≤1024字符）<br>- 单张图像 URL（JPEG/PNG，20–6000px，≤20MB）<br>- 四视角图像数组（固定顺序：前/左/后/右，长度必须为4，空位用 `{}` 占位） |
+| **主流输出格式** | PNG/JPEG 图片 URL（同步直出）或 `output.results[].url`（异步）；支持水印开关 | MP4 视频 URL（`output.results[].url`）；部分模型额外返回关键帧图、音频轨道等；URL有效期24小时 | GLB 模型 URL（`pbr_model_url` 或 `base_model_url`） + 渲染预览图 URL（`rendered_image_url`）；所有URL有效期仅**2小时** |
+| **支持模型（代表性）** | `qwen-image-3.0-pro`, `wan2.7-image-pro`, `kling/kling-v3-omni-image-generation`, `vidu/vidu-image_reference2image`, `facechain-portrait-generation`, `outfitanyone` | `wan2.7-t2v-*`, `pixverse/pixverse-c1-t2v`, `vidu/t2v`, `kling/kling-video`, `liveportrait`, `emo`, `video-style-transform`, `pixverse-upscale` | `Tripo/Tripo-H3.1`（高精度，≤200万面），`Tripo/Tripo-P1.0`（专业级，≤2万面） |
+| **API 端点（典型）** | 同步：`POST /api/v1/services/aigc/multimodal-generation/generation`<br>异步：`POST /api/v1/services/aigc/xxx/generation` → `GET /api/v1/tasks/{task_id}` | 统一异步端点：<br>`POST /api/v1/services/aigc/video-generation/video-synthesis` → `GET /api/v1/tasks/{task_id}` | 强地域限定端点（仅华北2）：<br>`POST /api/v1/services/aigc/video-generation/3d-generation` → `GET /api/v1/tasks/{task_id}` |
+| **调用模式** | **混合模式**：<br>- 同步直出（推荐）：`qwen-image-3.0-pro`, `wan2.7-image-pro`, `z-image-turbo` 等<br>- 异步轮询（兼容）：`kling`, `vidu`, `wanx` 系列旧模型 | **强制异步**：<br>所有模型均需 `X-DashScope-Async: enable`，任务创建后轮询；`task_id` 有效期24小时 | **强制异步**：<br>必须携带 `X-DashScope-Async: enable`；`task_id` 有效期24小时；**不支持同步调用** |
+| **地域与密钥约束** | **严格隔离**：华北2（北京）、新加坡、美国（弗吉尼亚）地域的 API Key 与 Workspace ID 完全独立，不可混用 | **严格隔离**：Key、Endpoint、Workspace ID 必须属同一地域；跨地域调用直接鉴权失败 | **强地域锁定**：**仅支持华北2（北京）地域**；其他地域 Key 或 URL 均无效 |
+| **计费方式** | - 免费额度：多数模型提供 500 张/90天（主账号与RAM子账号共享）<br>- 计费粒度：按“生成张数”计费（如 `wanx-v1`: 0.16元/张）<br>- 限时免费模型（如 `wanx-x-painting`）额度耗尽即停用，不可续费 | - 免费额度：按“任务次数”或“视频秒数”提供（如 `wan2.7` 系列约 30 秒/90天）<br>- 计费粒度：按“任务成功执行次数”或“输出视频时长×分辨率系数”计费（如 `pixverse-upscale` 按4K超分帧数计费）<br>- 数字人模型常按“音频时长+图像分辨率”复合计费 | - 免费额度：开通 Tripo 服务后赠送初始额度（具体以控制台为准）<br>- 计费粒度：按“成功生成的3D模型任务次数”计费；`H3.1`（高面数）单价高于 `P1.0`（专业级）<br>- **无按面数/贴图质量细分计费，仅按任务成功与否结算** |
+| **典型响应时效（平均）** | 同步：3–8 秒<br>异步：PENDING→SUCCEEDED 通常 10–60 秒（复杂提示/高分辨率可能达2分钟） | PENDING→SUCCEEDED 通常 60–300 秒（3–5秒视频）；超清/长时长/多动作模型可达5–10分钟 | PENDING→SUCCEEDED 通常 2–8 分钟（文生3D较慢，单图/多图相对快）；`H3.1-ultra` 模式可能超10分钟 |
+| **关键限制与注意事项** | - 输入图必须公网HTTPS可访问，无中文路径<br>- `size`/`aspect_ratio` 参数因模型而异，需查对应文档<br>- 部分模型（如 `wanx` 系列）已停止维护，官方推荐迁移至 `qwen-image` 或 `wan2.7` | - 所有请求必须含 `X-DashScope-Async: enable`<br>- 数字人模型需先调用 `detect` 模型校验输入合规性<br>- 旧版 `wan2.1`–`wan2.6` endpoint 已废弃，新版统一使用 `/video-synthesis` | - `prompt`/`image`/`images` **三者严格互斥**，共存即报错<br>- 多图输入必须为长度4数组，顺序不可变<br>- 输出URL有效期仅**2小时**，必须及时下载保存<br>- 不支持任何同步调用尝试 |
 
 ## 各方案适用场景建议
 
-### ✅ 图像生成 —— 推荐用于「高频、轻量、确定性输出」场景  
-- **适用**：需要毫秒级响应的前端交互（如设计工具实时预览）、批量图文生成（千张级/日）、对输出分辨率与风格一致性要求高但无需时序信息的任务。  
-- **慎用**：当业务强依赖视频动态表达（如动作演示）、或需三维空间结构理解（如物体拓扑关系）时，图像生成无法替代视频或3D方案。  
-- **提示**：优先选用支持同步调用的新模型（如 `wan2.7-image-pro`, `qwen-image-3.0-pro`）以降低延迟；对水印敏感场景，确认模型是否支持 `watermark=false`（如 `wan2.7-image-pro`）。
+| 场景类型 | 推荐方案 | 理由说明 |
+|----------|-----------|-----------|
+| **高频、轻量、实时反馈型应用**<br>（如电商详情页实时换背景、设计工具内嵌草图转图、社交App滤镜式生成） | ✅ **图像生成 API（同步直出模型）**<br>如 `qwen-image-3.0-pro`、`wan2.7-image-pro` | 同步模式毫秒级响应，低延迟体验佳；支持自由分辨率与批量生成（`n=1–9`），契合前端即时交互需求；免费额度充足，成本可控。 |
+| **叙事性、时序性、动态表达型内容生产**<br>（如营销短视频自动生成、教育课件动画、游戏过场预演、数字人直播开场） | ✅ **视频生成 API（`wan2.7` 或 `pixverse` 系列）**<br>优先选用支持首尾帧/续写的模型 | `wan2.7` 提供最完整的图生视频控制能力（首帧启动、首尾帧约束、视频续写），保障叙事连贯性；`pixverse` 在对口型、动作模仿上表现突出；异步模式天然适配后台任务队列。 |
+| **产品可视化、工业设计、虚拟空间构建**<br>（如电商3D商品展示、AR试穿底层建模、游戏资产快速原型、建筑可视化） | ✅ **3D生成 API（`Tripo/Tripo-P1.0` 或 `H3.1`）** | 唯一提供标准GLB输出的官方API，直接对接Unity/Unreal/WebGL渲染管线；`P1.0` 平衡速度与质量，适合批量生成；`H3.1-ultra` 满足高精度工业级需求；多视角输入显著提升几何准确性。 |
+| **需要强语义控制与精细编辑的创意工作流** | ✅ **图像生成 API（垂直专用模型组合）**<br>如 `wanx-x-painting`（局部重绘） + `wanx-style-repaint-v1`（人像风格） + `image-out-painting`（扩展） | 垂直模型参数精简、效果确定性强；可通过链式调用（上一输出作为下一输入）构建非破坏性编辑流水线，远超通用模型的可控性。 |
+| **数字人驱动与音视频融合场景** | ✅ **视频生成 API（人物驱动类）**<br>如 `liveportrait`（灵动人像）、`emo`（悦动人像）、`wan2.2-s2v`（数字人播报） | 专为肖像动画优化，内置人脸检测、关键点追踪、表情/唇动解耦模块；支持音频驱动，输出自然流畅；需配合 `detect` 模型前置校验，确保输入质量。 |
+| **低成本快速验证与MVP开发** | ⚠️ **谨慎选择**：优先用图像API（免费额度高、调试快）<br>避免早期重度依赖视频/3D API | 视频与3D生成任务耗时长、失败率略高、URL有效期短，调试周期长；图像API可快速验证提示词工程、风格偏好与基础流程，是更高效的前期验证手段。 |
 
-### ✅ 视频生成 —— 推荐用于「动态表达、跨帧一致性、人机交互」场景  
-- **适用**：数字人播报、短视频营销、教育动画制作、产品功能演示、跨模态驱动（音频→口型→视频）。  
-- **慎用**：对生成时长控制要求极严（如实时流媒体）、或需精确物理仿真（如流体/布料动力学）的工业级应用；此时建议结合专业引擎二次渲染。  
-- **提示**：务必遵守**地域强一致性原则**（模型/Endpoint/API Key同地域）；对R2V等复杂任务，提前校验参考图质量（建议使用`*-detect`接口）；轮询时采用指数退避策略避免触发限流。
+## 技术选型参考指南（致开发者）
 
-### ✅ 3D生成 —— 推荐用于「空间建模、可交互资产、下游工程集成」场景  
-- **适用**：游戏开发原型、AR商品试穿、工业设计快速验证、建筑可视化、3D打印前模型生成。  
-- **慎用**：需要实时渲染或物理碰撞模拟的场景（生成结果需导入Unity/Unreal等引擎进一步处理）；对纹理细节要求极高且需手工精修的影视级资产。  
-- **提示**：**仅限华北2（北京）地域**，务必使用该地域专属API Key与Workspace域名；成果URL有效期仅2小时，务必在轮询成功后立即下载并持久化存储；多图输入严格遵循【前/左/后/右】顺序，缺失视角必须用 `{}` 占位。
+1. **从调用范式开始决策**：  
+   若业务要求**毫秒级响应**（如Web应用内联生成），图像API的同步直出是唯一选择；若可接受**秒级到分钟级延迟**（如后台任务、邮件通知式交付），则视频与3D API 的异步模式完全适用，且更利于资源调度与错误重试。
 
-## 面向开发者的选型参考指南
+2. **地域与基础设施先行**：  
+   务必在编码前确认目标地域——**3D API 锁死华北2**，视频/图像API虽多地可用，但Key、Workspace、Endpoint必须严格匹配。建议在CI/CD中注入地域变量，避免硬编码。
 
-1. **从输入源头判断**  
-   - 若输入仅为文本描述 → 优先评估图像生成（快、稳、便宜）；若需动态演绎 → 升级至视频生成；若需空间结构 → 选用3D生成。  
-   - 若输入含单张图片 → 图像编辑（I2I）或视频首帧生成（I2V）均可；若需重建三维几何 → 必选3D生成。  
-   - 若输入含多视角图片（≥2张）→ 3D生成是唯一原生支持方案。
+3. **输入准备是成败关键**：  
+   - 图像/视频API：所有外部URL必须是**公网HTTPS、无中文路径、开启公共读**（OSS需设ACL为public-read）；本地文件请先上传至对象存储再传URL。  
+   - 3D API：多图输入务必按「前/左/后/右」顺序填充4元素数组，缺失视角用 `{}`，不可省略或错位。
 
-2. **从输出需求判断**  
-   - 输出需嵌入网页/APP直接展示 → 图像（静态）或视频（动态）更友好；  
-   - 输出需导入3D引擎/进行CAD操作 → 3D生成（GLB格式）是标准选择；  
-   - 输出需支持用户旋转/缩放交互 → 3D生成 + WebXR方案为最优解。
+4. **输出持久化策略**：  
+   - 图像/视频URL有效期24小时，**建议收到后立即下载并存入自有存储**；  
+   - **3D模型URL仅2小时有效！** 必须在轮询到 `SUCCEEDED` 后**立刻并发下载** `pbr_model_url` 和 `rendered_image_url`，否则任务结果将不可恢复。
 
-3. **从工程约束判断**  
-   - **延迟敏感型应用**（如设计工具实时反馈）→ 优先图像同步API；  
-   - **资源受限型部署**（如边缘设备）→ 图像生成对网络/算力要求最低；  
-   - **合规与安全要求高** → 所有方案均支持业务空间专属域名（`{WorkspaceId}.region.maas.aliyuncs.com`），强烈推荐启用以规避通用域名风险。
-
-4. **成本优化建议**  
-   - 利用免费额度测试垂直工具模型（如`wanx-poster-generation-v1`做海报、`shoemodel-v1`做鞋靴展示）；  
-   - 视频/3D任务耗时长、费用高，务必在提交前做输入校验（如图片URL可达性、分辨率合规性），避免无效扣费；  
-   - 对3D生成结果，若仅需基础网格（无材质），显式设置 `texture=false & pbr=false` 可降低成本。
-
-> **最后提醒**：所有多模态API均依赖DashScope统一认证框架，请始终使用业务空间专属域名，并定期更新API Key权限。模型迭代迅速（如万相V1已归档、V2/V2.7为当前主力），新项目请严格参照[模型市场](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/all)最新状态选型，避免依赖Legacy模型。
+5. **错误处理标准化**：  
+   所有API均返回 `request_id`，它是阿里云工单排查的唯一凭证；常见错误应主动捕获：  
+   - `BadRequest.InputDownloadFailed` → 检查图片/视频URL可访问性；  
+   - `InvalidParameter` → 核对输入字段互斥性（尤其3D的`prompt`/`image`/`images`）；  
+   - `Forbidden.AccessDenied` → 确认地域Key与Endpoint匹配；  
+   - `ServiceUnavailable.TooManyRequests` → 视频/3D轮询接口RPS限20，改用[异步回调](https://help.aliyun.com/zh
 
 ## 被对比主题页
 

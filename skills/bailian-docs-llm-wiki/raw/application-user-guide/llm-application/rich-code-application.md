@@ -30,7 +30,7 @@
     -   **命令行创建**：在控制台创建空白应用后，通过 AgentScope-AI 命令行工具上传本地代码包部署。适合已有项目代码的开发者，详细流程请参考[API 开发指南](https://help.aliyun.com/zh/model-studio/rich-code-app-develop-guide)。
         
     
-    填写**应用名称**后，单击**确认**。
+    填写**应用名称**后，单击**立即创建**。
     
     ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2506686771/p1070627.png)
     
@@ -49,14 +49,14 @@
     
     **提交代码**
     
-    -   **使用模板代码**（默认）：选择一个预置的应用模板快速开始。
+    -   **使用模版代码**（默认）：选择一个预置的应用模版快速开始。
         
     -   **上传代码包**：上传本地开发的 .whl 格式代码包。代码包制作方式请参考[API 开发指南](https://help.aliyun.com/zh/model-studio/rich-code-app-develop-guide)。
         
     
-    平台提供以下应用模板：
+    平台提供以下应用模版：
     
-    **模板**
+    **模版**
     
     **说明**
     
