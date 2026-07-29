@@ -455,6 +455,32 @@ wan2.2-kf2v-flash
 -   模型训练费用 = 374.4 × 2 = 748.8元
     
 
+### **语音合成模型-CosyVoice**
+
+**说明**
+
+CosyVoice 模型调优服务仅支持**华北2（北京）**地域。模型训练流程请参见[CosyVoice模型调优](https://help.aliyun.com/zh/model-studio/fine-tune-speech-synthesis-model-by-api)。训练完成后的新模型需先完成**模型部署**，才能调用。
+
+**计费方式**
+
+按训练消耗的Token数计费
+
+**训练单价**
+
+0.2元/千Tokens
+
+**计费公式**
+
+模型训练费用 = 训练消耗Token总量 × 训练单价
+
+**训练消耗Token总量的计算公式**
+
+单次任务的Token消耗按下式估算：
+
+消耗 Tokens\=(lm\_max\_epoch+fm\_max\_epoch)×25×训练集总时长(秒)
+
+其中 `lm_max_epoch` 与 `fm_max_epoch` 为创建调优任务时设置的超参数，分别表示 LM 与 FM 训练轮次；训练集总时长为调优数据集中全部音频文件的总秒数。提高任一轮次或扩大训练集均会线性增加 Token 消耗。
+
 ## **模型部署计费**
 
 ### **文本生成模型-千问**
@@ -1777,6 +1803,36 @@ wan2.7-image-pro
 wan2.7-image
 
 0.20元/张
+
+### **语音合成模型-CosyVoice**
+
+**说明**
+
+CosyVoice 模型调优服务仅支持**华北2（北京）**地域。
+
+调优后的CosyVoice模型部署后按**模型单元的使用时长**计费，公式为：费用\=使用时长（小时）×模型单元数量×模型单元单价。
+
+其中，模型单元数量\=单副本模型单元×部署副本数，可选的模版及对应的模型单元类型请参见CosyVoice模型调优的[部署模版](https://help.aliyun.com/zh/model-studio/fine-tune-speech-synthesis-model-by-api#cv-deploy-sub-template-t)。
+
+**模型名称**
+
+**模型代码**
+
+**模型单元规格**
+
+**小时单价（元）**
+
+**包月单价（元）**
+
+cosyvoice-v3-flash
+
+cosyvoice-v3-flash
+
+MU5
+
+¥21
+
+¥10,139
 
 ## **常见问题**
 

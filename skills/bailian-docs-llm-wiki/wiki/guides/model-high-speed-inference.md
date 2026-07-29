@@ -1,42 +1,39 @@
 # model high speed inference
 
-百炼平台提供两种面向高吞吐、低延迟场景的推理加速能力：**TPM 预留（[Token](../concepts/token.md) Per Minute Reservation）** 保障专属容量与确定性 SLA，**快速模式（Fast Mode）** 提升单请求输出速度与 TPS。二者适用不同优化目标——前者解决“容量争抢”问题，后者解决“响应延迟”问题，可独立或组合使用（如在 TPM 预留实例上启用 fast-preview 模型）。
+百炼平台提供两种面向高吞吐、低延迟推理场景的加速能力：**TPM 预留（[Token](../concepts/token.md) Per Minute Reservation）** 和 **快速模式（Fast Mode）**。前者通过预分配专属容量保障确定性吞吐与稳定性，适用于流量可预估、不可接受限流的核心业务；后者通过底层调度与硬件优化提升单请求输出速度（TPS），适用于对响应实时性敏感的交互式场景（如编程助手、Agent 多步推理）。二者可独立使用，也可组合——例如在 TPM 预留的专属实例上启用 `*-fast-preview` 模型。
 
-## 支持的模型与功能
+## 支持的模型/功能
 
-- **TPM 预留**：为指定模型锁定专属输入/输出吞吐量（单位：kTPM），支持千问、GLM、DeepSeek、Kimi 等主流模型，覆盖华北2（北京）和新加坡地域。详情见 [TPM 预留](../../raw/model-user-guide/model-high-speed-inference/tpm-reservation.md)。
-- **快速模式**：当前仅支持 `glm-5.2-fast-preview` 模型（北京/新加坡双地域），提供 1.5~2 倍标准 API 的 TPS（达 80~100 TPS），适用于 AI 编程助手、Agent 多步推理等对输出流速敏感的场景。该能力处于 preview 阶段，规格可能调整，详见 [快速模式](../../raw/model-user-guide/model-high-speed-inference/fast-mode.md)。
-- > **注意**：两文档对 `glm-5.2` 的缓存折扣描述存在差异——[TPM 预留](../../raw/model-user-guide/model-high-speed-inference/tpm-reservation.md) 中明确其缓存命中部分按 25% 折算容量；而 [快速模式](../../raw/model-user-guide/model-high-speed-inference/fast-mode.md) 仅列出“缓存命中”单价为 4 元（北京），未说明容量折算逻辑。实际容量计算请以控制台实时参数为准，或参考 [TPM 预留](../../raw/model-user-guide/model-high-speed-inference/tpm-reservation.md) 中的阶梯系数与缓存折扣规则。
+- **TPM 预留**：为指定模型锁定专属输入/输出吞吐量（单位：kTPM），支持千问、GLM、DeepSeek、Kimi 等主流模型，覆盖华北2（北京）和新加坡地域。具体支持列表及价格详见 [TPM 预留](../../raw/model-user-guide/model-high-speed-inference/tpm-reservation.md) 文档中的“支持的模型”表格。
+  
+- **快速模式**：当前仅支持 `glm-5.2-fast-preview` 模型（北京、新加坡双地域），处于 preview 阶段，提供 1.5~2 倍于标准 API 的 TPS（达 80~100 TPS），并引入排队机制缓解突发流量冲击。详细模型列表与计费单价见 [快速模式](../../raw/model-user-guide/model-high-speed-inference/fast-mode.md) 文档。
+
+> **注意**：两套机制的模型支持范围不重叠。TPM 预留支持 Qwen3.6-Flash、DeepSeek-v4-Pro 等多款模型，而快速模式目前**仅支持 `glm-5.2-fast-preview`**。若需在快速模式下获得容量保障，必须先为该模型创建 TPM 预留，并将 `model` 参数设为预留生成的专属 code（如 `bailian-glm-5.2-fast-preview-xxxxx`），而非直接使用 `glm-5.2-fast-preview` —— 后者走公共资源池，不享受预留保障。此关键差异在 [TPM 预留](../../raw/model-user-guide/model-high-speed-inference/tpm-reservation.md) 和 [快速模式](../../raw/model-user-guide/model-high-speed-inference/fast-mode.md) 两份文档中均未明确交叉说明，开发者需自行组合配置。
 
 ## 关键参数
 
-| 参数 | TPM 预留 | 快速模式 |
-|------|----------|-----------|
-| **核心指标** | 输入TPM / 输出TPM（kTPM） | TPS（80~100）、输出延迟降低 |
-| **计费单位** | 预付费（按天，kTPM） | 按 token（输入/输出分别计费） |
-| **容量保障** | 刚性兑付专属容量，不共享 | 无专属容量，依赖公共资源池，超限请求排队而非直接限流 |
-| **溢出策略** | 可选：自动溢出至按量（默认）或返回 429 | 请求排队，不返回 429（但排队时延增加） |
-| **缓存支持** | 支持（如 glm-5.2 缓存命中按 25% 折算输入容量） | 支持（明确列出缓存命中单价） |
+| 参数 | 适用场景 | 说明 |
+|------|----------|------|
+| `model` | 全局必填 | TPM 预留需替换为专属模型 code（如 `bailian-qwen37-max-xxxxx`）；快速模式需设为 `glm-5.2-fast-preview`（或其对应预留 code）。两者不可混用同一字符串。 |
+| 输入/输出 TPM（kTPM） | TPM 预留 | 创建时按模型粒度分别设置，决定专属吞吐上限。阶梯系数、缓存折扣等影响实际容量消耗，详见 [TPM 预留](../../raw/model-user-guide/model-high-speed-inference/tpm-reservation.md) 中“长输入阶梯系数和缓存折扣”表格。 |
+| 溢出策略 | TPM 预留 | “自动溢出”（默认）：超限请求降级为按量计费；“仅使用预留容量”：超限返回 HTTP 429。 |
+| 接入域名 | 快速模式 | 必须使用 `https://{workspace_id}.{region}.maas.aliyuncs.com/compatible-mode/v1` 格式，`{workspace_id}` 和 `{region}` 需从控制台获取，标准 dashscope 域名不支持快速模式。 |
 
 ## 使用方式
 
-- **TPM 预留**：创建后获取专属 `model` code，在 API 请求中替换标准模型 ID 即可生效。需确保实例状态为“运行中”，且调用域名与标准 API 一致（如 `https://dashscope.aliyuncs.com/...`）。详见 [TPM 预留](../../raw/model-user-guide/model-high-speed-inference/tpm-reservation.md) 中的“创建 TPM 预留”与“API 接入”章节。
-- **快速模式**：直接使用 `glm-5.2-fast-preview` 作为 `model` 参数，并切换至专属接入域名（格式：`https://{workspace_id}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`）。无需额外 header 或 query 参数。流式调用时需解析 `delta.reasoning_content` 和 `delta.content` 字段。示例见 [快速模式](../../raw/model-user-guide/model-high-speed-inference/fast-mode.md)。
-- **组合使用**：可在已创建的 TPM 预留实例上，将 `model` 参数设为 `glm-5.2-fast-preview`（前提是该模型 code 已开通快速模式支持），从而同时获得容量保障与高速输出。
+- **TPM 预留**：在百炼控制台创建预留后，复制生成的专属 `model` code，替换 API 请求中的 `model` 字段即可生效。调用示例见 [TPM 预留](../../raw/model-user-guide/model-high-speed-inference/tpm-reservation.md) 文档末尾的 Python/curl 示例。注意：新预留实例存在短暂预热期，期间可能出现延迟波动，建议实现客户端重试逻辑。
+
+- **快速模式**：无需额外配置，只需将 `model` 设为 `glm-5.2-fast-preview` 并使用专用域名调用。流式响应中 `reasoning_content` 与 `content` 字段分离推送，需按 [快速模式](../../raw/model-user-guide/model-high-speed-inference/fast-mode.md) 文档示例解析。非流式调用返回结构亦含 `reasoning_content` 字段。
 
 ## 限制和注意事项
 
-- **TPM 预留**：
-  - 创建后需等待实例“运行中”状态方可调用；短时间内请求量激增会触发系统预热，预热期可能出现延迟波动，建议实现客户端重试或排队机制。
-  - 缩容/退订会产生违约金（已用部分按 1.5 倍系数结算），且退订后专属 model code 失效。
-  - 服务到期后 14 小时内资源不可恢复，务必提前续费。
-- **快速模式**：
-  - 当前仅 `glm-5.2-fast-preview` 可用，不支持其他模型；preview 阶段能力可能变更，不建议用于生产环境长期依赖。
-  - 排队机制不保证端到端延迟上限，高并发下排队时延可能显著上升。
-  - 返回结构含 `reasoning_content` 字段，需适配解析逻辑（尤其流式场景）。
-- **通用限制**：
-  - 两种能力均不改变模型本身的能力边界（如上下文长度、token 限制），具体参数以各模型文档为准。
-  - TPM 预留与快速模式的计费相互独立：TPM 预留覆盖其专属容量内调用，超出部分按量计费；快速模式所有调用均按 token 计费，不受 TPM 预留额度影响（除非 model code 显式绑定快速模式）。
+- **地域与模型绑定**：TPM 预留和快速模式均按地域隔离。北京地域的预留 code 不能在新加坡调用；`glm-5.2-fast-preview` 在两地价格不同，需按实际地域选择对应计费标准。
+  
+- **preview 风险**：快速模式为预览功能，接口行为、模型能力、可用性及计费规则可能随时调整，不建议用于生产环境的关键链路。正式 GA 后将同步更新文档。
+
+- **容量计算复杂性**：TPM 预留的实际容量消耗受输入长度阶梯系数、缓存命中率影响显著。例如 GLM-5.1 在 `[32K, 200K]` 输入区间内，输入容量消耗系数为 1.33，需在容量计算器中准确填写平均输入长度，否则易导致预留不足。详情参见 [TPM 预留](../../raw/model-user-guide/model-high-speed-inference/tpm-reservation.md) 中“长输入阶梯系数和缓存折扣”表格。
+
+- **退订与 code 失效**：TPM 预留退订后专属 `model` code 立即失效，历史请求将回退至公共资源池。若需长期稳定接入，建议开启“到期自动续费”并监控用量趋势，避免因过期导致服务中断。
 
 ## 来源文档
 

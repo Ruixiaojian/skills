@@ -34,7 +34,7 @@
 - [start using](guides/start-using.md) — 2 篇源文档
 - [test 1](guides/test-1.md) — 5 篇源文档
 - [token plan guide](guides/token-plan-guide.md) — 14 篇源文档
-- [use cases](guides/use-cases.md) — 24 篇源文档
+- [use cases](guides/use-cases.md) — 27 篇源文档
 - [use chat client or development tool](guides/use-chat-client-or-development-tool.md) — 17 篇源文档
 
 ## API 参考
@@ -55,29 +55,29 @@
 - [omni realtime api](api/omni-realtime-api.md) — 6 篇源文档
 - [preparations](api/preparations.md) — 4 篇源文档
 - [qwen api reference](api/qwen-api-reference.md) — 1 篇源文档
-- [realtime api user guide](api/realtime-api-user-guide.md) — 15 篇源文档
+- [realtime api user guide](api/realtime-api-user-guide.md) — 12 篇源文档
 - [toolkits and frameworks](api/toolkits-and-frameworks.md) — 10 篇源文档
 - [vector and sort](api/vector-and-sort.md) — 4 篇源文档
-- [video generation api](api/video-generation-api.md) — 34 篇源文档
+- [video generation api](api/video-generation-api.md) — 33 篇源文档
 
 ## 横切概念
 
-- [OpenAI 兼容接口](concepts/openai-compatible-interface.md) — 关联 5 个主题
-- [Token](concepts/token.md) — 关联 6 个主题
-- [业务空间隔离](concepts/workspace-isolation.md) — 关联 5 个主题
+- [OpenAI 兼容接口](concepts/openai-compatible-api.md) — 关联 5 个主题
+- [Prompt 工程](concepts/prompt-engineering.md) — 关联 5 个主题
+- [Token](concepts/token.md) — 关联 5 个主题
 - [函数调用](concepts/function-calling.md) — 关联 5 个主题
-- [多模态输入](concepts/multi-modal-input.md) — 关联 6 个主题
-- [工具集成](concepts/tool-integration.md) — 关联 5 个主题
-- [异步任务](concepts/asynchronous-task.md) — 关联 5 个主题
+- [工具集成](concepts/tool-integration.md) — 关联 6 个主题
+- [文件输入](concepts/file-input.md) — 关联 5 个主题
 - [检索增强生成](concepts/rag.md) — 关联 6 个主题
-- [流式输出](concepts/streaming-output.md) — 关联 5 个主题
-- [长期记忆](concepts/long-term-memory.md) — 关联 4 个主题
+- [模型部署](concepts/model-deployment.md) — 关联 5 个主题
+- [流式输出](concepts/streaming-output.md) — 关联 6 个主题
+- [长期记忆](concepts/long-term-memory.md) — 关联 5 个主题
 
 ## 对比分析
 
-- [多模态生成 API 对比：图像、视频与3D生成](comparisons/generation-apis-comparison.md) — 对比 3 个主题
-- [实时 API 方案对比：Omni Realtime API 与 Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
-- [应用层核心 API 对比：Application Calling、Managed Agents 与 Application Component](comparisons/application-apis-comparison.md) — 对比 3 个主题
-- [模型部署方案对比：Model Production、High-Speed Inference 与 Fine-tuning](comparisons/model-deployment-options.md) — 对比 3 个主题
-- [知识管理相关能力对比：Knowledge API、知识库与向量检索](comparisons/knowledge-apis-comparison.md) — 对比 3 个主题
+- [图像、视频与3D生成能力对比](comparisons/image-video-3d-generation.md) — 对比 3 个主题
+- [实时API方案对比：Omni Realtime vs Realtime User Guide](comparisons/realtime-api-comparison.md) — 对比 2 个主题
+- [应用编排能力对比：托管智能体、组件API、应用调用](comparisons/application-orchestration.md) — 对比 3 个主题
+- [模型部署方式对比：高并发推理、压缩、生产化部署](comparisons/model-deployment-options.md) — 对比 3 个主题
+- [长期记忆与知识库方案对比](comparisons/memory-solutions.md) — 对比 3 个主题
 

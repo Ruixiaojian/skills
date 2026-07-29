@@ -1,56 +1,67 @@
 # 工具集成
 
-工具集成是百炼平台中将外部能力（如计算、搜索、文件处理、云服务等）以标准化方式接入智能体或工作流的核心机制，使大模型能够安全、可控地调用真实世界的服务，突破其固有的知识时效性、计算精度与执行边界限制。
+工具集成是百炼平台中将外部能力（如 API、脚本、服务）安全、标准化地接入大模型推理流程的核心机制，使模型能按需调用真实世界功能（如搜索、计算、代码执行、文件处理、天气查询等），从而突破纯语言生成的局限，构建具备行动力的智能体。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-工具集成不是单一技术方案，而是覆盖多层抽象、适配多种开发范式的统一能力体系，具体体现为以下三类主流形态，开发者可根据需求选择：
+工具集成不是单一技术方案，而是覆盖多层抽象、适配不同开发范式的统一能力体系，具体体现为以下三类主流模式：
 
-- **插件（Plug-in）**：面向轻量、通用能力的即插即用集成。适用于实时搜索（`quark_search`）、代码执行（`code_interpreter`）、文生图（`text_to_image`）等高频场景。模型可自主规划调用，也可在工作流中作为显式节点编排。所有插件需通过服务关联角色授权，且仅限同一子业务空间内使用。
+- **插件（Plug-in）**：面向快速集成与开箱即用。官方插件（如 `calculator`、`quark_search`）无需配置即可在智能体或工作流中启用；自定义插件需定义 URL、鉴权方式、输入/输出 Schema，并**必须发布为 MCP 服务后才能被智能体识别和调用**。适用于明确输入结构、结果可结构化返回的 RESTful 场景。
 
-- **Skill**：面向结构化任务处理的能力封装，强调语义驱动与零代码集成。适用于文件解析（`pdf-parser`）、数据清洗（`csv-cleaner`）等输入/输出明确的业务逻辑。通过 `SKILL.md` 中的 `description` 字段定义触发条件与能力边界，由智能体运行时自动匹配调用，无需修改提示词或流程图。
+- **Skill**：面向文件与本地任务自动化。以 ZIP 包形式封装 Python 脚本及依赖，通过 `SKILL.md` 中的 `description` 字段驱动语义匹配（如“把 PDF 表格转成 Excel”）。不依赖模型能力，由智能体调度引擎直接触发，适合格式解析、数据清洗等确定性任务。
 
-- **MCP 服务（Model Context Protocol）**：面向高扩展性、协议标准化的工具生态集成。支持官方服务（如 `Amap Maps`、`WebSearch`）和自定义部署（`npx`/`uvx` 脚本、AI 网关封装、OpenAPI 导入）。MCP 屏蔽通信细节，提供统一的工具发现（`list_tools`）与调用（`call_tool`）接口，适用于需要跨平台复用或深度定制工具链的场景。
+- **MCP（Model Context Protocol）服务**：面向标准化、可扩展的工具生态。基于开源 MCP 协议（Streamable HTTP），支持官方服务（如高德地图）、AI 网关封装的 API 或 OpenAPI 自动发布。智能体自动发现工具并生成调用参数；工作流中则作为显式节点编排。**是当前推荐的、统一的工具接入标准**，尤其适用于需要多工具协同、长链路调用的复杂场景。
 
-> ⚠️ 注意：三者**不可混用**于同一调用上下文——插件与 Skill 仅支持在百炼托管智能体/工作流中使用；MCP 服务**不支持直连 `dashscope` SDK 的纯 API 调用**；而应用组件 API（如知识库、数据连接）本身属于平台基础设施，不归类为“工具”，但可被上述三类工具在运行时调用（例如 Skill 内部读取知识库检索结果）。
+此外，在 **Managed Agents** 运行时中，工具集成体现为内置沙箱能力（如 `bash`、`read`、`download_file`）与外部 MCP/Skill 的混合调用——模型可在同一会话中交替使用云端工具与本地命令，实现“思考-执行-验证”闭环。
+
+> ✅ 关键区别：  
+> - 插件侧重 *模型主动决策调用*，依赖模型理解输入参数；  
+> - Skill 侧重 *意图精准匹配*，依赖 `description` 编写质量；  
+> - MCP 侧重 *协议统一与生态互通*，支持自动发现与跨平台集成。
 
 ## 关键参数和配置
 
-工具集成的配置围绕“标识”、“描述”、“权限”与“运行约束”四个维度展开，不同形态侧重点不同：
+工具集成的配置分散在服务定义与应用绑定两个层面，开发者需关注以下核心项：
 
-| 形态 | 核心标识参数 | 必填描述字段 | 权限前提 | 典型运行约束 |
-|------|----------------|----------------|------------|----------------|
-| **插件** | `tool_id`（如 `"calculator"`） | 无（官方插件内置描述）；自定义插件需符合 OpenAPI 规范 | `AliyunServiceRoleForSFMAccessCloudAPI` 服务关联角色 | 输入字段名严格（如 `payload__input__text`）；`code_interpreter` 禁网络/禁文件上传；依赖库白名单（`pandas`, `matplotlib` 等） |
-| **Skill** | `name`（小写字母+数字+连字符，全局唯一） | `description`（必须含输入类型、支持操作、触发关键词、明确排除场景） | 无额外 IAM 权限（依赖智能体所在空间权限） | ZIP 包 ≤10 MB；`description` 质量决定调用准确率；加密 PDF 等边界场景需显式排除 |
-| **MCP 服务** | `service name`（控制台识别用）、`mcpServers` 中的 key（如 `"memory"`） | `description`（控制台展示用，不影响调用逻辑） | 无独立角色，但自定义服务若访问云资源（如 RDS），需为函数计算配置 VPC 或出口 IP 白名单 | 部署模式影响计费与延迟（基础模式冷启动，极速模式常驻）；必须符合 Streamable HTTP 协议（`POST /mcp`）；不支持本地资源访问 |
+### 通用必填项（所有类型）
+- **工具标识（ID / name）**：唯一字符串，用于在 `tools` 列表中声明或在工作流节点中引用（如 `"calculator"`、`"maps_weather"`）。控制台详情页可一键复制。
+- **描述（description）**：对工具能力的自然语言说明。插件和 MCP 中用于模型理解用途；Skill 中此字段决定是否被触发，**必须包含适用场景 + 典型关键词 + 明确排除项**（如“不处理图像内容”）。
 
-> ✅ 统一要求：所有工具集成均需在**同一业务空间（Workspace）内完成注册与绑定**；跨空间调用必须先完成显式授权（插件）或服务共享配置（MCP/Skill）。
+### 鉴权与安全
+- **仅支持 `Authorization` header 透传**：自定义插件/MCP 调用时，其他自定义 header 将被平台忽略。建议使用 `bearer` 或 `appcode` 类型，并通过环境变量（如 `MCP_ENV_API_KEY`）注入敏感凭据，**禁止硬编码**。
+- **服务关联角色授权**：首次使用插件或 MCP 服务前，需主账号或具备 `ram:CreateServiceLinkedRole` 权限的 RAM 用户授权角色 `AliyunServiceRoleForSFMAccessCloudAPI`。
+
+### 输入与参数
+- **输入 Schema（inputSchema）**：JSON Schema 格式，定义参数名、类型、是否必需、示例值（如 `{"city": "杭州", "date": "2025-04-25"}`）。工作流节点和模型调用均据此校验与填充。
+- **参数传递方式**：
+  - `大模型识别`：由模型从用户输入中抽取（适用于插件/MCP）；
+  - `业务透传`：通过 `biz_params`（旧版智能体）、`user_defined_params`（Assistant API）或工作流字段引用（如 `{{ upstream.city }}`）显式传入。
+
+### 协议与部署（MCP 专属）
+- `type`: 必须为 `"streamableHttp"`（对应 `/mcp` 端点），旧版 `"sse"` 已弃用。
+- `env`: 环境变量列表，用于注入 API Key、Endpoint 等，配合 KMS 加密管理。
+- 超时控制：`MCP_INIT_TIMEOUT`（初始化超时，默认 30s）、`MCP_REQUEST_TIMEOUT`（单次请求超时，默认 60s），错误码 `11200058` 多因 `type` 不匹配或超时导致。
 
 ## 面向开发者，简洁实用
 
-- **选型建议**：
-  - 快速验证通用能力 → 用**插件**（控制台一键添加，API 直接传 `tools` 数组）；
-  - 封装自有业务逻辑（如发票识别、合同比对）→ 用**Skill**（写好 `SKILL.md` + ZIP 上传，语义触发）；
-  - 构建可复用、可跨平台（Cherry Studio/Cursor）的工具生态 → 用**MCP**（优先 `npx` 部署开源 Server，或 AI 网关封装现有 API）。
+- ✅ **首选 MCP**：新项目统一使用 MCP 接入工具。它兼容官方/三方/自定义服务，支持自动发现、版本管理与跨平台 SDK（Python/Cherry Studio/Cursor），长期维护成本最低。
+- ✅ **插件用于轻量 API**：若已有简单 REST 接口且无需复杂编排，用自定义插件最快上线；但务必记得：**发布为 MCP 服务后才可在智能体中生效**。
+- ✅ **Skill 用于文件处理**：当任务本质是“读一个 PDF → 提取表格 → 生成图表 → 输出 Excel”，优先选 Skill，避免模型幻觉与网络调用开销。
+- ⚠️ **避坑提示**：
+  - 修改工具 URL 或鉴权配置后，必须重新测试并**发布**，否则调用失败；
+  - 单个智能体最多添加 10 个工具（插件限制），MCP 服务最多选 5 个（智能体配置页限制）；
+  - `code_interpreter` 沙箱禁止网络访问与文件上传，仅支持预装库（pandas/matplotlib/requests 等）；
+  - 文件上传请确保 PDF 后缀为小写 `pdf`，否则报错 `140010`。
 
-- **调试要点**：
-  - 插件/Skill/MCP 均支持在智能体「对话测试窗格」中输入典型语句验证触发效果；
-  - 查看调用日志：插件 → 控制台「插件市场 > 调用记录」；Skill → 「Skill 管理 > 调用统计」；MCP → 「MCP 市场 > 服务监控」；
-  - 常见失败原因：权限缺失（检查服务关联角色）、输入格式错误（对照文档字段名）、环境限制（如 `code_interpreter` 无网络）、描述模糊（Skill 误触发/不触发）。
-
-- **生产就绪检查清单**：
-  - [ ] 所有工具已通过安全扫描（Skill/MCP 上传后状态为 `active`，插件已授权）；
-  - [ ] `description` 字段已明确排除不支持的输入类型与边缘场景；
-  - [ ] 自定义工具（插件/Skill/MCP）已通过最小可行用例验证（如传空输入、超长文本、特殊字符）；
-  - [ ] 计费项已确认（如 `text_to_image` 限时免费，`WebSearch` 2000 次/月配额）；
-  - [ ] 生产环境使用固定版本（Skill/MCP 指定 `version`，避免 `latest`；插件 ID 不变更）。
+工具集成不是“连上就行”，而是模型能力延伸的接口设计。清晰定义 `description`、严格校验 `inputSchema`、安全管理 `env` 凭据——这三步做好，90% 的集成问题可提前规避。
 
 ## 关联主题页
 
 - [plug in](../guides/plug-in.md)
 - [skill](../guides/skill.md)
-- [managed agents api](../api/managed-agents-api.md)
 - [model context protocol](../guides/model-context-protocol.md)
-- [application component api reference](../api/application-component-api-reference.md)
+- [managed agents api](../api/managed-agents-api.md)
+- [managed agents](../guides/managed-agents.md)
+- [application support](../guides/application-support.md)
 
 

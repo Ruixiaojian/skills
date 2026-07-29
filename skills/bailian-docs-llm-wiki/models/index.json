@@ -1,7 +1,7 @@
 {
   "updatedAt": "2026-07-29",
-  "totalFamilies": 172,
-  "totalModels": 389,
+  "totalFamilies": 171,
+  "totalModels": 387,
   "capabilityDistribution": {
     "TG": 36,
     "IG": 31,
@@ -17,8 +17,7 @@
     "ME": 2,
     "Realtime-Chatting": 2,
     "Realtime-Text-to-Speech": 2,
-    "TR": 2,
-    "3D-generation": 1
+    "TR": 2
   },
   "providerDistribution": {
     "qwen": 103,
@@ -33,7 +32,6 @@
     "vidu": 2,
     "kling": 1,
     "stepfun": 1,
-    "tripo": 1,
     "xiaomi": 1
   },
   "families": [
@@ -2499,22 +2497,6 @@
         "tongyi-xiaomi-analysis-pro"
       ],
       "maxContextWindow": 32768
-    },
-    {
-      "slug": "tripo-models-market-place",
-      "name": "Tripo",
-      "primaryCapability": "3D-generation",
-      "capabilities": [
-        "3D-generation"
-      ],
-      "providers": [
-        "tripo"
-      ],
-      "itemCount": 2,
-      "items": [
-        "Tripo/Tripo-H3.1",
-        "Tripo/Tripo-P1.0"
-      ]
     },
     {
       "slug": "vanchin-models-market-place",
