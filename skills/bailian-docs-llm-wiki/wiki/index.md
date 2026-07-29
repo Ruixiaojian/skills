@@ -26,7 +26,7 @@
 - [model experience](guides/model-experience.md) — 11 篇源文档
 - [model high speed inference](guides/model-high-speed-inference.md) — 2 篇源文档
 - [model monitoring](guides/model-monitoring.md) — 2 篇源文档
-- [plug in](guides/plug-in.md) — 3 篇源文档
+- [plug in](guides/plug-in.md) — 2 篇源文档
 - [prompt](guides/prompt.md) — 5 篇源文档
 - [release notes](guides/release-notes.md) — 2 篇源文档
 - [security and compliance](guides/security-and-compliance.md) — 12 篇源文档
@@ -41,7 +41,7 @@
 
 - [3d generation](api/3d-generation.md) — 1 篇源文档
 - [application call](api/application-call.md) — 5 篇源文档
-- [application component api reference](api/application-component-api-reference.md) — 57 篇源文档
+- [application component api reference](api/application-component-api-reference.md) — 58 篇源文档
 - [file management api](api/file-management-api.md) — 1 篇源文档
 - [frameworks](api/frameworks.md) — 3 篇源文档
 - [image generation](api/image-generation.md) — 27 篇源文档
@@ -51,7 +51,7 @@
 - [model production](api/model-production.md) — 2 篇源文档
 - [more](api/more.md) — 3 篇源文档
 - [more about models](api/more-about-models.md) — 6 篇源文档
-- [more models](api/more-models.md) — 6 篇源文档
+- [more models](api/more-models.md) — 5 篇源文档
 - [omni realtime api](api/omni-realtime-api.md) — 6 篇源文档
 - [preparations](api/preparations.md) — 4 篇源文档
 - [qwen api reference](api/qwen-api-reference.md) — 1 篇源文档

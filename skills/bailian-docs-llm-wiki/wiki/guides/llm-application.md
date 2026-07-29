@@ -87,6 +87,7 @@
 - [高代码应用](../../raw/application-user-guide/llm-application/rich-code-application.md)
 - [智能体应用](../../raw/application-user-guide/llm-application/single-agent-application.md)
 - [工作流应用](../../raw/application-user-guide/llm-application/workflow-application.md)
+- [高代码应用](../../raw/application-user-guide/llm-application/rich-code-application.md)
 - [文件问答](../../raw/application-user-guide/llm-application/file-q-a.md)
 
 

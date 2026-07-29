@@ -42,8 +42,8 @@
 ## 来源文档
 
 - [权限管理](../../raw/model-user-guide/security-and-compliance/permission-management-overview.md)
-- [输⼊输出AI安全护栏](../../raw/model-user-guide/security-and-compliance/content-security.md)
 - [模型备案信息公示](../../raw/model-user-guide/security-and-compliance/model-filing-information-publicity.md)
+- [输⼊输出AI安全护栏](../../raw/model-user-guide/security-and-compliance/content-security.md)
 - [千问大模型应用上架及合规备案](../../raw/model-user-guide/security-and-compliance/compliance-and-launch-filing-guide-for-ai-apps-powered-by-the-tongyi-model.md)
 - [合规资质与隐私说明](../../raw/model-user-guide/security-and-compliance/privacy-notice.md)
 - [以加密的方式接入模型推理功能](../../raw/model-user-guide/security-and-compliance/transmission-security/encrypted-access-to-model-inference.md)

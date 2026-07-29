@@ -78,5 +78,7 @@
 - [语音转语音](../../raw/model-user-guide/model-experience/s2s-model.md)
 - [向量与重排序](../../raw/model-user-guide/model-experience/embedding-rerank-model.md)
 - [全模态](../../raw/model-user-guide/model-experience/omni.md)
+- [向量与重排序](../../raw/model-user-guide/model-experience/embedding-rerank-model.md)
+- [语音转语音](../../raw/model-user-guide/model-experience/s2s-model.md)
 
 

@@ -2,7 +2,7 @@
 
 百炼平台提供一系列面向垂直场景的专用模型，覆盖法律、意图理解、机器翻译、深度研究、OCR 和 GUI 自动化等能力。这些模型均基于通义千问基座，通过领域精调、RAG 增强或工具链集成实现专业化输出，开发者可通过 DashScope SDK 或 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)调用。所有模型均需配置业务空间专属域名以获得最佳性能与稳定性。
 
-## 支持的模型与功能
+## 支持的模型/功能
 
 | 模型名称 | 用途 | 关键特性 | 文档引用 |
 |----------|------|-----------|-----------|
@@ -63,7 +63,6 @@
 
 ## 来源文档
 
-- [通义法睿大语言模型](../../raw/model-api-reference/more-models/tongyi-farui-api.md)
 - [意图理解能力](../../raw/model-api-reference/more-models/intent-detect-capability.md)
 - [Qwen-MT API参考](../../raw/model-api-reference/more-models/qwen-mt-api.md)
 - [Qwen-Deep-Research API 参考](../../raw/model-api-reference/more-models/qwen-deep-research-api.md)

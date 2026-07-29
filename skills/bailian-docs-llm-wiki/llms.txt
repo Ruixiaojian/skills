@@ -50,6 +50,7 @@
   - [全模态](raw/model-user-guide/model-experience/omni.md)
 - **接入客户端/开发工具**
   - [OpenClaw](raw/model-user-guide/use-chat-client-or-development-tool/openclaw.md)
+  - [Hermes Agent](raw/model-user-guide/use-chat-client-or-development-tool/hermes-agent.md)
   - [Claude Code](raw/model-user-guide/use-chat-client-or-development-tool/claude-code.md)
   - [Hermes Agent](raw/model-user-guide/use-chat-client-or-development-tool/hermes-agent.md)
   - [OpenCode](raw/model-user-guide/use-chat-client-or-development-tool/opencode.md)
@@ -104,8 +105,8 @@
     - [配置可用区IP](raw/model-user-guide/security-and-compliance/secure-storage/configure-zone-ip.md)
     - [配置MSE云原生网关](raw/model-user-guide/security-and-compliance/secure-storage/configure-mse.md)
   - [权限管理](raw/model-user-guide/security-and-compliance/permission-management-overview.md)
-  - [输⼊输出AI安全护栏](raw/model-user-guide/security-and-compliance/content-security.md)
   - [模型备案信息公示](raw/model-user-guide/security-and-compliance/model-filing-information-publicity.md)
+  - [输⼊输出AI安全护栏](raw/model-user-guide/security-and-compliance/content-security.md)
   - [千问大模型应用上架及合规备案](raw/model-user-guide/security-and-compliance/compliance-and-launch-filing-guide-for-ai-apps-powered-by-the-tongyi-model.md)
   - [合规资质与隐私说明](raw/model-user-guide/security-and-compliance/privacy-notice.md)
 - **模型数据**
@@ -473,6 +474,7 @@
     - [MiniMax](raw/model-user-guide/use-cases/third-party-model-integration-tutorial/minimax-api-by-minimax.md)
     - [Stepfun-阶跃星辰](raw/model-user-guide/use-cases/third-party-model-integration-tutorial/stepfun.md)
   - [高效搭建 AI 智能体与工作流应用](raw/model-user-guide/use-cases/build-ai-applications-based-on-alibaba-cloud-model-studio.md)
+  - [HappyHorse 打造一站式影视创作平台](raw/model-user-guide/use-cases/infinite-canvas.md)
   - [深度研究：生成你的独家洞察报告](raw/model-user-guide/use-cases/deep-research.md)
   - [AI 解题 + 批改：推动课程教学智变](raw/model-user-guide/use-cases/ai-homework-helper.md)
   - [文生文Prompt指南](raw/model-user-guide/use-cases/prompt-engineering-guide.md)
@@ -543,6 +545,11 @@
   - [自定义 MCP 服务](raw/application-user-guide/model-context-protocol/custom-mcp.md)
   - [外部调用](raw/application-user-guide/model-context-protocol/mcp-external-calls.md)
   - [MCP 常见问题](raw/application-user-guide/model-context-protocol/mcp-faq.md)
+  - [外部调用](raw/application-user-guide/model-context-protocol/mcp-external-calls.md)
+  - [官方 MCP 服务](raw/application-user-guide/model-context-protocol/official-and-third-party-mcp.md)
+- **插件**
+  - [插件概述](raw/application-user-guide/plug-in/plug-in-overview.md)
+  - [官方和第三方插件](raw/application-user-guide/plug-in/plugins.md)
 - **应用发布与分享**
   - [分享智能体应用](raw/application-user-guide/application-publishing-and-sharing/share-an-application.md)
   - [使用智能体或工作流作为组件](raw/application-user-guide/application-publishing-and-sharing/use-agent-or-workflow-as-component.md)
@@ -556,9 +563,10 @@
 - **应用评测**
   - **新版应用评测**
     - [新版评测集](raw/application-user-guide/application-evaluation/new-version-of-application-evaluation/new-version-of-evaluation-set.md)
-    - [评测任务](raw/application-user-guide/application-evaluation/new-version-of-application-evaluation/evaluation-task.md)
     - [标签管理](raw/application-user-guide/application-evaluation/new-version-of-application-evaluation/label-management.md)
+    - [评测任务](raw/application-user-guide/application-evaluation/new-version-of-application-evaluation/evaluation-task.md)
     - [评估器](raw/application-user-guide/application-evaluation/new-version-of-application-evaluation/grader.md)
+  - [自动评测](raw/application-user-guide/application-evaluation/application-auto-evaluation.md)
   - [手动评测](raw/application-user-guide/application-evaluation/evaluate-manual-application.md)
   - [自动评测](raw/application-user-guide/application-evaluation/application-auto-evaluation.md)
   - [评测集](raw/application-user-guide/application-evaluation/application-evaluation-dataset.md)
@@ -568,8 +576,8 @@
       - **API目录**
         - [CutQuestions - 试卷切题](raw/application-user-guide/application-gallery/edu-tutor/api-reference-edututor/api-edututor-2025-07-07-dir/api-edututor-2025-07-07-cutquestions.md)
         - [AnswerSSE - 解题辅导](raw/application-user-guide/application-gallery/edu-tutor/api-reference-edututor/api-edututor-2025-07-07-dir/api-edututor-2025-07-07-answersse.md)
-      - [API概览](raw/application-user-guide/application-gallery/edu-tutor/api-reference-edututor/api-edututor-2025-07-07-overview.md)
       - [服务接入点](raw/application-user-guide/application-gallery/edu-tutor/api-reference-edututor/api-edututor-2025-07-07-endpoint.md)
+      - [API概览](raw/application-user-guide/application-gallery/edu-tutor/api-reference-edututor/api-edututor-2025-07-07-overview.md)
       - [授权信息](raw/application-user-guide/application-gallery/edu-tutor/api-reference-edututor/api-edututor-2025-07-07-ram.md)
     - [通义拍照解题辅导产品介绍](raw/application-user-guide/application-gallery/edu-tutor/brief-introduction-of-edu-tutor.md)
   - **官方应用-通义音频播客生成**
@@ -599,7 +607,6 @@
       - [HTTP协议](raw/application-user-guide/application-gallery/multimodal-products/multimodal-api-references/multimodal-http-protocol.md)
       - [调用插件](raw/application-user-guide/application-gallery/multimodal-products/multimodal-api-references/call-plugins.md)
       - [多模态对话结果 extra_info 说明](raw/application-user-guide/application-gallery/multimodal-products/multimodal-api-references/extra-info-description.md)
-      - [多模态交互套件-错误码](raw/application-user-guide/application-gallery/multimodal-products/multimodal-api-references/multimodal-error-code.md)
       - [长期记忆开放接口](raw/application-user-guide/application-gallery/multimodal-products/multimodal-api-references/long-term-memory-api.md)
       - [管理热词](raw/application-user-guide/application-gallery/multimodal-products/multimodal-api-references/management-hot-words.md)
     - **最佳实践**
@@ -655,7 +662,6 @@
       - [影视互娱剧本创作](raw/application-user-guide/application-gallery/quanmiao-light-application-series/light-application-guidelines-for-use/film-and-television-script-creation.md)
       - [影视传媒视频理解](raw/application-user-guide/application-gallery/quanmiao-light-application-series/light-application-guidelines-for-use/media-video-understanding.md)
       - [车机网络热点信息互动问答](raw/application-user-guide/application-gallery/quanmiao-light-application-series/light-application-guidelines-for-use/car-machine-content-platform-news-hot-list-interaction.md)
-      - [泛企业VOC挖掘](raw/application-user-guide/application-gallery/quanmiao-light-application-series/light-application-guidelines-for-use/pan-enterprise-voc-mining.md)
       - [泛企业线索挖掘](raw/application-user-guide/application-gallery/quanmiao-light-application-series/light-application-guidelines-for-use/pan-enterprise-clue-mining.md)
       - [网络内容安全审核](raw/application-user-guide/application-gallery/quanmiao-light-application-series/light-application-guidelines-for-use/network-content-security-audit.md)
       - [作文批改助手](raw/application-user-guide/application-gallery/quanmiao-light-application-series/light-application-guidelines-for-use/composition-correction-assistant.md)
@@ -670,7 +676,6 @@
           - [ModelUsage](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-struct-dir/api-quanmiaolightapp-2024-08-01-struct-modelusage.md)
         - **API目录**
           - **电商零售推广文案写作**
-            - [RunMarketingInformationWriting - 电商零售推广文案写作](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-dir/api-quanmiaolightapp-2024-08-01-dir-e-commerce-retail-promotion-copy-writing/api-quanmiaolightapp-2024-08-01-runmarketinginformationwriting.md)
             - [RunMarketingInformationExtract - 电商零售内容实体抽取](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-dir/api-quanmiaolightapp-2024-08-01-dir-e-commerce-retail-promotion-copy-writing/api-quanmiaolightapp-2024-08-01-runmarketinginformationextract.md)
           - **影视互娱剧本创作**
             - [RunScriptRefine - 影视互娱剧本创作-剧本整理](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-dir/api-quanmiaolightapp-2024-08-01-dir-film-and-television-mutual-entertainment-script-creation/api-quanmiaolightapp-2024-08-01-runscriptrefine.md)
@@ -680,8 +685,8 @@
           - **传媒/零售文章风格与格式学习**
             - [RunStyleWriting - 传媒/零售文章风格与格式学习](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-dir/api-quanmiaolightapp-2024-08-01-dir-media-retail-article-style-and-format-learning/api-quanmiaolightapp-2024-08-01-runstylewriting.md)
           - **影视传媒视频理解**
-            - [SubmitVideoAnalysisTask - 视频理解-提交异步任务](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-dir/api-quanmiaolightapp-2024-08-01-dir-film-and-television-media-video-understanding/api-quanmiaolightapp-2024-08-01-submitvideoanalysistask.md)
             - [GetVideoAnalysisTask - 视频理解-获取异步任务状态和结果](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-dir/api-quanmiaolightapp-2024-08-01-dir-film-and-television-media-video-understanding/api-quanmiaolightapp-2024-08-01-getvideoanalysistask.md)
+            - [SubmitVideoAnalysisTask - 视频理解-提交异步任务](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-dir/api-quanmiaolightapp-2024-08-01-dir-film-and-television-media-video-understanding/api-quanmiaolightapp-2024-08-01-submitvideoanalysistask.md)
             - [UpdateVideoAnalysisConfig - 视频理解-更新配置](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-dir/api-quanmiaolightapp-2024-08-01-dir-film-and-television-media-video-understanding/api-quanmiaolightapp-2024-08-01-updatevideoanalysisconfig.md)
             - [GetVideoAnalysisConfig - 视频理解-获取配置](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-dir/api-quanmiaolightapp-2024-08-01-dir-film-and-television-media-video-understanding/api-quanmiaolightapp-2024-08-01-getvideoanalysisconfig.md)
             - [RunVideoAnalysis - 视频理解-在线任务](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-dir/api-quanmiaolightapp-2024-08-01-dir-film-and-television-media-video-understanding/api-quanmiaolightapp-2024-08-01-runvideoanalysis.md)
@@ -726,6 +731,7 @@
             - [GetEnterpriseVocAnalysisTask - 获取企业VOC分析任务结果](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-dir/api-quanmiaolightapp-2024-08-01-dir-other/api-quanmiaolightapp-2024-08-01-getenterprisevocanalysistask.md)
         - [API概览](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-overview.md)
         - [服务接入点](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-endpoint.md)
+        - [API概览](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-overview.md)
         - [授权信息](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-ram.md)
         - [版本说明](raw/application-user-guide/application-gallery/quanmiao-light-application-series/development-documentation/api-reference-1/api-quanmiaolightapp-2024-08-01-changeset.md)
     - [全妙轻应用更新公告](raw/application-user-guide/application-gallery/quanmiao-light-application-series/light-application-update-announcement.md)
@@ -789,8 +795,9 @@
         - **平台能力-文档库**
           - [UpdateDocumentChunk - 更新文档块内容](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-updatedocumentchunk.md)
           - [CreateLibrary - 创建文档库](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-createlibrary.md)
-          - [GetLibraryList - 获取文档库列表](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-getlibrarylist.md)
+          - [GetAppConfig - 获取配置信息](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-getappconfig.md)
           - [GetLibrary - 获取文档库详情](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-getlibrary.md)
+          - [GetLibraryList - 获取文档库列表](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-getlibrarylist.md)
           - [UploadDocument - 上传文档](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-uploaddocument.md)
           - [GetDocumentUrl - 获取文档的下载链接](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-getdocumenturl.md)
           - [PreviewDocument - 预览文档](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-previewdocument.md)
@@ -798,7 +805,6 @@
           - [GetDocumentList - 获取文档列表](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-getdocumentlist.md)
           - [DeleteDocument - 删除文档](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-deletedocument.md)
           - [UpdateDocument - 更新文档](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-updatedocument.md)
-          - [CreatePredefinedDocument - 创建预定义文档](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-createpredefineddocument.md)
           - [GetDocumentChunkList - 获取文档块列表](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-getdocumentchunklist.md)
           - [RecallDocument - 文档召回](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-recalldocument.md)
           - [GetParseResult - 获取文档解析结果](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-document-library/api-dianjin-2024-06-28-getparseresult.md)
@@ -812,8 +818,8 @@
         - **平台能力-应用**
           - [EndToEndRealTimeDialog - 语音实时对话](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-endtoendrealtimedialog.md)
           - [RunDialogAnalysis - 会话分析结果生成](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-rundialoganalysis.md)
-          - [RunAgent - 运行智能体](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-runagent.md)
           - [CreateDialog - 创建外呼会话](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-createdialog.md)
+          - [RunAgent - 运行智能体](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-runagent.md)
           - [RealTimeDialog - 实时会话](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-realtimedialog.md)
           - [RealtimeDialogAssist - 实时会话辅助](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-realtimedialogassist.md)
           - [GetDialogDetail - 获取会话详情](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-getdialogdetail.md)
@@ -827,7 +833,6 @@
           - [CreateDocsSummaryTask - 创建多文档总结任务](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-createdocssummarytask.md)
           - [CreatePdfTranslateTask - 创建pdf文档翻译任务](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-createpdftranslatetask.md)
           - [GetSummaryTaskResult - 获取财报总结任务结果](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-getsummarytaskresult.md)
-          - [GetTaskResult - 获取结果](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-gettaskresult.md)
           - [CreateQualityCheckTask - 创建质检任务](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-createqualitychecktask.md)
           - [GetQualityCheckTaskResult - 获取质检结果](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-getqualitychecktaskresult.md)
           - [RecognizeIntention - 意图识别](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-dir/api-dianjin-2024-06-28-dir-platform-capabilities-application/api-dianjin-2024-06-28-recognizeintention.md)
@@ -842,6 +847,7 @@
       - [API概览](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-overview.md)
       - [服务接入点](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-endpoint.md)
       - [授权信息](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-ram.md)
+      - [API概览](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-overview.md)
       - [版本说明](raw/application-user-guide/application-gallery/tongyi-dianjin/api-reference-3/api-dianjin-2024-06-28-changeset.md)
     - [产品简介](raw/application-user-guide/application-gallery/tongyi-dianjin/tongyi-dianjin-overview.md)
   - **官方应用-通义数据挖掘**
@@ -873,12 +879,12 @@
           - [GetImageTranslateTask - 获取图片翻译任务结果](raw/application-user-guide/application-gallery/official-application-tongyi-translate/tongyi-translate-api-reference/api-anytrans-2025-07-07-dir/api-anytrans-2025-07-07-dir-image-translation/api-anytrans-2025-07-07-getimagetranslatetask.md)
           - [SubmitImageTranslateTask - 提交图片翻译任务](raw/application-user-guide/application-gallery/official-application-tongyi-translate/tongyi-translate-api-reference/api-anytrans-2025-07-07-dir/api-anytrans-2025-07-07-dir-image-translation/api-anytrans-2025-07-07-submitimagetranslatetask.md)
         - **文档翻译**
-          - [SubmitDocTranslateTask - 文档翻译任务提交](raw/application-user-guide/application-gallery/official-application-tongyi-translate/tongyi-translate-api-reference/api-anytrans-2025-07-07-dir/api-anytrans-2025-07-07-dir-document-translation/api-anytrans-2025-07-07-submitdoctranslatetask.md)
           - [GetDocTranslateTask - 文档翻译结果获取](raw/application-user-guide/application-gallery/official-application-tongyi-translate/tongyi-translate-api-reference/api-anytrans-2025-07-07-dir/api-anytrans-2025-07-07-dir-document-translation/api-anytrans-2025-07-07-getdoctranslatetask.md)
       - [API概览](raw/application-user-guide/application-gallery/official-application-tongyi-translate/tongyi-translate-api-reference/api-anytrans-2025-07-07-overview.md)
       - [服务接入点](raw/application-user-guide/application-gallery/official-application-tongyi-translate/tongyi-translate-api-reference/api-anytrans-2025-07-07-endpoint.md)
       - [授权信息](raw/application-user-guide/application-gallery/official-application-tongyi-translate/tongyi-translate-api-reference/api-anytrans-2025-07-07-ram.md)
       - [版本说明](raw/application-user-guide/application-gallery/official-application-tongyi-translate/tongyi-translate-api-reference/api-anytrans-2025-07-07-changeset.md)
+      - [授权信息](raw/application-user-guide/application-gallery/official-application-tongyi-translate/tongyi-translate-api-reference/api-anytrans-2025-07-07-ram.md)
     - [通义多模态翻译](raw/application-user-guide/application-gallery/official-application-tongyi-translate/official-application-tongyi-translate-overview.md)
     - [网页翻译JSSDK](raw/application-user-guide/application-gallery/official-application-tongyi-translate/web-page-translation-jssdk.md)
   - **官方应用-千问联网检索Agent**
@@ -913,11 +919,11 @@
             - [妙笔-分布生成创作文章](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/usage-guide/amb/function-interface/step-by-step-generation.md)
             - [搜索素材](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/usage-guide/amb/function-interface/search-materials.md)
             - [智能配图](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/usage-guide/amb/function-interface/smart-image-generation.md)
-          - [AI妙笔产品概述](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/usage-guide/amb/product-overview-for-amb.md)
+            - [搜索素材](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/usage-guide/amb/function-interface/search-materials.md)
           - [妙笔首页概览](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/usage-guide/amb/amb-homepage-overview.md)
+          - [AI妙笔产品概述](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/usage-guide/amb/product-overview-for-amb.md)
           - [AI工具箱](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/usage-guide/amb/ai-toolbox.md)
           - [素材库](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/usage-guide/amb/material-library.md)
-          - [系统配置](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/usage-guide/amb/system-configuration.md)
           - [文章风格和格式学习](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/usage-guide/amb/style-imitation.md)
         - [智能审校](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/usage-guide/article-review.md)
         - [AI妙策](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/usage-guide/ai-miaoce.md)
@@ -925,7 +931,6 @@
       - **文本写作指导**
         - **政务公文写作指导**
           - [快速写一篇政务稿（prompt一步式撰写）](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/document-writing-best-practices/government-document-writing-best-practices/quick-gov-writing-prompt.md)
-          - [分步式撰写政务稿（精准控制章节内容）](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/document-writing-best-practices/government-document-writing-best-practices/step-by-step-gov-writing.md)
           - [用已有文章，生成标题摘要等](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/document-writing-best-practices/government-document-writing-best-practices/generate-titles-summaries-gov-text.md)
         - **传媒类文体写作指导**
           - [用已有文章，生成标题摘要等](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/document-writing-best-practices/media-style-writing-best-practices/generate-titles-summaries-media-text.md)
@@ -945,6 +950,7 @@
       - [计费说明（PPT生成）](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/ppt-generation-billing.md)
       - [计费说明（妙策-自定义数据源）](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/billing-document-miaoce-custom-data-source.md)
       - [计费说明（视频混剪）](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/billing-description-video-mixing.md)
+      - [计费说明（妙笔）](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaobi-miaoce-shenjiao/miaobi-billing.md)
     - **妙搜和妙读**
       - **使用指南**
         - [妙搜](raw/application-user-guide/application-gallery/quanmiao-solution-products/miaosou-and-miaodu/miaodou-and-miaodu-guidelines-for-use/ai-miaosou.md)
@@ -956,9 +962,9 @@
           - [HottopicNews](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-struct-dir/api-aimiaobi-2023-08-01-hottopicnews.md)
           - [OutlineSearchResult](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-struct-dir/api-aimiaobi-2023-08-01-struct-outlinesearchresult.md)
           - [OutlineWritingArticle](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-struct-dir/api-aimiaobi-2023-08-01-struct-outlinewritingarticle.md)
-          - [TopicSelection](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-struct-dir/api-aimiaobi-2023-08-01-struct-topicselection.md)
           - [WritingOutline](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-struct-dir/api-aimiaobi-2023-08-01-struct-writingoutline.md)
           - [WritingStyleTemplateDefine](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-struct-dir/api-aimiaobi-2023-08-01-struct-writingstyletemplatedefine.md)
+          - [TopicSelection](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-struct-dir/api-aimiaobi-2023-08-01-struct-topicselection.md)
           - [WritingStyleTemplateField](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-struct-dir/api-aimiaobi-2023-08-01-struct-writingstyletemplatefield.md)
         - **API目录**
           - **通用接口**
@@ -967,7 +973,6 @@
             - [ListVersions - 获取版本信息](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-universal-interface/api-aimiaobi-2023-08-01-listversions.md)
             - [GetProperties - 获取配置信息](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-universal-interface/api-aimiaobi-2023-08-01-getproperties.md)
           - **通用接口-文件上传下载**
-            - [GenerateFileUrlByKey - 生成文件URL](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-common-interface-file-upload-and-download/api-aimiaobi-2023-08-01-generatefileurlbykey.md)
             - [GenerateUploadConfig - 生成上传配置](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-common-interface-file-upload-and-download/api-aimiaobi-2023-08-01-generateuploadconfig.md)
           - **通用接口-异步任务管理**
             - [SubmitAsyncTask - 提交异步任务](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-common-interface-asynchronous-task-management/api-aimiaobi-2023-08-01-submitasynctask.md)
@@ -981,7 +986,6 @@
             - [GetGeneralConfig - 通用配置-详情](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-common-interface-common-configuration/api-aimiaobi-2023-08-01-getgeneralconfig.md)
             - [DeleteGeneralConfig - 通用配置-删除](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-common-interface-common-configuration/api-aimiaobi-2023-08-01-deletegeneralconfig.md)
           - **妙笔-文体仿写**
-            - [ListStyleLearningResult - 获取文体学习分析结果列表](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-style-imitation-writing/api-aimiaobi-2023-08-01-liststylelearningresult.md)
             - [RunStyleFeatureAnalysis - 内容特点分析](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-style-imitation-writing/api-aimiaobi-2023-08-01-runstylefeatureanalysis.md)
             - [SaveStyleLearningResult - 保存文体学习分析结果](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-style-imitation-writing/api-aimiaobi-2023-08-01-savestylelearningresult.md)
             - [DeleteStyleLearningResult - 删除自定义文体](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-style-imitation-writing/api-aimiaobi-2023-08-01-deletestylelearningresult.md)
@@ -1011,12 +1015,10 @@
             - [SubmitVideoAudit - 提交视频审校任务](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-video-review/api-aimiaobi-2023-08-01-submitvideoaudit.md)
             - [QueryVideoAuditResult - 查询视频审校结果](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-video-review/api-aimiaobi-2023-08-01-queryvideoauditresult.md)
           - **妙笔-文章审校-词库管理**
-            - [ListAuditTerms - 获取自定义词库记录](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-miaobi-article-review-thesaurus-management/api-aimiaobi-2023-08-01-listauditterms.md)
             - [AddAuditTerms - 添加自定义词库记录](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-miaobi-article-review-thesaurus-management/api-aimiaobi-2023-08-01-addauditterms.md)
             - [DeleteAuditTerms - 删除指定词库记录](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-miaobi-article-review-thesaurus-management/api-aimiaobi-2023-08-01-deleteauditterms.md)
             - [EditAuditTerms - 编辑自定义词库记录](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-miaobi-article-review-thesaurus-management/api-aimiaobi-2023-08-01-editauditterms.md)
             - [SubmitImportTermsTask - 提交导入词库任务](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-miaobi-article-review-thesaurus-management/api-aimiaobi-2023-08-01-submitimporttermstask.md)
-            - [FetchImportTermsTask - 获取导入词库任务结果](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-miaobi-article-review-thesaurus-management/api-aimiaobi-2023-08-01-fetchimporttermstask.md)
             - [SubmitExportTermsTask - 提交导出词库任务](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-miaobi-article-review-thesaurus-management/api-aimiaobi-2023-08-01-submitexporttermstask.md)
             - [FetchExportTermsTask - 获取导出词库任务结果](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-miaobi-article-review-thesaurus-management/api-aimiaobi-2023-08-01-fetchexporttermstask.md)
           - **妙笔-文章审校-规则库管理**
@@ -1049,6 +1051,7 @@
             - [DeleteMaterialById - 删除素材](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-material-library/api-aimiaobi-2023-08-01-deletematerialbyid.md)
             - [SaveMaterialDocument - 保存素材](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-material-library/api-aimiaobi-2023-08-01-savematerialdocument.md)
             - [UpdateMaterialDocument - 更新素材](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-material-library/api-aimiaobi-2023-08-01-updatematerialdocument.md)
+            - [DeleteMaterialById - 删除素材](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-material-library/api-aimiaobi-2023-08-01-deletematerialbyid.md)
             - [GetMaterialById - 获取素材](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-material-library/api-aimiaobi-2023-08-01-getmaterialbyid.md)
             - [ListMaterialDocuments - 获取素材列表](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-material-library/api-aimiaobi-2023-08-01-listmaterialdocuments.md)
           - **妙策-自定义数据源**
@@ -1059,6 +1062,7 @@
             - [GetCustomText - 获取自定义文本](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-material-library-custom-text/api-aimiaobi-2023-08-01-getcustomtext.md)
             - [UpdateCustomText - 更新自定义文本](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-material-library-custom-text/api-aimiaobi-2023-08-01-updatecustomtext.md)
             - [ListCustomText - 获取自定义文本列表](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-material-library-custom-text/api-aimiaobi-2023-08-01-listcustomtext.md)
+            - [DeleteCustomText - 删除自定义文本](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-material-library-custom-text/api-aimiaobi-2023-08-01-deletecustomtext.md)
             - [SaveCustomText - 保存自定义文本](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-material-library-custom-text/api-aimiaobi-2023-08-01-savecustomtext.md)
             - [DeleteCustomText - 删除自定义文本](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-material-library-custom-text/api-aimiaobi-2023-08-01-deletecustomtext.md)
             - [DocumentExtraction - 文档提取](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-material-library-custom-text/api-aimiaobi-2023-08-01-documentextraction.md)
@@ -1070,8 +1074,16 @@
             - [AsyncUploadVideo - 异步上传视频剪辑素材](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-video-mixed-cut/api-aimiaobi-2023-08-01-asyncuploadvideo.md)
             - [AsyncCreateClipsTask - 创建剪辑任务](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-video-mixed-cut/api-aimiaobi-2023-08-01-asynccreateclipstask.md)
             - [ListAutoClipsTask - 智能混剪任务列表](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-pen-video-mixed-cut/api-aimiaobi-2023-08-01-listautoclipstask.md)
-          - **公文库检索**
-            - [ListDocumentRetrieve - 公文库检索](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-public-library-retrieval/api-aimiaobi-2023-08-01-listdocumentretrieve.md)
+          - **妙策-自定义数据源**
+            - [ExportCustomSourceAnalysisTask - 导出自定义源-话题分析任务结果](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-tips-custom-data-source/api-aimiaobi-2023-08-01-exportcustomsourceanalysistask.md)
+            - [GetCustomSourceTopicAnalysisTask - 获取自定义源话题分析任务结果](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-tips-custom-data-source/api-aimiaobi-2023-08-01-getcustomsourcetopicanalysistask.md)
+            - [SubmitCustomSourceTopicAnalysis - 提交自定义源话题选题分析任务](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-tips-custom-data-source/api-aimiaobi-2023-08-01-submitcustomsourcetopicanalysis.md)
+          - **通用接口-通用配置**
+            - [CreateGeneralConfig - 通用配置-创建](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-common-interface-common-configuration/api-aimiaobi-2023-08-01-creategeneralconfig.md)
+            - [ListGeneralConfigs - 通用配置-列表](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-common-interface-common-configuration/api-aimiaobi-2023-08-01-listgeneralconfigs.md)
+            - [GetGeneralConfig - 通用配置-详情](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-common-interface-common-configuration/api-aimiaobi-2023-08-01-getgeneralconfig.md)
+            - [UpdateGeneralConfig - 通用配置-修改](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-common-interface-common-configuration/api-aimiaobi-2023-08-01-updategeneralconfig.md)
+            - [DeleteGeneralConfig - 通用配置-删除](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-common-interface-common-configuration/api-aimiaobi-2023-08-01-deletegeneralconfig.md)
           - **妙策-选题热点**
             - [RunTopicSelectionMerge - 选题热点融合](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-miaozi-hot-topics/api-aimiaobi-2023-08-01-runtopicselectionmerge.md)
             - [ListHotSources - 获取三方热榜源列表](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-miaozi-hot-topics/api-aimiaobi-2023-08-01-listhotsources.md)
@@ -1086,10 +1098,10 @@
             - [ExportHotTopicPlanningProposals - 导出选题策划文档](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-miaozi-hot-topics/api-aimiaobi-2023-08-01-exporthottopicplanningproposals.md)
           - **妙策-openapi**
             - [SubmitDocClusterTask - 提交内容聚合任务](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-tips-openapi/api-aimiaobi-2023-08-01-submitdocclustertask.md)
-            - [GetDocClusterTask - 获取内容聚合任务结果](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-tips-openapi/api-aimiaobi-2023-08-01-getdocclustertask.md)
             - [SubmitTopicSelectionPerspectiveAnalysisTask - 提交选题热点分析任务](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-tips-openapi/api-aimiaobi-2023-08-01-submittopicselectionperspectiveanalysistask.md)
-            - [GetTopicSelectionPerspectiveAnalysisTask - 获取选题视角分析任务结果](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-tips-openapi/api-aimiaobi-2023-08-01-gettopicselectionperspectiveanalysistask.md)
+            - [GetDocClusterTask - 获取内容聚合任务结果](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-tips-openapi/api-aimiaobi-2023-08-01-getdocclustertask.md)
             - [SubmitCustomTopicSelectionPerspectiveAnalysisTask - 提交自定义热点选题视角分析任务](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-tips-openapi/api-aimiaobi-2023-08-01-submitcustomtopicselectionperspectiveanalysistask.md)
+            - [GetTopicSelectionPerspectiveAnalysisTask - 获取选题视角分析任务结果](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-tips-openapi/api-aimiaobi-2023-08-01-gettopicselectionperspectiveanalysistask.md)
             - [GetCustomTopicSelectionPerspectiveAnalysisTask - 获取自定义选题视角分析任务结果](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-tips-openapi/api-aimiaobi-2023-08-01-getcustomtopicselectionperspectiveanalysistask.md)
           - **妙策-新闻播报**
             - [SubmitCustomHotTopicBroadcastJob - 提交自定义播报单任务](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-policy-news-broadcast/api-aimiaobi-2023-08-01-submitcustomhottopicbroadcastjob.md)
@@ -1108,7 +1120,7 @@
             - [DeleteDataset - 数据源-删除](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-search-data-source/api-aimiaobi-2023-08-01-deletedataset.md)
             - [UpdateDataset - 数据源-修改](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-search-data-source/api-aimiaobi-2023-08-01-updatedataset.md)
             - [ListDatasets - 数据源-列表](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-search-data-source/api-aimiaobi-2023-08-01-listdatasets.md)
-            - [AddDatasetDocument - 数据源-添加文档到数据集](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-search-data-source/api-aimiaobi-2023-08-01-adddatasetdocument.md)
+            - [DeleteDataset - 数据源-删除](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-search-data-source/api-aimiaobi-2023-08-01-deletedataset.md)
             - [GetDatasetDocument - 数据源-获取文档详情](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-search-data-source/api-aimiaobi-2023-08-01-getdatasetdocument.md)
             - [UpdateDatasetDocument - 数据源-修改文档](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-search-data-source/api-aimiaobi-2023-08-01-updatedatasetdocument.md)
             - [SearchDatasetDocuments - 数据源-搜索文档](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-search-data-source/api-aimiaobi-2023-08-01-searchdatasetdocuments.md)
@@ -1161,7 +1173,6 @@
             - [RunGenerateQuestions - 猜你想问](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-reading-question-and-answer-class/api-aimiaobi-2023-08-01-rungeneratequestions.md)
             - [RunDocQa - 文档问答（文章问答/多模态文件问答）](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-wonderful-reading-question-and-answer-class/api-aimiaobi-2023-08-01-rundocqa.md)
           - **深度写作**
-            - [SubmitDeepWriteTask - 提交深度写作任务](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-deep-writing/api-aimiaobi-2023-08-01-submitdeepwritetask.md)
             - [GetDeepWriteTask - 查询深度写作任务](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-deep-writing/api-aimiaobi-2023-08-01-getdeepwritetask.md)
             - [GetDeepWriteTaskResult - 查询深度写作任务的结果](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-deep-writing/api-aimiaobi-2023-08-01-getdeepwritetaskresult.md)
             - [CancelDeepWriteTask - 取消深度写作任务](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/amb-api-reference/api-aimiaobi-2023-08-01-dir/api-aimiaobi-2023-08-01-dir-deep-writing/api-aimiaobi-2023-08-01-canceldeepwritetask.md)
@@ -1231,11 +1242,18 @@
         - [妙笔写作信源对接](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/quanmiao-more/miaobi-writing-source-docking.md)
         - [妙搜数据集管理通过API引入数据源](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/quanmiao-more/miaosou-introduce-data-source-through-api.md)
         - [全妙iframe嵌入方案](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/quanmiao-more/iframe-embedding-scheme.md)
-        - [全妙Logo定制规范及部署方式](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/quanmiao-more/logo-customization-specification-and-deployment-method.md)
         - [全妙云存储（OSS）设置指南](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/quanmiao-more/oss-setup-guide.md)
+        - [全妙Logo定制规范及部署方式](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/quanmiao-more/logo-customization-specification-and-deployment-method.md)
         - [全妙PaaS AgentKey 获取指南](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/quanmiao-more/quanmiao-paas-agentkey-get-guide.md)
+      - **最佳实践**
+        - [智能审校最佳实践](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/miaobi-and-miaoce-best-practices/best-practices-for-smart-audit.md)
+        - [妙笔API最佳实践](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/miaobi-and-miaoce-best-practices/best-practices-for-miaobi-api.md)
+        - [妙策API最佳实践](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/miaobi-and-miaoce-best-practices/best-practices-for-miaoce-api.md)
+        - [妙搜API最佳实践](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/miaobi-and-miaoce-best-practices/best-practices-for-miaosou-api.md)
+        - [妙读最佳实践](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/miaobi-and-miaoce-best-practices/miaodu-best-practices.md)
+        - [视频混剪最佳实践](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/miaobi-and-miaoce-best-practices/best-practices-for-video-mixing-and-cutting.md)
+        - [PPT生成最佳实践](raw/application-user-guide/application-gallery/quanmiao-solution-products/ai-quan-miao-development-document/miaobi-and-miaoce-best-practices/ppt-generation-best-practices.md)
   - [官方应用-通义听悟Agent](raw/application-user-guide/application-gallery/official-application-tingwu-agent.md)
-  - [通义法睿](raw/application-user-guide/application-gallery/tongyi-farui.md)
   - [官方应用-析言GBI](raw/application-user-guide/application-gallery/xiyan-gbi.md)
 - **实践教程**
   - [在网站上增加一个AI助手](raw/application-user-guide/application-use-cases/add-an-ai-assistant-to-your-website-in-10-minutes.md)
@@ -1253,8 +1271,8 @@
 ## 模型 API 参考
 
 - **使用 API**
-  - [获取API Key](raw/model-api-reference/preparations/get-api-key.md)
   - [安装SDK](raw/model-api-reference/preparations/install-sdk.md)
+  - [获取API Key](raw/model-api-reference/preparations/get-api-key.md)
   - [使用百炼 CLI](raw/model-api-reference/preparations/use-model-studio-cli.md)
   - [错误码](raw/model-api-reference/preparations/error-code.md)
 - **图像生成**
@@ -1263,6 +1281,7 @@
     - [千问-图像编辑API参考](raw/model-api-reference/image-generation/qwen-image-api-reference/qwen-image-edit-api.md)
     - [千问-文生图API参考](raw/model-api-reference/image-generation/qwen-image-api-reference/qwen-image-api.md)
     - [千问-图像翻译API参考](raw/model-api-reference/image-generation/qwen-image-api-reference/qwen-mt-image-api.md)
+    - [千问-图像生成与编辑3.0 API参考](raw/model-api-reference/image-generation/qwen-image-api-reference/qwen-image-generation-and-editing-api-reference.md)
   - **万相**
     - [万相-文生图V1版API参考](raw/model-api-reference/image-generation/wan-image-api-reference/text-to-image-api-reference.md)
     - [万相-图像生成与编辑2.7 API参考](raw/model-api-reference/image-generation/wan-image-api-reference/wan-image-generation-and-editing-api-reference.md)
@@ -1270,6 +1289,7 @@
     - [万相-通用图像编辑2.5](raw/model-api-reference/image-generation/wan-image-api-reference/wan2-5-image-edit-api-reference.md)
     - [万相-通用图像编辑API参考](raw/model-api-reference/image-generation/wan-image-api-reference/wanx-image-edit-api-reference.md)
     - [万相-涂鸦作画API参考](raw/model-api-reference/image-generation/wan-image-api-reference/wanx-sketch-to-image-api-reference.md)
+    - [万相-通用图像编辑API参考](raw/model-api-reference/image-generation/wan-image-api-reference/wanx-image-edit-api-reference.md)
     - [万相-图像局部重绘API参考](raw/model-api-reference/image-generation/wan-image-api-reference/vary-region-api-reference.md)
     - [万相-文生图V2版API参考](raw/model-api-reference/image-generation/wan-image-api-reference/text-to-image-v2-api-reference.md)
   - **Z-Image**
@@ -1284,6 +1304,7 @@
     - [人物实例分割API参考](raw/model-api-reference/image-generation/image-creative-tools-api-reference/image-instance-segmentation-api-reference.md)
     - [图像擦除补全API参考](raw/model-api-reference/image-generation/image-creative-tools-api-reference/image-erase-completion-api-reference.md)
     - [人物写真生成FaceChain](raw/model-api-reference/image-generation/image-creative-tools-api-reference/facechain-portrait-generation.md)
+    - [AI试衣OutfitAnyone](raw/model-api-reference/image-generation/image-creative-tools-api-reference/outfitanyone.md)
     - [创意文字WordArt锦书](raw/model-api-reference/image-generation/image-creative-tools-api-reference/wordart-quick-start.md)
     - [AI试衣OutfitAnyone](raw/model-api-reference/image-generation/image-creative-tools-api-reference/outfitanyone.md)
   - **Vidu**
@@ -1297,6 +1318,7 @@
   - [Python SDK](raw/model-api-reference/omni-realtime-api/omni-realtime-python-sdk.md)
   - [Java SDK](raw/model-api-reference/omni-realtime-api/omni-realtime-java-sdk.md)
   - [实时多模态交互流程](raw/model-api-reference/omni-realtime-api/omni-realtime-interaction-process.md)
+  - [Java SDK](raw/model-api-reference/omni-realtime-api/omni-realtime-java-sdk.md)
   - [声音复刻API参考](raw/model-api-reference/omni-realtime-api/qwen-omni-voice-cloning.md)
 - **3D模型生成**
   - [Tripo-3D模型生成](raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md)
@@ -1317,7 +1339,6 @@
     - [AOQ SDK简介](raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-desc.md)
   - [Realtime API 概述](raw/model-api-reference/realtime-api-user-guide/realtime-api-overview.md)
 - **更多模型**
-  - [通义法睿大语言模型](raw/model-api-reference/more-models/tongyi-farui-api.md)
   - [意图理解能力](raw/model-api-reference/more-models/intent-detect-capability.md)
   - [Qwen-MT API参考](raw/model-api-reference/more-models/qwen-mt-api.md)
   - [Qwen-Deep-Research API 参考](raw/model-api-reference/more-models/qwen-deep-research-api.md)
@@ -1346,6 +1367,7 @@
   - [DashScope SDK连接复用配置](raw/model-api-reference/more-about-models/connection-multiplexing-configuration.md)
 - **视频生成**
   - **HappyHorse**
+    - [HappyHorse-图生视频-基于首帧API参考](raw/model-api-reference/video-generation-api/happyhorse-api-reference/happyhorse-image-to-video-api-reference.md)
     - [HappyHorse-文生视频API参考](raw/model-api-reference/video-generation-api/happyhorse-api-reference/happyhorse-text-to-video-api-reference.md)
     - [HappyHorse-视频编辑API参考](raw/model-api-reference/video-generation-api/happyhorse-api-reference/happyhorse-video-edit-api-reference.md)
     - [HappyHorse-图生视频-基于首帧API参考](raw/model-api-reference/video-generation-api/happyhorse-api-reference/happyhorse-image-to-video-api-reference.md)
@@ -1373,19 +1395,54 @@
     - [万相-数字人](raw/model-api-reference/video-generation-api/wan-api-reference/wan-s2v-overview.md)
   - **人像驱动**
     - [图生舞蹈视频-舞动人像AnimateAnyone](raw/model-api-reference/video-generation-api/portrait-animation-api-reference/animateanyone-quick-start.md)
-    - [图生唱演视频-悦动人像EMO](raw/model-api-reference/video-generation-api/portrait-animation-api-reference/emo-quick-start.md)
     - [图生播报视频-灵动人像LivePortrait](raw/model-api-reference/video-generation-api/portrait-animation-api-reference/liveportrait-quick-start.md)
     - [视频口型替换-声动人像VideoRetalk](raw/model-api-reference/video-generation-api/portrait-animation-api-reference/videoretalk.md)
     - [图生表情包视频-表情包Emoji](raw/model-api-reference/video-generation-api/portrait-animation-api-reference/emoji-quick-start.md)
     - [视频风格重绘API参考](raw/model-api-reference/video-generation-api/portrait-animation-api-reference/video-style-transform-api-reference.md)
-  - **Vidu**
-    - [Vidu-文生视频API参考](raw/model-api-reference/video-generation-api/vidu-api-reference/vidu-text-to-video-api-reference.md)
-    - [Vidu-图生视频-基于首帧API参考](raw/model-api-reference/video-generation-api/vidu-api-reference/vidu-image-to-video-api-reference.md)
-    - [Vidu-图生视频-基于首尾帧API参考](raw/model-api-reference/video-generation-api/vidu-api-reference/vidu-keyframe-to-video-api-reference.md)
-    - [Vidu-参考生视频 API 参考](raw/model-api-reference/video-generation-api/vidu-api-reference/vidu-reference-to-video-api-reference.md)
+    - [图生表情包视频-表情包Emoji](raw/model-api-reference/video-generation-api/portrait-animation-api-reference/emoji-quick-start.md)
   - **可灵**
     - [可灵-视频生成API文档](raw/model-api-reference/video-generation-api/kling-api-reference/kling-video-generation-api-reference.md)
+  - **Vidu**
+    - [Vidu-文生视频API参考](raw/model-api-reference/video-generation-api/vidu-api-reference/vidu-text-to-video-api-reference.md)
+    - [Vidu-图生视频-基于首尾帧API参考](raw/model-api-reference/video-generation-api/vidu-api-reference/vidu-keyframe-to-video-api-reference.md)
+    - [Vidu-图生视频-基于首帧API参考](raw/model-api-reference/video-generation-api/vidu-api-reference/vidu-image-to-video-api-reference.md)
+    - [Vidu-参考生视频 API 参考](raw/model-api-reference/video-generation-api/vidu-api-reference/vidu-reference-to-video-api-reference.md)
 - **音频**
+  - **语音合成**
+    - **实时语音合成（Qwen-Audio-TTS/CosyVoice）**
+      - [Qwen-Audio-TTS/CosyVoice WebSocket API参考](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/cosyvoice-large-model-for-speech-synthesis/cosyvoice-websocket-api.md)
+      - [Qwen-Audio-TTS/CosyVoice客户端事件](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/cosyvoice-large-model-for-speech-synthesis/cosyvoice-client-events.md)
+      - [Qwen-Audio-TTS/CosyVoice服务端事件](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/cosyvoice-large-model-for-speech-synthesis/cosyvoice-server-events.md)
+      - [实时语音合成Qwen-Audio-TTS/CosyVoice Java SDK](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/cosyvoice-large-model-for-speech-synthesis/cosyvoice-java-sdk.md)
+      - [语音合成Qwen-Audio-TTS/CosyVoice Android SDK](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/cosyvoice-large-model-for-speech-synthesis/cosyvoice-android-sdk.md)
+      - [实时语音合成Qwen-Audio-TTS/CosyVoice Python SDK](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/cosyvoice-large-model-for-speech-synthesis/cosyvoice-python-sdk.md)
+      - [语音合成Qwen-Audio-TTS/CosyVoice iOS SDK](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/cosyvoice-large-model-for-speech-synthesis/cosyvoice-ios-sdk.md)
+    - **实时语音合成（Qwen-TTS-Realtime）**
+      - [Qwen-TTS-Realtime WebSocket API 参考](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/qwen-tts-realtime-api-reference/interactive-process-of-qwen-tts-realtime-synthesis.md)
+      - [客户端事件](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/qwen-tts-realtime-api-reference/qwen-tts-realtime-client-events.md)
+      - [服务端事件](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/qwen-tts-realtime-api-reference/qwen-tts-realtime-server-events.md)
+      - [Java SDK](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/qwen-tts-realtime-api-reference/qwen-tts-realtime-java-sdk.md)
+      - [Python SDK](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/qwen-tts-realtime-api-reference/qwen-tts-realtime-python-sdk.md)
+    - **实时语音合成（Sambert）**
+      - [Sambert WebSocket API 参考](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/sambert-speech-synthesis/sambert-websocket-api.md)
+      - [Sambert客户端事件](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/sambert-speech-synthesis/sambert-client-events.md)
+      - [Sambert服务端事件](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/sambert-speech-synthesis/sambert-server-events.md)
+      - [语音合成Sambert Java SDK](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/sambert-speech-synthesis/sambert-java-sdk.md)
+      - [语音合成Sambert Android SDK](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/sambert-speech-synthesis/sambert-android-sdk.md)
+      - [语音合成Sambert iOS SDK](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/sambert-speech-synthesis/sambert-ios-sdk.md)
+      - [语音合成Sambert Python SDK](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/sambert-speech-synthesis/sambert-python-sdk.md)
+    - **非实时语音合成（Qwen-Audio-TTS/CosyVoice）**
+      - [非实时语音合成Qwen-Audio-TTS/CosyVoice HTTP API参考](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/non-realtime-cosyvoice-api/cosyvoice-tts-http-api.md)
+      - [非实时语音合成Qwen-Audio-TTS/CosyVoice Java SDK参考](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/non-realtime-cosyvoice-api/cosyvoice-tts-java-sdk.md)
+      - [非实时语音合成Qwen-Audio-TTS/CosyVoice Python SDK参考](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/non-realtime-cosyvoice-api/cosyvoice-tts-python-sdk.md)
+    - **非实时语音合成（MiniMax）**
+      - [MiniMax同步语音合成API参考](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/minimax-speech-synthesis/minimax-synchronous-speech-synthesis-api.md)
+    - **声音复刻**
+      - [声音复刻HTTP API参考](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/sound-reengraving/voice-clone-design-http-api.md)
+      - [声音复刻Python SDK参考](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/sound-reengraving/voice-clone-python-sdk.md)
+      - [声音复刻Java SDK参考](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/sound-reengraving/voice-clone-java-sdk.md)
+    - [非实时语音合成（Qwen-TTS）API参考](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/qwen-tts-api.md)
+    - [声音设计API参考](raw/model-api-reference/audio-api-references/speech-synthesis-api-reference/voice-design-api-references.md)
   - **语音识别**
     - **实时语音识别（Fun-ASR）**
       - [Fun-ASR实时语音识别WebSocket API](raw/model-api-reference/audio-api-references/speech-recognition-api-reference/fun-asr-real-time-speech-recognition-api-reference/fun-asr-realtime-websocket-api.md)
@@ -1578,6 +1635,11 @@
   - [通过LlamaIndex API构建RAG应用](raw/application-api-reference/frameworks/llamaindex.md)
 - **长期记忆**
   - [长期记忆（新）API 参考](raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)
+- **框架**
+  - **Spring AI Alibaba**
+    - [通过Spring AI Alibaba检索阿里云百炼知识库](raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-knowledge-base.md)
+    - [使用Spring AI Alibaba集成阿里云百炼大模型应用](raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-llm-application.md)
+  - [通过LlamaIndex API构建RAG应用](raw/application-api-reference/frameworks/llamaindex.md)
 - **更多**
   - [服务关联角色](raw/application-api-reference/more/bailian-service-linked-role.md)
   - [知识库SearchFilters](raw/application-api-reference/more/how-to-use-search-filters.md)

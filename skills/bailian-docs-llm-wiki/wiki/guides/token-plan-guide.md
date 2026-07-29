@@ -1,4 +1,6 @@
-# token plan guide
+> /config
+Thinking mode: true
+```
 
 [Token](../concepts/token.md) Plan 是阿里云百炼推出的 AI 大模型订阅服务，以 Credits 统一计量，支持文本、多模态生成及 Harness 工具调用，适配主流 AI 编程与智能体工具。服务目前仅支持华北2（北京）地域，个人版与团队版独立计费、额度不共享，且均禁止用于非交互式自动化场景。
 

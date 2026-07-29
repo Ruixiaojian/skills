@@ -35,7 +35,6 @@
 
 ## 来源文档
 
-- [获取API Key](../../raw/model-api-reference/preparations/get-api-key.md)
 - [安装SDK](../../raw/model-api-reference/preparations/install-sdk.md)
 - [使用百炼 CLI](../../raw/model-api-reference/preparations/use-model-studio-cli.md)
 - [错误码](../../raw/model-api-reference/preparations/error-code.md)
