@@ -19,6 +19,7 @@
         {
           "priceUnit": "每秒",
           "price": "0.15",
+          "timeBand": "standard",
           "type": "video_generation",
           "priceName": "视频生成"
         }
@@ -39,6 +40,9 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],
@@ -48,33 +52,6 @@
       "inferenceProvider": "pixverse",
       "name": "pixverse/pixverse-upscale",
       "category": "Third-party",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -102,18 +79,21 @@
         {
           "priceUnit": "每秒",
           "price": "0.27",
+          "timeBand": "standard",
           "type": "video_ratio_360p",
           "priceName": "视频生成（360P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.3",
+          "timeBand": "standard",
           "type": "video_ratio_540p",
           "priceName": "视频生成（540P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.36",
+          "timeBand": "standard",
           "type": "video_ratio_720p",
           "priceName": "视频生成（720P）"
         }
@@ -134,6 +114,9 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],
@@ -143,33 +126,6 @@
       "inferenceProvider": "pixverse",
       "name": "pixverse/pixverse-motioncontrol",
       "category": "Third-party",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -199,6 +155,7 @@
         {
           "priceUnit": "每秒",
           "price": "0.12",
+          "timeBand": "standard",
           "type": "video_generation",
           "priceName": "视频生成"
         }
@@ -219,6 +176,9 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],
@@ -228,33 +188,6 @@
       "inferenceProvider": "pixverse",
       "name": "pixverse/pixverse-lipsync",
       "category": "Third-party",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.8,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 0.7,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {

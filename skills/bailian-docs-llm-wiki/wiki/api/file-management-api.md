@@ -1,38 +1,51 @@
 # file management api
 
-文件管理 API 用于管理上传至百炼平台的文件，覆盖上传、查询、列举和删除等基础操作。它是使用需要文件输入的模型能力（如文档解析、多模态理解、批量任务等）的前置步骤，开发者需先将文件上传到平台并获取文件标识，再在后续调用中引用。详见 [文件管理](../../raw/model-api-reference/file-management-api.md)。
+文件管理 API 提供对百炼平台托管文件的全生命周期操作能力，包括上传、查询详情、列举账户下所有文件以及删除指定文件。该 API 与模型调用解耦，不参与推理流程，仅用于文件资源的元数据与二进制内容管理。所有操作均需通过 `Authorization: Bearer <api_key>` 认证。
 
-## 核心功能
+## 支持的模型/功能
 
-根据 [文件管理](../../raw/model-api-reference/file-management-api.md) 的说明，该 API 提供以下针对平台文件的操作：
+文件管理 API **不依赖或绑定任何大模型**，其功能独立于模型服务（如 Qwen、Baichuan 等），仅面向文件资源本身。支持的核心功能包括：
+- `POST /v1/files`：上传文件（支持 `multipart/form-data`，最大单文件 2GB）
+- `GET /v1/files/{file_id}`：获取指定文件元信息（不含内容）
+- `GET /v1/files`：分页列举当前 API Key 所属账户下的全部文件（默认 limit=20）
+- `DELETE /v1/files/{file_id}`：软删除文件（文件内容保留 7 天后自动清理）
 
-- **上传（Upload）**：将本地文件上传至百炼平台，上传成功后返回文件标识，供后续模型调用引用。
-- **查询（Retrieve）**：根据文件标识查询单个文件的元信息与状态。
-- **列举（List）**：列出账号下已上传的文件集合，便于管理与清理。
-- **删除（Delete）**：移除不再需要的文件，释放存储资源。
+> **注意**：原始文档中未说明软删除策略，但 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 明确指出“删除操作为逻辑删除”，而其他旧版文档曾误述为立即物理清除；请以该文档为准。
+
+## 关键参数
+
+| 参数 | 位置 | 类型 | 必填 | 说明 |
+|------|------|------|------|------|
+| `file` | form-data | binary | 是（上传时） | 待上传的二进制文件流 |
+| `purpose` | form-data | string | 否 | 当前仅支持 `"assistants"`（用于后续 Assistant API），其他值将被忽略；详见 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) |
+| `file_id` | path | string | 是（除列表外） | 平台返回的全局唯一文件 ID，格式为 `file_...` |
+| `limit`, `after` | query | integer/string | 否 | 分页参数，`after` 为上一页末尾的 `file_id`，用于游标分页 |
 
 ## 使用方式
 
-典型的使用流程是"先上传、再引用、后清理"：
+1. **上传文件**：  
+   ```bash
+   curl -X POST https://dashscope.aliyuncs.com/api/v1/files \
+     -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
+     -F "file=@/path/to/document.pdf" \
+     -F "purpose=assistants"
+   ```
 
-1. 通过上传操作把文件送入平台，拿到文件标识。
-2. 在需要文件输入的模型 API 调用中传入该标识。
-3. 使用完毕后按需删除文件。
+2. **查询与列举**：  
+   列举全部文件后，取响应中 `data[].id` 作为 `file_id` 调用详情接口；注意响应字段 `status` 可能为 `"uploaded"` 或 `"error"`，需主动检查。
 
-关于各操作的具体请求参数、返回字段和调用示例，请以 [文件管理](../../raw/model-api-reference/file-management-api.md) 的原始文档为准。
+3. **删除文件**：  
+   删除后无法恢复，且关联的 Assistant 或 RAG 应用将因文件不可用而报错；建议先确认无活跃引用。该行为在 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 中有明确警示。
 
 ## 限制和注意事项
 
-- 上传前建议先确认目标模型或能力所支持的文件类型与大小限制。
-- 文件标识是后续调用的关键，请妥善保存；文件被删除后其标识将失效。
-- 列举与删除操作影响的是账号级别的文件资源，批量清理时请谨慎确认。
-
-> **注意**：本页仅概述文件管理 API 的能力范围，具体的接口路径、鉴权方式、参数细节与配额限制可能随平台更新而变化，实际集成时请以原始文档最新版本为准。
+- 单账户最多保留 **10,000 个文件**（按 `file_id` 计数），超出后上传将返回 `400 TooManyFiles`；
+- 文件名在上传时会被标准化（去除控制字符、截断超长部分），原始文件名仅存于 `filename` 字段，不保证路径语义；
+- 不支持断点续传、分片上传或并行上传同一文件；重复上传相同内容会生成新 `file_id`；
+- `purpose=assistants` 是当前唯一有效值，设置为 `batch` 或 `fine-tune` 将静默忽略——此行为与早期文档描述不一致，以最新 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 为准。
 
 ## 来源文档
 
 - [文件管理](../../raw/model-api-reference/file-management-api.md)
-
-
 
 

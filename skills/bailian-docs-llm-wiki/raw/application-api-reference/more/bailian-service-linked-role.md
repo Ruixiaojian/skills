@@ -12,7 +12,7 @@
 
 [AliyunServiceRoleForSFMAccessFC](#Bd0OF)
 
-[百炼工作流应用](https://help.aliyun.com/zh/model-studio/workflow-application/)和[流程编排](https://help.aliyun.com/zh/model-studio/what-is-process-orchestration-old)通过此服务关联角色访问您在[FC](https://help.aliyun.com/zh/functioncompute/fc/product-overview/what-is-function-compute)中的资源。
+[百炼工作流应用](https://help.aliyun.com/zh/model-studio/workflow-application/)和[流程编排](https://help.aliyun.com/zh/model-studio/what-is-process-orchestration-old)通过此服务关联角色访问您在[FC](https://help.aliyun.com/zh/functioncompute/what-is-function-compute)中的资源。
 
 [AliyunServiceRoleForSFMDataHubOSSImport](#2b75fc8a97g4c)
 
@@ -62,7 +62,7 @@
 
 ### **应用场景**
 
-百炼[工作流应用](https://help.aliyun.com/zh/model-studio/workflow-application/)和[流程编排](https://help.aliyun.com/zh/model-studio/what-is-process-orchestration-old)中的函数计算节点通过此服务关联角色访问您在[FC](https://help.aliyun.com/zh/functioncompute/fc/product-overview/what-is-function-compute)中的资源。
+百炼[工作流应用](https://help.aliyun.com/zh/model-studio/workflow-application/)和[流程编排](https://help.aliyun.com/zh/model-studio/what-is-process-orchestration-old)中的函数计算节点通过此服务关联角色访问您在[FC](https://help.aliyun.com/zh/functioncompute/what-is-function-compute)中的资源。
 
 ### **角色及权限说明**
 

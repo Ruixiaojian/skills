@@ -782,7 +782,7 @@ RocketMQ创建完成后，打开配置的事件目标界面，选择已配置的
 
 -   RocketMQ在线查看消息需要开通消息一键收发体验功能。
     
--   消息一键收发体验功能是基于[函数计算](https://help.aliyun.com/zh/functioncompute/fc/product-overview/what-is-function-compute)实现的，如果超过了免费试用额度后将会产生少量费用，请查看[函数计算计费规则](https://help.aliyun.com/zh/functioncompute/fc-2-0/product-overview/billing-overview)。
+-   消息一键收发体验功能是基于[函数计算](https://help.aliyun.com/zh/functioncompute/what-is-function-compute)实现的，如果超过了免费试用额度后将会产生少量费用，请查看[函数计算计费规则](https://help.aliyun.com/zh/functioncompute/fc-2-0/product-overview/billing-overview)。
     
 
 在**Topic 管理**页面找到已创建的Topic，单击其右侧**操作**列中的**详情**。

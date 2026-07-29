@@ -2,7 +2,7 @@
 
 Qwen-Audio Realtime API的客户端事件参考。
 
-**用户指南**：[实时语音对话（Qwen-Audio-Realtime）](https://help.aliyun.com/zh/model-studio/qwen-audio-realtime-user-guides)。如需了解事件交互时序，请参见[WebSocket API](https://help.aliyun.com/zh/model-studio/qwen-audio-realtime-websocket-api)。
+**用户指南**：[实时语音对话（Qwen-Audio-Realtime）](https://help.aliyun.com/zh/model-studio/qwen-audio-realtime-user-guides)。如需了解事件交互时序，请参见[WebSocket API](https://help.aliyun.com/zh/model-studio/fun-audiochat-realtime-websocket-api)。
 
 ## **session.update**
 

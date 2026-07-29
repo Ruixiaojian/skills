@@ -1,41 +1,47 @@
-# 函数调用（Function Calling）
+# 函数调用
 
-函数调用（Function Calling）是让大模型在推理过程中根据用户输入，自主判断并"调用"外部工具（自定义函数、内置能力或插件）以获取实时信息、执行精确计算或操作外部系统的能力。它是弥补大模型原生局限、构建 Agent 与复杂应用的核心机制。
+函数调用（Function Calling）是百炼平台中模型主动识别用户意图、生成结构化工具请求并协同外部能力完成任务的核心机制。它不是简单的 API 封装，而是模型在理解对话上下文后，自主决策是否需要调用工具、选择哪个工具、构造合法参数，并将执行结果无缝融入后续推理链路的端到端能力。
 
-## 在百炼平台的使用场景
+## 在百炼平台的不同场景中，这个概念如何使用
 
-百炼在多个层面暴露了 Function Calling 能力：
+函数调用在百炼中并非单一接口功能，而是贯穿多个技术路径的横切能力，具体体现为以下三类实践模式：
 
-- **文本 / 视觉生成模型**：所有 Qwen3 及以上通用文本与视觉理解模型均支持自定义工具调用。以 `qwen3.7-plus` 为代表的旗舰模型工具调用完整、上下文长（1M），适合 AI 编程与 Agent 开发；效果确认后可切到 `qwen3.6-flash` 降本，功能与上下文保持一致。
-- **实时多模态（Omni-Realtime API）**：基于 WebSocket 的实时音视频对话同样支持工具调用。客户端通过 `session.update` 事件在会话中声明工具，模型触发调用后由 `response.function_call_arguments.done` 服务端事件返回调用参数，客户端执行后再用 `conversation.item.create` 事件回传工具结果。
-- **应用构建（智能体 / 工作流）**：新版智能体（Agent 2.0）将知识库、MCP、插件等能力统一抽象为"工具"，由智能体自主规划调用顺序，形成"规划-执行-反思"链路。工作流应用则把工具作为固定节点按编排顺序执行，不由模型主动规划。
-- **插件（Plug-in）与 Assistant API**：插件是工具集合，本质也是工具调用。智能体应用 / Assistant API 中，模型依据工具名称与描述判断是否调用；无需调用时直接生成结果。
+- **模型原生函数调用（推荐）**：通过 DashScope 原生接口（如 `/api/v1/services/aigc/text-generation/generation`）传入 `tools` 数组（含 `tool_id`、`description` 和可选 `parameters` schema），由 `qwen-max`、`qwen-plus`、`qwen-turbo` 等支持模型直接输出 `function_call` 结构。模型返回 `output.choices[0].message.tool_calls`，包含 `id`、`tool_name` 和 `tool_input`，开发者需解析后同步/异步调用对应工具，再将结果以 `tool_response` 形式回传继续对话。
 
-## 内置工具与自定义工具
+- **意图识别辅助调用**：使用专用意图模型（如 `tongyi-intent-detect-v3`）在 `INTENT_MODE` 下对用户输入做轻量级解析，返回标准化意图标签（如 `"search_news"`）和结构化参数（如 `{"keyword": "AI政策", "time_range": "7d"}`）。该方式延迟低、确定性强，适用于路由分发、规则引擎前置等场景，不依赖大模型生成，但需自行绑定工具逻辑。
 
-- **自定义工具（Function Calling）**：开发者自行定义工具名称、描述与参数结构，模型据此决定何时调用、如何填参，应用侧执行后将结果回填模型生成最终回复。
-- **内置工具**：联网搜索、代码解释器、网页抓取等由平台预置，无需复杂配置即可开启，是 Function Calling 的开箱即用形态。
+- **智能体/工作流编排调用**：在可视化应用中，插件（Plugin）作为已注册的工具单元被显式添加至智能体或拖入工作流节点。此时函数调用由平台运行时自动触发——模型输出 `tool_use` 指令后，平台根据 `tool_id` 查找已授权插件，注入参数并执行，结果自动注入上下文。此模式屏蔽底层协议细节，适合非代码型开发者快速集成。
 
-## 关键参数与配置
+> ⚠️ 注意：[OpenAI 兼容接口](openai-compatible-interface.md)（`/v1/chat/completions`）**不原生支持函数调用**；其 `functions` / `function_call` 参数被忽略。若需兼容 OpenAI 客户端，必须自行封装：将工具描述注入 `system` 提示词，解析模型 `content` 中的 JSON-like 调用指令，再手动调度。
 
-- **模型选型**：推荐具备强工具调用能力的模型（如千问-Max / `qwen3.7-plus` 系列）。
-- **思考模式**：可通过 `enable_thinking` 开启（Responses API 用 `reasoning.effort` 控制），配合工具调用提升规划质量。
-- **ReAct 最大轮次**：智能体中取值 1-50，限制单次会话内工具调用的最大次数，防止无限循环。
-- **实时 API 工具配置**：通过 `session.update` 的 `tools` 字段声明可用工具；工具调用结果需经 `conversation.item.create` 回传。
-- **插件调用**：通过 Assistant API 调用时需正确传递工具 ID（如 `calculator`、`code_interpreter`），且每个智能体应用最多添加 10 个工具。
+## 关键参数和配置
 
-## 开发建议
+| 参数 | 位置 | 类型 | 说明 | 必填 |
+|------|------|------|------|------|
+| `tools` | 请求体 `input` 或 `messages` 同级 | array | 工具定义列表，每个元素含 `tool_id`（字符串，如 `"quark_search"`）、`description`（自然语言描述）、`parameters`（JSON Schema，用于约束输入格式） | 是（启用函数调用时） |
+| `tool_choice` | 请求体 `parameters` 内 | string 或 object | 控制调用策略：`"auto"`（默认，模型自主决定）、`"none"`（禁用）、`{"type": "function", "function": {"name": "xxx"}}`（强制指定） | 否 |
+| `enable_search` / `enable_code_interpreter` | 请求体 `parameters` 内 | boolean | DashScope 原生接口快捷开关（仅限内置工具），等价于预置对应 `tools` | 否（推荐用 `tools` 显式声明） |
+| `tool_response` | 后续请求 `messages` 中 | object | 上一轮工具执行结果，格式为 `{"role": "tool", "content": "...", "tool_id": "...", "tool_call_id": "..."}`，必须与前次 `tool_calls[0].id` 匹配 | 是（多轮调用时） |
 
-- 优先用内置工具满足通用需求（搜索、计算、代码执行），减少自定义成本。
-- 自定义工具时，工具名称与描述要清晰准确，直接影响模型是否正确触发调用。
-- 需要精确、可控流程时用工作流把工具固化为节点；需要动态规划时用智能体让模型自主调用。
-- 旧版智能体的自定义插件有 5 秒超时限制，设计工具时注意执行时长。
+- **工具 ID 规范**：必须与插件市场注册的 `tool_id` 完全一致（区分大小写），如 `calculator`、`text_to_image`；自定义插件需确保 `tool_id` 在业务空间内唯一且已授权。
+- **参数校验**：模型生成的 `tool_input` 会依据 `parameters` schema 进行基础校验（如类型、必填字段），但**不执行业务逻辑验证**（如搜索关键词长度、图片尺寸合法性），需在工具侧二次校验。
+- **流式响应注意**：函数调用结果在流式响应中可能分块到达（如 `delta.tool_calls`），需按 `index` 和 `id` 组装完整 `tool_call` 对象，不可仅依赖首块。
+
+## 面向开发者，简洁实用
+
+- ✅ **首选 DashScope 原生接口**：功能最全、错误反馈明确（如 `invalid_tool_id`）、支持长上下文与私有模型。
+- ✅ **始终显式声明 `tools`**：避免依赖隐式开关（如 `enable_search`），确保行为可预测、可审计。
+- ✅ **验证 `tool_call_id` 回传**：多轮调用中，`tool_response` 的 `tool_call_id` 必须严格匹配模型返回的 `id`，否则平台拒绝处理。
+- ❌ **勿在 [OpenAI 兼容接口](openai-compatible-interface.md)中传 `functions`**：该字段被静默忽略，会导致调用逻辑失效。
+- ❌ **勿跳过 `tool_response` 格式校验**：`content` 字段必须为字符串（即使返回 JSON），且 `role` 必须为 `"tool"`。
+- 🚀 **生产建议**：对高并发场景，使用连接池（Java 设置 `connectionPoolSize`，Python 复用 `requests.Session`）；对耗时工具（如 `quark_search`），结合[异步任务](asynchronous-task.md) + EventBridge 回调，避免阻塞主线程。
 
 ## 关联主题页
 
-- [omni realtime api](../api/omni-realtime-api.md)
-- [model experience](../guides/model-experience.md)
-- [llm application](../guides/llm-application.md)
+- [qwen api reference](../api/qwen-api-reference.md)
+- [more models](../api/more-models.md)
 - [plug in](../guides/plug-in.md)
+- [toolkits and frameworks](../api/toolkits-and-frameworks.md)
+- [more about models](../api/more-about-models.md)
 
 

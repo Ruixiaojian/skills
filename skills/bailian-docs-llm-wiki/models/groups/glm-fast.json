@@ -21,6 +21,29 @@
       ],
       "provider": "zhipu-ai",
       "model": "glm-5.2-fast-preview",
+      "prices": [
+        {
+          "priceUnit": "每百万tokens",
+          "price": "16",
+          "timeBand": "standard",
+          "type": "input_token",
+          "priceName": "输入"
+        },
+        {
+          "priceUnit": "每百万tokens",
+          "price": "56",
+          "timeBand": "standard",
+          "type": "output_token",
+          "priceName": "输出"
+        },
+        {
+          "priceUnit": "每百万tokens",
+          "price": "4",
+          "timeBand": "standard",
+          "type": "input_token_cache",
+          "priceName": "输入（缓存命中）"
+        }
+      ],
       "qpmInfo": {
         "model-default-actual": {
           "count_limit_period": 6,
@@ -39,6 +62,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "TG"
       ],
@@ -51,7 +77,7 @@
       ],
       "contextWindow": 1048576,
       "maxInputTokens": 1048576,
-      "inferenceProvider": "bailian",
+      "inferenceProvider": "aliyun-bailian",
       "name": "GLM-5.2-Fast-Preview",
       "docUrl": "https://help.aliyun.com/document_detail/2974045.html",
       "category": "Third-party",

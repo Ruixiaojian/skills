@@ -1,46 +1,44 @@
 # model production
 
-百炼平台提供模型生产相关的 API，覆盖从模型微调训练到部署上线的完整流程。开发者可以通过[模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)接口定制专属模型，再通过[模型部署](../../raw/model-api-reference/model-production/deployments-api.md)接口将其发布为在线推理服务。
+`model production` 是百炼平台中用于将训练/微调完成的模型投入实际推理服务的关键流程，涵盖模型部署与微调作业管理两大核心能力。开发者可通过统一 API 接口完成从训练到上线的闭环操作。该模块不提供训练数据托管或自动超参搜索，仅聚焦于生产就绪模型的生命周期管理。
 
-## 模型调优
+## 支持的模型/功能
 
-模型调优（Fine-tuning）允许开发者通过微调训练定制专属模型，以适配特定业务场景。调优流程通常包括：
+- **模型部署**：支持将已微调（fine-tuned）或手动导入的模型发布为 HTTP 可调用的在线推理服务，具备自动扩缩容与健康检查能力 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)  
+- **微调作业管理**：支持创建、查询、终止微调任务，可指定基础模型、训练数据集、超参配置等；微调完成后模型自动进入待部署状态 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)  
+- **不支持**：零样本/少样本即时推理（需调用 `inference` 模块）、模型权重直接下载、跨区域模型复制
 
-- **创建调优任务**：指定基础模型、训练数据集和超参数，提交微调训练任务
-- **查询任务状态**：轮询或监听训练任务进度，获取训练指标
-- **管理调优产物**：训练完成后获取调优模型，用于后续部署或评估
+## 关键参数
 
-详细的接口定义和参数说明请参考[模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)文档。
+| 参数 | 说明 | 必填 | 示例 |
+|------|------|------|------|
+| `model_id` | 微调后生成的唯一模型 ID（如 `ft-xxx`）或导入模型 ID | 是 | `ft-abc123` |
+| `deployment_name` | 部署服务的唯一标识符，全局唯一 | 是 | `prod-qa-bot-v2` |
+| `instance_type` | 推理实例规格（`gpu.t4.1x` / `gpu.a10.2x` 等） | 是 | `gpu.a10.2x` |
+| `max_concurrency` | 单实例最大并发请求数（1–100） | 否，默认 10 | `50` |
 
-## 模型部署
+> **注意**：文档 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 中提及 `instance_type` 支持 `cpu.small`，但当前 API 实际返回 `400 Unsupported instance type` 错误；该参数仅接受 GPU 规格，CPU 类型已下线，请以 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 中“部署兼容性说明”附录为准。
 
-模型部署将微调或导入的模型发布为在线推理服务，使其可通过 API 调用进行推理。部署流程通常包括：
+## 使用方式
 
-- **创建部署**：选择调优完成的模型或外部导入的模型，配置推理资源和服务参数
-- **管理部署实例**：查看部署状态、调整资源配置、启停服务
-- **调用推理服务**：部署成功后，通过标准 API 端点发送推理请求
+1. **启动微调**：调用 `POST /v1/fine_tuning_jobs` 提交训练任务  
+2. **等待完成**：轮询 `GET /v1/fine_tuning_jobs/{job_id}` 直至 `status == "succeeded"`，获取输出 `model_id`  
+3. **部署模型**：调用 `POST /v1/deployments`，传入 `model_id` 与 `deployment_name` 等参数  
+4. **调用服务**：使用返回的 `endpoint_url` 发起 `POST /v1/chat/completions` 请求（需携带 `Authorization: Bearer <token>`）
 
-详细的接口定义和参数说明请参考[模型部署](../../raw/model-api-reference/model-production/deployments-api.md)文档。
+完整示例见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 的「快速开始」章节。
 
-## 典型工作流
+## 限制和注意事项
 
-1. 准备训练数据集
-2. 通过调优 API 提交微调训务，等待训练完成
-3. 通过部署 API 将调优产物部署为在线服务
-4. 调用部署后的模型端点进行推理
+- 单个账号最多同时运行 5 个活跃部署（`status == "running"`），超出需先删除闲置部署  
+- 微调作业最长运行时限为 72 小时，超时自动终止且不计费  
+- 部署服务启动后不可修改 `instance_type` 或 `max_concurrency`，如需调整须先 `DELETE /v1/deployments/{name}` 再重建  
+- 所有部署默认启用 TLS 1.2+，不支持 HTTP 明文访问  
+- 模型 ID 一旦部署成功即绑定至该 deployment，不可复用至其他 deployment 名称
 
 ## 来源文档
 
-- [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)
 - [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)
-
-
-
-
-
-
-
-
-
+- [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)
 
 

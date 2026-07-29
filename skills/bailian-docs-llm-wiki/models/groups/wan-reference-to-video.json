@@ -23,12 +23,14 @@
         {
           "priceUnit": "每秒",
           "price": "0.6",
+          "timeBand": "standard",
           "type": "video_ratio_720p",
           "priceName": "视频生成（720P）"
         },
         {
           "priceUnit": "每秒",
           "price": "1",
+          "timeBand": "standard",
           "type": "video_ratio_1080p",
           "priceName": "视频生成（1080P）"
         }
@@ -49,6 +51,9 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],
@@ -58,43 +63,7 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Wan2.7-R2V",
       "docUrl": "https://help.aliyun.com/document_detail/3001146.html",
-      "predictConfig": [
-        {
-          "name": "清晰度",
-          "key": "resolution",
-          "default": "1080P"
-        },
-        {
-          "name": "宽高比",
-          "key": "ratio",
-          "default": "16:9"
-        },
-        {
-          "name": "视频时长(秒)",
-          "key": "duration",
-          "default": 5,
-          "range": [
-            2,
-            10
-          ]
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        },
-        {
-          "name": "智能改写",
-          "key": "prompt_extend",
-          "default": true,
-          "tip": "开启后会使用大模型对输入prompt进行智能改写，仅对正向提示词有效。对于较短的输prompt生成效果提升明显，但会增加3-4秒耗时。"
-        }
-      ],
+      "category": "Wan",
       "samples": {
         "dashscope": {
           "default": {
@@ -124,24 +93,28 @@
         {
           "priceUnit": "每秒",
           "price": "0.3",
+          "timeBand": "standard",
           "type": "video_ratio_720p",
           "priceName": "视频生成（720P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.5",
+          "timeBand": "standard",
           "type": "video_ratio_1080p",
           "priceName": "视频生成（1080P）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.15",
+          "timeBand": "standard",
           "type": "720P_no_audio",
           "priceName": "视频生成（720P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.25",
+          "timeBand": "standard",
           "type": "1080P_no_audio",
           "priceName": "视频生成（1080P 无声）"
         }
@@ -162,6 +135,9 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],
@@ -170,39 +146,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Wan2.6-R2V-Flash",
       "docUrl": "https://help.aliyun.com/document_detail/3001146.html",
-      "predictConfig": [
-        {
-          "name": "分辨率",
-          "key": "size",
-          "default": "1920*1080"
-        },
-        {
-          "name": "视频时长",
-          "key": "duration",
-          "default": 5
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        },
-        {
-          "name": "智能多镜",
-          "key": "shot_type",
-          "default": "single",
-          "tip": "开启后输出视频采用多分镜形式呈现"
-        },
-        {
-          "name": "生成音频",
-          "key": "audio",
-          "default": true
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
@@ -232,12 +175,14 @@
         {
           "priceUnit": "每秒",
           "price": "0.6",
+          "timeBand": "standard",
           "type": "video_ratio_720p",
           "priceName": "视频生成（720P）"
         },
         {
           "priceUnit": "每秒",
           "price": "1",
+          "timeBand": "standard",
           "type": "video_ratio_1080p",
           "priceName": "视频生成（1080P）"
         }
@@ -258,6 +203,9 @@
           "async_user_concurrency_limit": 5
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "VG"
       ],
@@ -266,34 +214,6 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "Wan2.6-R2V",
       "docUrl": "https://help.aliyun.com/document_detail/3001146.html",
-      "predictConfig": [
-        {
-          "name": "分辨率",
-          "key": "size",
-          "default": "1920*1080"
-        },
-        {
-          "name": "视频时长",
-          "key": "duration",
-          "default": 5
-        },
-        {
-          "name": "随机种子",
-          "key": "seed",
-          "default": 1234,
-          "tip": "随机数种子，用于控制模型生成内容的随机性",
-          "range": [
-            1,
-            2147483647
-          ]
-        },
-        {
-          "name": "智能多镜",
-          "key": "shot_type",
-          "default": "single",
-          "tip": "开启后输出视频采用多分镜形式呈现"
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {

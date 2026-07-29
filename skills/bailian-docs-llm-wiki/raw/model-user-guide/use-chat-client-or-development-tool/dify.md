@@ -1,6 +1,6 @@
 # Dify
 
-Dify 是一个开源的大模型应用开发平台，您可以基于阿里云百炼提供的模型 API 来构建大模型应用。
+Dify 是一个开源的大模型应用开发平台，您可以基于阿里云百炼提供的模型 API（按量付费或 Token Plan 个人版）来构建大模型应用。
 
 ## **前提条件**
 
@@ -36,7 +36,7 @@ Dify 是一个开源的大模型应用开发平台，您可以基于阿里云百
 
 单击**通义千问**卡片中的显示模型，打开您需要使用的模型开关。
 
-> 若插件内暂未包含最新版千问模型，可尝试安装 **OpenAI-API-compatible** 插件，在插件设置中的 **API endpoint URL** 填入`https://dashscope.aliyuncs.com/compatible-mode/v1`（华北2（北京）地域）或`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`（新加坡地域）。其中`WorkspaceId`需替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
+> 若插件内暂未包含最新版千问模型，可尝试安装 **OpenAI-API-compatible** 插件，在插件设置中的 **API endpoint URL** 填入`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`（华北2（北京）地域）或`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`（新加坡地域）。其中`WorkspaceId`需替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
 
 ## **2\. 开始使用**
 

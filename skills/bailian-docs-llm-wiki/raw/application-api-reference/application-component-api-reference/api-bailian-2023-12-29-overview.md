@@ -228,6 +228,12 @@ API概述
 
 查看文本切片列表及信息。
 
+[AddChunk](https://help.aliyun.com/zh/model-studio/api-bailian-2023-12-29-addchunk)
+
+新增切片
+
+使用此API可为文档搜索类（document）、数据查询类（table）、图片问答类（image）知识库添加切片。
+
 [UpdateChunk](https://help.aliyun.com/zh/model-studio/api-bailian-2023-12-29-updatechunk)
 
 修改切片

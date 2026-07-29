@@ -1,136 +1,43 @@
 # more
 
-本主题汇总百炼平台在应用接入与数据检索中常用的几项辅助能力：临时 [API Key](../concepts/api-key.md) 生成、服务关联角色（SLR）管理，以及[知识库](../concepts/knowledge-base.md) Retrieve 接口的 SearchFilters 过滤语法。它们分别覆盖安全鉴权、跨云服务授权与结构化数据检索过滤三个场景，详细说明可参见 [生成临时API Key](../../raw/application-api-reference/more/application-obtain-temporary-authentication-token.md)、[服务关联角色](../../raw/application-api-reference/more/bailian-service-linked-role.md) 与 [知识库SearchFilters](../../raw/application-api-reference/more/how-to-use-search-filters.md)。
+`more` 是百炼平台中一组支撑性能力的统称，涵盖临时凭证生成、服务关联角色管理、知识库高级检索过滤等关键基础设施功能。这些能力不直接面向模型推理，而是为安全调用、跨云服务集成和结构化数据精准检索提供底层支持。开发者需根据具体场景选择并正确配置对应组件。
 
-## 生成临时 [API Key](../concepts/api-key.md)
+## 支持的模型/功能
 
-在浏览器、移动 App 等不可信环境中调用模型服务时，应通过后端服务生成临时 [API Key](../concepts/api-key.md)，避免永久 [API Key](../concepts/api-key.md) 泄露。临时 [API Key](../concepts/api-key.md) 继承生成它的永久 [API Key](../concepts/api-key.md) 的全部权限（包括对特定模型或[知识库](../concepts/knowledge-base.md)的访问限制），到期后自动失效，无法提前删除。
+`more` 并非模型类别，而是平台级支撑能力集合，当前包含三类核心功能：
 
-**前提条件**：在百炼密钥管理页面（北京 / 新加坡 / 弗吉尼亚）创建永久 [API Key](../concepts/api-key.md)，并将其配置为环境变量 `DASHSCOPE_API_KEY`。
+- **临时 API Key 生成**：用于在前端（浏览器、App）等不可信环境安全调用模型服务，避免永久密钥泄露 [生成临时API Key](../../raw/application-api-reference/more/application-obtain-temporary-authentication-token.md)  
+- **服务关联角色（SLR）**：百炼自动创建的 RAM 角色，用于访问 FC、OSS、ADB-PG、MNS、SLS 等外部云服务资源，支撑工作流、数据管理、安全存储、监控等场景 [服务关联角色](../../raw/application-api-reference/more/bailian-service-linked-role.md)  
+- **知识库 SearchFilters**：在 `Retrieve` 接口请求中传入结构化过滤条件，对语义检索结果进行字段级精确过滤（如 `{"姓名": "张三"}`），显著提升结构化数据检索精度 [知识库SearchFilters](../../raw/application-api-reference/more/how-to-use-search-filters.md)  
 
-**请求**：
+> **注意**：文档 2 中列出的 `AliyunServiceRoleForSFMAccessingMNS` 权限说明存在截断（末尾 JSON 不完整），实际策略应以 RAM 控制台中该角色绑定的 `AliyunServiceRolePolicyForSFMAccessingMNS` 策略内容为准；其他 SLR 策略描述均完整可用。
 
-```
-curl -X POST "https://dashscope.aliyuncs.com/api/v1/tokens?expire_in_seconds=1800" \
--H "Authorization: Bearer $DASHSCOPE_API_KEY"
-```
+## 关键参数
 
-**关键参数**：
+| 功能 | 参数名 | 类型 | 必填 | 说明 | 示例 |
+|------|--------|------|------|------|------|
+| 临时 API Key | `expire_in_seconds` | integer | 否 | TTL（秒），取值范围 `[1, 1800]`，默认 `60` | `1800` |
+| SearchFilters | `searchFilters` | array of object | 否 | 每个 object 为一个 AND 分组，支持单值、多值、范围、模糊、标签查询 | `[{"姓名": "张三"}, {"岗位": "技术员"}]` |
+| SearchFilters（范围查询） | `gte`, `lte`, `gt`, `lt`, `eq`, `neq` | number/string | 否 | 字段比较操作符，需嵌套在字段值中（如 `{"年龄": "{\"gte\": 20, \"lte\": 30}\"}`） | `{"age": "{\"gte\": 25}"}` |
+| SearchFilters（模糊查询） | `like` | string | 否 | 值格式为 `{"like": "张%"}`，`%` 表示通配符 | `{"岗位": "{\"like\": \"技%员\"}"}` |
 
-| 参数 | 说明 |
-| --- | --- |
-| `expire_in_seconds` | 临时 Key 有效期（TTL），单位秒，范围 `[1, 1800]`，默认 60 秒。 |
+## 使用方式
 
-**正常响应**：
+- **临时 API Key**：通过 `POST https://dashscope.aliyuncs.com/api/v1/tokens?expire_in_seconds=1800` 调用，需在 `Authorization` Header 中携带后端持有的永久 `DASHSCOPE_API_KEY`。返回的 `token` 可直接用于后续模型请求的 `Authorization: Bearer <token>`。  
+- **服务关联角色**：首次启用对应功能（如添加函数计算节点、配置 OSS 数据源）时由百炼自动创建，无需手动调用 API；角色权限已预置，禁止修改其策略内容。  
+- **SearchFilters**：在 `RetrieveRequest` 请求体中作为顶层字段传入，与 `indexId`、`query` 同级；SDK 中通过 `retrieve_request.search_filters = [...]` 设置（Python/Java SDK 示例见 [知识库SearchFilters](../../raw/application-api-reference/more/how-to-use-search-filters.md)）。
 
-```json
-{
-  "token": "st-****",
-  "expires_at": 1744080369
-}
-```
+## 限制和注意事项
 
-`token` 为生成的临时 [API Key](../concepts/api-key.md)，`expires_at` 为过期 UNIX 时间戳（秒）。错误响应包含 `code`、`message`、`request_id` 三段，常见如 `InvalidApiKey`。
-
-> **注意**：各地域（北京 / 新加坡 / 弗吉尼亚）的 [API Key](../concepts/api-key.md) 不互通，请求时需使用对应地域的 Endpoint 与永久 Key。
-
-## 服务关联角色（SLR）
-
-百炼在实现特定功能时，需通过服务关联角色（Service Linked Role, SLR）访问其他云服务（如 FC、OSS、ADB-PG、MNS、内容安全、SLS、CMS、DTS、CPFS 等）。当您首次在百炼中开通相关功能（如函数计算节点、OSS 数据导入、安全存储空间等）时，系统会**自动创建**对应的 SLR，无需手动创建。所有 SLR 可在 [RAM 控制台](https://ram.console.aliyun.com/) 的角色管理页面查看。
-
-**主要 SLR 与用途**：
-
-| 服务关联角色 | 用途 |
-| --- | --- |
-| `AliyunServiceRoleForSFMAccessFC` | [工作流](../concepts/workflow.md)应用 / 流程编排访问函数计算（FC）资源 |
-| `AliyunServiceRoleForSFMDataHubOSSImport` | 数据管理从 OSS 导入数据 |
-| `AliyunServiceRoleForAccessOSS` | 安全存储空间访问 OSS |
-| `AliyunServiceRoleForSFMAccessADB` | [知识库](../concepts/knowledge-base.md) / 安全存储空间访问 ADB-PG 实例 |
-| `AliyunServiceRoleForSFMAccessingMNS` | 数据管理访问 MNS 队列中的 OSS 变更消息 |
-| `AliyunServiceRoleForSFMTelemetry` | 用量监控与性能分析访问 OpenTelemetry 实例 |
-| `AliyunServiceRoleForSFMAccessingCIP` | 百炼应用访问内容安全服务 |
-| `AliyunServiceRoleForSFMAccessSLS` | 模型监控访问 SLS 资源 |
-| `AliyunServiceRoleForSFMAccessCMS` | 模型监控访问 CMS 资源 |
-| `AliyunServiceRoleForAccessCusOss` | 百炼平台托管操作用户 OSS 文件 |
-| `AliyunServiceRoleForSFMConnectorAccessDTS` | 创建和管理 DTS 任务，从数据源接入数据 |
-| `AliyunServiceRoleForSFMFineTuning` | [模型调优](../concepts/fine-tuning.md) / 数据管理访问 CPFS 与 OSS |
-
-每个 SLR 关联一个固定的系统策略（如 `AliyunServiceRolePolicyForSFMAccessFC`），策略中通过 RAM 条件（`ram:ServiceName`）限定只能由百炼服务使用，请勿修改或授予其他 RAM 身份。
-
-**删除前注意事项**：删除 SLR 会导致对应功能不可用，须先清理依赖资源。例如删除 `AliyunServiceRoleForSFMAccessFC` 前须先删除所有已发布[工作流](../concepts/workflow.md)应用和流程中的函数计算节点并重新发布；删除 `AliyunServiceRoleForAccessOSS` 前须在安全存储空间中断开所有 OSS 连接；删除 `AliyunServiceRoleForSFMDataHubOSSImport` 前须确保没有进行中的 OSS 数据导入任务。具体删除步骤参见 [服务关联角色](https://help.aliyun.com/zh/ram/user-guide/service-linked-roles)。
-
-## 知识库 SearchFilters
-
-在调用知识库 [Retrieve](https://help.aliyun.com/zh/model-studio/api-bailian-2023-12-29-retrieve) 接口时，若返回结果包含较多与 Query 无关的干扰信息（尤其适合结构化数据场景），可在请求体中传入 `searchFilters` 对语义检索结果做进一步过滤。
-
-**效果对比**：未传入 `searchFilters` 时，Retrieve 可能返回多条低相关切片（如查询「张三」却返回李四、王五）；传入后可仅保留命中过滤条件的切片。
-
-**语法**：`searchFilters` 是一个数组，每个元素是一个由 Key-Value 键值对组成的**子分组**。子分组之间默认采用 **AND** 语义且不可更改。
-
-```json
-{
-  "searchFilters": [
-    { "姓名": "张三", "性别": "男" },
-    { "岗位": "技术员" }
-  ]
-}
-```
-
-**支持的查询类型**：
-
-| 查询类型 | 适用字段类型 | 说明 |
-| --- | --- | --- |
-| 单值查询 | 数值（long/double）、字符串（string） | 字段等于某个值 |
-| 多值查询 | 纯数值数组或纯字符串数组 | 字段命中数组中任一值；多值需用 `json.dumps` 序列化后传入 |
-| 范围查询-等值 | 数值、字符串 | 支持 `eq`（等于）、`neq`（不等于）；一个字段不可配多个值 |
-| 范围查询-区间 | 数值（long/double） | 支持 `gt`/`gte`/`lt`/`lte` |
-| 模糊查询 | 字符串 | 支持 `like` 属性，`%` 匹配任意字符（含零个） |
-| 标签（Tag）查询 | 仅文档搜索、音视频搜索类知识库 | `tags` 字段，多个标签之间为 OR 关系 |
-
-**前置条件**：子账号需获取 `AliyunBailianDataFullAccess` 策略并加入[业务空间](../concepts/workspace.md)（主账号可操作所有[业务空间](../concepts/workspace.md)），获取[业务空间](../concepts/workspace.md) ID，安装百炼 SDK（2023-12-29 版本）并配置 `ALIBABA_CLOUD_ACCESS_KEY_ID` / `ALIBABA_CLOUD_ACCESS_KEY_SECRET` 环境变量。
-
-**调用示例（Python，单值查询）**：
-
-```python
-retrieve_request = bailian_20231229_models.RetrieveRequest()
-retrieve_request.query = '公司中叫张三的员工'
-retrieve_request.index_id = '请传入实际的知识库ID'
-retrieve_request.search_filters = [{"姓名": "张三"}]
-resp = client.retrieve('请传入实际的业务空间ID', retrieve_request)
-```
-
-多值、范围、模糊、标签查询的写法类似，区别在于将字段的值替换为 `json.dumps` 序列化后的对象（如 `{"like": "技%员"}`、`{"gte": 20, "lte": 27}`、`["张三", "李四"]`）。完整 Python/Java 示例参见 [知识库SearchFilters](../../raw/application-api-reference/more/how-to-use-search-filters.md)。
-
-## 限制与注意事项
-
-- 临时 [API Key](../concepts/api-key.md) 无法手动删除，只能等 TTL 到期自动失效；各地域 [API Key](../concepts/api-key.md) 不互通。
-- 服务关联角色由百炼自动创建并绑定固定系统策略，不可修改、不可授予其他 RAM 身份；删除前必须先解除对应功能的依赖资源，否则相关功能将不可用。
-- SearchFilters 子分组之间为 AND 语义且不可更改；多值 / 范围 / 模糊 / 标签查询的值需通过 `json.dumps` 序列化为字符串后传入；标签查询仅支持文档搜索与音视频搜索类知识库。
-- 子账号只能操作已加入[业务空间](../concepts/workspace.md)中的知识库，主账号可操作所有[业务空间](../concepts/workspace.md)。
+- 临时 API Key **不可主动删除**，仅能等待过期自动失效；其权限完全继承自签发用的永久 API Key，务必确保后者权限最小化。  
+- 所有服务关联角色均受 **RAM 服务关联角色约束**：删除前必须先解除其依赖（如删除函数计算节点、断开 OSS 连接、停止 MNS 订阅等），否则删除失败；`AliyunServiceRoleForSFMAccessingMNS` 明确禁止手动修改或删除 [服务关联角色](../../raw/application-api-reference/more/bailian-service-linked-role.md)。  
+- SearchFilters 仅作用于 **已成功索引且参与检索的字段**；若字段未在知识库创建时勾选“参与检索”，则无法被 `searchFilters` 过滤；多值查询需使用 `json.dumps(["val1", "val2"])` 格式传递字符串数组，而非原生数组。  
+- > **注意**：文档 3 的 Python 示例中 `multi_query()` 方法将 `names` 数组 `json.dumps` 后赋值给字段，但实际 SDK（如 `alibabacloud_bailian20231229` v1.0.11+）已支持原生 list 传参，推荐直接使用 `{"姓名": ["张三", "李四"]}`，避免手动序列化引发格式错误。
 
 ## 来源文档
 
 - [生成临时API Key](../../raw/application-api-reference/more/application-obtain-temporary-authentication-token.md)
 - [服务关联角色](../../raw/application-api-reference/more/bailian-service-linked-role.md)
 - [知识库SearchFilters](../../raw/application-api-reference/more/how-to-use-search-filters.md)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

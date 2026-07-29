@@ -16,10 +16,16 @@
         "model-experience"
       ],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "gummy-chat-v1",
+      "prices": [
+        {
+          "priceUnit": "每秒",
+          "price": "0.00015",
+          "timeBand": "standard",
+          "type": "content_duration",
+          "priceName": "音频时长"
+        }
+      ],
       "qpmInfo": {
         "model-default-actual": {
           "count_limit_period": 1,
@@ -32,6 +38,9 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "ASR"
       ],
@@ -40,13 +49,12 @@
       "offlineInfo": {
         "inference": {
           "announceUrl": "https://www.aliyun.com/notice/118331",
-          "offlineTime": "2026-09-07 00:00:00"
+          "offlineTime": "2026-10-10 00:00:00"
         }
       },
-      "inferenceProvider": "bailian",
+      "inferenceProvider": "aliyun-bailian",
       "name": "一句话识别及翻译V1.0",
       "docUrl": "https://help.aliyun.com/document_detail/2866122.html",
-      "predictConfig": [],
       "samples": {
         "dashscope": {
           "default": {

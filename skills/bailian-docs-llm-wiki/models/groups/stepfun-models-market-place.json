@@ -21,10 +21,30 @@
         "batch"
       ],
       "provider": "stepfun",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "stepfun/step-3.7-flash",
+      "prices": [
+        {
+          "priceUnit": "每百万tokens",
+          "price": "1.35",
+          "timeBand": "standard",
+          "type": "input_token",
+          "priceName": "输入"
+        },
+        {
+          "priceUnit": "每百万tokens",
+          "price": "8.1",
+          "timeBand": "standard",
+          "type": "output_token",
+          "priceName": "输出"
+        },
+        {
+          "priceUnit": "每百万tokens",
+          "price": "0.27",
+          "timeBand": "standard",
+          "type": "input_token_cache",
+          "priceName": "输入（缓存命中）"
+        }
+      ],
       "qpmInfo": {
         "model-default-actual": {
           "count_limit_period": 6,
@@ -43,8 +63,12 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
-        "TG"
+        "TG",
+        "VU"
       ],
       "versionTag": "MAJOR",
       "maxOutputTokens": 262144,
@@ -55,39 +79,6 @@
       "inferenceProvider": "stepfun",
       "name": "stepfun/step-3.7-flash",
       "docUrl": "https://help.aliyun.com/document_detail/3036697.html",
-      "predictConfig": [
-        {
-          "name": "system",
-          "key": "systemMessage",
-          "tip": "系统人设，例如“你是一个AI助手”。"
-        },
-        {
-          "name": "top_p",
-          "key": "top_p",
-          "default": 0.95,
-          "tip": "控制核采样方法的概率阈值，取值越大，生成的随机性越高。",
-          "range": [
-            0.0001,
-            1
-          ]
-        },
-        {
-          "name": "temperature",
-          "key": "temperature",
-          "default": 1,
-          "tip": "控制生成随机性和多样性，数值越高多样性越强，数值越低一致性越强，范围(0,2)。建议该参数和top_p只设置1个。",
-          "range": [
-            0,
-            1.9999
-          ]
-        },
-        {
-          "name": "enable_thinking",
-          "key": "enable_thinking",
-          "default": true,
-          "tip": "推理模式"
-        }
-      ],
       "samples": {
         "openai": {
           "completionsAPI": {

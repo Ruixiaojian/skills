@@ -4,13 +4,13 @@
 
 ## 模型评测概述
 
-模型评测是百炼平台提供的模型能力评估功能，支持自定义评测和基线评测两种方式，通过评测维度对模型推理结果进行打分和对比，生成评测报告和排行榜。您可以使用预置模型或调优后的模型作为评测对象，量化模型表现并辅助选型决策。当前仅支持文本生成类模型评测。更多功能介绍请参见[模型评测产品概览](#)。
+模型评测是百炼平台提供的模型能力评估功能，支持自定义评测和基线评测两种方式，通过评测维度对模型推理结果进行打分和对比，生成评测报告和排行榜。您可以使用预置模型或调优后的模型作为评测对象，量化模型表现并辅助选型决策。当前仅支持文本生成类模型评测。更多功能介绍请参见[模型评测产品概览](https://help.aliyun.com/zh/model-studio/model-evaluation-introduction/)。
 
 ### 使用场景
 
 -   **模型选型对比**：使用相同的评测数据集和维度评测多个候选模型，通过排行榜横向对比综合得分和通过率，用数据驱动选型决策。
     
--   **调优效果验证**：对模型调优前后分别执行评测，对比评分变化，量化调优带来的能力提升。调优操作请参见[模型调优](#)。
+-   **调优效果验证**：对模型调优前后分别执行评测，对比评分变化，量化调优带来的能力提升。调优操作请参见[模型调优](https://help.aliyun.com/zh/model-studio/model-training-overview)。
     
 -   **能力量化评估**：生成包含综合得分、通过率和分数分布的评测报告，为团队协作和管理层汇报提供客观数据支撑。
     
@@ -154,7 +154,7 @@ Function Calling、NL2SQL
 
 ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/9455233871/p1085617.png)
 
-在[百炼控制台的模型评测页面](https://bailian.console.aliyun.com/#/efm/model_evaluate/dimension_template)，选择**评测维度** Tab，单击**创建评测维度**。各维度类型的完整配置详解也可参见[评测维度](#)。
+在[百炼控制台的模型评测页面](https://bailian.console.aliyun.com/#/efm/model_evaluate/dimension_template)，选择**评测维度** Tab，单击**创建评测维度**。各维度类型的完整配置详解也可参见[评测维度](https://help.aliyun.com/zh/model-studio/evaluation-metrics)。
 
 ### 大模型评估
 
@@ -184,7 +184,7 @@ Function Calling、NL2SQL
 
 ### 选择评测模型
 
-从控制台模型列表中选择要评测的目标模型。支持预置模型和调优后的模型，具体支持的模型请参见[预置模型列表](#)。
+从控制台模型列表中选择要评测的目标模型。支持预置模型和调优后的模型，具体支持的模型请参见[预置模型列表](https://help.aliyun.com/zh/model-studio/model-deployment-introduction)。
 
 ### 配置数据来源
 
@@ -451,7 +451,7 @@ Function Calling、NL2SQL
 
 ## 计费说明
 
-模型评测的费用由两部分构成：被评测模型的推理费用和裁判模型的评分费用。具体模型单价请参见[预置模型列表](#)中的定价说明。
+模型评测的费用由两部分构成：被评测模型的推理费用和裁判模型的评分费用。具体模型单价请参见[预置模型列表](https://help.aliyun.com/zh/model-studio/model-deployment-introduction)中的定价说明。
 
 不同维度类型的费用构成如下：
 
@@ -520,7 +520,7 @@ Function Calling、NL2SQL
 
 首先检查评分器 Prompt 是否有明确的评分标准和正确的变量引用。模糊的评分标准会导致裁判模型评分集中在某个分数段。建议为每个分数档提供清晰的判定条件描述。
 
-其次确认裁判模型的推理能力是否足够（推荐千问-Max）。LLM 评分器存在位置偏差和自我偏好偏差，建议定期人工抽查校准。优化评分器 Prompt 可参考[Prompt 最佳实践](#)。
+其次确认裁判模型的推理能力是否足够（推荐千问-Max）。LLM 评分器存在位置偏差和自我偏好偏差，建议定期人工抽查校准。优化评分器 Prompt 可参考[Prompt 最佳实践](https://help.aliyun.com/zh/model-studio/prompt-engineering-guide)。
 
 **问题**：创建评测维度时选错了维度类型，想修改但找不到入口。
 
@@ -544,4 +544,4 @@ Function Calling、NL2SQL
 
 **问题**：评测发现模型在特定场景表现不足。
 
-可对模型进行调优后重新评测验证效果（请参见[模型调优](#)）。如果模型缺失特定领域知识，可引入知识库增强模型能力（请参见知识库）。
+可对模型进行调优后重新评测验证效果（请参见[模型调优](https://help.aliyun.com/zh/model-studio/model-training-overview)）。如果模型缺失特定领域知识，可引入知识库增强模型能力（请参见知识库）。

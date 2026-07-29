@@ -14,10 +14,19 @@
       "description": "Paraformer中文实时语音识别模型，支持8kHz电话客服等场景下的实时语音识别。",
       "features": [],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "paraformer-realtime-8k-v1",
+      "prices": [
+        {
+          "priceUnit": "每秒",
+          "price": "0.00024",
+          "timeBand": "standard",
+          "type": "content_duration",
+          "priceName": "音频时长"
+        }
+      ],
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "Realtime-ASR"
       ],
@@ -26,19 +35,12 @@
       "offlineInfo": {
         "inference": {
           "announceUrl": "https://www.aliyun.com/notice/118331",
-          "offlineTime": "2026-09-07 00:00:00"
+          "offlineTime": "2026-10-10 00:00:00"
         }
       },
-      "inferenceProvider": "bailian",
+      "inferenceProvider": "aliyun-bailian",
       "name": "Paraformer实时语音识别-8k-v1",
       "docUrl": "https://help.aliyun.com/document_detail/2712536.html",
-      "predictConfig": [
-        {
-          "name": "过滤语气词",
-          "key": "disfluency_removal_enabled",
-          "tip": "过滤语气词，默认为关闭false。"
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {

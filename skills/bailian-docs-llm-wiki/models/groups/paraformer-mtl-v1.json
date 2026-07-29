@@ -16,10 +16,19 @@
         "model-experience"
       ],
       "provider": "qwen",
-      "limit": {
-        "message": "model not exist"
-      },
       "model": "paraformer-mtl-v1",
+      "prices": [
+        {
+          "priceUnit": "每秒",
+          "price": "0.00008",
+          "timeBand": "standard",
+          "type": "content_duration",
+          "priceName": "音频时长"
+        }
+      ],
+      "priceTimeBands": [
+        "standard"
+      ],
       "capabilities": [
         "ASR"
       ],
@@ -28,19 +37,12 @@
       "offlineInfo": {
         "inference": {
           "announceUrl": "https://www.aliyun.com/notice/118331",
-          "offlineTime": "2026-09-07 00:00:00"
+          "offlineTime": "2026-10-10 00:00:00"
         }
       },
-      "inferenceProvider": "bailian",
+      "inferenceProvider": "aliyun-bailian",
       "name": "Paraformer语音识别-mtl-v1",
       "docUrl": "https://help.aliyun.com/document_detail/2712535.html",
-      "predictConfig": [
-        {
-          "name": "过滤语气词",
-          "key": "disfluency_removal_enabled",
-          "tip": "过滤语气词，默认为关闭false。"
-        }
-      ],
       "samples": {
         "dashscope": {
           "default": {
