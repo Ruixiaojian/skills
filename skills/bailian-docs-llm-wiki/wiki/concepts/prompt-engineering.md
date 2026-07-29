@@ -1,56 +1,50 @@
 # Prompt 工程
 
-Prompt 工程是百炼平台上系统化设计、管理与优化大语言模型输入指令（Prompt）的方法论与工程实践，核心目标是将业务意图精准、稳定、可复用地转化为高质量模型输出。它不是单次提示词编写，而是涵盖模板化、变量注入、自动增强、数据驱动反馈优化等全生命周期能力的结构化工作流。
+Prompt 工程是指在百炼平台上系统性设计、组织、验证与优化提示词（Prompt）的方法论与实践体系，其目标是通过结构化指令、角色设定、上下文注入、样例引导和自动化反馈等手段，显著提升大模型输出的准确性、稳定性、格式一致性与业务适配性。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-- **智能体（Agent）应用**：通过「系统提示词」配置强化角色设定与行为约束（如“你是一名金融风控专家，仅基于提供的报告摘要作判断”），并结合知识库检索结果动态拼接上下文；Prompt 模板可作为 Agent 的默认推理入口，实现提示逻辑与工具调度解耦。  
-- **工作流（Workflow）应用**：在「大模型节点」中直接引用已创建的 Prompt 模板，运行时自动填充 `query`、`historyList` 等会话变量；支持多版本模板灰度切换，无需修改工作流拓扑即可迭代提示策略。  
-- **高代码应用开发**：通过 SDK 调用 `GetPromptTemplate` 接口拉取模板内容，解析 `variables` 字段后注入业务数据（如用户画像、订单状态），再构造完整 Prompt 发送给目标模型（如 `qwen3.7-plus`）；模板更新后，应用无需重新部署即可生效。  
-- **RAG 增强场景**：Prompt 工程与 RAG 协同——RAG 负责召回相关知识片段，Prompt 工程负责设计“如何整合这些片段”的指令（例如：“请严格依据以下 3 条检索结果回答，禁止编造未提及的信息”），确保生成结果忠实、可控。  
-- **图片/视频生成任务**：使用「图片生成类 Prompt 模板」，分别定义正向提示（`positive_prompt`）与负向提示（`negative_prompt`），支持变量占位（如 `${style}`、`${subject}`），便于批量生成风格统一的视觉内容。
+- **模板化 Prompt 管理**：在「组件管理 > 提示词」中，开发者可基于 ICIO（Input-Context-Instruction-Output）、CRISPE（Capacity-Role-Insight-Statement-Personality-Experiment）或 RASCEF（Role-Action-Steps-Constraints-Examples-Format）等工程框架创建可复用模板；支持 `${variable}` 变量插值，实现跨业务动态填充（如营销文案生成、日志分析摘要），适用于文本生成、图片生成（正向/负向 Prompt 分离配置）等标准化任务。
 
-> ⚠️ 注意：Prompt 样例库功能已正式下线，所有新项目应避免依赖该能力；历史项目请迁移至 RAG 表格库或使用反馈优化替代。
+- **智能体（LLM Application）构建**：在新版智能体（Agent 2.0）中，系统提示词（System Prompt）是 Prompt 工程的核心载体——它定义 Agent 的角色、能力边界、工具调用规范及输出格式约束。结合知识库（RAG）与 MCP 工具，Prompt 工程确保模型在多步推理中保持意图对齐与结构化响应（如始终以 JSON 输出订单状态）。
+
+- **自动增强与反馈优化**：  
+  - **自动优化**：无需人工经验，一键将原始自然语言 Prompt（如“帮我写个产品介绍”）转化为含角色注入、指令强化、安全护栏的工业级版本；不计费，且输入数据不用于训练。  
+  - **反馈优化**：面向分类、结构化抽取等高精度任务，上传 5–10 条典型样例（few-shot）与 ≥20 条评测集，平台通过多轮评估-反思-重写，产出业务效果更优的 Prompt，直接支持 A/B 测试与灰度发布。
+
+- **API 与 SDK 集成**：通过 `CreatePromptTemplate` / `GetPromptTemplate` 接口管理模板元数据；渲染后作为 `system` 或 `messages[0].content` 传入 `ChatCompletion` 等模型 API；SDK 自动处理变量注入与地域适配（仅华北2可用），开发者聚焦业务逻辑。
 
 ## 关键参数和配置
 
-| 参数 | 说明 | 开发建议 |
+| 参数 | 说明 | 注意事项 |
 |------|------|----------|
-| `promptTemplateId` | 模板唯一标识符，用于 API 调用（如 `GetPromptTemplate`） | 从控制台模板卡片复制，或通过 `ListPromptTemplates` 接口批量获取；建议在代码中常量化管理。 |
-| `workspaceId` | 业务空间 ID，用于资源隔离与权限校验 | 必填，需提前通过控制台或 OpenAPI 获取；不同环境（测试/生产）应使用独立 workspace。 |
-| `variables` | 模板中声明的变量列表（如 `${topic}`、`${num1}`），运行时需全部填充 | 使用 `GetPromptTemplate` 接口返回的 `variables` 字段做校验，缺失变量将导致渲染失败；建议封装 `renderPrompt(template, data)` 工具函数。 |
-| `temperature` / `max_tokens` | 控制生成随机性与输出长度 | 属于模型调用参数，非 Prompt 模板本身属性；应在最终请求中显式设置（如 `temperature=0.3` 保证稳定性）。 |
-| `enable_thinking` | 启用模型推理链路展示（仅对 `qwen-max` 等支持思考模式的模型生效） | 调试阶段开启便于分析 Prompt 效果；生产环境可关闭以降低延迟。 |
+| `promptTemplateId` | 模板唯一标识符 | 由平台生成，用于 API 获取模板内容 |
+| `workspaceId` | 业务空间 ID | 必填，控制台或 `ListWorkspaces` 接口获取，决定资源隔离与鉴权范围 |
+| `variables` | 模板中声明的变量名列表（JSON 数组） | 最多 64 个；语法为 `${topic}`，不支持嵌套或表达式 |
+| `enable_thinking`（智能体场景） | 启用规划-执行-反思链路 | 仅对千问-Max 等支持思考模式的模型生效，用于调试 Prompt 效果 |
+| `top_k` / `score_threshold`（RAG 场景） | 控制检索片段数量与相关性阈值 | 影响 Prompt 中注入的上下文质量，间接决定最终输出可靠性 |
 
-- **地域强制约束**：所有 Prompt 相关 API（模板管理、自动优化、反馈优化）**仅支持华北2（北京）地域**（`RegionId=cn-beijing`），跨地域调用将返回 `InvalidRegionId` 错误。  
-- **容量限制**：单个文本 Prompt 模板最大 6144 字符；图片生成模板需分别填写正向与负向 Prompt，各自独立计长。  
-- **反馈优化数据要求**：训练样例建议 5–10 条（覆盖典型 case），评测样例 ≥20 条（含边界 case）；数据不足将显著降低优化效果。
+> ⚠️ **重要限制**：  
+> - 所有 Prompt 功能**仅支持华北2（北京）地域**；  
+> - 控制台编辑器最大长度 **6144 字符**，实际 token 消耗需按所选模型上下文窗口（如 Qwen-Max 32K）自行校验；  
+> - 图片生成模板暂不支持通过 API 创建（`CreatePromptTemplate` 接口当前仅支持文本类）；  
+> - Prompt 自动优化与反馈优化过程中的用户数据**不存储、不训练、符合阿里云隐私政策**。
 
 ## 面向开发者，简洁实用
 
-- ✅ **推荐做法**：  
-  - 所有业务级 Prompt 必须通过「自定义 Prompt 模板」管理，禁用硬编码；  
-  - 使用控制台「自动优化」快速提升初始 Prompt 质量（免费、不计费、不存数据）；  
-  - 对关键业务流（如客服回复、合同审核），启用「反馈优化」并定期用线上真实样本迭代；  
-  - 在 SDK 中封装模板渲染与错误处理逻辑，统一处理变量缺失、超长截断、地域校验失败等异常。
-
-- ❌ **禁止做法**：  
-  - 在代码中拼接字符串构造 Prompt（无法复用、不可审计、难调试）；  
-  - 跨地域调用 Prompt 接口（必须显式指定 `cn-beijing` endpoint）；  
-  - 继续使用已下线的 Prompt 样例库功能（包括 `recall_k`、`has_thoughts` 等参数）；  
-  - 将敏感信息（如用户身份证号、密钥）直接写入 Prompt 模板（应通过变量注入，并确保传输加密）。
-
-- 🛠️ **调试技巧**：  
-  - 控制台右侧「测试区」支持实时变量填充与一键调试，优先用于验证模板逻辑；  
-  - 查看 API 返回的 `RequestId`，配合日志追踪 Prompt 渲染与模型调用全过程；  
-  - 对比「原始 Prompt」与「自动优化后 Prompt」，学习角色注入、约束强化等工程技巧。
+- ✅ **起步建议**：从预置模板（如“会议纪要生成”）开始，复制后修改变量与指令细节，比从零编写更高效；  
+- ✅ **调试技巧**：启用 `enable_thinking=True` + `stream=True`，实时观察模型如何解析 Prompt 并规划步骤；  
+- ✅ **生产最佳实践**：  
+  - 对关键业务 Prompt，用反馈优化生成多个候选版本，结合线上评测集（如准确率、格式合规率）择优部署；  
+  - 将 Prompt 模板 ID 与变量映射关系纳入配置中心管理，避免硬编码；  
+  - 监控 `input_tokens` 增长——优化后的 Prompt 若引入大量样例或知识片段，可能推高成本，需权衡效果与开销。  
+- ❌ **避免踩坑**：勿依赖已下线的 Prompt 样例库功能；新项目统一使用 RAG 表格库或反馈优化替代。
 
 ## 关联主题页
 
 - [prompt](../guides/prompt.md)
-- [application component api reference](../api/application-component-api-reference.md)
 - [llm application](../guides/llm-application.md)
-- [model experience](../guides/model-experience.md)
+- [application component api reference](../api/application-component-api-reference.md)
 - [application support](../guides/application-support.md)
 
 

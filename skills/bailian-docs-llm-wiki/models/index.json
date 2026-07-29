@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-29",
-  "totalFamilies": 171,
+  "updatedAt": "2026-07-30",
+  "totalFamilies": 170,
   "totalModels": 387,
   "capabilityDistribution": {
     "TG": 36,
@@ -9,19 +9,20 @@
     "TTS": 16,
     "Reasoning": 14,
     "ASR": 12,
-    "VU": 9,
+    "VU": 8,
     "Realtime-ASR": 7,
     "Multimodal-Omni": 5,
     "Realtime-Omni": 4,
-    "Realtime-Audio-Translate": 3,
     "ME": 2,
     "Realtime-Chatting": 2,
     "Realtime-Text-to-Speech": 2,
-    "TR": 2
+    "TR": 2,
+    "Realtime-Audio-Translate": 2,
+    "3D-generation": 1
   },
   "providerDistribution": {
-    "qwen": 103,
-    "qwen-domain-model": 34,
+    "qwen": 102,
+    "qwen-domain-model": 33,
     "wan": 13,
     "happyhorse": 4,
     "pixverse": 4,
@@ -32,6 +33,7 @@
     "vidu": 2,
     "kling": 1,
     "stepfun": 1,
+    "tripo": 1,
     "xiaomi": 1
   },
   "families": [
@@ -474,22 +476,6 @@
       "maxContextWindow": 1048576
     },
     {
-      "slug": "gui-plus",
-      "name": "GUI-Plus",
-      "primaryCapability": "VU",
-      "capabilities": [
-        "VU"
-      ],
-      "providers": [
-        "qwen-domain-model"
-      ],
-      "itemCount": 1,
-      "items": [
-        "gui-plus"
-      ],
-      "maxContextWindow": 256000
-    },
-    {
       "slug": "gummy-chat-v1",
       "name": "一句话识别及翻译V1.0",
       "primaryCapability": "ASR",
@@ -502,21 +488,6 @@
       "itemCount": 1,
       "items": [
         "gummy-chat-v1"
-      ]
-    },
-    {
-      "slug": "gummy-realtime-v1",
-      "name": "实时语音识别及翻译V1.0",
-      "primaryCapability": "Realtime-Audio-Translate",
-      "capabilities": [
-        "Realtime-Audio-Translate"
-      ],
-      "providers": [
-        "qwen"
-      ],
-      "itemCount": 1,
-      "items": [
-        "gummy-realtime-v1"
       ]
     },
     {
@@ -2497,6 +2468,22 @@
         "tongyi-xiaomi-analysis-pro"
       ],
       "maxContextWindow": 32768
+    },
+    {
+      "slug": "tripo-models-market-place",
+      "name": "Tripo",
+      "primaryCapability": "3D-generation",
+      "capabilities": [
+        "3D-generation"
+      ],
+      "providers": [
+        "tripo"
+      ],
+      "itemCount": 2,
+      "items": [
+        "Tripo/Tripo-H3.1",
+        "Tripo/Tripo-P1.0"
+      ]
     },
     {
       "slug": "vanchin-models-market-place",

@@ -1,95 +1,92 @@
 # bailian [application call](../api/application-call.md)ing
 
-百炼平台支持通过统一的 Application API 调用多种类型的应用（工作流应用、智能体应用），开发者可使用 DashScope SDK 或标准 HTTP 接口快速集成。该能力屏蔽底层模型与编排细节，提供一致的调用契约，适用于对话生成、插件协同、多轮会话等场景。所有调用均需在华北2（北京）地域执行。
+百炼应用调用是将阿里云百炼平台创建的智能体应用或工作流应用集成到业务系统的核心方式，支持通过 DashScope SDK 或标准 HTTP API 进行同步调用。所有调用均需有效 API Key 和应用 ID，并遵循统一的请求结构与认证机制。该能力适用于单轮问答、多轮对话及带[插件](../concepts/plugin.md)参数的复杂任务编排。
 
 ## 支持的模型/功能
 
-- **应用类型**：当前支持两类应用：
-  - **工作流应用**（Workflow Application）：基于可视化节点编排（如大模型节点、条件分支、插件节点等）构建的复杂逻辑应用，适用于需多步骤决策或外部系统集成的场景 [调用工作流应用](../../raw/application-user-guide/bailian-application-calling/invoke-workflow-application.md)。
-  - **智能体应用**（Single Agent Application）：基于单一大模型驱动、支持插件调用的轻量级智能体，适用于快速构建具备工具调用能力的助手 [调用智能体应用](../../raw/application-user-guide/bailian-application-calling/call-single-agent-application.md)。
+- **应用类型**：支持两类应用调用：
+  - **智能体应用（Single Agent Application）**：面向单一角色、任务导向的轻量级智能体，适用于客服问答、知识检索等场景 [调用智能体应用](../../raw/application-user-guide/bailian-application-calling/call-single-agent-application.md)；
+  - **工作流应用（Workflow Application）**：支持多节点编排（如大模型节点、[插件](../concepts/plugin.md)节点、条件分支），适用于需组合工具调用、逻辑判断的复杂业务流程 [调用工作流应用](../../raw/application-user-guide/bailian-application-calling/invoke-workflow-application.md)。
 - **核心能力**：
-  - 单轮文本生成（`prompt` 输入）
-  - 多轮对话（通过 `session_id` 或显式 `messages` 数组管理上下文）
-  - 自定义插件参数透传（`biz_params.user_defined_params`）[应用的自定义参数传递](../../raw/application-user-guide/bailian-application-calling/pass-through-of-application-parameters.md)
-  - 调试信息返回（`debug` 字段）
+  - 单轮文本生成（`prompt` 输入 → `text` 输出）；
+  - 多轮对话支持（通过 `session_id` 或显式 `messages` 数组维护上下文）；
+  - 自定义[插件](../concepts/plugin.md)参数透传（`biz_params.user_defined_params`），用于向关联插件传递业务字段 [应用的自定义参数传递](../../raw/application-user-guide/bailian-application-calling/pass-through-of-application-parameters.md)；
+  - 调试信息返回（`debug` 字段可启用）；
+  - [Token](../concepts/token.md) 使用统计（`usage.models` 中包含 `input_tokens`/`output_tokens` 及对应 `model_id`）。
 
-> **注意**：文档 1 明确声明“本文档仅适用于华北2（北京）地域”，而文档 2 和 3 均未提及地域限制。实际生产环境必须严格遵循文档 1 的地域要求，否则请求将失败。
+> **注意**：文档 2 明确声明“本文档仅适用于华北2（北京）地域”，而文档 1 和 3 均未限定地域。实际调用时若在非北京地域遇到 `404` 或 `InvalidRegionId` 错误，应优先确认应用部署地域并使用对应 endpoint —— 当前生产环境默认 endpoint 为 `https://dashscope.aliyuncs.com`，其路由已自动适配地域，但部分旧版 SDK 或手动构造 URL 的场景仍可能受地域约束。
 
 ## 关键参数
 
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|------|------|
-| `app_id` | string | 是 | 应用唯一标识，在控制台「应用管理」页面获取。文档 1 和文档 2 使用 `APP_ID` 占位符，文档 3 使用 `YOUR_APP_ID`，语义一致。 |
-| `prompt` | string | 否（若提供 `messages` 则非必填） | 用户输入的自然语言指令。当使用 `messages` 进行多轮对话时，此字段被忽略。 |
-| `messages` | array | 否（若提供则替代 `prompt`） | 消息数组，格式为 `[{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}]`，用于精确控制上下文。 |
-| `session_id` | string | 否 | 由服务端维护的会话 ID，有效期 1 小时，最多支持 50 轮。若同时提供 `session_id` 和 `messages`，系统优先使用 `messages`。 |
-| `biz_params` | object | 否 | 用于传递自定义插件参数，结构为 `{"user_defined_params": {"<plugin_code>": {"param_key": "param_value"}}}`。仅在关联了自定义插件的应用中生效。 |
-| `parameters` | object | 否 | 预留扩展字段，当前暂未开放用户可配置的模型超参。 |
-| `debug` | object | 否 | 空对象 `{}` 即可启用调试模式，返回更详细的执行链路信息（如插件调用日志、节点耗时）。 |
+| `app_id` | string | ✓ | 百炼控制台中应用卡片显示的唯一 ID，区分智能体应用与工作流应用 |
+| `prompt` | string | ✓（除 `messages` 模式外） | 用户输入的自然语言指令；若使用 `messages` 多轮模式，则此项忽略 |
+| `biz_params` | object | ✗ | 用于传递插件参数，结构为 `{ "user_defined_params": { "<plugin_code>": { "<param_key>": <value> } } }`，详见 [应用的自定义参数传递](../../raw/application-user-guide/bailian-application-calling/pass-through-of-application-parameters.md) |
+| `parameters` | object | ✗ | 预留扩展字段，当前暂未开放通用参数配置 |
+| `debug` | object | ✗ | 设为空对象 `{}` 即可启用调试模式，返回更详细的执行链路信息 |
+| `input`（HTTP） | object | ✓ | HTTP 请求体顶层字段，必须包裹 `prompt` 或 `messages` 等子字段 |
 
 ## 使用方式
 
-### 1. 前置准备
-- 获取并配置 `DASHSCOPE_API_KEY` 至环境变量（推荐），避免硬编码 [获取 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
-- 确保应用已发布，且 `app_id` 正确无误。
-- （SDK 方式）安装对应语言的 DashScope SDK，Python 推荐 ≥1.14.0，Java 推荐 ≥2.12.0。
+### 1. 准备工作
+- 获取 API Key：前往 [密钥管理](https://bailian.console.aliyun.com/?tab=model#/api-key) 创建并复制；
+- 获取 `app_id`：在 [应用管理](https://bailian.console.aliyun.com/?tab=app#/app-center) 页面复制目标应用的 ID；
+- （推荐）配置环境变量：`export DASHSCOPE_API_KEY=sk-xxx`，避免代码硬编码。
 
-### 2. 调用示例（以 Python SDK 为例）
+### 2. SDK 调用（Python 示例）
 ```python
 from dashscope import Application
-import os
-
 response = Application.call(
-    api_key=os.getenv("DASHSCOPE_API_KEY"),
+    api_key=os.getenv("DASHSCOPE_API_KEY"),  # 自动读取环境变量
     app_id="YOUR_APP_ID",
-    prompt="你是谁？",
-    # 多轮对话（显式 messages）
-    # messages=[{"role": "user", "content": "你好"}, {"role": "assistant", "content": "我是通义千问"}],
-    # 插件参数透传
-    # biz_params={"user_defined_params": {"plugin_abc123": {"query": "天气"}}}
+    prompt="你是谁？"
 )
-
 if response.status_code == 200:
     print(response.output.text)
-else:
-    print(f"Error {response.status_code}: {response.message}")
 ```
 
-### 3. HTTP 接口（通用）
-- **Endpoint**: `POST https://dashscope.aliyuncs.com/api/v1/apps/{app_id}/completion`
-- **Headers**: 
-  - `Authorization: Bearer <your_api_key>`
-  - `Content-Type: application/json`
-- **Body**:
-  ```json
-  {
-    "input": {
-      "prompt": "你是谁？",
-      "biz_params": { /* 可选 */ }
-    },
-    "parameters": {},
-    "debug": {}
-  }
-  ```
+### 3. HTTP 直接调用（curl 示例）
+```bash
+curl -X POST https://dashscope.aliyuncs.com/api/v1/apps/YOUR_APP_ID/completion \
+  -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "input": {"prompt": "你是谁？"},
+        "parameters": {},
+        "debug": {}
+      }'
+```
+
+### 4. 多轮对话（推荐 `messages` 模式）
+```python
+# 显式维护 messages（更可控）
+messages = [
+    {"role": "user", "content": "你好"},
+    {"role": "assistant", "content": "你好！我是通义千问。"},
+    {"role": "user", "content": "今天天气如何？"}
+]
+response = Application.call(
+    app_id="YOUR_APP_ID",
+    messages=messages  # 此时忽略 prompt 字段
+)
+```
 
 ## 限制和注意事项
 
-- **地域限制**：所有调用必须在 **华北2（北京）** 地域发起，跨地域请求将返回 403 错误。这是硬性约束，不可绕过。
-- **会话管理**：
-  - `session_id` 由服务端生成并返回在响应中（`output.session_id`），客户端需自行保存并在后续请求中复用。
-  - `session_id` 有效期为 1 小时，超时后需新建会话；单个会话最多承载 50 轮交互。
-- **安全实践**：
-  - 绝对禁止在代码中硬编码 `DASHSCOPE_API_KEY`，必须通过环境变量或密钥管理服务注入。
-  - 生产环境应配置 API Key 的访问策略（如 IP 白名单、权限最小化）。
-- **插件参数**：
-  - `biz_params.user_defined_params` 中的 `plugin_code` 必须与控制台中插件卡片显示的 ID 完全一致（区分大小写）。
-  - 插件工具的输入参数在创建时必须设置为 **业务透传**（Business Pass-through），否则无法通过 API 传递。
-- **错误处理**：所有失败响应均包含 `request_id`，可用于问题定位；详细错误码请查阅 [开发者参考错误码文档](https://help.aliyun.com/zh/model-studio/developer-reference/error-code)。
+- **地域限制**：工作流应用调用明确要求华北2（北京）地域，智能体应用虽未明示，但建议统一部署在北京 region 以确保兼容性；
+- **会话有效期**：`session_id` 有效期为 1 小时，最多支持 50 轮对话；超时或超轮次后需新建会话；
+- **参数冲突规则**：若请求中同时提供 `session_id` 和 `messages`，系统**优先使用 `messages`**，`session_id` 将被忽略；
+- **插件参数要求**：自定义插件的输入参数必须在控制台配置为 **“业务透传”** 方式，否则无法通过 `biz_params` 传递；
+- **SDK 版本依赖**：
+  - Java SDK 推荐 ≥ 2.12.0（文档 1 & 2）；
+  - Python SDK 推荐 ≥ 1.14.0（文档 3 中插件调用所需）；
+- **错误处理**：所有调用均返回 `request_id`，用于问题排查；常见错误码参考 [开发者参考错误码](https://help.aliyun.com/zh/model-studio/developer-reference/error-code)。
 
 ## 来源文档
 
-- [调用工作流应用](../../raw/application-user-guide/bailian-application-calling/invoke-workflow-application.md)
 - [调用智能体应用](../../raw/application-user-guide/bailian-application-calling/call-single-agent-application.md)
+- [调用工作流应用](../../raw/application-user-guide/bailian-application-calling/invoke-workflow-application.md)
 - [应用的自定义参数传递](../../raw/application-user-guide/bailian-application-calling/pass-through-of-application-parameters.md)
 
 

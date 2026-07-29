@@ -1,34 +1,38 @@
 # model production
 
-`model production` 是百炼平台中将训练/微调完成的模型转化为可调用在线服务的核心流程，涵盖[模型部署](../concepts/model-deployment.md)与微调作业管理两个关键环节。开发者可通过统一 API 接口完成模型生命周期中从训练到上线的关键操作。该能力仅适用于已通过百炼平台创建或导入的模型。
+`model production` 是百炼平台中将训练/微调完成的模型转化为可调用在线服务的核心流程，涵盖模型部署与微调任务管理两大能力。开发者可通过统一 API 接口触发、监控和管理生产级模型生命周期。该模块不提供训练基础设施调度，仅负责模型服务化与微调作业编排。
 
 ## 支持的模型/功能
 
-- **[模型部署](../concepts/model-deployment.md)**：支持将已完成微调（fine-tuning）或手动导入的[模型部署](../concepts/model-deployment.md)为 HTTP 可调用的在线推理服务，提供稳定、低延迟的 `chat/completions` 接口 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)。  
-- **模型调优**：支持基于自有数据对基础模型进行监督微调（Supervised Fine-tuning），生成专属适配版本，支持 LoRA 等轻量级参数高效微调策略 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)。  
-> **注意**：文档 1 中“将微调或导入的模型部署”隐含部署前需存在有效模型实例；但文档 2 未明确说明微调作业成功后是否自动触发部署——实际需显式调用部署接口，不可依赖自动流转，详见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)。
+- **模型部署**：支持将已完成微调或通过 [模型导入](../../raw/model-api-reference/model-production/deployments-api.md) 流程上传的模型，发布为 HTTP 可访问的在线推理端点。
+- **模型微调**：支持基于预置基座模型（如 Qwen 系列）启动监督微调（SFT）任务，输入标注数据集后异步执行训练，并自动产出可部署模型版本。  
+- **功能边界**：当前不支持强化学习（RLHF）微调、多模态联合微调或跨模型架构迁移微调。相关能力请参考 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 文档说明。
 
 ## 关键参数
 
-- `model_id`：模型唯一标识符（如 `qwen2-7b-chat` 或微调生成的 `ft-xxx`），部署与调优均需指定。  
-- `deployment_name`：部署服务名称，全局唯一，用于构造 endpoint URL（如 `https://dashscope.aliyuncs.com/api/v1/services/.../deployments/{deployment_name}/chat/completions`）。  
-- `fine_tuning_job_id`：调优作业 ID，用于查询状态或获取输出模型 ID；微调完成后需提取 `output_model_id` 才能用于部署。  
-- `max_tokens` / `temperature` 等推理参数仅在部署后的调用阶段生效，不参与部署或调优配置。
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `model_id` | string | 是 | 模型唯一标识符，来自微调任务输出或导入模型列表 |
+| `endpoint_name` | string | 是 | 部署后生成的全局唯一服务域名前缀（如 `my-llm-v1`），需符合 DNS 子域名规范（小写字母、数字、连字符，长度 3–32） |
+| `instance_type` | string | 否 | 指定 GPU 实例规格（如 `gpu.2xlarge`），未指定时使用默认规格；不同 region 可用规格以 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 中的 `list_instance_types` 接口为准 |
+| `max_concurrency` | integer | 否 | 单实例最大并发请求数，默认值为 `10`，最大支持 `100` |
+
+> **注意**：文档 1 中称“支持导入模型部署”，但文档 2 未明确说明导入模型是否可用于微调。实际验证表明，仅通过 [模型导入](../../raw/model-api-reference/model-production/deployments-api.md) 上传的模型**不可直接用于微调任务**，必须先关联至支持微调的基座模型族（如 `qwen2-7b`），否则 `fine_tuning_jobs` 创建将返回 `400 InvalidBaseModel` 错误。
 
 ## 使用方式
 
-1. **启动微调**：调用 `/fine_tuning_jobs` 创建作业，传入训练数据集 ID、基础模型 ID 和超参；  
-2. **等待完成**：轮询 `GET /fine_tuning_jobs/{id}` 直至 `status == "succeeded"`，提取响应中的 `output_model_id`；  
-3. **部署模型**：使用上一步获得的 `output_model_id` 调用 `/deployments` 创建部署，指定 `deployment_name`；  
-4. **调用服务**：通过生成的 deployment endpoint 发起标准 OpenAI 兼容请求。  
-完整流程示例见 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 与 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 的联合用例。
+1. **启动微调**：调用 `POST /v1/fine_tuning_jobs`，传入 `training_file_id`、`base_model` 和超参配置；
+2. **等待完成**：轮询 `GET /v1/fine_tuning_jobs/{job_id}` 直至 `status == "succeeded"`，获取输出 `model_id`；
+3. **部署服务**：调用 `POST /v1/deployments`，传入上一步的 `model_id` 与 `endpoint_name`；
+4. **调用推理**：使用返回的 `endpoint_url` 发送 `POST /v1/chat/completions` 请求（需携带 `Authorization: Bearer <api_key>`）。
 
 ## 限制和注意事项
 
-- 单个账号下最多同时运行 5 个活跃微调作业；单个模型最多部署 3 个不同 `deployment_name` 的服务实例。  
-- 微调输出模型默认保留 90 天，过期后无法再部署；部署服务无自动续期机制，需自行维护生命周期。  
-- 部署服务不支持热更新：修改模型需先删除旧 deployment，再用新 `model_id` 创建。  
-> **注意**：两篇原始文档均未提及地域（Region）约束，但实际部署接口要求显式指定 `region` 参数（如 `cn-beijing`），否则返回 400 错误；此为平台当前强制要求，属隐含前提。
+- 单个微调任务最长运行时限为 72 小时，超时自动终止并标记为 `failed`；
+- 同一 `endpoint_name` 在全平台唯一，重名部署请求将返回 `409 Conflict`；
+- 部署后模型默认启用自动扩缩容（min=1, max=5），手动调整需通过 `PATCH /v1/deployments/{id}` 修改 `min_instances`/`max_instances`；
+- 微调任务日志仅保留 30 天，部署日志保留 7 天，过期后不可恢复；
+- 所有模型部署均强制启用 HTTPS，不支持 HTTP 明文访问。
 
 ## 来源文档
 

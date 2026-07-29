@@ -224,6 +224,8 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 可选值：
 
+-   `480P`
+    
 -   `720P`
     
 -   `1080P`：默认值。

@@ -1,40 +1,44 @@
 # preparations
 
-在调用阿里云百炼平台的模型或应用前，开发者需完成 API Key 获取、SDK 或 CLI 安装、环境配置等基础准备。这些步骤是所有后续调用的前提，直接影响鉴权有效性、协议兼容性与运行稳定性。本文档结构化梳理关键环节，聚焦可执行的技术细节，避免冗余说明。
+在调用阿里云百炼平台的模型或应用前，开发者需完成基础环境准备：获取并安全配置 API Key、安装适用的 SDK 或 CLI 工具、理解关键参数约束及常见错误应对策略。这些步骤是所有模型调用的前置依赖，直接影响服务可用性与安全性。
 
 ## 支持的模型/功能
 
-百炼平台支持多模态模型调用，包括文本生成（如 `qwen3.7-max`）、图像生成（如 `qwen-image-2.0`）、视频生成（如 `happyhorse-1.0-t2v`）、语音合成（如 `cosyvoice-v3-flash`）、视觉理解（如 `qwen3-vl-plus`）及向量/排序模型等。模型能力取决于其类型：纯文本模型（如 `qwen3-max`）**不支持** `image_url` 等多模态 `content` 元素；若需处理图片、视频或音频输入，必须选用对应多模态模型（如 `qwen3-vl-plus` 或 `qwen3.5-omni-plus`）。具体支持列表请参见[模型市场](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market)。> **注意**：文档 4 中明确指出，“使用纯文本模型时，若 `messages` 中包含 `image_url` 等多模态元素会触发 `Unexpected item type in content` 错误”，而文档 3 的 CLI 命令（如 `bl omni`）默认启用多模态能力，开发者需根据实际模型类型显式指定 `--model` 参数，避免因隐式默认值导致调用失败。
+百炼平台支持多模态模型（如 `qwen3-vl-plus`、`qwen-image-2.0`）、文本生成模型（如 `qwen3.7-max`）、语音合成（`cosyvoice-v3-flash`）、语音识别（`paraformer-real-time`）、向量嵌入（`text-embedding-v3`）及排序模型（`text-rerank-v3`）等。模型能力与调用方式严格绑定其类型：纯文本模型不接受 `image_url` 等多模态 `content` 元素；Qwen-Omni 等全模态模型则需配合 `--image`、`--audio` 等 CLI 参数或 `messages` 中合法 `type` 字段（如 `"image_url"`）使用。具体支持列表请以[模型市场](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market)为准，调用前务必确认模型已开通且名称拼写准确（例如 `qwen3-235b-a22b-instruct-2507`，非开源社区命名格式）[原文标题](../../raw/model-api-reference/preparations/error-code.md)。
 
 ## 关键参数
 
-调用时需关注以下核心参数及其约束：
-- `model`：必须为百炼控制台模型市场中**精确匹配的模型 ID**（如 `qwen3.7-max`），不可混用开源社区命名（如 `Qwen/Qwen3-235B...`）；错误将返回 `Model not exist.` [原文标题](../../raw/model-api-reference/preparations/error-code.md)。
-- `temperature`：取值范围 `[0.0, 2.0)`，超出将报错 `Temperature should be in [0.0, 2.0)`。
-- `top_p`：取值范围 `(0.0, 1.0]`，`top_k`、`repetition_penalty`、`presence_penalty` 等均有明确数值边界，详见[错误码文档](../../raw/model-api-reference/preparations/error-code.md)。
-- `enable_thinking`：仅部分模型（如 `qwen3-235b-a22b-thinking-2507`）强制要求为 `true`；开启时必须同时设置 `stream=true` 和 `incremental_output=true`，且禁用 `response_format={"type": "json_object"}`，否则将触发 `Json mode response is not supported when enable_thinking is true` 等错误 [原文标题](../../raw/model-api-reference/preparations/error-code.md)。
-- `messages` / `prompt`：二者必须且仅存在其一；`messages` 格式需严格符合 JSON Schema（如 `content` 必须为字符串或合法对象数组），非法结构将导致 `Required body invalid` 或 `Input should be a valid dictionary` 错误 [原文标题](../../raw/model-api-reference/preparations/error-code.md)。
+核心参数需严格遵循取值范围与组合规则：
+- `temperature`: 必须在 `[0.0, 2.0)` 区间；
+- `top_p`: 必须在 `(0.0, 1.0]` 区间；
+- `max_tokens`: 上限由模型文档明确标注，不可超过该值；
+- `n`: 图像生成等场景中最大为 `6`（CLI）或 `4`（HTTP 接口），详见 [原文标题](../../raw/model-api-reference/preparations/error-code.md)；
+- `seed`: DashScope 协议下有效范围为 `[0, 9223372036854775807]`；
+- `enable_thinking`: 思考模式仅支持[流式输出](../concepts/streaming-output.md)（`stream=true`），且与 `response_format="json_object"` 冲突，启用时必须设置 `incremental_output=true` 和 `result_format="message"`；
+- `messages` 构造：纯文本模型要求 `content` 为字符串；多模态模型允许数组，但元素 `type` 仅限 `text`、`image_url`、`video_url` 等受支持类型，禁止混入数字或布尔值 [原文标题](../../raw/model-api-reference/preparations/error-code.md)。
+
+> **注意**：文档 3 中 CLI 的 `bl image generate --n` 默认值为 `1`，最大支持 `6`；而文档 4 的错误码说明中 `Range of n should be [1, 4]` 针对的是 HTTP 接口（如 OpenAI 兼容协议）的通用限制。实际使用时，请依据所选调用方式（CLI vs SDK/HTTP）参考对应文档。
 
 ## 使用方式
 
 ### API Key 获取与配置
-- **获取**：需主账号或具备 `管理员`/`API-Key` 权限的子账号，在[百炼控制台 API Key 页面](https://bailian.console.aliyun.com/?tab=model#/api-key)创建。新创建的 Key 统一以 `sk-ws` 开头，且**仅创建时可见明文**，关闭弹窗后无法再次查看 [原文标题](../../raw/model-api-reference/preparations/get-api-key.md)。
-- **配置**：强烈建议通过环境变量 `DASHSCOPE_API_KEY` 设置（Linux/macOS/Windows 均有详细操作指南），避免硬编码泄露风险。CLI 工具也支持 `bl auth login --api-key` 或 `--api-key` 临时传入等方式 [原文标题](../../raw/model-api-reference/preparations/get-api-key.md)。
+- **获取**：需主账号或具备 `管理员`/`API-Key` 权限的子账号，在[百炼控制台 API Key 页面](https://bailian.console.aliyun.com/?tab=model#/api-key)创建。华北2（北京）、新加坡等地域支持权限精细化配置（IP 白名单、模型范围）；美国（弗吉尼亚）地域暂不支持自定义权限 [原文标题](../../raw/model-api-reference/preparations/get-api-key.md)。
+- **安全配置**：强烈建议将 `DASHSCOPE_API_KEY` 设为环境变量（Linux/macOS/Windows 均有详细步骤），避免硬编码。新创建的 Key 以 `sk-ws` 开头，明文仅显示一次，丢失后需重置 [原文标题](../../raw/model-api-reference/preparations/get-api-key.md)。
 
 ### SDK 与 CLI 安装
-- **SDK**：支持 DashScope（Python/Java）和 OpenAI 兼容 SDK（Python/Node.js/Java/Go）。Python 要求 `>=3.8`，Java 要求 `8+`，Go 要求 `1.22+`；Node.js 版本无特殊要求，但百炼 CLI 需 `>=22.12.0` [原文标题](../../raw/model-api-reference/preparations/install-sdk.md)。
-- **CLI**：通过 `npm install -g bailian-cli` 安装，认证方式包括浏览器 OAuth 登录（推荐）、API Key 直接登录、环境变量或配置文件持久化。CLI 提供丰富命令（如 `bl text chat`, `bl image generate`）并支持地域切换（`--region cn|us|intl`）和自定义端点（`--base-url`）[原文标题](../../raw/model-api-reference/preparations/use-model-studio-cli.md)。
+- **SDK**：Python 开发者可选 `openai`（`pip install -U openai`）或 `dashscope`（`pip install -U dashscope`）；Java/Node.js/Go 用户按文档 2 的 Gradle/Maven/npm/go get 指令安装对应 SDK。
+- **CLI**：仅支持 `npm install -g bailian-cli`（Node ≥ 22.12.0），认证方式包括浏览器登录（`bl auth login --console`）、API Key 直接输入（`bl auth login --api-key sk-xxx`）或环境变量配置。CLI 提供 `bl text chat`、`bl image generate` 等命令，支持地域切换（`--region cn|us|intl`）和[异步任务](../concepts/asynchronous-task.md)轮询 [原文标题](../../raw/model-api-reference/preparations/use-model-studio-cli.md)。
 
 ## 限制和注意事项
 
-- **地域差异**：美国（弗吉尼亚）地域的 API Key **不支持禁用/重置操作**，且创建后仅显示 Key 值，不提供 `API Host`；其他地域则支持完整生命周期管理 [原文标题](../../raw/model-api-reference/preparations/get-api-key.md)。
-- **安全升级**：`sk-` 开头的旧 Key 可继续使用，但新 Key 均为 `sk-ws` 格式，长度更长且明文仅一次可见，**强烈建议迁移**。
-- **权限隔离**：API Key 权限由其**归属业务空间**决定，同一空间内 Key 权限一致；子业务空间下的 Key 仅能调用该空间已授权的模型 [原文标题](../../raw/model-api-reference/preparations/get-api-key.md)。
-- **IP 白名单**：仅华北2（北京）、新加坡、日本（东京）、德国（法兰克福）地域支持配置 IPv4/IPv6 白名单（最多 20 个），美国（弗吉尼亚）地域不支持。
-- **文件限制**：Qwen-Long 模型仅支持 TXT/DOCX/PDF/EPUB/MOBI/MD 纯文本文件，大小上限 150 MB，页数上限 1500 页；图片类文件需先用 Qwen-VL 提取文本 [原文标题](../../raw/model-api-reference/preparations/error-code.md)。
+- **地域与端点**：API Host（`base_url`）随地域变化，OpenAI 兼容与 Anthropic 兼容协议的端点不同，必须从创建 API Key 弹窗中复制，不可自行构造。
+- **权限隔离**：API Key 权限由其归属业务空间决定。默认空间 Key 可调用所有标准模型；子业务空间 Key 仅能调用已授权模型及该空间内应用；调优模型仅允许所在空间的 Key 调用。
+- **安全红线**：严禁公开 API Key；CLI 在 CI/Agent 场景中禁止将 Key 写入日志或脚本；环境变量配置后需重启终端/IDE 才生效。
+- **错误处理**：常见错误如 `Model not exist`（模型未开通或名称错误）、`Arrearage`（账号欠费）、`InvalidParameter`（参数越界或格式错误）均需结合 [原文标题](../../raw/model-api-reference/preparations/error-code.md) 定位。推荐使用阿里云 AI 助理输入错误信息获取实时解决方案。
 
 ## 来源文档
 
+- [获取API Key](../../raw/model-api-reference/preparations/get-api-key.md)
 - [安装SDK](../../raw/model-api-reference/preparations/install-sdk.md)
 - [使用百炼 CLI](../../raw/model-api-reference/preparations/use-model-studio-cli.md)
 - [错误码](../../raw/model-api-reference/preparations/error-code.md)
