@@ -1,0 +1,68 @@
+name: auto-merge-to-main
+
+# The FC crawler pushes skill updates to feat/bailian-docs-update.
+# On each such push, create (or reuse) a PR to main and merge it.
+# The resulting push to main then triggers publish-skills.yml,
+# which pokes the remote FC to sync main -> OSS.
+on:
+  push:
+    branches: [feat/bailian-docs-update]
+    paths: ['skills/**']
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: auto-merge-to-main
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create or update PR to main
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GIT_TOKEN }}
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          # Use the latest commit subject as the PR title (fallback to default title)
+          TITLE=$(git log -1 --pretty=%s "${{ github.sha }}")
+          [ -n "$TITLE" ] || TITLE="chore: update bailian-docs-llm-wiki ($(TZ=Asia/Shanghai date +%Y-%m-%d))"
+
+          EXISTING_PR=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[0].number')
+
+          if [ -n "$EXISTING_PR" ]; then
+            echo "PR #$EXISTING_PR already exists, updating..."
+            gh pr edit "$EXISTING_PR" --title "$TITLE"
+            PR_NUMBER="$EXISTING_PR"
+          else
+            echo "Creating new PR..."
+            PR_NUMBER=$(gh pr create \
+              --base main \
+              --head "$BRANCH" \
+              --title "$TITLE" \
+              --body "Automated PR created on push to \`${BRANCH}\`." \
+              --no-maintainer-edit)
+          fi
+
+          echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+
+      - name: Auto-merge PR
+        env:
+          # GIT_TOKEN is a classic PAT (repo scope, no expiration) so that
+          # the merge commit fires publish-skills.yml on main.
+          GH_TOKEN: ${{ secrets.GIT_TOKEN }}
+        run: |
+          PR_NUMBER="${{ steps.pr.outputs.number }}"
+          echo "Merging PR #$PR_NUMBER..."
+          gh pr merge "$PR_NUMBER" --squash --delete-branch=false
+
+          echo "### PR #$PR_NUMBER merged" >> "$GITHUB_STEP_SUMMARY"
+          echo "Branch \`${{ github.ref_name }}\` has been merged into \`main\`." >> "$GITHUB_STEP_SUMMARY"
