@@ -46,7 +46,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           BRANCH="${{ github.ref_name }}"
-          TITLE="Auto PR: merge ${BRANCH} into main"
+          # Use the latest commit subject as the PR title (fallback to default title)
+          TITLE=$(git log -1 --pretty=%s "${{ github.sha }}")
+          [ -n "$TITLE" ] || TITLE="chore: update bailian-docs-llm-wiki ($(TZ=Asia/Shanghai date +%Y-%m-%d))"
 
           EXISTING_PR=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[0].number')
 
