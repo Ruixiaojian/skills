@@ -26,43 +26,22 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Sync main back into branch (prevent merge conflicts)
+      - name: Sync main back into branch (prevent squash-merge conflicts)
         run: |
-          # Snapshot-based sync, no merge and therefore no conflicts ever:
-          # build the desired tree directly —
-          #   - skills/bailian-docs-llm-wiki : exactly the crawler branch (HEAD)
-          #   - everything else              : exactly origin/main
-          # then record it as a two-parent merge commit (HEAD + origin/main)
-          # so the branch history stays joined with main and the PR is clean.
-          # Pushing with GITHUB_TOKEN does NOT retrigger this workflow
-          # (recursive triggers are suppressed by default), so no loop.
+          # Squash-merging PRs rewrites history on main, so this branch
+          # diverges from main after every merge and later PRs conflict.
+          # Merge main back in first, preferring the branch (crawler output
+          # is the source of truth for skills/**) on conflicting hunks.
+          # Pushing with the default GITHUB_TOKEN does NOT retrigger this
+          # workflow (recursive triggers are suppressed), so no loop.
           BRANCH="${{ github.ref_name }}"
-          OWNED="skills/bailian-docs-llm-wiki"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           git fetch origin main
-
-          # index := main's tree exactly (includes deletions)
-          git read-tree origin/main
-          # drop main's copy of the crawler-owned dir, graft ours instead
-          git rm -r --cached -f --ignore-unmatch -q -- "$OWNED"
-          if git rev-parse -q --verify "HEAD:$OWNED" >/dev/null; then
-            git read-tree "--prefix=$OWNED/" "HEAD:$OWNED"
+          if ! git merge-base --is-ancestor origin/main HEAD; then
+            git merge -X ours --no-edit origin/main
+            git push origin "HEAD:${BRANCH}"
           fi
-          TREE=$(git write-tree)
-
-          if [ "$TREE" = "$(git rev-parse 'HEAD^{tree}')" ] \
-             && git merge-base --is-ancestor origin/main HEAD; then
-            echo "Branch already matches main + crawler dir, nothing to sync."
-            git read-tree HEAD
-            exit 0
-          fi
-
-          COMMIT=$(git commit-tree "$TREE" -p HEAD -p origin/main \
-            -m "chore: sync main into ${BRANCH} (crawler owns ${OWNED})")
-          git reset --hard "$COMMIT"
-          git push origin "HEAD:${BRANCH}"
 
       - name: Create or update PR to main
         id: pr
@@ -105,7 +84,7 @@ jobs:
         run: |
           PR_NUMBER="${{ steps.pr.outputs.number }}"
           echo "Merging PR #$PR_NUMBER..."
-          gh pr merge "$PR_NUMBER" --merge --delete-branch=false
+          gh pr merge "$PR_NUMBER" --squash --delete-branch=false
 
           echo "### PR #$PR_NUMBER merged" >> "$GITHUB_STEP_SUMMARY"
           echo "Branch \`${{ github.ref_name }}\` has been merged into \`main\`." >> "$GITHUB_STEP_SUMMARY"
