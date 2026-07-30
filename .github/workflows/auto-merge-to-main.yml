@@ -28,58 +28,40 @@ jobs:
 
       - name: Sync main back into branch (prevent merge conflicts)
         run: |
-          # Merge commits keep history aligned, but the feature branch still
-          # gets new commits from the crawler that main doesn't have yet.
-          # Merge main back in first. Conflicts are resolved by ownership:
-          #   - skills/bailian-docs-llm-wiki/** : crawler output wins (ours)
-          #   - everything else                 : main wins (theirs), since
-          #     humans edit other skills and repo files on main.
+          # Snapshot-based sync, no merge and therefore no conflicts ever:
+          # build the desired tree directly —
+          #   - skills/bailian-docs-llm-wiki : exactly the crawler branch (HEAD)
+          #   - everything else              : exactly origin/main
+          # then record it as a two-parent merge commit (HEAD + origin/main)
+          # so the branch history stays joined with main and the PR is clean.
           # Pushing with GITHUB_TOKEN does NOT retrigger this workflow
           # (recursive triggers are suppressed by default), so no loop.
           BRANCH="${{ github.ref_name }}"
+          OWNED="skills/bailian-docs-llm-wiki"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Clean up stale state from a previous failed run
-          rm -f .git/index.lock
-          if [ -d .git/MERGE_HEAD ] || [ -f .git/MERGE_HEAD ]; then
-            git merge --abort 2>/dev/null || true
-          fi
-
           git fetch origin main
-          if git merge-base --is-ancestor origin/main HEAD; then
-            echo "Branch already contains main, nothing to sync."
+
+          # index := main's tree exactly (includes deletions)
+          git read-tree origin/main
+          # drop main's copy of the crawler-owned dir, graft ours instead
+          git rm -r --cached -f --ignore-unmatch -q -- "$OWNED"
+          if git rev-parse -q --verify "HEAD:$OWNED" >/dev/null; then
+            git read-tree "--prefix=$OWNED/" "HEAD:$OWNED"
+          fi
+          TREE=$(git write-tree)
+
+          if [ "$TREE" = "$(git rev-parse 'HEAD^{tree}')" ] \
+             && git merge-base --is-ancestor origin/main HEAD; then
+            echo "Branch already matches main + crawler dir, nothing to sync."
+            git read-tree HEAD
             exit 0
           fi
-          if ! git merge --no-edit origin/main; then
-            echo "Resolving conflicts by path ownership..."
-            git diff --name-only --diff-filter=U -z |
-            while IFS= read -r -d '' f; do
-              case "$f" in
-                skills/bailian-docs-llm-wiki/*)
-                  # Crawler output wins — always take ours
-                  if git ls-files -u -- "$f" | awk '{print $2}' | grep -qx 2; then
-                    git checkout --ours -- "$f"
-                    git add -- "$f"
-                  else
-                    # ours deleted it → delete
-                    git rm -f --quiet -- "$f"
-                  fi
-                  ;;
-                *)
-                  # Main wins — always take theirs
-                  if git ls-files -u -- "$f" | awk '{print $2}' | grep -qx 3; then
-                    git checkout --theirs -- "$f"
-                    git add -- "$f"
-                  else
-                    # theirs deleted it → delete
-                    git rm -f --quiet -- "$f"
-                  fi
-                  ;;
-              esac
-            done
-            git commit --no-edit
-          fi
+
+          COMMIT=$(git commit-tree "$TREE" -p HEAD -p origin/main \
+            -m "chore: sync main into ${BRANCH} (crawler owns ${OWNED})")
+          git reset --hard "$COMMIT"
           git push origin "HEAD:${BRANCH}"
 
       - name: Create or update PR to main
