@@ -434,7 +434,7 @@ TPM（每分钟tokens）
 
 RPM（每分钟请求数）
 
-2400
+600
 
 TPM（每分钟tokens）
 

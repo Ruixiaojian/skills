@@ -369,7 +369,7 @@ resolution直接影响费用，请在调用前确认[模型价格](https://help.
 
 -   vidu/viduq3-ad\_reference2video：可选720P、1080P。默认值为720P。
     
--   vidu/viduq3-drama\_reference2video：固定为1080P。
+-   vidu/viduq3-drama\_reference2video：可选720P、1080P。默认值为1080P。
     
 -   vidu/viduq3-mix\_reference2video：可选720P、1080P。默认值为720P。
     

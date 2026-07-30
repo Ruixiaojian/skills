@@ -1,8 +1,8 @@
-# Fun-ASR实时语音识别iOS SDK
+# Qwen-Audio-3.0-ASR-Flash-Streaming/Fun-ASR-Realtime实时语音识别iOS SDK
 
-本文档提供了Fun-ASR实时语音识别iOS SDK的详细使用指南，帮助您将语音转换为文本。
+本文档提供了Qwen-Audio-3.0-ASR-Flash-Streaming/Fun-ASR-Realtime实时语音识别iOS SDK的详细使用指南，帮助您将语音转换为文本。
 
-**用户指南：**关于模型介绍和选型建议请参见[实时语音识别-Fun-ASR/Paraformer](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition)
+**用户指南：**关于模型介绍和选型建议请参见[语音识别](https://help.aliyun.com/zh/model-studio/asr-model/)。
 
 ## **快速开始**
 
@@ -180,7 +180,7 @@
     {
         "service_type": 4,
         "nls_config": {
-            "model": "fun-asr-realtime",
+            "model": "qwen-audio-3.0-asr-flash-streaming",
             "sr_format": "pcm",
             "sample_rate": "16000",
             "parameters": {
@@ -222,7 +222,7 @@
     
     是
     
-    语音识别[支持的模型](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition-user-guide#4a43cc1bb7kxg)。
+    指定模型名。支持Qwen-Audio-3.0-ASR-Flash-Streaming和Fun-ASR-Realtime系列模型，详情请参见[支持的模型与地域](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition-user-guide#4a43cc1bb7kxg)。
     
     `nls_config.sr_format`
     
@@ -230,16 +230,32 @@
     
     是
     
-    待识别音频格式。
+    音频格式。
     
-    支持的音频格式：pcm、wav、opus。
+    取值范围：
+    
+    -   `pcm`
+        
+    -   `wav`
+        
+    -   `mp3`
+        
+    -   `opus`
+        
+    -   `speex`
+        
+    -   `aac`
+        
+    -   `amr`
+        
     
     **重要**
     
-    -   opus：必须为PCM编码，SDK内部会将其编码成OPUS格式；
-        
-    -   wav/pcm：必须为PCM编码。
-        
+    opus/speex：必须使用Ogg封装；
+    
+    wav：必须为PCM编码；
+    
+    amr：仅支持AMR-NB类型。
     
     `nls_config.sample_rate`
     
@@ -247,9 +263,9 @@
     
     是
     
-    待识别音频采样率（单位Hz）。
+    采样率（Hz）。
     
-    8k模型仅支持 8000 Hz，其他模型支持任意采样率。
+    取值范围：8k模型仅支持 8000 Hz，其他模型支持任意采样率。
     
     `nls_config.semantic_punctuation_enabled`
     
@@ -257,18 +273,16 @@
     
     否
     
-    设置断句模式。
+    是否启用语义断句。
     
     默认值：false。
     
-    取值范围：
-    
-    -   true：开启语义断句，关闭VAD（Voice Activity Detection，语音活动检测）断句。
+    -   true：开启语义断句，关闭 VAD 断句。
         
-    -   false：开启VAD断句，关闭语义断句。
+    -   false（默认）：开启 VAD 断句，关闭语义断句。
         
     
-    语义断句准确性更高，适合会议转写场景；VAD断句延迟较低，适合实时交互场景。
+    语义断句准确性更高，适合会议转写场景；VAD（Voice Activity Detection，语音活动检测）断句延迟较低，适合交互场景。
     
     `nls_config.max_sentence_silence`
     
@@ -276,15 +290,15 @@
     
     否
     
-    VAD（Voice Activity Detection，语音活动检测）断句的静音时长阈值（单位为ms）。
+    **重要**
     
-    默认值：800。
+    仅在`semantic_punctuation_enabled`参数为false时生效。
+    
+    VAD 断句静音阈值（ms）。当一段语音后的静音时长超过该阈值时，系统会判定该句子已结束。
+    
+    默认值：1300。
     
     取值范围：\[200, 6000\]。
-    
-    当一段语音后的静音时长超过该阈值时，系统会判定该句子已结束。
-    
-    该参数仅在`semantic_punctuation_enabled`参数为false时生效。
     
     `nls_config.multi_threshold_mode_enabled`
     
@@ -292,18 +306,13 @@
     
     否
     
-    是否开启防过长切割模式。开启可防止VAD断句切割过长。
+    **重要**
     
-    默认值：false（关闭）。
+    仅在`semantic_punctuation_enabled`参数为false时生效。
     
-    取值范围：
+    是否启用多阈值模式。启用后可防止 VAD 断句切割过长。
     
-    -   true：开启
-        
-    -   false：关闭
-        
-    
-    该参数仅在`semantic_punctuation_enabled`参数为false时生效。
+    默认值：false。
     
     `nls_config.heartbeat`
     
@@ -311,16 +320,16 @@
     
     否
     
-    是否和服务端保持长连接。
+    是否启用心跳包。
     
     默认值：false。
     
-    取值范围：
-    
     -   true：在持续发送静音音频的情况下，可保持与服务端的连接不中断。
         
-    -   false：即使持续发送静音音频，连接也将在60秒后因超时而断开。该 60 秒超时为服务端默认行为，客户端不可配置。
+    -   false（默认）：即使持续发送静音音频，连接也将在60秒后因超时而断开。
         
+    
+    静音音频指的是在音频文件或数据流中没有声音信号的内容。静音音频可以通过多种方法生成，例如使用音频编辑软件如Audacity或Adobe Audition，或者通过命令行工具如FFmpeg。
     
     `nls_config.vocabulary_id`
     
@@ -328,7 +337,31 @@
     
     否
     
-    热词词表ID，用于提升特定词汇的识别准确率。热词的使用方法请参见[定制热词](https://help.aliyun.com/zh/model-studio/custom-hot-words/)。
+    预编译热词列表 ID。
+    
+    需预先调用创建热词列表接口生成，识别时传入该 ID 即可使用列表中的热词。
+    
+    适用于词汇已知且相对稳定、需要跨请求复用同一词表的场景。
+    
+    使用方法请参见[预编译热词](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#hw-precompiled-h3)。
+    
+    `nls_config.parameters.vocabulary`
+    
+    `object`
+    
+    否
+    
+    即时热词。
+    
+    以键值对形式传入，键为热词文本（`string`），值为热词权重（`integer`），无需预先创建热词列表。权重取值范围为 \[1, 5\] 或 50：取 \[1, 5\] 时值越大模型越倾向输出该词；取 50 时为超级热词，召回率大幅提升，但超级热词数量最多不超过 50 个。
+    
+    适用于临时性、会话级别的热词优化。
+    
+    与预编译热词同时配置时，仅即时热词生效。使用方法请参见[即时热词](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#hw-instant-h3)。
+    
+    **重要**
+    
+    仅`qwen-audio-3.0-asr-flash-streaming`支持即时热词。
     
     `nls_config.language_hints`
     
@@ -336,13 +369,13 @@
     
     否
     
-    设置待识别语言代码。如果无法提前确定语种，可不设置，模型会自动识别语种。
+    待识别音频语种。无默认值，不设置时模型自动识别。
     
-    系统仅读取数组中的首个值。多余值将被忽略。
+    对于 Qwen-Audio-3.0-ASR-Flash-Streaming 系列模型，最多支持设置 4 个值，即便设置超出 4 个，也仅前 4 个生效；对于 Fun-ASR-Realtime 系列模型，仅支持设置 1 个值，即便设置多个，也仅第一个生效。
     
-    不同模型支持的语言代码如下：
+    **点击查看支持的语言代码**
     
-    -   fun-asr-realtime、fun-asr-realtime-2025-11-07：
+    -   qwen-audio-3.0-asr-flash-streaming、fun-asr-realtime、fun-asr-realtime-2025-11-07：
         
         -   zh: 中文
             
@@ -437,7 +470,7 @@
     
     否
     
-    控制语音与噪音的判定阈值，用于调整语音活动检测（VAD）的灵敏度。
+    语音与噪音的判定阈值，用于调整语音活动检测（VAD）的灵敏度。
     
     取值范围：\[-1.0, 1.0\]。
     
@@ -447,8 +480,6 @@
         
     -   取值越接近 +1：提高噪音判定阈值，语音被误判为噪音的概率增大，可能导致部分语音被过滤
         
-    
-    **重要**
     
     此参数为高级配置参数，调整可能显著影响识别效果，建议：
     
@@ -462,8 +493,6 @@
     `object`
     
     否
-    
-    **special\_word\_filter** `_string_` （可选）
     
     指定在语音识别过程中需要处理的敏感词，并支持对不同敏感词设置不同的处理方式。详情请参见[敏感词过滤](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition-user-guide#rt03-sensitive-h3)。
     

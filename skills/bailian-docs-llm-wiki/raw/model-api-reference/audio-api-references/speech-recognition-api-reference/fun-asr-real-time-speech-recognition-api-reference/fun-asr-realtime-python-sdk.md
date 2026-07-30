@@ -1,19 +1,8 @@
-# Python SDK
+# Qwen-Audio-3.0-ASR-Flash-Streaming/Fun-ASR-Realtime实时语音识别Python SDK
 
-本文介绍Fun-ASR实时语音识别Python SDK的参数和接口细节。
+本文介绍Qwen-Audio-3.0-ASR-Flash-Streaming/Fun-ASR-Realtime实时语音识别Python SDK的参数和接口细节。
 
-**重要**
-
-阿里云百炼为华北2（北京）、新加坡地域推出了业务空间专属域名，能够为推理请求提供卓越的性能和更高的稳定性，建议迁移至新域名：
-
--   华北2（北京）地域：从 `dashscope.aliyuncs.com` 迁移至 `{WorkspaceId}.cn-beijing.maas.aliyuncs.com`
-    
--   新加坡地域：从 `dashscope-intl.aliyuncs.com` 迁移至 `{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com`
-    
-
-`{WorkspaceId}`需要替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。现有域名仍可正常使用。
-
-**用户指南：**关于模型介绍和选型建议请参见[实时语音识别-Fun-ASR/Paraformer](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition)。
+**用户指南：**关于模型介绍和选型建议请参见[语音识别](https://help.aliyun.com/zh/model-studio/asr-model/)。
 
 ## **前提条件**
 
@@ -52,7 +41,7 @@ dashscope.api_key = os.environ.get('DASHSCOPE_API_KEY')
 # 以下为华北2（北京）地域的配置，调用时请将"{WorkspaceId}"替换为真实的业务空间ID，各地域的配置不同。
 dashscope.base_websocket_api_url='wss://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api-ws/v1/inference'
 
-recognition = Recognition(model='fun-asr-realtime',
+recognition = Recognition(model='qwen-audio-3.0-asr-flash-streaming',
                           format='wav',
                           sample_rate=16000,
                           callback=None)
@@ -192,7 +181,7 @@ if __name__ == '__main__':
     # Call recognition service by async mode, you can customize the recognition parameters, like model, format,
     # sample_rate
     recognition = Recognition(
-        model='fun-asr-realtime',
+        model='qwen-audio-3.0-asr-flash-streaming',
         format=format_pcm,
         # 'pcm'、'wav'、'opus'、'speex'、'aac'、'amr', you can check the supported formats in the document
         sample_rate=sample_rate,
@@ -259,7 +248,7 @@ class Callback(RecognitionCallback):
 
 callback = Callback()
 
-recognition = Recognition(model='fun-asr-realtime',
+recognition = Recognition(model='qwen-audio-3.0-asr-flash-streaming',
                           format='wav',
                           sample_rate=16000,
                           callback=callback)
@@ -311,6 +300,42 @@ print(
     ))
 ```
 
+## **接口地址**
+
+SDK的接口地址需在初始化前设置为下方地址（包含WorkspaceId）。如需切换到其他地域，请修改 `dashscope.base_websocket_api_url`为对应地域的URL。
+
+## 华北2（北京）
+
+`wss://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api-ws/v1/inference`
+
+调用时请将`{WorkspaceId}`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
+
+## 新加坡
+
+`wss://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api-ws/v1/inference`
+
+调用时请将`{WorkspaceId}`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
+
+**切换到新加坡地域**：
+
+```
+import dashscope
+
+# 调用时请将"{WorkspaceId}"替换为真实的业务空间ID
+dashscope.base_websocket_api_url = 'wss://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api-ws/v1/inference'
+```
+
+**重要**
+
+阿里云百炼为华北2（北京）、新加坡地域推出了业务空间专属域名，能够为推理请求提供卓越的性能和更高的稳定性，建议迁移至新域名：
+
+-   华北2（北京）地域：从 `dashscope.aliyuncs.com` 迁移至 `{WorkspaceId}.cn-beijing.maas.aliyuncs.com`
+    
+-   新加坡地域：从 `dashscope-intl.aliyuncs.com` 迁移至 `{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com`
+    
+
+`{WorkspaceId}`需要替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。现有域名仍可正常使用。
+
 ## **请求参数**
 
 请求参数通过[Recognition类](#44f87473bfp2m)的构造方法（\_init\_）进行设置。
@@ -318,8 +343,6 @@ print(
 **参数**
 
 **类型**
-
-**默认值**
 
 **是否必须**
 
@@ -329,35 +352,44 @@ model
 
 str
 
-\-
-
 是
 
-用于实时语音识别的[支持的模型](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition-user-guide#4a43cc1bb7kxg)
+指定模型名。支持Qwen-Audio-3.0-ASR-Flash-Streaming和Fun-ASR-Realtime系列模型，详情请参见[支持的模型与地域](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition-user-guide#4a43cc1bb7kxg)。
 
 sample\_rate
 
 int
 
-\-
-
 是
 
-设置待识别音频采样率（单位Hz）。
+采样率（Hz）。
 
-8k模型仅支持 8000 Hz，其他模型支持任意采样率。
+取值范围：8k模型仅支持 8000 Hz，其他模型支持任意采样率。
 
 format
 
 str
 
-\-
-
 是
 
-设置待识别音频格式。
+音频格式。
 
-支持的音频格式：pcm、wav、mp3、opus、speex、aac、amr。
+取值范围：
+
+-   `pcm`
+    
+-   `wav`
+    
+-   `mp3`
+    
+-   `opus`
+    
+-   `speex`
+    
+-   `aac`
+    
+-   `amr`
+    
 
 **重要**
 
@@ -371,90 +403,122 @@ vocabulary\_id
 
 str
 
-\-
+否
+
+预编译热词列表 ID。
+
+需预先调用创建热词列表接口生成，识别时传入该 ID 即可使用列表中的热词。
+
+适用于词汇已知且相对稳定、需要跨请求复用同一词表的场景。
+
+使用方法请参见[预编译热词](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#hw-precompiled-h3)。
+
+vocabulary
+
+dict
 
 否
 
-热词ID。使用方法参见[定制热词](https://help.aliyun.com/zh/model-studio/custom-hot-words/)。
+即时热词。
 
-默认不设置。
+以键值对形式传入，键为热词文本（`string`），值为热词权重（`integer`），无需预先创建热词列表。权重取值范围为 \[1, 5\] 或 50：取 \[1, 5\] 时值越大模型越倾向输出该词；取 50 时为超级热词，召回率大幅提升，但超级热词数量最多不超过 50 个。
+
+适用于临时性、会话级别的热词优化。
+
+与预编译热词同时配置时，仅即时热词生效。使用方法请参见[即时热词](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#hw-instant-h3)。
+
+**重要**
+
+仅`qwen-audio-3.0-asr-flash-streaming`支持即时热词。
+
+示例：
+
+```
+from dashscope.audio.asr import Recognition
+
+vocab = {"张三": 5, "李四": 5}
+recognition = Recognition(
+    model='qwen-audio-3.0-asr-flash-streaming',
+    format='wav',
+    sample_rate=16000,
+    vocabulary=vocab,
+    callback=None)
+```
 
 semantic\_punctuation\_enabled
 
 bool
 
-False
-
 否
 
-设置是否开启语义断句，默认关闭。
+是否启用语义断句。
 
--   true：开启语义断句，关闭VAD（Voice Activity Detection，语音活动检测）断句。
+默认值：False。
+
+-   True：开启语义断句，关闭 VAD 断句。
     
--   false（默认）：开启VAD（Voice Activity Detection，语音活动检测）断句，关闭语义断句。
+-   False（默认）：开启 VAD 断句，关闭语义断句。
     
 
 语义断句准确性更高，适合会议转写场景；VAD（Voice Activity Detection，语音活动检测）断句延迟较低，适合交互场景。
-
-通过调整`semantic_punctuation_enabled`参数，可以灵活切换语音识别的断句方式以适应不同场景需求。
 
 max\_sentence\_silence
 
 int
 
-1300
-
 否
 
-设置VAD（Voice Activity Detection，语音活动检测）断句的静音时长阈值（单位为ms）。
+**重要**
 
-当一段语音后的静音时长超过该阈值时，系统会判定该句子已结束。
+仅在`semantic_punctuation_enabled`参数为false时生效。
 
-参数范围为200ms至6000ms，默认值为1300ms。
+VAD 断句静音阈值（ms）。当一段语音后的静音时长超过该阈值时，系统会判定该句子已结束。
 
-该参数仅在`semantic_punctuation_enabled`参数为false（VAD断句）时生效。
+默认值：1300。
+
+取值范围：\[200, 6000\]。
 
 multi\_threshold\_mode\_enabled
 
 bool
 
-False
-
 否
 
-该开关打开时（true）可以防止VAD断句切割过长。默认关闭。
+**重要**
 
-该参数仅在`semantic_punctuation_enabled`参数为false（VAD断句）时生效。
+仅在`semantic_punctuation_enabled`参数为false时生效。
+
+是否启用多阈值模式。启用后可防止 VAD 断句切割过长。
+
+默认值：False。
 
 punctuation\_prediction\_enabled
 
 bool
 
-True
-
 否
 
 设置是否在识别结果中自动添加标点：
 
--   true（默认）：是，不支持修改。
+-   True（默认）：是，不支持修改。
     
 
 heartbeat
 
 bool
 
-False
-
 否
 
-当需要与服务端保持长连接时，可通过该开关进行控制：
+是否启用心跳包。
 
--   true：在持续发送静音音频的情况下，可保持与服务端的连接不中断。
+默认值：False。
+
+-   True：在持续发送静音音频的情况下，可保持与服务端的连接不中断。
     
--   false（默认）：即使持续发送静音音频，连接也将在60秒后因超时而断开。
+-   False（默认）：即使持续发送静音音频，连接也将在60秒后因超时而断开。
     
-    静音音频指的是在音频文件或数据流中没有声音信号的内容。静音音频可以通过多种方法生成，例如使用音频编辑软件如Audacity或Adobe Audition，或者通过命令行工具如FFmpeg。
-    
+
+静音音频指的是在音频文件或数据流中没有声音信号的内容。静音音频可以通过多种方法生成，例如使用音频编辑软件如Audacity或Adobe Audition，或者通过命令行工具如FFmpeg。
 
 使用该字段时，SDK版本不能低于1.23.1。
 
@@ -462,17 +526,15 @@ language\_hints
 
 list\[str\]
 
-\-
-
 否
 
-设置待识别语言代码。如果无法提前确定语种，可不设置，模型会自动识别语种。
+待识别音频语种。无默认值，不设置时模型自动识别。
 
-系统仅读取数组中的首个值。多余值将被忽略。
+对于 Qwen-Audio-3.0-ASR-Flash-Streaming 系列模型，最多支持设置 4 个值，即便设置超出 4 个，也仅前 4 个生效；对于 Fun-ASR-Realtime 系列模型，仅支持设置 1 个值，即便设置多个，也仅第一个生效。
 
-不同模型支持的语言代码如下：
+**点击查看支持的语言代码**
 
--   fun-asr-realtime、fun-asr-realtime-2025-11-07：
+-   qwen-audio-3.0-asr-flash-streaming、fun-asr-realtime、fun-asr-realtime-2025-11-07：
     
     -   zh: 中文
         
@@ -557,11 +619,9 @@ speech\_noise\_threshold
 
 float
 
-\-
-
 否
 
-控制语音与噪音的判定阈值，用于调整语音活动检测（VAD）的灵敏度。
+语音与噪音的判定阈值，用于调整语音活动检测（VAD）的灵敏度。
 
 取值范围：\[-1.0, 1.0\]。
 
@@ -571,8 +631,6 @@ float
     
 -   取值越接近 +1：提高噪音判定阈值，语音被误判为噪音的概率增大，可能导致部分语音被过滤
     
-
-**重要**
 
 此参数为高级配置参数，调整可能显著影响识别效果，建议：
 
@@ -585,19 +643,13 @@ special\_word\_filter
 
 str
 
-\-
-
 否
-
-**special\_word\_filter** `_string_` （可选）
 
 指定在语音识别过程中需要处理的敏感词，并支持对不同敏感词设置不同的处理方式。详情请参见[敏感词过滤](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition-user-guide#rt03-sensitive-h3)。
 
 callback
 
 RecognitionCallback
-
-\-
 
 否
 
@@ -609,8 +661,6 @@ RecognitionCallback
 
 **类型**
 
-**默认值**
-
 **是否必须**
 
 **说明**
@@ -619,15 +669,13 @@ raw\_input
 
 dict
 
-\-
-
 否
 
 输入对象，用于传入对话上下文（context）。上下文用于辅助识别、提升专有词汇的识别准确率。使用方法详见[快速开始](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#ctx-quickstart-sec)。
 
 **重要**
 
-仅 `fun-asr-realtime` 和 `fun-asr-realtime-2025-11-07` 模型支持 context 参数。
+仅 `qwen-audio-3.0-asr-flash-streaming`、`fun-asr-realtime` 和 `fun-asr-realtime-2025-11-07` 模型支持 context 参数。
 
 dict 中需包含 `context` 键，值为消息列表（list\[dict\]），每条消息包含以下字段：
 

@@ -1,17 +1,6 @@
-# Fun-ASR非实时语音识别Python SDK
+# Qwen-Audio-3.0-ASR-Flash-Filetrans/Fun-ASR非实时语音识别Python SDK
 
-本文介绍Fun-ASR非实时语音识别Python SDK的参数和接口细节。
-
-**重要**
-
-阿里云百炼为华北2（北京）、新加坡地域推出了业务空间专属域名，能够为推理请求提供卓越的性能和更高的稳定性，建议迁移至新域名：
-
--   华北2（北京）地域：从 `dashscope.aliyuncs.com` 迁移至 `{WorkspaceId}.cn-beijing.maas.aliyuncs.com`
-    
--   新加坡地域：从 `dashscope-intl.aliyuncs.com` 迁移至 `{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com`
-    
-
-`{WorkspaceId}`需要替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。现有域名仍可正常使用。
+本文介绍Qwen-Audio-3.0-ASR-Flash-Filetrans/Fun-ASR非实时语音识别Python SDK的参数和接口细节。
 
 **用户指南：**[非实时语音识别](https://help.aliyun.com/zh/model-studio/non-realtime-speech-recognition-user-guide)。关于支持的音频格式、文件大小限制、时长限制等输入要求，请参见[音频规格](https://help.aliyun.com/zh/model-studio/asr-model/#asr-audio-spec02)。
 
@@ -41,7 +30,7 @@
 
 ### **异步提交任务+同步等待任务结束**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3178074871/CAEQURiBgMCvo5zjpxkiIDQyNzUwZjVjMWM3MjQ5Nzg4ODBjNDRjNzE1ZGFiOGFj4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5381245871/CAEQURiBgMCvo5zjpxkiIDQyNzUwZjVjMWM3MjQ5Nzg4ODBjNDRjNzE1ZGFiOGFj4709861_20241015153444.149.svg)
 
 1.  调用[核心类（Transcription）](#adcb5e9bddbyq)的`async_call`方法并设置[请求参数](#340f6879fci7d)。
     
@@ -76,7 +65,7 @@ dashscope.base_http_api_url = 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.co
 dashscope.api_key = os.getenv("DASHSCOPE_API_KEY")
 
 task_response = Transcription.async_call(
-    model='fun-asr',
+    model='qwen-audio-3.0-asr-flash-filetrans',
     file_urls=['{YOUR_AUDIO_URL}']
 )
 
@@ -88,7 +77,7 @@ if transcribe_response.status_code == HTTPStatus.OK:
 
 ### **异步提交任务+异步查询任务执行结果**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3178074871/CAEQURiBgMCN3qzkpxkiIGE0YmU4YTdjMWNiNzRmYjJhMjFlMWZkZmFmOWQ1NmEx4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6381245871/CAEQURiBgMCN3qzkpxkiIGE0YmU4YTdjMWNiNzRmYjJhMjFlMWZkZmFmOWQ1NmEx4709861_20241015153444.149.svg)
 
 1.  调用[核心类（Transcription）](#adcb5e9bddbyq)的`async_call`方法并设置[请求参数](#340f6879fci7d)。
     
@@ -123,7 +112,7 @@ dashscope.base_http_api_url = 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.co
 dashscope.api_key = os.getenv("DASHSCOPE_API_KEY")
 
 transcribe_response = Transcription.async_call(
-    model='fun-asr',
+    model='qwen-audio-3.0-asr-flash-filetrans',
     file_urls=['{YOUR_AUDIO_URL}']
 )
 
@@ -137,6 +126,38 @@ if transcribe_response.status_code == HTTPStatus.OK:
     print('transcription done!')
 ```
 
+## **接口地址**
+
+SDK 默认使用**北京地域**的接口地址。如需切换到其他地域，需在初始化前修改 `dashscope.base_http_api_url`。
+
+## 华北2（北京）
+
+`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1`
+
+调用时请将`{WorkspaceId}`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
+
+## 新加坡
+
+`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1`
+
+调用时请将`{WorkspaceId}`替换为真实的[业务空间ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
+
+**切换到新加坡地域**：
+
+```
+import dashscope
+
+# 在代码开头设置
+dashscope.base_http_api_url = 'https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1'
+```
+
+**注意**：
+
+-   不同地域的 API Key 不同，请确保使用对应地域的 API Key
+    
+-   地域配置为全局设置，影响所有 DashScope SDK 的 API 调用
+    
+
 ## **请求参数**
 
 请求参数通过[核心类（Transcription）](#adcb5e9bddbyq)的`async_call`方法进行设置。
@@ -144,8 +165,6 @@ if transcribe_response.status_code == HTTPStatus.OK:
 **参数**
 
 **类型**
-
-**默认值**
 
 **是否必须**
 
@@ -155,52 +174,81 @@ model
 
 str
 
-\-
-
 是
 
-指定用于音视频文件转写的模型名。
-
-取值范围：
-
--   fun-asr
-    
--   fun-asr-2025-11-07
-    
--   fun-asr-2025-08-25
-    
--   fun-asr-mtl
-    
--   fun-asr-mtl-2025-08-25
-    
+指定模型名。支持Qwen-Audio-3.0-ASR-Flash-Filetrans和Fun-ASR系列模型，详情请参见[支持的模型与地域](https://help.aliyun.com/zh/model-studio/non-realtime-speech-recognition-user-guide#4a43cc1bb7kxg)。
 
 file\_urls
 
 list\[str\]
 
-\-
-
 是
 
 音视频文件转写的URL列表，支持HTTP / HTTPS协议，单次请求仅支持1个URL。关于支持的音频格式、文件大小限制、时长限制等输入要求，请参见[音频规格](https://help.aliyun.com/zh/model-studio/asr-model/#asr-audio-spec02)。
 
-若录音文件存储在阿里云OSS，使用SDK方式不支持使用以 oss://为前缀的临时 URL。
+若录音文件存储在阿里云OSS，使用RESTful API方式支持使用以`oss://`为前缀的临时 URL，使用SDK方式不支持使用以 oss://为前缀的临时 URL。。
+
+**重要**
+
+-   临时 URL 有效期48小时，过期后无法使用，**请勿用于生产环境。**
+    
+-   文件上传凭证接口限流为 100 QPS 且不支持扩容，**请勿用于生产环境、高并发及压测场景。**
+    
+-   生产环境建议使用[阿里云OSS](https://help.aliyun.com/zh/oss/user-guide/what-is-oss) 等稳定存储，确保文件长期可用并规避限流问题。
+    
+-   录音文件URL设置成OSS临时公网访问不通该如何处理？请求头中将`X-DashScope-OssResourceResolve`设为`enable`（不推荐该方式）。
+    
+    SDK不支持对请求头进行配置。
+    
 
 vocabulary\_id
 
 str
 
-\-
+否
+
+预编译热词列表 ID。
+
+需预先调用创建热词列表接口生成，识别时传入该 ID 即可使用列表中的热词。
+
+适用于词汇已知且相对稳定、需要跨请求复用同一词表的场景。
+
+使用方法请参见[预编译热词](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#hw-precompiled-h3)。
+
+vocabulary
+
+dict
 
 否
 
-热词ID，此次语音识别中生效此热词ID对应的热词信息。默认不启用。使用方法请参考[定制热词](https://help.aliyun.com/zh/model-studio/custom-hot-words/)。
+即时热词。
+
+以键值对形式传入，键为热词文本（`string`），值为热词权重（`integer`），无需预先创建热词列表。权重取值范围为 \[1, 5\] 或 50：取 \[1, 5\] 时值越大模型越倾向输出该词；取 50 时为超级热词，召回率大幅提升，但超级热词数量最多不超过 50 个。
+
+适用于临时性、会话级别的热词优化。
+
+与预编译热词同时配置时，仅即时热词生效。使用方法请参见[即时热词](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#hw-instant-h3)。
+
+**重要**
+
+仅`qwen-audio-3.0-asr-flash-filetrans`支持即时热词。
+
+示例：
+
+```
+from dashscope.audio.asr import Transcription
+
+vocab = {"张三": 5, "李四": 5}
+result = Transcription.async_call(
+    model="qwen-audio-3.0-asr-flash-filetrans",
+    vocabulary=vocab,
+    file_urls=['{YOUR_AUDIO_URL}']
+)
+```
 
 channel\_id
 
 list\[int\]
-
-\[0\]
 
 否
 
@@ -210,11 +258,11 @@ list\[int\]
 
 指定的每一个音轨都将独立计费。例如，为单个文件请求 \[0, 1\] 会产生两笔独立的费用。
 
+默认值：\[0\]。
+
 special\_word\_filter
 
 str
-
-\-
 
 否
 
@@ -224,11 +272,9 @@ diarization\_enabled
 
 bool
 
-False
-
 否
 
-自动说话人分离，默认关闭。
+是否启用说话人分离，默认关闭。
 
 仅适用于单声道音频，多声道音频不支持说话人分离。
 
@@ -238,37 +284,39 @@ False
 
 如果启用说话人分离功能，建议音频时长不超过2小时，否则可能导致识别失败或超时。
 
+默认值：False。
+
 有关`speaker_id`的示例，请参见[识别结果说明](#a9021178ccl7s)。
 
 speaker\_count
 
 int
 
-\-
-
 否
+
+**重要**
+
+仅在开启说话人分离功能（`diarization_enabled`设置为`True`）时生效。
 
 说话人数量参考值。取值范围为2至100的整数（包含2和100）。
 
-开启说话人分离功能后（`diarization_enabled`设置为true）生效。
-
 默认自动判断说话人数量，如果配置此项，只能辅助算法尽量输出指定人数，无法保证一定会输出此人数。
+
+无默认值。
 
 language\_hints
 
 list\[str\]
 
-\-
-
 否
 
 设置待识别语言代码。如果无法提前确定语种，可不设置，模型会自动识别语种。
 
-系统仅读取数组中的首个值。多余值将被忽略。
+对于 Qwen-Audio-3.0-ASR-Flash-Filetrans 系列模型，最多支持设置 4 个值，即便设置超出 4 个，也仅前 4 个生效；对于 Fun-ASR 系列模型，仅支持设置 1 个值，即便设置多个，也仅第一个生效。
 
 点击查看支持的语言代码
 
--   fun-asr、fun-asr-2025-11-07、fun-asr-mtl、fun-asr-mtl-2025-08-25：
+-   qwen-audio-3.0-asr-flash-filetrans、fun-asr、fun-asr-2025-11-07、fun-asr-mtl、fun-asr-mtl-2025-08-25：
     
     -   zh: 中文
         

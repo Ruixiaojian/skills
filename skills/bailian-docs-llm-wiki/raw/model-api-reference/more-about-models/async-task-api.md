@@ -128,7 +128,7 @@
 
 事件总线控制台支持查询阿里云百炼投递的事件。
 
-1.  登录阿里云主账号，进入[事件总线控制台](https://eventbridge.console.aliyun.com/cn-beijing/event-buses)，切换到**北京地域**，在左侧导航栏选择**事件总线**，点击**default**进入云服务专用总线。
+1.  登录阿里云主账号，进入[事件总线控制台](https://eventbridge.console.aliyun.com/cn-beijing/event-buses)，切换到****华北2（北京）地域****，在左侧导航栏选择**事件总线**，点击**default**进入云服务专用总线。
     
     > 阿里云百炼所属的事件总线默认为default。
     
@@ -138,7 +138,7 @@
         
     -   事件类型：搜索选择`**dashscope:System:AsyncTaskFinish**`，表示异步任务完成事件。
         
-3.  点击**事件详情**，查看阿里云百炼上报的异步任务完成事件的详细信息。
+3.  点击**详情**，查看阿里云百炼上报的异步任务完成事件的详细信息。
     
     ```
     {
@@ -301,6 +301,27 @@ String
 API Key ID
 
 1234
+
+data\[\].contain\_result
+
+Boolean
+
+是否包含结果详情。
+
+-   true：包含
+    
+-   false：不包含
+    
+
+true
+
+data\[\].output\_result
+
+JSON
+
+结果详情。当`contain_result`为`true`时返回。
+
+`{"request_id": "6abe5b9b-f95c-9a23-8bed-0a04c2158b5c", "output": {"task_id": "84d0e919-5eda-40a1-a6e9-a94033840693", "task_status": "SUCCEEDED", "submit_time": "2026-05-20 15:38:19.940", "scheduled_time": "2026-05-20 15:38:19.995", "end_time": "2026-05-20 15:38:25.186", "text": "这是一个模拟的文本生成结果。"}, "usage": {"output_tokens": 100, "input_tokens": 21}}`
 
 aliyunoriginalaccountid
 
@@ -477,7 +498,7 @@ dashscope:System:AsyncTaskFinish
 
 事件总线控制台支持查询阿里云百炼投递的事件。
 
-1.  登录阿里云主账号，进入[事件总线控制台](https://eventbridge.console.aliyun.com/cn-beijing/event-buses)，切换到**北京地域**，在左侧导航栏选择**事件总线**，点击**default**进入云服务专用总线。
+1.  登录阿里云主账号，进入[事件总线控制台](https://eventbridge.console.aliyun.com/cn-beijing/event-buses)，切换到****华北2（北京）地域****，在左侧导航栏选择**事件总线**，点击**default**进入云服务专用总线。
     
     > 阿里云百炼所属的事件总线默认为default。
     
@@ -487,7 +508,7 @@ dashscope:System:AsyncTaskFinish
         
     -   事件类型：搜索选择`**dashscope:System:AsyncTaskFinish**`，表示异步任务完成事件。
         
-3.  点击**事件详情**，查看阿里云百炼上报的异步任务完成事件的详细信息。
+3.  点击**详情**，查看阿里云百炼上报的异步任务完成事件的详细信息。
     
     ```
     {
@@ -650,6 +671,27 @@ String
 API Key ID
 
 1234
+
+data\[\].contain\_result
+
+Boolean
+
+是否包含结果详情。
+
+-   true：包含
+    
+-   false：不包含
+    
+
+true
+
+data\[\].output\_result
+
+JSON
+
+结果详情。当`contain_result`为`true`时返回。
+
+`{"request_id": "6abe5b9b-f95c-9a23-8bed-0a04c2158b5c", "output": {"task_id": "84d0e919-5eda-40a1-a6e9-a94033840693", "task_status": "SUCCEEDED", "submit_time": "2026-05-20 15:38:19.940", "scheduled_time": "2026-05-20 15:38:19.995", "end_time": "2026-05-20 15:38:25.186", "text": "这是一个模拟的文本生成结果。"}, "usage": {"output_tokens": 100, "input_tokens": 21}}`
 
 aliyunoriginalaccountid
 

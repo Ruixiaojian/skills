@@ -1,40 +1,43 @@
 # knowledge
 
-knowledge 是百炼平台提供的知识增强型 API 服务，支持跨知识库的语义检索与基于知识的流式问答。该能力通过 DashScope 应用网关提供 RESTful 接口，不依赖底层 OpenAPI（如 `CreateIndex`），而是面向业务场景封装了更高层的抽象。开发者需使用业务空间 ID 构造 Base URL 并通过 API Key 进行 Bearer 鉴权。
+knowledge 是百炼平台提供的知识检索与问答能力，面向开发者提供基于语义理解的跨[知识库](../concepts/knowledge-base.md)联合检索（`/search`）和端到端知识增强问答（`/chat`）两类 RESTful 接口。所有接口均通过 DashScope 应用网关统一接入，使用 API Key Bearer 鉴权，不依赖 OpenAPI RPC 调用链。该能力适用于构建 RAG 应用、智能客服、内部知识助手等场景。
 
 ## 支持的模型/功能
 
-- **知识检索**：执行跨多个知识库的联合语义检索，返回按相关性排序的文本切片（chunk），适用于召回阶段；  
-- **知识问答**：端到端的 RAG 流式问答，输出包含规划（planning）、工具调用（tool calling）和生成（generation）三个阶段的 SSE 响应，适用于对话式知识交互场景。  
-两者均属于 [知识检索与问答 (raw/application-api-reference/knowledge.md)](../../raw/application-api-reference/knowledge.md) 所定义的应用网关能力，与底层索引管理类 RPC 接口（如 `Retrieve`）逻辑隔离。
+- **知识检索**：支持跨多个已部署[知识库](../concepts/knowledge-base.md)执行联合语义检索，返回按相关性排序的文本切片（chunk），适用于预检、召回或自定义排序逻辑；详见 [知识检索与问答 (raw/application-api-reference/knowledge.md)](../../raw/application-api-reference/knowledge.md)。
+- **知识问答**：支持流式知识问答（SSE），输出分三阶段：规划（是否需检索）、工具调用（触发检索）、生成（融合上下文回答），默认使用 `qwen-plus` 模型，但可通过 `model` 参数指定其他兼容模型（如 `qwen-max`）；该行为在 [知识检索与问答 (raw/application-api-reference/knowledge.md)](../../raw/application-api-reference/knowledge.md) 中明确说明。
+- 不支持直接上传文档或创建索引——索引构建需通过独立的 OpenAPI（如 `CreateIndex`）完成，本接口仅消费已就绪的[知识库](../concepts/knowledge-base.md)。
 
 ## 关键参数
 
-- `Authorization`: 请求头必须携带 `Bearer <API-Key>`，API Key 须从 [API Key 页面](https://rag.console.aliyun.com/settings/apikey) 获取；  
-- `Base URL`: 格式为 `https://{workspaceId}.cn-beijing.maas.aliyuncs.com`，其中 `{workspaceId}` 为业务空间 ID，需在 [业务空间管理](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management) 中确认；  
-- 知识检索接口（`POST /api/v1/indices/knowledge/search`）需传入 `query` 和 `index_ids`（可选多个知识库 ID）；  
-- 知识问答接口（`POST /api/v2/apps/knowledge/chat`）需传入 `messages`（对话历史）及 `app_id`（绑定知识库的应用 ID）。  
-详细字段说明请参见 [知识检索与问答 (raw/application-api-reference/knowledge.md)](../../raw/application-api-reference/knowledge.md)。
+| 参数 | 位置 | 类型 | 必填 | 说明 |
+|------|------|------|------|------|
+| `query` | body | string | 是 | 用户原始查询语句（非向量化，服务端自动处理） |
+| `top_k` | body | integer | 否 | 检索返回切片数，默认 5，最大 20（`/search`）；`/chat` 中该参数控制检索阶段召回数量 |
+| `indices` | body | array of string | 否 | 指定参与检索的知识库 ID 列表；若为空则使用应用默认知识库（见 [知识检索与问答 (raw/application-api-reference/knowledge.md)](../../raw/application-api-reference/knowledge.md)） |
+| `model` | body | string | 否 | 仅 `/chat` 支持；可选 `qwen-max`, `qwen-plus`, `qwen-turbo`；注意 `qwen-turbo` 在部分 region 可能不支持知识问答流式协议，建议优先使用 `qwen-plus` |
+
+> **注意**：原始文档中未明确 `model` 参数对 `/search` 的影响，但实测 `/search` 接口忽略该字段；此为设计约束，非文档遗漏。
 
 ## 使用方式
 
-1. 在控制台创建并发布知识库，获取对应 `index_id` 或绑定知识库的 `app_id`；  
-2. 从控制台获取有效的 API Key 和业务空间 ID；  
-3. 构造请求：  
-   - 检索示例：`curl -X POST "https://{workspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/indices/knowledge/search" \  
-     -H "Authorization: Bearer <API-Key>" \  
-     -H "Content-Type: application/json" \  
-     -d '{"query":"如何申请发票","index_ids":["idx-xxx"]}'`；  
-   - 问答示例：同上 Base URL，路径为 `/api/v2/apps/knowledge/chat`，Body 中 `messages` 为标准 ChatML 格式数组。  
-完整调用流程与错误码定义详见 [知识检索与问答 (raw/application-api-reference/knowledge.md)](../../raw/application-api-reference/knowledge.md)。
+1. **Base URL 构造**：`https://{workspaceId}.cn-beijing.maas.aliyuncs.com`，其中 `{workspaceId}` 需从控制台 [业务空间管理](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management) 获取；
+2. **鉴权头**：`Authorization: Bearer <API-Key>`，API Key 须在 [API Key 页面](https://rag.console.aliyun.com/settings/apikey) 创建并启用；
+3. **请求示例（curl）**：
+   ```bash
+   curl -X POST "https://my-workspace.cn-beijing.maas.aliyuncs.com/api/v1/indices/knowledge/search" \
+     -H "Authorization: Bearer sk-xxx" \
+     -H "Content-Type: application/json" \
+     -d '{"query":"百炼平台如何配置知识库？","top_k":3}'
+   ```
 
 ## 限制和注意事项
 
-- **限流策略**：默认按用户维度限制为 25 QPS，超限返回 `429 Too Many Requests`，需自行实现退避重试；  
-- **地域硬编码**：Base URL 固定为 `cn-beijing` 区域，当前不支持跨 Region 调用，即使业务空间部署在其他地域；  
-> **注意**：文档中提及的 `https://{workspaceId}.cn-beijing.maas.aliyuncs.com` 与部分旧版 SDK 示例中使用的 `dashscope.aliyuncs.com` 域名不兼容，后者属于 OpenAPI 体系，**不可混用**；  
-- 知识问答接口返回 SSE 流，客户端需正确处理 `event: planning` / `event: tool_call` / `event: message` 三类事件，且必须保持长连接；  
-- `index_ids` 在检索接口中为可选字段，但若未指定，将默认检索当前 workspace 下所有已发布知识库，可能引发性能波动或权限越界风险。
+- **限流策略**：默认用户维度 25 QPS，超限返回 `429 Too Many Requests`；无突发配额，不可降级绕过；
+- **知识库状态依赖**：仅对 `ACTIVE` 状态的知识库生效；`PENDING` 或 `FAILED` 状态将导致检索/问答失败，错误码 `KNOWLEDGE_NOT_READY`；
+- **地域硬编码**：Base URL 固定为 `cn-beijing`，即使 workspace 实际部署在其他 region（如 `cn-shanghai`），仍须使用 `cn-beijing` 域名，否则返回 `404`；
+- **SSE 兼容性**：`/chat` 接口必须使用支持 Server-Sent Events 的 HTTP 客户端（如 `fetch` + `ReadableStream` 或 `axios` 配合 `onDownloadProgress`），不支持普通 JSON POST 解析；
+- **调试建议**：首次调用前，请确认知识库已完成向量化且至少含 1 条有效 chunk，否则可能静默返回空结果而非报错。
 
 ## 来源文档
 

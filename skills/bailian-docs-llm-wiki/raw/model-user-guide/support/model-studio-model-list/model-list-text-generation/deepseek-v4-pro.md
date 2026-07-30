@@ -500,7 +500,7 @@ TPM（每分钟tokens）
 
 RPM（每分钟请求数）
 
-15000
+10000
 
 TPM（每分钟tokens）
 

@@ -1,17 +1,6 @@
-# Fun-ASR非实时语音识别Java SDK
+# Qwen-Audio-3.0-ASR-Flash-Filetrans/Fun-ASR非实时语音识别Java SDK
 
-本文介绍Fun-ASR非实时语音识别Java SDK的参数和接口细节。
-
-**重要**
-
-阿里云百炼为华北2（北京）、新加坡地域推出了业务空间专属域名，能够为推理请求提供卓越的性能和更高的稳定性，建议迁移至新域名：
-
--   华北2（北京）地域：从 `dashscope.aliyuncs.com` 迁移至 `{WorkspaceId}.cn-beijing.maas.aliyuncs.com`
-    
--   新加坡地域：从 `dashscope-intl.aliyuncs.com` 迁移至 `{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com`
-    
-
-`{WorkspaceId}`需要替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。现有域名仍可正常使用。
+本文介绍Qwen-Audio-3.0-ASR-Flash-Filetrans/Fun-ASR非实时语音识别Java SDK的参数和接口细节。
 
 **用户指南：**[非实时语音识别](https://help.aliyun.com/zh/model-studio/non-realtime-speech-recognition-user-guide)。关于支持的音频格式、文件大小限制、时长限制等输入要求，请参见[音频规格](https://help.aliyun.com/zh/model-studio/asr-model/#asr-audio-spec02)。
 
@@ -41,7 +30,7 @@
 
 ### **异步提交任务+同步等待任务结束**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6278074871/CAEQURiBgMCO2_fRpxkiIDBlNzI4YmMyNTU3ODRlM2Y4NjUxZWU4YmUxNjliMmFl4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2681245871/CAEQURiBgMCO2_fRpxkiIDBlNzI4YmMyNTU3ODRlM2Y4NjUxZWU4YmUxNjliMmFl4709861_20241015153444.149.svg)
 
 1.  配置[请求参数](#48ea212b1d08r)。
     
@@ -82,7 +71,7 @@ public class Main {
                         // 新加坡和北京地域的API Key不同。获取API Key：https://help.aliyun.com/zh/model-studio/get-api-key
                         // 若没有配置环境变量，请用百炼API Key将下行替换为：.apiKey("sk-xxx")
                         //.apiKey("apikey")
-                        .model("fun-asr") // 此处以fun-asr为例，可按需更换模型名称。模型列表：https://help.aliyun.com/zh/model-studio/models
+                        .model("qwen-audio-3.0-asr-flash-filetrans") // 此处以qwen-audio-3.0-asr-flash-filetrans为例，可按需更换模型名称。模型列表：https://help.aliyun.com/zh/model-studio/models
                         .fileUrls(
                                 Arrays.asList(
                                         "{YOUR_AUDIO_URL}"))
@@ -107,7 +96,7 @@ public class Main {
 
 ### **异步提交任务+异步查询任务执行结果**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6278074871/CAEQURiBgIDnxvjRpxkiIGI1NjJjOTgyNTVhMTRiMjM4OWVjYzFmZTExNGZjYzE14709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2681245871/CAEQURiBgIDnxvjRpxkiIGI1NjJjOTgyNTVhMTRiMjM4OWVjYzFmZTExNGZjYzE14709861_20241015153444.149.svg)
 
 1.  配置[请求参数](#48ea212b1d08r)。
     
@@ -149,7 +138,7 @@ public class Main {
                         // 新加坡和北京地域的API Key不同。获取API Key：https://help.aliyun.com/zh/model-studio/get-api-key
                         // 若没有配置环境变量，请用百炼API Key将下行替换为：.apiKey("sk-xxx")
                         //.apiKey("apikey")
-                        .model("fun-asr") // 此处以fun-asr为例，可按需更换模型名称。模型列表：https://help.aliyun.com/zh/model-studio/models
+                        .model("qwen-audio-3.0-asr-flash-filetrans") // 此处以qwen-audio-3.0-asr-flash-filetrans为例，可按需更换模型名称。模型列表：https://help.aliyun.com/zh/model-studio/models
                         .fileUrls(
                                 Arrays.asList(
                                         "{YOUR_AUDIO_URL}"))
@@ -177,6 +166,49 @@ public class Main {
 }
 ```
 
+## **接口地址**
+
+SDK 默认使用**北京地域**的接口地址。如需切换到其他地域，需在初始化前修改 `Constants.baseHttpApiUrl`。
+
+## 华北2（北京）
+
+`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1`
+
+调用时请将`{WorkspaceId}`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
+
+## 新加坡
+
+`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1`
+
+调用时请将`{WorkspaceId}`替换为真实的[业务空间ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
+
+**重要**
+
+阿里云百炼为华北2（北京）、新加坡地域推出了业务空间专属域名，能够为推理请求提供卓越的性能和更高的稳定性，建议迁移至新域名：
+
+-   华北2（北京）地域：从 `dashscope.aliyuncs.com` 迁移至 `{WorkspaceId}.cn-beijing.maas.aliyuncs.com`
+    
+-   新加坡地域：从 `dashscope-intl.aliyuncs.com` 迁移至 `{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com`
+    
+
+`{WorkspaceId}`需要替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。现有域名仍可正常使用。
+
+**切换到新加坡地域**：
+
+```
+import com.alibaba.dashscope.utils.Constants;
+
+// 在代码开头设置
+Constants.baseHttpApiUrl = "https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1";
+```
+
+**注意**：
+
+-   不同地域的 API Key 不同，请确保使用对应地域的 API Key
+    
+-   地域配置为全局设置，影响所有 DashScope SDK 的 API 调用
+    
+
 ## **请求参数**
 
 请求参数通过`TranscriptionParam`的链式方法进行配置。
@@ -185,7 +217,7 @@ public class Main {
 
 ```
 TranscriptionParam param = TranscriptionParam.builder()
-  .model("fun-asr")
+  .model("qwen-audio-3.0-asr-flash-filetrans")
   .fileUrls(
           Arrays.asList(
                   "{YOUR_AUDIO_URL}"))
@@ -196,8 +228,6 @@ TranscriptionParam param = TranscriptionParam.builder()
 
 **类型**
 
-**默认值**
-
 **是否必须**
 
 **说明**
@@ -206,52 +236,98 @@ model
 
 String
 
-\-
-
 是
 
-指定用于音视频文件转写的模型名。
-
-取值范围：
-
--   fun-asr
-    
--   fun-asr-2025-11-07
-    
--   fun-asr-2025-08-25
-    
--   fun-asr-mtl
-    
--   fun-asr-mtl-2025-08-25
-    
+指定模型名。支持Qwen-Audio-3.0-ASR-Flash-Filetrans和Fun-ASR系列模型，详情请参见[支持的模型与地域](https://help.aliyun.com/zh/model-studio/non-realtime-speech-recognition-user-guide#4a43cc1bb7kxg)。
 
 fileUrls
 
 List<String>
 
-\-
-
 是
 
 音视频文件转写的URL列表，支持HTTP / HTTPS协议，单次请求仅支持1个URL。关于支持的音频格式、文件大小限制、时长限制等输入要求，请参见[音频规格](https://help.aliyun.com/zh/model-studio/asr-model/#asr-audio-spec02)。
 
-若录音文件存储在阿里云OSS，使用SDK方式不支持使用以 oss://为前缀的临时 URL。
+若录音文件存储在阿里云OSS，使用RESTful API方式支持使用以`oss://`为前缀的临时 URL，使用SDK方式不支持使用以 oss://为前缀的临时 URL。。
+
+**重要**
+
+-   临时 URL 有效期48小时，过期后无法使用，**请勿用于生产环境。**
+    
+-   文件上传凭证接口限流为 100 QPS 且不支持扩容，**请勿用于生产环境、高并发及压测场景。**
+    
+-   生产环境建议使用[阿里云OSS](https://help.aliyun.com/zh/oss/user-guide/what-is-oss) 等稳定存储，确保文件长期可用并规避限流问题。
+    
+-   录音文件URL设置成OSS临时公网访问不通该如何处理？请求头中将`X-DashScope-OssResourceResolve`设为`enable`（不推荐该方式）。
+    
+    SDK不支持对请求头进行配置。
+    
 
 vocabularyId
 
 String
 
-\-
+否
+
+预编译热词列表 ID。
+
+需预先调用创建热词列表接口生成，识别时传入该 ID 即可使用列表中的热词。
+
+适用于词汇已知且相对稳定、需要跨请求复用同一词表的场景。
+
+使用方法请参见[预编译热词](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#hw-precompiled-h3)。
+
+vocabulary
+
+Map<String, Integer>
 
 否
 
-热词ID，此次语音识别中生效此热词ID对应的热词信息。默认不启用。使用方法请参考[定制热词](https://help.aliyun.com/zh/model-studio/custom-hot-words/)。
+即时热词。
+
+以键值对形式传入，键为热词文本（`string`），值为热词权重（`integer`），无需预先创建热词列表。权重取值范围为 \[1, 5\] 或 50：取 \[1, 5\] 时值越大模型越倾向输出该词；取 50 时为超级热词，召回率大幅提升，但超级热词数量最多不超过 50 个。
+
+适用于临时性、会话级别的热词优化。
+
+与预编译热词同时配置时，仅即时热词生效。使用方法请参见[即时热词](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#hw-instant-h3)。
+
+**重要**
+
+仅`qwen-audio-3.0-asr-flash-filetrans`支持即时热词。
+
+**说明**
+
+`vocabulary`需要通过`TranscriptionParam`实例的`parameter`方法或者`parameters`方法进行设置：
+
+## 通过parameter设置
+
+```
+Map<String, Integer> vocab = new HashMap<>();
+vocab.put("张三", 5);
+vocab.put("李四", 5);
+
+TranscriptionParam param = TranscriptionParam.builder()
+  .model("qwen-audio-3.0-asr-flash-filetrans")
+  .parameter("vocabulary", vocab)
+  .build();
+```
+
+## 通过parameters设置
+
+```
+Map<String, Integer> vocab = new HashMap<>();
+vocab.put("张三", 5);
+vocab.put("李四", 5);
+
+TranscriptionParam param = TranscriptionParam.builder()
+  .model("qwen-audio-3.0-asr-flash-filetrans")
+  .parameters(Collections.singletonMap("vocabulary", vocab))
+  .build();
+```
 
 channelId
 
 List<Integer>
-
-\[0\]
 
 否
 
@@ -261,11 +337,11 @@ List<Integer>
 
 指定的每一个音轨都将独立计费。例如，为单个文件请求 \[0, 1\] 会产生两笔独立的费用。
 
+默认值：\[0\]。
+
 specialWordFilter
 
 String
-
-\-
 
 否
 
@@ -275,11 +351,9 @@ diarizationEnabled
 
 Boolean
 
-false
-
 否
 
-自动说话人分离，默认关闭。
+是否启用说话人分离，默认关闭。
 
 仅适用于单声道音频，多声道音频不支持说话人分离。
 
@@ -289,37 +363,39 @@ false
 
 如果启用说话人分离功能，建议音频时长不超过2小时，否则可能导致识别失败或超时。
 
+默认值：false。
+
 有关`speaker_id`的示例，请参见[识别结果说明](#a9021178ccl7s)。
 
 speakerCount
 
 Integer
 
-\-
-
 否
+
+**重要**
+
+仅在开启说话人分离功能（`diarization_enabled`设置为`true`）时生效。
 
 说话人数量参考值。取值范围为2至100的整数（包含2和100）。
 
-开启说话人分离功能后（`diarizationEnabled`设置为true）生效。
-
 默认自动判断说话人数量，如果配置此项，只能辅助算法尽量输出指定人数，无法保证一定会输出此人数。
+
+无默认值。
 
 language\_hints
 
 String\[\]
 
-\-
-
 否
 
 设置待识别语言代码。如果无法提前确定语种，可不设置，模型会自动识别语种。
 
-系统仅读取数组中的首个值。多余值将被忽略。
+对于 Qwen-Audio-3.0-ASR-Flash-Filetrans 系列模型，最多支持设置 4 个值，即便设置超出 4 个，也仅前 4 个生效；对于 Fun-ASR 系列模型，仅支持设置 1 个值，即便设置多个，也仅第一个生效。
 
 点击查看支持的语言代码
 
--   fun-asr、fun-asr-2025-11-07、fun-asr-mtl、fun-asr-mtl-2025-08-25：
+-   qwen-audio-3.0-asr-flash-filetrans、fun-asr、fun-asr-2025-11-07、fun-asr-mtl、fun-asr-mtl-2025-08-25：
     
     -   zh: 中文
         
@@ -396,7 +472,7 @@ String\[\]
 
 ```
 TranscriptionParam param = TranscriptionParam.builder()
-  .model("fun-asr")
+  .model("qwen-audio-3.0-asr-flash-filetrans")
   .parameter("language_hints", new String[]{"zh"})
   .build();
 ```
@@ -405,7 +481,7 @@ TranscriptionParam param = TranscriptionParam.builder()
 
 ```
 TranscriptionParam param = TranscriptionParam.builder()
-  .model("fun-asr")
+  .model("qwen-audio-3.0-asr-flash-filetrans")
   .parameters(Collections.singletonMap("language_hints", new String[]{"zh"}))
   .build();
 ```
@@ -413,8 +489,6 @@ TranscriptionParam param = TranscriptionParam.builder()
 apiKey
 
 String
-
-\-
 
 否
 
@@ -534,7 +608,7 @@ public JsonObject getOutput()
     "results": [
         {
             "file_url": "{YOUR_AUDIO_URL}",
-            "code": "InvalidFile.DownloadFailed",
+            "code": "FILE_DOWNLOAD_FAILED",
             "message": "The audio file cannot be downloaded.",
             "subtask_status": "FAILED"
         }
@@ -772,7 +846,7 @@ TranscriptionParam param =
         TranscriptionParam.builder()
                 // 若没有将API Key配置到环境变量中，需将apiKey替换为自己的API Key
                 //.apiKey("apikey")
-                .model("fun-asr")
+                .model("qwen-audio-3.0-asr-flash-filetrans")
                 .fileUrls(
                         Arrays.asList(
                                 "{YOUR_AUDIO_URL}"))
@@ -874,7 +948,7 @@ public TranscriptionResult fetch(TranscriptionQueryParam queryParam)
     "results": [
         {
             "file_url": "{YOUR_AUDIO_URL}",
-            "code": "InvalidFile.DownloadFailed",
+            "code": "FILE_DOWNLOAD_FAILED",
             "message": "The audio file cannot be downloaded.",
             "subtask_status": "FAILED"
         }

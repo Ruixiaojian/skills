@@ -1,6 +1,6 @@
-# 实时语音识别（Fun-ASR）客户端事件
+# 实时语音识别（Qwen-Audio-3.0-ASR-Flash-Streaming/Fun-ASR-Realtime）客户端事件
 
-本文介绍 Fun-ASR 实时语音识别服务中客户端通过 WebSocket 发送给服务端的客户端事件，包括 run-task（启动任务）、continue-task（更新上下文）、finish-task（结束任务）等指令的数据结构与字段含义。
+本文介绍 Qwen-Audio-3.0-ASR-Flash-Streaming/Fun-ASR-Realtime 实时语音识别服务中客户端通过 WebSocket 发送给服务端的客户端事件，包括 run-task（启动任务）、continue-task（更新上下文）、finish-task（结束任务）等指令的数据结构与字段含义。
 
 **用户指南：**关于模型介绍和选型建议请参见[语音识别](https://help.aliyun.com/zh/model-studio/asr-model/)。
 
@@ -43,7 +43,7 @@
         "task_group": "audio",
         "task": "asr",
         "function": "recognition",
-        "model": "fun-asr-realtime",
+        "model": "qwen-audio-3.0-asr-flash-streaming",
         "parameters": {
             "format": "pcm",
             "sample_rate": 16000
@@ -66,7 +66,7 @@
         "task_group": "audio",
         "task": "asr",
         "function": "recognition",
-        "model": "fun-asr-realtime",
+        "model": "qwen-audio-3.0-asr-flash-streaming",
         "parameters": {
             "format": "pcm",
             "sample_rate": 16000
@@ -97,6 +97,30 @@
 }
 ```
 
+## 即时热词
+
+```
+{
+    "header": {
+        "action": "run-task",
+        "task_id": "2bf83b9a-baeb-4fda-8d9a-xxxxxxxxxxxx",
+        "streaming": "duplex"
+    },
+    "payload": {
+        "task_group": "audio",
+        "task": "asr",
+        "function": "recognition",
+        "model": "qwen-audio-3.0-asr-flash-streaming",
+        "parameters": {
+            "format": "pcm",
+            "sample_rate": 16000,
+            "vocabulary": {"张三": 5, "李四": 5}
+        },
+        "input": {}
+    }
+}
+```
+
 **payload** `_object_` **（必选）**
 
 **属性**
@@ -115,7 +139,7 @@
 
 **model** `_string_` **（必选）**
 
-[支持的模型](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition-user-guide#4a43cc1bb7kxg)名称。
+指定模型名。支持Qwen-Audio-3.0-ASR-Flash-Streaming和Fun-ASR-Realtime系列模型，详情请参见[支持的模型与地域](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition-user-guide#4a43cc1bb7kxg)。
 
 **input** `_object_` **（必选）**
 
@@ -123,17 +147,17 @@
 
 **重要**
 
-仅 `fun-asr-realtime` 和 `fun-asr-realtime-2025-11-07` 模型支持 context 参数。
+仅 `qwen-audio-3.0-asr-flash-streaming`、`fun-asr-realtime` 和 `fun-asr-realtime-2025-11-07` 模型支持上下文。
 
 **属性**
 
 **context** `_array(object)_` （可选）
 
-对话上下文，用于辅助识别、提升专有词汇的识别准确率。使用方法详见[快速开始](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#ctx-quickstart-sec)。
+对话上下文，用于辅助识别、提升专有词汇的识别准确率。使用方法详见[上下文增强](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#ctx-enhance-h2)。
 
 **重要**
 
-约束：上下文消息（`input_text` 和 `text` 类型）各最多 5 条，超出时保留最近的 5 条。每轮上下文文本总长度（`user` 和 `assistant` 的 `text` 字段长度之和）不超过 400 个字符（按字符数计算，每个字符计为 1），超出部分从末尾截断。
+**约束**：上下文消息（`input_text` 和 `text` 类型）各最多 5 条，超出时保留最近的 5 条。每轮上下文文本总长度（`user` 和 `assistant` 的 `text` 字段长度之和）不超过 400 个字符（按字符数计算，每个字符计为 1），超出部分从末尾截断。
 
 **重要**
 
@@ -196,28 +220,53 @@
 -   `amr`
     
 
+**重要**
+
+opus/speex：必须使用Ogg封装；
+
+wav：必须为PCM编码；
+
+amr：仅支持AMR-NB类型。
+
 **sample\_rate** `_integer_` **（必选）**
 
 采样率（Hz）。
 
-取值范围：
-
--   8k模型仅支持 8000 Hz，其他模型支持任意采样率。
-    
+取值范围：8k模型仅支持 8000 Hz，其他模型支持任意采样率。
 
 **vocabulary\_id** `_string_` （可选）
 
-热词列表 ID。
+预编译热词列表 ID。
+
+需预先调用创建热词列表接口生成，识别时传入该 ID 即可使用列表中的热词。
+
+适用于词汇已知且相对稳定、需要跨请求复用同一词表的场景。
+
+使用方法请参见[预编译热词](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#hw-precompiled-h3)。
+
+**vocabulary** `_object_` （可选）
+
+即时热词。
+
+以键值对形式传入，键为热词文本（`string`），值为热词权重（`integer`），无需预先创建热词列表。权重取值范围为 \[1, 5\] 或 50：取 \[1, 5\] 时值越大模型越倾向输出该词；取 50 时为超级热词，召回率大幅提升，但超级热词数量最多不超过 50 个。
+
+适用于临时性、会话级别的热词优化。
+
+与预编译热词同时配置时，仅即时热词生效。使用方法请参见[即时热词](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#hw-instant-h3)。
+
+**重要**
+
+仅`qwen-audio-3.0-asr-flash-streaming`支持即时热词。
 
 **language\_hints** `_array[string]_` （可选）
 
 待识别音频语种。无默认值，不设置时模型自动识别。
 
-系统仅读取数组中的首个值，多余值将被忽略。
+对于 Qwen-Audio-3.0-ASR-Flash-Streaming 系列模型，最多支持设置 4 个值，即便设置超出 4 个，也仅前 4 个生效；对于 Fun-ASR-Realtime 系列模型，仅支持设置 1 个值，即便设置多个，也仅第一个生效。
 
-不同模型支持的语言代码如下：
+**点击查看支持的语言代码**
 
--   fun-asr-realtime、fun-asr-realtime-2025-11-07：
+-   qwen-audio-3.0-asr-flash-streaming、fun-asr-realtime、fun-asr-realtime-2025-11-07：
     
     -   zh: 中文
         
@@ -315,8 +364,7 @@
 
 **重要**
 
--   仅在`semantic_punctuation_enabled`参数为false时生效。
-    
+仅在`semantic_punctuation_enabled`参数为false时生效。
 
 VAD 断句静音阈值（ms）。当一段语音后的静音时长超过该阈值时，系统会判定该句子已结束。
 
@@ -328,8 +376,7 @@ VAD 断句静音阈值（ms）。当一段语音后的静音时长超过该阈�
 
 **重要**
 
--   仅在`semantic_punctuation_enabled`参数为false时生效。
-    
+仅在`semantic_punctuation_enabled`参数为false时生效。
 
 是否启用多阈值模式。启用后可防止 VAD 断句切割过长。
 
@@ -345,6 +392,8 @@ VAD 断句静音阈值（ms）。当一段语音后的静音时长超过该阈�
     
 -   false（默认）：即使持续发送静音音频，连接也将在60秒后因超时而断开。
     
+
+静音音频指的是在音频文件或数据流中没有声音信号的内容。静音音频可以通过多种方法生成，例如使用音频编辑软件如Audacity或Adobe Audition，或者通过命令行工具如FFmpeg。
 
 **speech\_noise\_threshold** `_float_` （可选）
 
@@ -378,7 +427,7 @@ VAD 断句静音阈值（ms）。当一段语音后的静音时长超过该阈�
 
 **重要**
 
-仅 `fun-asr-realtime` 和 `fun-asr-realtime-2025-11-07` 模型支持该事件。
+仅 `qwen-audio-3.0-asr-flash-streaming`、`fun-asr-realtime` 和 `fun-asr-realtime-2025-11-07` 模型支持该事件。
 
 **header** `_object_` **（必选）**
 
@@ -442,11 +491,11 @@ VAD 断句静音阈值（ms）。当一段语音后的静音时长超过该阈�
 
 **context** `_array(object)_` （可选）
 
-对话上下文，用于辅助识别、提升专有词汇的识别准确率。使用方法详见[快速开始](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#ctx-quickstart-sec)。
+对话上下文，用于辅助识别、提升专有词汇的识别准确率。使用方法详见[上下文增强](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#ctx-enhance-h2)。
 
 **重要**
 
-约束：上下文消息（`input_text` 和 `text` 类型）各最多 5 条，超出时保留最近的 5 条。每轮上下文文本总长度（`user` 和 `assistant` 的 `text` 字段长度之和）不超过 400 个字符（按字符数计算，每个字符计为 1），超出部分从末尾截断。
+**约束**：上下文消息（`input_text` 和 `text` 类型）各最多 5 条，超出时保留最近的 5 条。每轮上下文文本总长度（`user` 和 `assistant` 的 `text` 字段长度之和）不超过 400 个字符（按字符数计算，每个字符计为 1），超出部分从末尾截断。
 
 **重要**
 

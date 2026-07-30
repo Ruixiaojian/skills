@@ -150,7 +150,7 @@ Function Calling
 
 RPM（每分钟请求数）
 
-500
+30000
 
 TPM（每分钟tokens）
 
@@ -326,7 +326,7 @@ Function Calling
 
 RPM（每分钟请求数）
 
-500
+30000
 
 TPM（每分钟tokens）
 

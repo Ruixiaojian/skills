@@ -383,6 +383,10 @@ MetaExtractInfo
 
 string
 
+文档提取的 Meta 信息。
+
+{ "doc\_summary": \["Example 1."\], "health\_rule": \["Example 2"\] }
+
 IndexId
 
 string
@@ -452,7 +456,7 @@ string
         "ChunkMode": "DashSplitter",
         "GmtModified": 1744856423000,
         "separator": "\" \"",
-        "MetaExtractInfo": ""
+        "MetaExtractInfo": "{\n  \"doc_summary\": [\"Example 1.\"],\n  \"health_rule\": [\"Example 2\"]\n}"
       }
     ],
     "IndexId": "79c0alxxxx",

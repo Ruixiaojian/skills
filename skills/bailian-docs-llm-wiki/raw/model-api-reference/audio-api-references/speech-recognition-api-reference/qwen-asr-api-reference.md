@@ -55,11 +55,11 @@ SDK调用配置的base\_url：`https://{WorkspaceId}.ap-southeast-1.maas.aliyunc
 
 `{WorkspaceId}`需要替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。现有域名仍可正常使用。
 
-### **请求体**
+### **请求参数**
 
-### 输入内容：音频文件URL
+## 输入内容：音频文件URL
 
-#### Python SDK
+## Python SDK
 
 ```
 from openai import OpenAI
@@ -116,7 +116,7 @@ except Exception as e:
     print(f"错误信息：{e}")
 ```
 
-#### Node.js SDK
+## Node.js SDK
 
 ```
 // 运行前的准备工作:
@@ -187,7 +187,7 @@ async function main() {
 main();
 ```
 
-#### cURL
+## cURL
 
 以下为华北2（北京）地域的配置，调用时请将`{WorkspaceId}`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)，各地域的配置不同。
 
@@ -217,7 +217,7 @@ curl -X POST 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode
 }'
 ```
 
-### 输入内容：Base64编码的音频文件
+## 输入内容：Base64编码的音频文件
 
 可输入Base64编码数据（[Data URL](https://www.rfc-editor.org/rfc/rfc2397)），格式为：`data:<mediatype>;base64,<data>`。
 
@@ -272,7 +272,7 @@ curl -X POST 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode
     ```
     
 
-#### Python SDK
+## Python SDK
 
 ```
 import base64
@@ -343,7 +343,7 @@ except Exception as e:
     print(f"错误信息：{e}")
 ```
 
-#### Node.js SDK
+## Node.js SDK
 
 ```
 // 运行前的准备工作:
@@ -600,7 +600,7 @@ User Message `_object_`**（必选）**
 
 > 流式输出时，Token 消耗信息仅可出现在响应的最后一个数据块。
 
-### **返回体**
+### **响应参数**
 
 ## 非流式输出
 
@@ -887,7 +887,7 @@ SDK调用配置的base\_url：`https://dashscope-us.aliyuncs.com/api/v1`
 
 `{WorkspaceId}`需要替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。现有域名仍可正常使用。
 
-### **请求体**
+### **请求参数**
 
 以下示例为音频 URL 识别；本地音频文件识别示例请参见[快速开始](https://help.aliyun.com/zh/model-studio/non-realtime-speech-recognition-user-guide#7818a3bc466d6)。
 
@@ -1150,7 +1150,7 @@ User Message `_object_`**（必选）**
 -   false：关闭。
     
 
-### **返回体**
+### **响应参数**
 
 ```
 {
@@ -1379,7 +1379,7 @@ User Message `_object_`**（必选）**
 
 您可以根据集成环境选择使用SDK或直接调用RESTful API。
 
--   使用 SDK（示例代码请参见[快速开始](https://help.aliyun.com/zh/model-studio/non-realtime-speech-recognition-user-guide#7818a3bc466d6)，请求参数请参见[提交任务](#88657039c4x0g)的[请求体](#1a2369eebaueh)，返回结果请参见[异步调用识别结果说明](#2c27ad3e80p4y)）
+-   使用 SDK（示例代码请参见[快速开始](https://help.aliyun.com/zh/model-studio/non-realtime-speech-recognition-user-guide#7818a3bc466d6)，请求参数请参见[提交任务](#88657039c4x0g)的请求参数[请求参数](#1a2369eebaueh)，返回结果请参见[异步调用识别结果说明](#2c27ad3e80p4y)）
     
     SDK封装了底层的API调用细节，提供了更便捷的编程体验。
     
@@ -1391,7 +1391,7 @@ User Message `_object_`**（必选）**
     
     直接调用HTTP接口提供了最大的灵活性。
     
-    1.  [提交任务](#88657039c4x0g)，如果请求成功，[返回体](#eca6c7d3f35hn)中将包含一个 `task_id`。
+    1.  [提交任务](#88657039c4x0g)，如果请求成功，响应参数[响应参数](#eca6c7d3f35hn)中将包含一个 `task_id`。
         
     2.  使用上一步获取的 `task_id`，[获取任务执行结果](#f9109f6ea3di2)。
         
@@ -1427,7 +1427,7 @@ SDK调用配置的base\_url：`https://{WorkspaceId}.ap-southeast-1.maas.aliyunc
 
 `{WorkspaceId}`需要替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。现有域名仍可正常使用。
 
-#### **请求体**
+#### **请求参数**
 
 ## cURL
 
@@ -1732,7 +1732,7 @@ else:
 
 指定的每一个音轨都将独立计费。例如，为单个文件请求 \[0, 1\] 会产生两笔独立的费用。
 
-#### **返回体**
+#### **响应参数**
 
 ```
 {
@@ -1804,7 +1804,7 @@ SDK调用配置的base\_url：`https://{WorkspaceId}.ap-southeast-1.maas.aliyunc
 
 `{WorkspaceId}`需要替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。现有域名仍可正常使用。
 
-#### **请求体**
+#### **请求参数**
 
 ## cURL
 
@@ -1889,7 +1889,7 @@ print(response.json())
 
 任务ID。将[提交任务](#88657039c4x0g)返回结果中的task\_id作为参数传入，查询语音识别结果。
 
-#### **返回体**
+#### **响应参数**
 
 ## RUNNING
 
@@ -1987,20 +1987,6 @@ print(response.json())
 
 识别结果文件的下载 URL，链接有效期为 24 小时。过期后无法查询任务，也无法通过先前的 URL 下载结果。  
 识别结果以 JSON 文件保存，可通过该链接下载文件，或直接使用 HTTP 请求读取文件内容。  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
 
 详情参见[异步调用识别结果说明](#2c27ad3e80p4y)。

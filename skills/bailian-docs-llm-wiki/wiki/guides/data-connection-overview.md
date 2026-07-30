@@ -1,43 +1,59 @@
 # data connection overview
 
-数据连接是阿里云百炼平台统一管理外部数据源的核心能力，为应用提供安全、可控的数据接入通道。它支持将企业自有数据库、文档系统、对象存储等异构数据源接入百炼，实现对话中实时查询与知识引用。所有连接器均基于统一权限模型与网络隔离策略设计，开发者可按需选择托管式或流处理式接入方式。
+数据连接是阿里云百炼平台统一管理外部数据源的核心能力，为应用提供安全、可控的数据接入通道。它支持结构化与非结构化数据的接入，并通过平台托管或流处理两种模式实现数据的静态导入或实时查询。所有连接器均需满足前置权限与网络条件，且配置后可被智能体、RAG 应用等直接调用。
 
 ## 支持的模型/功能
 
-数据连接器分为两类：**平台托管型**（文件、表格）和**流处理型**（MySQL、PostgreSQL、PolarDB-X 2.0、语雀、OSS）。  
-- **平台托管型**：数据导入百炼平台或自有OSS，经解析后构建向量知识库，供RAG类应用调用；支持文档智能解析、大模型文档解析（含图表理解）、音视频[多模态](../concepts/multi-modal.md)解析等能力，详见 [文档理解](https://help.aliyun.com/zh/document-mind/product-overview/overview-of-document-understanding#9a4f5fb91fpps)。  
-- **流处理型**：数据保留在源端，通过实时连接执行查询或检索。其中 MySQL、PostgreSQL 和 PolarDB-X 2.0 连接器**仅当通过 DMS 导入数据源方式创建时才支持 SQL 查询**；语雀和 OSS 连接器则提供知识库级检索能力（如 `searchOSSFile` 工具），但需提前开通[向量检索服务](https://help.aliyun.com/zh/oss/user-guide/vector-retrieval/)。  
-> **注意**：原始文档中对“文件连接器”和“表格连接器”的存储额度描述存在不一致——前者称平台存储“限时免费”，后者称“1 TB 免费额度，额度用完后自动转为按量付费”。该差异已在 [数据连接](../../raw/application-user-guide/data-connection-overview/data-connection.md) 中明确体现，建议以控制台实时配额为准。
+数据连接器按数据访问模式分为两类：
+
+- **平台托管类**：适用于离线导入场景，包括  
+  - **文件连接器**：支持 PDF、Word、Markdown、图像、音视频等非结构化文档（详见 [数据连接](../../raw/application-user-guide/data-connection-overview/data-connection.md)）；  
+  - **表格连接器**：支持 CSV、Excel（XLS/XLSX）等结构化数据，自动识别表头或支持自定义 Schema。
+
+- **流处理类**：适用于实时 SQL 查询或在线内容检索，包括  
+  - **MySQL / PostgreSQL / PolarDB-X 2.0 连接器**：仅通过 **DMS 导入数据源** 方式创建的连接器支持执行 SQL 查询（[数据连接](../../raw/application-user-guide/data-connection-overview/data-connection.md) 明确指出该限制）；  
+  - **语雀连接器**：对接语雀[知识库](../concepts/knowledge-base.md)，支持公网版语雀文档的实时检索；  
+  - **OSS 连接器**：访问自有 OSS Bucket 中的文件，依赖向量检索服务实现 `searchOSSFile` 等工具调用（[数据连接](../../raw/application-user-guide/data-connection-overview/data-connection.md) 要求开通该服务）。
+
+> **注意**：原始文档中“文件连接器”和“表格连接器”的存储位置说明存在不一致表述——前者称平台存储“限时免费”，后者称“1 TB 免费额度，额度用完后自动转为按量付费”。实际计费策略以控制台最新提示为准，建议以 [数据连接](../../raw/application-user-guide/data-connection-overview/data-connection.md) 中“表格连接器”描述为当前有效规则。
 
 ## 关键参数
 
-| 参数类别 | 关键字段 | 说明 |
-|----------|----------|------|
-| **通用** | 连接器名称、描述 | 名称需唯一且易识别；描述影响智能体调用准确度，建议说明数据内容与业务用途 |
-| **文件/表格** | 存储位置（平台存储 / 自有OSS） | 使用自有OSS需完成RAM授权，并为目标Bucket添加 `bailian-connector-access` 标签（值为 `ReadAndWrite`） |
-| **MySQL/PostgreSQL/PolarDB-X** | 网络类型（公网/私网）、数据库地址、端口、用户名、密码 | MySQL 默认端口 3306，PostgreSQL 默认 5432；PolarDB-X **仅支持私网**；PostgreSQL 必须设置 `wal_level=logical` |
-| **语雀** | Tenant access token | 仅支持公网语雀，[Token](../concepts/token.md) 需从 [语雀开放 API](https://www.yuque.com/yuque/developer/api) 获取 |
-| **OSS** | Bucket 选择、`bailian-datahub-access` 标签 | Bucket 需设为 `read` 权限标签；不支持归档/冷归档存储类型 |
+| 连接器类型 | 必填参数 | 特殊要求 | 检测机制 |
+|------------|----------|----------|----------|
+| 文件/表格（平台托管） | 连接器名称、描述、存储位置（平台/OSS） | OSS Bucket 需打 `bailian-connector-access` 标签（值 `ReadAndWrite`） | 无显式连通性检测，依赖上传/解析结果反馈 |
+| MySQL | 数据库地址、端口、用户名、密码、数据库实例（RDS）或主机（自建） | RDS 场景下自动填充地址/端口；自建需手动配置白名单；仅 DMS 导入方式支持 SQL 执行 | EventBridge 连通性检测 |
+| PostgreSQL | 主机地址、端口、dbName、用户名、密码 | `wal_level=logical`；自建需配置 `listen_addresses` 允许 `100.64.0.0/16` 访问 | DTS 连通性检测 |
+| PolarDB-X 2.0 | 数据库实例（自定义）或数据源（DMS）、用户名、密码 | 仅支持私网；必须完成 DTS + PolarDB-X SLR 授权；DMS 方式还需 DMS 角色授权 | EventBridge 检测（同 MySQL） |
+| 语雀 | Tenant access token | 仅支持公网语雀；[Token](../concepts/token.md) 需通过 [语雀开放 API](https://www.yuque.com/yuque/developer/api) 获取 | [Token](../concepts/token.md) 校验（无网络连通性检测） |
+| OSS | Bucket 名称 | Bucket 需打 `bailian-datahub-access` 标签（值 `read`）；不支持归档/冷归档存储类型 | 授权后自动校验 Bucket 权限 |
 
 ## 使用方式
 
-1. **创建连接器**：访问 [数据连接](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/connector/list) 页面 → 单击“创建连接器” → 选择类型 → 填写基本信息与连接参数 → 完成授权与连通性检测。  
-2. **导入数据**（仅文件/表格）：进入连接器详情页 → 选择类目（文件）或数据表（表格）→ 上传本地文件或配置表结构 → 选择解析方式（推荐默认设置，复杂图表建议选“大模型文档解析”）→ 提交任务。  
-3. **调用数据**：在智能体或API调用中，通过工具名（如 `searchOSSFile`、`queryMySQL`）触发对应连接器能力；标签（`tags`）可用于过滤文件范围，提升检索效率，具体参见 [应用调用指南](https://help.aliyun.com/zh/model-studio/application-calling-guide#4100253b7chc3)。  
-> 注意：文件导入后作为独立副本存储，**仅支持查看最近90天内导入的文件**；超过时间仍可被知识库检索，但控制台不可见。
+1. **创建连接器**：进入 [数据连接](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/connector/list) 页面 → 单击「创建连接器」→ 选择类型 → 填写基本信息与连接参数 → （可选）点击「开始检测」或「连接检测」验证 → 单击「确认」。
+2. **导入数据（仅平台托管类）**：
+   - 文件连接器：进入详情页 → 选择类目 → 「导入数据」→ 本地上传 → 选择解析方式（默认/文档智能/大模型/Qwen VL/音视频）→（可选）配置标签 → 确认。
+   - 表格连接器：进入详情页 → 「数据表管理」→ 新建数据表 → 选择「直接上传 Excel」或「自定义表头」→ 上传文件 → 确认。
+3. **调用数据**：
+   - 平台托管类：在智能体 Knowledge Retrieval 或 RAG 应用中绑定对应连接器，系统自动切分、向量化并建立索引；
+   - 流处理类：通过 `querySQL`（MySQL/PG/PolarDB-X）、`searchYuQueDoc`（语雀）、`searchOSSFile`（OSS）等内置工具在 Function Calling 中调用。
 
 ## 限制和注意事项
 
-- **权限要求**：必须由主账号或已授予 `AliyunBailianDataConnectorFullAccess` 权限的 RAM 用户操作；DMS 相关连接器首次使用需完成 EventBridge、DTS 及对应数据库服务的 SLR 授权。  
-- **网络与兼容性**：  
-  - MySQL/PostgreSQL 自建实例需确保 `100.64.0.0/16` 网段可达（PostgreSQL 还需配置 `pg_hba.conf`）；  
-  - PolarDB-X 2.0 **不支持自建实例**，且仅限私网访问；  
-  - OSS Bucket 若启用 Referer 防盗链，须将 `*.console.aliyun.com` 加入白名单。  
-- **功能限制**：  
-  - 文件连接器**不支持直接导入 JSON/CSV/YAML**，需先转为 XLSX/XLS；  
-  - 表格连接器的数据表结构（列名、类型）**创建后不可修改**；  
-  - image_url 字段要求链接**公开可访问**，否则图片索引构建失败。  
-- **资源约束**：平台托管文件连接器提供最多 200,000 个文件、1 TB 存储（限时免费）；表格连接器平台存储为 1 TB 免费额度（用尽后按量计费），详见 [数据连接](../../raw/application-user-guide/data-connection-overview/data-connection.md)。
+- **权限限制**：RAM 用户需主账号授予 `AliyunBailianDataConnectorFullAccess` 或最小化自定义策略权限，否则无法创建/管理连接器（参见 [数据连接](../../raw/application-user-guide/data-connection-overview/data-connection.md) 的前置条件章节）。
+- **网络限制**：
+  - MySQL/PostgreSQL 支持公网/私网，但公网需将百炼出口 IP 段加入数据库白名单；
+  - PolarDB-X 2.0 **仅支持私网**，且必须与实例同地域；
+  - 语雀、OSS 依赖公网访问，无内网 VPC 支持。
+- **功能限制**：
+  - MySQL/PostgreSQL/PolarDB-X 的 SQL 执行能力**严格依赖 DMS 导入方式**，自定义数据源方式创建的连接器不可执行 SQL（该限制在三类连接器文档中重复强调，具有一致性）；
+  - 文件连接器不支持直接导入 JSON/CSV/YAML，须转为 XLSX/XLS；
+  - 表格连接器一旦确定列名与类型，**不可修改**；
+  - OSS 连接器启用 `searchOSSFileByFileName` 工具前，必须已开通向量检索服务。
+- **容量与生命周期**：
+  - 文件连接器仅可查看最近 **90 天内导入的文件**（过期不可见，但数据未删除）；
+  - 平台托管文件上限为 **200,000 个文件 + 1 TB 存储**（文件连接器）；表格连接器平台存储为 **1 TB 免费额度**（见 [数据连接](../../raw/application-user-guide/data-connection-overview/data-connection.md)）；
+  - 类目数量上限为 **500 个**，扩容需提交工单。
 
 ## 来源文档
 

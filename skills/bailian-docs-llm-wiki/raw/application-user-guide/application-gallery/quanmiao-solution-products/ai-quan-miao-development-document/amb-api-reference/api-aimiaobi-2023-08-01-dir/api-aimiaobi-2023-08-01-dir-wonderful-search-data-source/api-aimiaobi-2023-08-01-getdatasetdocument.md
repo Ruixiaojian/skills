@@ -311,15 +311,27 @@ KeyValues
 
 array<object>
 
+key-value 结构的 metadata
+
 object
+
+keyValue 结构 metadata
 
 Key
 
 string
 
+参数名称
+
+xx
+
 Value
 
 string
+
+参数值
+
+xx
 
 DocType
 
@@ -341,23 +353,45 @@ CategoryUuid
 
 string
 
+类目唯一标识
+
+xx
+
 Tags
 
 array
 
+标签。
+
 string
+
+标签。
+
+xx
 
 Extend1
 
 string
 
+扩展字段 1
+
+xx
+
 Extend2
 
 string
 
+扩展字段 2
+
+xx
+
 Extend3
 
 string
+
+扩展字段 3
+
+xx
 
 RequestId
 
@@ -435,20 +469,20 @@ http 状态码
       ],
       "KeyValues": [
         {
-          "Key": "",
-          "Value": ""
+          "Key": "xx",
+          "Value": "xx"
         }
       ]
     },
     "DocType": "video",
     "Status": 100,
-    "CategoryUuid": "",
+    "CategoryUuid": "xx",
     "Tags": [
-      ""
+      "xx"
     ],
-    "Extend1": "",
-    "Extend2": "",
-    "Extend3": ""
+    "Extend1": "xx",
+    "Extend2": "xx",
+    "Extend3": "xx"
   },
   "RequestId": "1813ceee-7fe5-41b4-87e5-982a4d18cca5",
   "Success": true,

@@ -1,16 +1,16 @@
 {
-  "updatedAt": "2026-07-30",
-  "totalFamilies": 172,
-  "totalModels": 389,
+  "updatedAt": "2026-07-31",
+  "totalFamilies": 175,
+  "totalModels": 392,
   "capabilityDistribution": {
     "TG": 36,
     "IG": 31,
     "VG": 26,
     "TTS": 16,
     "Reasoning": 14,
-    "ASR": 12,
+    "ASR": 14,
     "VU": 9,
-    "Realtime-ASR": 7,
+    "Realtime-ASR": 8,
     "Multimodal-Omni": 5,
     "Realtime-Omni": 4,
     "Realtime-Audio-Translate": 3,
@@ -21,7 +21,7 @@
     "3D-generation": 1
   },
   "providerDistribution": {
-    "qwen": 103,
+    "qwen": 106,
     "qwen-domain-model": 34,
     "wan": 13,
     "happyhorse": 4,
@@ -960,6 +960,51 @@
         "qvq-plus"
       ],
       "maxContextWindow": 131072
+    },
+    {
+      "slug": "qwen-audio-asr-flash-filetrans",
+      "name": "Qwen-Audio-ASR-Flash-Filetrans",
+      "primaryCapability": "ASR",
+      "capabilities": [
+        "ASR"
+      ],
+      "providers": [
+        "qwen"
+      ],
+      "itemCount": 1,
+      "items": [
+        "qwen-audio-3.0-asr-flash-filetrans"
+      ]
+    },
+    {
+      "slug": "qwen-audio-asr-flash-streaming",
+      "name": "Qwen-Audio-ASR-Flash-Streaming",
+      "primaryCapability": "Realtime-ASR",
+      "capabilities": [
+        "Realtime-ASR"
+      ],
+      "providers": [
+        "qwen"
+      ],
+      "itemCount": 1,
+      "items": [
+        "qwen-audio-3.0-asr-flash-streaming"
+      ]
+    },
+    {
+      "slug": "qwen-audio-asr-flash",
+      "name": "Qwen-Audio-ASR-Flash",
+      "primaryCapability": "ASR",
+      "capabilities": [
+        "ASR"
+      ],
+      "providers": [
+        "qwen"
+      ],
+      "itemCount": 1,
+      "items": [
+        "qwen-audio-3.0-asr-flash"
+      ]
     },
     {
       "slug": "qwen-audio-realtime-flash",

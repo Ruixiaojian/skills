@@ -853,7 +853,7 @@ with open('output.mp3', 'wb') as f:
 
 [方式二·步骤 1](#cv-deploy-api-step1-li)
 
-[列举可部署模型](https://help.aliyun.com/zh/model-studio/list-deployable-models-api)
+[列举可部署模型](https://help.aliyun.com/zh/model-studio/list-deployable-models-api/)
 
 创建部署任务
 
