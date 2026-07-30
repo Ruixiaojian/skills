@@ -1,13 +1,9 @@
 name: auto-merge-to-main
 
-# The FC crawler pushes skill updates to feat/bailian-docs-update.
-# On each such push, create (or reuse) a PR to main and merge it.
-# The resulting push to main then triggers publish-skills.yml,
-# which pokes the remote FC to sync main -> OSS.
 on:
   push:
     branches: [feat/bailian-docs-update]
-    paths: ['skills/**']
+  workflow_dispatch: {}
 
 permissions:
   contents: write
@@ -24,41 +20,69 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: feat/bailian-docs-update
           fetch-depth: 0
 
-      - name: Sync main back into branch (prevent squash-merge conflicts)
+      - name: Sync main back into branch
+        id: sync
         run: |
-          # Squash-merging PRs rewrites history on main, so this branch
-          # diverges from main after every merge and later PRs conflict.
-          # Merge main back in first, preferring the branch (crawler output
-          # is the source of truth for skills/**) on conflicting hunks.
-          # Pushing with the default GITHUB_TOKEN does NOT retrigger this
-          # workflow (recursive triggers are suppressed), so no loop.
-          BRANCH="${{ github.ref_name }}"
+          BRANCH="feat/bailian-docs-update"
+          OWNED="skills/bailian-docs-llm-wiki"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git fetch origin main
+
           if ! git merge-base --is-ancestor origin/main HEAD; then
-            git merge -X ours --no-edit origin/main
+            git merge --no-ff --no-commit --no-edit origin/main || true
+
+            git rm -r --cached -f --ignore-unmatch -q -- skills
+
+            if [ -n "$(git ls-files -u)" ]; then
+              echo "::error::Unresolved conflicts outside skills/, resolve them on main first:"
+              git ls-files -u | awk '{print $4}' | sort -u
+              exit 1
+            fi
+
+            if git rev-parse -q --verify origin/main:skills >/dev/null; then
+              git read-tree --prefix=skills/ origin/main:skills
+            fi
+            git rm -r --cached -f --ignore-unmatch -q -- "$OWNED"
+            if git rev-parse -q --verify "HEAD:$OWNED" >/dev/null; then
+              git read-tree "--prefix=$OWNED/" "HEAD:$OWNED"
+            fi
+
+            TREE=$(git write-tree)
+            COMMIT=$(git commit-tree "$TREE" -p HEAD -p origin/main \
+              -m "chore: sync main into ${BRANCH}")
+            git reset --hard "$COMMIT"
             git push origin "HEAD:${BRANCH}"
           fi
 
+          if git diff --quiet origin/main HEAD; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No content changes vs main, skipping PR."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Create or update PR to main
+        if: steps.sync.outputs.changed == 'true'
         id: pr
         env:
           GH_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: |
-          BRANCH="${{ github.ref_name }}"
-          # Use the latest commit subject as the PR title (fallback to default title)
-          TITLE=$(git log -1 --pretty=%s "${{ github.sha }}")
+          BRANCH="feat/bailian-docs-update"
+          TITLE=$(git log -1 --pretty=%s "${{ github.sha }}" 2>/dev/null || true)
+          case "$TITLE" in
+            "chore: sync main"*|"Merge "*) TITLE="" ;;
+          esac
           [ -n "$TITLE" ] || TITLE="chore: update bailian-docs-llm-wiki ($(TZ=Asia/Shanghai date +%Y-%m-%d))"
 
           EXISTING_PR=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[0].number')
 
           if [ -n "$EXISTING_PR" ]; then
             echo "PR #$EXISTING_PR already exists, updating..."
-            # gh pr edit uses GraphQL and needs read:org scope; the REST
-            # endpoint only needs repo scope, which GIT_TOKEN has.
             gh api "repos/${{ github.repository }}/pulls/$EXISTING_PR" \
               -X PATCH -f title="$TITLE" --silent
             PR_NUMBER="$EXISTING_PR"
@@ -70,21 +94,19 @@ jobs:
               --title "$TITLE" \
               --body "Automated PR created on push to \`${BRANCH}\`." \
               --no-maintainer-edit)
-            # gh pr create prints the PR URL; keep only the trailing number
             PR_NUMBER="${PR_URL##*/}"
           fi
 
           echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
 
       - name: Auto-merge PR
+        if: steps.sync.outputs.changed == 'true'
         env:
-          # GIT_TOKEN is a classic PAT (repo scope, no expiration) so that
-          # the merge commit fires publish-skills.yml on main.
           GH_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: |
           PR_NUMBER="${{ steps.pr.outputs.number }}"
           echo "Merging PR #$PR_NUMBER..."
-          gh pr merge "$PR_NUMBER" --squash --delete-branch=false
+          gh pr merge "$PR_NUMBER" --merge --delete-branch=false
 
           echo "### PR #$PR_NUMBER merged" >> "$GITHUB_STEP_SUMMARY"
-          echo "Branch \`${{ github.ref_name }}\` has been merged into \`main\`." >> "$GITHUB_STEP_SUMMARY"
+          echo "Branch \`feat/bailian-docs-update\` has been merged into \`main\`." >> "$GITHUB_STEP_SUMMARY"
