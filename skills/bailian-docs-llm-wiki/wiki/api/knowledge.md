@@ -1,52 +1,38 @@
 # knowledge
 
-knowledge 是百炼平台提供的知识检索与问答能力，通过 HTTP REST 接口实现跨知识库的语义检索和基于知识的流式问答。该能力运行在 DashScope 应用网关体系下，与底层 OpenAPI（如 `CreateIndex`、`Retrieve` 等 RPC 接口）逻辑隔离，面向业务应用层提供开箱即用的 RAG 服务。详细设计与行为请参考 [知识检索与问答 (raw/application-api-reference/knowledge.md)](../../raw/application-api-reference/knowledge.md)。
+knowledge 是百炼平台提供的知识增强型 AI 服务模块，支持基于私有知识库的语义检索与多阶段智能问答。该能力通过 DashScope 应用网关提供 RESTful API，不依赖底层 OpenAPI RPC 接口（如 `CreateIndex`），适用于快速集成 RAG 场景。详细设计与行为请参考 [知识检索与问答 (raw/application-api-reference/knowledge.md)](../../raw/application-api-reference/knowledge.md)。
 
 ## 支持的模型/功能
 
-- **知识检索**：支持跨多个知识库联合语义检索，返回按相关性排序的文本切片（chunk），适用于召回增强场景。  
-- **知识问答**：支持端到端的智能问答流程，通过 SSE [流式输出](../concepts/streaming-output.md)，依次返回规划（planning）、工具调用（tool calling）、生成（generation）三个阶段结果，需配合已部署的知识应用 ID 使用。  
-- 所有功能均基于 DashScope 应用网关提供，**不依赖用户自行托管模型或向量引擎**，底层模型由平台统一调度。具体能力边界详见 [知识检索与问答 (raw/application-api-reference/knowledge.md)](../../raw/application-api-reference/knowledge.md)。
+- **知识检索**：跨多个已发布知识库执行联合语义检索，返回按相关性排序的文本切片（chunk），适用于召回阶段。
+- **知识问答**：端到端问答流程，通过 SSE [流式输出](../concepts/streaming-output.md)，明确划分为「规划 → 工具调用 → 生成」三阶段，支持上下文感知与知识引用。  
+  > **注意**：知识问答不等同于通用大模型调用，其输入必须绑定已发布的应用 ID（`app_id`），且仅作用于该应用关联的知识库；该约束在 [知识检索与问答 (raw/application-api-reference/knowledge.md)](../../raw/application-api-reference/knowledge.md) 中明确，但部分旧版 SDK 示例未体现，实际调用时需严格校验。
 
 ## 关键参数
 
-| 参数 | 类型 | 必填 | 说明 |
+| 参数 | 说明 | 必填 | 示例 |
 |------|------|------|------|
-| `workspaceId` | string | 是 | 业务空间 ID，用于构造 Base URL（`https://{workspaceId}.cn-beijing.maas.aliyuncs.com`），非 AccessKey 或 Region ID |
-| `Authorization` | header | 是 | `Bearer <API-Key>`，API Key 需在控制台 [API Key 页面](https://rag.console.aliyun.com/settings/apikey) 获取 |
-| `app_id` | body（仅 `/chat`） | 是 | 已发布的知识应用 ID，对应控制台中“知识应用”模块下的唯一标识 |
-| `query` | body | 是 | 检索或问答的原始用户输入文本 |
-
-> **注意**：`workspaceId` 与百炼控制台中的“业务空间”ID 完全一致，**不可替换为 Project ID 或 UID**；部分旧文档误将 `workspaceId` 描述为“区域+实例ID”，该说法已过时，请以 [知识检索与问答 (raw/application-api-reference/knowledge.md)](../../raw/application-api-reference/knowledge.md) 中定义为准。
+| `Authorization` | Bearer 鉴权头，值为 `Bearer <API-Key>` | 是 | `Bearer ak-xxx` |
+| `workspaceId` | 业务空间 ID，用于构造 Base URL（`https://{workspaceId}.cn-beijing.maas.aliyuncs.com`） | 是 | `ws-abc123` |
+| `app_id` | 知识问答必需，对应控制台中已发布的知识应用 ID | 仅 `/api/v2/apps/knowledge/chat` 需要 | `app-xyz789` |
+| `query` | 检索或问答的原始用户输入文本 | 是 | `"阿里云百炼支持哪些知识格式？"` |
 
 ## 使用方式
 
-1. **构造请求地址**：  
-   - 知识检索：`POST https://{workspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/indices/knowledge/search`  
-   - 知识问答：`POST https://{workspaceId}.cn-beijing.maas.aliyuncs.com/api/v2/apps/knowledge/chat`  
-
-2. **设置请求头**：  
-   ```http
-   Authorization: Bearer <your-api-key>
-   Content-Type: application/json
-   ```
-
-3. **发送 JSON Body（示例）**：  
-   ```json
-   {
-     "query": "百炼平台如何配置知识库权限？",
-     "top_k": 5
-   }
-   ```
-   > 注意：`top_k` 仅对 `/search` 有效；`/chat` 接口不接受 `top_k`，其召回策略由绑定的知识应用配置决定。
+1. 在控制台获取 **API Key**（见 [API Key 页面](https://rag.console.aliyun.com/settings/apikey)）和 **workspaceId**（见 [业务空间管理](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management)）；
+2. 构造请求 URL：
+   - 检索：`POST https://{workspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/indices/knowledge/search`
+   - 问答：`POST https://{workspaceId}.cn-beijing.maas.aliyuncs.com/api/v2/apps/knowledge/chat`
+3. 设置 `Authorization` 请求头；
+4. 发送 JSON body（检索含 `query`、`top_k`；问答含 `app_id`、`query`、`stream` 等）。  
+   完整字段定义与示例见 [知识检索与问答 (raw/application-api-reference/knowledge.md)](../../raw/application-api-reference/knowledge.md)。
 
 ## 限制和注意事项
 
-- **限流策略**：默认按用户维度限流 25 QPS，超限返回 `429 Too Many Requests`，需客户端实现退避重试。  
-- **鉴权隔离**：API Key 与 workspaceId 必须匹配同一业务空间，跨空间调用将返回 `403 Forbidden`。  
-- **知识问答依赖部署状态**：`/chat` 接口要求 `app_id` 对应的知识应用已**发布成功且状态为“运行中”**，草稿或停用状态将返回 `404 Not Found`。  
-- **无批量接口**：当前不支持单次请求多 query 批处理，需逐条调用。  
-- **SSE 兼容性**：`/chat` 返回流式响应，需客户端正确处理 `text/event-stream` MIME 类型及 `data:` 前缀格式。
+- **限流策略**：默认按用户维度限流 25 QPS，超限返回 `429 Too Many Requests`，需客户端实现退避重试；
+- **知识库状态要求**：仅已「发布」的知识库参与检索/问答，草稿或下线状态不可见；
+- **问答流式响应结构固定**：SSE event 类型依次为 `plan` → `tool_call` → `answer`，解析时须按序处理，不可假设单次响应即完成；
+- **Base URL 区域固定**：当前仅支持 `cn-beijing` 地域，`{workspaceId}` 不可替换为其他地域标识。
 
 ## 来源文档
 

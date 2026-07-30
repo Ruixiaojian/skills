@@ -1,6 +1,6 @@
 # 百炼模型市场索引
 
-> 自动生成 · 共 170 个模型家族 · 387 个主干模型 · 更新于 2026-07-30
+> 自动生成 · 共 172 个模型家族 · 389 个主干模型 · 更新于 2026-07-30
 
 **机器查询走结构化文件**：
 
@@ -299,8 +299,10 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [语音识别热词](groups/speech-biasing.json) — 热词是指用户可以预先定义的一组特定词汇或短语，这些词汇或短语在识别、翻译过程中会被赋予更高的优先级。针对您的特定业务领域，如果有部分词汇的语音识别、翻译效果不够好，可以将这些关键词或短语添加为热词进行…
   - 模型：`speech-biasing`
 
-## 视觉理解 `VU` — 8 个家族
+## 视觉理解 `VU` — 9 个家族
 
+- [GUI-Plus](groups/gui-plus.json) — GUI系列图形界面交互基础模型，针对手机端与电脑端图形界面理解与交互任务，性能优于开源版同类GUI模型。全面升级跨平台界面理解与多步任务规划，支持跨应用复杂任务；具备精细化动作执行与多角色多智能体协作…
+  - 模型：`gui-plus`
 - [Qwen-VL-Max](groups/qwen-vl-max.json) — Qwen-VL-Max，即千问超大规模视觉语言模型。相比增强版，再次提升视觉推理能力和指令遵循能力，提供更高的视觉感知和认知水平。在更多复杂任务上提供最佳的性能。
   - 模型：`qwen-vl-max`
 - [Qwen-VL-OCR](groups/qwen-vl-ocr.json) — Qwen-VL-OCR，即基于Qwen-VL训练的OCR识别大模型。通过统一模型的方式聚合多种图文识别、解析、处理类任务，提供强大的图文识别能力。
@@ -359,6 +361,15 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [Qwen3.5-Omni-Plus-Realtime](groups/qwen3.5-omni-plus-realtime.json) — Qwen3.5-Omni是Qwen最新一代全模态大模型，支持文本，图片，音频，音视频理解与交互。作为 Qwen3-Omni 的全面进化版本，支持60+种语言音频输入，30+语言语音输出以及可控语音对话…
   - 模型：`qwen3.5-omni-plus-realtime`
 
+## 实时音频翻译 `Realtime-Audio-Translate` — 3 个家族
+
+- [Qwen3-LiveTranslate-Flash-Realtime](groups/qwen3-livetranslate-flash-realtime.json) — Qwen3-LiveTranslate-Flash-Realtime的实时版本，一款高精度、高响应、高鲁棒性的多语言实时音视频同传大模型。依托Qwen3-Omni强大的基座能力、海量多模态数据、跨语言…
+  - 模型：`qwen3-livetranslate-flash-realtime`
+- [Qwen3.5-LiveTranslate-Flash-Realtime](groups/qwen3.5-livetranslate-flash-realtime.json) — Qwen3.5-LiveTranslate-Flash的实时版本，一款高精度、高响应、高鲁棒性的多语言实时音视频同传大模型。依托Qwen3.5-Omni强大的基座能力、海量多模态数据、跨语言跨模态对齐…
+  - 模型：`qwen3.5-livetranslate-flash-realtime`
+- [实时语音识别及翻译V1.0](groups/gummy-realtime-v1.json) — 多语言语音转写及翻译的多模态大模型。本模型提供长时间、高准确率、实时转写中/英/日/韩等10个混合语种的服务。同时支持中英日韩互译，以其他6个语种翻译成中文或英文。
+  - 模型：`gummy-realtime-v1`
+
 ## 多模态嵌入 `ME` — 2 个家族
 
 - [Qwen-VL-Embedding](groups/qwen-vl-embedding.json) — 基于Qwen-VL底座训练的统一多模态向量模型，支持文本、图片、视频单模态/混合模态输入，输出统一表征向量，适用于跨模态检索、图搜、视频检索、图像聚类、复杂多模态信息检索、打标等场景。
@@ -386,13 +397,6 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen3.7-text-embedding`, `text-embedding-async-v1`, `text-embedding-async-v2`, `text-embedding-v1`, `text-embedding-v2`, `text-embedding-v3`, `text-embedding-v4`
 - [Qwen-Rerank](groups/qwen-rerank.json) — 基于Qwen LLM底座训练的文本排序模型，对输入的Query和候选Docs进行相关性排序，支持100+语种和长文本输入，适用于文本检索、RAG等场景，效果对齐Qwen家族开源Rerank系列模型。
   - 模型：`gte-rerank-v2`, `qwen3-rerank`, `qwen3-vl-rerank`
-
-## 实时音频翻译 `Realtime-Audio-Translate` — 2 个家族
-
-- [Qwen3-LiveTranslate-Flash-Realtime](groups/qwen3-livetranslate-flash-realtime.json) — Qwen3-LiveTranslate-Flash-Realtime的实时版本，一款高精度、高响应、高鲁棒性的多语言实时音视频同传大模型。依托Qwen3-Omni强大的基座能力、海量多模态数据、跨语言…
-  - 模型：`qwen3-livetranslate-flash-realtime`
-- [Qwen3.5-LiveTranslate-Flash-Realtime](groups/qwen3.5-livetranslate-flash-realtime.json) — Qwen3.5-LiveTranslate-Flash的实时版本，一款高精度、高响应、高鲁棒性的多语言实时音视频同传大模型。依托Qwen3.5-Omni强大的基座能力、海量多模态数据、跨语言跨模态对齐…
-  - 模型：`qwen3.5-livetranslate-flash-realtime`
 
 ## 3D 生成 `3D-generation` — 1 个家族
 

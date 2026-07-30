@@ -1,52 +1,49 @@
 # 流式输出
 
-流式输出（Streaming Output）是百炼平台提供的一种实时响应机制，允许模型在生成过程中分块（chunk）返回结果，而非等待全部内容完成后再一次性返回。它显著降低端到端延迟，提升用户交互体验，并支持前端实现打字机效果、实时转录、语音合成驱动等增量式渲染场景。
+流式输出（Streaming Output）是指模型服务在生成响应过程中，将结果以增量方式分块（chunk）实时返回给客户端，而非等待全部内容生成完毕后一次性返回。这种方式显著降低端到端延迟，提升用户感知的响应速度与交互流畅性，是构建低延迟对话、实时语音合成、长文本生成等场景的关键能力。
 
 ## 在百炼平台的不同场景中如何使用
 
-流式输出在以下核心能力中被统一支持，但协议、事件格式与适用范围存在差异：
+- **Qwen 系列模型 API（OpenAI 兼容 / DashScope 原生）**：  
+  默认启用流式输出（`stream: true`），适用于 `qwen-max`、`qwen-plus`、`qwen-turbo` 等文本生成模型。[OpenAI 兼容接口](openai-compatible-interface.md)返回符合 SSE 标准的 `text/event-stream` 响应；DashScope 原生接口支持更细粒度控制（如 `incremental_output` 参数）。注意：OpenAI 兼容-Responses 模式下，流式 chunk 中 `delta.tool_calls` 字段可能不完整，建议非流式模式验证工具调用逻辑。
 
-- **知识问答（`/api/v2/apps/knowledge/chat`）**：通过 Server-Sent Events（SSE）协议返回 `text/event-stream` 响应，按阶段输出 `planning` → `tool_calling` → `generation` 三类事件，每个事件携带结构化字段（如 `event: generation`, `data: {"text": "..."}`），需客户端正确解析 `data:` 前缀与换行分隔。
+- **应用调用（Application Call）**：  
+  仅**同步调用**支持流式输出（通过 `stream=true` 启用），适用于新版智能体、旧版智能体及工作流；**异步调用（`background=true`）不支持流式输出**，必须轮询或订阅事件获取最终结果。
 
-- **智能体/工作流调用（Responses API）**：在同步调用接口（如 `/responses`）中设置 `stream=true`，返回符合 OpenAI 兼容格式的 SSE 流，每 chunk 包含 `delta.content`（增量文本）、`finish_reason` 等字段；**异步调用（`background=true`）不支持流式输出**。
+- **Omni Realtime API 与 Realtime API**：  
+  原生基于 WebSocket 的事件驱动架构，天然支持流式输出。文本以 `response.text.delta` 事件逐 token 推送；音频以 `response.audio.delta` 事件按 PCM 帧（通常 20ms/帧）持续下发。`modalities: ["text", "audio"]` 配置下，两类流可并行、低延迟同步输出。
 
-- **Realtime API（AOQ/WebRTC/WebSocket）**：基于长连接的双向事件流，非传统 HTTP SSE。服务端通过 `response.delta`（文本增量）、`response.audio.delta`（音频 PCM 片段）、`conversation.item.input_audio_transcription.delta`（ASR 实时识别）等事件主动推送，客户端需监听并拼接。
-
-- **Omni Realtime API（WebSocket）**：采用自定义 WebSocket 事件协议，关键事件包括 `response.delta`（文本流）、`response.audio.delta`（音频流）、`response.done`（结束标识）。支持 `incremental_output=true` 进一步确保每次只返回新生成 token，避免重复内容。
-
-- **通用应用调用（DashScope API）**：`/api/v1/apps/{APP_ID}/completion` 接口本身**不原生支持流式输出**；如需流式能力，必须使用 Responses API 兼容路径（即 `compatible-mode/v1/responses`）并显式启用 `stream=true`。
-
-> ✅ 统一原则：所有流式能力均要求客户端具备事件解析、缓冲管理与错误重连能力；不支持流式的调用（如[异步任务](asynchronous-task.md)、DashScope 原生 completion）将返回完整 JSON 响应体。
+- **异步任务类模型（图像/视频生成等）**：  
+  **不支持流式输出**。此类任务需通过 `task_id` 轮询或事件总线接收完成通知，结果为一次性结构化响应（如 OSS URL 或 base64 图片）。
 
 ## 关键参数和配置
 
-| 参数 | 类型 | 作用 | 是否必需 | 说明 |
-|------|------|------|----------|------|
-| `stream` | `boolean` | 启用流式响应模式 | 否（默认 `false`） | 所有支持流式的接口均需显式设为 `true`；设为 `false` 或不传则返回完整响应 |
-| `incremental_output` | `boolean` | 启用真正增量式输出（仅 `stream=true` 时生效） | 否（默认 `false`） | 若为 `true`，每个 chunk 的 `delta.content` 仅含本次新生成内容（非累计）；若为 `false`，部分场景可能重复返回已发送内容，前端需自行去重 |
-| `modalities` | `string[]` | 指定输出模态（Realtime/Omni 场景） | 是（当含 `"audio"` 时） | 必须包含 `"text"`；若需语音合成，需同时指定 `"audio"` 并配置 `voice` |
-| `turn_detection.type` | `string` | VAD 检测模式（Realtime/Omni） | 否（默认 `"server_vad"`） | 影响流式触发时机：`"semantic_vad"` 可实现语义级断句流式，`"server_vad"` 依赖音频静音检测 |
+| 参数 | 类型 | 说明 | 适用场景 |
+|------|------|------|----------|
+| `stream` | `boolean` | 控制是否启用流式响应。设为 `true` 时，HTTP 响应头为 `Content-Type: text/event-stream`，响应体为 SSE 格式 chunk。默认值为 `false`（同步阻塞模式）。 | Qwen API、Application Call（同步） |
+| `incremental_output` | `boolean` | DashScope 原生接口特有参数，启用后返回增量 token（等效于 `stream=true`），但响应格式为 JSON 数组而非 SSE。适用于无法处理 SSE 的客户端。 | DashScope 文本生成原生接口 |
+| `modalities` | `array` | 指定输出模态组合，如 `["text"]` 或 `["text","audio"]`。决定流式事件类型（`response.text.delta` / `response.audio.delta`）。 | Omni Realtime API、Realtime API |
+| `enable_search` / `tools` | `boolean` / `array` | 影响流式内容结构：启用后，流式响应中会包含 `response.tool_use.delta` 或 `response.search_result.delta` 等事件，需客户端按事件类型解析。 | Omni Realtime（`qwen3.5-omni-realtime` 系列）、Qwen DashScope 接口 |
 
 > ⚠️ 注意事项：
-> - `stream=true` 时，HTTP 响应头必须包含 `Content-Type: text/event-stream`（SSE）或维持 WebSocket/AOQ 长连接；
-> - 流式响应无 `Content-Length`，客户端不可依赖该 header 判断结束；
-> - 超时时间需延长（建议 ≥60s），避免因网络波动中断连接；
-> - 错误发生时，服务端会发送 `error` 事件（SSE）或 `error` WebSocket message，需捕获处理。
+> - 流式响应需客户端正确处理 SSE 解析（如 `EventSource` 或 `aiohttp.ClientSession` 的 `content.iter_any()`）；
+> - 所有流式接口均要求连接保持活跃，超时断连将中断输出；
+> - 异步调用、文件上传、[多模态](multi-modal.md)预处理等前置步骤**本身不支持流式**，仅最终模型推理阶段可流式。
 
 ## 面向开发者：简洁实用建议
 
-- **前端渲染**：对 `stream=true` + `incremental_output=true` 的响应，直接追加 `delta.content` 到 DOM 即可，无需缓存或去重；若未启用 `incremental_output`，请维护本地 buffer 并比对上一 chunk 内容。
-- **错误处理**：监听 `event: error`（SSE）或 `error` message（WebSocket），检查 `data.code` 和 `data.message`，常见错误如 `429 Too Many Requests`（需指数退避）、`503 Service Unavailable`（重试）。
-- **调试技巧**：使用 `curl -N` 或浏览器 DevTools Network → EventStream 查看原始 SSE 数据；WebSocket 场景可用 `wscat` 工具连接测试。
-- **性能优化**：Realtime/Omni 场景下，优先选用 `semantic_vad` + `incremental_output=true` 组合，可最小化首包延迟（TTFT）与生成延迟（TPOT）。
-- **兼容性提醒**：旧版 DashScope 原生 API（如 `/completion`）不支持流式，请务必切换至 Responses API 兼容路径。
+- ✅ **首选流式**：对延迟敏感场景（如客服对话、语音助手），务必设置 `stream=true` 并监听增量事件；
+- ✅ **验证兼容性**：OpenAI SDK 默认支持 SSE，但需确认版本 ≥1.0；自定义 HTTP 客户端请严格遵循 [SSE 协议规范](https://html.spec.whatwg.org/multipage/server-sent-events.html)；
+- ✅ **错误处理**：流式请求失败时，部分 chunk 可能已接收，需检查 `event: error` 或 `data:` 中的 `error` 字段，并重试完整请求；
+- ❌ **避免混用**：不要在 `background=true` 的异步请求中设置 `stream=true`（会被忽略）；
+- 🛠️ **调试技巧**：使用 `curl -N` 或 Postman 的 SSE 插件直接观察原始流式响应，快速定位解析问题。
 
 ## 关联主题页
 
-- [knowledge](../api/knowledge.md)
+- [qwen api reference](../api/qwen-api-reference.md)
 - [application call](../api/application-call.md)
-- [application support](../guides/application-support.md)
-- [realtime api user guide](../api/realtime-api-user-guide.md)
 - [omni realtime api](../api/omni-realtime-api.md)
+- [realtime api user guide](../api/realtime-api-user-guide.md)
+- [more about models](../api/more-about-models.md)
 
 
