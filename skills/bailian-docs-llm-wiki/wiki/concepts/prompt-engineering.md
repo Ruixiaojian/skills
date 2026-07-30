@@ -1,50 +1,45 @@
 # Prompt 工程
 
-Prompt 工程是指在百炼平台上系统性设计、组织、验证与优化提示词（Prompt）的方法论与实践体系，其目标是通过结构化指令、角色设定、上下文注入、样例引导和自动化反馈等手段，显著提升大模型输出的准确性、稳定性、格式一致性与业务适配性。
+Prompt 工程是指在百炼平台上，通过系统化设计、结构化表达与迭代优化提示词（Prompt），以精准引导大语言模型行为、提升输出稳定性、可控性与业务适配性的技术实践。它不是简单的“写指令”，而是融合角色设定、任务分解、约束注入、样例引导与效果验证的工程化方法论。
 
-## 在百炼平台的不同场景中，这个概念如何使用
+## 在百炼平台的不同场景中如何使用
 
-- **模板化 Prompt 管理**：在「组件管理 > 提示词」中，开发者可基于 ICIO（Input-Context-Instruction-Output）、CRISPE（Capacity-Role-Insight-Statement-Personality-Experiment）或 RASCEF（Role-Action-Steps-Constraints-Examples-Format）等工程框架创建可复用模板；支持 `${variable}` 变量插值，实现跨业务动态填充（如营销文案生成、日志分析摘要），适用于文本生成、图片生成（正向/负向 Prompt 分离配置）等标准化任务。
+Prompt 工程能力深度集成于百炼三大核心层，开发者可根据需求选择对应路径：
 
-- **智能体（LLM Application）构建**：在新版智能体（Agent 2.0）中，系统提示词（System Prompt）是 Prompt 工程的核心载体——它定义 Agent 的角色、能力边界、工具调用规范及输出格式约束。结合知识库（RAG）与 MCP 工具，Prompt 工程确保模型在多步推理中保持意图对齐与结构化响应（如始终以 JSON 输出订单状态）。
+- **模板化开发（推荐用于标准化任务）**  
+  使用「Prompt 模板」功能，在控制台或通过 `CreatePromptTemplate` API 创建可复用的提示词资产。支持基于 ICIO、CRISPE、RASCEF 等成熟框架结构化编写（如明确 Role/Task/Format/Constraint），适用于营销文案生成、摘要抽取、JSON 结构化输出等确定性任务。文本与图片生成模板需分别配置（后者需正向/负向 Prompt 分离）。
 
-- **自动增强与反馈优化**：  
-  - **自动优化**：无需人工经验，一键将原始自然语言 Prompt（如“帮我写个产品介绍”）转化为含角色注入、指令强化、安全护栏的工业级版本；不计费，且输入数据不用于训练。  
-  - **反馈优化**：面向分类、结构化抽取等高精度任务，上传 5–10 条典型样例（few-shot）与 ≥20 条评测集，平台通过多轮评估-反思-重写，产出业务效果更优的 Prompt，直接支持 A/B 测试与灰度发布。
+- **智能体应用（Agent）中的动态编排**  
+  在 Agent 2.0 应用中，Prompt 工程体现为**系统提示词（System Prompt）的精细化配置**：支持嵌入变量（如 `/user_name`）、绑定知识库检索结果、注入工具调用上下文，并可通过 `enable_thinking=true` 观察模型推理链路。此时 Prompt 是 Agent 的“大脑指令集”，直接影响规划、工具选择与响应质量。
 
-- **API 与 SDK 集成**：通过 `CreatePromptTemplate` / `GetPromptTemplate` 接口管理模板元数据；渲染后作为 `system` 或 `messages[0].content` 传入 `ChatCompletion` 等模型 API；SDK 自动处理变量注入与地域适配（仅华北2可用），开发者聚焦业务逻辑。
+- **自动化优化（适合无 Prompt 经验或快速验证）**  
+  利用「Prompt 自动优化」服务，输入原始自然语言指令（如“帮我写一封道歉邮件”），平台自动注入角色、明确格式、强化边界（如“不使用感叹号”）、增强安全性，输出更鲁棒的版本；或使用「Prompt 反馈优化」，上传 query-answer 样例对，由 `qwen-max` 等强模型驱动多轮评估，生成带 few-shot 示例和显式约束的高精度 Prompt，特别适用于分类、表格生成等结构化任务。
+
+> ⚠️ 注意：Prompt 样例库功能已下线，新项目请统一迁移至 RAG 表格库实现上下文增强；所有 Prompt 相关能力（模板、优化、关联）**仅支持华北2（北京）地域**。
 
 ## 关键参数和配置
 
-| 参数 | 说明 | 注意事项 |
-|------|------|----------|
-| `promptTemplateId` | 模板唯一标识符 | 由平台生成，用于 API 获取模板内容 |
-| `workspaceId` | 业务空间 ID | 必填，控制台或 `ListWorkspaces` 接口获取，决定资源隔离与鉴权范围 |
-| `variables` | 模板中声明的变量名列表（JSON 数组） | 最多 64 个；语法为 `${topic}`，不支持嵌套或表达式 |
-| `enable_thinking`（智能体场景） | 启用规划-执行-反思链路 | 仅对千问-Max 等支持思考模式的模型生效，用于调试 Prompt 效果 |
-| `top_k` / `score_threshold`（RAG 场景） | 控制检索片段数量与相关性阈值 | 影响 Prompt 中注入的上下文质量，间接决定最终输出可靠性 |
+| 参数 | 说明 | 开发者须知 |
+|------|------|------------|
+| `promptTemplateId` | 模板唯一标识符 | 调用 `GetPromptTemplate` 获取内容后，必须按 `variables` 字段声明的变量名（如 `["topic", "tone"]`）填充值，不可动态增删变量。 |
+| `workspaceId` | 业务空间 ID | 所有 Prompt API（模板、优化、应用调用）均需显式传入，是资源隔离与权限控制的基础。 |
+| `has_thoughts` | 是否返回样例召回详情 | 仅在已关联 RAG 表格库的智能体应用中有效；设为 `true` 时，响应中 `thoughts` 字段可查看实际注入的上下文片段，用于调试检索效果。 |
+| `temperature`（全局） | 输出随机性控制 | 建议 Prompt 驱动的确定性任务（如结构化提取）设为 `0.1–0.3`；创意类任务可放宽至 `0.6–0.8`。该参数作用于模型层，与 Prompt 内容协同生效。 |
+| 召回片段数（RAG 场景） | 单次注入的上下文片段数量 | 默认 `5`，上限 `10`；增加可提升信息覆盖，但显著增加 [Token](token.md) 成本与延迟，需在控制台或 API 中权衡设置。 |
 
-> ⚠️ **重要限制**：  
-> - 所有 Prompt 功能**仅支持华北2（北京）地域**；  
-> - 控制台编辑器最大长度 **6144 字符**，实际 token 消耗需按所选模型上下文窗口（如 Qwen-Max 32K）自行校验；  
-> - 图片生成模板暂不支持通过 API 创建（`CreatePromptTemplate` 接口当前仅支持文本类）；  
-> - Prompt 自动优化与反馈优化过程中的用户数据**不存储、不训练、符合阿里云隐私政策**。
+## 面向开发者的实用建议
 
-## 面向开发者，简洁实用
-
-- ✅ **起步建议**：从预置模板（如“会议纪要生成”）开始，复制后修改变量与指令细节，比从零编写更高效；  
-- ✅ **调试技巧**：启用 `enable_thinking=True` + `stream=True`，实时观察模型如何解析 Prompt 并规划步骤；  
-- ✅ **生产最佳实践**：  
-  - 对关键业务 Prompt，用反馈优化生成多个候选版本，结合线上评测集（如准确率、格式合规率）择优部署；  
-  - 将 Prompt 模板 ID 与变量映射关系纳入配置中心管理，避免硬编码；  
-  - 监控 `input_tokens` 增长——优化后的 Prompt 若引入大量样例或知识片段，可能推高成本，需权衡效果与开销。  
-- ❌ **避免踩坑**：勿依赖已下线的 Prompt 样例库功能；新项目统一使用 RAG 表格库或反馈优化替代。
+- **优先模板化**：将高频、稳定 Prompt 封装为模板（而非硬编码在代码中），便于版本管理、A/B 测试与跨应用复用。
+- **变量即契约**：模板中 `variables` 是运行时契约——前端/SDK 必须提供完整且类型匹配的值，缺失或错位将导致渲染失败。
+- **优化≠替代**：自动优化是起点，非终点；产出的 Prompt 应人工校验逻辑完整性与业务合规性，尤其关注安全边界是否被弱化。
+- **[Token](token.md) 敏感性**：Prompt 内容 + 变量填充后总长度 ≤ 6144 字符；RAG 注入片段数 × 平均片段长度 + Prompt 本身，需严格控制在模型上下文窗口内（如 `qwen3.7-plus` 支持 1M token，但实际应预留 20% 给输出）。
+- **地域强约束**：若应用部署在其他地域（如华东1），必须将 Prompt 相关逻辑（模板获取、优化调用）路由至 `cn-beijing` 接入点，否则直接报错。
 
 ## 关联主题页
 
 - [prompt](../guides/prompt.md)
-- [llm application](../guides/llm-application.md)
 - [application component api reference](../api/application-component-api-reference.md)
-- [application support](../guides/application-support.md)
+- [llm application](../guides/llm-application.md)
+- [model experience](../guides/model-experience.md)
 
 

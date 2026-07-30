@@ -1,53 +1,55 @@
 # application [use cases](use-cases.md)
 
-百炼平台支持多种主流业务场景下的 AI 应用快速落地，涵盖网站嵌入、企业微信、钉钉、微信公众号等私域渠道的智能客服/助手集成，以及本地化知识库驱动的 RAG 应用。所有方案均基于百炼大模型 API 与 AppFlow 低代码连接能力构建，无需自建推理服务或编写复杂集成逻辑，开发者可聚焦于业务逻辑与效果调优。
+百炼平台支持多种主流企业通讯与网站渠道的 AI 助手快速集成，核心模式为“大模型应用 + RAG 知识增强 + 低代码连接流”。所有方案均基于统一的百炼大模型应用作为推理后端，通过 AppFlow 实现与外部渠道（如网站、企业微信、微信公众号、钉钉）的零编码对接，并支持私有知识库注入以提升领域回答准确性。开发者可复用同一套模型配置和知识库，灵活部署至不同触点。
 
 ## 支持的模型/功能
 
-- **核心模型**：统一支持通义千问系列商用模型，包括 `qwen-max`（高精度）、`qwen-plus`（均衡型，[原文标题](../../raw/application-user-guide/application-use-cases/add-an-ai-assistant-to-your-website-in-10-minutes.md) 中明确推荐用于网站助手场景）、`qwen-turbo`（低延迟）及 `qwen3.5-plus`（文档 1 中指定为最新推荐版本）。  
-- **RAG 能力**：所有集成方案均默认支持知识库增强，通过百炼控制台的「知识库」模块接入结构化/非结构化文档（PDF、DOCX、TXT、XLSX 等），支持向量检索与全文引用两种模式。  
-- **多端交互能力**：提供开箱即用的 Web 悬浮挂件、企业微信应用、钉钉机器人、微信公众号智能客服四类标准化集成形态，均支持自定义 Prompt、图标、预置问题及对话样式。  
-- **本地 RAG 扩展**：除云端知识库外，[原文标题](../../raw/application-user-guide/application-use-cases/build-rag-application-based-on-local-retrieval.md) 提供基于本地文件系统 + 百炼 Embedding API 的轻量级 RAG 方案，适用于对数据驻留有强要求的场景。
+- **基础模型**：推荐使用 `Qwen3.5-Plus`（文档 1 明确指定）或 `千问-Plus`（文档 2、3、4 均采用），该模型在效果、速度与成本间取得平衡，适用于通用客服问答场景。`qwen-turbo` 可用于对响应延迟敏感的场景（如未认证公众号的 5 秒限制），但需权衡生成质量 [原文标题](../../raw/application-user-guide/application-use-cases/build-rag-application-based-on-local-retrieval.md)。
+- **RAG 能力**：所有集成方案均依赖百炼知识库实现私域知识增强，支持 PDF、DOCX、TXT、XLSX 等格式（文档 2、3、4、5 均明确列出），最大单文件 100 MB（文档 2、5 提及）。
+- **扩展能力**：支持对话日志记录至 SLS（文档 2、3、4 均提供详细步骤）、卡片消息渲染（文档 4）、DeepSeek 思考过程展示（文档 4）等高级功能。
 
-> **注意**：文档 1 明确指定模型为 `Qwen3.5-Plus`，而文档 2–4 均使用 `千问-Plus`（即 `qwen-plus`）。二者为同一模型的不同命名表述，实际调用时应以百炼控制台当前可用模型列表为准；若控制台未显示 `Qwen3.5-Plus`，请选用 `qwen-plus`。
+> **注意**：文档 1 指定模型为 `Qwen3.5-Plus`，而文档 2、3、4 统一使用 `千问-Plus`。当前控制台中 `Qwen3.5-Plus` 是 `千问-Plus` 的演进版本，二者 API 兼容，但 `Qwen3.5-Plus` 在中文理解与指令遵循上略有提升。建议新项目优先选用 `Qwen3.5-Plus`，存量项目无需强制迁移。
 
 ## 关键参数
 
-| 参数类别 | 参数名 | 说明 | 可配置位置 |
-|----------|--------|------|------------|
-| **模型层** | `temperature` | 控制生成随机性，范围 0–2，推荐值 0.3–0.7 | [原文标题](../../raw/application-user-guide/application-use-cases/build-rag-application-based-on-local-retrieval.md) 的「优化回复效果」章节 |
-| | `max_tokens` | 最大输出长度，影响响应详略程度 | 同上 |
-| | `top_p` / `top_k` | 核采样参数，控制候选 token 范围 | 百炼应用配置页「高级设置」 |
-| **RAG 层** | `retrieval_top_k` | 召回片段数，默认 3–5 | 百炼应用配置页「知识库」→「调用方式」旁设置项；本地 RAG 方案见 [原文标题](../../raw/application-user-guide/application-use-cases/build-rag-application-based-on-local-retrieval.md) |
-| | `similarity_threshold` | 相似度阈值，过滤低相关片段，默认 0.3–0.6 | 同上 |
-| | `chunk_size` / `chunk_overlap` | 文档切分粒度（仅本地 RAG 可调） | [原文标题](../../raw/application-user-guide/application-use-cases/build-rag-application-based-on-local-retrieval.md) 的「优化切分方法」章节 |
+- **身份凭证**：所有方案均需百炼 `App ID` 与 `API Key`（文档 1、2、3、4 均要求），用于 AppFlow 调用模型服务；各渠道还需对应平台凭证（如企业微信的 `CorpID/AgentID/Secret`、钉钉的 `Client ID/Client Secret`、微信公众号的 `AppID`）。
+- **知识库配置**：
+  - 调用方式：推荐设为 `必定调用`（文档 1、2、3、4 均采用），确保知识检索始终生效；
+  - 向量存储：可选 `ADB-PG` 以集中管理多应用向量数据（文档 1、2、3、4 均提及）；
+  - 文档处理：支持 `全文引用`、`切片检索`、`自定义处理`（文档 2 明确列出）。
+- **RAG 参数（本地部署场景）**：文档 5 提供细粒度控制，包括召回片段数、相似度阈值、温度、最大回复长度等，适用于需深度调优的定制化部署 [原文标题](../../raw/application-user-guide/application-use-cases/build-rag-application-based-on-local-retrieval.md)。
 
 ## 使用方式
 
-1. **创建百炼应用**：在百炼控制台「应用管理」中创建「智能体应用」，选择目标模型（如 `qwen-plus`），配置 Prompt（例如 `"你叫小助，帮助解答产品选购、使用问题"`），发布应用并记录 `AppID` 与 `API Key`。  
-2. **配置知识库（可选但推荐）**：  
-   - 上传文档至「数据连接」或「文件」页签；  
-   - 在「知识库」页签创建标准版知识库，关联上传文件；  
-   - 在应用配置中启用知识库，设置调用方式为「必定调用」。  
-3. **集成到目标平台**：  
-   - **网站**：通过 AppFlow 创建「AI助手」→ 配置百炼凭证 → 获取悬浮挂件脚本 → 插入 HTML。  
-   - **企业微信/钉钉/微信公众号**：在对应平台创建应用获取凭证（AgentId/Secret 或 ClientID/ClientSecret 或 AppID），再通过 AppFlow 预置模板（如「企业微信自建应用大模型自动回复」）一键绑定百炼应用与 Webhook。  
-4. **验证与调优**：在目标渠道发起测试对话，结合人工评测结果调整 Prompt、知识库覆盖范围或 RAG 参数。
+1. **创建百炼应用**：在百炼控制台选择“智能体应用”，配置 Prompt（如 `你叫小助，可以帮助用户解答产品选购、使用等方面的问题`），并发布应用（文档 1、2、3、4 均含此步骤）。
+2. **配置知识库**：上传私有文档 → 创建知识库 → 在应用配置中绑定知识库并设为“必定调用”（文档 1、2、3、4 流程一致）。
+3. **构建连接流**：
+   - 网站场景：使用 AppFlow 创建“AI助手”，导入百炼应用，生成悬浮挂件脚本嵌入 HTML（文档 1）；
+   - 企业微信/钉钉/微信公众号：使用 AppFlow 预置模板（文档 2、3、4 均提供专属模板链接），完成平台凭证授权与百炼凭证绑定，获取 Webhook URL。
+4. **渠道侧配置**：
+   - 网站：插入 JS 脚本（文档 1）；
+   - 企业微信：配置 API 接收消息（URL=Webhook）与可信 IP（文档 2）；
+   - 微信公众号：开启服务器配置，注意认证状态影响消息接口（文档 3 强调已认证/未认证两种工作流）；
+   - 钉钉：配置机器人 HTTP 模式接收地址（文档 4 明确要求禁用 Stream 模式）。
+
+> **注意**：文档 3 特别指出，未认证公众号受 5 秒响应限制，若百炼应用超时将导致回复失败，此时需优化 Prompt（如添加“请总是给出简短的回答”）或切换至 `qwen-turbo` 模型 [原文标题](../../raw/application-user-guide/application-use-cases/add-an-ai-assistant-to-your-wechat-in-10-minutes.md)。
 
 ## 限制和注意事项
 
-- **免费额度限制**：新用户享有百炼免费额度，覆盖教程全部资源消耗；超出后按 token 计费，详见 [原文标题](../../raw/application-user-guide/application-use-cases/add-an-ai-assistant-to-your-website-in-10-minutes.md) 中的额度说明。  
-- **微信公众号认证约束**：未认证公众号仅支持被动回复（5 秒超时限制），已认证方可启用客户消息接口；若未认证且需稳定响应，建议切换至 `qwen-turbo` 模型或优化 Prompt 缩短响应时间。  
-- **知识库文件限制**：单文档最大 100 MB 或 1000 页，图片单张最大 20 MB，总文件数上限 200 个（文档 2 明确说明）；本地 RAG 方案同样不建议上传 >100 MB 文件（文档 5 提示）。  
-- **可信 IP 与域名校验**：企业微信/钉钉等平台要求配置可信 IP 和主体备案域名。当 AppFlow 自动生成的 Webhook 域名校验失败时，需按文档 2 的「常见问题」章节配置二级域名或 Nginx 代理。  
-- **模型兼容性**：钉钉机器人必须使用 HTTP 模式接收消息（文档 3 强调），Stream 模式将导致消息无法返回；企业微信需严格配置 [Token](../concepts/token.md) 和 EncodingAESKey（文档 2 的 4.1 节）。
+- **免费额度**：新用户可使用百炼免费额度覆盖全部教程资源消耗，额度用尽后按 token 计费（文档 1、2、4 均强调）。
+- **文件解析时效**：上传文档后需等待 1–6 分钟完成解析（文档 1、2、3、4 均提示），期间知识库不可用。
+- **渠道限制**：
+  - 微信公众号未认证时仅支持被动回复，且响应必须 ≤5 秒（文档 3）；
+  - 钉钉机器人必须使用 HTTP 模式，Stream 模式不兼容（文档 4）；
+  - 企业微信配置需解决域名主体校验与可信 IP 冲突问题（文档 2 提供 Nginx 代理等完整解决方案）。
+- **本地部署补充**：文档 5 提供基于 Python 的本地 RAG 方案，适用于需完全掌控文档切分、嵌入模型选择的场景，但需自行维护计算环境 [原文标题](../../raw/application-user-guide/application-use-cases/build-rag-application-based-on-local-retrieval.md)。
 
 ## 来源文档
 
 - [在网站上增加一个AI助手](../../raw/application-user-guide/application-use-cases/add-an-ai-assistant-to-your-website-in-10-minutes.md)
 - [在企业微信中集成一个 AI 助手](../../raw/application-user-guide/application-use-cases/add-an-ai-assistant-to-your-work-wechat.md)
-- [在钉钉上增加一个AI机器人](../../raw/application-user-guide/application-use-cases/add-an-ai-assistant-to-your-dingtalk.md)
 - [10分钟让微信公众号成为智能客服](../../raw/application-user-guide/application-use-cases/add-an-ai-assistant-to-your-wechat-in-10-minutes.md)
+- [在钉钉上增加一个AI机器人](../../raw/application-user-guide/application-use-cases/add-an-ai-assistant-to-your-dingtalk.md)
 - [基于本地知识库构建RAG应用](../../raw/application-user-guide/application-use-cases/build-rag-application-based-on-local-retrieval.md)
 
 
