@@ -76,7 +76,7 @@ Seedance 2.0、Runway Gen-4
 
 文生视频
 
-720P, 1080P
+480P, 720P, 1080P
 
 3-15秒
 
@@ -92,7 +92,7 @@ Seedance 2.0、Runway Gen-4
 
 首帧生视频
 
-720P, 1080P
+480P, 720P, 1080P
 
 3-15秒
 
@@ -108,7 +108,7 @@ Seedance 2.0、Runway Gen-4
 
 参考图像生视频
 
-720P, 1080P
+480P, 720P, 1080P
 
 3-15秒
 
@@ -170,7 +170,7 @@ Seedance 2.0、Runway Gen-4
 
 有声视频
 
-720P, 1080P。3-15秒。24 fps, MP4
+480P, 720P, 1080P。3-15秒。24 fps, MP4
 
 `happyhorse-1.1-i2v`
 
@@ -178,7 +178,7 @@ Seedance 2.0、Runway Gen-4
 
 有声视频
 
-720P, 1080P。3-15秒。24 fps, MP4
+480P, 720P, 1080P。3-15秒。24 fps, MP4
 
 `happyhorse-1.1-r2v`
 
@@ -186,7 +186,7 @@ Seedance 2.0、Runway Gen-4
 
 有声视频
 
-720P, 1080P。3-15秒。24 fps, MP4
+480P, 720P, 1080P。3-15秒。24 fps, MP4
 
 ### HappyHorse 1.0
 

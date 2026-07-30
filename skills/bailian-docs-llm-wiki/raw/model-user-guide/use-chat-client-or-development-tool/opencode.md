@@ -413,9 +413,9 @@ OpenCode 是一款终端 AI 编程工具，可以通过按量计费、Coding Pla
 
 `baseURL` 按地域设置（将 `{WorkspaceId}` 替换为真实的 [Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)），API Key 需与所选地域对应：
 
--   华北2（北京）：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
+-   华北2（北京）：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic/v1`
     
--   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
+-   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/apps/anthropic/v1`
     
 
 ```
@@ -423,10 +423,10 @@ OpenCode 是一款终端 AI 编程工具，可以通过按量计费、Coding Pla
   "$schema": "https://opencode.ai/config.json",
   "provider": {
     "bailian-payg": {
-      "npm": "@ai-sdk/openai-compatible",
+      "npm": "@ai-sdk/anthropic",
       "name": "Alibaba Cloud Model Studio",
       "options": {
-        "baseURL": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "baseURL": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic/v1",
         "apiKey": "YOUR_API_KEY"
       },
       "models": {

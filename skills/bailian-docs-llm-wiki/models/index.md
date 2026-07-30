@@ -1,6 +1,6 @@
 # 百炼模型市场索引
 
-> 自动生成 · 共 171 个模型家族 · 387 个主干模型 · 更新于 2026-07-29
+> 自动生成 · 共 172 个模型家族 · 389 个主干模型 · 更新于 2026-07-30
 
 **机器查询走结构化文件**：
 
@@ -397,3 +397,8 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen3.7-text-embedding`, `text-embedding-async-v1`, `text-embedding-async-v2`, `text-embedding-v1`, `text-embedding-v2`, `text-embedding-v3`, `text-embedding-v4`
 - [Qwen-Rerank](groups/qwen-rerank.json) — 基于Qwen LLM底座训练的文本排序模型，对输入的Query和候选Docs进行相关性排序，支持100+语种和长文本输入，适用于文本检索、RAG等场景，效果对齐Qwen家族开源Rerank系列模型。
   - 模型：`gte-rerank-v2`, `qwen3-rerank`, `qwen3-vl-rerank`
+
+## 3D 生成 `3D-generation` — 1 个家族
+
+- [Tripo](groups/tripo-models-market-place.json) — AI驱动的3D通用大模型Tripo，支持文本或图片输入，数秒内一键生成高质量3D模型。
+  - 模型：`Tripo/Tripo-H3.1`, `Tripo/Tripo-P1.0`

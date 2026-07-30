@@ -60,7 +60,8 @@
         "function-calling",
         "model-experience",
         "prefix-completion",
-        "web-search"
+        "web-search",
+        "structured-outputs"
       ],
       "provider": "qwen",
       "model": "qwen3.7-max",
