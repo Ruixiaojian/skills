@@ -1,6 +1,6 @@
-# Fun-ASR非实时语音识别iOS SDK
+# Qwen-Audio-3.0-ASR-Flash-Filetrans/Fun-ASR非实时语音识别iOS SDK
 
-本文档提供了Fun-ASR非实时语音识别iOS SDK的详细使用指南，帮助您将语音转换为文本。
+本文档提供了Qwen-Audio-3.0-ASR-Flash-Filetrans/Fun-ASR非实时语音识别iOS SDK的详细使用指南，帮助您将语音转换为文本。
 
 **用户指南：**[非实时语音识别](https://help.aliyun.com/zh/model-studio/non-realtime-speech-recognition-user-guide)。关于支持的音频格式、文件大小限制、时长限制等输入要求，请参见[音频规格](https://help.aliyun.com/zh/model-studio/asr-model/#asr-audio-spec02)。
 
@@ -177,7 +177,7 @@
         ],
         "async_request": false,
         "nls_config": {
-            "model":"fun-asr",
+            "model":"qwen-audio-3.0-asr-flash-filetrans",
             "diarization_enabled": false,
             "parameters": {
                 "speech_noise_threshold": 0.0
@@ -202,21 +202,21 @@
     
     是
     
-    音视频文件转写的URL列表，支持HTTP / HTTPS协议，单次请求仅支持1个URL。
+    音视频文件转写的URL列表，支持HTTP / HTTPS协议，单次请求仅支持1个URL。关于支持的音频格式、文件大小限制、时长限制等输入要求，请参见[音频规格](https://help.aliyun.com/zh/model-studio/asr-model/#asr-audio-spec02)。
     
-    若录音文件存储在阿里云OSS，使用SDK方式不支持使用以 oss://为前缀的临时 URL。
+    若录音文件存储在阿里云OSS，使用RESTful API方式支持使用以`oss://`为前缀的临时 URL，使用SDK方式不支持使用以 oss://为前缀的临时 URL。。
     
-    -   **音频格式**：`aac`、`amr`、`avi`、`flac`、`flv`、`m4a`、`mkv`、`mov`、`mp3`、`mp4`、`mpeg`、`ogg`、`opus`、`wav`、`webm`、`wma`、`wmv`
+    **重要**
+    
+    -   临时 URL 有效期48小时，过期后无法使用，**请勿用于生产环境。**
         
-        **重要**
+    -   文件上传凭证接口限流为 100 QPS 且不支持扩容，**请勿用于生产环境、高并发及压测场景。**
         
-        由于音视频格式及其变种众多，技术上无法穷尽测试，API不能保证所有格式均能够被正确识别。请通过测试验证您所提供的文件能够获得正常的语音识别结果。
+    -   生产环境建议使用[阿里云OSS](https://help.aliyun.com/zh/oss/user-guide/what-is-oss) 等稳定存储，确保文件长期可用并规避限流问题。
         
-    -   **音频采样率：**任意
+    -   录音文件URL设置成OSS临时公网访问不通该如何处理？请求头中将`X-DashScope-OssResourceResolve`设为`enable`（不推荐该方式）。
         
-    -   **音频文件大小和时长**：音频文件不超过2GB；时长在12小时以内。
-        
-        如果希望处理的文件超过了上述限制，可尝试对文件进行预处理以降低文件尺寸。有关文件预处理的最佳实践可以查阅[预处理视频文件以提高文件转写效率（针对录音文件识别场景）](https://help.aliyun.com/zh/model-studio/paraformer-best-practices#c5dda0a0cf2x9)。
+        SDK不支持对请求头进行配置。
         
     
     `async_request`
@@ -258,7 +258,7 @@
     
     是
     
-    语音识别[模型](https://help.aliyun.com/zh/model-studio/funauidio-asr-recorded-speech-recognition-python-sdk#47e6ae42d1u1b)。
+    指定模型名。支持Qwen-Audio-3.0-ASR-Flash-Filetrans和Fun-ASR系列模型，详情请参见[支持的模型与地域](https://help.aliyun.com/zh/model-studio/non-realtime-speech-recognition-user-guide#4a43cc1bb7kxg)。
     
     `nls_config.special_word_filter`
     
@@ -266,71 +266,7 @@
     
     否
     
-    指定在语音识别过程中需要处理的敏感词，并支持对不同敏感词设置不同的处理方式。
-    
-    若未传入该参数，系统将启用系统内置的敏感词过滤逻辑，识别结果中与[阿里云百炼敏感词表](https://dashscope.oss-cn-beijing.aliyuncs.com/samples/audio/paraformer/%E7%99%BE%E7%82%BC%E6%95%8F%E6%84%9F%E8%AF%8D%E5%88%97%E8%A1%A8_20230716.words.txt)匹配的词语将被替换为等长的`*`。
-    
-    若传入该参数，则可实现以下敏感词处理策略：
-    
-    -   替换为 `*`：将匹配的敏感词替换为等长的 `*`；
-        
-    -   直接过滤：将匹配的敏感词从识别结果中完全移除。
-        
-    
-    该参数的值应为一个 JSON Object，其结构如下所示：
-    
-    ```
-    {
-      "filter_with_signed": {
-        "word_list": ["测试"]
-      },
-      "filter_with_empty": {
-        "word_list": ["开始", "发生"]
-      },
-      "system_reserved_filter": true
-    }
-    ```
-    
-    JSON字段说明：
-    
-    -   `filter_with_signed`
-        
-        -   类型：对象。
-            
-        -   是否必填：否。
-            
-        -   描述：配置需替换为`*`的敏感词列表。识别结果中匹配的词语将被等长的 `*` 替代。
-            
-        -   示例：以上述JSON为例，“帮我测试一下这段代码”的语音识别结果将会是“帮我\*\*一下这段代码”。
-            
-        -   内部字段：
-            
-            -   `word_list`: 字符串数组，列出需被替换的敏感词。
-                
-    -   `filter_with_empty`
-        
-        -   类型：对象。
-            
-        -   是否必填：否。
-            
-        -   描述：配置需从识别结果中移除（过滤）的敏感词列表。识别结果中匹配的词语将被完全删除。
-            
-        -   示例：以上述JSON为例，“比赛这就要开始了吗？”的语音识别结果将会是“比赛这就要了吗”。
-            
-        -   内部字段：
-            
-            -   `word_list`: 字符串数组，列出需被完全移除（过滤）的敏感词。
-                
-    -   `system_reserved_filter`
-        
-        -   类型：布尔值。
-            
-        -   是否必填：否。
-            
-        -   默认值：true。
-            
-        -   描述：是否启用系统预置的敏感词规则。设为`true`时，将同时启用系统内置的敏感词过滤逻辑，识别结果中与[阿里云百炼敏感词表](https://dashscope.oss-cn-beijing.aliyuncs.com/samples/audio/paraformer/%E7%99%BE%E7%82%BC%E6%95%8F%E6%84%9F%E8%AF%8D%E5%88%97%E8%A1%A8_20230716.words.txt)匹配的词语将被替换为等长的`*`。
-            
+    指定在语音识别过程中需要处理的敏感词，并支持对不同敏感词设置不同的处理方式。详情请参见[敏感词过滤](https://help.aliyun.com/zh/model-studio/non-realtime-speech-recognition-user-guide#nrt03-sensitive-h3)。
     
     `nls_config.channel_id`
     
@@ -344,7 +280,7 @@
     
     指定的每一个音轨都将独立计费。例如，为单个文件请求 \[0, 1\] 会产生两笔独立的费用。
     
-    默认值：`[0]`
+    默认值：\[0\]。
     
     `nls_config.diarization_enabled`
     
@@ -352,7 +288,7 @@
     
     否
     
-    自动说话人分离，默认关闭。
+    是否启用说话人分离，默认关闭。
     
     仅适用于单声道音频，多声道音频不支持说话人分离。
     
@@ -362,6 +298,8 @@
     
     如果启用说话人分离功能，建议音频时长不超过2小时，否则可能导致识别失败或超时。
     
+    默认值：false。
+    
     有关`speaker_id`的示例，请参见[识别结果说明](https://help.aliyun.com/zh/model-studio/funauidio-asr-recorded-speech-recognition-python-sdk#a9021178ccl7s)。
     
     `nls_config.speaker_count`
@@ -370,11 +308,15 @@
     
     否
     
-    说话人数量参考值。若要使用该功能，需将`diarization_enabled`设置为`true`。
+    **重要**
+    
+    仅在开启说话人分离功能（`diarization_enabled`设置为`true`）时生效。
+    
+    说话人数量参考值。取值范围为2至100的整数（包含2和100）。
     
     默认自动判断说话人数量，如果配置此项，只能辅助算法尽量输出指定人数，无法保证一定会输出此人数。
     
-    取值范围：`[2, 100]`。该功能用于区分多个说话人，因此最少需要设置2。
+    无默认值。
     
     `nls_config.vocabulary_id`
     
@@ -382,7 +324,13 @@
     
     否
     
-    热词词表ID，用于提升特定词汇的识别准确率。该参数适用于v2及更高版本模型。热词的使用方法请参见[定制热词](https://help.aliyun.com/zh/model-studio/custom-hot-words/)。
+    预编译热词列表 ID。
+    
+    需预先调用创建热词列表接口生成，识别时传入该 ID 即可使用列表中的热词。
+    
+    适用于词汇已知且相对稳定、需要跨请求复用同一词表的场景。
+    
+    使用方法请参见[预编译热词](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#hw-precompiled-h3)。
     
     `nls_config.language_hints`
     
@@ -392,11 +340,11 @@
     
     设置待识别语言代码。如果无法提前确定语种，可不设置，模型会自动识别语种。
     
-    系统仅读取数组中的首个值。多余值将被忽略。
+    对于 Qwen-Audio-3.0-ASR-Flash-Filetrans 系列模型，最多支持设置 4 个值，即便设置超出 4 个，也仅前 4 个生效；对于 Fun-ASR 系列模型，仅支持设置 1 个值，即便设置多个，也仅第一个生效。
     
     点击查看支持的语言代码
     
-    -   fun-asr、fun-asr-2025-11-07、fun-asr-mtl、fun-asr-mtl-2025-08-25：
+    -   qwen-audio-3.0-asr-flash-filetrans、fun-asr、fun-asr-2025-11-07、fun-asr-mtl、fun-asr-mtl-2025-08-25：
         
         -   zh: 中文
             
@@ -550,7 +498,7 @@
     ```
     {
         "nls_config": {
-            "model":"fun-asr",
+            "model":"qwen-audio-3.0-asr-flash-filetrans",
             "diarization_enabled": false
         }
     }
@@ -594,7 +542,7 @@
         ],
         "async_request": false,
         "nls_config": {
-            "model":"fun-asr",
+            "model":"qwen-audio-3.0-asr-flash-filetrans",
             "diarization_enabled": false
         }
     }

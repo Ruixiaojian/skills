@@ -1,6 +1,6 @@
-# Fun-ASR非实时语音识别HTTP API参考
+# Qwen-Audio-3.0-ASR-Flash-Filetrans/Fun-ASR非实时语音识别HTTP API参考
 
-本文介绍Fun-ASR非实时语音识别HTTP API的参数和接口细节。
+本文介绍Qwen-Audio-3.0-ASR-Flash-Filetrans/Fun-ASR非实时语音识别HTTP API的参数和接口细节。
 
 **用户指南：**[非实时语音识别](https://help.aliyun.com/zh/model-studio/non-realtime-speech-recognition-user-guide)。关于支持的音频格式、文件大小限制、时长限制等输入要求，请参见[音频规格](https://help.aliyun.com/zh/model-studio/asr-model/#asr-audio-spec02)。
 
@@ -21,7 +21,7 @@
     -   当任务处理完成后，结果查询接口将返回最终的识别结果。
         
 
-## **服务端点**
+## **接口地址**
 
 ## 华北2（北京）
 
@@ -52,7 +52,7 @@
 
 **重要**
 
-使用新版域名（`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com`）提交任务时，请求体中必须包含`parameters`对象。即使无需设置任何参数，也必须传入空对象`{}`，否则任务可正常提交，但识别将失败。
+使用新版域名（`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com`）提交任务时，请求参数中必须包含`parameters`对象。即使无需设置任何参数，也必须传入空对象`{}`，否则任务可正常提交，但识别将失败。
 
 ## **请求头**
 
@@ -78,7 +78,7 @@ string
 
 是
 
-请求体的媒体类型。仅提交任务接口需要传入，固定为`application/json`。
+请求参数的媒体类型。仅提交任务接口需要传入，固定为`application/json`。
 
 X-DashScope-Async
 
@@ -92,7 +92,9 @@ string
 
 提交语音识别任务。该接口异步返回，业务侧需结合[查询任务接口](#480630e0582sb)轮询任务状态。
 
-### **请求体**
+### **请求参数**
+
+## 普通调用
 
 以下为华北2（北京）地域的配置，调用时请将"{WorkspaceId}"替换为真实的业务空间ID，各地域的配置不同。
 
@@ -102,7 +104,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
      --header "Content-Type: application/json" \
      --header "X-DashScope-Async: enable" \
      --data '{
-    "model": "fun-asr",
+    "model": "qwen-audio-3.0-asr-flash-filetrans",
     "input": {
         "file_urls": [
             "{YOUR_AUDIO_URL}"
@@ -114,22 +116,65 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 }'
 ```
 
+## 即时热词
+
+使用即时热词时格式如下：
+
+```
+{
+    "model": "qwen-audio-3.0-asr-flash-filetrans",
+    "input": {
+        "file_urls": [
+            "{YOUR_AUDIO_URL}"
+        ]
+    },
+    "parameters": {
+        "vocabulary": {"张三": 5, "李四": 5}
+    }
+}
+```
+
+## 上下文
+
+使用上下文时格式如下：
+
+```
+{
+    "model": "qwen-audio-3.0-asr-flash-filetrans",
+    "input": {
+        "file_urls": [
+            "{YOUR_AUDIO_URL}"
+        ],
+        "context": [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": "你好啊"
+                    }
+                ]
+            },
+            {
+                "role": "assistant",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "你好啊，我是通义千问，有什么可以帮助你的？"
+                    }
+                ]
+            }
+        ]
+    },
+    "parameters": {
+        "vocabulary": {"张三": 5, "李四": 5}
+    }
+}
+```
+
 **model** `_string_` **（必选）**
 
-指定用于音视频文件转写的模型名。
-
-取值范围：
-
--   fun-asr
-    
--   fun-asr-2025-11-07
-    
--   fun-asr-2025-08-25
-    
--   fun-asr-mtl
-    
--   fun-asr-mtl-2025-08-25
-    
+指定模型名。支持Qwen-Audio-3.0-ASR-Flash-Filetrans和Fun-ASR系列模型，详情请参见[支持的模型与地域](https://help.aliyun.com/zh/model-studio/non-realtime-speech-recognition-user-guide#4a43cc1bb7kxg)。
 
 **input** `_object_` **（必选）**
 
@@ -141,7 +186,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 音视频文件转写的URL列表，支持HTTP / HTTPS协议，单次请求仅支持1个URL。关于支持的音频格式、文件大小限制、时长限制等输入要求，请参见[音频规格](https://help.aliyun.com/zh/model-studio/asr-model/#asr-audio-spec02)。
 
-若录音文件存储在阿里云OSS，使用RESTful API方式支持使用以`oss://`为前缀的临时 URL。
+若录音文件存储在阿里云OSS，使用RESTful API方式支持使用以`oss://`为前缀的临时 URL，使用SDK方式不支持使用以 oss://为前缀的临时 URL。。
 
 **重要**
 
@@ -151,10 +196,58 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
     
 -   生产环境建议使用[阿里云OSS](https://help.aliyun.com/zh/oss/user-guide/what-is-oss) 等稳定存储，确保文件长期可用并规避限流问题。
     
--   录音文件URL设置成OSS临时公网访问不通该如何处理？[请求头](#h2-hd)中将`X-DashScope-OssResourceResolve`设为`enable`（不推荐该方式）。
+-   录音文件URL设置成OSS临时公网访问不通该如何处理？请求头中将`X-DashScope-OssResourceResolve`设为`enable`（不推荐该方式）。
     
-    Java SDK或者Python SDK不支持对请求头进行配置。
+    SDK不支持对请求头进行配置。
     
+
+**context** `_array(object)_` （可选）
+
+消息列表。包含可选的对话上下文（用于提升识别效果）。
+
+**重要**
+
+SDK暂不支持该功能。
+
+**重要**
+
+上下文功能用于提升专有词汇的识别准确率，使用方法详见[上下文增强](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#ctx-enhance-h2)。
+
+**约束**：上下文消息（`input_text` 和 `text` 类型）各最多 5 条，超出时保留最近的 5 条。每轮上下文文本总长度（`user` 和 `assistant` 的 `text` 字段长度之和）不超过 400 个字符（按字符数计算，每个字符计为 1），超出部分从末尾截断。
+
+**重要**
+
+携带上下文时，`messages` 中的消息顺序有要求：上下文消息必须按对话轮次排列，每轮中 `user`（`input_text` 类型）必须在对应的 `assistant`（`text` 类型）之前；包含 `input_audio` 的 `user` 消息必须放在 `messages` 数组的最后。
+
+**属性**
+
+**role** `_string_` **（必选）**
+
+消息角色。取值范围：
+
+-   `user`：前几轮的识别结果或领域相关的词表。
+    
+-   `assistant`：前几轮大语言模型的回复内容。
+    
+
+**content** `_array(object)_` **（必选）**
+
+消息内容列表。
+
+**属性**
+
+**type** `_string_` **（必选）**
+
+内容类型。取值范围：
+
+-   `input_text`（可选，上下文）：前几轮用户语音的识别结果或领域相关的词表（role为user），需同时传入`text`字段。
+    
+-   `text`（可选，上下文）：前几轮大语言模型的回复内容（role为assistant），需同时传入`text`字段。
+    
+
+**text** `_string_` **（条件必选）**
+
+当`type`为`input_text`时，填入前几轮用户语音的识别结果或领域相关的词表；当`type`为`text`时，填入前几轮大语言模型的回复内容。文本按字符数计算，每个字符计为 1。每轮上下文中所有消息的 `text` 字段长度之和不超过 400 个字符，超出部分从末尾截断。
 
 **parameters** `_object_` （可选）
 
@@ -168,7 +261,27 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 **vocabulary\_id** `_string_` （可选）
 
-热词ID，此次语音识别中生效此热词ID对应的热词信息。默认不启用。使用方法请参考[定制热词](https://help.aliyun.com/zh/model-studio/custom-hot-words/)。
+预编译热词列表 ID。
+
+需预先调用创建热词列表接口生成，识别时传入该 ID 即可使用列表中的热词。
+
+适用于词汇已知且相对稳定、需要跨请求复用同一词表的场景。
+
+使用方法请参见[预编译热词](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#hw-precompiled-h3)。
+
+**vocabulary** `_object_` （可选）
+
+即时热词。
+
+以键值对形式传入，键为热词文本（`string`），值为热词权重（`integer`），无需预先创建热词列表。权重取值范围为 \[1, 5\] 或 50：取 \[1, 5\] 时值越大模型越倾向输出该词；取 50 时为超级热词，召回率大幅提升，但超级热词数量最多不超过 50 个。
+
+适用于临时性、会话级别的热词优化。
+
+与预编译热词同时配置时，仅即时热词生效。使用方法请参见[即时热词](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy#hw-instant-h3)。
+
+**重要**
+
+仅`qwen-audio-3.0-asr-flash-filetrans`支持即时热词。
 
 **channel\_id** `_array[integer]_` （可选）
 
@@ -210,15 +323,17 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 默认自动判断说话人数量，如果配置此项，只能辅助算法尽量输出指定人数，无法保证一定会输出此人数。
 
+无默认值。
+
 **language\_hints** `_array[string]_` （可选）
 
 设置待识别语言代码。如果无法提前确定语种，可不设置，模型会自动识别语种。
 
-系统仅读取数组中的首个值。多余值将被忽略。
+对于 Qwen-Audio-3.0-ASR-Flash-Filetrans 系列模型，最多支持设置 4 个值，即便设置超出 4 个，也仅前 4 个生效；对于 Fun-ASR 系列模型，仅支持设置 1 个值，即便设置多个，也仅第一个生效。
 
 点击查看支持的语言代码
 
--   fun-asr、fun-asr-2025-11-07、fun-asr-mtl、fun-asr-mtl-2025-08-25：
+-   qwen-audio-3.0-asr-flash-filetrans、fun-asr、fun-asr-2025-11-07、fun-asr-mtl、fun-asr-mtl-2025-08-25：
     
     -   zh: 中文
         
@@ -287,7 +402,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
     -   en: 英文
         
 
-### **返回体**
+### **响应参数**
 
 ```
 {
@@ -321,7 +436,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 查询语音识别任务的执行情况和结果。建议轮询调用直至任务终态。
 
-### **请求体**
+### **请求参数**
 
 以下为华北2（北京）地域的配置，调用时请将"{WorkspaceId}"替换为真实的业务空间ID，各地域的配置不同。
 
@@ -334,11 +449,11 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/tasks
 
 **重要**
 
-该参数为URL路径参数，无请求体。
+该参数为URL路径参数，无请求参数。
 
 查询任务需指定其ID，该ID为[提交任务接口](#418f2ac8ecxm4)被调用后返回的`task_id`。
 
-### **返回体**
+### **响应参数**
 
 ## 正常示例
 

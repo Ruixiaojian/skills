@@ -1,12 +1,12 @@
 # WritingStyleTemplateDefine
 
-名称
+**名称**
 
-类型
+**类型**
 
-描述
+**描述**
 
-示例值
+**示例值**
 
 object
 
@@ -24,7 +24,7 @@ array
 
 Example
 
-array<object>
+array
 
 表单的示例
 

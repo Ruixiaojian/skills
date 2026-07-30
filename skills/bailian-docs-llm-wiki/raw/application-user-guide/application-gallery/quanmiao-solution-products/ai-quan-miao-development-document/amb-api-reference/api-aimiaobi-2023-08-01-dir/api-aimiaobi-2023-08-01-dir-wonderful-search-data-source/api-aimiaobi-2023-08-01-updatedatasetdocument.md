@@ -121,15 +121,25 @@ string
 
 否
 
+类目唯一标识
+
+xx
+
 Tags
 
 array
 
 否
 
+标签
+
 string
 
 否
+
+标签值。
+
+xx
 
 Extend1
 
@@ -137,17 +147,29 @@ string
 
 否
 
+扩展字段 1
+
+xxx
+
 Extend2
 
 string
 
 否
 
+扩展字段 2
+
+xxxx
+
 Extend3
 
 string
 
 否
+
+扩展字段 3
+
+xxx
 
 DatasetId
 
@@ -217,23 +239,45 @@ Tags
 
 array
 
+标签。
+
 string
+
+标签。
+
+xx
 
 CategoryUuid
 
 string
 
+类目唯一标识
+
+xx
+
 Extend1
 
 string
+
+扩展字段 1
+
+xx
 
 Extend2
 
 string
 
+扩展字段 2
+
+xx
+
 Extend3
 
 string
+
+扩展字段 3
+
+xx
 
 RequestId
 
@@ -288,12 +332,12 @@ http 状态码
     "Title": "文章标题",
     "DocId": "用户指定的文档唯一ID",
     "Tags": [
-      ""
+      "xx"
     ],
-    "CategoryUuid": "",
-    "Extend1": "",
-    "Extend2": "",
-    "Extend3": ""
+    "CategoryUuid": "xx",
+    "Extend1": "xx",
+    "Extend2": "xx",
+    "Extend3": "xx"
   },
   "RequestId": "1813ceee-7fe5-41b4-87e5-982a4d18cca5",
   "Success": true,

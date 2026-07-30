@@ -1,12 +1,12 @@
 # WritingStyleTemplateField
 
-名称
+**名称**
 
-类型
+**类型**
 
-描述
+**描述**
 
-示例值
+**示例值**
 
 object
 
@@ -22,7 +22,7 @@ integer
 
 Max
 
-double
+number
 
 数值输入的最大值
 
@@ -70,7 +70,7 @@ true
 
 Enums
 
-array<object>
+array
 
 表单的枚举值列表
 
@@ -108,7 +108,7 @@ string
 
 Min
 
-double
+number
 
 数值输入的最小值
 

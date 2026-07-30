@@ -1,61 +1,54 @@
 # 3d generation
 
-百炼平台提供基于 Tripo 模型的 3D 模型生成能力，支持文生3D、单图生3D 和多图生3D 三种输入模式。该服务采用异步任务机制，需通过创建任务 + 轮询结果两步完成调用，适用于华北2（北京）地域。所有调用均需配置有效的 API Key 并显式启用异步头 `X-DashScope-Async: enable`。
+百炼平台提供基于 Tripo 模型的 3D 模型生成能力，支持文生3D、单图生3D 和多图生3D 三种输入模式。所有任务均为异步执行，需通过 `task_id` 轮询获取结果，适用于华北2（北京）地域。该能力依赖 Tripo 官方模型服务，输出格式为 GLB（含 PBR 材质或基础网格），并附带预览渲染图。
 
 ## 支持的模型/功能
 
-- **支持模型**：
-  - `Tripo/Tripo-H3.1`：高精度生成，输出模型最高 200 万面，支持 `geometry_quality: "ultra"`；对应 Tripo 官方 API 版本 `v3.1-20260211`。
-  - `Tripo/Tripo-P1.0`：专业级快速生成，输出模型最高 2 万面；对应 Tripo 官方 API 版本 `P1-20260311`。
-- **输入模式**（三者互斥）：
-  - 文生3D：通过 `input.prompt` 输入文本描述；
-  - 单图生3D：通过 `input.image` 提供单张公网可访问图像 URL；
-  - 多图生3D：通过 `input.images` 提供长度为 4 的数组，顺序固定为【前、左、后、右】，空视角用 `{}` 占位；
+- **模型标识**：当前仅支持 `Tripo/Tripo-P1.0`（专业版，最高 2 万面，速度快）和 `Tripo/Tripo-H3.1`（高精度版，最高 200 万面）。二者在几何精度与输出质量上存在显著差异，详见 [Tripo-3D模型生成](../../raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md)。
+- **输入模式**：
+  - 文生3D：通过 `prompt` 字段传入文本描述（最大 1024 字符，支持中英文）；
+  - 单图生3D：通过 `image` 字段传入单张公网可访问的 JPEG/PNG 图像（分辨率 20–6000 像素，≤20MB）；
+  - 多图生3D：通过 `images` 数组传入 4 张图像（顺序固定为前/左/后/右），允许部分位置填空对象 `{}`，实际有效图数为 2–4 张。
 - **输出类型**：
-  - 默认返回 PBR 材质模型（`pbr_model_url`，GLB 格式）及预览图（`rendered_image_url`）；
-  - 无贴图模型需同时设置 `"texture": false, "pbr": false`，此时返回 `base_model_url`。
+  - 默认返回 `pbr_model_url`（含 PBR 材质的 GLB）和 `rendered_image_url`（预览图）；
+  - 可通过设置 `"texture": false, "pbr": false` 获取无贴图的 `base_model_url`。
 
-> **注意**：[Tripo-3D模型生成](../../raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md) 明确要求仅支持华北2（北京）地域，且必须使用该地域的 API Key；其他地域 URL 不可用，此限制未在通用文档中说明，需严格遵循。
+> **注意**：文档中 `images` 数组明确要求长度为 4，且顺序不可变；但示例中“传入2张图”使用了 `[img1, {}, img3, {}]` 形式，与“仅支持前/左/后/右四视角”的说明一致。请勿尝试非标准索引或长度 ≠ 4 的数组，否则将触发 `InvalidParameter` 错误 —— 此行为已在 [Tripo-3D模型生成](../../raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md) 中严格定义。
 
 ## 关键参数
 
-| 参数 | 类型 | 必填 | 说明 |
+| 参数 | 类型 | 必选 | 说明 |
 |------|------|------|------|
-| `model` | string | 是 | 固定为 `Tripo/Tripo-H3.1` 或 `Tripo/Tripo-P1.0` |
-| `input.prompt` | string | 文生3D时必填 | 最长 1024 字符，支持中英文；详见 [Tripo-3D模型生成](../../raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md) |
-| `input.image` | string | 单图生3D时必填 | 公网 HTTP/HTTPS 图像 URL；格式 JPEG/PNG；宽高 ∈ [20, 6000] px；≤ 20 MB |
-| `input.images` | array[object] | 多图生3D时必填 | 长度恒为 4，每项含 `type`（`jpeg`/`png`）和 `file_token`（URL）；空视角填 `{}` |
-| `parameters.texture_quality` | string | 否 | `"standard"`（默认）或 `"detailed"`；影响贴图分辨率 |
-| `parameters.geometry_quality` | string | 否 | 仅 `Tripo/Tripo-H3.1` 支持；`"standard"`（≤150万面）或 `"ultra"`（≤200万面） |
-| `parameters.pbr` | boolean | 否 | 默认 `true`；设为 `false` 时需同步设 `texture: false` 才生效 |
-| `parameters.texture` | boolean | 否 | 默认 `true`；与 `pbr` 联动控制是否生成贴图 |
+| `model` | string | 是 | 固定为 `Tripo/Tripo-P1.0` 或 `Tripo/Tripo-H3.1` |
+| `input.prompt` / `input.image` / `input.images` | string / string / array[object] | 条件必填 | 三者互斥，仅可选其一；`images` 必须为长度 4 的数组 |
+| `parameters.texture_quality` | string | 否 | `standard`（默认）或 `detailed`；仅对含贴图任务生效 |
+| `parameters.geometry_quality` | string | 否 | 仅 `Tripo/Tripo-H3.1` 支持：`standard`（≤150 万面）或 `ultra`（≤200 万面） |
+| `parameters.pbr` | boolean | 否 | 默认 `true`；设为 `false` 时需同步设 `texture: false` 才能获得 `base_model_url` |
+| `parameters.texture` | boolean | 否 | 默认 `true`；与 `pbr` 联动控制贴图生成，详见 [Tripo-3D模型生成](../../raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md) |
 
 ## 使用方式
 
 1. **前置准备**：
-   - 在 [百炼控制台（北京地域）](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/all) 开通 Tripo 服务；
-   - [获取并配置北京地域的 API Key](https://help.aliyun.com/zh/model-studio/get-api-key) 到环境变量 `DASHSCOPE_API_KEY`；
-2. **创建任务（POST）**：
-   - 请求 URL：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/video-generation/3d-generation`
-   - 必须携带请求头：`Content-Type: application/json`、`Authorization: Bearer $DASHSCOPE_API_KEY`、`X-DashScope-Async: enable`
-   - 请求体按输入模式选择 `prompt` / `image` / `images`，并合理设置 `parameters`
-   - 成功响应返回 `task_id`（有效期 24 小时），**禁止重复提交同一任务**
-3. **轮询结果（GET）**：
-   - 请求 URL：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/tasks/{task_id}`
-   - 建议间隔 ≥15 秒轮询，状态流转为 `PENDING` → `RUNNING` → `SUCCEEDED`/`FAILED`
-   - 成功时 `output.results` 包含 `pbr_model_url`（或 `base_model_url`）和 `rendered_image_url`，链接有效期 2 小时，需及时下载
+   - 在华北2（北京）地域开通 Tripo 服务（[控制台链接](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/all)）；
+   - 配置 `DASHSCOPE_API_KEY` 环境变量，并确保请求头包含 `Authorization: Bearer $DASHSCOPE_API_KEY` 和 `X-DashScope-Async: enable`。
 
-完整调用流程示例见 [Tripo-3D模型生成](../../raw/model-api-reference/3d-generation/tripo-3d-generation-api-reference.md) 中各 curl 示例。
+2. **创建任务（POST）**：
+   - 请求地址：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/video-generation/3d-generation`
+   - 必须携带 `X-DashScope-Async: enable`，否则报错 `current user api does not support synchronous calls`。
+
+3. **轮询结果（GET）**：
+   - 地址：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/tasks/{task_id}`
+   - `task_id` 有效期为 24 小时，建议轮询间隔 ≥15 秒；
+   - 成功响应中 `output.results` 包含 `pbr_model_url`（或 `base_model_url`）、`rendered_image_url`，所有 URL 有效期仅 2 小时，需及时下载。
 
 ## 限制和注意事项
 
-- **地域强约束**：仅支持华北2（北京）地域，跨地域调用必然失败；
-- **异步强制性**：HTTP 接口不支持同步调用，缺失 `X-DashScope-Async: enable` 头将报错 `current user api does not support synchronous calls`；
-- **任务生命周期**：`task_id` 有效期严格为 24 小时，超时后查询返回 `task_status: "UNKNOWN"`；
-- **RPS 限制**：任务结果查询接口默认限流 20 RPS，高频轮询建议改用 [异步回调](https://help.aliyun.com/zh/model-studio/async-task-api)；
-- **输入校验**：`prompt`、`image`、`images` 三者互斥，同时传入多个将直接报错 `InvalidParameter`；
-- **图像要求**：单图/多图均需公网可直连，CDN 缓存需支持 CORS；多图场景下四视角分辨率不要求一致，但建议统一为 ≥256px 边长；
-- **无贴图逻辑**：必须同时设置 `"texture": false` 和 `"pbr": false`，仅设其一无效。
+- **地域强约束**：仅支持华北2（北京）地域，其他地域 URL 不可用，且 API Key 必须在该地域下生成。
+- **异步强制性**：不支持同步调用，`X-DashScope-Async: enable` 为硬性请求头，缺失即失败。
+- **输入互斥性**：`prompt`、`image`、`images` 三者不可共存，同时传入将返回 `InvalidParameter`。
+- **多图格式刚性**：`images` 数组长度必须为 4，缺失视角必须用 `{}` 占位，不可省略或缩短数组。
+- **资源时效性**：`task_id` 24 小时后失效；生成结果 URL（如 `pbr_model_url`）2 小时后过期，需在有效期内完成下载。
+- **错误处理**：任务失败时 `output.code` 和 `output.message` 提供具体原因，应优先查阅 [错误码文档](https://help.aliyun.com/zh/model-studio/error-code)，而非重试无效请求。
 
 ## 来源文档
 

@@ -1,6 +1,6 @@
 # 百炼模型市场索引
 
-> 自动生成 · 共 172 个模型家族 · 389 个主干模型 · 更新于 2026-07-30
+> 自动生成 · 共 175 个模型家族 · 392 个主干模型 · 更新于 2026-07-31
 
 **机器查询走结构化文件**：
 
@@ -272,7 +272,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [Qwen3.7-Max](groups/qwen3.7-max.json) — Qwen3.7系列中规模最大、综合能力最强的Max模型，当前开放纯文本模型能力供体验。Qwen3.7是面向智能体时代的新一代旗舰模型，核心优势在于智能体能力的广度与深度：在编程、办公与生产力、长周期自…
   - 模型：`qwen3.7-max`, `qwen3.7-max-preview`
 
-## 语音识别 `ASR` — 12 个家族
+## 语音识别 `ASR` — 14 个家族
 
 - [Fun-ASR-Flash](groups/fun-asr-flash.json) — 百聆2026年6月更新的大模型ASR版本，全面支持汉语传统七大方言体系（官话/吴/湘/赣/客/闽/粤），并适配 20+ 地区口音官话。针对中文古诗词的韵律、节奏与文言表达特点进行专项优化，提升对古诗词…
   - 模型：`fun-asr-flash-2026-06-15`
@@ -288,6 +288,10 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`paraformer-v1`
 - [Paraformer语音识别-v2](groups/paraformer-v2.json) — 推荐使用 Paraformer最新语音识别模型，支持多个语种的语音识别。可以通过language_hints参数选择语种获得更准确的识别效果，支持任意采样率。 支持的语言包括：中文（含粤语等各种方言）…
   - 模型：`paraformer-v2`
+- [Qwen-Audio-ASR-Flash](groups/qwen-audio-asr-flash.json) — Qwen-Audio-ASR-Flash是一款支持短语音高效识别的大模型，面向高质量、多语种及文化内容转写场景。模型支持多语种与多地区中文方言识别，同时针对中文古诗词的韵律、节奏与文言表达进行优化。具…
+  - 模型：`qwen-audio-3.0-asr-flash`
+- [Qwen-Audio-ASR-Flash-Filetrans](groups/qwen-audio-asr-flash-filetrans.json) — Qwen-Audio-ASR-Flash-Filetrans是新一代端到端离线语音识别大模型，面向会议转写、内容生产与通话分析等场景，支持多语种与多地区中文方言识别。模型具备高精度转写、热词及上下文增…
+  - 模型：`qwen-audio-3.0-asr-flash-filetrans`
 - [Qwen3-ASR-Flash](groups/qwen3-asr-flash.json) — Qwen3-ASR-Flash是一款基于大语言模型的高精度、高智能、高鲁棒性的多语种语音识别模型。依托强大的基座模型、海量的文本与多模态数据、千万小时音频数据，Qwen3-ASR-Flash实现了高精…
   - 模型：`qwen3-asr-flash`
 - [Qwen3-ASR-Flash-Filetrans](groups/qwen3-asr-flash-filetrans.json) — Qwen3-ASR-Flash的大文件转录版本，Qwen3-ASR-Flash是一款基于大语言模型的高精度、高智能、高鲁棒性的多语种语音识别模型。依托强大的基座模型、海量的文本与多模态数据、千万小时音…
@@ -320,7 +324,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [Qwen3开源模型](groups/qwen3.json) — Qwen3系列开源模型，包含混合模型、思考模型与非思考模型，思考能力与通用能力均达到同规模业界SOTA水平。
   - 模型：`qwen3-14b`, `qwen3-235b-a22b`, `qwen3-235b-a22b-instruct-2507`, `qwen3-235b-a22b-thinking-2507`, `qwen3-30b-a3b`, `qwen3-30b-a3b-instruct-2507`, `qwen3-30b-a3b-thinking-2507`, `qwen3-32b`, `qwen3-8b`, `qwen3-coder-next`, `qwen3-next-80b-a3b-instruct`, `qwen3-next-80b-a3b-thinking`, `qwen3-vl-235b-a22b-instruct`, `qwen3-vl-235b-a22b-thinking`, `qwen3-vl-30b-a3b-instruct`, `qwen3-vl-30b-a3b-thinking`, `qwen3-vl-32b-instruct`, `qwen3-vl-32b-thinking`, `qwen3-vl-8b-instruct`, `qwen3-vl-8b-thinking`
 
-## 实时语音识别 `Realtime-ASR` — 7 个家族
+## 实时语音识别 `Realtime-ASR` — 8 个家族
 
 - [Fun-ASR实时语音识别](groups/fun-asr-realtime.json) — 通义实验室新一代端到端语音识别大模型的实时版，基于领先的自研语音技术，具备卓越的上下文感知和高精度语音转写能力。基于端到端架构，Fun-ASR 集成了创新的 RAG 技术，支持大规模热词自定义、敏感/…
   - 模型：`fun-asr-flash-8k-realtime`, `fun-asr-realtime`
@@ -332,6 +336,8 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`paraformer-realtime-v1`
 - [Paraformer实时语音识别-v2](groups/paraformer-realtime-v2.json) — 推荐使用 Paraformer最新实时语音识别模型，支持多个语种自由切换的视频直播、会议等实时场景的语音识别。可以通过language_hints参数选择语种获得更准确的识别效果。支持任意采样率。 支…
   - 模型：`paraformer-realtime-v2`
+- [Qwen-Audio-ASR-Flash-Streaming](groups/qwen-audio-asr-flash-streaming.json) — Qwen-Audio-ASR-Flash-Streaming是新一代端到端实时语音识别大模型，面向实时会议、直播字幕与智能交互等场景，具备低延迟、高精度的流式语音转写能力。模型支持多语种与多地区中文方…
+  - 模型：`qwen-audio-3.0-asr-flash-streaming`
 - [Qwen3-ASR-Flash-Realtime](groups/qwen3-asr-flash-realtime.json) — Qwen3-ASR-Flash的实时版，一款基于大语言模型的高精度、高智能、高鲁棒性的多语种语音识别模型。依托强大的基座模型、海量的文本与多模态数据、千万小时音频数据，Qwen3-ASR-Flash实…
   - 模型：`qwen3-asr-flash-realtime`
 - [Qwen3-LiveTranslate-Flash](groups/qwen3-livetranslate-flash.json) — Qwen3-LiveTranslate-Flash，一款高精度、高响应、高鲁棒性的多语言实时音视频同传大模型。依托Qwen3-Omni强大的基座能力、海量多模态数据、跨语言跨模态对齐和视觉增强等技术，…

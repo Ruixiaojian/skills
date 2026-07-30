@@ -289,9 +289,9 @@ qwen3.7-flash
 
 qwen3.7-flash-2026-07-15
 
-600
+30,000
 
-1,000,000
+5,000,000
 
 qwen3.6-flash
 
@@ -869,9 +869,9 @@ qwen3.7-flash-2026-07-15
 
 国际
 
-60
+15,000
 
-1,000,000
+5,000,000
 
 qwen3.6-flash
 
@@ -1093,9 +1093,9 @@ qwen3-max-2026-01-23
 
 欧盟
 
-600
+60
 
-1,000,000
+100,000
 
 qwen3-max-2025-09-23
 
@@ -1149,9 +1149,9 @@ qwen3.7-flash-2026-07-15
 
 全球
 
-60
+15,000
 
-1,000,000
+5,000,000
 
 qwen3.6-flash
 
@@ -1237,7 +1237,7 @@ qwen3.5-flash
 
 全球
 
-30,000
+35,000
 
 10,000,000
 
@@ -1245,7 +1245,7 @@ qwen3.5-flash
 
 欧盟
 
-30,000
+35,000
 
 10,000,000
 
@@ -1269,7 +1269,7 @@ qwen-flash
 
 全球
 
-15,000
+30,000
 
 10,000,000
 
@@ -1301,15 +1301,15 @@ qwen3.7-max
 
 全球
 
-30,000
+600
 
-5,000,000
+1,000,000
 
 qwen3.7-max-2026-05-20
 
 全球
 
-600
+60
 
 1,000,000
 
@@ -1349,7 +1349,7 @@ qwen3.6-plus
 
 全球
 
-30,000
+15,000
 
 5,000,000
 
@@ -1357,7 +1357,7 @@ qwen3.6-plus-2026-04-02
 
 全球
 
-600
+60
 
 1,000,000
 
@@ -1373,9 +1373,9 @@ qwen3.7-flash-2026-07-15
 
 全球
 
-60
+15,000
 
-1,000,000
+5,000,000
 
 qwen3.6-flash
 
@@ -1383,7 +1383,7 @@ qwen3.6-flash
 
 15,000
 
-5,000,000
+10,000,000
 
 qwen3.6-flash-2026-04-16
 
@@ -1649,7 +1649,7 @@ qwen3-vl-plus
 
 全球
 
-1,200
+2,000
 
 1,000,000
 
@@ -1657,7 +1657,7 @@ qwen3-vl-plus
 
 欧盟
 
-1,200
+2,000
 
 1,000,000
 
@@ -1673,17 +1673,17 @@ qwen3-vl-flash
 
 全球
 
-1,200
+12,000
 
-1,000,000
+10,000,000
 
 qwen3-vl-flash
 
 欧盟
 
-1,200
+12,000
 
-1,000,000
+10,000,000
 
 qwen3-vl-flash-2026-01-22
 
@@ -1697,17 +1697,17 @@ qwen3-vl-flash-2025-10-15
 
 全球
 
-60
+600
 
-100,000
+1,000,000
 
 qwen3-vl-flash-2025-10-15
 
 欧盟
 
-60
+600
 
-100,000
+1,000,000
 
 ### **千问Omni**
 
@@ -2243,7 +2243,7 @@ qwen-audio-turbo-latest
 
 60
 
-100,000
+无 TPM 限制
 
 ### **千问数学模型**
 
@@ -2485,9 +2485,9 @@ qwen3-coder-plus
 
 全球
 
-2,400
+5,000
 
-2,000,000
+5,000,000
 
 qwen3-coder-plus-2025-09-23
 
@@ -2509,9 +2509,9 @@ qwen3-coder-flash
 
 全球
 
-1,200
+5,000
 
-1,000,000
+5,000,000
 
 qwen3-coder-flash-2025-07-28
 
@@ -3301,7 +3301,7 @@ qwen3-32b
 
 全球
 
-600
+2,400
 
 1,000,000
 
@@ -3923,7 +3923,7 @@ deepseek-v3.2
 
 15,000
 
-1,200,000
+1,000,000
 
 deepseek-v3.2-exp
 
@@ -4151,7 +4151,7 @@ deepseek-v4-pro
 
 全球
 
-15,000
+10,000
 
 1,200,000
 
@@ -4159,7 +4159,7 @@ deepseek-v4-flash
 
 全球
 
-15,000
+10,000
 
 1,200,000
 
@@ -5341,7 +5341,7 @@ wan2.6-t2i
 
 全球
 
-5
+1
 
 5
 
@@ -5607,7 +5607,7 @@ qwen-audio-3.0-realtime-flash
 
 ## **语音合成（文本转语音）**
 
-### **Qwen-Audio-TTS语音合成**
+### **Qwen-Audio-TTS**
 
 #### 华北2（北京）
 
@@ -5643,11 +5643,11 @@ qwen-audio-3.0-tts-flash
 
 3
 
-### **千问语音合成**
+### **Qwen-TTS**
 
 #### 华北2（北京）
 
-##### **千问3-TTS-Instruct-Flash**
+##### **Qwen3-TTS-Instruct-Flash**
 
 **模型名称**
 
@@ -5661,7 +5661,7 @@ qwen3-tts-instruct-flash-2026-01-26
 
 180
 
-##### **千问3-TTS-VD**
+##### **Qwen3-TTS-VD**
 
 **模型名称**
 
@@ -5671,7 +5671,7 @@ qwen3-tts-vd-2026-01-26
 
 180
 
-##### **千问3-TTS-VC**
+##### **Qwen3-TTS-VC**
 
 **模型名称**
 
@@ -5681,7 +5681,7 @@ qwen3-tts-vc-2026-01-22
 
 180
 
-##### 千问3-TTS-Flash
+##### Qwen3-TTS-Flash
 
 **模型名称**
 
@@ -5699,7 +5699,7 @@ qwen3-tts-flash-2025-09-18
 
 10
 
-##### 千问-TTS
+##### Qwen-TTS
 
 **模型名称**
 
@@ -5727,7 +5727,7 @@ qwen-tts-2025-04-10
 
 #### 新加坡
 
-##### **千问3-TTS-Instruct-Flash**
+##### **Qwen3-TTS-Instruct-Flash**
 
 **模型名称**
 
@@ -5747,7 +5747,7 @@ qwen3-tts-instruct-flash-2026-01-26
 
 180
 
-##### **千问3-TTS-VD**
+##### **Qwen3-TTS-VD**
 
 **模型名称**
 
@@ -5761,7 +5761,7 @@ qwen3-tts-vd-2026-01-26
 
 180
 
-##### **千问3-TTS-VC**
+##### **Qwen3-TTS-VC**
 
 **模型名称**
 
@@ -5775,7 +5775,7 @@ qwen3-tts-vc-2026-01-22
 
 180
 
-##### 千问3-TTS-Flash
+##### Qwen3-TTS-Flash
 
 **模型名称**
 
@@ -5801,11 +5801,11 @@ qwen3-tts-flash-2025-09-18
 
 10
 
-### **千问实时语音合成**
+### **Qwen-TTS-Realtime**
 
 #### 华北2（北京）
 
-##### **千问3-TTS-Instruct-Flash-Realtime**
+##### **Qwen3-TTS-Instruct-Flash-Realtime**
 
 **模型名称**
 
@@ -5819,7 +5819,7 @@ qwen3-tts-instruct-flash-realtime-2026-01-22
 
 180
 
-##### 千问3-TTS-VD-Realtime
+##### Qwen3-TTS-VD-Realtime
 
 **模型名称**
 
@@ -5831,7 +5831,7 @@ qwen3-tts-vd-realtime-2026-01-15
 
 qwen3-tts-vd-realtime-2025-12-16
 
-##### 千问3-TTS-VC-Realtime
+##### Qwen3-TTS-VC-Realtime
 
 **模型名称**
 
@@ -5843,7 +5843,7 @@ qwen3-tts-vc-realtime-2026-01-15
 
 qwen3-tts-vc-realtime-2025-11-27
 
-##### 千问3-TTS-Flash-Realtime
+##### Qwen3-TTS-Flash-Realtime
 
 **模型名称**
 
@@ -5861,7 +5861,7 @@ qwen3-tts-flash-realtime-2025-09-18
 
 10
 
-##### 千问-TTS-Realtime
+##### Qwen-TTS-Realtime
 
 **模型名称**
 
@@ -5887,7 +5887,7 @@ qwen-tts-realtime-2025-07-15
 
 #### 新加坡
 
-##### **千问3-TTS-Instruct-Flash-Realtime**
+##### **Qwen3-TTS-Instruct-Flash-Realtime**
 
 **模型名称**
 
@@ -5907,7 +5907,7 @@ qwen3-tts-instruct-flash-realtime-2026-01-22
 
 180
 
-##### 千问3-TTS-VD-Realtime
+##### Qwen3-TTS-VD-Realtime
 
 **模型名称**
 
@@ -5925,7 +5925,7 @@ qwen3-tts-vd-realtime-2025-12-16
 
 国际
 
-##### 千问3-TTS-VC-Realtime
+##### Qwen3-TTS-VC-Realtime
 
 **模型名称**
 
@@ -5943,7 +5943,7 @@ qwen3-tts-vc-realtime-2025-11-27
 
 国际
 
-##### 千问3-TTS-Flash-Realtime
+##### Qwen3-TTS-Flash-Realtime
 
 **模型名称**
 
@@ -5969,7 +5969,7 @@ qwen3-tts-flash-realtime-2025-09-18
 
 10
 
-### **千问声音复刻**
+### **Qwen-TTS声音复刻**
 
 #### 华北2（北京）
 
@@ -5995,7 +5995,7 @@ qwen-voice-enrollment
 
 180
 
-### **千问声音设计**
+### **Qwen-TTS声音设计**
 
 #### 华北2（北京）
 
@@ -6021,7 +6021,7 @@ qwen-voice-design
 
 180
 
-### **CosyVoice语音合成**
+### **CosyVoice**
 
 #### 华北2（北京）
 
@@ -6089,7 +6089,7 @@ voice-enrollment
 
 10
 
-### **Sambert语音合成**
+### **Sambert**
 
 #### **华北2（北京）**
 
@@ -6143,7 +6143,7 @@ MiniMax/speech-02-turbo
 
 ## **语音识别（语音转文本）与翻译（语音转成指定语种的文本）**
 
-### **千问3-LiveTranslate-Flash**
+### **Qwen3-LiveTranslate-Flash**
 
 #### 华北2（北京）
 
@@ -6195,7 +6195,7 @@ qwen3-livetranslate-flash-2025-12-01
 
 国际
 
-### **千问-LiveTranslate-Flash-Realtime**
+### **Qwen-LiveTranslate-Flash-Realtime**
 
 #### 华北2（北京）
 
@@ -6259,11 +6259,89 @@ qwen3-livetranslate-flash-realtime-2025-09-22
 
 国际
 
-### **千问录音文件识别**
+### Qwen-Audio-3.0-ASR-Flash-Streaming
 
 #### 华北2（北京）
 
-##### 千问3-ASR-Flash-Filetrans
+**模型名称**
+
+**提交作业接口RPS限制**
+
+qwen-audio-3.0-asr-flash-streaming
+
+20
+
+#### 新加坡
+
+**模型名称**
+
+**服务部署范围**
+
+**提交作业接口RPS限制**
+
+qwen-audio-3.0-asr-flash-streaming
+
+国际
+
+20
+
+### **Qwen-Audio-3.0-ASR-Flash-Filetrans**
+
+#### 华北2（北京）
+
+**模型名称**
+
+**每分钟调用次数（RPM）**
+
+qwen-audio-3.0-asr-flash-filetrans
+
+600
+
+#### 新加坡
+
+**模型名称**
+
+**服务部署范围**
+
+**每分钟调用次数（RPM）**
+
+qwen-audio-3.0-asr-flash-filetrans
+
+国际
+
+600
+
+### **Qwen-Audio-3.0-ASR-Flash**
+
+#### 华北2（北京）
+
+**模型名称**
+
+**每分钟调用次数（RPM）**
+
+qwen-audio-3.0-asr-flash
+
+600
+
+#### 新加坡
+
+**模型名称**
+
+**服务部署范围**
+
+**每分钟调用次数（RPM）**
+
+qwen-audio-3.0-asr-flash
+
+国际
+
+600
+
+### **Qwen-ASR**
+
+#### 华北2（北京）
+
+##### Qwen3-ASR-Flash-Filetrans
 
 **模型名称**
 
@@ -6275,7 +6353,7 @@ qwen3-asr-flash-filetrans
 
 qwen3-asr-flash-filetrans-2025-11-17
 
-##### **千问3-ASR-Flash**
+##### **Qwen3-ASR-Flash**
 
 **模型名称**
 
@@ -6291,7 +6369,7 @@ qwen3-asr-flash-2025-09-08
 
 #### 新加坡
 
-##### 千问3-ASR-Flash-Filetrans
+##### Qwen3-ASR-Flash-Filetrans
 
 **模型名称**
 
@@ -6309,7 +6387,7 @@ qwen3-asr-flash-filetrans-2025-11-17
 
 国际
 
-##### **千问3-ASR-Flash**
+##### **Qwen3-ASR-Flash**
 
 **模型名称**
 
@@ -6349,7 +6427,7 @@ qwen3-asr-flash-2025-09-08-us
 
 美国
 
-### **千问实时语音识别**
+### **Qwen-ASR-Realtime**
 
 #### 华北2（北京）
 
@@ -6387,7 +6465,7 @@ qwen3-asr-flash-realtime-2025-10-27
 
 国际
 
-### **Fun-ASR录音文件识别**
+### **Fun-ASR**
 
 #### 华北2（北京）
 
@@ -6453,7 +6531,7 @@ fun-asr-flash-2026-06-15
 
 600
 
-### **Fun-ASR实时语音识别**
+### **Fun-ASR-Realtime**
 
 #### 华北2（北京）
 
@@ -6493,7 +6571,7 @@ fun-asr-realtime-2025-11-07
 
 国际
 
-### **Paraformer语音识别**
+### **Paraformer**
 
 #### **华北2（北京）**
 
@@ -7741,7 +7819,7 @@ Tripo/Tripo-P1.0
 
 qwen3.7-text-embedding
 
-1,800
+24,000
 
 1,000,000
 
@@ -8117,7 +8195,7 @@ qwen-plus-character
 
 120
 
-500,000
+5,000,000
 
 ## **日本（东京）**
 
@@ -8141,7 +8219,7 @@ qwen-plus-character
 
 120
 
-500,000
+5,000,000
 
 ### 界面交互
 

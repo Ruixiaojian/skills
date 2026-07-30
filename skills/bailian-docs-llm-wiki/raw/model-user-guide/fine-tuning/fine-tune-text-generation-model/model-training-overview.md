@@ -25,7 +25,7 @@
 
 ### **模型调优流程**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5928225871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6199935871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
 
 详情参见：
 
@@ -1338,309 +1338,31 @@ if __name__ == "__main__":
 
 ## **调优数据格式**
 
-#### **SFT 训练集**
+SFT/DPO/CPT 各训练方式的数据格式规格、打包规则、大小与数量限制、API 上传配额详见[调优数据上传规则](https://help.aliyun.com/zh/model-studio/text-generation-tuning-data-upload-rules#sec-support-matrix)。各训练方式支持的文件格式概览：
 
-SFT ChatML（Chat Markup Language）格式训练数据，支持多轮对话和多种角色设置。
+**训练方式**
 
-> 不支持OpenAI 的`name`、`weight`参数，所有的 assistant 输出都会被训练。
+**文件格式**
 
-```
-# 一行训练数据（json 格式），展开后典型结构如下:
-{"messages": [
-  {"role": "system", "content": "系统输入1"}, 
-  {"role": "user", "content": "用户输入1"}, 
-  {"role": "assistant", "content": "期望的模型输出1"}, 
-  {"role": "user", "content": "用户输入2"}, 
-  {"role": "assistant", "content": "期望的模型输出2"}
-  ...
-]}
-```
+SFT 文本生成
 
-system/user/assistant 区别请参见[概述](https://help.aliyun.com/zh/model-studio/text-generation#51574d7e93su4)，训练数据集样例：[SFT-ChatML格式示例.jsonl](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241014/utjdbx/SFT-ChatML%E6%A0%BC%E5%BC%8F%E7%A4%BA%E4%BE%8B.jsonl)、[SFT-ChatML格式示例.xlsx](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20251111/jrxbpn/SFT-ChatML%E6%A0%BC%E5%BC%8F%E7%A4%BA%E4%BE%8B.xlsx)（xls、xlsx 格式只支持单轮对话）。
+jsonl（ChatML messages 多轮结构）
 
-单条训练数据的**所有** assistant 行都支持`"loss_weight"`参数，用于设置该行在训练时的相对重要性。（设置范围`0.0 ~ 1.0`，数值越大，重要性越高）
+SFT 多模态（图片/视频）
 
-> 该参数属于邀测参数，如需使用，请联系您的商务经理。
+zip（data.jsonl + 图片/视频文件）
 
-```
-{"role": "assistant", "content": "期望的模型输出1", "loss_weight": 1.0}, 
- {"role": "assistant", "content": "期望的模型输出2", "loss_weight": 0.5}
-```
+DPO
 
-#### SFT 思考模型（thinking）
+jsonl（chosen/rejected 偏好对比）
 
-训练数据支持多轮对话和多种角色设置，但只能针对**最后**的 assistant 输出进行训练，**一行训练数据展开后结构如下**：
+CPT
 
-> 思考标签前后的若干个`\n`必须要保留。
+jsonl（纯文本 {text}）
 
-```
-# 一行训练数据（json 格式），展开后典型结构如下:
-{"messages": [
-  {"role": "system", "content": "系统输入1"}, 
-  {"role": "user", "content": "用户输入1"}, 
-  {"role": "assistant", "content": "模型输出1"}, --中间的 assistant 输出不应添加 <think> 标签
-   ...
-  {"role": "user", "content": "用户输入2"}, 
-  {"role": "assistant", "content": "<think>\n期望的思考内容2\n</think>\n\n期望的输出2"} --思考内容只能包含在最后一个 assistant 输出中。 
-]}
-```
+评测集
 
-system/user/assistant 区别请参见[概述](https://help.aliyun.com/zh/model-studio/text-generation#51574d7e93su4)，训练数据集样例：[SFT- 深度思考内容示例.jsonl](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20251224/txsbci/SFT-+%E6%B7%B1%E5%BA%A6%E6%80%9D%E8%80%83%E5%86%85%E5%AE%B9%E7%A4%BA%E4%BE%8B.jsonl)。
-
-也可以在训练样本中设置模型不输出`<think>`标签， 如果使用这种输出方式，模型训练完成后**不建议再开启思考模式进行调用**。
-
-```
-{"role": "assistant", "content": "期望的模型输出2"}  --告诉模型不开启思考
-```
-
-单条训练数据**最后**的 assistant 行支持`"loss_weight"`参数，用于设置该条数据在训练时的相对重要性。（设置范围`0.0 ~ 1.0`，数值越大，重要性越高）
-
-> 该参数属于邀测参数，如需使用，请联系您的商务经理。
-
-```
-{"role": "assistant", "content": "<think>\n期望的思考内容2\n</think>\n\n期望的输出2", "loss_weight": 1.0}
-```
-
-#### SFT 视觉理解（千问VL）
-
-> 不支持OpenAI 的`name`、`weight`参数，所有的 assistant 输出都会被训练。
-
-system/user/assistant 区别请参见[概述](https://help.aliyun.com/zh/model-studio/text-generation#51574d7e93su4)。ChatML 格式训练数据样例：
-
-> 如需传入 `system` 消息，对应的 `content` 必须使用数组格式 `[{"text":"..."}]`，不能使用字符串格式 `"content":"字符串"`。
-
-```
-# 一行训练数据（json 格式），展开后典型结构如下：
-{"messages": [
-  {"role": "system", "content": [{"text": "系统输入"}]},
-  {"role": "user", "content": [{"text": "用户输入1"}, {"image": "图像文件名1.jpg", "resized_width": 200, "resized_height": 200}]},
-  {"role": "assistant", "content": [{"text": "期望的模型输出1"}]},
-  {"role": "user", "content": [{"text": "用户输入2"}, {"video": "视频文件名1.mp4", "fps": 3.0, "resized_width": 200, "resized_height": 200, "video_start": 0.0, "video_end": 3.0}]},
-  {"role": "assistant", "content": [{"text": "期望的模型输出2"}]},
-  {"role": "user", "content": [{"text": "用户输入2"}, {"video": ["0.jpg", "1.jpg", "2.jpg", "3.jpg"], "sample_fps": 5.0, "resized_width": 200, "resized_height": 200}]},
-  {"role": "assistant", "content": [{"text": "期望的模型输出2"}]},
-  ...
-]}
-```
-
-**点击此处查看更多支持的参数**
-
-**字段**
-
-**类型**
-
-**必填**
-
-**说明**
-
-**图片文件**
-
-`image`
-
-`str`
-
-是
-
-图片文件路径
-
-`resized_width`
-
-`int`
-
-否
-
-图片目标缩放宽度（像素）
-
-`resized_height`
-
-`int`
-
-否
-
-图片目标缩放高度（像素）
-
-**视频文件-视频文件路径模式（仅 qwen3.5 及以后的 VL 模型支持）**
-
-**样例：**[阿里云VL\_Video.zip](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260514/xllbzy/%E9%98%BF%E9%87%8C%E4%BA%91VL_Video.zip)
-
-`video`
-
-`str` 
-
-是
-
-视频文件路径模式：`{"video": "视频文件名1.mp4"}`
-
-`resized_width`
-
-`int`
-
-否
-
-视频目标缩放宽度（像素）
-
-`resized_height`
-
-`int`
-
-否
-
-视频目标缩放高度（像素）
-
-`fps`
-
-`float`
-
-否
-
-训练时的输入频率。如果设置`fps=30`，实际训练用的视频帧率为 30 帧。
-
-`video_start`
-
-`float`
-
-否
-
-视频截取起始时间（秒）
-
-`video_end`
-
-`float`
-
-否
-
-视频截取结束时间（秒）
-
-**视频文件-图片帧列表模式（仅 qwen3.5 及以后的 VL 模型支持）**
-
-`video`
-
-`List[str]`
-
-是
-
-图片帧列表模式：`{"video": ["0.jpg", "1.jpg", "2.jpg", ...], "sample_fps": 2.0}`
-
-`sample_fps`
-
-`float`
-
-否
-
-用于告知图片帧的帧率。
-
-`resized_width`
-
-`int`
-
-否
-
-图片帧缩放宽度（像素）
-
-`resized_height`
-
-`int`
-
-否
-
-图片帧缩放高度（像素）
-
-**说明**
-
-如果训练思考模型（Thinking），也需要遵循[SFT 思考模型（thinking）](#f5454632ef4yo)的数据格式要求。
-
-#### **压缩包要求：**
-
-1.  压缩包格式：ZIP。最大支持 2 GB， ZIP 包内文件夹、文件名仅支持 ASCII 字符集中的字母 (a-z, A-Z)、数字 (0-9)、下划线 (\_)、连字符 (-)。
-    
-2.  训练文本数据固定为 data.jsonl，并且位于压缩包的**根目录**下，应**确保压缩后打开 zip 文件，直接就能看到** `**data.jsonl**` **文件。**
-    
-3.  图片单张尺寸的宽度和高度均不得超过 1024px，最大不超过10MB，支持 `.bmp`, `.jpeg /.jpg`, `.png`, `.tif /.tiff`, `.webp` 格式。
-    
-4.  图片文件的名称不能重复，即使分布在不同的文件夹中。
-    
-5.  压缩包目录结构：
-    
-    #### **单层目录（推荐）**
-    
-    图片文件与 `data.jsonl` 文件均位于压缩包根目录下。
-    
-    ```
-    Trainingdata_vl.zip
-       |--- data.jsonl #注意：外层不能再包裹文件夹
-       |--- image1.png
-       |--- video1.mp4
-    ```
-    
-    #### 多层目录
-    
-    1.  data.jsonl 必须在压缩包根目录下。
-        
-    2.  data.jsonl 内只需要声明图像/视频文件名，**不需要声明文件路径**。例如：
-        
-        **正确示例**：`image1.jpg`；**错误示例**：`jpg_folder/image1.jpg`。
-        
-    3.  图像/视频文件名应在压缩包内全局唯一。
-        
-    
-    ```
-    Trainingdata_vl.zip
-        |--- data.jsonl #注意：外层不能再包裹文件夹
-        |--- jpg_folder
-        |   └── image1.jpg
-        |--- mp4_folder
-            └── video.mp4
-    ```
-    
-
-#### DPO 数据集
-
-DPO ChatML 格式训练数据，**一行训练数据展开后结构如下**：
-
-system/user/assistant 区别请参见[概述](https://help.aliyun.com/zh/model-studio/text-generation#51574d7e93su4)，训练数据集样例：[DPO ChatML格式样例.jsonl](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241014/ihjgry/DPO+ChatML%E6%A0%BC%E5%BC%8F%E6%A0%B7%E4%BE%8B.jsonl)。
-
-```
-# 一行训练数据（json 格式），展开后典型结构如下:
-{"messages": [
-  {"role": "system", "content": "系统输入"},
-  {"role": "user", "content": "用户输入1"},
-  {"role": "assistant", "content": "模型输出1"},
-  {"role": "user", "content": "用户输入2"},
-  {"role": "assistant", "content": "模型输出2"},
-  {"role": "user", "content": "用户输入3"}
- ],
- "chosen":
-   {"role": "assistant", "content": "赞同的模型期望输出3"},
- "rejected":
-   {"role": "assistant", "content": "反对的模型期望输出3"}}
-```
-
-模型将 `messages` 内的所有内容均作为输入，DPO 用于训练模型对`用户输入3`的正负反馈。
-
-针对深度思考的内容，需要使用`<think>`标签包裹：
-
-```
-{"role": "assistant", "content": "<think>期望的模型思考内容</think>期望的模型输出"}
-```
-
-单条训练数据的`"chosen"`模块支持`"loss_weight"`参数，用于设置该条训练数据在训练中的相对重要性。（设置范围`0.0 ~ 1.0`，数值越大，重要性越高）
-
-> 该参数属于邀测参数，如需使用，请联系您的商务经理。
-
-```
-"chosen":
-   {"role": "assistant", "content": "赞同的模型期望输出3", "loss_weight": 1.0},
-```
-
-#### CPT 训练集
-
-CPT 纯文本格式训练数据，**一行训练数据展开后结构如下**：
-
-```
-{"text":"文本内容"}
-```
-
-训练数据集样例：[CPT-文本生成训练集示例.jsonl](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241127/qrtlrz/CPT-%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90%E8%AE%AD%E7%BB%83%E9%9B%86%E6%A0%BC%E5%BC%8F%E7%A4%BA%E4%BE%8B.jsonl)
+xlsx
 
 ## **数据集构建技巧**
 

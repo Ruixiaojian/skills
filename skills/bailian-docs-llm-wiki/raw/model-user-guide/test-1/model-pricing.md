@@ -12001,6 +12001,120 @@ qwen3-livetranslate-flash-2025-12-01
 
 46.292元
 
+### Qwen-Audio-3.0-ASR-Flash-Streaming
+
+计费规则：按输入音频的秒数计费，输出不计费。
+
+**说明**
+
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
+
+#### 华北2（北京）
+
+**模型 ID（Model ID）**
+
+**输入单价**
+
+**免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
+
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
+
+qwen-audio-3.0-asr-flash-streaming
+
+0.00033元/秒
+
+36,000秒（10小时）
+
+#### 新加坡
+
+**模型 ID（Model ID）**
+
+**服务部署范围**
+
+**输入单价**
+
+qwen-audio-3.0-asr-flash-streaming
+
+国际
+
+0.00066元/秒
+
+### **Qwen-Audio-3.0-ASR-Flash-Filetrans**
+
+计费规则：按输入音频的秒数计费，输出不计费。
+
+**说明**
+
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
+
+#### 华北2（北京）
+
+**模型 ID（Model ID）**
+
+**输入单价**
+
+**免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
+
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
+
+qwen-audio-3.0-asr-flash-filetrans
+
+0.00022元/秒
+
+36,000秒（10小时）
+
+#### 新加坡
+
+**模型 ID（Model ID）**
+
+**服务部署范围**
+
+**输入单价**
+
+qwen-audio-3.0-asr-flash-filetrans
+
+国际
+
+0.00026元/秒
+
+### **Qwen-Audio-3.0-ASR-Flash**
+
+计费规则：按输入音频的秒数计费，输出不计费。
+
+**说明**
+
+以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
+
+#### 华北2（北京）
+
+**模型 ID（Model ID）**
+
+**输入单价**
+
+**免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
+
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
+
+qwen-audio-3.0-asr-flash
+
+0.00022元/秒
+
+36,000秒（10小时）
+
+#### 新加坡
+
+**模型 ID（Model ID）**
+
+**服务部署范围**
+
+**输入单价**
+
+qwen-audio-3.0-asr-flash
+
+国际
+
+0.00026元/秒
+
 ### **千问ASR**
 
 **说明**
@@ -15545,11 +15659,15 @@ vidu/viduq3-ad\_reference2video
 
 vidu/viduq3-drama\_reference2video
 
-1080P
+720P
 
 0.875元/秒
 
 无免费额度
+
+1080P
+
+0.875元/秒
 
 vidu/viduq3-mix\_reference2video
 
