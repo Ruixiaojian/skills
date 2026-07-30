@@ -115,7 +115,7 @@ curl "https://dashscope.aliyuncs.com/api/v1/deployments" \
 
 部分模型的**模型单元**部署模式支持该设置，可限制模型调用的 RPM、TPM。
 
-如何在 API 设置上述内容，请参考：[使用 API 创建模型部署任务](https://help.aliyun.com/zh/model-studio/model-deployment-api#0dda8fc0587ho)。
+如何在 API 设置上述内容，请参考：[使用 API 创建部署](https://help.aliyun.com/zh/model-studio/create-deployment-api)。
 
 ### 按模型 Token 使用量计费
 

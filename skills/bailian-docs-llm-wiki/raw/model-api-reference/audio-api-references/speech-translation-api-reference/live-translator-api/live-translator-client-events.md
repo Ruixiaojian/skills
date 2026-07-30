@@ -164,6 +164,33 @@
 
 输出音频格式，当前仅支持设为`pcm`。
 
+**turn\_detection** `_object_` （可选）
+
+语音活动检测（VAD，Voice Activity Detection）配置，用于控制语音起止的检测方式：
+
+-   设为配置对象（默认值）：启用 VAD 模式。服务端自动检测语音起止，自动提交音频缓冲区并触发翻译响应，客户端无需发送`input_audio_buffer.commit`事件。
+    
+-   设为`null`：启用 Manual 模式。由客户端通过`input_audio_buffer.commit`事件手动提交音频缓冲区，服务端收到后自动开始生成翻译响应。
+    
+
+**属性**
+
+**type** `_string_` （可选）
+
+VAD 类型，固定为`server_vad`。
+
+**threshold** `_float_` （可选）
+
+VAD 检测灵敏度。值越低，越容易将微弱声音（包括背景噪音）识别为语音；值越高，需要更清晰、音量更大的语音才能触发。
+
+取值范围：\[-1.0, 1.0\]，默认值为 0.2。
+
+**silence\_duration\_ms** `_integer_` （可选）
+
+语音结束后需保持静音的最短时长（毫秒）。超过该时长后判定语音结束，服务端自动提交音频缓冲区并触发翻译响应。
+
+取值范围：\[200, 6000\]，默认值为 1000。
+
 **translation** `_object_` （可选）
 
 翻译配置。
@@ -205,6 +232,38 @@
 **audio** `_string_` **(必选)**
 
 Base64 编码的音频数据。
+
+## **input\_audio\_buffer.commit**
+
+提交输入音频缓冲区。仅在 Manual 模式（`turn_detection`设为`null`）下需要发送此事件；VAD 模式下服务端会自动提交，客户端无需发送。
+
+服务端收到该事件后，会返回`input_audio_buffer.committed`事件确认，并自动开始生成翻译响应（无需再发送其他事件触发响应）。若音频缓冲区为空，服务端将返回错误事件。
+
+**type** `_string_` **(必选)**
+
+事件类型，固定为`input_audio_buffer.commit`。
+
+```
+{
+    "event_id": "event_xxx",
+    "type": "input_audio_buffer.commit"
+}
+```
+
+## **input\_audio\_buffer.clear**
+
+清空输入音频缓冲区中尚未提交的音频数据。
+
+**type** `_string_` **(必选)**
+
+事件类型，固定为`input_audio_buffer.clear`。
+
+```
+{
+    "event_id": "event_xxx",
+    "type": "input_audio_buffer.clear"
+}
+```
 
 ## **input\_image\_buffer.append**
 

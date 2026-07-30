@@ -1,42 +1,33 @@
 # 流式输出
 
-流式输出（Streaming Output）是指模型响应以增量方式、分块（chunk）持续返回给客户端的通信模式，而非等待整个响应生成完毕后一次性返回。它显著降低端到端延迟，提升用户感知的响应实时性，是构建高交互性 AI 应用（如对话助手、实时语音合成、代码补全等）的关键能力。
+流式输出（Streaming Output）是指模型响应以增量方式分块返回，而非等待整个生成过程完成后再一次性返回全部结果。它通过持续发送 token 或结构化数据片段，显著降低用户感知延迟，提升交互实时性，是构建低延迟 AI 应用（如对话助手、实时翻译、代码补全）的关键能力。
 
 ## 在百炼平台的不同场景中如何使用
 
-流式输出在百炼平台中并非统一开关，而是按协议、模型类型和调用模式差异化支持：
-
-- **同步 API 调用（Application Call / Qwen Model API）**：  
-  通过请求参数 `stream=true` 启用。适用于 `application-call`（新版/旧版智能体、工作流）、`qwen-*` 文本生成模型等同步接口。服务端将按 token 或语义单元（如句子、工具调用片段）分批返回 `data: {...}` 格式的 SSE（Server-Sent Events）响应。前端需使用 `EventSource` 或 SDK 的流式解析器（如 DashScope Python SDK 的 `StreamIterator`）逐块消费。
-
-- **Realtime API（Omni / Audio 系列）**：  
-  流式为**默认且强制行为**，不依赖 `stream` 参数。WebSocket 连接建立后，服务端通过标准化事件（如 `response.text.delta`、`response.audio.delta`、`response.tool_calls.delta`）实时推送增量内容，天然适配语音、文本、音频[多模态](multi-modal.md)混合输出场景。
-
-- **异步调用（`background=true`）**：  
-  **明确不支持流式输出**。异步模式下，API 立即返回任务 ID，结果需通过轮询 `retrieve` 接口获取完整响应。若在异步请求中设置 `stream=true`，该参数将被忽略。
-
-- **OpenAI 兼容 Responses API**：  
-  支持流式，但存在兼容性差异：部分流式 chunk 中 `delta.tool_calls` 字段可能缺失参数细节，建议在非流式模式下验证工具调用逻辑后再启用流式。
+- **应用调用（Application Call）**：在同步模式下（`background=false`），通过设置 `stream=true` 启用流式输出；异步调用（`background=true`）不支持流式，需轮询获取最终结果。
+- **Qwen 模型直调（Qwen API）**：所有 DashScope 原生接口默认支持流式（`stream: true`），[OpenAI 兼容接口](openai-compatible-interface.md)也支持，但需注意其流式 chunk 中工具调用字段（如 `delta.tool_calls`）可能不完整，建议关键逻辑使用非流式验证。
+- **Omni 实时 API**：作为 WebSocket 事件驱动接口，天然支持流式文本与音频同步输出（如 `response.text.delta`、`response.audio.delta`），无需额外参数，所有 `modalities` 组合均按事件流实时推送。
+- **RAG/智能体增强场景**：流式输出可与知识检索、插件调用协同工作；若启用 `incremental_output=true`（需配合 `stream=true`），服务端将仅返回新增 token，避免重复传输已发送内容，进一步优化带宽与前端渲染效率。
 
 ## 关键参数和配置
 
 | 参数名 | 类型 | 作用 | 适用场景 | 注意事项 |
 |--------|------|------|----------|----------|
-| `stream` | `boolean` | 启用基础流式响应 | Application Call、Qwen 模型 API（DashScope / OpenAI 兼容） | 默认 `false`；仅同步调用有效；异步调用中设为 `true` 无效 |
-| `incremental_output` | `boolean` | 启用**增量式流式输出**（即每次只返回新生成的 token，而非重发全部已生成内容） | Application Call、Qwen 模型 API（DashScope 原生接口） | 必须与 `stream=true` 同时设置；可显著减少网络传输量和前端处理开销 |
-| `modalities`（Realtime） | `array` | 控制输出模态组合（如 `["text", "audio"]`） | Omni Realtime、Audio Realtime API | 决定流式事件类型（`response.text.delta` / `response.audio.delta`），影响前端解析逻辑 |
+| `stream` | boolean | 启用流式响应机制 | 所有支持流式的 API（Application Call、Qwen 直调、Omni 实时） | 必须为 `true`；异步调用中设为 `true` 将被忽略 |
+| `incremental_output` | boolean | 启用增量式流式（每次仅返回新 token，非全量重发） | Application Call、Qwen DashScope 接口 | 仅在 `stream=true` 时生效；前端需自行拼接 token 流 |
+| `modalities` | array | 控制输出模态组合（如 `["text"]` 或 `["text","audio"]`） | Omni Realtime API | 决定流式事件类型（`response.text.delta` / `response.audio.delta`），不可动态变更 |
 
-> 💡 **最佳实践**：  
-> - 对话类应用：始终启用 `stream=true` + `incremental_output=true`（DashScope 接口）；  
-> - 实时语音助手：直接使用 Omni Realtime API，无需手动配置 `stream`，专注处理 `response.*.delta` 事件；  
-> - 调试流式行为：使用控制台「API 调试」页或 `curl -N` 命令观察原始 SSE 流。
+> ⚠️ 注意：  
+> - 流式仅适用于同步请求路径；异步任务（`background=true`）必须等待任务完成后再获取完整结果。  
+> - [OpenAI 兼容接口](openai-compatible-interface.md)的流式响应格式严格遵循 OpenAI SSE 标准（`data: {...}`），而 DashScope 原生接口使用自定义 JSON 行格式（每行一个 JSON 对象）。  
+> - 前端解析流式响应时，需正确处理分块边界、空行、错误事件（如 `error` 字段），推荐使用百炼官方 SDK（如 `dashscope` Python SDK）自动管理连接与解析逻辑。
 
-## 面向开发者的重要提示
+## 面向开发者提示
 
-- **前端必须正确解析 SSE**：确保使用支持 `text/event-stream` 的客户端（如 `EventSource`、`fetch + ReadableStream` 或 SDK 封装的流式迭代器），避免因未处理 `data:` 前缀或忽略 `event:` 类型导致解析失败。
-- **流式 ≠ 实时语音级低延迟**：文本流式通常为 100–500ms 级别；如需 <200ms 端到端语音交互，请务必选用 `Omni Realtime` 或 `Audio Realtime` 系列模型及 WebSocket/AOQ 协议。
-- **错误处理需适配流式**：流式响应中，错误可能出现在任意 chunk（如 `event: error`），不可仅依赖 HTTP 状态码；应监听所有事件并检查 `error` 字段。
-- **计费与 [Token](token.md) 统计**：流式输出按实际生成的 token 总数计费，与是否启用流式无关；各 chunk 中的 `usage` 字段（如存在）仅反映该块 token 数，完整用量请以最终 `done` 事件或非流式响应为准。
+- ✅ **推荐实践**：对实时性敏感的 UI（如聊天输入框打字效果），务必启用 `stream=true` + `incremental_output=true`，并监听 `content` 或 `delta.content` 字段增量更新 DOM。  
+- ❌ **避免踩坑**：不要在流式响应中依赖 `usage` 或 `finish_reason` 字段的中间值——它们仅在最后一个 chunk 中完整出现。  
+- 🛠️ **调试建议**：使用控制台「API 调试」工具或 `curl -N` 命令直接观察原始 SSE 流；Python 开发者可结合 `requests.Response.iter_lines()` 或 `dashscope.Generation.stream()` 方法快速验证。  
+- 📈 **性能考量**：流式本身不降低模型计算耗时，但可减少首字节时间（TTFB）；若发现流式延迟高，请优先检查网络链路、token 生成速率（受 `temperature`/`top_p` 影响）及客户端解析开销。
 
 ## 关联主题页
 
@@ -44,6 +35,5 @@
 - [application support](../guides/application-support.md)
 - [qwen api reference](../api/qwen-api-reference.md)
 - [omni realtime api](../api/omni-realtime-api.md)
-- [realtime api user guide](../api/realtime-api-user-guide.md)
 
 

@@ -35,7 +35,7 @@
 2. **开通高级能力**：  
    在目标业务空间的模型监控页右上角点击「模型监控配置」，依次开通：  
    - 审计日志（用于操作审计）  
-   - 推理日志（用于请求/响应内容记录，**必须开通才可查看单次 Token 用量与对话内容**）  
+   - 推理日志（用于请求/响应内容记录，**必须开通才可查看单次 [Token](../concepts/token.md) 用量与对话内容**）  
    > 开通后数据同步存在分钟级延迟，历史调用无法补录 —— 此限制在 [模型监控 (raw/model-user-guide/model-monitoring/model-telemetry.md)](../../raw/model-user-guide/model-monitoring/model-telemetry.md) 中明确强调。
 
 3. **创建告警规则**：  
@@ -56,7 +56,7 @@
 
 - **数据时效性**：  
   - 普通监控（用量汇总、失败率等）延迟为 **1–2 小时**；  
-  - 高级监控（推理日志、TPS、首Token延时）延迟为 **分钟级**；  
+  - 高级监控（推理日志、TPS、首[Token](../concepts/token.md)延时）延迟为 **分钟级**；  
   - 免费额度数据在控制台**分钟级更新**，但账单中免费额度消耗记录按分钟汇总生成，存在轻微滞后。
 
 - **权限与范围**：  
@@ -72,6 +72,7 @@
 
 - [模型用量](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)
 - [模型监控](../../raw/model-user-guide/model-monitoring/model-telemetry.md)
+
 
 
 

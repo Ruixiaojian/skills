@@ -72,8 +72,14 @@
             "audio"
         ],
         "voice": "Cherry",
-        "input_audio_format": "pcm16",
-        "output_audio_format": "pcm24",
+        "input_audio_format": "pcm",
+        "sample_rate": 16000,
+        "output_audio_format": "pcm",
+        "turn_detection": {
+            "type": "server_vad",
+            "threshold": 0.2,
+            "silence_duration_ms": 1000
+        },
         "translation": {
            "language": "en",
            "corpus": {
@@ -119,11 +125,19 @@
 
 **input\_audio\_format** `_string_`
 
-输入音频的格式，固定为`pcm16`。
+输入音频的格式，默认为`pcm`。
+
+**sample\_rate** `_integer_`
+
+输入音频的采样率，单位为Hz。
 
 **output\_audio\_format** `_string_`
 
-输出音频的格式，固定为`pcm24`。
+输出音频的格式，默认为`pcm`。
+
+**turn\_detection** `_object_`
+
+VAD（语音活动检测）配置。
 
 **translation** `_object_` （可选）
 
@@ -143,7 +157,7 @@
 
 **corpus.phrases** `_object_` （可选）
 
-热词映射表。key 为源语言词汇，value 为目标语言对应翻译，参见[支持的语种](https://help.aliyun.com/zh/model-studio/qwen3-5-livetranslate-flash-realtime#4ffd192226f0s)。
+热词映射表。key 为源语言词汇，value 为目标语言对应翻译，参见[支持的语种](https://help.aliyun.com/zh/model-studio/qwen3-5-livetranslate-flash-realtime#4ffd192226f0s) 。
 
 ## **session.updated**
 
@@ -169,6 +183,18 @@
         "sample_rate": 16000,
         "input_audio_format": "pcm",
         "output_audio_format": "pcm",
+        "input_audio_transcription": {
+            "model": "qwen3-asr-flash-realtime",
+            "language": "zh"
+        },
+        "turn_detection": {
+            "type": "server_vad",
+            "threshold": 0.2,
+            "prefix_padding_ms": 300,
+            "silence_duration_ms": 1000,
+            "create_response": true,
+            "interrupt_response": true
+        },
         "translation": {
            "language": "en",
            "corpus": {
@@ -177,6 +203,10 @@
                    "机器学习": "Machine Learning"
                }
            }
+        },
+        "enable_voice_clone": true,
+        "voice_clone_options": {
+            "frequency": "once"
         }
     }
 }
@@ -224,6 +254,50 @@
 
 输出音频的格式，固定为`pcm`。
 
+**input\_audio\_transcription** `_object_`
+
+输入音频转录配置。仅在会话配置了`input_audio_transcription.model`参数时返回。
+
+**属性**
+
+**model** `_string_`
+
+语音识别模型。
+
+**language** `_string_`
+
+设置的语音识别语种。
+
+**turn\_detection** `_object_`
+
+VAD（语音活动检测）配置。Manual 模式下（客户端在`session.update`中将该参数设为`null`）不返回此字段。
+
+**属性**
+
+**type** `_string_`
+
+VAD 类型，固定为`server_vad`。
+
+**threshold** `_float_`
+
+VAD 检测灵敏度。
+
+**prefix\_padding\_ms** `_integer_`
+
+语音开始前保留的音频时长（毫秒），避免丢失语音起始部分。
+
+**silence\_duration\_ms** `_integer_`
+
+语音结束后需保持静音的最短时长（毫秒），超过该时长即判定语音结束。
+
+**create\_response** `_boolean_`
+
+VAD 检测到语音结束后，是否自动触发翻译响应。
+
+**interrupt\_response** `_boolean_`
+
+VAD 检测到新一轮语音开始时，是否打断当前正在生成的翻译响应。
+
 **translation** `_object_` （可选）
 
 翻译配置。
@@ -243,6 +317,20 @@
 **corpus.phrases** `_object_` （可选）
 
 热词映射表。key 为源语言词汇，value 为目标语言对应翻译。
+
+**enable\_voice\_clone** `_boolean_`
+
+是否启用声音复刻。
+
+**voice\_clone\_options** `_object_`
+
+声音复刻控制参数，仅在`enable_voice_clone`为`true`时返回。
+
+**属性**
+
+**frequency** `_string_`
+
+音色复刻频率。
 
 ## **session.finished**
 
@@ -287,7 +375,7 @@
             "audio"
         ],
         "voice": "Cherry",
-        "output_audio_format": "pcm24",
+        "output_audio_format": "pcm16",
         "output": []
     }
 }
@@ -338,7 +426,7 @@
 
 **output\_audio\_format** `_string_`
 
-输出音频的格式，固定为`pcm24`。
+输出音频的格式。
 
 **output** `_string_`
 
@@ -366,7 +454,7 @@
       "audio"
     ],
     "voice": "Cherry",
-    "output_audio_format": "pcm24",
+    "output_audio_format": "pcm16",
     "output": [
       {
         "id": "item_MKtkMwN9RtcyE9eJShyWy",
@@ -435,7 +523,7 @@
 
 **output\_audio\_format** `_string_`
 
-输出音频的格式，固定为`pcm24`。
+输出音频的格式。
 
 **output** `_object_`
 
@@ -667,6 +755,164 @@
 
 目前固定为 0。
 
+## **input\_audio\_buffer.speech\_started**
+
+当服务端 VAD（语音活动检测）检测到用户开始说话时，返回此事件。
+
+**event\_id** `_string_`
+
+本次事件唯一标识符。
+
+```
+{
+    "event_id": "event_xxx",
+    "type": "input_audio_buffer.speech_started",
+    "audio_start_ms": 568,
+    "item_id": "item_xxx"
+}
+```
+
+**type** `_string_`
+
+事件类型，固定为`input_audio_buffer.speech_started`。
+
+**audio\_start\_ms** `_integer_`
+
+检测到语音开始的时间点（毫秒），相对于音频流开始的偏移量。
+
+**item\_id** `_string_`
+
+关联的消息项唯一标识符。
+
+## **input\_audio\_buffer.speech\_stopped**
+
+当服务端 VAD 检测到用户停止说话时，返回此事件，标志本轮语音输入结束。由于翻译响应基于流式语音同步生成，实际的翻译响应可能已经在语音输入过程中开始，无需等待此事件。
+
+**event\_id** `_string_`
+
+本次事件唯一标识符。
+
+```
+{
+    "event_id": "event_xxx",
+    "type": "input_audio_buffer.speech_stopped",
+    "audio_end_ms": 3900,
+    "item_id": "item_xxx"
+}
+```
+
+**type** `_string_`
+
+事件类型，固定为`input_audio_buffer.speech_stopped`。
+
+**audio\_end\_ms** `_integer_`
+
+检测到语音结束的时间点（毫秒），相对于音频流开始的偏移量。
+
+**item\_id** `_string_`
+
+关联的消息项唯一标识符。
+
+## **input\_audio\_buffer.committed**
+
+Manual 模式（`turn_detection`为`null`）下，客户端发送`input_audio_buffer.commit`事件后，服务端返回此事件进行确认，并自动开始生成翻译响应。
+
+**event\_id** `_string_`
+
+本次事件唯一标识符。
+
+```
+{
+    "event_id": "event_xxx",
+    "type": "input_audio_buffer.committed"
+}
+```
+
+**type** `_string_`
+
+事件类型，固定为`input_audio_buffer.committed`。
+
+## **input\_audio\_buffer.cleared**
+
+客户端发送`input_audio_buffer.clear`事件后，服务端返回此事件进行确认，表示已清空缓冲区中尚未提交的音频数据。
+
+**event\_id** `_string_`
+
+本次事件唯一标识符。
+
+```
+{
+    "event_id": "event_xxx",
+    "type": "input_audio_buffer.cleared"
+}
+```
+
+**type** `_string_`
+
+事件类型，固定为`input_audio_buffer.cleared`。
+
+## **conversation.item.created**
+
+当对话中创建新的消息项时，服务端返回此事件。以下场景会触发此事件：
+
+-   服务端开始生成翻译响应时，创建对应的 assistant 消息项（此时`content`为空数组，内容随流式响应逐步填充）。
+    
+-   Manual 模式下，客户端发送`input_audio_buffer.commit`事件后，服务端会额外创建一个对应用户输入音频的消息项（`content`中包含`{"type": "input_audio"}`）。
+    
+
+**event\_id** `_string_`
+
+本次事件唯一标识符。
+
+```
+{
+    "event_id": "event_xxx",
+    "type": "conversation.item.created",
+    "item": {
+        "id": "item_xxx",
+        "object": "realtime.item",
+        "type": "message",
+        "status": "in_progress",
+        "role": "assistant",
+        "content": []
+    }
+}
+```
+
+**type** `_string_`
+
+事件类型，固定为`conversation.item.created`。
+
+**item** `_object_`
+
+消息项信息。
+
+**属性**
+
+**id** `_string_`
+
+消息项的唯一标识符。
+
+**type** `_string_`
+
+固定为`message`。
+
+**object** `_string_`
+
+固定为`realtime.item`。
+
+**status** `_string_`
+
+消息项的状态。
+
+**role** `_string_`
+
+消息的角色，取值为`assistant`或`user`。
+
+**content** `_array_`
+
+消息的内容。响应刚创建时为空数组，随流式响应逐步填充；Manual 模式下 commit 产生的用户消息项中包含`{"type": "input_audio"}`。
+
 ## **conversation.item.input\_audio\_transcription.text**
 
 当配置了`input_audio_transcription.model`参数时，服务端会流式返回输入音频的语音识别结果（源语言原文）。
@@ -683,7 +929,8 @@
     "content_index": 0,
     "text": "",
     "stash": "今天天气真好",
-    "language": "zh"
+    "language": "zh",
+    "emotion": "neutral"
 }
 ```
 
@@ -711,6 +958,25 @@
 
 检测到的源语种。
 
+**emotion** `_string_`
+
+被识别音频的情感。支持的情感如下：
+
+-   `surprised`：惊讶
+    
+-   `neutral`：平静
+    
+-   `happy`：愉快
+    
+-   `sad`：悲伤
+    
+-   `disgusted`：厌恶
+    
+-   `angry`：愤怒
+    
+-   `fearful`：恐惧
+    
+
 ## **conversation.item.input\_audio\_transcription.completed**
 
 当配置了`input_audio_transcription.model`参数时，语音识别完成后服务端会返回此事件，包含最终的完整识别结果。
@@ -726,7 +992,8 @@
     "item_id": "item_xxx",
     "content_index": 0,
     "transcript": "今天天气真好，我们一起去公园散步吧。",
-    "language": "zh"
+    "language": "zh",
+    "emotion": ""
 }
 ```
 
@@ -749,6 +1016,63 @@
 **language** `_string_`
 
 检测到的源语种。
+
+**emotion** `_string_`
+
+被识别音频的情感。支持的情感如下：
+
+-   `surprised`：惊讶
+    
+-   `neutral`：平静
+    
+-   `happy`：愉快
+    
+-   `sad`：悲伤
+    
+-   `disgusted`：厌恶
+    
+-   `angry`：愤怒
+    
+-   `fearful`：恐惧
+    
+
+## **conversation.item.input\_audio\_transcription.failed**
+
+当输入了音频但识别失败时，服务端发送该事件。与其他`error`事件分开处理，便于客户端识别相关的具体项目。
+
+**type** `_string_`
+
+事件类型，固定为`conversation.item.input_audio_transcription.failed`。
+
+```
+{
+    "event_id": "event_xxx",
+    "type": "conversation.item.input_audio_transcription.failed",
+    "item_id": "item_xxx",
+    "content_index": 0,
+    "error": {
+        "code": "xxx",
+        "message": "xxx",
+        "param": "xxx"
+    }
+}
+```
+
+**item\_id** `_string_`
+
+关联的对话项 ID。
+
+**content\_index** `_integer_`
+
+包含音频的内容部分的索引。
+
+**error.code** `_string_`
+
+错误代码。
+
+**error.message** `_string_`
+
+错误消息。
 
 ## **response.audio\_transcript.text**
 
