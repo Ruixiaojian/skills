@@ -16,8 +16,8 @@ model deployment 1 是百炼平台面向生产环境的模型服务化能力，�
 |--------|----------|------|----------|
 | `ptu_capacity.input_tpm` / `output_tpm` | PTU | 输入/输出每分钟 [Token](../concepts/token.md) 数（KTPM），决定额度购买量，影响长输入阶梯系数应用范围 | [预置吞吐长输入与缓存](../../raw/model-user-guide/model-deployment-1/ptu-long-input-and-cache.md) |
 | `deploy_spec` / `capacity` / `enable_thinking` / `max_context_length` | MU | 模型单元规格（如 `MU1`）、副本数、是否启用思考模式、最长上下文长度（部分模型支持） | [使用 API或命令行进行模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md) |
-| `plan: "lora"` | Token 用量 | 仅用于 LoRA 微调模型，`capacity` 字段必须填写但无效，扩缩容需走控制台人工审核 | [使用 API或命令行进行模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md) |
-| `rpm_limit` / `tpm_limit` | MU（可选） | 服务级请求/Token 每分钟限流阈值，防止突发流量冲击 | [模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-introduction.md) |
+| `plan: "lora"` | [Token](../concepts/token.md) 用量 | 仅用于 LoRA 微调模型，`capacity` 字段必须填写但无效，扩缩容需走控制台人工审核 | [使用 API或命令行进行模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md) |
+| `rpm_limit` / `tpm_limit` | MU（可选） | 服务级请求/[Token](../concepts/token.md) 每分钟限流阈值，防止突发流量冲击 | [模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-introduction.md) |
 
 ## 使用方式
 
@@ -25,7 +25,7 @@ model deployment 1 是百炼平台面向生产环境的模型服务化能力，�
 - **API 调用**：使用 DashScope SDK 或 HTTP 请求 `POST /api/v1/deployments`，按 `plan` 字段区分模式：
   - PTU：传 `"plan": "ptu"` + `ptu_capacity` 对象；
   - MU：传 `"plan": "mu"` + `deploy_spec`, `capacity`, `enable_thinking` 等字段；
-  - Token 用量：传 `"plan": "lora"` + `model_name`（LoRA 模型 ID）。
+  - [Token](../concepts/token.md) 用量：传 `"plan": "lora"` + `model_name`（LoRA 模型 ID）。
   详细字段与示例见[使用 API或命令行进行模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md)。
 - **调用地址**：部署成功后，专属服务 ID（`deployed_model`）即为模型名称，直接用于 `Generation.call(model='xxx', ...)` 或 [OpenAI 兼容接口](../concepts/openai-compatible-interface.md)。
 
@@ -44,5 +44,6 @@ model deployment 1 是百炼平台面向生产环境的模型服务化能力，�
 - [模型导入](../../raw/model-user-guide/model-deployment-1/model-import.md)
 - [模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-introduction.md)
 - [使用 API或命令行进行模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md)
+
 
 

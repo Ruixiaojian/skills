@@ -11,11 +11,11 @@
 
 - **核心功能模块**：  
   - **调用记录追踪**：支持按 Request ID 查看单次调用的输入、输出、状态码、耗时及 [Token](../concepts/token.md) 用量；  
-  - **多维指标监控**：涵盖安全（内容安全错误次数）、成本（平均单次请求调用量）、性能（RPM、TPM、调用时长、首[Token](../concepts/token.md)延时、非首Token延时）、错误（失败率、限流错误次数）四大类；  
+  - **多维指标监控**：涵盖安全（内容安全错误次数）、成本（平均单次请求调用量）、性能（RPM、TPM、调用时长、首[Token](../concepts/token.md)延时、非首[Token](../concepts/token.md)延时）、错误（失败率、限流错误次数）四大类；  
   - **历史对话审计**：仅对已开通推理日志且模型明确支持的版本（如 `qwen3-plus-2025-12-01` 及之后快照）生效；  
   - **Grafana / 自建系统集成**：通过私有 Prometheus HTTP API 提供标准指标查询能力，详见 [模型监控 (raw/model-user-guide/model-monitoring/model-telemetry.md)](../../raw/model-user-guide/model-monitoring/model-telemetry.md)。
 
-> **注意**：文档1中称“模型用量页面数据延迟约为 1 小时”，而文档2明确区分普通监控（小时级）与高级监控（分钟级）——二者不矛盾，但需注意：**普通监控不提供首Token延时、TPS、单次请求日志等高级能力**，这些仅在开通高级监控后可用。开发者应依据 SLA 要求选择对应能力层级。
+> **注意**：文档1中称“模型用量页面数据延迟约为 1 小时”，而文档2明确区分普通监控（小时级）与高级监控（分钟级）——二者不矛盾，但需注意：**普通监控不提供首[Token](../concepts/token.md)延时、TPS、单次请求日志等高级能力**，这些仅在开通高级监控后可用。开发者应依据 SLA 要求选择对应能力层级。
 
 ## 关键参数
 
@@ -30,7 +30,7 @@
 ## 使用方式
 
 1. **基础监控查看**：  
-   进入 [模型监控](https://bailian.console.aliyun.com/?tab=model#/model-telemetry) 页面，系统自动列出当前业务空间内所有已调用模型。点击某行「监控」可查看调用统计（失败详情、Token 消耗趋势）与性能指标（RPM、TPM、延时分布）；点击「日志」可查看已开通推理日志的调用记录。
+   进入 [模型监控](https://bailian.console.aliyun.com/?tab=model#/model-telemetry) 页面，系统自动列出当前业务空间内所有已调用模型。点击某行「监控」可查看调用统计（失败详情、[Token](../concepts/token.md) 消耗趋势）与性能指标（RPM、TPM、延时分布）；点击「日志」可查看已开通推理日志的调用记录。
 
 2. **开通高级能力**：  
    在目标业务空间的模型监控页右上角点击「模型监控配置」，依次开通：  
@@ -72,5 +72,6 @@
 
 - [模型用量](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)
 - [模型监控](../../raw/model-user-guide/model-monitoring/model-telemetry.md)
+
 
 

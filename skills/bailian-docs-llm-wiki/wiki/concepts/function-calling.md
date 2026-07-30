@@ -1,48 +1,41 @@
 # 函数调用
 
-函数调用（Function Calling）是百炼平台支持的一种结构化工具协同能力，指大语言模型在生成响应过程中，主动识别用户意图并按预定义 Schema 生成结构化工具调用请求（而非自由文本），交由外部系统执行后，再将结果注入后续推理。该机制实现了“思考→规划→执行→整合”的闭环，是构建可靠智能体（Agent）的核心基础设施。
+函数调用（Function Calling）是百炼平台支持的一种结构化工具协同能力，指大语言模型在生成响应过程中，主动识别用户意图并按需生成标准化的工具调用请求（而非自由文本），交由外部系统执行后，再将结果注入上下文继续推理。该机制实现了模型与真实世界服务（如搜索、计算、数据库查询等）的安全、可控、可追溯集成。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-函数调用能力在百炼平台中并非全局统一启用，其支持范围、行为细节和配置方式因接入协议与模型而异：
+- **DashScope 原生接口**：通过 `tools` 参数传入 JSON Schema 定义的工具列表，配合 `tool_choice` 控制调用策略（`auto` / `required` / 具体工具名）。模型返回 `output.choices[].message.tool_calls` 字段，含 `id`、`function.name` 和 `function.arguments`，开发者需解析、执行并构造 `tool_result` 回填调用结果。
+  
+- **Anthropic 兼容 Messages 接口**：使用 `tool_use` 消息类型，模型输出中以 `content` 数组包含 `{"type": "tool_use", "id": "...", "name": "...", "input": {...}}` 结构；需按 Anthropic 协议规范构造 `tool_result` 消息重新提交，支持多轮工具链式调用。
 
-- **DashScope 原生接口**：完全支持自定义函数调用。开发者通过 `tools` 参数传入 OpenAI 风格的工具定义（含 `name`、`description`、`parameters` JSON Schema），模型返回 `output.choices[0].message.tool_calls` 数组，包含 `function.name` 和 `function.arguments` 字符串（需 `json.loads` 解析）。支持多工具并行调用、嵌套调用及调用后自动追加执行结果继续推理（需设置 `enable_tool_choice: "auto"` 或指定 `tool_choice`）。
+- **OpenAI 兼容 Responses 接口**：**不支持自定义函数调用**，仅内置三类平台托管工具（联网搜索、代码解释器、网页内容提取），由模型自动触发，开发者无需定义 `tools`，也无需手动处理调用逻辑——平台自动完成执行与结果注入，适合快速构建免运维智能助手。
 
-- **Anthropic 兼容 Messages 接口**：支持 `tool_use` 块输出，使用 Anthropic 原生 `tools` 定义语法（`input_schema` 替代 `parameters`），响应中以 `content` 数组中的 `tool_use` 类型块返回调用请求。注意：`system` 提示词长度受限于 4096 token，可能影响复杂工具描述的完整性。
+- **Qwen 系列旗舰模型（如 `qwen3.7-plus`）**：原生强化支持函数调用，兼容 OpenAI/Anthropic/DashScope 三种协议，且在长上下文（1M token）、结构化 JSON 输出、多工具并行调用等场景表现更稳定；而 `qwen3.7-max` 等强推理模型默认禁用函数调用，以专注复杂逻辑推演（详见模型选型指南）。
 
-- **OpenAI 兼容 Chat Completions 接口**：**不支持流式工具调用响应解析**——虽然请求可携带 `tools`，但流式响应（`stream: true`）的 `delta.tool_calls` 可能缺失参数或顺序错乱；建议在非流式模式下使用，并严格校验 `finish_reason == "tool_calls"` 后再解析 `message.tool_calls`。
-
-- **OpenAI 兼容-Responses 模式**：仅支持平台预置的三类内置工具（联网搜索、代码解释器、网页内容提取），**不可自定义 `tools`**。调用逻辑由平台自动触发与编排，开发者只需在 `messages` 中提供自然语言请求，无需声明工具定义。
-
-> ⚠️ 注意：`qwen3.7-max` 等强推理模型默认禁用结构化输出（含函数调用），如需启用，请优先选用 `qwen3.7-plus` 或 `qwen3.7-flash`；同时，联网搜索与函数调用互斥，二者不可同时开启。
+> ⚠️ 注意：函数调用与联网搜索功能互斥——启用 `enable_search: true` 时，`tools` 参数将被忽略，请求将失败。
 
 ## 关键参数和配置
 
-| 参数 | 所属接口 | 说明 | 示例值 |
-|------|----------|------|--------|
-| `tools` | DashScope、Anthropic 兼容 | 工具定义列表，格式为 OpenAI 或 Anthropic 规范 | `[{"type": "function", "function": {"name": "get_weather", "description": "...", "parameters": {...}}}]` |
-| `tool_choice` | DashScope | 控制模型是否调用工具及调用策略 | `"auto"`（默认）、`"none"`、`{"type": "function", "function": {"name": "get_weather"}}` |
-| `enable_tool_choice` | DashScope（旧版别名） | 同 `tool_choice`，已逐步被后者替代 | `"auto"` |
-| `response_format` | DashScope | 强制结构化输出格式，与函数调用协同使用 | `{"type": "json_object"}`（需配合 `tools` 使用） |
-| `enable_search` | DashScope | 启用内置联网搜索（与自定义 `tools` 互斥） | `true` |
-| `tools`（OpenAI 兼容） | [OpenAI 兼容接口](openai-compatible-interface.md) | 仅用于非流式请求；流式响应中 `delta.tool_calls` 不可靠 | 同上 |
+| 参数 | 所属接口 | 类型 | 说明 |
+|------|----------|------|------|
+| `tools` | DashScope、Anthropic 兼容 | array | 工具定义列表，每个元素为 `{ "type": "function", "function": { "name": "...", "description": "...", "parameters": { ... } } }`；`parameters` 必须为合法 JSON Schema（支持 `string`/`number`/`boolean`/`object`/`array` 及嵌套） |
+| `tool_choice` | DashScope | string / object | 控制调用行为：<br>`"auto"`（默认，模型自主决定）<br>`"none"`（禁止调用）<br>`{"type": "function", "function": {"name": "xxx"}}`（强制调用指定工具） |
+| `tool_choice` | Anthropic 兼容 | string | 仅支持 `"auto"` 或 `"any"`（等效于 `auto`）；不支持强制指定单个工具 |
+| `previous_response_id` | OpenAI 兼容 Responses | string | 用于关联上一轮响应（格式 `resp_xxx`），实现多轮对话中工具调用历史的自动维护，**不可用于自定义工具调用** |
+| `output_format: "json"` | DashScope | string | 配合函数调用使用，确保模型输出严格遵循 JSON Schema，提升 `arguments` 解析可靠性（推荐开启） |
 
-- **认证与路由**：所有函数调用均需标准鉴权（`Authorization: Bearer <API_KEY>`），且必须使用对应协议的 Endpoint（如 DashScope 原生接口使用 `/api/v1/services/aigc/text-generation/generation`）。
-- **输入构造**：工具调用依赖 `messages` 中清晰的用户指令（如“查上海今天天气”），模型据此生成符合 `tools` Schema 的调用请求；避免在 `system` 提示中重复定义工具，应集中于 `tools` 参数。
-- **错误处理**：若 `arguments` 解析失败（JSON 格式错误）、工具执行超时或返回异常，需由业务层捕获并构造 error message 追加至 `messages` 后重试。
+- **流式响应注意事项**：在 `stream: true` 模式下，`tool_calls` 可能分块返回（尤其 [OpenAI 兼容接口](openai-compatible-interface.md)），建议优先使用非流式模式验证逻辑，或在客户端聚合所有 `delta.tool_calls` 后统一解析。
+- **认证与地域**：函数调用能力依赖模型本身支持，调用时仍需标准鉴权（`Authorization: Bearer <api_key>` 或 `X-DashScope-Signature`），且部分模型（如 `qwen-coder-turbo` 的 `completions` 接口）仅限华北2（北京）地域可用。
 
-## 面向开发者，简洁实用
+## 面向开发者：一句话实践建议
 
-- ✅ **推荐路径**：生产环境首选 **DashScope 原生接口** + `qwen3.7-plus`，它提供最完整的工具定义、调用控制与错误反馈能力。
-- ✅ **快速验证**：开发调试阶段可用 **OpenAI 兼容-Responses** 模式，零配置体验内置工具链（搜索/代码执行），但无法扩展自定义能力。
-- ❌ **规避陷阱**：勿在 [OpenAI 兼容接口](openai-compatible-interface.md)中依赖流式 `tool_calls`；勿在 `qwen3.7-max` 上启用 `tools`；勿同时设置 `enable_search: true` 和自定义 `tools`。
-- 🛠️ **调试技巧**：开启 `stream: false` + `debug: true`（DashScope）可获取完整推理 trace，观察模型何时、为何选择调用某工具；使用 `seed` 固定随机性便于复现问题。
+> 优先选用 DashScope 原生接口 + `qwen3.7-plus` 模型进行函数调用开发：它提供最完整的工具定义、最稳定的参数解析、最灵活的调用控制，并支持 `output_format: "json"` 强约束，显著降低集成复杂度与出错概率。
 
 ## 关联主题页
 
 - [qwen api reference](../api/qwen-api-reference.md)
-- [more about models](../api/more-about-models.md)
 - [model experience](../guides/model-experience.md)
 - [toolkits and frameworks](../api/toolkits-and-frameworks.md)
+- [more about models](../api/more-about-models.md)
 
 

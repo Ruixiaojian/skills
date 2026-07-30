@@ -48,7 +48,7 @@
 - **文件时效性**：聊天窗口上传的文件**仅在当前会话有效**，刷新或关闭页面即失效；生产环境强烈推荐使用 `session_file_id` 方式上传 [文件问答](../../raw/application-user-guide/llm-application/file-q-a.md)。  
 - **计费要点**：  
   - 模型调用费用 = 输入 [Token](../concepts/token.md)（含知识库召回内容、文件解析文本） + 输出 [Token](../concepts/token.md)；  
-  - 全文引用模式 Token 消耗显著高于切片检索；  
+  - 全文引用模式 [Token](../concepts/token.md) 消耗显著高于切片检索；  
   - MCP 工具调用可能产生第三方费用，百炼平台不代收。  
 - **缓存机制**：仅支持**隐式缓存**（自动识别公共前缀并按 20% 计费），暂不支持显式缓存配置 [新版智能体应用 (raw/application-user-guide/llm-application/new-single-agent-application.md)](../../raw/application-user-guide/llm-application/new-single-agent-application.md)。  
 - **超时限制**：自定义 MCP 服务调用超时为 **5 秒**，需确保服务响应在此时限内 [智能体应用 (raw/application-user-guide/llm-application/single-agent-application.md)](../../raw/application-user-guide/llm-application/single-agent-application.md)。
@@ -61,5 +61,6 @@
 - [工作流应用](../../raw/application-user-guide/llm-application/workflow-application.md)
 - [高代码应用](../../raw/application-user-guide/llm-application/rich-code-application.md)
 - [文件问答](../../raw/application-user-guide/llm-application/file-q-a.md)
+
 
 

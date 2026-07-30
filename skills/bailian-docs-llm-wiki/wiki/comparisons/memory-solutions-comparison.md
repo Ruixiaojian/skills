@@ -1,73 +1,57 @@
 # [长期记忆](../concepts/long-term-memory.md)方案对比：Long Term Memory 与 Memory Library
 
-## 对比目的与背景
-
-在百炼平台智能体开发实践中，“[长期记忆](../concepts/long-term-memory.md)”是构建具备上下文感知、用户理解与持续交互能力的关键基础设施。当前平台存在两套命名相近、功能重叠但定位差异显著的[长期记忆](../concepts/long-term-memory.md)能力：**Long Term Memory（新）**（文档标识为 `long-term-memory-new`）与 **Memory Library**（文档标识为 `memory-library-overview`）。开发者常因名称混淆、接口相似、文档分散而难以准确选型，导致集成成本上升、能力误用或架构冗余。
-
-本文旨在系统性对比二者在技术实现、能力边界、使用范式与运维特性上的核心差异，为开发者提供清晰、可落地的技术选型参考，避免“用错能力、多走弯路”。
+本页旨在为开发者提供清晰、客观的技术选型参考，对比百炼平台当前两类主流[长期记忆](../concepts/long-term-memory.md)能力：**Long Term Memory（新）**（即 `long-term-memory-new`）与 **Memory Library**（即记忆库体系）。二者虽在概念上同属“[长期记忆](../concepts/long-term-memory.md)”范畴，但在架构定位、能力边界、集成方式及适用阶段上存在实质性差异。本文基于官方文档、API 行为规范及实际工程实践，从关键维度展开横向对比，帮助团队根据业务目标、技术栈成熟度与智能体演进阶段做出合理决策。
 
 > ⚠️ 重要说明：  
-> - **二者并非版本迭代关系**（即 Memory Library 不是 Long Term Memory 的旧版），而是面向不同抽象层级与使用场景的并行能力组件；  
-> - **Memory Library 是平台级能力总称与产品概念**，而 **Long Term Memory（新）是其底层核心 API 实现之一**，但 Memory Library 还包含画像管理、OpenClaw 插件集成、多应用共享等更高阶能力；  
-> - 所有对比均基于当前（2024年Q3）百炼平台正式发布的文档与 API 行为，不涉及内测或灰度功能。
+> - “Memory Library” 并非独立于 Long Term Memory 的全新系统，而是其**面向产品化、规模化落地的统一能力封装与运营界面**，底层共享同一套存储、索引与模型服务；  
+> - “Long Term Memory（新）” 是底层 API 层的正式命名，强调模型驱动、结构化抽取与细粒度控制；  
+> - 二者**不构成互斥替代关系，而体现“能力原子化”与“场景工程化”的协同演进路径**。下表将明确其分工边界。
 
----
-
-## 关键维度对比表
+## 关键维度对比
 
 | 维度 | Long Term Memory（新） | Memory Library |
 |------|------------------------|----------------|
-| **本质定位** | **轻量级、API 优先的记忆操作能力封装**，聚焦单点记忆片段的增删改查与语义检索 | **平台级长期记忆解决方案**，涵盖记忆片段、用户画像、插件集成、多应用协同等完整能力栈 |
-| **输入格式** | • 必须传入 `messages`（最多50条）或 `custom_content`（≤512字符）<br>• `messages.content` 支持 string/array（含 image_url），但仅文本参与解析 | • 同样支持 `messages` / `custom_content` 输入<br>• **额外支持 `profile_schema` 触发结构化画像抽取**<br>• `meta_data` 字段更标准化，明确用于业务分类与上下文标记 |
-| **输出格式** | • `AddMemory` 返回 `memory_node_id` 及基础元数据（`created_at`, `score` 等）<br>• `SearchMemory` 返回带 `score` 的记忆片段数组，结构较扁平 | • 输出与 Long Term Memory 兼容（同构响应体）<br>• **额外提供 `GetUserProfile` 等专属接口，返回结构化 JSON 画像对象**<br>• `ListMemory` 支持分页与 `status` 字段（如 `active`/`archived`） |
-| **支持模型** | • 依赖百炼统一专用记忆模型（非通用大模型）<br>• **不开放模型选择权**，所有能力由平台自动调度 | • 同样基于专用记忆模型<br>• **通过 `project_id` 可显式绑定不同记忆规则（含不同模型微调版本或提取策略）**，支持 A/B 测试与策略灰度 |
-| **API 端点** | • 固定 Base URL：<br>`https://dashscope.aliyuncs.com/api/v2/apps/memory/`<br>• 接口路径严格遵循 `/add`, `/search`, `/list`, `/delete`, `/update` | • **端点完全兼容 Long Term Memory（同一 Base URL）**<br>• **额外提供画像专属端点**：<br>`/profile/schema`（创建 Schema）<br>`/profile/{user_id}`（获取画像）<br>`/library/{id}/rules`（管理规则） |
-| **计费方式** | • 按 API 调用量计费（QPS/月调用量）<br>• `AddMemory`、`SearchMemory` 等独立计费项<br>• **无按存储容量或记忆条目数收费** | • 计费模型与 Long Term Memory **完全一致**（同一计费体系）<br>• **但 `GetUserProfile` 等画像接口计入独立计费单元**，需注意配额分配 |
-| **典型场景** | • 快速接入单点记忆能力（如聊天机器人待办提醒）<br>• 需要细粒度控制每条记忆生命周期（如手动 `UpdateMemory`）<br>• 对 SDK 封装要求高（如 `agentscope-runtime` 异步工具链） | • 构建完整用户理解闭环（记忆 + 画像 + 动态召回）<br>• 多 Agent / 多应用共享同一记忆源（如客服+营销系统共用用户偏好）<br>• 通过 OpenClaw 插件实现零代码自动捕获与召回 |
-| **SDK 支持** | • Python SDK (`agentscope-runtime>=1.1.5`) 提供 `AddMemory`, `SearchMemory`, `ListMemory` 封装<br>• `UpdateMemory` 和 `DeleteMemory` **需手写 HTTP 请求**（文档明确提示） | • 官方推荐使用 `dashscope` SDK 或 `agentscope`<br>• **OpenClaw 插件提供 `memory_store`, `memory_search` 等开箱即用工具函数**，支持 Agent 运行时直接调用<br>• `CreateProfileSchema`, `GetUserProfile` 均有完整 SDK 封装 |
-| **扩展能力** | • 支持 `enable_rerank`/`enable_judge`/`enable_rewrite` 等高级搜索开关（需显式启用）<br>• 仅支持默认记忆库或显式指定 `memory_library_id` | • **支持多记忆库管理（创建/编辑/切换）**<br>• **支持记忆规则（`project_id`）配置过期策略、字段映射、敏感词过滤等**<br>• 提供控制台可视化管理界面（记忆库列表、规则配置、画像 Schema 编辑） |
+| **定位与角色** | 底层能力 API 套件，聚焦**高可控性、可编程性与模型能力暴露**；面向需要深度定制记忆提取逻辑、规则策略或与自研 Agent 框架深度集成的开发者。 | 上层工程化抽象，聚焦**开箱即用、[多模态](../concepts/multi-modal.md)接入、跨应用复用与低代码配置**；面向希望快速构建具备持续记忆能力的智能体、且重视交付效率与运维一致性的业务/产品团队。 |
+| **输入格式** | 支持两种互斥模式：<br>• `messages`: 最多 50 条对话消息（role/content 结构），支持[多模态](../concepts/multi-modal.md) `content` 数组（但仅文本参与解析）；<br>• `custom_content`: 纯文本字符串（≤512 字符）。 | 兼容相同输入格式（`messages` / `custom_content`），并**额外支持 OpenClaw 插件的 `autoCapture` 自动捕获模式**——无需显式调用 API，由插件监听对话流自动触发记忆写入。 |
+| **输出格式** | 返回结构化记忆片段（JSON 对象），含 `id`, `content`, `timestamp`, `meta_data`, `score`（检索时）等字段；支持 `profile_schema_id` 映射后生成带 schema 标签的画像属性。 | 输出格式完全一致；**额外提供 `GetUserProfile` 接口，返回完整、归一化的用户画像 JSON 对象**（如 `{ "age": 28, "occupation": "engineer", "preference": ["python", "open-source"] }`），屏蔽碎片化片段聚合逻辑。 |
+| **支持模型与能力** | • 专用抽取模型（隐式调用，无需指定）<br>• 强语义理解：支持事件、提醒、偏好等意图识别<br>• 高级搜索开关：`enable_rerank` / `enable_judge` / `enable_rewrite`（需显式启用）<br>• 严格遵循 `profile_schema_id` 进行结构化约束 | • 底层模型完全相同<br>• **预置“默认项目”规则**（含 180 天过期策略模板，但实际存储无强制过期）<br>• 提供图形化控制台管理记忆库、规则、画像 Schema<br>• **OpenClaw 插件原生支持 `autoRecall`**：在 LLM 提示词中自动注入相关记忆，无需手动拼接上下文 |
+| **API 端点** | `POST https://dashscope.aliyuncs.com/api/v2/apps/memory/add`<br>`POST https://dashscope.aliyuncs.com/api/v2/apps/memory/search`<br>（统一 Base URL，路径区分操作） | **完全相同的 API 端点与协议**。<br>Memory Library 文档中引用的 `AddMemory` / `SearchMemory` 即指向上述 Long Term Memory（新）接口。二者为同一套后端服务。 |
+| **计费方式** | 按调用量计费（QPM 限流 + 请求次数）：<br>• 所有接口合计 ≤3000 QPM（账号级）<br>• `AddMemory` ≤120 QPM<br>• `SearchMemory` ≤300 QPM<br>• 具体单价见 [百炼定价页](https://help.aliyun.com/zh/model-studio/pricing) | **计费模型完全一致**。Memory Library 的所有操作（包括 OpenClaw 插件触发的自动调用）均计入同一账号的 Long Term Memory 调用量配额。 |
+| **典型场景** | • 构建需精细控制记忆生命周期的金融/医疗类 Agent（如：动态更新患者用药记录并校验时效性）<br>• 在自研 Agent 框架（如 LangChain、LlamaIndex）中嵌入定制化记忆模块<br>• 实验性验证不同抽取规则对业务指标的影响<br>• 需要 `UpdateMemory` 或 `DeleteMemory` 频繁操作的强状态管理场景 | • 快速上线客服/导购类智能体，要求“开箱即用”记忆能力<br>• 多个 Agent 应用（如销售助手、售后机器人）共享同一用户记忆库<br>• 使用 OpenClaw 框架，追求零侵入式记忆增强（`autoCapture` + `autoRecall`）<br>• 需要通过控制台统一管理记忆规则、画像 Schema 及审计日志 |
 
----
+## 各方案的适用场景建议
 
-## 适用场景建议
+### ✅ 推荐选择 **Long Term Memory（新）** 当：
+- 你正在开发高度定制化的 Agent，需要直接控制记忆提取的触发时机、输入内容粒度（如仅传入特定轮次对话）或后处理逻辑；
+- 你需要利用 `enable_rerank`、`enable_judge` 等高级搜索能力进行精准召回，并愿意在请求中显式配置开关；
+- 你的技术栈已集成 `agentscope-runtime` 或其他 SDK，且能接受部分操作（如 `UpdateMemory`）需直调 HTTP API；
+- 你处于 POC 或算法验证阶段，需频繁调整 `profile_schema_id` 或测试不同 `min_score` 阈值对召回质量的影响；
+- 你对数据主权要求极高，需确保所有记忆操作均有明确 trace（`request_id`）且符合内部安全审计规范。
 
-### ✅ 推荐选用 **Long Term Memory（新）** 当：
-- 项目处于快速原型验证阶段，只需基础记忆存取与语义搜索；
-- 已有成熟 Agent 框架（如 AgentScope），且希望最小侵入式集成；
-- 开发者熟悉 REST API 调用，能接受部分操作（如更新、删除）需手写请求；
-- 场景对用户画像无强需求，仅需事件型记忆（如“会议提醒”、“订单备注”）；
-- 需要精细控制 `SearchMemory` 的重排（rerank）、相关性判断（judge）等高级搜索行为。
+### ✅ 推荐选择 **Memory Library** 当：
+- 你使用 OpenClaw 作为核心框架，希望以声明式配置（`autoCapture: true`）实现记忆能力“零代码接入”；
+- 你需要在一个控制台内统一管理多个应用的记忆库、画像 Schema 和规则策略，降低跨团队协作成本；
+- 你的业务场景强调“用户一致性”，例如同一用户在售前、售中、售后多个 Bot 中的行为记忆需全局共享；
+- 你更关注最终效果而非实现细节，例如直接调用 `GetUserProfile` 获取结构化画像，而非自行聚合多个记忆片段；
+- 你处于 MVP 快速迭代期，优先保障功能交付，后续再逐步下沉至 Long Term Memory（新）进行精细化优化。
 
-### ✅ 推荐选用 **Memory Library** 当：
-- 构建生产级智能体应用，需同时管理**记忆片段 + 结构化用户画像**（如金融KYC、电商个性化推荐）；
-- 存在多个子系统或 Agent（如客服Bot、营销Bot、IoT控制Agent），需**跨应用共享同一用户记忆源**；
-- 希望通过 **OpenClaw 插件实现全自动记忆捕获（autoCapture）与动态召回（autoRecall）**，降低开发复杂度；
-- 需要**可视化配置记忆规则**（如设置某类记忆180天后自动归档）、**管理多套画像 Schema** 或进行 A/B 策略实验；
-- 团队具备一定平台使用经验，愿意利用控制台进行记忆库治理与监控。
+## 面向开发者的选型参考
 
-> 💡 **混合使用建议**：  
-> 在大型项目中，常见模式是：  
-> - 使用 **Memory Library 的 `AddMemory` / `SearchMemory` 接口**（享受插件与画像能力）；  
-> - 对于需要极致性能或特殊搜索策略的模块，**单独调用 Long Term Memory（新）的 `SearchMemory` 并启用 `enable_rerank`**；  
-> - **始终通过 `user_id` 隔离数据空间**，确保两种能力写入的数据可被对方检索（因底层存储同源）。
+| 你的需求 | 推荐方案 | 理由 |
+|----------|-----------|------|
+| **“我只想让我的 Bot 记住用户说过的话，并在下次聊天时自动想起来”** | ✅ Memory Library + OpenClaw 插件 | `autoRecall` 自动注入上下文，无需修改提示词工程；`autoCapture` 免去手动调用 `AddMemory` 的负担。 |
+| **“我需要把用户说的‘下周三下午三点开会’解析成结构化待办，并关联到日历系统”** | ✅ Long Term Memory（新） | 可通过 `profile_schema_id` 定义 `meeting_time: datetime` 字段，确保抽取结果可被下游系统直接消费；`custom_content` 模式也支持直接注入结构化文本。 |
+| **“我的 Agent 框架是自研的，不兼容 OpenClaw，但需要稳定可靠的长期记忆”** | ✅ Long Term Memory（新） | 提供标准 REST API 与 Python SDK 封装（`AddMemory`, `SearchMemory`），可无缝集成至任意框架；`user_id` 隔离机制保障多租户安全。 |
+| **“我们有 5 个不同的智能体应用，希望它们共享同一套用户偏好记忆”** | ✅ Memory Library | 通过指定相同 `memory_library_id`（或共用默认库）+ 不同 `user_id`，天然支持跨应用共享；控制台可集中查看所有应用的调用统计与错误日志。 |
+| **“我需要定期清理 6 个月前的会议记录，但保留用户的长期偏好”** | ⚠️ 两者均需业务侧实现 | 二者均**不提供自动过期删除能力**。Long Term Memory（新）需定时调用 `ListMemory` + `DeleteMemory`；Memory Library 可借助控制台“批量删除”功能或通过 OpenClaw 插件扩展钩子函数实现。 |
 
----
+> 💡 **终极建议**：  
+> **不要将二者视为二选一，而应视作同一能力栈的“底层 API”与“上层平台”**。  
+> - 初期推荐从 **Memory Library + OpenClaw** 入手，快速验证业务价值；  
+> - 当遇到性能瓶颈、定制需求或需要深度可观测性时，平滑切换至 **Long Term Memory（新）** 的细粒度 API；  
+> - 所有 `memory_library_id`、`profile_schema_id`、`user_id` 等标识符在两套方案中完全通用，迁移成本极低。  
 
-## 技术选型决策指南（面向开发者）
-
-| 决策问题 | 推荐答案 | 依据说明 |
-|----------|----------|----------|
-| **我只需要记住用户说过的话，并在下次对话中召回——该选哪个？** | Long Term Memory（新）即可满足 | 功能精简、接入快、无额外学习成本；Memory Library 的优势在此场景未被激活 |
-| **我的 Agent 需要从对话中自动提取“年龄=28”、“职业=设计师”等字段，并持久化为结构化数据——必须用哪个？** | 必须选用 Memory Library | Long Term Memory（新）不提供 `CreateProfileSchema` 或 `GetUserProfile` 接口，无法完成画像闭环 |
-| **我有 5 个不同业务线的 Bot，希望它们共用同一套用户偏好记忆——如何设计？** | 使用 Memory Library，为所有 Bot 配置相同 `memory_library_id` | Long Term Memory（新）虽支持 `memory_library_id`，但缺乏多库管理、权限隔离与控制台视图，运维风险高 |
-| **我正在用 OpenClaw 开发 Agent，不想写任何记忆 API 调用代码——怎么选？** | 直接启用 Memory Library 的 OpenClaw 插件 | Long Term Memory（新）无官方插件支持，需自行封装 `autoCapture` 逻辑 |
-| **我担心 API 调用出错，需要完整的错误追踪与问题排查能力——哪个更友好？** | 两者均返回 `request_id`，但 Memory Library 文档中明确强调 `request_id` 用于工单提报与日志关联，实操支持更完善 | Long Term Memory（新）文档仅提及 `request_id`，未说明其在售后支持中的具体用途 |
-
-> 📌 **最后提醒**：  
-> - **不要重复创建记忆库**：Memory Library 的“默认记忆库”已预置可用，Long Term Memory（新）若不传 `memory_library_id` 即使用该库；  
-> - **务必校验 `user_id`**：两个方案均强制要求，缺失将直接返回 400 错误；  
-> - **关注限流策略**：两者共享同一账号级 QPM 配额（总计 ≤3000 QPM），需在整体架构中统一分配；  
-> - **数据一致性有保障**：写入 Long Term Memory（新）的数据，可被 Memory Library 的 `SearchMemory` 检索到，反之亦然——二者底层存储与索引服务统一。
+如需进一步了解具体接口调用示例、错误码详解或配额扩容流程，请参阅对应 API 参考文档。
 
 ## 被对比主题页
 

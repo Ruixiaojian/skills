@@ -10,7 +10,7 @@
 
 - **视觉模型**：万相系列（`wan2.7` 图像/视频生成）、Qwen-VL系列（`qwen3-vl-plus` 用于解题与批改）、HappyHorse 视频生成模型。其中，[HappyHorse 打造一站式影视创作平台](../../raw/model-user-guide/use-cases/infinite-canvas.md) 展示了如何融合 Wan2.7 与 HappyHorse 构建节点式无限画布创作流。
 
-- **[多模态](../concepts/multi-modal.md)与实时交互**：`qwen3.5-omni-plus-realtime` 支持 WebRTC 实时音视频通话；多模态交互套件（multimodal-dialog）面向硬件终端提供低延迟交互能力。
+- **[多模态](../concepts/multi-modal.md)与实时交互**：`qwen3.5-omni-plus-realtime` 支持 WebRTC 实时音视频通话；[多模态](../concepts/multi-modal.md)交互套件（multimodal-dialog）面向硬件终端提供低延迟交互能力。
 
 - **增强与编排能力**：RAG（基于 LlamaIndex 集成知识库）、Agent（自主决策与 Function Call）、工作流（可视化节点编排）、深度研究（Qwen-Deep-Research 自动化情报分析）。
 
@@ -85,5 +85,6 @@
 - [Vidu视频生成Prompt指南](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/vidu-video-generation-prompt-guide.md)
 - [MiMo-小米](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/mimo.md)
 - [Stepfun-阶跃星辰](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/stepfun.md)
+
 
 

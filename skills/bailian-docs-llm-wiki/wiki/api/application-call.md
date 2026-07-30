@@ -18,7 +18,7 @@
 |--------|------|------|------|
 | `app_id` | string | 是 | 应用唯一标识，从[应用管理](https://bailian.console.aliyun.com/#/app-center)页面复制；若应用位于子业务空间或特定地域（如德国法兰克福），还需提供 `workspace_id` —— 获取方式详见[获取APP ID和Workspace ID](../../raw/application-api-reference/application-call/obtain-the-app-id-and-workspace-id.md)。 |
 | `input` | string 或 array | 是 | 核心输入内容：<br>- 字符串：用于单轮纯文本对话；<br>- 消息数组：用于多轮对话或含图片/文件的[多模态](../concepts/multi-modal.md)输入，格式需符合 OpenAI 兼容规范（`role`, `content` 等）。 |
-| `stream` | boolean | 否（默认 `false`） | 是否启用流式输出。仅同步调用有效；异步调用中设置 `true` 将被忽略。 |
+| `stream` | boolean | 否（默认 `false`） | 是否启用[流式输出](../concepts/streaming-output.md)。仅同步调用有效；异步调用中设置 `true` 将被忽略。 |
 | `background` | boolean | 否（默认 `false`） | 是否启用异步模式。设为 `true` 时立即返回任务 ID，后续需调用 `retrieve` 查询结果。 |
 | `biz_params` | object | 否 | 传递应用内定义的**自定义参数**（如城市名、索引值等），参数名与类型须与应用配置严格一致；该参数仅在 OpenAI 兼容模式（Responses API）中生效。 |
 
@@ -58,5 +58,6 @@
 - [应用 DashScope API 参考](../../raw/application-api-reference/application-call/application-dashscope-api-reference/agent-and-workflow-application-api-reference.md)
 - [同步调用 API 参考](../../raw/application-api-reference/application-call/openai-responses-api/synchronous-call-api-reference.md)
 - [异步调用API参考](../../raw/application-api-reference/application-call/openai-responses-api/asynchronous-call-api-reference.md)
+
 
 

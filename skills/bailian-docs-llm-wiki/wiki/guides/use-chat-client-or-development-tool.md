@@ -15,7 +15,7 @@
 
 | 参数 | 说明 | 示例值 |
 |------|------|--------|
-| `API Key` | 方案专属密钥，不可跨方案复用 | Token Plan 个人版：`sk-xxx`（控制台获取） |
+| `API Key` | 方案专属密钥，不可跨方案复用 | [Token](../concepts/token.md) Plan 个人版：`sk-xxx`（控制台获取） |
 | `Base URL` | 必须与 API Key 所属方案及地域严格匹配 | OpenAI 兼容：<br>`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`<br>Anthropic 兼容：<br>`https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic` |
 | `Model ID` | 模型名称需与方案支持列表一致；部分工具要求别名（如 `kimi-k2.6` → `kimi-k2-6`） | `qwen3.8-max-preview`, `glm-5-2` |
 | `thinking` / `enable_thinking` | qwen3.8-max-preview 强制启用，不可关闭；temperature < 0.6 时自动设为 0.6 | `true`（必填） |
@@ -64,5 +64,6 @@
 - [更多工具](../../raw/model-user-guide/use-chat-client-or-development-tool/more-tools.md)
 - [Qoder CN（原 Lingma）](../../raw/model-user-guide/use-chat-client-or-development-tool/lingma-agent.md)
 - [Qoder](../../raw/model-user-guide/use-chat-client-or-development-tool/qoder-agent.md)
+
 
 

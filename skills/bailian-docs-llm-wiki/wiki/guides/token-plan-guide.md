@@ -11,11 +11,11 @@
 - **[多模态](../concepts/multi-modal.md)生成**：图像、视频、语音模型需通过工具扩展机制（如 Slash Command、Skill、Agent）接入，不可直接通过 OpenAI/Anthropic 兼容 Base URL 调用 [接入多模态生成模型](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-multimodal-gen.md)。
 - **视觉理解**：qwen3.7-plus、qwen3.6-plus、kimi-k2.5 等模型原生支持；glm-5、MiniMax-M2.5 等纯文本模型需通过 Skill 或 Agent 辅助实现 [添加视觉理解能力](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/add-vision-skill.md)。
 
-> **注意**：文档 13（Coding Plan概述）中声明“Lite 套餐已于 2026 年 3 月 20 日起停止新购”，而文档 1 中明确指出“推荐使用 [Token](../concepts/token.md) Plan，支持更多模型和 Harness 工具”。二者定位不同，Coding Plan 已逐步被 Token Plan 替代，开发者应优先选用 Token Plan。
+> **注意**：文档 13（Coding Plan概述）中声明“Lite 套餐已于 2026 年 3 月 20 日起停止新购”，而文档 1 中明确指出“推荐使用 [Token](../concepts/token.md) Plan，支持更多模型和 Harness 工具”。二者定位不同，Coding Plan 已逐步被 [Token](../concepts/token.md) Plan 替代，开发者应优先选用 [Token](../concepts/token.md) Plan。
 
 ## 关键参数
 
-- **Credits 计费机制**：单次消耗由模型类型、Token 用量、思考模式及工具调用动态决定，实际消耗以控制台用量明细为准。
+- **Credits 计费机制**：单次消耗由模型类型、[Token](../concepts/token.md) 用量、思考模式及工具调用动态决定，实际消耗以控制台用量明细为准。
 - **限额机制**：
   - *个人版*：采用双层窗口限额——**每 5 小时**和**每 7 天**独立计时，任一触顶即暂停服务；额度不结转，可购买用量包补充或手动重置 [Token Plan 个人版](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-overview.md)。
   - *团队版*：采用**月度总额度制**，无窗口限制；各坐席额度按月重置，未用完不结转；超出后可购买共享用量包（625,000 Credits/个，有效期 1 个月）[Token Plan 团队版](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-overview.md)。
@@ -32,7 +32,7 @@
 3. **工具接入**：支持 Cursor、Claude Code、Qwen Code、Qoder、OpenClaw 等主流工具，配置 API Key 和 Base URL 即可启用 [快速开始（个人版）](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-quick-start.md) 和 [快速开始（团队版）](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-quickstart.md)。
 4. **高级能力接入**：
    - Harness 工具：切换至支持模型后直接提问，模型自动调用。
-   - 多模态模型：需在工具中配置 Skill/Slash Command/Agent，调用独立接口（如 `/text-to-image`）。
+   - [多模态](../concepts/multi-modal.md)模型：需在工具中配置 Skill/Slash Command/Agent，调用独立接口（如 `/text-to-image`）。
    - 联网搜索 MCP：需额外开通百炼通用 API Key（`sk-`）驱动的 MCP 服务，与 Token Plan 专属 Key 分离 [联网搜索](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/web-search-mcp.md)。
 
 ## 限制和注意事项
@@ -62,5 +62,6 @@
 - [联网搜索](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/web-search-mcp.md)
 - [Coding Plan概述](../../raw/model-user-guide/token-plan-guide/coding-plan-guide/coding-plan.md)
 - [常见问题](../../raw/model-user-guide/token-plan-guide/coding-plan-guide/coding-plan-faq.md)
+
 
 

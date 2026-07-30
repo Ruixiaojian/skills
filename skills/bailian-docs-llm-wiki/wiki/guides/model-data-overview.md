@@ -32,7 +32,7 @@
   - SFT训练集最小需**上千条优质样本**，CPT需**千万级[Token](../concepts/token.md)预训练数据**；DPO一般需**上百条人类偏好数据**。  
   - ZIP包最大2GB（训练集）或20MB（图生视频`data.jsonl`），图片单张≤1024px且≤10MB，视频≤4096×4096。  
 - **功能边界**：  
-  - 数据处理不支持多模态或DPO训练集；  
+  - 数据处理不支持[多模态](../concepts/multi-modal.md)或DPO训练集；  
   - 日志回流评测集不支持OSS挂载；  
   - 图生视频验证集无需提供视频文件，由平台自动调用模型生成预览。  
 - **版本管理**：数据清洗、增强及日志回流均生成独立版本，不会覆盖原始数据集，但名称与描述创建后不可修改。  
@@ -43,5 +43,6 @@
 - [训练集与评测集](../../raw/model-user-guide/model-data-overview/training-set-and-evaluation-set.md)
 - [数据清洗或增强](../../raw/model-user-guide/model-data-overview/data-processing.md)
 - [日志回流](../../raw/model-user-guide/model-data-overview/model-log-backflow.md)
+
 
 

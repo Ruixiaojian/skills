@@ -1,42 +1,61 @@
 # 文件处理
 
-文件处理是百炼平台中对非结构化与半结构化数据（如 PDF、Word、Excel、CSV、JPG、PNG 等）进行上传、解析、引用、转换与输出的核心能力集合，贯穿模型调用、智能体执行、知识库构建与数据连接等关键链路。它不直接参与模型推理，而是为大模型和业务逻辑提供安全、标准化的文件输入通道与结果交付载体。
+文件处理是百炼平台中统一抽象的、面向非结构化与半结构化数据（如文本、表格、图像）的接入、解析、操作与协同能力，贯穿模型调用、智能体运行、知识库构建及技能执行等多个核心场景。它不指代单一 API，而是由文件管理、数据连接、Managed Agents 和 Skill 等模块协同提供的端到端能力集合，核心目标是让大模型和智能体能安全、可控、语义化地“理解并操作文件”。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-- **模型调用场景**：通过 `file management API` 上传文件获取 `file_id`，在 `chat/completions` 或[多模态](multi-modal.md)请求（如 `qwen-vl-plus`）中以 `file_id` 或 `oss://` URL 引用；需注意 `purpose` 参数（`assistants` / `vision`）决定文件是否可用于文本理解或视觉模型。
-- **智能体（Agent）场景**：用户上传附件后，系统自动识别 MIME 类型与内容特征，结合 Skill 的 `description` 语义匹配，触发 `pdf`、`xlsx` 等官方 Skill 执行解析、格式转换或表格生成，并以新文件形式返回结果。
-- **RAG 与知识库场景**：通过应用支持模块上传 `.pdf`/`.docx` 等文档，平台调用文档理解能力完成切片、向量化与索引构建；文件作为知识源参与检索增强，不直接参与对话流但影响生成质量。
-- **数据连接场景**：文件连接器（File Connector）将本地或 OSS 中的静态文档批量导入平台，经统一解析后形成可检索的知识集；表格连接器则处理 Excel/CSV，支持 `image_url` 字段用于[多模态](multi-modal.md)向量构建。
-- **异步任务与临时资源场景**：调用图像/视频生成等异步模型时，需先通过 `getPolicy` 接口获取临时 OSS 上传策略，生成 `oss://` URL 并在请求头中显式启用 `X-DashScope-OssResourceResolve: enable`，该 URL 48 小时后自动失效。
+- **文件管理 API（基础层）**：提供文件的上传、查询、列举与删除等全生命周期元数据与二进制操作。上传后获得全局唯一的 `file_id`，该 ID 可在后续任意支持文件引用的接口（如 `chat/completions`、Managed Agents 会话、Skill 调用）中复用。注意：此层仅托管文件，**不执行解析或嵌入生成**，纯属资源中枢。
+
+- **Managed Agents（运行时层）**：在沙箱环境中支持对已挂载文件的实时读写、编辑、执行命令（如 `bash`, `grep`, `edit`）。文件通过 `resources` 参数挂载至 `/mnt/session/uploads/` 下，单文件 ≤10 MB；Agent 可基于上下文自主调用工具完成清洗、转换、分析等操作，状态跨事件持久化，但 Session 终止即销毁。
+
+- **数据连接（知识层）**：通过「文件连接器」或「表格连接器」将 PDF/Word/Excel/CSV 等文件批量导入平台，触发后台文档理解服务（如 Qwen-VL [多模态](multi-modal.md)解析），构建可检索的知识库。此过程为异步、批处理式，生成独立副本，适用于 RAG 场景；不支持 JSON/YAML 直接导入，需转为 XLSX/XLS。
+
+- **Skill（能力封装层）**：以预置或自定义 ZIP 包形式封装专业文件处理逻辑（如发票识别、Excel 表格生成、PDF 文本提取）。Skill 由模型根据用户指令语义 + 附件类型自动匹配调用，输出结果以新文件形式返回（如 `.xlsx`），运行于沙箱，禁止外网访问与系统命令。
+
+- **Application Support（应用集成层）**：在 RAG 应用中直接上传 `.pdf`（小写）、`.docx` 等格式文档作为知识源；文件格式与命名（如 `.pdf` 必须小写）直接影响解析成功率。此层强调易用性，但底层仍依赖文件管理 API 上传 + 数据连接解析流水线。
+
+> ⚠️ 关键区分：  
+> - `file_id` 是跨模块复用的统一标识符，但**用途受 `purpose` 参数约束**（`assistants` vs `vision`）；  
+> - 文件解析（OCR、结构提取、向量化）由 `document_parse` 或数据连接后台异步完成，**不可通过文件管理 API 同步触发**；  
+> - 所有文件操作均默认**无自动清理策略**，需开发者主动调用 DELETE 或通过配额管理控制。
 
 ## 关键参数和配置
 
-| 参数 | 所属模块 | 说明 | 注意事项 |
-|------|----------|------|----------|
-| `file_id` | File Management API | 文件唯一标识符，上传成功后返回，全局唯一且不可复用 | 删除后所有关联调用立即失效；不可修改 purpose |
-| `purpose` | File Management API | 取值 `assistants`（默认，适用于文本类模型）或 `vision`（仅限[多模态](multi-modal.md)模型如 `qwen-vl`） | 同一文件若需双用途，必须分别上传两次并指定不同 purpose |
-| `expire_in_seconds` | More about Models | 临时 API Key 有效期（1–1800 秒） | 用于前端直传等不可信环境，到期自动作废 |
-| `X-DashScope-OssResourceResolve: enable` | Model Calling (Multi-modal) | 使用 `oss://` URL 时必需的请求头 | 缺失将导致模型拒绝访问文件资源 |
-| `MD5` | Application Support | 文件上传完整性校验字段 | 必填，用于服务端比对防止传输损坏 |
-| `bailian-connector-access` / `bailian-datahub-access` | Data Connection | OSS Bucket 标签，区分连接器类型权限 | 前者用于文件/表格连接器（值 `ReadAndWrite`），后者用于数据枢纽型 OSS 连接（值 `read`），不可混用 |
-
-> ⚠️ 共同限制：单文件 ≤ 512 MB；禁止 `.exe`、`.zip`、`.jar` 等可执行/压缩格式；PDF 后缀必须为小写 `pdf`；文件默认永久保留，需显式 DELETE 清理。
+| 模块 | 参数/配置项 | 说明 | 典型值/限制 |
+|------|-------------|------|-------------|
+| **文件管理 API** | `purpose` | 决定文件在下游模型中的可用范围 | `assistants`（默认，用于文本模型）、`vision`（用于 Qwen-VL 等[多模态](multi-modal.md)模型） |
+| | `file_id` | 上传成功后返回的全局唯一 ID，用于所有引用场景 | 字符串，不可修改、不可重用 |
+| | 单文件大小 | 上传硬限制 | ≤ 512 MB（超出返回 `413`） |
+| **Managed Agents** | `resources` | 挂载文件列表，含 `resource_id`（即 `file_id`）与 `mount_path` | 路径固定为 `/mnt/session/uploads/{filename}`，单文件 ≤10 MB |
+| | `tools` | 控制是否启用内置文件工具（`read`/`write`/`edit` 等） | 默认全启用，暂不支持细粒度开关 |
+| **数据连接（文件/表格）** | 存储位置 | 决定数据副本归属 | 平台存储（免费额度：200,000 文件 + 1 TB）或自有 OSS（需打 `bailian-connector-access: ReadAndWrite` 标签） |
+| | 解析方式 | 影响内容提取质量 | 默认（平台优化策略）或自定义（指定 OCR/版面模型） |
+| **Skill** | `description`（SKILL.md） | Skill 是否被触发的核心语义依据 | 必须明确声明支持的输入类型（如 `"PDF 发票"`）、操作（如 `"提取金额与日期"`）及不适用场景 |
+| | ZIP 包大小 | 自定义 Skill 上传限制 | ≤ 10 MB（超限直接拒绝） |
 
 ## 面向开发者，简洁实用
 
-- ✅ **首选路径**：生产环境优先使用 `file management API` 上传 + `file_id` 引用，避免临时 URL 的 48 小时生命周期约束；
-- ✅ **多模态必做**：调用 `qwen-vl-*` 模型前，务必确认 `purpose=vision`，否则图像无法被识别；
-- ✅ **Skill 开发提示**：自定义 Skill ZIP 包 ≤ 10 MB，运行于沙箱，禁止外网访问；输出文件需通过标准返回协议（如 `{"file": "result.xlsx"}`）交付；
-- ✅ **调试建议**：文件未生效？检查 `file_id` 是否有效、`purpose` 是否匹配模型、请求头是否缺失 `X-DashScope-OssResourceResolve`、OSS Bucket 标签是否正确；
-- ❌ **禁止行为**：不要重复上传同名文件期望复用 `file_id`（每次生成新 ID）；不要在 Skill 中尝试写数据库或调用外部 API（沙箱限制）；不要将临时 `oss://` URL 用于长期存储或压测（QPS 限 100，且非生产级设计）。
+- ✅ **统一 ID，分场景复用**：一次上传（`POST /v1/files`），获取 `file_id`，即可在 Agents 会话、Skill 调用、RAG 知识库、`chat/completions` 中引用——但务必确认 `purpose` 匹配目标模型能力。
+- ✅ **按需选择处理层级**：
+  - 快速托管+引用 → 用 **文件管理 API**；
+  - 需沙箱内交互式操作（如改 Excel、跑脚本）→ 用 **Managed Agents**；
+  - 批量导入+构建知识库 → 用 **数据连接（文件连接器）**；
+  - 封装专业逻辑（如合同比对）→ 开发 **Skill**。
+- ✅ **避坑清单**：
+  - 图像文件若要用于 `qwen-vl`，上传时必须设 `purpose=vision`，否则无法引用；
+  - 文件连接器不支持 `.json`/`.csv` 直传，需转 `.xlsx`；
+  - Managed Agents 挂载文件路径固定为 `/mnt/session/uploads/...`，勿硬编码其他路径；
+  - Skill 的 `description` 必须覆盖典型触发词+文件类型，否则模型大概率漏触发；
+  - 所有删除操作（DELETE `/v1/files/{id}`）**不可逆**，且立即使关联调用失效。
+
+文件处理不是黑盒，而是百炼平台能力分层设计的体现：底层管资源，中层管执行，上层管语义。掌握各层边界与协作方式，即可高效构建稳健的文件智能应用。
 
 ## 关联主题页
 
 - [file management api](../api/file-management-api.md)
+- [managed agents](../guides/managed-agents.md)
 - [data connection overview](../guides/data-connection-overview.md)
 - [skill](../guides/skill.md)
-- [more about models](../api/more-about-models.md)
 - [application support](../guides/application-support.md)
 
 

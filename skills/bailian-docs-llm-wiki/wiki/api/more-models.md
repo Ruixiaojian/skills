@@ -42,7 +42,7 @@
 
 - **地域限制**：`qwen-deep-research` 仅限华北2（北京）地域，其他地域调用将失败；`qwen-mt-plus` 和 `qwen3.5-ocr` 支持北京、新加坡、美国（弗吉尼亚）三地，但各地区 API Key 不互通。
 - **SDK 限制**：`qwen-deep-research` 当前仅支持 Python DashScope SDK，不支持 Java SDK 和 [OpenAI 兼容接口](../concepts/openai-compatible-interface.md)（见[Qwen-Deep-Research API 参考](../../raw/model-api-reference/more-models/qwen-deep-research-api.md)）。
-- **成本与配额**：`tongyi-intent-detect-v3` 提供 100 万 [Token](../concepts/token.md) 免费额度（开通后 90 天内有效），其余模型按实际 Token 数计费；`farui-plus` 输入/输出成本分别为 20 元/百万 Token（见[通义法睿大语言模型](../../raw/model-api-reference/more-models/tongyi-farui-api.md)）。
+- **成本与配额**：`tongyi-intent-detect-v3` 提供 100 万 [Token](../concepts/token.md) 免费额度（开通后 90 天内有效），其余模型按实际 [Token](../concepts/token.md) 数计费；`farui-plus` 输入/输出成本分别为 20 元/百万 [Token](../concepts/token.md)（见[通义法睿大语言模型](../../raw/model-api-reference/more-models/tongyi-farui-api.md)）。
 - **流式响应解析**：`qwen-deep-research` 的流式响应包含 `phase` 字段（如 `"ResearchPlanning"`、`"WebResearch"`、`"answer"`），需据此区分阶段并处理 `extra.deep_research.references` 等结构化数据。
 - **图像处理约束**：`qwen3.5-ocr` 和 `gui-plus-2026-02-26` 对输入图像有像素阈值（`min_pixels`/`max_pixels`），超出范围将自动缩放，需在请求中显式配置以避免失真。
 
@@ -54,5 +54,6 @@
 - [Qwen-Deep-Research API 参考](../../raw/model-api-reference/more-models/qwen-deep-research-api.md)
 - [Qwen-OCR API参考](../../raw/model-api-reference/more-models/qwen-vl-ocr-api-reference.md)
 - [GUI-Plus API参考](../../raw/model-api-reference/more-models/gui-plus-interface-interaction-model.md)
+
 
 

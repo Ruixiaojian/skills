@@ -16,13 +16,13 @@
 ## 关键参数
 
 - **计费维度**：以 [Token](../concepts/token.md) 为基本单位，分 `input_token` 和 `output_token` 单独计费。
-- **阶梯计费**：部分模型（如 `qwen3-max`、`qwen3.7-plus`）按单次请求的输入 [Token](../concepts/token.md) 总量分档定价，所有 [Token](../concepts/token.md) 均按所处最高档单价结算（例如输入 100K Token 落入 32K–128K 档，则全部 100K 按该档单价计费）。
+- **阶梯计费**：部分模型（如 `qwen3-max`、`qwen3.7-plus`）按单次请求的输入 [Token](../concepts/token.md) 总量分档定价，所有 [Token](../concepts/token.md) 均按所处最高档单价结算（例如输入 100K [Token](../concepts/token.md) 落入 32K–128K 档，则全部 100K 按该档单价计费）。
 - **地域差异**：同一模型在不同地域（华北2、美国、新加坡、德国、日本）价格不同，且**仅华北2（北京）地域模型享有新人免费额度**，其他地域无此权益 [原文标题](../../raw/model-user-guide/test-1/new-free-quota.md)。
-- **免费额度参数**：每个模型（含不同快照版本，如 `qwen-max` 与 `qwen-max-2026-05-17`）独立享有 100 万 Token 免费额度，有效期 90 天（自开通/模型发布/申请通过日起较晚者计算）。
+- **免费额度参数**：每个模型（含不同快照版本，如 `qwen-max` 与 `qwen-max-2026-05-17`）独立享有 100 万 [Token](../concepts/token.md) 免费额度，有效期 90 天（自开通/模型发布/申请通过日起较晚者计算）。
 
 ## 使用方式
 
-- **调用流程**：使用通用 API Key（非 Token Plan/Coding Plan 专属 Key）发起 HTTP 请求，系统自动按以下优先级抵扣费用：**免费额度 > 资源包 > 其他模型节省计划 > AI 通用型节省计划 > 按量付费** [原文标题](../../raw/model-user-guide/test-1/savings-plan-and-resource-package.md)。
+- **调用流程**：使用通用 API Key（非 [Token](../concepts/token.md) Plan/Coding Plan 专属 Key）发起 HTTP 请求，系统自动按以下优先级抵扣费用：**免费额度 > 资源包 > 其他模型节省计划 > AI 通用型节省计划 > 按量付费** [原文标题](../../raw/model-user-guide/test-1/savings-plan-and-resource-package.md)。
 - **启用免费额度**：无需额外配置，首次开通百炼后，在华北2（北京）地域调用支持的模型即自动生效。专属 API Key 不消耗免费额度，须改用通用 Key [原文标题](../../raw/model-user-guide/test-1/new-free-quota.md)。
 - **成本优化选型**：
   - 高频、跨模型调用：首选 [AI 通用型节省计划](../../raw/model-user-guide/test-1/savings-plan-and-resource-package.md)，承诺月消费额换取最高 5.3 折。
@@ -51,5 +51,6 @@
 - [节省计划与资源包](../../raw/model-user-guide/test-1/savings-plan-and-resource-package.md)
 - [账单查询与成本管理](../../raw/model-user-guide/test-1/bill-query-and-cost-management.md)
 - [模型调用价格](../../raw/model-user-guide/test-1/model-pricing.md)
+
 
 

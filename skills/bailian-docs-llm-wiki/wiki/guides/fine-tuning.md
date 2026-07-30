@@ -54,9 +54,9 @@ fine tuning（微调）是百炼平台提供的核心模型优化能力，允许
 
 - **地域与权限**：所有微调任务**仅限华北2（北京）地域**，且子账号需显式授予模型调用、训练、部署权限 [原文标题](../../raw/model-user-guide/fine-tuning/wan-image-generation-finetune-guide.md)。
 - **计费模式**：
-  - 文本/视觉微调：按训练消耗 [Token](../concepts/token.md) 数计费（单价见模型文档），[Token](../concepts/token.md) 数 = 数据 Token 总数 × 循环次数。
-  - CosyVoice：训练费 0.2 元/千 Token，部署费按模型单元时长计费。
-  - RL 训练：**强制使用 MTU 训练单元（预付费/后付费）**，不支持 Token 计费。
+  - 文本/视觉微调：按训练消耗 [Token](../concepts/token.md) 数计费（单价见模型文档），[Token](../concepts/token.md) 数 = 数据 [Token](../concepts/token.md) 总数 × 循环次数。
+  - CosyVoice：训练费 0.2 元/千 [Token](../concepts/token.md)，部署费按模型单元时长计费。
+  - RL 训练：**强制使用 MTU 训练单元（预付费/后付费）**，不支持 [Token](../concepts/token.md) 计费。
 - **数据与格式约束**：
   - 图像分辨率上限为 8K，但超过 4K 仅支持 JPG/PNG；视频帧列表模式要求 `qwen3.5+` VL 模型。
   - CosyVoice 训练数据必须为**同一发音人**，混合多人会导致音色失真；`text` 字段禁止含 SSML/LaTeX 标签。
@@ -75,5 +75,6 @@ fine tuning（微调）是百炼平台提供的核心模型优化能力，允许
 - [使用 API 或命令行进行模型调优](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/fine-tuning-api-guide.md)
 - [0 代码强化大模型安全合规能力](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/enhance-the-security-compliance-of-large-models.md)
 - [CosyVoice模型调优](../../raw/model-user-guide/fine-tuning/fine-tune-speech-synthesis-model/fine-tune-speech-synthesis-model-by-api.md)
+
 
 

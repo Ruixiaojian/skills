@@ -11,7 +11,7 @@
   - `RETRIEVER`（含 `TextRetriever` 和 `VectorRetriever`，默认返回 100 个切片）
   - `EMBEDDING`、`RERANKER`、`REWRITER`、`TOOL`、`GUARDRAIL`、`API`、`CLASSIFIER` 等工作流专用节点
   - `START`/`END`（工作流生命周期节点）
-- **核心功能**：调用链追踪（Trace/Spans）、多维筛选（按状态、Span Name、输入/输出关键词、延时、Token 量、标签等）、数据导出（JSONL/Excel）、监控统计（调用次数、失败率、Token 趋势、平均延时）、Span 数据一键导入评测集、以及支持布尔/分类/数字/文本四类数据标注。
+- **核心功能**：调用链追踪（Trace/Spans）、多维筛选（按状态、Span Name、输入/输出关键词、延时、[Token](../concepts/token.md) 量、标签等）、数据导出（JSONL/Excel）、监控统计（调用次数、失败率、[Token](../concepts/token.md) 趋势、平均延时）、Span 数据一键导入评测集、以及支持布尔/分类/数字/文本四类数据标注。
 
 > **注意**：高代码应用虽可开启观测，但 `FullCodeApp` 节点为黑盒，**不支持展开其内部调用链路**；实际可观测性依赖开发者在代码中集成 AgentScope-AI 的 Tracing 模块并启用 `--telemetry enable` 参数（参见 [应用观测](../../raw/application-user-guide/application-monitoring/application-observation.md) 中“常见问题”部分）。
 
@@ -20,7 +20,7 @@
 | 参数 | 说明 | 备注 |
 |------|------|------|
 | **Request ID / Trace ID / Span ID** | 用于精准定位单次调用或子链路 | 可在节点详情页点击“查看 ID”获取 |
-| **延时（ms）** | LLM 节点延时包含完整响应过程（含流式首 Token 时间）；整体应用延时为 Chain 根节点耗时 | “平均首 Token 耗时”仅对流式调用有效 |
+| **延时（ms）** | LLM 节点延时包含完整响应过程（含流式首 [Token](../concepts/token.md) 时间）；整体应用延时为 Chain 根节点耗时 | “平均首 Token 耗时”仅对流式调用有效 |
 | **Token 总量** | = 输入 Token + 输出 Token（LLM 节点）；Embedding 节点 Token 量仅指向量化输入长度 | 所有 Token 统计均基于对应模型 tokenizer 计算 |
 | **状态** | `正常` 或 `错误`（后者可进一步按错误类型细分） | 错误类型需结合日志与节点上下文诊断 |
 | **标签（Label）** | 支持布尔、分类、数字、文本四类标注，与评测集标签系统共享 | 单个评测集最多支持 50 个字段映射 |
@@ -58,5 +58,6 @@
 ## 来源文档
 
 - [应用观测](../../raw/application-user-guide/application-monitoring/application-observation.md)
+
 
 

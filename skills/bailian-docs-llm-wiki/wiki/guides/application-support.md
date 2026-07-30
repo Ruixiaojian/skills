@@ -16,7 +16,7 @@
 | 参数名 | 类型 | 说明 | 示例 |
 |--------|------|------|------|
 | `stream` | bool | 启用[流式输出](../concepts/streaming-output.md) | `True` |
-| `incremental_output` | bool | 启用增量式流式输出（需配合 `stream=True`） | `True` |
+| `incremental_output` | bool | 启用增量式[流式输出](../concepts/streaming-output.md)（需配合 `stream=True`） | `True` |
 | `MD5` | string | 文件上传必填，用于校验文件完整性 | `"d41d8cd98f00b204e9800998ecf8427e"` |
 
 ## 使用方式
@@ -38,5 +38,6 @@
 - [常见问题](../../raw/application-user-guide/application-support/application-faq.md)
 - [相关协议](../../raw/application-user-guide/application-support/application-related-agreements.md)
 - [阿里云百炼平台售后服务范围说明](../../raw/application-user-guide/application-support/application-after-sales-service-scope.md)
+
 
 

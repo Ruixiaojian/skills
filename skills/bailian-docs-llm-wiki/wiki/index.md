@@ -41,7 +41,7 @@
 
 - [3d generation](api/3d-generation.md) — 1 篇源文档
 - [application call](api/application-call.md) — 5 篇源文档
-- [application component api reference](api/application-component-api-reference.md) — 57 篇源文档
+- [application component api reference](api/application-component-api-reference.md) — 58 篇源文档
 - [file management api](api/file-management-api.md) — 1 篇源文档
 - [frameworks](api/frameworks.md) — 3 篇源文档
 - [image generation](api/image-generation.md) — 27 篇源文档
@@ -56,28 +56,28 @@
 - [preparations](api/preparations.md) — 4 篇源文档
 - [qwen api reference](api/qwen-api-reference.md) — 1 篇源文档
 - [realtime api user guide](api/realtime-api-user-guide.md) — 12 篇源文档
-- [toolkits and frameworks](api/toolkits-and-frameworks.md) — 9 篇源文档
+- [toolkits and frameworks](api/toolkits-and-frameworks.md) — 10 篇源文档
 - [vector and sort](api/vector-and-sort.md) — 4 篇源文档
 - [video generation api](api/video-generation-api.md) — 34 篇源文档
 
 ## 横切概念
 
 - [OpenAI 兼容接口](concepts/openai-compatible-interface.md) — 关联 5 个主题
-- [Prompt 工程](concepts/prompt-engineering.md) — 关联 4 个主题
+- [Prompt 工程](concepts/prompt-engineering.md) — 关联 5 个主题
 - [Token](concepts/token.md) — 关联 5 个主题
 - [函数调用](concepts/function-calling.md) — 关联 4 个主题
-- [多模态](concepts/multi-modal.md) — 关联 6 个主题
+- [多模态](concepts/multi-modal.md) — 关联 8 个主题
 - [文件处理](concepts/file-processing.md) — 关联 5 个主题
-- [检索增强生成](concepts/rag.md) — 关联 6 个主题
+- [检索增强生成](concepts/rag.md) — 关联 5 个主题
 - [模型上下文协议](concepts/mcp.md) — 关联 5 个主题
 - [流式输出](concepts/streaming-output.md) — 关联 5 个主题
-- [长期记忆](concepts/long-term-memory.md) — 关联 4 个主题
+- [长期记忆](concepts/long-term-memory.md) — 关联 5 个主题
 
 ## 对比分析
 
-- [多模态生成能力对比：图像生成、视频生成与3D生成](comparisons/generation-apis-comparison.md) — 对比 3 个主题
-- [实时 API 方案对比：Omni Realtime API vs Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
-- [应用构建框架对比：Managed Agents、Application Component API 与 Toolkits and Frameworks](comparisons/application-frameworks-comparison.md) — 对比 3 个主题
-- [模型部署方式对比：Model Deployment、Model Production 与 Fine-tuning](comparisons/model-deployment-options.md) — 对比 3 个主题
+- [多模态生成能力对比：图像、视频与3D生成](comparisons/generation-apis-comparison.md) — 对比 3 个主题
+- [实时 API 方案对比：Omni Realtime API 与 Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
+- [应用部署方式对比：模型部署、应用发布与托管智能体](comparisons/application-deployment-options.md) — 对比 3 个主题
+- [知识集成方案对比：Knowledge API、知识库与数据连接](comparisons/knowledge-integration-approaches.md) — 对比 3 个主题
 - [长期记忆方案对比：Long Term Memory 与 Memory Library](comparisons/memory-solutions-comparison.md) — 对比 2 个主题
 
