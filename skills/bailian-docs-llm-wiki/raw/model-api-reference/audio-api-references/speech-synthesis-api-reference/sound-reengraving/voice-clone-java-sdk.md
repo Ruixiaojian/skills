@@ -4,9 +4,9 @@
 
 **用户指南：**[声音复刻](https://help.aliyun.com/zh/model-studio/voice-cloning-user-guide)。
 
-## **服务地址**
+## **接口地址**
 
-SDK的服务端点需在初始化前设置为下方地址（包含WorkspaceId）。如需切换到其他地域，请修改 `Constants.baseHttpApiUrl`为对应地域的URL。
+SDK的接口地址需在初始化前设置为下方地址（包含WorkspaceId）。如需切换到其他地域，请修改 `Constants.baseHttpApiUrl`为对应地域的URL。
 
 ## 华北2（北京）
 

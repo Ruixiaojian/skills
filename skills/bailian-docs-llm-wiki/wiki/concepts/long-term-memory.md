@@ -1,45 +1,41 @@
 # 长期记忆
 
-长期记忆是百炼平台提供的结构化用户记忆管理能力，用于突破大模型上下文窗口限制，实现跨会话、跨对话的用户偏好、关键事件与结构化画像信息的持久化存储与语义化召回。它基于专用抽取模型自动理解对话意图，生成可检索、可管理的记忆片段，并支持与用户画像联动，使智能体具备持续上下文感知能力。
+长期记忆是百炼平台提供的结构化、持久化用户信息管理能力，用于突破大模型上下文窗口限制，实现跨会话的用户偏好、关键事件与结构化属性的自动提取、语义检索与全生命周期管理。所有记忆片段与用户画像默认永不过期（可配置），由专用记忆模型处理，不依赖通用大语言模型。
 
 ## 在百炼平台的不同场景中如何使用
 
-- **智能体（Agent）应用**：作为核心上下文增强能力，替代传统短期记忆（仅限0–30轮），支撑多轮、跨会话任务（如待办提醒、偏好记忆、服务历史追溯）。通过 `AddMemory` 自动从 `messages` 中提取“明天9点开会”等事件型记忆，或用 `custom_content` 注入结构化信息；再通过 `SearchMemory` 在新对话中动态召回相关记忆，供大模型决策参考。
-  
-- **用户画像构建**：配合 `profile_schema_id`，将对话中零散信息（如“我35岁，在杭州做设计师”）自动映射至预定义画像字段（`age`, `city`, `occupation`），支持多轮渐进式填充，最终通过 `GetUserProfile` 获取完整结构化画像。
+- **智能体（Agent）应用**：作为核心记忆中枢，支撑个性化交互。通过 OpenClaw 插件启用 `autoCapture`（对话后自动提取记忆）与 `autoRecall`（对话前自动语义检索并注入上下文），无需修改业务逻辑即可获得连贯体验；也可在 Agent 内主动调用 `memory_search` / `memory_store` 工具实现精准控制。
 
-- **插件/自动化集成**：可通过 OpenClaw 等框架配置 `autoCapture`（自动捕获）与 `autoRecall`（自动召回），无需手动调用 API；记忆库支持多应用共享，同一 `memory_library_id` 下不同 Agent 可复用同一用户记忆空间，仅通过 `user_id` 实现数据隔离。
+- **API 集成场景**：开发者可通过 REST API 或 `agentscope-runtime` SDK 直接调用 `AddMemory`、`SearchMemory` 等接口，灵活写入结构化记忆或原始文本，并基于自然语言查询实时召回相关历史信息，适用于客服系统、健康助手、旅行规划等需状态延续的业务。
 
-- **RAG 与知识协同**：长期记忆聚焦“用户专属事实”，知识库（RAG）承载“通用领域知识”，二者可并行调用——例如在客服场景中，同时检索知识库（产品说明书）和长期记忆（该用户历史投诉记录），实现个性化精准响应。
+- **记忆库（Memory Library）管理**：在控制台统一配置记忆库、片段规则（如有效期、自动更新策略）和用户画像 Schema，支持多业务隔离（通过 `user_id` + `memory_library_id`）、元数据分类（`meta_data` 字段）及规则级调试，实现可观测、可治理的记忆运营。
 
-> ⚠️ 注意：当前 LLM 应用层（如 Agent 2.0 控制台）默认仅启用短期记忆；长期记忆需显式调用 API 或配置插件启用，不自动生效。
+- **RAG 与知识增强协同**：长期记忆聚焦「用户专属事实」（如“用户对青霉素过敏”），区别于通用知识库（RAG）。二者可分层使用：RAG 提供领域知识，长期记忆注入用户上下文，共同提升回复准确性与个性化水平。
 
 ## 关键参数和配置
 
-| 参数名 | 类型 | 必填 | 说明 | 推荐值 |
-|--------|------|------|------|--------|
-| `user_id` | string | 是 | 用户唯一标识（≤64 字符），所有操作以此隔离数据空间 | `user_12345` |
-| `messages` / `custom_content` | array / string | 互斥必填 | `messages`：最多 50 条对话消息（含 role/content），用于自动抽取；`custom_content`：直接注入文本（≤512 字符） | `[{ "role": "user", "content": "帮我订每周三下午3点的会议室" }]` |
-| `memory_library_id` | string | 否 | 指定记忆库存储位置（≤32 字符）；不填则使用默认库 | 控制台「记忆库」页获取 ID |
-| `profile_schema_id` | string | 否 | 关联用户画像模板 ID，触发结构化字段抽取 | 需先通过 `CreateProfileSchema` 创建 |
-| `top_k`（SearchMemory） | integer | 否 | 检索返回的最大条数 | `3–10`（平衡精度与性能） |
-| `min_score`（SearchMemory） | double | 否 | 相似度阈值 `[0.0, 1.0]`，低于此值结果被过滤 | `0.5–0.7`（避免噪声） |
-| `meta_data` | object | 否 | 自定义键值对，用于业务标记（如 `"source": "chat"`、`"priority": "high"`） | `{ "channel": "wechat", "version": "v2" }` |
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `user_id` | string | ✅ | 用户唯一标识（≤64 字符），用于数据隔离与归属；同一 ID 下所有记忆共享命名空间。 |
+| `messages` 或 `custom_content` | array / string | ⚠️（互斥必填） | `messages`：role/content 对数组（最多 50 条），由记忆模型自动提炼关键事件；`custom_content`：纯文本（≤512 字符），绕过提取直接写入。两者共存时优先使用 `custom_content`。 |
+| `memory_library_id` | string | ❌ | 指定记忆库 ID（≤32 字符）；未传则使用默认库。可在控制台 [记忆库列表](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/memory/list) 获取。 |
+| `profile_schema` | string | ❌ | 用户画像模板 ID，需预先创建；指定后触发结构化字段抽取（如 `age`, `diet_preference`）。 |
+| `meta_data` | object | ❌ | 自定义键值对（如 `{"category": "health", "source": "onboarding"}`），用于后续过滤与分类管理。 |
 
-> ✅ **重要行为说明**：  
-> - `project_id`（记忆片段规则 ID）为可选参数，未传时系统自动选用默认规则；规则中设置的“过期时间”仅影响新写入记忆的生命周期策略，**底层存储无自动物理删除机制**，需业务侧主动调用 `DeleteMemory` 清理。  
-> - 所有接口统一鉴权：Header 中携带 `Authorization: Bearer $DASHSCOPE_API_KEY`，Content-Type 为 `application/json`。  
-> - [多模态](multi-modal.md)消息（含 `image_url`）支持传入，但当前仅对文本内容进行语义解析。
+**检索专用参数（`SearchMemory`）**：
+- `top_k`: 整数，返回最大条数（1–100，默认 10）；
+- `min_score`: 浮点数，相似度阈值 [0.0, 1.0]（默认 0.3，建议生产环境设为 0.5–0.7）；
+- `enable_rerank`: 布尔值，开启后对初筛结果进行重排序（提升相关性，轻微延迟）。
+
+> ⚠️ 注意：`AddMemory` 接口路径为 `POST /api/v2/apps/memory/add`；`SearchMemory` 当前有效路径为 `POST /api/v2/apps/memory/memory_nodes/search`（非 `/search`）。请以 [长期记忆（新）API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md) 为准。
 
 ## 开发者提示
 
-- **SDK 推荐**：Python 使用 `agentscope-runtime>=1.1.5`，已封装 `AddMemory`、`SearchMemory`、`ListMemory` 异步工具；`UpdateMemory` 和 `DeleteMemory` 需直接调用 REST API（参见 [API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)）。
-- **限流注意**：账号级总 QPM ≤3000；`AddMemory` ≤120 QPM；`SearchMemory` ≤300 QPM。高并发场景建议加缓存或批量聚合。
-- **错误排查**：所有响应含 `request_id`，失败时 HTTP 状态码非 2xx，响应体含 `code` 与 `message`，可用于工单提报。
-- **最佳实践**：  
-  - 写入前对长文本截断至 512 字符；  
-  - 检索时显式设置 `min_score` 避免低质召回；  
-  - 敏感信息（如手机号）勿明文写入，应在业务层脱敏后存储。
+- **认证方式**：所有请求需携带 `Authorization: Bearer $DASHSCOPE_API_KEY` 和 `Content-Type: application/json`。
+- **SDK 推荐**：使用 `agentscope-runtime>=1.1.5`，封装了连接池、错误重试与资源清理（务必调用 `tool.close()`）。
+- **限流策略（账号级）**：总 QPM ≤ 3000；`AddMemory` ≤ 120 QPM；`SearchMemory` ≤ 300 QPM —— 高频场景建议批量写入、缓存检索结果。
+- **数据时效性**：记忆默认永不过期，但可通过控制台为记忆库配置 7/30/180 天有效期；`project_id` 参数可指定具体规则，覆盖默认行为。
+- **调试建议**：首次集成时，优先在控制台 [记忆库调试页](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/memory/debug) 查看自动提取效果与检索命中情况，再对接代码。
 
 ## 关联主题页
 

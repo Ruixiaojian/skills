@@ -1,43 +1,43 @@
 # more
 
-`more` 是百炼平台中一组支撑性能力的统称，涵盖临时凭证管理、服务关联角色（SLR）授权、以及知识库高级检索过滤等功能。这些能力不直接参与模型推理，但为安全调用、跨云服务集成和精准语义检索提供关键基础设施支持。开发者需根据具体场景选择并正确配置对应机制。
+`more` 是百炼平台中一组面向高级用例的扩展能力集合，涵盖服务权限管理、临时凭证生成和知识库精细化检索等核心功能。这些能力不直接参与模型推理主流程，但对构建安全、可控、可观察的企业级AI应用至关重要。开发者需根据具体场景选择并正确配置对应能力。
 
 ## 支持的模型/功能
 
-- **临时 API Key 生成**：用于在浏览器、移动 App 等不可信前端环境安全调用模型服务，避免永久密钥泄露。该能力独立于具体模型，适用于所有通过 `dashscope.aliyuncs.com` 或 `bailian.aliyuncs.com` 调用的百炼/通义千问模型接口。  
-- **服务关联角色（SLR）**：百炼自动创建并托管的 RAM 角色，用于授权访问函数计算（FC）、OSS、ADB-PG、MNS、SLS、CMS、OpenTelemetry、内容安全、DTS、CPFS 等阿里云服务。不同角色对应不同功能模块，例如 `AliyunServiceRoleForSFMAccessFC` 支撑工作流中的函数计算节点调用 [原文标题](../../raw/application-api-reference/more/bailian-service-linked-role.md)。  
-- **知识库 SearchFilters**：专用于 `Retrieve` 接口的结构化过滤能力，支持在语义检索结果上叠加字段级条件（如 `{"姓名": "张三"}`），显著提升 RAG 场景下结果的相关性与准确性 [原文标题](../../raw/application-api-reference/more/how-to-use-search-filters.md)。
+`more` 并非模型名称或推理接口，而是百炼平台提供的**扩展功能模块集合**，当前包含以下三类关键能力：
+
+- **服务关联角色（SLR）管理**：为百炼各子服务（如工作流、数据管理、安全存储空间等）自动申请并托管对其他云服务（FC、OSS、ADB-PG、MNS、SLS 等）的最小必要访问权限。详见 [服务关联角色](../../raw/application-api-reference/more/bailian-service-linked-role.md)。
+- **临时 API Key 生成**：用于在不可信前端环境（如浏览器、App）中安全调用百炼 API，避免永久密钥泄露。该能力继承源 API Key 的全部权限范围。
+- **知识库 `searchFilters` 检索过滤**：在 `Retrieve` 接口请求中传入结构化过滤条件，对语义检索结果进行字段级精准筛选，显著提升结构化数据查询准确率。详见 [知识库SearchFilters](../../raw/application-api-reference/more/how-to-use-search-filters.md)。
+
+> **注意**：文档 1 中列出的 `AliyunServiceRoleForSFMTelemetry` 权限策略片段被截断（末尾缺失 `}`），实际使用时请以控制台或最新版 RAM 策略文档为准；其完整策略应包含 `xtrace` 相关读取权限及 `ram:DeleteServiceLinkedRole` 条件授权。
 
 ## 关键参数
 
-| 功能 | 参数名 | 类型 | 说明 | 取值范围/示例 |
-|------|--------|------|------|----------------|
-| 临时 API Key | `expire_in_seconds` | Integer | 临时 [Token](../concepts/token.md) 有效期（TTL） | `[1, 1800]` 秒，默认 `60`；示例：`?expire_in_seconds=1800` |
-| SearchFilters | `searchFilters` | Array of Object | 检索过滤条件数组，每个元素为一个子分组（AND 语义） | `[{"姓名": "张三"}, {"岗位": "技术员"}]`；支持单值、多值、范围（`{"年龄": {"gte": 20, "lte": 27}}`）、模糊（`{"岗位": {"like": "技%员"}}`）、标签查询 |
-| SearchFilters（范围查询） | `gt`, `gte`, `lt`, `lte`, `eq`, `neq` | String/Number | 字段比较操作符 | 仅数值字段支持 `gt`/`gte`/`lt`/`lte`；字符串和数值均支持 `eq`/`neq` |
-| SearchFilters（标签查询） | `tags` | Array of String | 文档级标签匹配（OR 语义） | `{"tags": ["A大学", "学生会主席"]}`；多子分组时为 AND+OR 混合逻辑 |
-
-> **注意**：文档 3 中 `multi_query` 示例代码使用 `json.dumps(names)` 构造多值，但实际 API 要求 `searchFilters` 中字段值应为原生 JSON 数组（如 `{"姓名": ["张三", "李四"]}`），而非字符串化数组。SDK 层需确保序列化正确，否则将导致过滤失效。请以 [原文标题](../../raw/application-api-reference/more/how-to-use-search-filters.md) 中的 JSON Schema 和实际接口行为为准。
+| 功能 | 参数名 | 类型 | 必填 | 说明 | 取值范围 |
+|------|--------|------|------|------|----------|
+| 临时 API Key | `expire_in_seconds` | Integer | 否 | 临时 [Token](../concepts/token.md) 有效期（秒） | `[1, 1800]`，默认 `60` |
+| `searchFilters` | `searchFilters` | Array of Object | 否 | 检索过滤条件数组，每个元素为一个子分组（AND 语义） | — |
+| `searchFilters` 子分组内 | 字段名（如 `"姓名"`） | String | 是 | 知识库文档元数据字段名 | 需与知识库索引字段定义一致 |
+| `searchFilters` 子分组内 | 字段值 | String / Number / Array / Object | 是 | 支持单值、多值（JSON 数组）、范围（`{"gte":18,"lte":25}`）、模糊（`{"like":"技%员"}`）、标签（`["A大学","学生会主席"]`） | 见 [知识库SearchFilters](../../raw/application-api-reference/more/how-to-use-search-filters.md) 语法说明 |
 
 ## 使用方式
 
-- **临时 API Key**：后端服务通过 `POST /api/v1/tokens` 调用生成（需携带 `Authorization: Bearer $DASHSCOPE_API_KEY`），获取 `token` 后透传至前端，前端在后续模型请求中使用该 `token` 替代永久密钥。地域 Endpoint 需与生成密钥一致（北京/新加坡/弗吉尼亚）[原文标题](../../raw/application-api-reference/more/application-obtain-temporary-authentication-token.md)。  
-- **服务关联角色**：首次启用对应功能（如添加函数计算节点、配置 OSS 数据源）时由百炼自动创建，无需手动申请。角色权限策略已预置，**禁止修改或删除**，否则将导致相关功能中断。如确需删除，须先解除所有依赖资源（如断开 OSS 连接、删除函数计算节点等）。  
-- **SearchFilters**：在 `RetrieveRequest` 请求体中直接设置 `searchFilters` 字段，配合 `indexId` 和 `query` 使用。要求知识库索引已对目标字段（如 `姓名`、`年龄`）启用结构化检索支持，且字段类型定义准确（string/double/long）。
+- **服务关联角色**：无需主动创建。当您首次在控制台启用依赖外部云服务的功能（如添加函数计算节点、配置 OSS 数据源、接入 ADB-PG 知识库）时，系统自动为您创建对应 SLR。角色名称与权限策略已预置，不可修改。详情参见 [服务关联角色](../../raw/application-api-reference/more/bailian-service-linked-role.md)。
+- **临时 API Key**：通过 `POST https://dashscope.aliyuncs.com/api/v1/tokens?expire_in_seconds=N` 调用，需在 `Authorization` Header 中携带有效的永久 `Bearer` API Key。响应返回 `token`（即临时 Key）和 `expires_at`（Unix 时间戳）。**重要**：临时 Key 继承源 Key 的全部权限，包括模型/知识库访问限制。
+- **`searchFilters`**：在调用 `Retrieve` 接口（如 `/api/v1/retrieve`）的 JSON 请求体中，与 `indexId`、`query` 同级传入 `searchFilters` 字段。支持嵌套多层逻辑（子分组间 AND，子分组内字段间 AND），不支持 OR 或 NOT 逻辑。示例见 [知识库SearchFilters](../../raw/application-api-reference/more/how-to-use-search-filters.md)。
 
 ## 限制和注意事项
 
-- 临时 API Key **不可手动撤销**，仅能等待自然过期；其权限完全继承自生成所用的永久 API Key，包括模型访问白名单与知识库权限。  
-- 所有服务关联角色均绑定特定百炼服务域名（如 `fc.sfm.aliyuncs.com`），**不可复用或跨服务授权**；删除角色前必须完成前置清理，否则操作将失败或引发功能异常。  
-- `SearchFilters` 仅作用于 `Retrieve` 接口，不适用于 `ChatCompletion` 或 `Embedding`；标签（`tags`）查询仅支持文档搜索、音视频搜索类知识库；模糊查询（`like`）仅支持字符串字段，且 `%` 为唯一通配符。  
-- > **注意**：文档 2 中 `AliyunServiceRoleForSFMAccessingMNS` 的权限说明末尾被截断（`"xtrace:Describe*"` 后缺失内容），实际策略应以 RAM 控制台中该角色绑定的 `AliyunServiceRolePolicyForSFMAccessingMNS` 策略内容为准，建议通过控制台校验完整权限。
+- **SLR 删除风险**：删除任一服务关联角色（如 `AliyunServiceRoleForSFMAccessFC`）将导致对应功能（如工作流中的函数计算节点）立即失效。删除前必须先解除所有依赖该角色的资源绑定（如删除函数节点、断开 OSS/ADB 连接、停止数据导入任务），否则操作将失败。
+- **临时 API Key 不可撤销**：临时 Key 生命周期固定，到期自动失效，**无法手动删除或提前吊销**。务必严格控制 `expire_in_seconds` 时长，并确保调用方环境安全。
+- **`searchFilters` 兼容性**：仅对**数据查询型知识库**（Data Query）生效；文档搜索、音视频搜索类知识库仅支持 `tags` 字段过滤。字段类型（string/long/double）必须与知识库索引定义严格匹配，否则过滤无效。
+- **权限继承原则**：所有 `more` 功能均受制于调用者所持凭证（API Key 或 AccessKey）的 RAM 权限。例如，若子账号未被授予 `AliyunBailianDataFullAccess` 策略，则无法使用 `searchFilters` 调用 `Retrieve` 接口。
 
 ## 来源文档
 
-- [生成临时API Key](../../raw/application-api-reference/more/application-obtain-temporary-authentication-token.md)
 - [服务关联角色](../../raw/application-api-reference/more/bailian-service-linked-role.md)
+- [生成临时API Key](../../raw/application-api-reference/more/application-obtain-temporary-authentication-token.md)
 - [知识库SearchFilters](../../raw/application-api-reference/more/how-to-use-search-filters.md)
-
-
 
 

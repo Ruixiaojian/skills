@@ -4,9 +4,9 @@
 
 **用户指南：**关于模型介绍和选型建议请参见[语音合成](https://help.aliyun.com/zh/model-studio/tts-model/)。
 
-## **服务端点**
+## **接口地址**
 
-SDK的服务端点需在初始化前设置为下方地址（包含WorkspaceId）。如需切换到其他地域，请修改 `dashscope.base_websocket_api_url`为对应地域的URL。
+SDK的接口地址需在初始化前设置为下方地址（包含WorkspaceId）。如需切换到其他地域，请修改 `dashscope.base_websocket_api_url`为对应地域的URL。
 
 ### 华北2（北京）
 
@@ -181,20 +181,20 @@ def get_last_request_id(self) -> str
 **方法签名**：
 
 ```
-def get_first_package_delay(self) -> int
+def get_first_package_delay(self) -> float
 ```
 
-**返回值**：`int`，从发送文本到收到第一块音频数据的延迟时间（毫秒）。需在合成完成后调用。
+**返回值**：`float`，从发送文本到收到第一块音频数据的延迟时间（毫秒）。需在合成完成后调用。
 
 ### **get\_response() - 获取响应消息**
 
 **方法签名**：
 
 ```
-def get_response(self) -> str
+def get_response(self) -> dict
 ```
 
-**返回值**：`str`，最近一次合成任务的JSON格式响应消息，包含请求状态和输出信息。
+**返回值**：`dict`，最近一次合成任务的响应消息（含 `header`/`payload` 键）。
 
 ### **构造参数**
 
@@ -740,7 +740,7 @@ SDK提供了语音合成的关键接口，支持以下几种调用方式：
 
 ### **非流式调用**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/0658354871/CAEQURiBgMDRr9T4phkiIGNmYzBiZjFkZjQ4MDQzZGU4NDIyZDU2NWJjYjkyZTQ04709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2172835871/CAEQURiBgMDRr9T4phkiIGNmYzBiZjFkZjQ4MDQzZGU4NDIyZDU2NWJjYjkyZTQ04709861_20241015153444.149.svg)
 
 单次调用发送的文本长度不得超过20000字符，超出限制将返回错误。
 
@@ -783,7 +783,7 @@ with open('output.mp3', 'wb') as f:
 
 ### **单向流式调用**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/0658354871/CAEQVRiBgIDv9fShrBkiIDhmNTk5YmQ1ZDgwNzRjZjRiN2VlMTU5YzI1ZGMwMTlm4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2172835871/CAEQVRiBgIDv9fShrBkiIDhmNTk5YmQ1ZDgwNzRjZjRiN2VlMTU5YzI1ZGMwMTlm4709861_20241015153444.149.svg)
 
 单次调用发送的文本长度不得超过20000字符，超出限制将返回错误。
 
@@ -870,7 +870,7 @@ synthesizer.call("今天天气怎么样？")
 
 ### **双向流式调用**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/0658354871/CAEQVRiBgMDb7PahrBkiIDVkNjEwOTMxYjEwOTRmOWFhMmI1OTRiY2Q3ZDgzZmE54709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2172835871/CAEQVRiBgMDb7PahrBkiIDVkNjEwOTMxYjEwOTRmOWFhMmI1OTRiY2Q3ZDgzZmE54709861_20241015153444.149.svg)
 
 单次发送文本长度不得超过 20000 字符，且累计发送文本总长度不得超过 20 万字符。
 

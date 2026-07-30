@@ -11,7 +11,7 @@
 -   不支持SDK调用。
     
 
-## **服务端点**
+## **接口地址**
 
 `POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
 

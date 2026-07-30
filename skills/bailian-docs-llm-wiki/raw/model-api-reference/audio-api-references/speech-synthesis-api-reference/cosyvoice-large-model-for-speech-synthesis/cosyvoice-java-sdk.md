@@ -4,9 +4,9 @@
 
 **用户指南：**关于模型介绍和选型建议请参见[语音合成](https://help.aliyun.com/zh/model-studio/tts-model/)。
 
-## **服务端点**
+## **接口地址**
 
-SDK的服务端点需在初始化前设置为下方地址（包含WorkspaceId）。如需切换到其他地域，请修改 `Constants.baseWebsocketApiUrl`为对应地域的URL。
+SDK的接口地址需在初始化前设置为下方地址（包含WorkspaceId）。如需切换到其他地域，请修改 `Constants.baseWebsocketApiUrl`为对应地域的URL。
 
 ## 华北2（北京）
 
@@ -871,7 +871,7 @@ SDK提供了语音合成的关键接口，支持以下几种调用方式：
 
 ### **非流式调用**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6538354871/CAEQURiBgIDHpsn4phkiIDQ0ZGE2OTk3NmY5NTRhNDVhZDQwNWE3ZGZiMzk4Yjk54709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2072835871/CAEQURiBgIDHpsn4phkiIDQ0ZGE2OTk3NmY5NTRhNDVhZDQwNWE3ZGZiMzk4Yjk54709861_20241015153444.149.svg)
 
 发送的文本长度不得超过20000字符。
 
@@ -946,7 +946,7 @@ public class Main {
 
 ### **单向流式调用**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7538354871/CAEQVRiBgMCfo..hrBkiIGEyMjNkZjVlMWZiYzRhZDU4ZjEyZjdjMmMzYjM1YzMz4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2072835871/CAEQVRiBgMCfo..hrBkiIGEyMjNkZjVlMWZiYzRhZDU4ZjEyZjdjMmMzYjM1YzMz4709861_20241015153444.149.svg)
 
 发送的文本长度不得超过20000字符。
 
@@ -1053,7 +1053,7 @@ public class Main {
 
 ### 双向流式调用
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7538354871/CAEQVRiBgICHxPGhrBkiIGE3ZTVmMzY0YzI3NzQxYTFiYWE2MmU2NTBhMDgzZGM14709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2072835871/CAEQVRiBgICHxPGhrBkiIGE3ZTVmMzY0YzI3NzQxYTFiYWE2MmU2NTBhMDgzZGM14709861_20241015153444.149.svg)
 
 单次发送文本长度不得超过 20000 字符，且累计发送文本总长度不得超过 20 万字符。
 

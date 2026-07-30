@@ -1,16 +1,16 @@
 # Sambert WebSocket API 参考
 
-本文介绍通过WebSocket连接访问Sambert实时语音合成服务的交互流程、服务端点和请求头。
+本文介绍通过WebSocket连接访问Sambert实时语音合成服务的交互流程、接口地址和请求头。
 
 DashScope SDK目前仅支持Java和Python。使用其他编程语言时，可通过WebSocket连接与服务进行通信。
 
 **用户指南：**关于模型介绍和选型建议请参见[语音合成](https://help.aliyun.com/zh/model-studio/tts-model/)。
 
-## **服务端点**
+## **接口地址**
 
 Sambert仅支持在北京地域使用。
 
-WebSocket 服务端点固定为：`wss://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api-ws/v1/inference`
+WebSocket 接口地址固定为：`wss://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api-ws/v1/inference`
 
 调用时请将`{WorkspaceId}`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
 
@@ -74,7 +74,7 @@ Authorization 鉴权在 WebSocket 握手阶段验证。如果 API Key 无效或�
 
 ## 交互流程
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/8396892871/CAEQURiBgICX8Y6AmBkiIGJmOTc2YjY2ZTYyNDQ0MmI4M2U4NTYxYmE5ZjYwMDY44709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3672835871/CAEQURiBgICX8Y6AmBkiIGJmOTc2YjY2ZTYyNDQ0MmI4M2U4NTYxYmE5ZjYwMDY44709861_20241015153444.149.svg)
 
 客户端事件和服务端事件的详细说明，请参见[客户端事件](https://help.aliyun.com/zh/model-studio/sambert-client-events)和[服务端事件](https://help.aliyun.com/zh/model-studio/sambert-server-events)。
 

@@ -4,7 +4,7 @@
 
 **用户指南：**[声音复刻](https://help.aliyun.com/zh/model-studio/voice-cloning-user-guide)。
 
-## **服务端点****（Qwen-Audio-TTS/CosyVoice/Qwen-TTS）**
+## **接口地址****（Qwen-Audio-TTS/CosyVoice/Qwen-TTS）**
 
 ## 华北2（北京）
 
@@ -29,7 +29,7 @@
 
 `{WorkspaceId}`需要替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。现有域名仍可正常使用。
 
-## **服务端点（MiniMax）**
+## **接口地址（MiniMax）**
 
 HTTP请求地址：`POST https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
 

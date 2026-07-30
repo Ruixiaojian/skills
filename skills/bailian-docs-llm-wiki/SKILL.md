@@ -148,21 +148,6 @@ description: >-
 | **按家族筛选**：按 primaryCapability / providers / itemCount / maxContextWindow 找家族 | `models/families.jsonl`（一行一家族，含 items[] 摘要） |
 | 模型家族总览 / 按能力分桶浏览         | `models/index.md`                                        |
 | 主题页 / API 文档（按功能领域查找）    | `wiki/index.md`（完整索引入口）                          |
-| 函数调用 | `wiki/concepts/function-calling.md` |
-| 检索增强生成 | `wiki/concepts/rag.md` |
-| Token | `wiki/concepts/token.md` |
-| 流式输出 | `wiki/concepts/streaming-output.md` |
-| OpenAI 兼容接口 | `wiki/concepts/openai-compatible-interface.md` |
-| 多模态 | `wiki/concepts/multi-modal.md` |
-| 模型上下文协议 | `wiki/concepts/mcp.md` |
-| 长期记忆 | `wiki/concepts/long-term-memory.md` |
-| 文件处理 | `wiki/concepts/file-processing.md` |
-| Prompt 工程 | `wiki/concepts/prompt-engineering.md` |
-| 实时 API 方案对比：Omni Realtime API 与 Realtime API | `wiki/comparisons/realtime-api-comparison.md` |
-| 多模态生成能力对比：图像、视频与3D生成 | `wiki/comparisons/generation-apis-comparison.md` |
-| 长期记忆方案对比：Long Term Memory 与 Memory Library | `wiki/comparisons/memory-solutions-comparison.md` |
-| 应用部署方式对比：模型部署、应用发布与托管智能体 | `wiki/comparisons/application-deployment-options.md` |
-| 知识集成方案对比：Knowledge API、知识库与数据连接 | `wiki/comparisons/knowledge-integration-approaches.md` |
 
 > 实际文件名以 `wiki/index.md` 为准；上表若有出入应回到索引页查找。
 

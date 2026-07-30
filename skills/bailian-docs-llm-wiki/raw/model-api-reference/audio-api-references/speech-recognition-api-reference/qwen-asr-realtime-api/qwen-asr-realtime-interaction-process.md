@@ -4,7 +4,7 @@
 
 **用户指南：**关于模型介绍和选型建议请参见[语音识别](https://help.aliyun.com/zh/model-studio/asr-model/)，示例代码请参见[实时语音识别](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition-user-guide)。
 
-## **服务端点**
+## **接口地址**
 
 WebSocket URL 固定如下，通过查询参数 `model` 指定要调用的模型名称（将 `<model_name>` 替换为实际的模型）：
 
@@ -100,7 +100,7 @@ Authorization 鉴权在 WebSocket 握手阶段验证。如果 API Key 无效或�
 
 **启用方式：**配置客户端`[session.update](https://help.aliyun.com/zh/model-studio/qwen-asr-realtime-client-events#af43722339yva)`事件的`session.turn_detection`参数。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7151064871/CAEQaxiBgICW9b6H3RkiIGM5MDgwMTNkMjBjMDRlNTNiOGZlODNjZGJhNDQ3NGJm5812623_20251022102739.334.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/9052835871/CAEQaxiBgICW9b6H3RkiIGM5MDgwMTNkMjBjMDRlNTNiOGZlODNjZGJhNDQ3NGJm5812623_20251022102739.334.svg)
 
 -   客户端通过发送`[input_audio_buffer.append](https://help.aliyun.com/zh/model-studio/qwen-asr-realtime-client-events#a42f8e9111n72)`事件将音频追加到缓冲区。
     
@@ -135,7 +135,7 @@ Authorization 鉴权在 WebSocket 握手阶段验证。如果 API Key 无效或�
 
 **启用方式：**将客户端`[session.update](https://help.aliyun.com/zh/model-studio/qwen-asr-realtime-client-events#af43722339yva)`事件的`session.turn_detection`设为null。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/8151064871/CAEQaxiBgMDUp8qH3RkiIGEyYTc0NTI1ZmQ1OTQ5NjliNWE0OTYwYTAwMDBlMjBm5812623_20251022102739.334.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/9052835871/CAEQaxiBgMDUp8qH3RkiIGEyYTc0NTI1ZmQ1OTQ5NjliNWE0OTYwYTAwMDBlMjBm5812623_20251022102739.334.svg)
 
 -   客户端通过发送`[input_audio_buffer.append](https://help.aliyun.com/zh/model-studio/qwen-asr-realtime-client-events#a42f8e9111n72)`事件将音频追加到缓冲区。
     
