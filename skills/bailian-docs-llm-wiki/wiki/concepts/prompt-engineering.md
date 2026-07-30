@@ -1,44 +1,53 @@
 # Prompt 工程
 
-Prompt 工程是指系统性设计、迭代与优化大语言模型输入指令（Prompt）的方法论与实践技术，目标是提升模型输出的准确性、稳定性、可控性与业务适配性。它不是简单的“写提示词”，而是融合结构化框架（如 CRISPE、RASCEF）、变量注入、样例引导、安全约束与自动评估的工程化过程。
+Prompt 工程是百炼平台上系统化设计、管理与优化提示词（Prompt）的方法论与技术实践，旨在通过结构化模板、变量注入、自动重写和反馈驱动迭代等手段，将业务逻辑稳定、可复用地映射到大语言模型的生成行为中，实现高质量、高一致性、可评估的 AI 输出。
 
-## 在百炼平台的不同场景中，这个概念如何使用
+## 在百炼平台的不同场景中如何使用
 
-- **模板化构建**：在「组件管理 > 提示词」中创建文本或图片生成类 Prompt 模板，支持基于 ICIO/CRISPE/RASCEF 等框架结构化组织角色、任务、约束与示例；图片生成需分别配置正向 Prompt 与负向 Prompt。
-- **智能体应用集成**：在 Agent 2.0 应用中，系统提示词（System Prompt）即为 Prompt 工程的核心载体，支持嵌入变量（如 `/user_name`）、调用知识库片段（RAG）、注入工具描述，并可通过 `enable_thinking=true` 观察模型推理链路。
-- **自动化优化**：通过控制台「提示词 > 自动优化」或 API `CreatePromptFeedbackOptimizationTask`，将原始 Prompt + 样例数据集提交给大模型（推荐 `qwen-max`），自动生成含角色设定、指令强化、边界说明与 few-shot 示例的高精度版本。
-- **RAG 协同增强**：Prompt 工程与 RAG 表格库深度协同——不再依赖已下线的样例库，而是将高质量问答对沉淀为结构化表格知识，由 Prompt 显式引导模型按格式检索并引用，实现确定性任务（如分类、JSON 输出）的稳定交付。
+- **智能体（Agent）应用构建**：在 Agent 2.0 应用中，Prompt 工程作为核心输入控制层。开发者可通过「使用 Prompt」功能直接绑定预置或自定义模板，模板变量（如 `${user_query}`、`${product_name}`）由智能体运行时自动填充；系统级指令（如角色设定、输出格式约束）建议置于 `system` 消息中，避免与用户输入混杂。
 
-> ⚠️ 注意：所有 Prompt 工程相关能力（模板、优化、RAG 表格关联）**仅支持华北2（北京）地域**；跨地域调用将返回错误。
+- **工作流（Workflow）编排**：在「大模型节点」中，支持直接引用已发布的 Prompt 模板 ID（`promptTemplateId`），或手动编写带变量插值的 Prompt 字符串。推荐使用模板方式，便于统一维护与 A/B 测试。
+
+- **高代码应用开发（Python/SDK）**：通过 `GetPromptTemplate` 接口获取模板内容与 `variables` 列表，完成变量替换后，将生成的完整 Prompt 作为 `messages` 数组中的 `system` 或 `user` 消息传入 `ChatCompletion` 等推理接口。不建议硬编码 Prompt 字符串，应依赖模板 API 实现动态解耦。
+
+- **RAG 增强场景**：虽 Prompt 样例库已下线，但 Prompt 工程仍与 RAG 深度协同——例如，在知识检索后，将召回片段与业务模板组合（如 `"根据以下资料回答：{retrieved_chunks}。问题：{user_query}"`），形成上下文感知的最终 Prompt，交由模型生成答案。
+
+- **[多模态](multi-modal.md)任务（图文/音视频）**：对支持[多模态](multi-modal.md)的模型（如 `qwen3.5-omni-plus`），Prompt 工程同样适用。需注意：图像/音频 URL 需作为 `input` 结构的一部分传入，而文本 Prompt（含变量）应置于 `messages` 的 `user` 内容中，不可混入 `input` 字段。
+
+> ⚠️ 注意：所有 Prompt 工程能力（创建、调用、优化）仅支持华北2（北京）地域，跨地域请求将失败；且必须指定有效的 `workspaceId`。
 
 ## 关键参数和配置
 
-| 参数 | 说明 | 使用场景 | 备注 |
-|------|------|----------|------|
-| `promptTemplateId` | Prompt 模板唯一标识符 | API 调用 `GetPromptTemplate` 获取模板内容后渲染使用 | 控制台创建后即生成，不可修改 |
-| `workspaceId` | 业务空间 ID | 所有 Prompt 相关 API（如 `CreatePromptTemplate`, `GetPromptTemplate`）必传 | 是资源隔离与权限作用域基础，需提前获取 |
-| `variables` | 模板中预声明的变量名数组（如 `["topic", "tone"]`） | 渲染模板时动态填充，如 `content.replace("{topic}", topicValue)` | 变量名由模板定义决定，运行时不可新增或删减 |
-| `has_thoughts` | 请求头或参数，设为 `true` 时返回 `thoughts` 字段 | 智能体应用调试阶段查看 RAG 检索过程、样例匹配逻辑 | 仅对已启用知识库且支持思考模式的模型（如 `qwen-max`）生效 |
-| `temperature` | 控制输出随机性（0.0–2.0） | 在智能体应用或直接调用模型 API 时设置 | Prompt 工程效果需配合合理 temperature：问答类建议 0.1–0.6，创意生成可设 0.7–1.2 |
+| 参数 | 说明 | 开发者须知 |
+|------|------|------------|
+| `workspaceId` | 业务空间唯一标识，所有 Prompt 操作的必需上下文 | 必填，从控制台或 RAM 权限页获取，不可省略 |
+| `promptTemplateId` | 模板唯一 ID（预置或自定义） | 控制台模板卡片右上角可一键复制；API 调用时用于 `GetPromptTemplate` |
+| `variables` | 模板声明的占位符列表（如 `["topic", "tone"]`） | 由 `GetPromptTemplate` 返回，**不可手动增删**；需严格按名称与类型（string/number）传入值 |
+| `temperature` / `max_tokens` | 控制生成随机性与输出长度 | 属模型级参数，与 Prompt 分离；应在调用 `ChatCompletion` 时传入，而非模板内 |
+| `enable_thinking` | 启用思考链（Chain-of-Thought）推理 | 仅对 `qwen3.7-plus` 等支持模型生效，需在推理请求中显式设置，不影响 Prompt 本身 |
+| `prompt_extend`（图片生成） | 是否启用大模型智能扩写正向提示词 | 仅适用于 `wan2.7-image-pro` 等视觉模型，属 `parameters` 字段，非 Prompt 模板参数 |
 
-- **长度限制**：单个 Prompt 模板内容 ≤ 6144 字符（控制台实时计数）；RAG 注入片段默认 5 条，上限 10 条，影响 [Token](token.md) 成本与精度平衡。
-- **模型兼容性**：
-  - 文本生成类 Prompt 模板适配 `qwen3.7-plus`、`qwen3.7-flash` 等主流文本模型；
-  - 图片生成类 Prompt 模板仅适配 `wan2.7-image-pro` 等图像模型，不兼容文本模型；
-  - 反馈优化任务推荐使用 `qwen-max` 作为推理模型以获得最佳效果。
+- **模板容量限制**：单个文本 Prompt 模板最大 6144 字符；图片生成模板需分别提供 `prompt`（正向）与 `negative_prompt`（反向），无明确字符上限，但过长将显著增加 [Token](token.md) 开销。
+- **变量安全规则**：变量值需做基础转义（如去除 `\n`、`{`、`}` 等可能破坏 JSON 结构的字符），避免注入攻击或解析失败。
+- **弃用项规避**：`has_thoughts`、`召回片段数` 等参数仅与已下线的 Prompt 样例库相关，**新项目严禁使用**；替代方案为 RAG 表格库 + 自定义 Prompt 组合。
 
-## 面向开发者，简洁实用
+## 面向开发者的实用建议
 
-- ✅ **起步建议**：从预置模板开始（如“营销文案生成”），复制后修改变量与约束，再逐步迁移到自定义 CRISPE 结构。
-- ✅ **调试技巧**：启用 `has_thoughts=true` 查看 RAG 检索片段，验证 Prompt 是否有效引导模型关注关键上下文。
-- ✅ **生产规范**：避免在 Prompt 中硬编码敏感信息；变量命名统一小写+下划线（如 `user_query`）；所有模板必须绑定 `workspaceId` 并发布后方可 API 调用。
-- ❌ **避坑提醒**：Prompt 样例库功能已下线，请勿新建或依赖；新项目务必使用 RAG 表格库替代；文生图 Prompt 暂不支持通过 API 创建（仅控制台支持）。
+- ✅ **优先使用预置模板**：营销文案、摘要抽取等高频场景已有开箱即用模板，可快速验证效果，再基于其结构定制。
+- ✅ **变量命名语义化**：用 `customer_name` 优于 `var1`，便于团队协作与后续调试；避免在模板中嵌套复杂逻辑（如条件判断），应由 SDK 层处理。
+- ✅ **版本化管理**：每次 `UpdatePromptTemplate` 即生成新版本；通过 `ListPromptTemplates` 查看历史版本，关键业务模板建议打标签（如 `v2-production`）。
+- ❌ **避免在 Prompt 中硬编码敏感信息**：如 API Key、内部路径等；应通过环境变量或安全凭证服务注入。
+- ❌ **勿依赖样例库**：该功能已正式下线，迁移至 RAG 表格库后，应将样例转化为结构化知识条目，由检索模块动态注入 Prompt。
+- 📈 **监控 [Token](token.md) 开销**：启用变量注入或长模板后，务必在测试阶段检查 `usage.total_tokens`，防止意外超限计费。
+
+Prompt 工程不是“写好一句话”，而是构建可维护、可灰度、可度量的提示词交付流水线——从控制台创建 → API 获取 → 变量渲染 → 模型调用 → 效果评测 → 迭代优化，全程闭环。
 
 ## 关联主题页
 
 - [prompt](../guides/prompt.md)
-- [application component api reference](../api/application-component-api-reference.md)
 - [llm application](../guides/llm-application.md)
+- [application component api reference](../api/application-component-api-reference.md)
+- [use cases](../guides/use-cases.md)
 - [model experience](../guides/model-experience.md)
 
 

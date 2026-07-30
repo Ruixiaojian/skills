@@ -1,42 +1,47 @@
 # release notes
 
-本页汇总百炼平台近期模型与功能更新，涵盖新模型上线、已有模型能力增强、平台功能迭代及关键使用变更。所有信息均基于官方发布内容整理，面向开发者提供可直接落地的参考依据。建议结合具体业务场景选择适配模型，并关注下线通知以规避服务中断风险。
+本页汇总百炼平台近期模型与功能更新，涵盖新模型上线、已有模型能力增强、平台功能迭代及关键使用变更。所有信息均基于官方发布内容整理，面向开发者提供可直接落地的版本演进参考。建议结合 [原文标题](../../raw/model-user-guide/release-notes/newly-released-models.md) 和 [原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md) 查阅原始细节与上下文。
 
 ## 支持的模型/功能
 
-- **文本生成与智能体**：新增 `qwen3.7-flash`（2026-07-21）、`glm-5.2-fast-preview`（2026-07-09）、`kimi/kimi-k3`（2026-07-17）等高吞吐/长上下文模型；`qwen3.7-max-2026-06-08` 已支持视觉模态理解，具备[多模态](../concepts/multi-modal.md)交互混合智能体能力。  
-- **[多模态](../concepts/multi-modal.md)生成**：图片生成新增 `qwen-image-3.0-pro`（2026-07-20），支持 4.5k token 输入与 10px 小字精准渲染；视频生成新增 `vidu/viduq3-pro-fast_img2video`（2026-07-09）、`pixverse/pixverse-motioncontrol`（2026-07-14）等专用能力模型。  
-- **语音与音频**：实时语音合成新增 `qwen-audio-3.0-tts-plus`（高质量）与 `qwen-audio-3.0-tts-flash`（低延迟）双版本；实时语音对话新增 `qwen-audio-3.0-realtime-plus` 与 `qwen-audio-3.0-realtime-flash`，端到端响应时延优化至低水平。  
-- **向量与识别**：文本向量新增 `qwen3.7-text-embedding`（2026-07-15），支持 256~2560 维自定义维度；OCR 新增 `qwen3.5-ocr`（2026-06-16），在卡证类业务场景抽取效果显著提升。  
-- **平台级能力**：新增 [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md) 中描述的多项能力，包括知识检索服务、智能体托管运行时 API、Skill 能力包、数据连接模块等，详见该文档。
+- **新增模型（2026年7月重点）**：  
+  - `qwen3.7-flash`（文本/视觉/深度思考）、`qwen-image-3.0-pro`（图片生成）、`kimi/kimi-k3`（2.8T参数，100万上下文）、`qwen3.7-text-embedding`（多语言向量，支持256–2560维自定义）、`qwen-audio-3.0-tts-plus`/`-flash`（语音合成双版本）、`qwen-audio-3.0-realtime-plus`/`-flash`（实时语音对话双版本）、`pixverse/pixverse-upscale`/`-motioncontrol`/`-lipsync`（视频后处理三件套）、`vidu/viduq3-pro-fast_img2video` 及全系 `viduq3-*`（剧/广告/高性价比视频生成）、`glm-5.2-fast-preview`（GLM-5.2高速版，TPS提升1.5–2倍）。  
+  - 全部模型均按华北2（北京）地域首批上线，部分模型（如 `kimi/kimi-k3`、`qwen3.7-flash`）明确标注为“原生视觉语言”或“[多模态](../concepts/multi-modal.md)Agent场景能力显著升级”。
+
+- **平台级功能新增**：  
+  - 智能体托管运行时 API（6月29日上线），支持平台托管会话与工具执行；  
+  - 知识检索服务与知识问答服务（6月23日上线），支持多知识库联合检索与混合排序；  
+  - Responses API 异步调用模式（6月1日），通过 `background=true` 提交长耗时任务；  
+  - 模型导入功能国际站上线（6月5日），支持从 OSS 导入 LoRA 微调模型；  
+  - [多模态](../concepts/multi-modal.md)交互开发套件 SDK 全栈覆盖（Android/iOS Lite、Linux C++、RTOS C、Java），含音色管理与低延迟接入能力。
+
+> **注意**：文档1中 `kimi/kimi-k3` 标注为“全球首个开源的 3 万亿级别模型”，但文档2未提及其开源状态，且当前百炼平台不提供该模型源码下载入口。实际使用以控制台可选模型为准，非开源模型亦可调用。
 
 ## 关键参数
 
-- **上下文长度**：`kimi/kimi-k3`、`glm-5.2`、`deepseek-v4-pro` 等主流旗舰模型均支持 100 万 token 上下文；`qwen3.7-flash` 等 Flash 系列模型在保持长上下文的同时侧重推理速度优化。  
-- **输入限制**：`vidu/viduq3-fast_reference2image` 支持 0–14 张参考图；`pixverse/pixverse-v6-r2v` 支持 2–7 张图像输入；`fun-asr-flash-2026-06-15` ASR 模型支持 ≤5 分钟音频转写。  
-- **性能指标**：`qwen-audio-3.0-tts-flash` 首包延时 ≤200ms；`kimi/kimi-k2.7-code-highspeed` 编程输出速度达 180–260 [Token](../concepts/token.md)/s；`qwen3.7-text-embedding` 在 MTEB 多语言检索任务上效果提升 20%。  
-- **部署规格**：模型部署支持按模型单元（MU）时长计费，详见 [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md) 中“1月23日”条目。
+- **上下文长度**：`kimi/kimi-k3`、`glm-5.2`、`glm-5.2-fast-preview`、`xiaomi/mimo-v2.5-pro`、`deepseek-v4-pro` 均支持 **100万 token**；`qwen3.7-max-2026-06-08` 及后续 `qwen3.7` 系列 Max/Plus/Flash 版本默认启用视觉模态，上下文能力继承同代文本基座。
+- **向量维度**：`qwen3.7-text-embedding` 支持 **256–2560 维用户自定义**，需在请求参数中显式指定 `dimension` 字段。
+- **语音合成延迟**：`qwen-audio-3.0-tts-flash` 首包延时 ≤200ms；`-plus` 版本未承诺具体延迟，侧重音质与表现力。
+- **视频生成时长**：`vidu/viduq3-pro-fast_img2video` 支持 **16秒视频生成**（较 `viduq2-pro-fast` 的10秒提升60%）；`pixverse/pixverse-v6-r2v` 支持 **15秒长视频直出**。
+- **图像输入能力**：`vidu` 全系 `reference2image`/`reference2video` 模型均支持 **0–14张参考图输入**（`viduq3-mix_reference2video` 限定为1–7张）。
 
 ## 使用方式
 
-- **API 调用**：文本生成统一入口已聚合 OpenAI Responses 与 Anthropic Messages 接口分类（[详见文档2 5月15日更新](../../raw/model-user-guide/release-notes/model-release-notes.md)）；Responses API 新增 `background=true` 异步调用模式（2026-06-01）。  
-- **SDK 接入**：[多模态](../concepts/multi-modal.md)交互开发套件已提供 Linux C++、Android、iOS Lite、RTOS C 等多端 SDK（[详见文档2 2月/4月条目](../../raw/model-user-guide/release-notes/model-release-notes.md)）；Spring AI Alibaba 框架调用百炼应用文档已上线（2026-06-01）。  
-- **模型部署**：预置吞吐部署（PTU）新增长输入与前缀缓存能力（2026-06-15）；国际站支持从 OSS 导入 LoRA 微调模型（2026-06-05）。  
-- **智能体开发**：可通过 Skill 能力包添加官方或自定义技能（2026-06-10）；Managed Agent 运行时 API 支持平台托管会话与工具执行（2026-06-29）。
+- **模型调用**：所有新模型均通过标准 `/v1/chat/completions`（文本/[多模态](../concepts/multi-modal.md)）、`/v1/embeddings`（向量）、`/v1/audio/speech`（TTS）、`/v1/video/generation`（视频）等 RESTful API 接入，兼容 OpenAI 兼容层（详见 [原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md) 中“5月15日 文本生成 API 入口聚合四类接口”说明）。
+- **智能体托管**：启用 Managed Agent 需调用 `/v1/agents/{agent_id}/runs` 接口，会话状态与工具执行由平台自动管理（6月29日上线）。
+- **异步任务**：对长耗时视频/3D生成任务，推荐使用 Responses API 的 `background=true` 模式，再通过轮询 `/v1/async_tasks/{task_id}` 获取结果；也可配置事件总线 HTTP 回调或 RocketMQ 主动推送（4月23日支持）。
+- **模型部署**：预置模型（如 `qwen-flash`、`qwen-plus`）支持通过 API 直接部署为专属实例，计费单位为模型单元（MU）时长（1月23日上线）。
 
 ## 限制和注意事项
 
-- > **注意**：文档1中 `kimi/kimi-k2.7-code`（2026-06-15）与 `kimi/kimi-k2.7-code-highspeed`（2026-06-17）被描述为“同一个模型”，但文档1未说明二者是否共享同一模型 ID 或 API 路径。实际调用前请以 [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md) 中列出的模型 ID 为准，并验证接口兼容性。  
-- > **注意**：文档2中“7月10日”与“7月9日”分别提及“部分老旧模型下线”和“部分老旧长尾模型下线”，但未明确具体模型清单；而文档1中大量模型（如 `qwen3.6-flash-2026-04-16`、`qwen-image-2.0-pro-2026-04-22`）标注为历史快照版。建议开发者主动查阅 [模型下线机制说明](https://help.aliyun.com/zh/model-studio/model-depreciation) 并监控控制台通知，避免依赖已标记为“快照”或无后续更新的模型。  
-- 所有 Flash/Plus/Pro/Turbo 等后缀模型均代表不同性能-成本权衡点，例如 `qwen-audio-3.0-tts-flash` 侧重低延迟，`qwen-audio-3.0-tts-plus` 侧重音质细节，不可混用配置参数。  
-- 视频生成类模型（如 `vidu/viduq3-drama_reference2video`、`wan2.7-r2v-2026-06-12`）对输入参考图数量、格式、分辨率有明确要求，超出范围将导致任务失败或效果劣化，需严格遵循各模型文档说明。  
-- 模型调优功能当前对部分模型类型（如视频生成、VL 模型）仍为邀约制或有限开放（见 [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md) 中 5月31日、5月28日、1月21日条目），非全量可用。
+- **模型下线风险**：7月10日、7月9日已发布“部分老旧模型下线通知”及“部分老旧长尾模型下线通知”，涉及 `qwen-turbo` 资源包退市（6月28日）、企业知识库（旧）下线（7月16日）等。请尽快迁移至 `qwen3.7-flash`、`qwen3.7-plus` 等替代模型，并检查依赖项。详情见 [原文标题](../../raw/model-user-guide/release-notes/newly-released-models.md) 中“模型下线机制说明”链接。
+- **地域限制**：新模型（如 `qwen3.7-flash`、`viduq3-*`）首发仅限华北2（北京），美国、德国、日本地域虽于6月12日新增部署范围，但模型同步存在1–3个工作日延迟，调用前需确认目标地域可用性。
+- **功能兼容性**：`qwen-audio-3.0-realtime-plus`/`-flash` 与 `qwen-audio-3.0-tts-plus`/`-flash` 均要求音频采样率 ≥16kHz、位深 ≥16bit；`pixverse` 系列视频后处理模型（`upscale`/`motioncontrol`/`lipsync`）**仅接受 MP4/H.264 编码输入**，AVI/WEBM 等格式需预转换。
+- **免费额度变更**：新人免费额度有效期已调整（参见文档2公告），且启用“用完即停”后将返回 `AllocationQuota.FreeTierOnly` 错误码，避免意外计费。
 
 ## 来源文档
 
 - [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)
 - [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)
-
-
 
 

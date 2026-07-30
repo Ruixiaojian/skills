@@ -6,9 +6,9 @@
 
 **在线体验：**暂不支持。
 
-## **服务端点**
+## **接口地址**
 
-SDK的服务端点需在初始化前设置为下方地址（包含WorkspaceId）。请修改 `Constants.baseWebsocketApiUrl`为对应地域的URL。
+SDK的接口地址需在初始化前设置为下方地址（包含WorkspaceId）。请修改 `Constants.baseWebsocketApiUrl`为对应地域的URL。
 
 Sambert仅支持在北京地域使用。
 
@@ -49,7 +49,7 @@ Constants.baseWebsocketApiUrl = "wss://{WorkspaceId}.cn-beijing.maas.aliyuncs.co
 
 提交单个语音合成任务，无需调用回调方法，进行语音合成（无流式输出中间结果），最终一次性获取完整结果。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3596892871/CAEQURiBgIDHpsn4phkiIDQ0ZGE2OTk3NmY5NTRhNDVhZDQwNWE3ZGZiMzk4Yjk54709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6772835871/CAEQURiBgIDHpsn4phkiIDQ0ZGE2OTk3NmY5NTRhNDVhZDQwNWE3ZGZiMzk4Yjk54709861_20241015153444.149.svg)
 
 实例化[SpeechSynthesizer类](#adcb5e9bddbyq)，调用`call`方法绑定[请求参数](#a96bfa6340jdd)，进行合成并获取二进制音频数据。
 
@@ -102,7 +102,7 @@ public class Main {
 
 提交单个语音合成任务，通过回调的方式流式输出中间结果，合成结果通过`ResultCallback`中的回调方法流式进行获取。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3596892871/CAEQVRiBgMDN2_qhrBkiIGJlMTQ5MDY4YWJlZTQxYWY5ZWEzOTZiNTVjOGEwZjZh4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6772835871/CAEQVRiBgMDN2_qhrBkiIGJlMTQ5MDY4YWJlZTQxYWY5ZWEzOTZiNTVjOGEwZjZh4709861_20241015153444.149.svg)
 
 实例化[SpeechSynthesizer类](#adcb5e9bddbyq)，调用`call`方法绑定[请求参数](#a96bfa6340jdd)和[回调接口（ResultCallback）](#3639e1cb40mxi)并开始语音合成，通过[回调接口（ResultCallback）](#3639e1cb40mxi)的`onEvent`方法实时获取合成结果。
 
