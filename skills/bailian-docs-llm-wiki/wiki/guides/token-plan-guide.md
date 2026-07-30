@@ -25,7 +25,7 @@
 
 1. **地域与订阅**：必须将百炼控制台地域切换至**华北2（北京）**，再访问对应购买页完成订阅。
 2. **API Key 与 Base URL**：
-   - API Key 以 `sk-sp-` 开头，仅限 Token Plan 专属使用，与通用 API Key（`sk-`）及 Coding Plan Key 完全隔离。
+   - API Key 以 `sk-sp-` 开头，仅限 [Token](../concepts/token.md) Plan 专属使用，与通用 API Key（`sk-`）及 Coding Plan Key 完全隔离。
    - Base URL 分协议：
      - OpenAI 兼容：`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
      - Anthropic 兼容：`https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic`
@@ -33,11 +33,11 @@
 4. **高级能力接入**：
    - Harness 工具：切换至支持模型后直接提问，模型自动调用。
    - [多模态](../concepts/multi-modal.md)模型：需在工具中配置 Skill/Slash Command/Agent，调用独立接口（如 `/text-to-image`）。
-   - 联网搜索 MCP：需额外开通百炼通用 API Key（`sk-`）驱动的 MCP 服务，与 Token Plan 专属 Key 分离 [联网搜索](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/web-search-mcp.md)。
+   - 联网搜索 MCP：需额外开通百炼通用 API Key（`sk-`）驱动的 MCP 服务，与 [Token](../concepts/token.md) Plan 专属 Key 分离 [联网搜索](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/web-search-mcp.md)。
 
 ## 限制和注意事项
 
-- **地域限制**：所有 Token Plan 功能仅在华北2（北京）可用，跨地域调用将失败。
+- **地域限制**：所有 [Token](../concepts/token.md) Plan 功能仅在华北2（北京）可用，跨地域调用将失败。
 - **使用范围限制**：仅限交互式开发工具（如 Claude Code、Cursor）中使用，**严禁用于自动化脚本、应用后端或批量调用**；违规可能导致订阅暂停或 API Key 封禁 [Token Plan 个人版](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-overview.md)。
 - **数据安全**：团队版承诺不使用对话数据训练模型；个人版则授权用于服务改进与模型优化。
 - **账号规范**：API Key 不可共享；团队版需通过成员管理分配席位，RAM 用户需主账号授予 `AliyunTokenPlanFullAccess` 及 `AliyunBSSReadOnlyAccess` 权限。
@@ -62,6 +62,7 @@
 - [联网搜索](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/web-search-mcp.md)
 - [Coding Plan概述](../../raw/model-user-guide/token-plan-guide/coding-plan-guide/coding-plan.md)
 - [常见问题](../../raw/model-user-guide/token-plan-guide/coding-plan-guide/coding-plan-faq.md)
+
 
 
 

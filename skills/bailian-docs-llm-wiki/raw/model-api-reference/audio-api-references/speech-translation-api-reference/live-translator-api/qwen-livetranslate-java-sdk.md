@@ -136,7 +136,7 @@
     
     `String`
     
-    否
+    是
     
     生成音频的音色。
     
@@ -186,6 +186,18 @@
     否
     
     翻译相关配置。
+    
+    `enableTurnDetection`
+    
+    `boolean`
+    
+    否
+    
+    是否启用 VAD（语音活动检测）。
+    
+    默认值：`true`，即启用 VAD 模式，服务端自动检测语音起止并自动触发翻译。
+    
+    设为`false`可切换为 Manual 模式，由客户端通过`commit()`方法手动提交音频。详细参数说明参见[turn\_detection object （可选） 语音活动检测（VAD，Voice Activity Detection）配置，用于控制语音起止的检测方式： 设为配置对象（默认值）：启用 VAD 模式。服务端自动检测语音起止，自动提交音频缓冲区并触发翻译响应，客户端无需发送input\_audio\_buffer.commit事件。 设为null：启用 Manual 模式。由客户端通过input\_audio\_buffer.commit事件手动提交音频缓冲区，服务端收到后自动开始生成翻译响应。 属性 type string （可选） VAD 类型，固定为server\_vad。 threshold float （可选） VAD 检测灵敏度。值越低，越容易将微弱声音（包括背景噪音）识别为语音；值越高，需要更清晰、音量更大的语音才能触发。 取值范围：\[-1.0, 1.0\]，默认值为 0.2。 silence\_duration\_ms integer （可选） 语音结束后需保持静音的最短时长（毫秒）。超过该时长后判定语音结束，服务端自动提交音频缓冲区并触发翻译响应。 取值范围：\[200, 6000\]，默认值为 1000。](https://help.aliyun.com/zh/model-studio/live-translator-client-events#lttd001sec)。
     
 -   以下参数通过OmniRealtimeTranslationParam的链式方法设置。
     
@@ -295,6 +307,26 @@ public void appendAudio(String audioBase64)
 无
 
 将Base64编码后的音频数据片段追加到云端输入音频缓冲区。服务端会自动检测语音起止并触发翻译。
+
+```
+public void commit()
+```
+
+[input\_audio\_buffer.committed](https://help.aliyun.com/zh/model-studio/live-translator-server-events#ltcommitted001sec)
+
+> 输入音频缓冲区已提交
+
+Manual 模式下，提交之前通过`appendAudio`方法追加到云端缓冲区的音频，服务端收到后自动开始生成翻译响应。VAD 模式下无需调用此方法，服务端会自动提交。
+
+```
+public void clearAppendedAudio()
+```
+
+[input\_audio\_buffer.cleared](https://help.aliyun.com/zh/model-studio/live-translator-server-events#ltcleared001sec)
+
+> 输入音频缓冲区已清空
+
+清空当前云端缓冲区中尚未提交的音频数据。
 
 ```
 public void endSession() throws InterruptedException

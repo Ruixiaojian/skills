@@ -20,8 +20,8 @@
 | 参数 | 说明 | 备注 |
 |------|------|------|
 | **Request ID / Trace ID / Span ID** | 用于精准定位单次调用或子链路 | 可在节点详情页点击“查看 ID”获取 |
-| **延时（ms）** | LLM 节点延时包含完整响应过程（含流式首 [Token](../concepts/token.md) 时间）；整体应用延时为 Chain 根节点耗时 | “平均首 Token 耗时”仅对流式调用有效 |
-| **Token 总量** | = 输入 Token + 输出 Token（LLM 节点）；Embedding 节点 Token 量仅指向量化输入长度 | 所有 Token 统计均基于对应模型 tokenizer 计算 |
+| **延时（ms）** | LLM 节点延时包含完整响应过程（含流式首 [Token](../concepts/token.md) 时间）；整体应用延时为 Chain 根节点耗时 | “平均首 [Token](../concepts/token.md) 耗时”仅对流式调用有效 |
+| **[Token](../concepts/token.md) 总量** | = 输入 [Token](../concepts/token.md) + 输出 Token（LLM 节点）；Embedding 节点 Token 量仅指向量化输入长度 | 所有 Token 统计均基于对应模型 tokenizer 计算 |
 | **状态** | `正常` 或 `错误`（后者可进一步按错误类型细分） | 错误类型需结合日志与节点上下文诊断 |
 | **标签（Label）** | 支持布尔、分类、数字、文本四类标注，与评测集标签系统共享 | 单个评测集最多支持 50 个字段映射 |
 
@@ -58,6 +58,7 @@
 ## 来源文档
 
 - [应用观测](../../raw/application-user-guide/application-monitoring/application-observation.md)
+
 
 
 
