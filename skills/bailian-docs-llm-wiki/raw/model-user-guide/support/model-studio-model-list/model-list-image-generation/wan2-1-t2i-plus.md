@@ -2,6 +2,10 @@
 
 Wan2.1 Text-to-Image Plus version, Generate more image details. Upgraded in image beauty, realism, and artistry. Stronger semantic understanding ability, rich style generalization ability, supports up to 2 million pixel generation, supports smart prompt rewriting.
 
+## 推理服务供应商
+
+`wan2.1-t2i-plus`模型的推理服务供应商为阿里云百炼。
+
 ## 模型能力
 
 能力项

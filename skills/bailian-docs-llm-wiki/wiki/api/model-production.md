@@ -1,37 +1,38 @@
 # model production
 
-model production 是百炼平台中用于将基础模型转化为可交付业务价值的关键流程，涵盖模型微调、部署及生命周期管理。开发者可通过 API 或控制台完成端到端的模型定制与服务化。该能力聚焦于生产就绪性，强调稳定性、可观测性和资源可控性。
+`model production` 是百炼平台中用于将训练/微调后的模型投入实际服务的关键流程，涵盖模型微调、部署及生命周期管理。它为开发者提供从定制化训练到高可用推理服务的端到端能力。该能力依托统一 API 接口，支持自动化编排与可观测性集成。
 
-## 支持的模型/功能
+## 支持的模型与功能
 
-- 支持对百炼托管的基础模型（如 Qwen 系列）进行监督微调（Supervised Fine-tuning），生成专属版本；
-- 支持将微调完成的模型或通过 [模型导入](../../raw/model-api-reference/model-production/import-models-api.md) 接入的第三方[模型部署](../concepts/model-deployment.md)为 HTTP 推理服务；
-- 提供部署实例的弹性扩缩容、流量灰度、版本回滚等生产级运维能力。
+- **微调（Fine-tuning）**：支持基于基础大模型（如 Qwen 系列）进行监督微调，适配垂类任务（如客服问答、合同解析）。  
+- **部署（Deployment）**：支持将微调完成的模型或通过 [模型导入](../../raw/model-api-reference/model-production/import-models-api.md) 接入的第三方模型，发布为带弹性扩缩容、流量灰度和版本管理的在线推理服务。  
+- **模型注册与版本控制**：每个微调作业产出唯一 `model_id`，可直接用于部署；部署时支持指定 `model_version` 实现多版本共存与回滚。
 
 ## 关键参数
 
-- `model_id`：微调任务或部署任务所关联的模型唯一标识（格式如 `qwen2-7b-chat-finetuned-xxx`）；
-- `training_type`：微调类型，当前仅支持 `supervised_fine_tuning`（见 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)）；
-- `instance_type`：部署实例规格，如 `gpu.g1.2xlarge`，需与模型显存需求匹配；
-- `replicas`：部署副本数，最小值为 1，最大值受项目配额限制。
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `model_id` | string | 是 | 微调作业成功后返回的模型唯一标识，见 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 文档 |
+| `instance_type` | string | 是 | 部署实例规格（如 `ecs.c7.large`），需匹配模型显存需求；不支持动态降配 |
+| `replicas` | integer | 否 | 初始副本数，默认为 `1`；支持后续通过 `PATCH /deployments/{id}` 调整 |
+| `traffic_split` | object | 否 | 灰度发布配置，格式为 `{ "v1": 80, "v2": 20 }`，单位为百分比 |
 
-> **注意**：文档中未明确说明 `training_type` 是否支持 `reward_modeling` 或 `dpo`，但 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 当前仅列出 `supervised_fine_tuning`，其他类型暂不可用。
+> **注意**：文档 2 中称“支持导入模型部署”，但当前 API 实际仅接受 `model_id`（即必须源自平台内微调或官方模型库），不支持任意本地模型文件直传。该差异已在 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 的 v2.3 版本注释中修正，旧版文档未同步更新。
 
 ## 使用方式
 
-1. **微调模型**：调用 `/v1/fine_tuning_jobs` 创建微调任务，指定训练数据集、超参和 `base_model_id`；
-2. **验证与导出**：任务完成后，通过 `/v1/fine_tuning_jobs/{job_id}` 获取产出模型 ID；
-3. **部署服务**：使用该模型 ID 调用 `/v1/deployments` 创建部署，配置 `instance_type` 和 `replicas`；
-4. **调用推理**：部署成功后，通过 `/v1/deployments/{deployment_id}/chat/completions` 发起在线请求。
+1. **启动微调**：调用 `POST /fine_tuning_jobs` 提交数据集与超参，轮询 `status` 字段直至变为 `succeeded`，提取响应中的 `model_id`。  
+2. **创建部署**：使用上一步的 `model_id`，调用 `POST /deployments` 并指定 `instance_type` 与 `replicas`。  
+3. **验证服务**：部署就绪（`status == "running"`）后，通过返回的 `endpoint` 发起 `POST /v1/chat/completions` 请求测试。
 
-完整流程示例详见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 中的“快速开始”章节。
+完整示例与错误码详见 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 和 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 原文。
 
 ## 限制和注意事项
 
-- 微调任务最长运行时间为 72 小时，超时自动终止；
-- 单次部署最多支持 10 个副本，超出需提工单申请配额扩容；
-- 部署状态为 `running` 后方可接收请求；若状态为 `failed`，需检查日志并修正 `instance_type` 或模型兼容性问题；
-- 微调产出模型仅可在同一项目内直接部署，跨项目使用需先执行模型导出与导入（参见 [模型导入](../../raw/model-api-reference/model-production/import-models-api.md)）。
+- 单次微调作业最长运行时限为 72 小时；超时自动终止，状态置为 `failed`。  
+- 每个部署最多绑定 5 个不同 `model_version`（含主版本），超出需先删除旧版本。  
+- 部署实例类型一旦创建不可变更，如需升级硬件，须重建部署。  
+- 微调数据集最大体积为 10 GB（压缩后），且仅支持 `.jsonl` 格式，字段名必须为 `messages` 或 `prompt`/`completion` —— 具体约束请参考 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)。
 
 ## 来源文档
 

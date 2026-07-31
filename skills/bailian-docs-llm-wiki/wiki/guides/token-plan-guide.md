@@ -1,61 +1,62 @@
 # token plan guide
 
-[Token](../concepts/token.md) Plan 是阿里云百炼推出的 AI 大模型订阅服务，以 Credits 统一计量，支持多种 AI 编程和智能体工具。它提供个人版和团队版两个版本，分别面向个人开发者与企业团队，覆盖文本、[多模态](../concepts/multi-modal.md)生成及 Harness [工具调用](../concepts/tool-use.md)等能力。所有服务当前仅支持华北2（北京）地域。
+[Token](../concepts/token.md) Plan 是阿里云百炼推出的 AI 大模型订阅服务，以 Credits 为统一计量单位，支持文本、多模态生成模型及 Harness 工具，适配主流 AI 编程与智能体工具。服务当前仅限华北2（北京）地域使用，个人版与团队版独立计费、额度不互通，均需通过专属 `sk-sp-` 开头的 API Key 和配套 Base URL 接入。
 
 ## 支持的模型与功能
 
-[Token](../concepts/token.md) Plan 支持广泛的模型类型和扩展能力：
+[Token](../concepts/token.md) Plan 支持覆盖文本生成、视觉理解、图像/视频生成、语音合成等能力的多模态模型，并集成联网搜索、代码解释器等 Harness 工具。  
+- **核心模型**：qwen3.8-max-preview（预览版，享限时 1 折+夜间 0.2 折）、qwen3.7-plus、qwen3.6-flash、wan2.7-image、happyhorse-1.1-t2v、glm-5.2、deepseek-v4-pro、kimi-k2.5 等（详见 [Token Plan 个人版概述](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-overview.md) 和 [Token Plan 团队版概述](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-overview.md)）。  
+- **Harness 工具**：仅 qwen3.7/qwen3.8 系列模型原生支持，包括 `web_search`、`t2i_search`、`i2i_search`、`web_extractor`、`code_interpreter`，须通过 Responses API 调用（[接入 Harness 工具](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-harness-tool.md)）。  
+- **多模态生成模型**（如图像、视频、语音）需通过 AI 工具的 Skill/Slash Command/Agent 扩展机制接入，不可直接通过 Chat Completions 接口调用（[接入多模态生成模型](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-multimodal-gen.md)）。
 
-- **文本模型**：qwen3.8-max-preview（预览版）、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro 等；
-- **[多模态](../concepts/multi-modal.md)模型**：wan2.7-image、wan2.7-image-pro（图片生成），happyhorse-1.1-t2v、happyhorse-1.1-i2v（视频生成），qwen-audio-3.0-tts-plus（语音合成）；
-- **Harness 工具**：联网搜索（`web_search`）、文搜图（`t2i_search`）、图搜图（`i2i_search`）、网页抓取（`web_extractor`）、代码解释器（`code_interpreter`）。这些工具需通过 qwen3.7 或 qwen3.8 系列模型原生调用，详见 [接入 Harness 工具](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-harness-tool.md)；
-- **视觉理解**：qwen3.8-max-preview、qwen3.7-plus、qwen3.6-plus、kimi-k2.5 等模型原生支持图片输入；glm-5、MiniMax-M2.5 等纯文本模型可通过 Skill/Agent 辅助实现，具体方法见 [添加视觉理解能力](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/add-vision-skill.md)。
-
-> **注意**：文档 1 和文档 4 均声明 qwen3.8-max-preview 为预览模型，但文档 1 提到“预览结束后该模型会下线或替换成正式版本”，而文档 2 和文档 4 仅强调“预览期间模型能力会持续迭代升级”，未明确下线承诺。实际行为请以控制台最新说明为准。
+> **注意**：文档 12（Coding Plan 概述）中声明“Coding Plan Lite 已于 2026 年 3 月 20 日停止新购”，而文档 1 明确指出“Coding Plan 和 [Token](../concepts/token.md) Plan 是两个独立的订阅产品，两者之间无法迁移或升级。推荐使用 **Token Plan**，支持更多模型和 Harness 工具”。该信息无矛盾，但需强调 Token Plan 是当前主推且功能更全的替代方案。
 
 ## 关键参数
 
-- **Credits 计费机制**：单次消耗由模型类型、[Token](../concepts/token.md) 用量、思考模式及[工具调用](../concepts/tool-use.md)动态决定，非固定单价。例如 qwen3.6-plus 单次请求约消耗 3.18 Credits（含输入、缓存、输出 tokens）[原文标题](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-overview.md)；
-- **额度结构**：
-  - *个人版*：采用双层窗口限额——**5 小时限额**（自首次调用起计时）和**7 天限额**（同样滚动窗口），任一层触顶即暂停服务；
-  - *团队版*：采用**月度总额度制**（如标准坐席 25,000 Credits/月），无窗口限制，额度到期不结转；
-- **并发能力**：个人版 Lite/Standard/Pro 套餐分别支持 1–2 / 3–4 / 6–8 个 Agent 并发；团队版基于多租户隔离架构，高峰期不排队；
-- **API Key 格式**：Token Plan 专属 API Key 以 `sk-sp-` 开头，与百炼通用 API Key（`sk-` 开头）及 Coding Plan Key 完全隔离，不可混用。
+| 参数 | 个人版 | 团队版 |
+|------|--------|--------|
+| **地域限制** | 华北2（北京） | 华北2（北京） |
+| **额度机制** | 双层窗口限额：每 5 小时 + 每 7 天（独立触发暂停） | 月度固定额度（无窗口限制） |
+| **额度重置** | 窗口到期自动重置；支持手动重置（清零当前窗口消耗） | 每月 1 日 00:00:00（UTC+8）自动重置 |
+| **并发能力** | Lite：1–2 Agent；Standard：3–4；Pro：6–8 | 无明确并发上限，高峰期不排队（多租户隔离） |
+| **API Key 格式** | `sk-sp-xxxxx`（仅限 Token Plan 个人版） | `sk-sp-xxxxx`（仅限 Token Plan 团队版，按席位分配） |
+| **Base URL** | OpenAI 兼容：`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`<br>Anthropic 兼容：`https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic` | 同上（与个人版共用同一 Base URL，但 Key 自动路由） |
+| **用量包** | 100 元/个/月，20,000 Credits/个，无窗口限制，需先订阅套餐 | 共享用量包：5,000 元/个/月，625,000 Credits/个，有效期 1 个月，团队内共享 |
 
 ## 使用方式
 
-1. **订阅与配置**：
-   - 访问 [Token Plan 购买页](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)，选择个人版或团队版套餐并完成支付；
-   - RAM 用户需由主账号授予 `AliyunTokenPlanFullAccess` 及 `AliyunBSSReadOnlyAccess` 策略，并在百炼控制台分配订阅权限 [原文标题](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-quick-start.md)；
-   - 在控制台「我的订阅」页面获取 API Key（仅生成时完整显示一次）和 Base URL（OpenAI 兼容：`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`；Anthropic 兼容：`https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic`）。
+1. **订阅与授权**：  
+   - 访问 [Token Plan 购买页](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)，选择个人版或团队版完成订阅。  
+   - RAM 用户需由主账号授予 `AliyunTokenPlanFullAccess`（或 ReadOnly）及 `AliyunBSSReadOnlyAccess`（个人版）/`AliyunBSSFullAccess`（团队版）策略，并在百炼控制台分配相应权限（[快速开始（个人版）](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-quick-start.md)、[快速开始（团队版）](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-quickstart.md)）。
 
-2. **接入工具**：
-   - 将 API Key 和 Base URL 配置至 Cursor、Claude Code、Qwen Code、Qoder、OpenClaw 等兼容工具；
-   - [多模态](../concepts/multi-modal.md)模型（如图像/视频生成）需通过工具的 Skill、Slash Command 或 Agent 扩展机制接入，不能直接使用文本模型 Base URL 调用 [原文标题](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-multimodal-gen.md)；
-   - Harness [工具调用](../concepts/tool-use.md)无需额外配置，切换至支持模型（如 qwen3.7-plus）后直接提问即可触发。
+2. **获取凭证**：  
+   - 个人版：在「我的订阅」页面生成唯一 API Key（仅显示一次）。  
+   - 团队版：在成员管理中为成员分配席位后，系统自动生成专属 API Key。
+
+3. **配置工具**：  
+   - 将 API Key 与对应 Base URL 配置至 Cursor、Claude Code、Qwen Code、Qoder 等兼容工具。  
+   - Harness 工具需确保工具通过 Responses API 接入（非 Chat Completions）；多模态模型需按工具规范配置 Skill/Slash Command（如 Claude Code 的 `.claude/commands/text-to-image.md`）。
+
+4. **扩展能力**：  
+   - 视觉理解：直接使用 `qwen3.7-plus` 等原生支持模型，或为 `glm-5` 等纯文本模型配置 `image-analyzer` Skill（[添加视觉理解能力](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/add-vision-skill.md)）。  
+   - 联网搜索：若需 MCP 方式（非 Harness 内置），须使用百炼通用 API Key（`sk-xxx`）开通 MCP 服务（[联网搜索](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/web-search-mcp.md)）。
 
 ## 限制和注意事项
 
-- **地域限制**：Token Plan 当前仅支持华北2（北京）地域，控制台需手动切换；
-- **使用范围**：严禁用于自动化脚本、批量调用或应用后端；仅限交互式 AI 编程/智能体工具中使用，违规可能导致 API Key 封禁；
-- **数据政策**：
-  - 个人版：输入及生成内容将用于服务改进与模型优化；
-  - 团队版：承诺不使用对话数据训练模型；
-- **额度管理**：
-  - 个人版用量包需先订阅有效套餐才能购买，最多持有 5 个，有效期 1 个月，不支持退款；
-  - 团队版共享用量包（625,000 Credits/个）按月清零，优先抵扣最近到期包；
-- **模型兼容性**：部分工具（如 OpenCode）需在配置文件中显式声明 `modalities.input = ["text", "image"]` 才能启用视觉能力；
-- **与 Coding Plan 的关系**：两者为独立产品，无法迁移或升级；Coding Plan Lite 已于 2026 年 3 月 20 日停止新购，推荐迁移到 Token Plan。
+- **地域与协议隔离**：仅支持华北2（北京）；Token Plan、Coding Plan、按量付费三者 API Key 与 Base URL 完全隔离，混用将导致 401/403 错误或意外扣费（[快速开始（个人版）](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-quick-start.md)、[快速开始（团队版）](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-quickstart.md)）。  
+- **使用场景限制**：严禁用于生产环境自动化脚本、后台定时任务或批量 API 调用；仅限交互式开发工具使用（[个人版订阅前须知](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-overview.md)、[团队版使用细则](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-overview.md)）。  
+- **额度与并发**：个人版任一窗口（5 小时或 7 天）限额触顶即暂停服务，即使另一窗口有余量；团队版无窗口限制，但坐席额度用尽后需购买共享用量包或升配（[常见问题（个人版）](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-faq.md)、[常见问题（团队版）](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-faq.md)）。  
+- **模型与工具兼容性**：多模态生成模型（如 `happyhorse-1.1-t2v`）必须通过异步任务流程（提交→轮询→下载），且 Credits 在任务完成时结算，可能集中触发限额（[接入多模态生成模型](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-multimodal-gen.md)）。  
+- **数据安全**：团队版明确承诺“不使用对话数据训练模型”；个人版数据用于服务改进（[Token Plan 个人版概述](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-overview.md)、[Token Plan 团队版概述](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-overview.md)）。
 
 ## 来源文档
 
 - [Token Plan 概述](../../raw/model-user-guide/token-plan-guide/token-plan-overview.md)
-- [概述](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-overview.md)
 - [快速开始](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-quick-start.md)
-- [概述](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-overview.md)
 - [常见问题](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-faq.md)
-- [团队管理](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-management.md)
 - [快速开始](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-quickstart.md)
+- [概述](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-overview.md)
+- [团队管理](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-management.md)
 - [常见问题](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-faq.md)
 - [接入 Harness 工具](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-harness-tool.md)
 - [接入多模态生成模型](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-multimodal-gen.md)
@@ -63,5 +64,6 @@
 - [添加视觉理解能力](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/add-vision-skill.md)
 - [Coding Plan概述](../../raw/model-user-guide/token-plan-guide/coding-plan-guide/coding-plan.md)
 - [常见问题](../../raw/model-user-guide/token-plan-guide/coding-plan-guide/coding-plan-faq.md)
+- [概述](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-overview.md)
 
 

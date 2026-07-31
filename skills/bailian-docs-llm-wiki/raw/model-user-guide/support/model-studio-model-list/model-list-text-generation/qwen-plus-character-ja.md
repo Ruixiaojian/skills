@@ -2,6 +2,10 @@
 
 The Qwen Role-Playing Model Series is specifically optimized for Japanese anthropomorphic interaction scenarios. It demonstrates advanced capabilities in character consistency maintenance, context-aware dialogue progression, and empathetic engagement, enabling precise personalized character embodiment. This version significantly enhances Japanese linguistic localization (including dialects and honorifics), human-like role-playing authenticity, narrative coherence control, and scenario-based cognitive intelligence.
 
+## 推理服务供应商
+
+`qwen-plus-character-ja`模型的推理服务供应商为阿里云百炼。
+
 ## 模型能力
 
 能力项

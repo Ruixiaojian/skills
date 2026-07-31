@@ -2,6 +2,10 @@
 
 Wan2.1 text to video Turbo version, one sentence generated video. Support for large and complex movements, adherence to physical laws, artistic styles, and visual quality of movies. The ability to follow instructions is further improved, and the generation speed is faster.
 
+## 推理服务供应商
+
+`wan2.1-t2v-turbo`模型的推理服务供应商为阿里云百炼。
+
 ## 模型能力
 
 能力项

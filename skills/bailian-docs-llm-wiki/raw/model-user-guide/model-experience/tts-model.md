@@ -117,6 +117,8 @@ Qwen-Audio-TTS/CosyVoice 和 Qwen 系列的 WebSocket 模型支持通过 DashSco
 
 选择 WebSocket 接入请参考**实时语音合成**，选择 HTTP 接入请参考**非实时语音合成**。
 
+CosyVoice 系列模型还支持通过 AOQ 协议接入，协议对比与选型请参见[Realtime API 概述](https://help.aliyun.com/zh/model-studio/realtime-api-overview#rtov-s02h2)。
+
 ## 指令控制
 
 用自然语言描述期望的表达方式，可按请求动态控制语速、情绪和风格。例如“用温柔的语气，语速稍慢”或“用激动的播报风格”。适用于情感化内容制作、专业播报、有声读物等需要丰富表现力的场景。

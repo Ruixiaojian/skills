@@ -74,6 +74,10 @@ Pro 套餐
 
 用量包有效期为 1 个月，到期后未使用的额度自动作废，不支持退款。
 
+### Token Plan 的用量在哪里查看？
+
+在[百炼控制台](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/token-plan)的 **Token Plan > 我的订阅** 页面查看当前订阅的 Credits 额度及消耗情况。
+
 ## **接入报错**
 
 ### 常见报错及解决方案
@@ -94,7 +98,7 @@ Pro 套餐
 
 误用了按量计费的 API Key 或 Coding Plan 的 Key；订阅过期；Key 复制不完整
 
-确认使用 Token Plan 个人版专属 API Key，确保完整且无空格
+确认使用 Token Plan 个人版 API Key，确保完整且无空格
 
 404 model 'xxx' not found or not supported
 
@@ -106,13 +110,13 @@ Pro 套餐
 
 误用了 Coding Plan 或其他计费模式的 Base URL
 
-使用 Token Plan 个人版专属 Base URL
+使用 Token Plan 个人版 Base URL
 
 401 Incorrect API key provided
 
 误用了百炼通用 Base URL（dashscope.aliyuncs.com）
 
-使用 Token Plan 个人版专属 Base URL
+使用 Token Plan 个人版 Base URL
 
 429 Requests rate limit exceeded
 
@@ -161,6 +165,14 @@ Token Plan 个人版仅供个人通过官方指定工具（如 Cursor、Claude C
 ### 多人共用一个账号可以吗？
 
 不可以。Token Plan 个人版限单人使用，不允许多人共用同一账号或 API Key。如需多人协作，请使用 Token Plan 团队版。
+
+### 可以在多台设备上使用同一个 API Key 吗？
+
+可以。Token Plan 个人版每个订阅对应一个专属 API Key，生成后请立即复制并妥善保存。您可以将同一个 API Key 配置到多台设备（如家庭电脑和公司电脑）上使用，无需为每台设备重新生成。
+
+**重要**
+
+重置 API Key 会使旧 Key 立即失效，届时需在所有设备上更新为新 Key。建议仅在 Key 泄露时才重置。
 
 ## **购买与订阅**
 

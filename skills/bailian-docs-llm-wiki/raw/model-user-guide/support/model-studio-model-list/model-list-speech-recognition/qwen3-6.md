@@ -2,6 +2,10 @@
 
 Qwen3.5-LiveTranslate-Flash的实时版本，一款高精度、高响应、高鲁棒性的多语言实时音视频同传大模型。依托Qwen3.5-Omni强大的基座能力、海量多模态数据、跨语言跨模态对齐和视觉增强等技术，通义千问3.5-LiveTranslate-Flash 实现了离线和实时两种音视频翻译能力，能听懂60种语言，会说29种语言。
 
+## 推理服务供应商
+
+`qwen3.5-livetranslate-flash-realtime`模型的推理服务供应商为阿里云百炼。
+
 ## 模型能力
 
 能力项
@@ -181,6 +185,10 @@ TPM（每分钟tokens）
 ### qwen3.5-livetranslate-flash-realtime-2026-05-19
 
 Qwen3.5-LiveTranslate-Flash的实时版本，一款高精度、高响应、高鲁棒性的多语言实时音视频同传大模型。依托Qwen3.5-Omni强大的基座能力、海量多模态数据、跨语言跨模态对齐和视觉增强等技术，通义千问3.5-LiveTranslate-Flash 实现了离线和实时两种音视频翻译能力，能听懂60种语言，会说29种语言。
+
+#### 推理服务供应商
+
+`qwen3.5-livetranslate-flash-realtime-2026-05-19`模型的推理服务供应商为阿里云百炼。
 
 #### 模型能力
 

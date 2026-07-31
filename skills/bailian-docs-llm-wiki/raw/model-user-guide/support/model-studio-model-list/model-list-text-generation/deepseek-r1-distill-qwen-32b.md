@@ -2,6 +2,10 @@
 
 DeepSeek-R1-Distill-Qwen-32B是一个基于Qwen2.5-32B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。
 
+## 推理服务供应商
+
+`deepseek-r1-distill-qwen-32b`模型的推理服务供应商为阿里云百炼。
+
 ## 模型能力
 
 能力项

@@ -137,7 +137,7 @@ qwen3.5-livetranslate-flash-realtime
 
 multimodal-dialog
 
-不支持
+支持
 
 支持
 
@@ -145,9 +145,9 @@ multimodal-dialog
 
 实时语音识别
 
-Fun-ASR系列模型
+Qwen-Audio-3.0-ASR-Flash-Streaming、Fun-ASR-Realtime系列模型
 
-不支持
+支持
 
 不支持
 
@@ -157,7 +157,7 @@ Fun-ASR系列模型
 
 CosyVoice系列模型
 
-不支持
+支持
 
 不支持
 
@@ -167,9 +167,9 @@ CosyVoice系列模型
 
 qwen-audio-3.0-realtime-plus、qwen-audio-3.0-realtime-flash
 
-不支持
+支持
 
-不支持
+支持
 
 支持
 

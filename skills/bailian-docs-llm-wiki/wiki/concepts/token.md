@@ -1,39 +1,38 @@
 # Token
 
-Token 是百炼平台中用于计量模型推理资源消耗的核心单位，表示模型处理的文本、图像、音频等模态数据的基本语义单元。在百炼体系中，Token 不仅是计费与配额的基础粒度，也是性能监控、容量规划和调用优化的关键指标。
+Token 是百炼平台中用于计量模型调用资源消耗的核心计费与监控单位，特指大语言模型（LLM）及全模态模型在推理过程中处理的文本单元——包括输入 Prompt 中的词元（tokenized text）和模型生成的输出内容。一个 Token 通常对应一个子词（subword）或标点符号，其具体切分方式由模型所采用的 tokenizer 决定（如 Qwen 系列使用 QwenTokenizer），并非简单按字符或字数计算。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-- **计费与配额（Token Plan）**：Token Plan 以 Credits 为统一计价单位，其消耗量由实际输入/输出 Token 数、模型类型、思考模式启用状态及 Harness [工具调用](tool-use.md)次数动态计算。例如 `qwen3.6-plus` 单次请求约消耗 3.18 Credits，已包含 [prompt](../guides/prompt.md) 缓存、推理输入、生成输出等全部 Token 开销。个人版按 5 小时/7 天滚动窗口限额，团队版按月度总 Credits 额度管理。
-
-- **高性能推理（TPM 预留 / 快速模式）**：TPM（Tokens Per Minute）是衡量吞吐能力的硬性指标，用户通过预付费锁定 `input_tpm` 和 `output_tpm`（单位：kTPM），保障高并发下确定性响应；快速模式虽不支持 TPM 预留，但 `glm-5.2-fast-preview` 的 TPS（tokens per second）提升直接反映在 Token 输出速率上，适用于对首 Token 延迟敏感的实时交互场景。
-
-- **可观测性（模型监控 & 应用监控）**：所有监控维度均以 Token 为统计基础——模型监控中 `model_usage` 指标精确到输入/输出 Token 总量；应用监控则在 `LLM` 节点级展示单次 Span 的 Token 总量（输入 + 输出）及首 Token 耗时，支撑链路级成本归因与性能瓶颈定位。
-
-- **API 调用约束（Preparations）**：`max_tokens` 参数直接限制模型最大输出长度，必须在模型支持范围内（如 `qwen3.7-max` 最大输出为 8192 tokens）；[多模态](multi-modal.md)输入（如含 `image_url` 的 `content` 数组）会显著增加视觉 Token 消耗，需注意纯文本模型不支持此类输入，否则触发 400 错误。
+- **计费计量**：所有文本生成类模型（如 `qwen3.7-plus`、`glm-5.2`）、全模态模型（如 `qwen-omni`）均按 **输入 Token 数 + 输出 Token 数** 的总和计费；向量嵌入（`text-embedding-v3`）等仅按输入 Token 计费；[多模态输入](multimodal-input.md)（如图像 URL）会经预处理折算为等效 Token 数参与计费。
+- **用量监控**：在「模型监控」中，Token 是大语言模型用量的核心统计维度，支持分钟级趋势分析、免费额度消耗追踪及告警配置；在「应用监控」中，每个 `LLM` 节点自动上报 `input_tokens`、`output_tokens` 和 `total_tokens`，用于链路级成本归因与性能诊断。
+- **配额控制**：Token Plan 订阅服务以 Credits 为统一单位，1 Credit ≈ 1 Token（具体换算系数依模型而异，详见各模型定价页），个人版采用双窗口（每 5 小时 + 每 7 天）Token 消耗限额，团队版按月度固定 Credits 额度管理。
+- **API 调用约束**：`max_tokens` 参数直接限制模型单次响应的最大输出 Token 数；`temperature`、`top_p` 等参数虽不直接影响 Token 数，但间接影响输出长度与稳定性；结构化输出（`response_format="json_object"`）需确保 Prompt 中含 `"json"` 关键词，否则可能因解析失败导致额外 Token 浪费。
+- **模型评测**：在模型评测任务中，被评测模型的每次推理消耗的 Token 会计入调用成本；若使用大模型评估（裁判模型），其评分过程本身也按 Token 计费，需在维度配置中明确指定裁判模型（如 `qwen-max`）。
 
 ## 关键参数和配置
 
-| 参数 | 说明 | 注意事项 |
-|------|------|----------|
-| `max_tokens` | 模型单次响应的最大输出 Token 数 | 必须为整数且 ≥1，不可超过模型文档声明的上限；设为 1 时仍会消耗输入 Token |
-| `input_tpm` / `output_tpm` | TPM 预留中分别承诺的每分钟输入/输出 Token 容量 | 单位为 kTPM（1,000 tokens/min），需按模型阶梯系数估算，缓存命中可降低实际消耗 |
-| Token 统计口径 | 输入 Token：[prompt](../guides/prompt.md) 内容经 tokenizer 后的 token 数（含 system/user/assistant 角色标记）<br>输出 Token：模型生成内容的 token 数（不含 stop token） | 图像/视频 URL 作为输入时，其视觉 Token 消耗由模型内部编码器计算，不对外暴露原始数值；流式响应中 `delta.content` 的 token 数实时累加 |
-| Credits 换算 | 非固定单价，取决于模型、Token 用量、[工具调用](tool-use.md)等组合因素 | 例如 `web_search` [工具调用](tool-use.md)会额外增加 Credits 消耗，具体值见控制台用量明细 |
+| 参数/配置项 | 说明 | 注意事项 |
+|-------------|------|----------|
+| `max_tokens` | 控制模型单次响应最大输出 Token 数 | 必须在模型支持范围内（如 `qwen3.7-plus` 最大为 8192），超限将返回 `400 Bad Request` |
+| `input_tokens` / `output_tokens` | 应用监控中 LLM 节点自动上报的细分指标 | 可用于识别“高输入低输出”（提示冗余）或“高输出低信息密度”（生成拖沓）等优化点 |
+| Credits-to-Token 换算 | Token Plan 中 1 Credit ≈ 1 Token（基准值），实际按模型精度动态调整 | 例如 `qwen3.8-max-preview` 折扣后为 0.1 Credit/Token（夜间 0.02 Credit/Token），详情见[模型定价页](https://help.aliyun.com/zh/model-studio/model-pricing) |
+| 免费额度 | 新用户赠送 10,000 Credits（约 10,000 Token），按模型 Code 独立核算 | 免费额度用尽后自动切换至付费账户，支持在控制台开启「用完即停」开关 |
 
 ## 面向开发者，简洁实用
 
-- ✅ **调试建议**：首次调用后立即查看 [模型用量页面](https://bailian.console.aliyun.com/?tab=costing-balance#/costing-balance/usage-statistics)，筛选对应 `model` 和 `apikey_id`，确认 Token 消耗是否符合预期（延迟约 1 小时）；开启高级监控后可查分钟级日志，精准定位高 Token 消耗请求。
-- ✅ **优化技巧**：缩短 [prompt](../guides/prompt.md)、禁用非必要工具、启用缓存（对重复 prompt 可降本）、选择 Flash 类模型（如 `qwen3.6-flash`）可显著降低 Token/Credits 消耗。
-- ✅ **安全红线**：Token Plan 明确禁止自动化脚本批量调用——单次请求若无用户交互上下文或高频固定 pattern，可能被判定为违规并封禁 API Key。
-- ✅ **开发验证**：使用 CLI 快速估算 Token：`bl text estimate --message "你的提示词"`（支持[多模态](multi-modal.md)输入 URL）；SDK 中可通过 `response.usage` 字段获取 `prompt_tokens`、`completion_tokens`、`total_tokens`。
+- ✅ **快速估算 Token 数**：使用 [DashScope Tokenizer 工具](https://dashscope.console.aliyun.com/tokenizer) 或 SDK 中 `dashscope.Tokenizer.count_tokens()` 方法，传入 `model` 和 `text` 即可获取精确值（支持多轮对话 `messages` 格式）。
+- ✅ **避免意外超限**：调用前始终校验 `max_tokens` 是否合理；对长文档输入，优先使用 `qwen-long` 等长上下文模型，并设置 `truncation_strategy="auto"`。
+- ✅ **监控与优化**：在应用监控中筛选 `total_tokens > 1000` 的 Span，结合 Prompt 和 Output 分析低效生成；对高频调用场景，复用推理结果集进行评测而非重复调用。
+- ❌ **不要硬编码 Token 逻辑**：不同模型 tokenizer 不同（如 `glm-5` 与 `qwen3` 切分结果差异可达 20%），务必通过 API 或官方工具动态计算。
+- ❌ **不要混淆 Token 与字符**：中文平均约 1.5–2 字符/Token，英文约 0.75 单词/Token；直接按字数估算会导致严重偏差。
 
 ## 关联主题页
 
 - [token plan guide](../guides/token-plan-guide.md)
-- [model high speed inference](../guides/model-high-speed-inference.md)
 - [model monitoring](../guides/model-monitoring.md)
 - [application monitoring](../guides/application-monitoring.md)
+- [model evaluation introduction](../guides/model-evaluation-introduction.md)
 - [preparations](../api/preparations.md)
 
 

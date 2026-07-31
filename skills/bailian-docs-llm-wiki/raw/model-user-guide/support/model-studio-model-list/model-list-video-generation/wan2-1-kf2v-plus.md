@@ -2,6 +2,10 @@
 
 Wan2.1 start and end frames to video Plus version, generate a smooth transition video for two images. Support for large and complex movements, adherence to physical laws, rich artistic styles, and visual quality at the film and television level. The ability to follow instructions is further enhanced, resulting in richer details in the generated video.
 
+## 推理服务供应商
+
+`wan2.1-kf2v-plus`模型的推理服务供应商为阿里云百炼。
+
 ## 模型能力
 
 能力项

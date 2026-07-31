@@ -325,7 +325,7 @@ Qwen-Audio-TTS/CosyVoice 支持一次性输入和流式输入两种调用方式�
     
     否
     
-    音频码率（kbps）。音频格式为opus时，支持通过`bit_rate`参数调整码率。
+    音频码率（kbps）。音频格式为mp3或opus时，支持通过`bit_rate`参数调整码率。
     
     默认值：32。
     
