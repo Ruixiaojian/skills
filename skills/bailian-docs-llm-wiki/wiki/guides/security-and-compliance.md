@@ -1,61 +1,65 @@
 # security and compliance
 
-阿里云百炼平台提供多层次的安全与合规能力，覆盖模型调用、数据传输、存储隔离、内容审核及监管备案等关键环节。开发者可通过权限管理、加密传输、私网接入、AI安全护栏和算法备案信息等机制，满足生产环境下的数据安全、隐私保护与法规遵从要求。
+阿里云百炼平台提供多层次的安全与合规能力，覆盖权限隔离、数据传输加密、内容安全防护、模型备案支持及私有化部署等关键维度。所有功能均基于阿里云统一安全体系构建，满足企业级生产环境对数据主权、审计合规和网络隔离的严苛要求。
 
 ## 支持的模型/功能
 
-百炼支持多种安全与合规相关功能，适用于不同场景：
+- **AI 安全护栏服务**：支持文本和图片类模型的输入输出内容审核，自动识别涉黄、涉政、广告等高风险内容 [输⼊输出AI安全护栏](../../raw/model-user-guide/security-and-compliance/content-security.md)。  
+- **加密传输能力**：支持对 `input` 字段进行 AES-RSA 混合加密，防止敏感数据在公网传输中被窃听或篡改 [以加密的方式接入模型推理功能](../../raw/model-user-guide/security-and-compliance/transmission-security/encrypted-access-to-model-inference.md)。  
+- **私网访问通道**：通过 PrivateLink 终端节点实现 VPC 内流量直连百炼 API，完全规避公网暴露 [通过终端节点私网访问阿里云百炼模型或应用 API](../../raw/model-user-guide/security-and-compliance/transmission-security/access-model-studio-through-privatelink.md)。  
+- **安全存储业务空间**：支持反向终端节点 + MSE 网关 + 专有云资源（OSS/ADB/ES）的全链路私有化数据存储方案，适用于金融、政务等强合规场景 [配置终端节点并发起连接](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-an-endpoint-and-initiate-a-connection.md)。  
+- **模型备案信息**：公示千问、万相、智谱、DeepSeek 等全部接入模型的算法备案号与大模型备案号，便于客户完成《生成式人工智能服务管理暂行办法》要求的上架合规动作 [模型备案信息公示](../../raw/model-user-guide/security-and-compliance/model-filing-information-publicity.md)。
 
-- **AI安全护栏服务**：对输入输出内容进行实时合规检测，支持文本和图片类型模型，可识别涉黄、涉政、广告等高风险内容 [输⼊输出AI安全护栏](../../raw/model-user-guide/security-and-compliance/content-security.md)。
-- **加密传输能力**：通过AES-RSA混合加密机制，对请求体中 `input` 字段加密，防止敏感数据在公网传输中被窃听或篡改 [以加密的方式接入模型推理功能](../../raw/model-user-guide/security-and-compliance/transmission-security/encrypted-access-to-model-inference.md)。
-- **私网访问能力**：支持通过阿里云 PrivateLink 创建终端节点，实现 VPC 内资源（如 ECS、容器）不经过公网直连百炼 API；同时支持反向终端节点，用于安全存储业务空间与客户私有网络的双向隔离通信 [通过终端节点私网访问阿里云百炼模型或应用 API](../../raw/model-user-guide/security-and-compliance/transmission-security/access-model-studio-through-privatelink.md) 和 [配置终端节点并发起连接](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-an-endpoint-and-initiate-a-connection.md)。
-- **安全存储业务空间**：提供专属隔离网络环境，支持对接客户自有 OSS、ADB、ElasticSearch 等私有云组件，实现数据不出域、存储可控 [配置私有网络中的资源](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-resources-in-private-network.md)。
-
-> **注意**：文档 8 明确指出美国（弗吉尼亚）地域暂不支持私网访问；而文档 9 和 10 均限定仅支持“华北2（北京）”地域的安全存储业务空间部署。二者地域支持范围不一致，实际部署前请以控制台最新能力为准。
+> **注意**：文档 3 和文档 5 均列出千问模型备案号，但文档 3 中备案主体为“阿里巴巴达摩院(杭州)科技有限公司”，而文档 5 中未明确主体；实际备案信息应以[互联网信息服务算法备案系统](https://beian.cac.gov.cn/#/index)实时查询结果为准，建议开发者自行核验。
 
 ## 关键参数
 
-| 参数 | 说明 | 来源 |
-|------|------|------|
-| `X-DashScope-DataInspection` | 启用 AI 安全护栏的请求头，值为 `{"input":"cip","output":"cip"}`，表示对输入和输出均启用内容检查 | [输⼊输出AI安全护栏](../../raw/model-user-guide/security-and-compliance/content-security.md) |
-| `X-DashScope-EncryptionKey` | 加密调用必需请求头，包含 `public_key_id`、`encrypt_key`（RSA 加密后的 AES 密钥）和 `iv`（初始向量） | [以加密的方式接入模型推理功能](../../raw/model-user-guide/security-and-compliance/transmission-security/encrypted-access-to-model-inference.md) |
-| `enable_encryption=True`（Python） / `.enableEncrypt(true)`（Java） | DashScope SDK 中启用自动加解密的开关参数，SDK 封装全部密钥管理逻辑 | [以加密的方式接入模型推理功能](../../raw/model-user-guide/security-and-compliance/transmission-security/encrypted-access-to-model-inference.md) |
-| `ep-{实例ID}.privatelink.aliyuncs.com` 或 `vpc-{实例ID}.{地域ID}.dashscope.aliyuncs.com` | 终端节点服务域名，用于替换默认 API endpoint 实现私网调用 | [通过终端节点私网访问阿里云百炼模型或应用 API](../../raw/model-user-guide/security-and-compliance/transmission-security/access-model-studio-through-privatelink.md) |
+| 参数名 | 用途 | 示例值 | 来源 |
+|--------|------|--------|------|
+| `X-DashScope-DataInspection` | 启用 AI 安全护栏 | `{"input":"cip","output":"cip"}` | [输⼊输出AI安全护栏](../../raw/model-user-guide/security-and-compliance/content-security.md) |
+| `X-DashScope-EncryptionKey` | 传递 RSA 加密后的 AES 密钥 | `{"public_key_id":"1","encrypt_key":"...","iv":"..."}` | [获取RSA的公钥](../../raw/model-user-guide/security-and-compliance/transmission-security/model-interface-aes-encryption.md) |
+| `enable_encryption=True` (Python) / `.enableEncrypt(true)` (Java) | SDK 级加密开关 | `True` / `true` | [以加密的方式接入模型推理功能](../../raw/model-user-guide/security-and-compliance/transmission-security/encrypted-access-to-model-inference.md) |
+| `base_url` (OpenAI SDK) / `dashscope.base_http_api_url` (DashScope SDK) | 替换为私网终端节点域名 | `https://vpc-cn-beijing.dashscope.aliyuncs.com/...` | [通过终端节点私网访问阿里云百炼模型或应用 API](../../raw/model-user-guide/security-and-compliance/transmission-security/access-model-studio-through-privatelink.md) |
 
 ## 使用方式
 
-### 1. 启用 AI 安全护栏
-- 在[安全管理页面](https://bailian.console.aliyun.com/?globalset=1#/efm/global_set)完成服务授权；
-- 调用时在请求头中添加 `X-DashScope-DataInspection: {"input":"cip","output":"cip"}`；
-- 响应返回 `400` 及 `data_inspection_failed` 错误码时，表示内容未通过审核。
+### 1. 启用内容安全护栏
+- 开通 AI 安全护栏服务（需主账号操作）；
+- 在请求 Header 中添加 `X-DashScope-DataInspection: {"input":"cip","output":"cip"}`；
+- 错误响应码为 `400`，`code` 字段为 `data_inspection_failed` 或 `DataInspectionFailed`。
 
-### 2. 启用传输加密（SDK 方式）
-- 安装最新版 DashScope SDK（Java/Python）；
-- Python 示例：`Generation.call(..., enable_encryption=True)`；
-- Java 示例：`.enableEncrypt(true)`；
-- SDK 自动处理 AES 密钥生成、RSA 加密、请求体加密及响应解密，返回明文结果。
+### 2. 启用传输加密
+- 调用 `/api/v1/public-keys/latest` 接口获取最新 `public_key_id` 和 RSA 公钥；
+- 生成 AES 密钥（推荐 256 位）和 IV，用 RSA 公钥加密 AES 密钥；
+- 将加密后的 `input` 和 `X-DashScope-EncryptionKey` 请求头一并发送；
+- **或直接使用 DashScope SDK**：设置 `enable_encryption=True`（Python）或 `.enableEncrypt(true)`（Java），SDK 自动处理加解密。
 
-### 3. 启用私网访问
-- **正向访问（VPC → 百炼）**：在 VPC 中创建接口终端节点，服务选择 `com.aliyuncs.dashscope`，获取终端节点域名后替换 API `base_url`；
-- **反向访问（百炼 → 客户私有网络）**：为安全存储业务空间创建反向终端节点，并关联客户 VPC；后续需配置 MSE 网关、可用区 VIP 及 OSS/ADB/ES 等资源白名单与授权 [配置终端节点并发起连接](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-an-endpoint-and-initiate-a-connection.md)。
+### 3. 私网访问百炼 API
+- 在 VPC 中创建接口终端节点，服务选择 `com.aliyuncs.dashscope`；
+- 获取终端节点服务域名（如 `vpc-cn-beijing.dashscope.aliyuncs.com`）；
+- 将 SDK 或 HTTP 请求的 `base_url` 替换为该域名；
+- **注意**：美国（弗吉尼亚）地域暂不支持私网访问。
 
-### 4. 获取备案信息
-- 所有已接入百炼的模型均公示算法备案号与大模型备案号，例如千问对应 `网信算备330110507206401230035号`；
-- 开发者可直接引用该信息用于《生成式人工智能服务管理暂行办法》要求的上架备案 [千问大模型应用上架及合规备案](../../raw/model-user-guide/security-and-compliance/compliance-and-launch-filing-guide-for-ai-apps-powered-by-the-tongyi-model.md) 和 [模型备案信息公示](../../raw/model-user-guide/security-and-compliance/model-filing-information-publicity.md)。
+### 4. 配置安全存储业务空间（私有化部署）
+- 创建类型为“安全存储空间”的业务空间；
+- 配置反向终端节点，关联 VPC 及交换机；
+- 部署 MSE 云原生网关，配置路由指向私有云资源（OSS/ADB/ES）；
+- 为 OSS Bucket 添加标签 `bailian-safe-workspace-oss-access=ReadAndWrite`，并配置 CORS 规则；
+- 将交换机网段加入 ES 白名单，确保网络连通性。
 
 ## 限制和注意事项
 
-- **API Key 归属不可迁移**：单个 API Key 仅归属一个地域内的一个业务空间和一个用户，无法转移；自 2026 年 3 月 25 日起，华北2（北京）地域新创建的 API Key 默认归属主账号 [权限管理](../../raw/model-user-guide/security-and-compliance/permission-management-overview.md)。
-- **OpenAPI 权限需主账号授权**：RAM 用户默认无权调用[知识库](../concepts/knowledge-base.md)、Prompt 工程等 OpenAPI，必须由阿里云主账号在 RAM 控制台为其授予 `AliyunBailianDataFullAccess` 或 `AliyunBailianDataReadOnlyAccess` 策略 [权限管理](../../raw/model-user-guide/security-and-compliance/permission-management-overview.md)。
-- **加密调用不兼容 OpenAI 兼容模式**：`X-DashScope-EncryptionKey` 机制仅适用于 DashScope 原生 Endpoint（如 `/api/v1/services/aigc/text-generation/generation`），OpenAI 兼容模式（`/compatible-mode/v1/chat/completions`）**不支持**该加密流程 [以加密的方式接入模型推理功能](../../raw/model-user-guide/security-and-compliance/transmission-security/encrypted-access-to-model-inference.md)。
-- **安全存储业务空间强地域绑定**：当前仅支持华北2（北京）地域，且专有网络必须包含可用区 G/H/L 中至少两个；跨地域或境外 VPC 无法直接接入 [配置终端节点并发起连接](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-an-endpoint-and-initiate-a-connection.md)。
-- **OSS/ADB/ES 故障影响全局服务**：若配置的 OSS Bucket 被释放、ADB 或 ES 实例停止计费或被释放，将导致安全存储业务空间、[知识库](../concepts/knowledge-base.md)、审计日志等功能完全不可用且**无法恢复**，需重建业务空间 [配置私有网络中的资源](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-resources-in-private-network.md)。
+- **API Key 归属约束**：单个 API Key 仅归属一个地域内的一个业务空间和一个用户，不可跨空间或跨用户转移；自 2026 年 3 月 25 日起，华北2（北京）地域新创建的 API Key 默认归属主账号 [权限管理](../../raw/model-user-guide/security-and-compliance/permission-management-overview.md)。  
+- **加密调用兼容性**：AES-RSA 加密机制**仅适用于 DashScope Endpoint**（如 `https://dashscope.aliyuncs.com/api/v1`），OpenAI 兼容模式（`/compatible-mode/v1`）**不支持**该加密机制 [以加密的方式接入模型推理功能](../../raw/model-user-guide/security-and-compliance/transmission-security/encrypted-access-to-model-inference.md)。  
+- **安全存储业务空间地域限制**：当前仅支持华北2（北京）地域，且专有网络必须包含可用区 G/H/L 中的至少两个 [配置终端节点并发起连接](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-an-endpoint-and-initiate-a-connection.md)。  
+- **备案责任主体**：阿里云提供模型备案信息及合作协议模板，但应用/小程序开发者作为《生成式人工智能服务管理暂行办法》定义的“服务提供者”，须独立承担内容审核、用户保护、算法备案等全部法定义务 [千问大模型应用上架及合规备案](../../raw/model-user-guide/security-and-compliance/compliance-and-launch-filing-guide-for-ai-apps-powered-by-the-tongyi-model.md)。  
+- **数据隐私承诺**：阿里云百炼**绝不会将客户数据用于模型训练**，所有传输数据默认经 AES-256 加密；但根据协议，调用日志等元数据将被存储用于运维与审计 [合规资质与隐私说明](../../raw/model-user-guide/security-and-compliance/privacy-notice.md)。
 
 ## 来源文档
 
 - [权限管理](../../raw/model-user-guide/security-and-compliance/permission-management-overview.md)
-- [千问大模型应用上架及合规备案](../../raw/model-user-guide/security-and-compliance/compliance-and-launch-filing-guide-for-ai-apps-powered-by-the-tongyi-model.md)
 - [输⼊输出AI安全护栏](../../raw/model-user-guide/security-and-compliance/content-security.md)
+- [千问大模型应用上架及合规备案](../../raw/model-user-guide/security-and-compliance/compliance-and-launch-filing-guide-for-ai-apps-powered-by-the-tongyi-model.md)
 - [合规资质与隐私说明](../../raw/model-user-guide/security-and-compliance/privacy-notice.md)
 - [模型备案信息公示](../../raw/model-user-guide/security-and-compliance/model-filing-information-publicity.md)
 - [以加密的方式接入模型推理功能](../../raw/model-user-guide/security-and-compliance/transmission-security/encrypted-access-to-model-inference.md)
@@ -63,7 +67,7 @@
 - [通过终端节点私网访问阿里云百炼模型或应用 API](../../raw/model-user-guide/security-and-compliance/transmission-security/access-model-studio-through-privatelink.md)
 - [配置终端节点并发起连接](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-an-endpoint-and-initiate-a-connection.md)
 - [配置可用区IP](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-zone-ip.md)
-- [配置私有网络中的资源](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-resources-in-private-network.md)
 - [配置MSE云原生网关](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-mse.md)
+- [配置私有网络中的资源](../../raw/model-user-guide/security-and-compliance/secure-storage/configure-resources-in-private-network.md)
 
 

@@ -1,57 +1,69 @@
 # model context protocol
 
-模型上下文协议（Model Context Protocol, MCP）是阿里云百炼平台提供的标准化接口协议，用于在大模型与外部工具（如地图、搜索、天气等服务）之间建立安全、可扩展的信息通道。它屏蔽了底层通信细节，使开发者无需为每个工具单独开发适配逻辑，即可在智能体或工作流中声明式接入多种能力。该协议基于开源 MCP 标准实现，并针对百炼平台进行了生产级增强与托管支持。
+模型上下文协议（Model Context Protocol, MCP）是阿里云百炼平台支持的标准化[工具调用](../concepts/tool-use.md)协议，用于在大模型应用（如智能体、工作流）与外部能力（如地图、搜索、数据库接口）之间建立可互操作的信息通道。它基于 Anthropic 提出的开源标准 [MCP 官方协议](https://modelcontextprotocol.io/) 实现，屏蔽底层通信细节，使开发者无需为每个工具单独开发适配层即可接入海量第三方或自定义服务。协议当前以 Streamable HTTP 为主力传输方式，兼容 SSE，支持平台内集成与外部 SDK 调用两种使用范式。
 
 ## 支持的模型/功能
 
-MCP 协议本身不绑定特定模型，但其能力需通过百炼平台的**智能体应用**和**工作流应用**触发与执行。当前支持以下两类服务集成方式：
+MCP 协议本身不绑定特定模型，而是作为**能力接入层**服务于百炼平台上的两类核心应用：
+- **智能体（Agent）应用**：支持在 Prompt 驱动下自动识别调用意图、生成工具参数并处理返回结果；
+- **工作流（Workflow）应用**：支持在可视化编排节点中显式调用已配置的 MCP 服务。
 
-- **官方 MCP 服务**：由阿里云百炼预部署并托管的云服务，开箱即用，包括 Amap Maps（地理信息）、WebSearch（联网搜索）、Firecrawl（网页爬取）、Sequential Thinking（逻辑推理）、QuickChart（图表生成）等。其中 Amap Maps 服务限时免费，WebSearch 提供 2000 次/月免费额度 [模型上下文协议（MCP）](../../raw/application-user-guide/model-context-protocol/mcp-introduction.md)。
-- **自定义 MCP 服务**：支持三种部署路径：
-  - *使用脚本部署*：通过 `npx`（Node.js）或 `uvx`（Python）直接运行开源或自研 MCP 服务代码；
-  - *从 AI 网关导入*：将现有 RESTful API 封装为 MCP 工具；
-  - *从阿里云 OpenAPI 导入*：将 ECS、OSS 等云产品能力一键发布为 MCP 工具 [自定义 MCP 服务](../../raw/application-user-guide/model-context-protocol/custom-mcp.md)。
+目前官方已预置并托管多种 MCP 服务，包括 Amap Maps（地理信息）、Firecrawl（网页爬取）、WebSearch（联网搜索）等，详见 [官方 MCP 服务](https://help.aliyun.com/zh/model-studio/official-and-third-party-mcp)。同时支持三类自定义部署方式：  
+1. **脚本部署**（`npx`/`uvx` 托管 Node.js 或 Python MCP Server）；  
+2. **AI 网关导入**（将现有 RESTful API 封装为 MCP 服务）；  
+3. **阿里云 OpenAPI 导入**（将阿里云产品 OpenAPI 快速发布为 MCP 工具）[原文标题](../../raw/application-user-guide/model-context-protocol/custom-mcp.md)。
 
-> **注意**：文档 4 中提到“百炼 MCP 服务已从旧版 SSE 协议升级为新版 Streamable HTTP 协议”，但文档 2 和文档 3 的配置示例及截图仍大量使用 `sse` 类型（如 `type: "sse/streamableHttp"`、`/sse` 路径）。实际部署时，请严格按文档 5 错误码说明验证协议匹配性：`"sse"` 必须对应 GET `/sse`，`"streamableHttp"` 必须对应 POST `/mcp`；混用将导致 `11200058` 或 `11200059` 错误 [MCP 常见问题](../../raw/application-user-guide/model-context-protocol/mcp-faq.md)。
+> **注意**：文档 3 明确指出“MCP 服务需集成在**智能体**或**工作流**应用中使用，不能直接在调用千问 API 时接入”，而文档 1 中“大模型应用：智能体应用”“大模型应用：工作流应用”的表述与此一致，但未覆盖 API 直接调用场景——该限制为关键约束，非疏漏。
 
 ## 关键参数
 
-MCP 服务配置的核心参数取决于部署方式，通用关键项如下：
+MCP 服务配置与调用涉及以下核心参数：
 
 | 参数 | 说明 | 示例值 | 来源 |
 |------|------|--------|------|
-| `type` | 通信协议类型，决定传输方式与端点路径 | `"stdio"`（本地）、`"sse"`、`"streamableHttp"` | [自定义 MCP 服务](../../raw/application-user-guide/model-context-protocol/custom-mcp.md) |
-| `command` / `url` | 启动命令（npx/uvx）或远程服务地址 | `"npx"`, `"https://your-mcp-server/mcp"` | [自定义 MCP 服务](../../raw/application-user-guide/model-context-protocol/custom-mcp.md) |
-| `env` | 环境变量，用于传递密钥、配置等敏感信息 | `{"AMAP_MAPS_API_KEY": "xxx"}` | [自定义 MCP 服务](../../raw/application-user-guide/model-context-protocol/custom-mcp.md) |
-| 部署模式 | 决定计费与延迟特性 | `基础模式（按次计费）` / `极速模式（常驻+调用双计费）` | [模型上下文协议（MCP）](../../raw/application-user-guide/model-context-protocol/mcp-introduction.md) |
+| `type` | 传输协议类型 | `"streamableHttp"`（推荐）、`"sse"` | [原文标题](../../raw/application-user-guide/model-context-protocol/mcp-external-calls.md) |
+| `url` | MCP Server 接入地址 | `https://dashscope.aliyuncs.com/api/v1/mcps/WebSearch/mcp` | 文档 2 SDK 示例 |
+| `command` / `args` | 脚本部署启动命令 | `"npx"`, `["-y", "@modelcontextprotocol/server-memory"]` | [原文标题](../../raw/application-user-guide/model-context-protocol/custom-mcp.md) |
+| `env` | 环境变量（含密钥） | `{"AMAP_MAPS_API_KEY": "xxx"}`（需配合 KMS 凭据加密） | 文档 2 开通说明 |
+| `DASHSCOPE_API_KEY` | 百炼平台鉴权凭证 | 通过环境变量或请求头 `Authorization: Bearer <key>` 传递 | 文档 2 SDK 示例 |
 
-> **注意**：敏感环境变量（如 API Key）必须通过 KMS 凭据加密，不可明文写入配置；否则部署将失败或存在安全风险 [官方 MCP 服务](../../raw/application-user-guide/model-context-protocol/official-and-third-party-mcp.md)。
+所有 HTTP 请求必须携带有效的 `DASHSCOPE_API_KEY`，且 `type` 与 `url` 路径必须严格匹配：`"sse"` 对应 `/sse` 端点（GET），`"streamableHttp"` 对应 `/mcp` 端点（POST）[原文标题](../../raw/application-user-guide/model-context-protocol/mcp-faq.md)。
 
 ## 使用方式
 
-### 在平台内集成（推荐）
-- **智能体应用**：最多可同时添加 5 个 MCP 服务。大模型根据用户输入自动判断是否调用及调用哪个服务，无需显式指定工具名（但提示词中明确工具能力可显著提升成功率）。
-- **工作流应用**：每个 MCP 节点仅能绑定一个具体工具（如 `maps_weather`），需手动配置输入参数（常通过前置大模型节点提取）和输出参数映射。
+### 平台内集成（智能体/工作流）
+1. 在 [MCP 广场](https://bailian.console.aliyun.com/cn-beijing?tab=app#/mcp-market) 开通官方服务，或在 [MCP 管理](https://bailian.console.aliyun.com/?tab=app#/mcp-manage) 创建自定义服务；
+2. 在智能体/工作流编辑器中，从可用工具列表选择目标 MCP 服务并启用；
+3. 在 Prompt 中明确指令（如“调用 Amap Maps 规划杭州到上海路线”），模型将自动解析并调用。
 
 ### 外部调用
-支持两种标准方式：
-- **集成至第三方应用**：一键配置到 Cherry Studio、Cursor 等 IDE，自动注入 MCP Server 配置（含 `DASHSCOPE_API_KEY` 和 URL）。
-- **通过 SDK 开发集成**：使用 `mcp` 官方 SDK（如 `streamablehttp_client`）连接百炼 MCP 服务端点，再结合 [OpenAI 兼容接口](../concepts/openai-compatible-interface.md)（`qwen-max`）实现多轮工具调用循环 [外部调用](../../raw/application-user-guide/model-context-protocol/mcp-external-calls.md)。
+- **第三方 IDE 集成**：支持 Cherry Studio、Cursor 等工具，提供一键自动配置或手动 JSON 导入（含 `DASHSCOPE_API_KEY` 替换）；
+- **SDK 编码集成**：使用 `mcp` 客户端库（如 `streamablehttp_client`）连接 MCP Server，获取工具列表后，结合 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)（如 `qwen-max`）实现多轮[工具调用](../concepts/tool-use.md)循环 [原文标题](../../raw/application-user-guide/model-context-protocol/mcp-external-calls.md)。
 
 ## 限制和注意事项
 
-- **网络与资源限制**：自定义 MCP 服务运行于函数计算 FC，**无法访问用户本地数据库或硬件**；访问云数据库需配置 FC IP 白名单或 VPC 打通；无固定出口 IP，代理场景需额外配置 [MCP 常见问题](../../raw/application-user-guide/model-context-protocol/mcp-faq.md)。
-- **协议兼容性**：非标准 MCP 实现（如依赖浏览器环境、本地文件系统）无法在百炼云端部署；私有 npm/PyPI 包暂不支持，需发布至公共仓库 [MCP 常见问题](../../raw/application-user-guide/model-context-protocol/mcp-faq.md)。
-- **[Token](../concepts/token.md) 开销**：MCP 返回结果会作为上下文注入模型输入，**直接增加输入 [Token](../concepts/token.md) 数量**；丰富上下文也可能间接增加输出 [Token](../concepts/token.md) [MCP 常见问题](../../raw/application-user-guide/model-context-protocol/mcp-faq.md)。
-- **模型调用隔离**：MCP 服务**仅可在百炼智能体/工作流应用中使用，不可直接接入千问 API 调用链** [MCP 常见问题](../../raw/application-user-guide/model-context-protocol/mcp-faq.md)。
-- **错误排查**：常见连接失败（`11200044`）、超时（`11200045/46`）、认证失败（`11200049`）、协议不匹配（`11200054/58/59`）等问题，均需结合 `curl` 测试、FC 日志及下游服务文档定位 [MCP 常见问题](../../raw/application-user-guide/model-context-protocol/mcp-faq.md)。
+- **网络与权限限制**：  
+  - 自定义 MCP 服务运行于函数计算 FC，**无法访问用户本地资源**（如本地文件、硬件）；  
+  - 访问远程资源（如云数据库）需配置 FC IP 白名单或 VPC 打通；  
+  - 私有 npm 仓库不支持直接部署，须发布至公共仓库或改用 SSE 连接。
+
+- **协议与部署约束**：  
+  - `npx`/`uvx` 部署的服务版本更新后**不会自动同步**，需手动重新部署；  
+  - `type` 与端点路径不匹配将触发错误码 `11200058`（HTTP 405）或 `11200059`（HTTP 404）；  
+  - 初始化超时（`11200057`）常见于基础模式冷启动延迟，可切换至极速模式缓解。
+
+- **计费与额度**：  
+  - 官方服务（如 WebSearch）有免费额度（2000 次/月），超限后按 29 元/千次计费；  
+  - 自定义服务按调用时长（0.000156 元/秒）或部署时长（0.000036 元/秒）计费，详见 [计费说明](https://help.aliyun.com/zh/model-studio/mcp-introduction#fb482455a3u8c)。
+
+- **安全要求**：  
+  敏感参数（如 API Key）**必须通过 KMS 凭据加密**，禁止明文写入配置；私有 MCP Server 仅限主账号及授权 RAM 用户访问。
 
 ## 来源文档
 
 - [模型上下文协议（MCP）](../../raw/application-user-guide/model-context-protocol/mcp-introduction.md)
-- [官方 MCP 服务](../../raw/application-user-guide/model-context-protocol/official-and-third-party-mcp.md)
-- [自定义 MCP 服务](../../raw/application-user-guide/model-context-protocol/custom-mcp.md)
 - [外部调用](../../raw/application-user-guide/model-context-protocol/mcp-external-calls.md)
 - [MCP 常见问题](../../raw/application-user-guide/model-context-protocol/mcp-faq.md)
+- [自定义 MCP 服务](../../raw/application-user-guide/model-context-protocol/custom-mcp.md)
 
 

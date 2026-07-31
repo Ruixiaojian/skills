@@ -4,12 +4,18 @@
 
 **机器查询走结构化文件**：
 
-- `index.json` — 全局摘要（统计 + 能力/厂商分布 + 轻量家族列表）
+- `index.json` — 全局摘要（统计 + 能力/厂商分布 + 画像覆盖率 + 轻量家族列表）
 - `families.jsonl` — 每行一个家族（含轻量 `items[]` 摘要），适合按家族筛选
-- `models.jsonl` — 每行一个主干模型（含价格/QPM/features），适合跨家族批量查询
+- `models.jsonl` — 每行一个主干模型（含价格/QPM/features/`profile` 选型画像），适合跨家族批量查询
 - `groups/<slug>.json` — 单家族完整明细（含调用代码、入参 schema）
 
 join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].slug`。
+
+**`profile`（选型画像）**：`oneLinePositioning` 一句话定位 / `scenes` 适用场景 / `notSuitableFor` 负面清单 /
+`familyTier` 族内档位（flagship·balanced·lightweight）/ `familyComparison` 同族对比 / `callModes` 调用模式 /
+`pipelineRole` 流水线角色。三态语义：字段缺失=未知，`null`=不适用（仅档位与对比两处），有值=已知；
+`notSuitableFor: []` 表示无已知限制。`profileCompleteness` 为 `structured-only` 时该画像未读过文档，仅机械字段可信。
+硬规格（价格/QPM/contextWindow/openSource）一律看行内顶层字段，不要从 profile 里找。
 
 ## 文本生成 `TG` — 36 个家族
 

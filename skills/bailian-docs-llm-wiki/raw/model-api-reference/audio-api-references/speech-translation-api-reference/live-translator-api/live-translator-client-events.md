@@ -145,7 +145,7 @@
 
 **language** `_string_` （可选）
 
-翻译源语种，可选值：[支持的语种](https://help.aliyun.com/zh/model-studio/qwen3-5-livetranslate-flash-realtime#4ffd192226f0s)。默认值为`en`。
+翻译源语种，可选值：[支持的语种](https://help.aliyun.com/zh/model-studio/qwen3-5-livetranslate-flash-realtime#4ffd192226f0s)。默认不填写，此时模型会自动识别源语种。
 
 **input\_audio\_format** `_string_` （可选）
 

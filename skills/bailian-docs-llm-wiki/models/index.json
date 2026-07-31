@@ -2,6 +2,12 @@
   "updatedAt": "2026-07-31",
   "totalFamilies": 175,
   "totalModels": 392,
+  "profileCoverage": {
+    "full": 332,
+    "partial": 14,
+    "structured-only": 46,
+    "none": 0
+  },
   "capabilityDistribution": {
     "TG": 36,
     "IG": 31,

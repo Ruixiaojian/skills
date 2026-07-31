@@ -1,52 +1,63 @@
-# 应用调用方式对比：Application Call vs Bailian Application Calling
+# 应用调用方式对比：Application Call、Managed Agents 与 Bailian Application Calling
 
-本文旨在帮助开发者清晰理解百炼平台中两种主流应用调用机制——`Application Call`（官方 API 规范命名）与 `Bailian Application Calling`（用户侧通用术语/文档体系命名）——在技术实现、能力边界与工程实践上的异同。二者并非互斥方案，而是同一底层能力在**不同抽象层级与文档视角下的表述**：前者侧重协议标准化与多模式支持（同步/异步/流式），后者强调开箱即用的集成体验与业务场景适配（如插件透传、统一接口）。本对比基于当前（2024 Q3）百炼平台正式发布能力整理，适用于新应用开发与存量系统迁移的技术选型决策。
+为帮助开发者在百炼平台中高效选型，本文系统对比三种主流应用调用机制：**Application Call**（原生应用调用）、**Managed Agents API**（托管智能体运行时）与 **Bailian Application Calling**（百炼统一应用调用）。三者虽均用于集成 AI 应用能力，但在架构定位、控制粒度、适用场景及运维复杂度上存在本质差异。本对比聚焦实际开发视角，涵盖接入成本、功能边界、地域约束、[多模态](../concepts/multi-modal.md)支持等关键维度，旨在为技术决策提供清晰、可落地的参考依据。
 
-## 关键维度对比
+## 关键维度对比表
 
-| 维度 | Application Call | Bailian Application Calling |
-|------|------------------|-----------------------------|
-| **定义与定位** | 百炼平台官方定义的标准化应用调用协议，覆盖新版智能体、旧版智能体、工作流三类应用，强调协议兼容性（DashScope 原生 + OpenAI 兼容）与调用模式完整性（同步/异步/流式）。 | 百炼用户文档体系中对“调用百炼应用”这一行为的统称，聚焦于实际集成流程、参数语义与典型业务能力（如插件参数透传），以简化开发者认知为设计目标。 |
-| **输入格式** | • 支持 `input` 字段为 `string`（单轮文本）或 `array`（多模态消息数组，含 `type: "input_image"` / `"input_file"`）<br>• 显式支持图像、文件等多模态输入（需应用配置匹配）<br>• `session_id` 用于云端会话管理 | • 支持 `prompt`（字符串）或 `messages`（消息数组）作为核心输入<br>• `messages` 优先级高于 `session_id`，支持精确上下文控制<br>• 通过 `biz_params.user_defined_params` 结构化透传插件参数（如 `{"plugin_abc123": {"query_id": 42}}`）<br>• **不显式声明图像/文件输入语法**（依赖应用内配置，未在调用层暴露 `input_image` 等类型字段） |
-| **输出格式** | • 同步响应：完整 JSON 结果（含 `output.text`、`usage`、`session_id` 等）<br>• [流式输出](../concepts/streaming-output.md)：SSE 格式分块返回（`stream=true`，仅同步支持）<br>• 异步响应：立即返回 `{ "task_id": "xxx" }`，需轮询 `/tasks/{id}` 获取结果 | • 统一返回标准 JSON 响应结构（含 `output.text`、`usage.models[].model_id`、`request_id`）<br>• **明确不支持[流式输出](../concepts/streaming-output.md)**（文档未提及 `stream` 参数，所有示例均为同步阻塞式）<br>• **不提供原生异步模式**（无 `background=true` 参数，未描述任务轮询机制） |
-| **支持模型/应用类型** | • 新版智能体（Agent 2.0）<br>• 旧版智能体<br>• 工作流应用<br>• 多模态模型（Qwen-VL 系列）需在应用中显式配置图像处理逻辑 | • 智能体应用（Single Agent）<br>• 工作流应用（Workflow）<br>• **隐式绑定模型**：由应用发布时选定的模型（如 `qwen-max`）决定，调用方无需指定；响应中可通过 `usage.models[].model_id` 查看实际调用模型<br>• **未提及多模态模型支持细节**（如图像/文件输入能力未在关键参数或示例中体现） |
-| **API 端点** | • DashScope 原生：`POST https://dashscope.aliyuncs.com/api/v1/apps/{APP_ID}/completion`<br>• OpenAI 兼容：`POST https://dashscope.aliyuncs.com/api/v2/apps/agent/{APP_ID}/compatible-mode/v1/responses`（同步/异步共用同一路径） | • **统一端点**：仅使用 `POST https://dashscope.aliyuncs.com/api/v1/apps/{app_id}/completion`<br>• **不提供 OpenAI 兼容路径**（所有文档示例均基于 DashScope 原生接口） |
-| **计费方式** | • 按实际调用的模型 [Token](../concepts/token.md) 数量计费（输入 + 输出）<br>• 异步任务、[流式输出](../concepts/streaming-output.md)、多模态输入（图像/文件）均计入对应模型的 [Token](../concepts/token.md) 消耗<br>• 费用归属应用所属的 Workspace | • 同样按 [Token](../concepts/token.md) 计费（输入 + 输出）<br>• 插件调用产生的额外费用（如第三方 API 调用）由插件配置独立结算，不计入主应用 Token 费用<br>• 文档强调 `biz_params` 透传不影响基础计费模型 |
-| **典型场景** | • 需要低延迟响应的实时对话（启用 `stream=true`）<br>• 执行耗时较长的复杂工作流（启用 `background=true`）<br>• 集成多模态能力（上传图片分析、解析 PDF 文件）<br>• 已有 OpenAI 生态代码需最小改动迁移 | • 快速集成标准问答/客服机器人（单轮/多轮文本）<br>• 需与自定义插件深度协同的业务流程（如订单查询、工单创建）<br>• 追求接口简洁、减少协议学习成本的内部系统对接<br>• 对流式/异步无强需求，以功能正确性与可维护性为优先 |
+| 维度 | Application Call | Managed Agents API | Bailian Application Calling |
+|------|------------------|---------------------|------------------------------|
+| **定位与角色** | 百炼平台核心应用调用能力，面向已发布（上线）的智能体/工作流应用，强调“即调即用”与业务集成 | 平台级智能体托管运行时服务，面向需深度定制执行生命周期、工具沙箱与事件流的复杂智能体开发场景 | 百炼官方推荐的标准化应用调用方式（SDK 封装层），本质是 Application Call 的易用封装，面向快速集成与统一治理 |
+| **输入格式** | 支持 `input.prompt`（字符串）或 `input.messages`（OpenAI 风格数组）；支持[多模态](../concepts/multi-modal.md)输入（图像需 VL 模型+显式配置，文件需启用全文引用） | 严格基于 `events` 消息流：`input` 为消息数组，每条含 `role`（user/assistant/tool）、`type`（message/tool_result）、`content`（支持文本、图像、音频等富媒体） | 同 Application Call：支持 `prompt`（单轮）或 `messages`（多轮）；**不原生支持图像/文件输入**（需通过 `biz_params` 间接透传或依赖应用内预处理） |
+| **输出格式** | 同步返回结构化 JSON（含 `output.text` / `output.choices[0].message.content`）；支持 `stream=true` 流式响应（SSE）；异步返回 `task_id` | 基于 SSE 的事件流（`text/event-stream`）：包含 `session_status`（idle/running/terminated）、`content`（模型输出）、`tool_calls`（[工具调用](../concepts/tool-use.md)指令）、`tool_results`（工具回填结果）等细粒度事件 | SDK 返回 `Response` 对象（含 `output.text` / `output.choices[0].message.content`）；HTTP 接口同 Application Call；**不支持[流式输出](../concepts/streaming-output.md)**（SDK 层未暴露 stream 参数） |
+| **支持模型** | 由应用发布时绑定的模型决定（如 `qwen-max`, `qwen-plus`, `qwen-vl` 等），调用方无需指定 | **仅支持百炼托管模型**（如 `qwen-plus`），不支持自定义模型或外部模型接入 | 同 Application Call：由应用绑定模型自动执行，响应中 `usage.models[].model_id` 可查实际模型 |
+| **API 端点** | DashScope 原生：`POST https://dashscope.aliyuncs.com/api/v1/apps/{APP_ID}/completion`<br>OpenAI 兼容：`POST https://dashscope.aliyuncs.com/api/v2/apps/agent/{APP_ID}/compatible-mode/v1/responses` | `POST https://{workspace_id}.{region}.maas.aliyuncs.com/api/v1/agentstudio/sessions/{session_id}/events`（事件提交）<br>`GET https://{workspace_id}.{region}.maas.aliyuncs.com/api/v1/agentstudio/sessions/{session_id}/events/stream`（SSE 流） | **统一端点**：`POST https://dashscope.aliyuncs.com/api/v1/apps/{APP_ID}/completion`（SDK 内部封装，对外透明） |
+| **计费方式** | 按调用次数 + 模型 token 消耗计费（含输入/输出 token）；异步任务按完成计费 | 按 Session 运行时长（秒） + [工具调用](../concepts/tool-use.md)次数 + 模型 token 消耗计费；Environment 和 Skill 存储单独计费 | 同 Application Call：按调用次数 + token 消耗计费；无额外运行时费用 |
+| **会话管理** | ✅ DashScope API：`session_id` 自动维护上下文（有效期 1 小时）<br>✅ Responses API：显式传递完整 `messages` 数组 | ✅ Session 级状态机管理（`idle`→`running`→`idle/terminated`）；`session_id` 为必需标识；支持中断、重试、状态查询 | ✅ 支持 `session_id`（云端会话）或 `messages`（本地会话）；**二者共存时以 `messages` 为准**（覆盖云端历史） |
+| **[多模态](../concepts/multi-modal.md)支持** | ✅ 图像：需 VL 模型 + 应用配置 `imageList` 或自定义处理<br>✅ 文件：仅智能体应用支持，需启用“全文引用”或“切片检索” | ✅ 全面支持：图像/音频/文本混合输入，通过 `content` 字段以 `{"type": "image_url", "image_url": {"url": "..."} }` 等标准格式传递 | ❌ **不直接支持**：无原生图像/文件字段；需将文件 ID 或 URL 作为 `biz_params` 透传，由应用内逻辑解析处理 |
+| **异步执行** | ✅ 支持：`background=true` 返回 `task_id`，需轮询 `GET /tasks/{task_id}` 获取结果 | ✅ 支持：Session 生命周期天然异步；通过 SSE 监听 `session_status` 变更即可获知完成 | ❌ **不支持**：SDK `Application.call()` 为同步阻塞调用；无异步接口封装 |
+| **典型场景** | • 快速集成已发布的工作流（如审批流、报告生成）<br>• 需要流式响应的对话类应用（客服、教育）<br>• 多模态输入（图文问答、文档理解） | • 构建具备复杂工具链（代码执行、数据库查询、API 调用）的自主智能体<br>• 需精细控制执行过程（中断、调试、事件审计）<br>• 多租户沙箱隔离要求高的企业级应用 | • 传统业务系统（ERP/CRM）轻量级 AI 增强（如智能搜索、摘要生成）<br>• 团队统一使用 SDK 开发，追求最小学习成本与最大兼容性<br>• 无需流式、无需多模态、无需深度定制的标准化调用 |
 
-## 适用场景建议
+## 各方案适用场景建议
 
-- **选择 `Application Call` 当：**  
-  ✅ 项目需要**流式响应**（如聊天界面逐字渲染、长文本生成实时反馈）；  
-  ✅ 任务执行时间可能超过数秒（如复杂数据分析、多步骤工作流），需**异步解耦**避免请求超时；  
-  ✅ 应用涉及**图像识别、文档解析等多模态能力**，且需在调用层直接控制输入格式；  
-  ✅ 已有基于 OpenAI SDK 的代码库，希望**零改造复用**（利用兼容接口）；  
-  ❌ 不推荐用于仅需简单文本交互且无性能敏感要求的轻量级集成。
+- **选择 Application Call 当：**  
+  您已构建并发布了成熟的智能体或工作流应用，且需要：
+  - **最高灵活性**：自由选择 DashScope 原生 API 或 OpenAI 兼容 API；
+  - **关键性能需求**：必须支持流式响应（如实时对话）或异步长任务（如小时级报告生成）；
+  - **多模态能力**：需直接传入图像或文件进行分析；
+  - **跨地域部署**：应用部署在法兰克福、新加坡等非北京地域，需显式构造带 Workspace ID 的 endpoint。
 
-- **选择 `Bailian Application Calling` 当：**  
-  ✅ 开发目标是快速上线一个**带插件能力的业务智能体**（如“查物流+改地址+发通知”一体化流程）；  
-  ✅ 团队偏好**单一、稳定、文档完备的接口**，不愿处理多种端点与参数组合；  
-  ✅ 多轮对话需**精确控制上下文长度或隔离敏感信息**（显式 `messages` 数组更可控）；  
-  ✅ 项目处于 PoC 或 MVP 阶段，优先保障功能交付而非极致性能优化；  
-  ❌ 不适合对首字延迟（TTFB）或总响应时间有严苛 SLA 要求的场景。
+- **选择 Managed Agents API 当：**  
+  您正在从零构建或深度定制一个具备**自主推理与[工具调用](../concepts/tool-use.md)能力**的智能体，且需要：
+  - **执行过程完全可控**：需监听每一步工具调用、接收中间结果、支持手动中断；
+  - **安全沙箱环境**：代码执行、文件读写等操作需在隔离环境中运行；
+  - **版本与环境快照管理**：要求 Agent、Environment、Skill 版本精确锁定，保障生产一致性；
+  - **事件驱动架构**：系统已基于事件总线设计，需与 SSE 流无缝集成。
 
-## 技术选型参考（面向开发者）
+- **选择 Bailian Application Calling 当：**  
+  您追求**开箱即用、低维护成本**的集成体验，且满足：
+  - **标准化调用即可**：业务逻辑简单，无需流式、异步或多模态；
+  - **团队技术栈统一**：已广泛采用 DashScope SDK，希望复用现有工程实践；
+  - **快速上线优先**：避免处理 `session_id` 管理、endpoint 构造、Workspace ID 适配等细节；
+  - **工作流应用为主**：主要调用预编排的工作流（如审批、数据清洗），对底层执行细节无定制需求。
 
-| 选型考量 | 推荐方案 | 理由 |
-|----------|----------|------|
-| **是否需要流式输出？** | `Application Call`（`stream=true`） | `Bailian Application Calling` 文档及示例中完全未涉及流式能力，非可用选项。 |
-| **是否需异步执行长任务？** | `Application Call`（`background=true`） | `Bailian Application Calling` 无对应参数与轮询机制，无法原生支持。 |
-| **是否需调用图像/文件处理能力？** | `Application Call`（`input` 中 `type: "input_image"`） | `Bailian Application Calling` 的 `prompt`/`messages` 输入模型未定义多模态类型字段，依赖应用内黑盒配置，调用层不可控。 |
-| **是否需透传插件参数？** | `Bailian Application Calling`（`biz_params.user_defined_params`） | `Application Call` 文档未定义插件参数透传结构，虽可通过 `input` 自定义字段实现，但缺乏标准化约定与文档指引。 |
-| **是否已使用 OpenAI SDK？** | `Application Call`（[OpenAI 兼容接口](../concepts/openai-compatible-interface.md)） | 可直接复用现有 `openai` 客户端，仅需修改 `base_url` 和 `api_key`，迁移成本趋近于零。 |
-| **是否追求接口极简与文档一致性？** | `Bailian Application Calling`（统一 `/completion` 端点） | 无需记忆多套路径（`/responses` vs `/completion`）、多套参数规则（`input` vs `prompt/messages`），降低出错概率。 |
-| **是否部署在非华北2地域？** | `Application Call`（明确支持 `workspace_id` + 地域 Base URL） | `Bailian Application Calling` 文档虽未禁止跨地域，但多处强调“仅适用于华北2”，实操风险更高；`Application Call` 提供明确的跨地域调用指南。 |
+## 技术选型参考指南（面向开发者）
 
-> **重要提示**：二者底层均调用百炼平台同一服务，**不存在功能鸿沟**。差异源于 API 设计哲学——`Application Call` 是“能力全集”的协议层封装，`Bailian Application Calling` 是“最佳实践”的用户层封装。在实际开发中，可混合使用：例如用 `Bailian Application Calling` 实现主业务流，对特定高要求节点（如实时绘图反馈）切换至 `Application Call` 的流式接口。始终以 [百炼官方 API 参考](https://help.aliyun.com/zh/model-studio/developer-reference) 为准，并关注各文档标注的**地域限制**与**权限要求**。
+| 选型考量点 | 推荐方案 | 说明 |
+|------------|----------|------|
+| **首次集成，求稳求快** | ✅ Bailian Application Calling | SDK 封装完善，文档示例丰富，错误处理友好，适合 PoC 和中小项目快速验证。 |
+| **已有成熟工作流，需流式/异步** | ✅ Application Call（DashScope 原生） | Bailian SDK 不支持流式与异步，必须降级使用原生 API 才能解锁核心能力。 |
+| **构建“Agent as a Service”平台** | ✅ Managed Agents API | 提供 Session、Environment、Skill 等完备资源模型，是构建多租户智能体平台的唯一官方路径。 |
+| **应用部署在新加坡/法兰克福** | ⚠️ Application Call（需手动拼接 Workspace ID）<br>❌ Bailian Application Calling（文档未明确支持）<br>❌ Managed Agents API（仅限北京） | 地域限制是硬约束，务必提前验证 endpoint 构造与凭证有效性。 |
+| **需调用自定义模型（非百炼托管）** | ✅ Application Call | Managed Agents API 仅支持百炼托管模型；Bailian Calling 依赖应用绑定模型，无法绕过。 |
+| **安全合规要求极高（如金融）** | ✅ Managed Agents API | 提供独立沙箱环境、技能安全扫描、执行过程全事件审计，满足强监管场景。 |
+| **团队无后端开发资源，仅前端调用** | ✅ Bailian Application Calling 或 Application Call（Responses API） | OpenAI 兼容 API 与 SDK 最易对接，减少后端适配工作。 |
+
+> **重要提醒**：三者并非互斥关系，而是**分层演进**关系——Bailian Application Calling 是 Application Call 的易用封装；Managed Agents API 则是更底层、更强大的运行时基础设施。建议从 Bailian Calling 入门，当业务复杂度上升（如需工具调用、沙箱隔离、事件追踪）时，再平滑迁移至 Managed Agents API；而 Application Call 始终是底层能力基石，所有高级封装均构建其上。
 
 ## 被对比主题页
 
 - [application call](../api/application-call.md)
+- [managed agents api](../api/managed-agents-api.md)
 - [bailian application calling](../guides/bailian-application-calling.md)
 
 

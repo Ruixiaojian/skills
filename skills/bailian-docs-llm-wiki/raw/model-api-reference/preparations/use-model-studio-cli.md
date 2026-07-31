@@ -205,6 +205,12 @@ API Key
 
 模型调用（文本、图像、视频、语音等）
 
+Token Plan API Key
+
+`bl auth login --config token-plan --api-key sk-sp-xxx`（[获取 Token Plan API Key](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/api-key)）
+
+Token Plan 个人版订阅用户的模型调用。使用 `bl config use --name token-plan` 切换为默认配置，或在命令中加 `--config token-plan` 单次指定
+
 环境变量
 
 配置 API Key 环境变量
@@ -224,6 +230,10 @@ CI/CD、无界面环境
 单次调用，不落盘
 
 > 控制台登录和 API Key 可同时配置，互不覆盖。
+
+**说明**
+
+如果您通过控制台登录后，执行 `bl text chat` 等模型调用命令时仍提示"缺少 API Key"，请先运行 `bl update` 升级到最新版本。若升级后问题仍然存在，请单独配置 API Key：`bl auth login --api-key <your-key>`。
 
 认证完成后，您可以通过 `bl config` 设置模型、输出目录等参数：
 
@@ -729,7 +739,7 @@ bl video generate --prompt <text> [--image <url>] [flags]
 
 模型 ID
 
-happyhorse-1.0-t2v（有 --image 时为 i2v）
+happyhorse-1.1-t2v（有 --image 时为 i2v）
 
 `--image <url>`
 
@@ -785,15 +795,9 @@ true
 
 —
 
-`--no-wait`
-
-立即返回任务 ID
-
-—
-
 `--async`
 
-同 --no-wait，Agent/CI 模式
+立即返回任务 ID（异步模式，适用于 Agent/CI）
 
 —
 
@@ -931,7 +935,7 @@ bl video ref --prompt <text> --image <url>... [flags]
 
 模型 ID
 
-happyhorse-1.0-r2v
+happyhorse-1.1-r2v
 
 `--image <url>`
 

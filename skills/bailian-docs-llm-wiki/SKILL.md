@@ -65,9 +65,31 @@ description: >-
   - 找包含某个 provider 的家族：`grep '"moonshot-ai"' families.jsonl | jq -c .slug`
 - `models/models.jsonl` — **每行一个主干模型**（跨家族扁平），含 `model` / `family` / `capabilities` /
   `features` / `contextWindow` / `maxInputTokens` / `maxOutputTokens` / `prices`（精简）/ `qpmInfo`（精简）/
-  `docUrl` / `detailPath`。适合跨家族批量查询，例如：
+  `docUrl` / `detailPath` / **`profile`**（选型画像，见下）。适合跨家族批量查询，例如：
   - 列出所有 contextWindow ≥ 1M 的模型：`jq -c 'select(.contextWindow>=1000000)' models.jsonl`
   - 找支持 function-calling 的文本模型：`grep '"function-calling"' models.jsonl | jq -c '{model,family,contextWindow}'`
+  - 按场景选模型：`jq -c 'select(.profile.scenes // [] | index("代码生成")) | {model, pos: .profile.oneLinePositioning}' models.jsonl`
+  - 同族里挑旗舰：`jq -c 'select(.profile.familyTier=="flagship") | {model,family}' models.jsonl`
+
+**`profile` —— LLM 合成的选型画像（判断层）**，用于回答「这个模型适合干什么、族里该选哪个」：
+
+| 字段 | 含义 |
+| --- | --- |
+| `profileCompleteness` | `full`（判断字段齐备）/ `partial`（有定位和场景）/ `structured-only`（仅由结构化规格推导，未读过文档） |
+| `oneLinePositioning` | 一句话定位（≤50 字） |
+| `scenes` | 适用场景标签（受控词表，31 个值） |
+| `notSuitableFor` | 不适用场景负面清单 |
+| `styleKeywords` | 风格关键词（≤5 个） |
+| `familyTier` | 族内选型档位：`flagship` 效果首选 / `balanced` 默认均衡 / `lightweight` 成本延迟优先或旧版 |
+| `familyComparison` | 同族对比摘要（族内所有成员共享同一段文本） |
+| `callModes` | 调用模式：`sync` / `async` / `streaming` / `realtime`（脚本从示例代码机械推导） |
+| `pipelineRole` | 多模态流水线角色 `{from, to, role}` |
+| `_meta` | `generatedAt` / `sourceHash` / `generatorVersion`，用于判断画像是否过期 |
+
+**三态语义要读准**：字段**缺失** = 未知；`null` = 不适用（仅 `familyTier` / `familyComparison` 会出现，表示单模型家族）；有值 = 已知。
+`notSuitableFor: []` 意为「无已知限制」，与字段缺失（未知）不同。
+`profileCompleteness` 为 `structured-only` 时该画像**没读过文档**，只有机械推导字段可信；模型的硬规格（价格 / QPM / contextWindow / `openSource`）永远以宿主记录的顶层字段为准，不要从画像里找。
+`index.json` 的 `profileCoverage` 给出三档分布，可一眼判断整体画像新鲜度。
 
 两份 JSONL 的 **join 字段**：`models.jsonl[].family == families.jsonl[].slug`。命中后按 `detailPath` 打开 `groups/<slug>.json` 取完整字段（`samples`、`predictConfig`）。
 
@@ -145,6 +167,7 @@ description: >-
 | ------------------------------------- | -------------------------------------------------------- |
 | 某模型的 contextWindow / 价格 / QPM / sample code / 入参定义 | `models/groups/<slug>.json`（从 `models/index.md` 找 slug） |
 | **跨家族筛选模型**：按 contextWindow / capability / feature / price 批量查找 | `models/models.jsonl`（`grep` / `jq` 一行一模型） |
+| **选型/推荐**：某场景该用哪个模型、同族里选哪个、模型不适合干什么 | `models/models.jsonl` 的 `profile` 字段（`scenes` / `oneLinePositioning` / `familyTier` / `notSuitableFor`） |
 | **按家族筛选**：按 primaryCapability / providers / itemCount / maxContextWindow 找家族 | `models/families.jsonl`（一行一家族，含 items[] 摘要） |
 | 模型家族总览 / 按能力分桶浏览         | `models/index.md`                                        |
 | 主题页 / API 文档（按功能领域查找）    | `wiki/index.md`（完整索引入口）                          |
