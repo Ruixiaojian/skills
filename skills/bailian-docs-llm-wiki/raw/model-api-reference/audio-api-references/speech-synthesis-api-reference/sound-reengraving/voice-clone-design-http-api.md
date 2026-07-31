@@ -305,7 +305,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/
 
 仅适用于Qwen-Audio-TTS/CosyVoice声音复刻（model为`voice-enrollment`时），且仅qwen-audio-3.0-tts-plus、qwen-audio-3.0-tts-flash、cosyvoice-v3.5-plus、v3.5-flash和v3-flash模型支持。
 
-音频预处理后用于声音复刻的参考音频最大时长（秒）。取值范围：\[3.0, 30.0\]。时间越长效果越好。
+音频预处理后用于声音复刻的参考音频最大时长（秒）。取值范围：\[3.0, 30.0\]。
 
 默认值：10.0。
 

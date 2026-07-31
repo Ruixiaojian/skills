@@ -2,6 +2,10 @@
 
 基于Qwen3的代码生成模型，继承Qwen3-Coder-480B-A35B-Instruct的coding agent能力，代码能力达到同尺寸规模模型SOTA。
 
+## 推理服务供应商
+
+`qwen3-coder-30b-a3b-instruct`模型的推理服务供应商为阿里云百炼。
+
 ## 模型能力
 
 ## 华北2（北京）

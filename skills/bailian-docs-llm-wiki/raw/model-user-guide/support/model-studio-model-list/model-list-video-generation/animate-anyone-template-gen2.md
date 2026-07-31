@@ -2,6 +2,10 @@
 
 AnimateAnyone-Template是辅助AnimateAnyone的动作模板生成模型，可基于视频提取人物动作并制作模板。
 
+## 推理服务供应商
+
+`animate-anyone-template-gen2`模型的推理服务供应商为阿里云百炼。
+
 ## 模型能力
 
 能力项

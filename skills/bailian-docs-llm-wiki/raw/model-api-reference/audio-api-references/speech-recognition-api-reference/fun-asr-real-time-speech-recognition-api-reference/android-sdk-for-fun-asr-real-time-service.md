@@ -290,11 +290,7 @@
     
     否
     
-    **重要**
-    
-    仅在`semantic_punctuation_enabled`参数为false时生效。
-    
-    VAD 断句静音阈值（ms）。当一段语音后的静音时长超过该阈值时，系统会判定该句子已结束。
+    VAD 断句静音阈值（ms）。当一段语音后的静音时长超过该阈值时，系统会判定该句子已结束。当`semantic_punctuation_enabled`为true时，不作为`sentence_end`返回依据，但设置过小可能会影响识别效果。
     
     默认值：1300。
     

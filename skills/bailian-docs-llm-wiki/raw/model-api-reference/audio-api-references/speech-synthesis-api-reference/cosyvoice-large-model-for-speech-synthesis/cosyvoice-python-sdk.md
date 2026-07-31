@@ -289,7 +289,7 @@ int
 
 否
 
-音频码率（kbps）。音频格式为opus时，支持通过`bit_rate`参数调整码率。
+音频码率（kbps）。音频格式为mp3或opus时，支持通过`bit_rate`参数调整码率。
 
 默认值：32。
 
@@ -740,7 +740,7 @@ SDK提供了语音合成的关键接口，支持以下几种调用方式：
 
 ### **非流式调用**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2172835871/CAEQURiBgMDRr9T4phkiIGNmYzBiZjFkZjQ4MDQzZGU4NDIyZDU2NWJjYjkyZTQ04709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5845055871/CAEQURiBgMDRr9T4phkiIGNmYzBiZjFkZjQ4MDQzZGU4NDIyZDU2NWJjYjkyZTQ04709861_20241015153444.149.svg)
 
 单次调用发送的文本长度不得超过20000字符，超出限制将返回错误。
 
@@ -783,7 +783,7 @@ with open('output.mp3', 'wb') as f:
 
 ### **单向流式调用**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2172835871/CAEQVRiBgIDv9fShrBkiIDhmNTk5YmQ1ZDgwNzRjZjRiN2VlMTU5YzI1ZGMwMTlm4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5845055871/CAEQVRiBgIDv9fShrBkiIDhmNTk5YmQ1ZDgwNzRjZjRiN2VlMTU5YzI1ZGMwMTlm4709861_20241015153444.149.svg)
 
 单次调用发送的文本长度不得超过20000字符，超出限制将返回错误。
 
@@ -870,7 +870,7 @@ synthesizer.call("今天天气怎么样？")
 
 ### **双向流式调用**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2172835871/CAEQVRiBgMDb7PahrBkiIDVkNjEwOTMxYjEwOTRmOWFhMmI1OTRiY2Q3ZDgzZmE54709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5845055871/CAEQVRiBgMDb7PahrBkiIDVkNjEwOTMxYjEwOTRmOWFhMmI1OTRiY2Q3ZDgzZmE54709861_20241015153444.149.svg)
 
 单次发送文本长度不得超过 20000 字符，且累计发送文本总长度不得超过 20 万字符。
 

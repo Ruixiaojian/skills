@@ -2,6 +2,10 @@
 
 M2.7 能够自行构建复杂 Agent Harness，并基于 Agent Teams、复杂 Skills、Tool Search tool 等能力，完成高度复杂的生产力任务。
 
+## 推理服务供应商
+
+`MiniMax/MiniMax-M2.7`模型的推理服务供应商为MiniMax。
+
 ## 模型能力
 
 能力项

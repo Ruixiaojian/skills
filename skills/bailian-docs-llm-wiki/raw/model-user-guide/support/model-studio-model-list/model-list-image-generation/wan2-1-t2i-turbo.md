@@ -2,6 +2,10 @@
 
 Wan2.1 Text-to-Image Turbo version, faster generation speed. Upgraded in image beauty, realism, and artistry. Stronger semantic understanding ability, rich style generalization ability, supports up to 2 million pixel generation, supports smart prompt rewriting.
 
+## 推理服务供应商
+
+`wan2.1-t2i-turbo`模型的推理服务供应商为阿里云百炼。
+
 ## 模型能力
 
 能力项

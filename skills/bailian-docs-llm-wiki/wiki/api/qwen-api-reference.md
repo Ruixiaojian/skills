@@ -1,46 +1,55 @@
 # qwen api reference
 
-Qwen 系列大语言模型通过百炼平台提供多种 API 接入方式，支持文本生成、[工具调用](../concepts/tool-use.md)、多轮对话等核心能力。开发者可根据现有技术栈（如 OpenAI 或 Anthropic 客户端）或功能需求（如联网搜索、历史管理）选择合适接口。所有接口均需通过 DashScope SDK 或标准 HTTP 请求调用，并依赖有效的 API Key 认证。
+Qwen 系列大语言模型通过百炼平台提供多种 API 接口，支持文本生成、多轮对话、工具调用等核心能力。开发者可根据技术栈兼容性、功能需求和部署场景选择 OpenAI 兼容、Anthropic 兼容或 DashScope 原生接口。所有接口均需通过阿里云百炼平台认证访问。
 
-## 支持的模型/功能
+## 支持的模型与功能
 
-当前支持的 Qwen 模型包括 `qwen-max`、`qwen-plus`、`qwen-turbo` 及 `qwen-vl`（[多模态](../concepts/multi-modal.md)），具体能力因模型而异：  
-- `qwen-max` 和 `qwen-plus` 支持长上下文、复杂推理与[工具调用](../concepts/tool-use.md)；  
-- `qwen-turbo` 适用于低延迟、高吞吐场景；  
-- `qwen-vl` 支持图像理解与图文生成（需使用 [DashScope](https://help.aliyun.com/zh/model-studio/qwen-api-via-dashscope) 接口）。  
-详细模型能力对比见 [原文标题](../../raw/model-api-reference/qwen-api-reference.md)。
+当前 Qwen 系列支持以下主流调用方式（详见 [文本生成模型API参考](../../raw/model-api-reference/qwen-api-reference.md)）：
+
+- **OpenAI 兼容 Chat Completions**：适配 `openai>=1.0.0` 客户端，支持 `messages` + `model` + `stream` 等标准参数，适用于快速迁移现有应用；  
+- **OpenAI 兼容 Responses**：在 Chat Completions 基础上增强，**自动管理对话历史**，并内置联网搜索、代码解释器、网页内容提取等工具链（参见 [文本生成模型API参考](../../raw/model-api-reference/qwen-api-reference.md)）；  
+- **Anthropic 兼容 Messages**：支持 `system` 消息、`tool_use`、`thinking` 等结构化能力，适用于需要显式推理路径与工具协同的场景；  
+- **DashScope 原生接口**：提供最细粒度控制，包括 `top_k`、`repetition_penalty`、`enable_search` 等专属参数，是功能最全的接入方式（详见 [文本生成模型API参考](../../raw/model-api-reference/qwen-api-reference.md)）。
+
+> **注意**：OpenAI 兼容 Responses 接口的 `tools` 字段行为与标准 OpenAI v1 API 不完全一致——其工具调用由服务端自动触发并注入结果，不返回原始 tool_calls，开发者无需手动解析 `tool_calls` 或调用 `tool` 函数。该差异已在 [文本生成模型API参考](../../raw/model-api-reference/qwen-api-reference.md) 中明确说明，但易被误读为标准 OpenAI 行为。
 
 ## 关键参数
 
-通用参数（各接口共用）：
-- `model`: 必填，指定模型 ID（如 `"qwen-plus"`）；
-- `messages`: 对话历史数组，格式为 `[{ "role": "user", "content": "..." }]`；
-- `temperature`: 控制输出随机性（0.0–2.0，默认 1.0）；
-- `max_tokens`: 限制响应最大 token 数（非必填，但建议设置防超限）；
-- `stream`: 布尔值，启用流式响应（仅部分接口支持，详见 [原文标题](../../raw/model-api-reference/qwen-api-reference.md)）。
-
-> **注意**：`top_p` 在 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)中默认为 `1.0`，但在 DashScope 原生接口中默认为 `0.8`，行为不一致，建议显式指定以避免歧义。
+| 参数名 | 类型 | 说明 | DashScope 支持 | OpenAI 兼容 | Anthropic 兼容 |
+|--------|------|------|----------------|-------------|----------------|
+| `model` | string | 模型标识，如 `qwen-max`、`qwen-plus`、`qwen-turbo` | ✅ | ✅（需映射为对应别名） | ✅（需映射为 `claude-3-*` 风格别名） |
+| `messages` | array | 对话消息列表，含 `role` 和 `content` | ✅（部分字段需转义） | ✅ | ✅（`system` 单独传入） |
+| `stream` | boolean | 是否启用流式响应 | ✅ | ✅ | ✅ |
+| `temperature` | number | 控制输出随机性（0.0–2.0） | ✅ | ✅ | ✅ |
+| `max_tokens` | integer | 最大生成 token 数 | ✅ | ✅ | ✅（`max_tokens`） |
+| `tools` | array | 工具定义列表 | ✅（`enable_search=true` 等隐式工具需额外开关） | ✅（仅 Responses 接口自动生效） | ✅（`tool_use` 显式声明） |
 
 ## 使用方式
 
-推荐优先使用 DashScope SDK（Python/Java/Node.js）简化认证与请求封装：  
-```python
-from dashscope import Generation
-Generation.call(model='qwen-plus', messages=[{'role': 'user', 'content': '你好'}])
-```
-
-若直接调用 HTTP 接口：
-- [OpenAI 兼容接口](../concepts/openai-compatible-api.md)：`POST https://dashscope.aliyuncs.com/v1/chat/completions`（需 `Authorization: Bearer <api_key>`）；  
-- Anthropic 兼容接口：`POST https://dashscope.aliyuncs.com/v1/messages`；  
-- DashScope 原生接口：`POST https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation`。  
-完整请求示例与鉴权说明参见 [原文标题](../../raw/model-api-reference/qwen-api-reference.md)。
+1. **认证**：使用阿里云 AccessKey（推荐 RAM 子账号 + 最小权限策略）或 STS 临时凭证，通过 `Authorization: Bearer <api_key>` 或 `X-DashScope-Signature` 头传递；  
+2. **Endpoint**：各接口 endpoint 不同，请严格按文档配置：
+   - DashScope：`https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation`  
+   - OpenAI 兼容：`https://dashscope.aliyuncs.com/v1/chat/completions`（Chat Completions）或 `/v1/responses`（Responses）  
+   - Anthropic 兼容：`https://dashscope.aliyuncs.com/v1/messages`  
+3. **示例请求（curl）**：  
+   ```bash
+   curl -X POST 'https://dashscope.aliyuncs.com/v1/chat/completions' \
+     -H 'Authorization: Bearer YOUR_API_KEY' \
+     -H 'Content-Type: application/json' \
+     -d '{
+           "model": "qwen-turbo",
+           "messages": [{"role": "user", "content": "你好"}],
+           "stream": false
+         }'
+   ```
 
 ## 限制和注意事项
 
-- 单次请求 `messages` 总长度（含 system [prompt](../guides/prompt.md)）不得超过模型 context window（如 `qwen-plus` 为 32768 tokens）；  
-- 流式响应（`stream=True`）在 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)中返回 `text/event-stream`，而 DashScope 原生接口返回 JSON Lines；  
-- [工具调用](../concepts/tool-use.md)（function calling）仅在 `qwen-max`/`qwen-plus` + DashScope 或 Anthropic 兼容接口中可用，OpenAI 兼容接口暂不支持结构化工具定义；  
-- 所有接口均受百炼配额与速率限制约束，超出将返回 `429 Too Many Requests`。
+- 所有接口默认单次请求最大 `messages` 长度为 32768 tokens（具体依模型而定），超长输入将被截断或报错 `400 Bad Request`；  
+- DashScope 接口支持 `input` 字段直接传入 [prompt](../guides/prompt.md) 字符串（非 messages），但 OpenAI/Anthropic 兼容接口**仅接受 `messages` 格式**；  
+- `qwen-max` 等高阶模型需单独开通权限，未授权调用将返回 `403 Forbidden`；  
+- 流式响应中，[OpenAI 兼容接口](../concepts/openai-compatible-interface.md)返回 `data: {...}` SSE 格式，DashScope 返回 JSON Lines（每行一个 JSON 对象），二者解析逻辑不同；  
+- 调用频率受百炼平台配额限制，可通过控制台查看实时用量与剩余额度。
 
 ## 来源文档
 

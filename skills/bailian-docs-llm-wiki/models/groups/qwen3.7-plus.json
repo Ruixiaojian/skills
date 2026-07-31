@@ -278,7 +278,7 @@
       "modelAlias": "qwen3.7-plus",
       "versionTag": "MAJOR",
       "equivalentSnapshot": "qwen3.7-plus-2026-05-26",
-      "maxOutputTokens": 65536,
+      "maxOutputTokens": 131072,
       "latestOnlineAt": "2026-06-01T12:46:50.000+00:00",
       "contextWindow": 1000000,
       "maxInputTokens": 991808,

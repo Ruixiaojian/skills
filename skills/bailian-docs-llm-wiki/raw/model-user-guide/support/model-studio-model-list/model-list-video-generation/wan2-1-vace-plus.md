@@ -2,6 +2,10 @@
 
 Wan2.1-VACE-Plus All-in-One Video Creation and Editing model.It supports local editing, video repainting, background outpainting, duration extension, image reference, and other video editing and generation tasks, and supports multimodal conditional control through text, images, and videos.
 
+## 推理服务供应商
+
+`wan2.1-vace-plus`模型的推理服务供应商为阿里云百炼。
+
 ## 模型能力
 
 能力项

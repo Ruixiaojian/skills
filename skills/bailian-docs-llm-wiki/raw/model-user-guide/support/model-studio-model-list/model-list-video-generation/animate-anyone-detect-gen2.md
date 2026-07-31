@@ -2,6 +2,10 @@
 
 AnimateAnyone-detect是辅助AnimateAnyone的图像检测模型，用于检测图片中的人物形象是否符合视频生成要求。
 
+## 推理服务供应商
+
+`animate-anyone-detect-gen2`模型的推理服务供应商为阿里云百炼。
+
 ## 模型能力
 
 能力项

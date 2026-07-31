@@ -2,6 +2,10 @@
 
 Qwen3.6系列中规模最大、综合能力最强的Max模型Preview版本，当前开放纯文本模型能力供体验。相较于此前发布的Qwen3-Max和Qwen3.6-Plus，本模型在vibe coding能力上进一步提升、coding agent执行更加高效、前端编程开发能力显著提升；长尾知识能力进一步升级。
 
+## 推理服务供应商
+
+`qwen3.6-max-preview`模型的推理服务供应商为阿里云百炼。
+
 ## 模型能力
 
 能力项
@@ -261,6 +265,10 @@ TPM（每分钟tokens）
 ### qwen3.6-max-preview
 
 Qwen3.6系列中规模最大、综合能力最强的Max模型Preview版本，当前开放纯文本模型能力供体验。相较于此前发布的Qwen3-Max和Qwen3.6-Plus，本模型在vibe coding能力上进一步提升、coding agent执行更加高效、前端编程开发能力显著提升；长尾知识能力进一步升级。
+
+#### 推理服务供应商
+
+`qwen3.6-max-preview`模型的推理服务供应商为阿里云百炼。
 
 #### 模型能力
 

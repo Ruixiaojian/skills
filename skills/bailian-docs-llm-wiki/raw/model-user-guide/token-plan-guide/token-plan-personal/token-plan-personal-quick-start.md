@@ -78,4 +78,8 @@ Token Plan 个人版支持多模态生成模型（wan2.7-image、happyhorse-1.1-
 
 ## **可选：接入 Harness 工具**
 
-通过 Harness 工具调用，模型可以在对话中调用联网搜索、文搜图、图搜图、网页抓取、代码解释器等扩展能力。当前仅 qwen3.7、qwen3.8 支持原生工具调用，通过 Responses API 直接调用，Harness 工具按抵扣系数消耗 Credits。详见[接入 Harness 工具](https://help.aliyun.com/zh/model-studio/token-plan-harness-tool)。
+部分 Qwen 模型（qwen3.7、qwen3.8 系列）内置 Harness 工具，可在对话中扩展联网搜索、文搜图、图搜图、网页抓取、代码解释器等能力。Harness 工具仅支持通过 Responses API 调用，按成功调用次数从套餐 Credits 中抵扣。详见[接入 Harness 工具](https://help.aliyun.com/zh/model-studio/token-plan-harness-tool)。
+
+**重要**
+
+Harness 工具为 Responses API 的内置工具，不支持通过 Chat Completions 接口调用。如需使用 Harness 工具，请确保您的 AI 工具通过 Responses API 接入。

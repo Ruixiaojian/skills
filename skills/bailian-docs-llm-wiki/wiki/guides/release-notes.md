@@ -1,42 +1,35 @@
 # release notes
 
-本页汇总百炼平台近期模型与功能更新，涵盖新模型上线、能力升级、平台功能迭代及关键变更。所有信息均基于官方发布内容整理，面向开发者提供可直接用于集成与调用的实用参考。模型能力、参数与限制以最新稳定版本为准，历史快照类模型（如 `*-2026-05-20`）仅在明确标注时可用。
+本页汇总百炼平台近期模型与功能更新，涵盖新模型上线、已有模型能力增强、平台功能迭代及关键使用变更。所有信息均基于官方发布内容整理，面向开发者提供可直接落地的参考依据。建议结合具体业务场景选择适配模型，并关注下线通知以规避服务中断风险。
 
 ## 支持的模型/功能
 
-百炼平台持续扩展[多模态](../concepts/multi-modal.md)模型矩阵与平台级能力，覆盖文本、语音、图像、视频、3D 及[多模态](../concepts/multi-modal.md)交互场景：
-
-- **文本生成与智能体**：`qwen3.7-max-2026-06-08`（支持视觉模态）、`kimi/kimi-k3`（100万上下文，2.8万亿参数）、`glm-5.2-fast-preview`（TPS 提升 1.5–2 倍）、`deepseek-v4-pro`（1.6T MoE，百万上下文）；详见 [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)。
-- **语音处理**：`qwen-audio-3.0-asr-flash-streaming`（实时方言识别）、`qwen-audio-3.0-tts-plus`（高表现力合成）、`qwen-audio-3.0-realtime-plus`（低延迟双工对话）；同上文档亦明确区分 `Plus`（质量优先）与 `Flash`（延迟优先）两类变体。
-- **图像与视频生成**：`qwen-image-3.0-pro`（4.5k token 输入，10px 小字渲染）、`vidu/viduq3-drama_reference2video`（剧集专用一致性增强）、`pixverse/pixverse-motioncontrol`（动作迁移）、`wan2.7-r2v-2026-06-12`（5图混合参考）。
-- **平台功能**：新增 `Responses API` 异步调用（`background=true`）、`Managed Agent` 托管运行时 API、`Skill 能力包`、`知识检索服务`（多知识库联合检索）、`模型压缩模块`（量化部署）；详见 [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)。
-
-> **注意**：文档 1 中 `kimi/kimi-k2.7-code` 与 `kimi/kimi-k2.7-code-highspeed` 均标注为“同一模型”，但后者宣称输出速度为前者的 5–6 倍；而文档 2 未提及该高速变体。实际调用时请以控制台或 API 文档中列出的可用模型 ID 为准，避免依赖未公开的别名。
+- **语音识别**：新增 `qwen-audio-3.0-asr-flash-streaming`（实时）、`qwen-audio-3.0-asr-flash-filetrans`（非实时）等三款 Flash 系列模型，支持汉语七大方言、20+ 地区口音、古诗词优化、30 语种识别及 context 上下文能力 [原文标题](../../raw/model-user-guide/release-notes/newly-released-models.md)；`fun-asr-flash-2026-06-15` 同样覆盖方言与多语种，但上下文限制为 5 分钟音频。
+- **文本生成与智能体**：`qwen3.7-flash` 和 `qwen3.7-flash-2026-07-15` 为原生视觉语言 Flash 模型，强化多模态 Agent 执行能力；`glm-5.2-fast-preview` 支持 1M 上下文，TPS 较标准版提升 1.5～2 倍；`kimi/kimi-k3` 为 2.8T 参数旗舰模型，原生支持视觉理解与 100 万 token 上下文 [原文标题](../../raw/model-user-guide/release-notes/newly-released-models.md)。
+- **图片生成**：`qwen-image-3.0-pro` 支持最大 4.5k token 输入、10px 小字渲染、12 国语言与 20+ 字体原生渲染；`vidu/viduq3-fast_reference2image` 成本比 Pro 版降低约 50%，适用于高速高质低成本场景。
+- **视频生成**：`pixverse/pixverse-motioncontrol` 支持动作迁移；`vidu/viduq3-drama_reference2video` 专用于精品剧/AI漫剧生产；`wan2.7-t2v-2026-06-12` 为万相 2.7 文生视频 6 月 12 日快照版本。
+- **平台功能**：2026 年 7 月起，新增 Managed Agent 商业化、记忆库商业化、知识检索服务、知识问答服务、Skill 能力包、数据连接模块（MySQL/语雀/OSS）等核心能力 [原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md)。
 
 ## 关键参数
 
-- **上下文长度**：`kimi/kimi-k3`、`glm-5.2`、`xiaomi/mimo-v2.5-pro` 等主流旗舰模型均支持 **1,000,000 token**；`qwen3.7-text-embedding` 支持 **256–2560 维自定义向量维度**。
-- **输入能力**：`qwen-image-3.0-pro` 支持最大 **4.5k token 输入**；`vidu/viduq3-fast_reference2image` 支持 **0–14 张参考图片**；`pixverse/pixverse-v6-r2v` 支持 **2–7 张图像输入**。
-- **性能指标**：`kimi-k2.7-code-highspeed` 在短上下文场景下可达 **260 [Token](../concepts/token.md)/s**；`qwen-audio-3.0-realtime-flash` 通过并行推理与全向流式优化，端到端响应时延控制在低水平。
-- **多语种支持**：`fun-asr-flash-2026-06-15` 和 `qwen-audio-3.0-asr-flash` 均明确支持 **30 个语种**，含中、英、日、韩及东南亚、欧洲主要语言；但 `qwen3.5-livetranslate-flash-realtime` 宣称“能听懂60种语言，会说29种语言”，存在覆盖范围差异。
+- **上下文长度**：`kimi/kimi-k3`、`glm-5.2`、`deepseek-v4-pro`、`xiaomi/mimo-v2.5-pro` 等主流模型均支持 1M token；`qwen3.7-text-embedding` 支持 256~2560 维用户自定义向量维度。
+- **输入限制**：`vidu/viduq2-pro_reference2image` 等参考生图模型支持 0–14 张参考图片；`pixverse/pixverse-v6-r2v` 支持 2–7 张图像输入；`happyhorse-1.1-r2v` 最多支持 9 张参考图片。
+- **性能指标**：`kimi-k2.7-code-highspeed` 输出速度约 180 [Token](../concepts/token.md)/s（中位数输入），短上下文可达 260 [Token](../concepts/token.md)/s；`qwen3.5-livetranslate-flash-realtime` 支持 60 种语言听懂、29 种语言说出。
+
+> **注意**：文档 1 中 `qwen3.7-max-2026-06-08` 描述其“增加了视觉模态理解能力”，而同系列 `qwen3.7-plus`（2026-06-01）已明确具备“全面升级的视觉-语言能力”；二者发布时间相近但能力描述存在重叠，建议以 [原文标题](../../raw/model-user-guide/release-notes/newly-released-models.md) 中最新快照（如 `qwen3.7-max-2026-06-08`）为准进行验证。
 
 ## 使用方式
 
-- **模型调用**：所有模型通过统一 DashScope API 接入，支持 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)（如 `/v1/chat/completions`）与百炼专属接口（如 `/v1/services/aigc/text-generation/generation`）。新版智能体应用 API 已支持单轮/多轮、流式、文件问答与视觉理解 [详见文档](../../raw/model-user-guide/release-notes/model-release-notes.md)。
-- **平台能力集成**：
-  - 异步任务：使用 `background=true` 参数提交，通过轮询或事件总线（EventBridge/RocketMQ）接收完成通知；
-  - 知识库 RAG：调用 `/v1/rag/knowledge-retrieval`（联合检索）与 `/v1/rag/knowledge-qa`（生成式问答）；
-  - [模型部署](../concepts/model-deployment.md)：支持预置模型（如 `qwen-flash`）API 部署，计费模式含按模型单元（MU）时长与资源包两种；
-  - 技能扩展：通过 `Skill 能力包` 添加官方或自定义技能，提升智能体执行能力。
-- **开发工具链**：已提供多端 SDK，包括 Android/iOS Lite SDK、Linux C++ SDK、RTOS C SDK 及 Codex 客户端接入支持；Spring AI Alibaba 框架调用文档亦已上线。
+- **API 调用**：文本生成类模型统一通过 DashScope API 接入，支持 OpenAI Responses / Anthropic Messages 兼容接口；异步任务可通过 `background=true` 参数提交并轮询结果，或配置事件总线 HTTP 回调/RocketMQ 主动推送 [原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md)。
+- **部署与调优**：预置模型（如 `qwen-flash`）支持通过 API 直接部署，计费模式含按模型单元（MU）时长；模型调优已支持文本、视觉理解（VL）、图像生成（Wan/Wanx）、视频生成（万相）四类模型类型，含 SFT、DPO、RL（邀约制）等多种训练方式。
+- **SDK 集成**：多模态交互开发套件提供 Linux C++、Android/iOS Lite、RTOS C、Java 等多端 SDK；Spring AI Alibaba 框架已支持调用百炼智能体与工作流应用。
 
 ## 限制和注意事项
 
-- **模型下线**：平台定期清理老旧模型，7月已发布“部分老旧模型下线通知”与“部分老旧长尾模型下线通知”；历史快照模型（如 `qwen3.7-max-2026-05-20`）可能随时停用，生产环境请优先选用无时间戳的稳定版 ID（如 `qwen3.7-max`）。
-- **地域与部署**：6月新增美国、德国、日本地域部署，但部分模型（如 `qwen-audio-3.0-*` 系列）当前仅限华北2（北京）可用，调用前需确认 endpoint 区域匹配。
-- **参数兼容性**：`qwen3.7-text-embedding` 支持用户自定义维度，但 `text-embedding-v4` 等旧版模型不支持此特性，迁移时需检查 embedding 接口参数。
-- **安全与合规**：模型调优新增“0 代码安全合规强化”流程，适用于文本生成模型；但图像/视频生成模型暂未开放同等能力，敏感内容生成仍需业务层过滤。
-- **计费变更**：`qwen-turbo` 资源包已启动退市，`GLM-5.2 Fast mode` 模式降价，`通义千问VL系列模型` 与 `千问系列模型` 均有独立降价通知，具体以 [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md) 中公告链接为准。
+- **模型下线**：2026 年 7 月起分批下线老旧模型（如 `qwen-turbo` 资源包启动退市、部分老旧长尾模型下线），具体清单与机制详见 [模型下线机制说明](https://help.aliyun.com/zh/model-studio/model-depreciation)；企业知识库（旧）已于 7 月 16 日下线，需迁移至新版知识库 RAG 服务。
+- **地域与权限**：6 月新增美国、德国、日本地域部署范围；API Key 已升级为加密存储，并支持生成临时 [Token](../concepts/token.md) 用于不可信环境，避免永久密钥泄露风险。
+- **兼容性约束**：`qwen3.5-livetranslate-flash-realtime` 仅支持实时音视频同传，离线翻译需调用对应离线版本；`qwen-audio-3.0-realtime-plus` 与 `qwen-audio-3.0-realtime-flash` 功能描述高度相似，但前者强调“高质量回复结果”，后者强调“极致响应速度”，实际选型需按延迟敏感度区分。
+- **资源包与计费**：GLM-5.2 Fast mode、通义千问 VL 系列、Qwen3-Coder-Plus 等模型存在阶段性价格调整，详见各资源包优惠公告 [原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md)。
 
 ## 来源文档
 
