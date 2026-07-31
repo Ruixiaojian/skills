@@ -9116,188 +9116,80 @@ func GetIndexJobStatus(client *bailian20231229.Client, workspaceId, jobId, index
 
 ## **检索知识库**
 
-目前，检索知识库支持两种方式：
+目前，检索知识库支持以下方式：
 
 -   **使用阿里云百炼应用：**[调用应用](https://help.aliyun.com/zh/model-studio/application-calling-guide#4100253b7chc3)时，通过`rag_options`传入知识库ID`index_id`，为您的大模型应用补充私有知识和提供最新信息。
     
 -   **使用阿里云API：**调用[Retrieve接口](https://help.aliyun.com/zh/model-studio/api-bailian-2023-12-29-retrieve)在指定的知识库中检索信息并返回原始文本切片。
     
-
-二者的区别在于：前者先将检索到的相关文本切片传给您配置的大模型，模型再结合这些切片与用户的原始查询生成最终回答并返回；后者则是直接返回文本切片。
-
-接下来为您介绍**使用阿里云API**的方式。
-
-在指定的知识库中检索信息，并返回文本切片，可以通过调用[Retrieve接口](https://help.aliyun.com/zh/model-studio/api-bailian-2023-12-29-retrieve)。
-
--   **client：**[如何获取client](#52ff2774f0pq9)
+-   **使用知识检索服务（推荐）：**调用[Search接口](https://help.aliyun.com/zh/model-studio/knowledgesearch)跨多个知识库执行联合语义检索，返回按相关性排序的文本切片。检索策略预先在控制台配置并发布，调用方只需传入检索意图（`query`/`images`）与`agent_id`。
     
--   **workspace\_id：**知识库所在的业务空间。[如何获取业务空间ID](https://help.aliyun.com/zh/model-studio/use-workspace#c5222ec081sbo)
+
+三者的区别在于：第一种方式先将检索到的相关文本切片传给您配置的大模型，模型再结合这些切片与用户的原始查询生成最终回答并返回；后两种方式则是直接返回文本切片。其中**知识检索服务（Search接口）**为推荐方式，支持跨多库联合检索与多模态检索，且检索策略在控制台统一配置管理，无需在请求中维护。
+
+接下来为您介绍**使用知识检索服务（Search接口）**的方式。
+
+跨多个知识库执行联合语义检索，返回按相关性排序的文本切片，可以通过调用[Search接口](https://help.aliyun.com/zh/model-studio/knowledgesearch)。
+
+-   **agent\_id：**知识检索服务（agent）实例 ID。在控制台[知识检索服务页面](https://bailian.console.aliyun.com/cn-beijing?tab=app#/knowledge-base/list?activeKey=retrieval)创建并发布后获取。
+    
+-   **API Key：**阿里云百炼 API Key。在控制台[API Key 页面](https://bailian.console.aliyun.com/cn-beijing?tab=app#/api-key)获取。
+    
+-   **workspace\_id：**知识库所在的业务空间，用于拼接 Base URL（`https://{workspaceId}.cn-beijing.maas.aliyuncs.com`）。在控制台[业务空间管理](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management)获取。
     
     > 子账号只能检索自己[已加入的业务空间](https://help.aliyun.com/zh/model-studio/grant-the-business-space-permission-to-ram-users)中的知识库。
     
 
-若本接口返回的结果包含较多干扰信息，您可以在请求时传入[SearchFilters](https://help.aliyun.com/zh/model-studio/how-to-use-search-filters)设置检索条件（比如设置[标签](https://help.aliyun.com/zh/model-studio/rag-knowledge-base#0a4efa5d7dta6)筛选），以排除干扰信息。
+检索策略（多库权重、知识路由、混排模型等）预先在控制台配置进服务实例并发布，调用方只需传入检索意图（`query`/`images`）与`agent_id`，无需在请求中维护检索策略参数。
 
 **重要**
 
--   子账号调用本示例前需获取[API权限](https://help.aliyun.com/zh/model-studio/member-management#a2e8c1d6246s2)（AliyunBailianDataFullAccess策略）。
+-   调用前须在百炼控制台[知识检索服务页面](https://bailian.console.aliyun.com/cn-beijing?tab=app#/knowledge-base/list?activeKey=retrieval)创建并发布知识检索服务（agent），获取服务 ID（`agent_id`）。未发布时返回 Agent 未发布错误。
     
--   本示例支持[在线调试](https://api.aliyun.com/api/bailian/2023-12-29/Retrieve)及多语言[代码示例生成](https://api.aliyun.com/api/bailian/2023-12-29/Retrieve?lang=JAVA&tab=DEMO)。
+-   默认用户维度 25 QPS。如遇限流，请稍后重试。
     
+
+## cURL
+
+```
+curl -X POST "https://{workspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/indices/knowledge/search" \
+  -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "agent_id": "aid-xxxxxxxxxxxxxxxx",
+    "query": "请介绍一下阿里云百炼手机X1。",
+    "images": []
+  }'
+```
 
 ## Python
 
 ```
-def retrieve_index(client, workspace_id, index_id, query):
-    """
-    在指定的知识库中检索信息。
-        
-    参数:
-        client (bailian20231229Client): 客户端（Client）。
-        workspace_id (str): 业务空间ID。
-        index_id (str): 知识库ID。
-        query (str): 原始输入prompt。
+import os
+import requests
 
-    返回:
-        阿里云百炼服务的响应。
-    """
-    headers = {}
-    retrieve_request = bailian_20231229_models.RetrieveRequest(
-        index_id=index_id,
-        query=query
-    )
-    runtime = util_models.RuntimeOptions()
-    return client.retrieve_with_options(workspace_id, retrieve_request, headers, runtime)
-```
-
-## Java
-
-```
-/**
- * 在指定的知识库中检索信息。
- *
- * @param client         客户端对象（bailian20231229Client）
- * @param workspaceId    业务空间ID
- * @param indexId        知识库ID
- * @param query          检索查询语句
- * @return               阿里云百炼服务的响应
- */
-public RetrieveResponse retrieveIndex(com.aliyun.bailian20231229.Client client, String workspaceId, String indexId, String query) throws Exception {
-    RetrieveRequest retrieveRequest = new RetrieveRequest();
-    retrieveRequest.setIndexId(indexId);
-    retrieveRequest.setQuery(query);
-    RuntimeOptions runtime = new RuntimeOptions();
-    return client.retrieveWithOptions(workspaceId, retrieveRequest, null, runtime);
-}
-```
-
-## PHP
-
-```
-/**
- * 在指定的知识库中检索信息。
- *
- * @param Bailian $client 客户端对象（Client）。
- * @param string $workspaceId 业务空间ID
- * @param string $indexId 知识库ID
- * @param string $query 检索查询语句
- * @return RetrieveResponse 阿里云百炼服务的响应
- * @throws Exception
- */
-public function retrieveIndex($client, $workspaceId, $indexId, $query) {
-    $headers = [];
-    $retrieveRequest = new RetrieveRequest([
-        "query" => $query,
-        "indexId" => $indexId
-    ]);
-    $runtime = new RuntimeOptions([]);
-    return $client->retrieveWithOptions($workspaceId, $retrieveRequest, $headers, $runtime);
-}
-```
-
-## Node.js
-
-```
-/**
- * 在指定的知识库中检索信息
- * @param {bailian20231229.Client} client 客户端（Client）
- * @param {string} workspaceId 业务空间ID
- * @param {string} indexId 知识库ID
- * @param {string} query 检索query
- * @returns {Promise<bailian20231229.RetrieveResponse>} 阿里云百炼服务的响应
- */
-async function retrieveIndex(client, workspaceId, indexId, query) {
-    const headers = {};
-    const req = new bailian20231229.RetrieveRequest({
-        indexId,
-        query
-    });
-    const runtime = new Util.RuntimeOptions({});
-    return await client.retrieveWithOptions(workspaceId, req, headers, runtime);
-}
-```
-
-## C#
-
-```
-/// <summary>
-/// 在指定的知识库中检索信息。
-/// </summary>
-/// <param name="client">客户端对象（bailian20231229Client）</param>
-/// <param name="workspaceId">业务空间ID</param>
-/// <param name="indexId">知识库ID</param>
-/// <param name="query">检索查询语句</param>
-/// <returns>阿里云百炼服务的响应</returns>
-/// <exception cref="Exception">如果调用失败</exception>
-public AlibabaCloud.SDK.Bailian20231229.Models.RetrieveResponse RetrieveIndex(
-    AlibabaCloud.SDK.Bailian20231229.Client client,
-    string workspaceId,
-    string indexId,
-    string query)
-{
-    var headers = new Dictionary<string, string>() { };
-    var retrieveRequest = new AlibabaCloud.SDK.Bailian20231229.Models.RetrieveRequest
-    {
-        IndexId = indexId,
-        Query = query
-    };
-    var runtime = new AlibabaCloud.TeaUtil.Models.RuntimeOptions();
-    return client.RetrieveWithOptions(workspaceId, retrieveRequest, headers, runtime);
-}
-```
-
-## Go
-
-```
-// retrieveIndex 在指定的知识库中检索信息。
-//
-// 参数:
-//   - client (bailian20231229.Client): 客户端（Client）。
-//   - workspaceId (string): 业务空间ID。
-//   - indexId（string）: 知识库ID。
-//   - query（string）: 检索查询语句
-//
-// 返回:
-//   - *bailian20231229.RetrieveResponse: 阿里云百炼服务的响应。
-//   - error: 错误信息。
-func retrieveIndex(client *bailian20231229.Client, workspaceId, indexId, query string) (*bailian20231229.RetrieveResponse, error) {
-	headers := make(map[string]*string)
-	request := &bailian20231229.RetrieveRequest{
-		IndexId: tea.String(indexId),
-		Query:   tea.String(query),
-	}
-	runtime := &util.RuntimeOptions{}
-	return client.RetrieveWithOptions(tea.String(workspaceId), request, headers, runtime)
-}
+resp = requests.post(
+    "https://{workspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/indices/knowledge/search",
+    headers={
+        "Authorization": f"Bearer {os.getenv('DASHSCOPE_API_KEY')}",
+        "Content-Type": "application/json",
+    },
+    json={
+        "agent_id": "aid-xxxxxxxxxxxxxxxx",
+        "query": "请介绍一下阿里云百炼手机X1。",
+        "images": [],
+    },
+)
+print(resp.json())
 ```
 
 **请求示例**
 
 ```
 {
-  "IndexId": "mymxbdxxxx",
-  "WorkspaceId": "llm-4u5xpd1xdjqpxxxx",
-  "Query": "请介绍一下阿里云百炼手机X1。"
+  "agent_id": "aid-xxxxxxxxxxxxxxxx",
+  "query": "请介绍一下阿里云百炼手机X1。",
+  "images": []
 }
 ```
 
@@ -9305,87 +9197,33 @@ func retrieveIndex(client *bailian20231229.Client, workspaceId, indexId, query s
 
 ```
 {
-  "Status": "200",
-  "Message": "success",
-  "RequestId": "17316EA2-1F4D-55AC-8872-53F6F1XXXXXX",
-  "Data": {
-    "Nodes": [
+  "code": "Success",
+  "status_code": 200,
+  "status": "SUCCESS",
+  "success": true,
+  "message": "success",
+  "request_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "data": {
+    "total": 3,
+    "nodes": [
       {
-        "Score": 0.6294550895690918,
-        "Metadata": {
-          "file_path": "https://bailian-datahub-data-prod.oss-cn-beijing.aliyuncs.com/10285263/multimodal/docJson/%E7%99%BE%E7%82%BC%E7%B3%BB%E5%88%97%E6%89%8B%E6%9C%BA%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D_1742197778230.json?Expires=1742457465&OSSAccessKeyId=TestID&Signature=ptFkSObdnBrbJNEw8CnlOSP%2FTeI%3D",
-          "is_displayed_chunk_content": "true",
-          "_rc_v_score": 0.7449869735535081,
-          "image_url": [],
-          "nid": "9ad347d9e4d7465d2c1e693a08b0077c|d6f7fbf8403e0df796258e5ada1ee1c1|4772257e93ed64ea087ff4be0d5e4620|7ce1370e4a1958842c9268144a452cc7",
-          "_q_score": 1,
-          "source": "0",
-          "_score": 0.6294550895690918,
-          "title": "阿里云百炼手机产品介绍",
+        "score": 0.9201,
+        "text": "阿里云百炼手机产品介绍阿里云百炼 X1 ——畅享极致视界：搭载 6.7英寸 1440 x 3200像素超清屏幕，搭配 120Hz刷新率，流畅视觉体验跃然眼前。256GB海量存储空间与 12GB RAM强强联合，无论是大型游戏还是多任务处理，都能轻松应对。5000mAh电池长续航，加上超感光四摄系统，记录生活每一刻精彩。参考售价：4599- 4999",
+        "metadata": {
           "doc_id": "file_0b21e0a852cd40cd9741c54fefbb61cd_10xxxxxx",
-          "content": "阿里云百炼手机产品介绍阿里云百炼 X1 ——畅享极致视界：搭载 6.7英寸 1440 x 3200像素超清屏幕，搭配 120Hz刷新率，流畅视觉体验跃然眼前。256GB海量存储空间与 12GB RAM强强联合，无论是大型游戏还是多任务处理，都能轻松应对。5000mAh电池长续航，加上超感光四摄系统，记录生活每一刻精彩。参考售价：4599- 4999千问 Vivid 7 ——智能摄影新体验：拥有 6.5英寸 1080 x 2400像素全面屏，AI智能摄影功能让每一张照片都能展现专业级色彩与细节。8GB RAM与 128GB存储空间确保流畅操作，4500mAh电池满足日常所需。侧面指纹解锁，便捷又安全。参考售价：2999- 3299星尘 S9 Pro ——创新视觉盛宴：突破性 6.9英寸 1440 x 3088像素屏下摄像头设计，带来无界视觉享受。512GB存储与 16GB RAM的顶级配置，配合 6000mAh电池与 100W快充技术，让性能与续航并驾齐驱，引领科技潮流。参考售价：5999- 6499。",
-          "_rc_score": 0,
-          "workspace_id": "llm-4u5xpd1xdjqpxxxx",
-          "hier_title": "阿里云百炼手机产品介绍",
-          "_rc_t_score": 0.05215025693178177,
           "doc_name": "阿里云百炼系列手机产品介绍",
-          "pipeline_id": "mymxbdxxxx",
-          "_id": "llm-4u5xpd1xdjqp8itj_mymxbd6172_file_0b21e0a852cd40cd9741c54fefbb61cd_10285263_0_0"
-        },
-        "Text": "阿里云百炼手机产品介绍阿里云百炼 X1 ——畅享极致视界：搭载 6.7英寸 1440 x 3200像素超清屏幕，搭配 120Hz刷新率，流畅视觉体验跃然眼前。256GB海量存储空间与 12GB RAM强强联合，无论是大型游戏还是多任务处理，都能轻松应对。5000mAh电池长续航，加上超感光四摄系统，记录生活每一刻精彩。参考售价：4599- 4999千问 Vivid 7 ——智能摄影新体验：拥有 6.5英寸 1080 x 2400像素全面屏，AI智能摄影功能让每一张照片都能展现专业级色彩与细节。8GB RAM与 128GB存储空间确保流畅操作，4500mAh电池满足日常所需。侧面指纹解锁，便捷又安全。参考售价：2999- 3299星尘 S9 Pro ——创新视觉盛宴：突破性 6.9英寸 1440 x 3088像素屏下摄像头设计，带来无界视觉享受。512GB存储与 16GB RAM的顶级配置，配合 6000mAh电池与 100W快充技术，让性能与续航并驾齐驱，引领科技潮流。参考售价：5999- 6499。"
-      },
-      {
-        "Score": 0.5322970747947693,
-        "Metadata": {
-          "file_path": "https://bailian-datahub-data-prod.oss-cn-beijing.aliyuncs.com/10285263/multimodal/docJson/%E7%99%BE%E7%82%BC%E7%B3%BB%E5%88%97%E6%89%8B%E6%9C%BA%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D_1742197778230.json?Expires=1742457465&OSSAccessKeyId=TestID&Signature=ptFkSObdnBrbJNEw8CnlOSP%2FTeI%3D",
-          "is_displayed_chunk_content": "true",
-          "_rc_v_score": 0.641660213470459,
-          "image_url": [],
-          "nid": "00be1864c18b4c39c59f83713af80092|4f2bfb02cc9fc4e85597b2e717699207",
-          "_q_score": 0.9948930557644994,
-          "source": "0",
-          "_score": 0.5322970747947693,
           "title": "阿里云百炼手机产品介绍",
-          "doc_id": "file_0b21e0a852cd40cd9741c54fefbb61cd_10xxxxxx",
-          "content": "阿里云百炼 Flex Fold+ ——折叠屏新纪元：集创新与奢华于一身，主屏 7.6英寸 1800 x 2400像素与外屏 4.7英寸 1080 x 2400像素，多角度自由悬停设计，满足不同场景需求。阿里云百炼 Flex Fold+ ——折叠屏新纪元：集创新与奢华于一身，主屏 7.6英寸 1800 x 2400像素与外屏 4.7英寸 1080 x 2400像素，多角度自由悬停设计，满足不同场景需求。512GB存储、12GB RAM，加之 4700mAh电池与 UTG超薄柔性玻璃，开启折叠屏时代新篇章。此外，这款手机还支持双卡双待、卫星通话，帮助您在世界各地都能畅联通话。参考零售价：9999- 10999。每一款手机都是匠心独运，只为成就您手中的科技艺术品。选择属于您的智能伙伴，开启未来科技生活的新篇章。",
-          "_rc_score": 0,
-          "workspace_id": "llm-4u5xpd1xdjqpxxxx",
-          "hier_title": "阿里云百炼手机产品介绍",
-          "_rc_t_score": 0.05188392847776413,
-          "doc_name": "阿里云百炼系列手机产品介绍",
+          "content": "阿里云百炼手机产品介绍阿里云百炼 X1 ——畅享极致视界：搭载 6.7英寸 1440 x 3200像素超清屏幕，搭配 120Hz刷新率，流畅视觉体验跃然眼前。256GB海量存储空间与 12GB RAM强强联合，无论是大型游戏还是多任务处理，都能轻松应对。5000mAh电池长续航，加上超感光四摄系统，记录生活每一刻精彩。参考售价：4599- 4999",
           "pipeline_id": "mymxbdxxxx",
-          "_id": "llm-4u5xpd1xdjqp8itj_mymxbd6172_file_0b21e0a852cd40cd9741c54fefbb61cd_10285263_0_2"
-        },
-        "Text": "阿里云百炼 Flex Fold+ ——折叠屏新纪元：集创新与奢华于一身，主屏 7.6英寸 1800 x 2400像素与外屏 4.7英寸 1080 x 2400像素，多角度自由悬停设计，满足不同场景需求。阿里云百炼 Flex Fold+ ——折叠屏新纪元：集创新与奢华于一身，主屏 7.6英寸 1800 x 2400像素与外屏 4.7英寸 1080 x 2400像素，多角度自由悬停设计，满足不同场景需求。512GB存储、12GB RAM，加之 4700mAh电池与 UTG超薄柔性玻璃，开启折叠屏时代新篇章。此外，这款手机还支持双卡双待、卫星通话，帮助您在世界各地都能畅联通话。参考零售价：9999- 10999。每一款手机都是匠心独运，只为成就您手中的科技艺术品。选择属于您的智能伙伴，开启未来科技生活的新篇章。"
-      },
-      {
-        "Score": 0.5050643086433411,
-        "Metadata": {
-          "file_path": "https://bailian-datahub-data-prod.oss-cn-beijing.aliyuncs.com/10285263/multimodal/docJson/%E7%99%BE%E7%82%BC%E7%B3%BB%E5%88%97%E6%89%8B%E6%9C%BA%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D_1742197778230.json?Expires=1742457465&OSSAccessKeyId=TestID&Signature=ptFkSObdnBrbJNEw8CnlOSP%2FTeI%3D",
-          "is_displayed_chunk_content": "true",
-          "_rc_v_score": 0.6757396459579468,
-          "image_url": [],
-          "nid": "f05d1b51eb6b033b32a162d90a9da71b|5cb6b848be8d11eb168c031025415cc5|4f2bfb02cc9fc4e85597b2e717699207",
-          "_q_score": 0.9890713450653327,
-          "source": "0",
-          "_score": 0.5050643086433411,
-          "title": "阿里云百炼手机产品介绍",
-          "doc_id": "file_0b21e0a852cd40cd9741c54fefbb61cd_10xxxxxx",
-          "content": "512GB存储与 16GB RAM的顶级配置，配合 6000mAh电池与 100W快充技术，让性能与续航并驾齐驱，引领科技潮流。参考售价：5999- 6499。阿里云百炼 Ace Ultra ——游戏玩家之选：配备 6.67英寸 1080 x 2400像素屏幕，内置 10GB RAM与 256GB存储，确保游戏运行丝滑无阻。5500mAh电池搭配液冷散热系统，长时间游戏也能保持冷静。高动态双扬声器，沉浸式音效升级游戏体验。参考售价：3999- 4299。阿里云百炼 Zephyr Z9 ——轻薄便携的艺术：轻巧的 6.4英寸 1080 x 2340像素设计，搭配 128GB存储与 6GB RAM，日常使用游刃有余。4000mAh电池确保一天无忧，30倍数字变焦镜头捕捉远处细节，轻薄而不失强大。参考售价：2499- 2799。阿里云百炼 Flex Fold+ ——折叠屏新纪元：集创新与奢华于一身，主屏 7.6英寸 1800 x 2400像素与外屏 4.7英寸 1080 x 2400像素，多角度自由悬停设计，满足不同场景需求。",
-          "_rc_score": 0,
           "workspace_id": "llm-4u5xpd1xdjqpxxxx",
-          "hier_title": "阿里云百炼手机产品介绍",
-          "_rc_t_score": 0.05158032476902008,
-          "doc_name": "阿里云百炼系列手机产品介绍",
-          "pipeline_id": "mymxbdxxxx",
-          "_id": "llm-4u5xpd1xdjqp8itj_mymxbd6172_file_0b21e0a852cd40cd9741c54fefbb61cd_10285263_0_1"
-        },
-        "Text": "512GB存储与 16GB RAM的顶级配置，配合 6000mAh电池与 100W快充技术，让性能与续航并驾齐驱，引领科技潮流。参考售价：5999- 6499。阿里云百炼 Ace Ultra ——游戏玩家之选：配备 6.67英寸 1080 x 2400像素屏幕，内置 10GB RAM与 256GB存储，确保游戏运行丝滑无阻。5500mAh电池搭配液冷散热系统，长时间游戏也能保持冷静。高动态双扬声器，沉浸式音效升级游戏体验。参考售价：3999- 4299。阿里云百炼 Zephyr Z9 ——轻薄便携的艺术：轻巧的 6.4英寸 1080 x 2340像素设计，搭配 128GB存储与 6GB RAM，日常使用游刃有余。4000mAh电池确保一天无忧，30倍数字变焦镜头捕捉远处细节，轻薄而不失强大。参考售价：2499- 2799。阿里云百炼 Flex Fold+ ——折叠屏新纪元：集创新与奢华于一身，主屏 7.6英寸 1800 x 2400像素与外屏 4.7英寸 1080 x 2400像素，多角度自由悬停设计，满足不同场景需求。"
+          "_id": "llm-4u5xpd1xdjqpxxxx_mymxbd6172_file_0b21e0a852cd40cd9741c54fefbb61cd_10xxxxxx_0_0",
+          "_knowledge_type": "document",
+          "_knowledge_scene": "basic_document_qa"
+        }
       }
-    ]
-  },
-  "Code": "Success",
-  "Success": "true"
+    ],
+    "cost_time": 2629
+  }
 }
 ```
 

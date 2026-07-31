@@ -4,10 +4,6 @@
 
 ## 文本生成
 
-### 千问模型
-
-从能力最强到成本最低，按需选择
-
 [查看更多 →](https://help.aliyun.com/zh/model-studio/text-generation-model/)
 
 [
@@ -344,15 +340,9 @@ Base URL`https://dashscope-us.aliyuncs.com/api/v1`
 
 API Key[获取↗](https://modelstudio.console.aliyun.com/us-east-1?tab=model#/api-key)
 
-### 三方模型
-
-API 格式与千问模型一致
-
-[查看更多 →](https://help.aliyun.com/zh/model-studio/text-generation-model/)
-
 [
 
-deepseek-v4-pro
+deepseek-v4-pro阿里直供
 
 ](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/deepseek-v4-pro)
 
@@ -460,7 +450,7 @@ API Key[获取↗](https://modelstudio.console.aliyun.com/us-east-1?tab=model#/a
 
 [
 
-deepseek-v4-flash
+deepseek-v4-flash阿里直供
 
 ](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/deepseek-v4-flash)
 
@@ -568,7 +558,7 @@ API Key[获取↗](https://modelstudio.console.aliyun.com/us-east-1?tab=model#/a
 
 [
 
-kimi/kimi-k3
+kimi/kimi-k3三方直供
 
 ](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/kimi%2Fkimi-k3?serviceSite=asia-pacific-china)
 
@@ -584,7 +574,7 @@ API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-
 
 [
 
-glm-5.2
+glm-5.2阿里直供
 
 ](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/glm-5.2)
 
@@ -672,7 +662,7 @@ API Key[获取↗](https://modelstudio.console.aliyun.com/us-east-1?tab=model#/a
 
 [
 
-MiniMax-M3
+MiniMax-M3三方直供
 
 ](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/MiniMax%2FMiniMax-M3)
 
@@ -688,7 +678,7 @@ API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-
 
 [
 
-mimo-v2.5-pro
+mimo-v2.5-pro三方直供
 
 ](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/xiaomi%2Fmimo-v2.5-pro)
 
@@ -844,7 +834,7 @@ API Key[获取↗](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=mod
 
 [
 
-kimi/kimi-k3
+kimi/kimi-k3三方直供
 
 ](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/kimi%2Fkimi-k3?serviceSite=asia-pacific-china)
 
@@ -1064,7 +1054,7 @@ API Key[获取↗](https://modelstudio.console.aliyun.com/us-east-1?tab=model#/a
 
 [
 
-Tripo/Tripo-H3.1
+Tripo/Tripo-H3.1三方直供
 
 ](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/Tripo%2FTripo-H3.1?serviceSite=asia-pacific-china)
 
@@ -1078,7 +1068,7 @@ API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-
 
 [
 
-Tripo/Tripo-P1.0
+Tripo/Tripo-P1.0三方直供
 
 ](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/Tripo%2FTripo-P1.0?serviceSite=asia-pacific-china)
 
@@ -1120,7 +1110,7 @@ API Key[获取↗](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=mod
 
 [
 
-MiniMax/speech-2.8-hd
+MiniMax/speech-2.8-hd三方直供
 
 ](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/MiniMax%2Fspeech-2.8-hd)
 
@@ -1160,19 +1150,19 @@ API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-
 
 [
 
-fun-asr-realtime
+qwen-audio-3.0-asr-flash-streaming
 
-](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/fun-asr-realtime)
+](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen-audio-3.0-asr-flash-streaming)
 
 华北2（北京）新加坡
 
-模型 ID`fun-asr-realtime`
+模型 ID`qwen-audio-3.0-asr-flash-streaming`
 
 Request URL`wss://[{WorkspaceId}](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management).cn-beijing.maas.aliyuncs.com/api-ws/v1/inference`
 
 API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-key)
 
-模型 ID`fun-asr-realtime`
+模型 ID`qwen-audio-3.0-asr-flash-streaming`
 
 Request URL`wss://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=globalset#/efm/business_management).ap-southeast-1.maas.aliyuncs.com/api-ws/v1/inference`
 
@@ -1180,19 +1170,19 @@ API Key[获取↗](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=mod
 
 [
 
-fun-asr
+qwen-audio-3.0-asr-flash-filetrans
 
-](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/fun-asr)
+](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen-audio-3.0-asr-flash-filetrans)
 
 华北2（北京）新加坡
 
-模型 ID`fun-asr`
+模型 ID`qwen-audio-3.0-asr-flash-filetrans`
 
 Request URL`https://[{WorkspaceId}](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management).cn-beijing.maas.aliyuncs.com/api/v1/services/audio/asr/transcription`
 
 API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-key)
 
-模型 ID`fun-asr`
+模型 ID`qwen-audio-3.0-asr-flash-filetrans`
 
 Request URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=globalset#/efm/business_management).ap-southeast-1.maas.aliyuncs.com/api/v1/services/audio/asr/transcription`
 

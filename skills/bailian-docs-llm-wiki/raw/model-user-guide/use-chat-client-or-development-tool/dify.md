@@ -138,7 +138,7 @@ A：Dify 没有提供万相模型相关的插件，通过Dify的Chatflow/工作�
     
 2.  **配置环境变量**
     
-    进入工作流界面，找到![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5589338471/p958072.png)，并将`DASHSCOPE_API_KEY`的值修改为您的API Key。
+    进入工作流界面，找到 ![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5589338471/p958072.png)，并将`DASHSCOPE_API_KEY`的值修改为您的API Key。
     
 3.  **测试生图效果**
     
@@ -148,7 +148,7 @@ A：Dify 没有提供万相模型相关的插件，通过Dify的Chatflow/工作�
     
     > 文生视频的时间一般在5分钟以上，请耐心等待。
     
-4.  **发布为工具（可选**
+4.  **发布为工具（可选）**
     
     为了在其它大模型应用中使用万相的文生图/视频功能，您可以在界面右上方单击**发布**并选择**发布为工具**。
     
