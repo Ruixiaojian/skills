@@ -1,68 +1,69 @@
 # get started with models
 
-阿里云百炼提供开箱即用的大模型服务，支持通过兼容 OpenAI 的 API 快速调用千问（Qwen）全系列及主流第三方模型。开发者无需部署运维，只需配置 API Key 和 Base URL 即可发起首次请求。本文档聚焦模型调用的核心路径，涵盖模型选择、参数配置、接入方式及关键约束。
+阿里云百炼提供开箱即用的大模型服务，支持通过兼容 OpenAI 的 API 快速调用千问（Qwen）及第三方模型。开发者无需部署或运维模型，只需配置 API Key 和 Base URL 即可发起推理请求。本文档聚焦模型调用的入门路径，涵盖模型选择、参数配置、接入方式及关键限制。
 
 ## 支持的模型与功能
 
-百炼提供文本生成、多模态理解与生成、嵌入向量、领域专用模型等能力，覆盖通用推理与垂直场景。主力模型包括：
+百炼提供多系列千问模型（如 `qwen3.7-max`、`qwen3.7-plus`、`qwen3.7-flash`）及 DeepSeek、Kimi、GLM 等第三方模型，覆盖文本生成、多模态理解与生成、嵌入向量等能力 [什么是阿里云百炼](../../raw/model-user-guide/get-started-with-models/what-is-model-studio.md)。模型按能力与成本分层：
 
-- **qwen3.7-max**：效果最优，适用于复杂多步任务，[详见模型详情](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-max)  
-- **qwen3.7-plus**：效果、速度与成本均衡，是多数生产场景的**推荐选择**（见 [什么是阿里云百炼](../../raw/model-user-guide/get-started-with-models/what-is-model-studio.md)）  
-- **qwen3.7-flash**：高性价比、低延迟，适合简单高频任务  
+- **qwen3.7-max**：旗舰模型，适合复杂多步骤任务，华北2（北京）地域 RPM 限流为 30,000，TPM 为 5,000,000；
+- **qwen3.7-plus**：效果、速度与成本均衡，是多数场景的推荐选择，同地域限流与 max 相同；
+- **qwen3.7-flash**：高性价比、低延迟，适用于简单快速响应任务，同地域限流亦为 30,000 RPM / 5,000,000 TPM。
 
-此外支持 DeepSeek、Kimi、GLM 等第三方模型（仅限北京地域），以及长文本、法律、意图识别等细分领域模型。所有模型均按地域独立提供，不同地域支持的模型列表存在差异，例如 `qwen3.7-max-preview` 仅限 [Token](../concepts/token.md) Plan 用户且仅在华北2（北京）可用（见 [选择模型](../../raw/model-user-guide/get-started-with-models/models.md)）。
+> **注意**：文档中多次出现 `qwen3.7-plus` 与 `qwen-plus` 混用（如 [首次调用千问API](../../raw/model-user-guide/get-started-with-models/first-api-call-to-qwen.md) 示例代码使用 `qwen-plus`，而 [选择模型](../../raw/model-user-guide/get-started-with-models/models.md) 和 [限流](../../raw/model-user-guide/get-started-with-models/rate-limit.md) 表格均以 `qwen3.7-plus` 为主）。实际调用应以 [选择模型](../../raw/model-user-guide/get-started-with-models/models.md) 文档中列出的模型 ID 为准，`qwen-plus` 是旧版命名，当前生产环境推荐使用带版本号的模型 ID（如 `qwen3.7-plus`），避免因快照版本过期导致调用失败。
 
-> **注意**：文档1中称“DeepSeek 仅支持北京地域”，而文档4的模型列表页未明确标注地域限制，但实际控制台界面显示其仅在北京地域可见。以控制台实时状态为准。
+各模型在不同地域的支持情况不同，例如 DeepSeek 仅支持华北2（北京）地域；`qwen3.8-max-preview` 仅面向 Token Plan 订阅用户 [选择模型](../../raw/model-user-guide/get-started-with-models/models.md)。完整模型列表及地域支持请参考控制台模型广场。
 
 ## 关键参数
 
 调用模型需明确以下核心参数：
 
-- **`model`**：模型 ID，如 `"qwen3.7-plus"`；注意带日期后缀的快照版本（如 `qwen-plus-2025-07-28`）限流更严格（见 [限流](../../raw/model-user-guide/get-started-with-models/rate-limit.md)）  
-- **`base_url`**：必须与所选地域和计费方案匹配，**不可跨地域混用**（见 [地域及接入域名](../../raw/model-user-guide/get-started-with-models/regions.md)）。常用格式如下：
-  - 业务空间专属（推荐生产环境）：`https://{WorkspaceId}.{region}.maas.aliyuncs.com/compatible-mode/v1`  
-  - Dashscope 兼容（存量迁移）：`https://dashscope.aliyuncs.com/compatible-mode/v1`（北京）、`https://dashscope-us.aliyuncs.com/compatible-mode/v1`（美国）等  
-- **`api_key`**：必须使用与 `base_url` 所属地域和计费方案（按量付费 / [Token](../concepts/token.md) Plan / Coding Plan）配套的 API Key，否则返回 401 错误（见 [Base URL总览](../../raw/model-user-guide/get-started-with-models/base-url.md)）
+- **API Key**：用于身份鉴权，需在[API Key 页面](https://bailian.console.aliyun.com/?tab=model#/api-key)创建并配置为环境变量 `DASHSCOPE_API_KEY`，避免硬编码 [首次调用千问API](../../raw/model-user-guide/get-started-with-models/first-api-call-to-qwen.md)；
+- **Base URL**：必须与 API Key 所属地域和计费方案严格匹配。业务空间专属域名（如 `https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`）为生产环境推荐，Dashscope 域名（如 `https://dashscope.aliyuncs.com/compatible-mode/v1`）适用于存量迁移，试用域名限流更严 [Base URL总览](../../raw/model-user-guide/get-started-with-models/base-url.md)；
+- **WorkspaceId**：华北2（北京）、新加坡、日本（东京）、德国（法兰克福）地域需从[业务空间管理](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management)页面获取，美国（弗吉尼亚）地域使用 `dashscope-us.aliyuncs.com`，无需 WorkspaceId；
+- **模型 ID**：必须与 Base URL 所属地域支持的模型一致，例如 `qwen3.7-plus` 在北京地域可用，但在德国法兰克福地域需确认是否在[可用模型列表](https://modelstudio.console.aliyun.com/eu-central-1?tab=doc#/doc/?type=model&url=2840914)中存在。
 
 ## 使用方式
 
-### 1. 前置准备
-- 注册阿里云账号并完成实名认证  
-- 开通百炼服务，在 [API Key 页面](https://bailian.console.aliyun.com/?tab=model#/api-key) 创建 Key  
-- 若使用业务空间专属域名，需在 [业务空间管理](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management) 获取 `WorkspaceId`
+### 1. 环境准备
+- 注册阿里云账号并完成实名认证；
+- 开通百炼服务，在控制台创建 API Key 并配置为环境变量 `DASHSCOPE_API_KEY`；
+- 根据所选地域获取对应 Base URL（含 WorkspaceId）和模型 ID。
 
-### 2. 配置与调用
-推荐将 `DASHSCOPE_API_KEY` 设为环境变量（避免硬编码），再使用 OpenAI SDK 或 DashScope SDK 调用：
-
+### 2. 调用示例（OpenAI SDK）
 ```python
-# OpenAI SDK 示例（兼容模式）
+import os
 from openai import OpenAI
+
 client = OpenAI(
     api_key=os.getenv("DASHSCOPE_API_KEY"),
     base_url="https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",  # 替换为实际 WorkspaceId
 )
-response = client.chat.completions.create(
+completion = client.chat.completions.create(
     model="qwen3.7-plus",
     messages=[{"role": "user", "content": "你是谁？"}]
 )
+print(completion.choices[0].message.content)
 ```
 
-完整步骤与多语言（Node.js/curl）示例见 [首次调用千问API](../../raw/model-user-guide/get-started-with-models/first-api-call-to-qwen.md)。
+### 3. 多语言支持
+除 Python 外，Node.js、curl 等方式均支持，详见 [什么是阿里云百炼](../../raw/model-user-guide/get-started-with-models/what-is-model-studio.md) 中的代码片段。DashScope SDK 也提供同等能力，但 [OpenAI 兼容接口](../concepts/openai-compatible-interface.md)更利于现有项目迁移。
 
 ## 限制和注意事项
 
-- **地域隔离**：各地域 API Key、Base URL、模型列表、功能支持均相互独立。例如德国（法兰克福）不支持批量推理，美国（弗吉尼亚）暂无业务空间专属域名（见 [地域及接入域名](../../raw/model-user-guide/get-started-with-models/regions.md)）  
-- **限流策略**：按主账号维度合并计算所有子账号、业务空间和 API Key 的调用量。触发限流时返回 `429`，常见原因包括 RPM（每分钟请求数）或 TPM（每分钟 [Token](../concepts/token.md) 数）超限。稳定版模型（如 `qwen3.7-plus`）限流额度显著高于快照版（如 `qwen-plus-2025-07-28`）（见 [限流](../../raw/model-user-guide/get-started-with-models/rate-limit.md)）  
-- **费用控制**：模型推理按 Token 用量计费，知识库（RAG）单独计费且不支持节省计划；新用户可开启“免费额度用完即停”避免意外扣费（见 [什么是阿里云百炼](../../raw/model-user-guide/get-started-with-models/what-is-model-studio.md)）  
-- **安全与合规**：所有传输数据加密，阿里云不会使用客户数据训练模型（见 [什么是阿里云百炼](../../raw/model-user-guide/get-started-with-models/what-is-model-studio.md)）
+- **地域隔离**：各地域的 API Key、Base URL、模型列表互不通用，跨地域混用将返回 401 错误 [地域及接入域名](../../raw/model-user-guide/get-started-with-models/regions.md)；
+- **限流策略**：按主账号维度合并计算所有子账号、业务空间和 API Key 的调用量。触发限流时返回 `429 Too Many Requests`，错误信息包含具体类型（RPM/TPM/突发速率） [限流](../../raw/model-user-guide/get-started-with-models/rate-limit.md)；
+- **费用控制**：模型调用按 Token 用量计费，知识库（RAG）为独立计费项；新用户享有北京地域免费额度，用完后可开启“免费额度用完即停”开关防止意外扣费 [什么是阿里云百炼](../../raw/model-user-guide/get-started-with-models/what-is-model-studio.md)；
+- **域名选择**：业务空间专属域名提供更高并发、更低延迟及 SLA 保障（99.9%），试用域名 RPM 仅为 1000，不建议用于生产 [地域及接入域名](../../raw/model-user-guide/get-started-with-models/regions.md)；
+- **安全合规**：用户数据不会被用于模型训练，传输全程加密；若需数据驻留，应选择符合合规要求的服务部署范围（如欧盟、日本） [地域及接入域名](../../raw/model-user-guide/get-started-with-models/regions.md)。
 
 ## 来源文档
 
 - [什么是阿里云百炼](../../raw/model-user-guide/get-started-with-models/what-is-model-studio.md)
 - [首次调用千问API](../../raw/model-user-guide/get-started-with-models/first-api-call-to-qwen.md)
-- [Base URL总览](../../raw/model-user-guide/get-started-with-models/base-url.md)
 - [选择模型](../../raw/model-user-guide/get-started-with-models/models.md)
 - [限流](../../raw/model-user-guide/get-started-with-models/rate-limit.md)
+- [Base URL总览](../../raw/model-user-guide/get-started-with-models/base-url.md)
 - [地域及接入域名](../../raw/model-user-guide/get-started-with-models/regions.md)
 
 

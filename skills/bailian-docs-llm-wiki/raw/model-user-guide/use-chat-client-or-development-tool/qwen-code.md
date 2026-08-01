@@ -119,6 +119,12 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
         "name": "[Token Plan 个人版] deepseek-v4-pro",
         "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
         "envKey": "BAILIAN_TOKEN_PLAN_API_KEY"
+      },
+      {
+        "id": "deepseek-v4-flash-0731",
+        "name": "[Token Plan 个人版] deepseek-v4-flash-0731",
+        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY"
       }
     ]
   }
@@ -220,6 +226,12 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
       {
         "id": "deepseek-v4-flash",
         "name": "[Token Plan 团队版] deepseek-v4-flash",
+        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY"
+      },
+      {
+        "id": "deepseek-v4-flash-0731",
+        "name": "[Token Plan 团队版] deepseek-v4-flash-0731",
         "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
         "envKey": "BAILIAN_TOKEN_PLAN_API_KEY"
       },

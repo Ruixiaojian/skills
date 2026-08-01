@@ -100,6 +100,10 @@ deepseek-v4-flash
 
 推理模型、文本生成
 
+deepseek-v4-flash-0731
+
+推理模型、文本生成（暂不支持 Responses API）
+
 deepseek-v3.2
 
 推理模型、文本生成

@@ -4,7 +4,7 @@
 
 **重要**
 
-deepseek-v3、deepseek-v3.1、deepseek-v3.2、deepseek-v3.2-exp、deepseek-r1、deepseek-r1-0528、deepseek-r1-distill-qwen-7b/14b/32b 将于**2026年10月10日**下架。推荐转用：[qwen3.7-plus](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-plus)、[qwen3.7-max](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-max)、[qwen3.6-flash](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.6-flash)。
+deepseek-v3、deepseek-v3.1、deepseek-v3.2、deepseek-v3.2-exp、deepseek-r1、deepseek-r1-0528、deepseek-r1-distill-qwen-7b/14b/32b 将于**2026年10月10日**下架。推荐转用：[qwen3.7-plus](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-plus)、[qwen3.7-max](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.8-max)、[qwen3.6-flash](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.6-flash)。
 
 ## **服务接入地址**
 
@@ -511,7 +511,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic/v
 
 ## **推理强度（reasoning\_effort）**
 
-deepseek-v4-pro 和 deepseek-v4-flash 默认开启思考模式。通过`reasoning_effort`参数可以调整推理强度，可选值为`low`、`medium`、`high`、`xhigh`和`max`，默认为`high`。
+deepseek-v4-pro、deepseek-v4-flash 和 deepseek-v4-flash-0731 默认开启思考模式。通过`reasoning_effort`参数可以调整推理强度，可选值为`low`、`medium`、`high`、`xhigh`和`max`，默认为`high`。
 
 其中，`low`和`medium`的效果等同于`high`；`xhigh`的效果等同于`max`。
 
@@ -615,6 +615,20 @@ deepseek-v4-pro
 不支持
 
 deepseek-v4-pro-us
+
+支持
+
+支持
+
+支持
+
+支持
+
+支持
+
+不支持
+
+deepseek-v4-flash-0731
 
 支持
 
@@ -798,6 +812,18 @@ deepseek-v4-pro-us
 
 共393,216
 
+deepseek-v4-flash-0731
+
+1.0
+
+1.0
+
+\-
+
+\-
+
+共393,216
+
 deepseek-v4-flash
 
 1.0
@@ -929,14 +955,14 @@ deepseek-v3
 
 ## **模型列表与计费**
 
--   混合思考模型（通过`enable_thinking`参数控制是否思考）：deepseek-v4-pro、deepseek-v4-flash、deepseek-v3.2、deepseek-v3.2-exp、deepseek-v3.1
+-   混合思考模型（通过`enable_thinking`参数控制是否思考）：deepseek-v4-pro、deepseek-v4-flash、deepseek-v4-flash-0731、deepseek-v3.2、deepseek-v3.2-exp、deepseek-v3.1
     
 -   仅思考模型（回复前总会思考）：deepseek-r1、deepseek-r1-0528
     
 -   非思考模型：deepseek-v3
     
 
-deepseek-v4-pro 在编程、数学和通用任务方面表现出色，deepseek-v4-flash 快速且经济高效，推荐优先使用 deepseek-v4-pro。
+deepseek-v4-pro 在编程、数学和通用任务方面表现出色，deepseek-v4-flash-0731 快速且经济高效，推荐优先使用 deepseek-v4-pro。
 
 模型上下文长度与价格信息请参见百炼控制台。
 

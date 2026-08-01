@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-08-01",
+  "updatedAt": "2026-08-02",
   "totalFamilies": 175,
-  "totalModels": 392,
+  "totalModels": 393,
   "profileCoverage": {
-    "full": 332,
+    "full": 314,
     "partial": 15,
-    "structured-only": 45,
+    "structured-only": 64,
     "none": 0
   },
   "capabilityDistribution": {
@@ -239,7 +239,7 @@
       "providers": [
         "deepseek"
       ],
-      "itemCount": 12,
+      "itemCount": 13,
       "items": [
         "deepseek-r1",
         "deepseek-r1-0528",
@@ -252,6 +252,7 @@
         "deepseek-v3.2",
         "deepseek-v3.2-exp",
         "deepseek-v4-flash",
+        "deepseek-v4-flash-0731",
         "deepseek-v4-pro"
       ],
       "maxContextWindow": 1000000

@@ -8492,6 +8492,10 @@ qwen3-coder-next
 
 以下模型仅在华北2（北京）下有免费额度，其他地域均无免费额度。
 
+**说明**
+
+模型后续可能采取峰谷定价策略，高峰时段调用价格可能有所上浮，价格策略调整以正式通知为准。
+
 #### 华北2（北京）
 
 **模型 ID（Model ID）**
@@ -8513,6 +8517,16 @@ deepseek-v4-pro
 12元
 
 24元
+
+100万Token
+
+deepseek-v4-flash-0731
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+1元
+
+2元
 
 100万Token
 
@@ -8654,6 +8668,16 @@ deepseek-v4-pro-us
 
 35.972元
 
+deepseek-v4-flash-0731
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+全球
+
+1元
+
+2元
+
 deepseek-v4-flash
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
@@ -8695,6 +8719,16 @@ deepseek-v4-pro
 17.986元
 
 35.972元
+
+deepseek-v4-flash-0731
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+国际
+
+1.499元
+
+2.998元
 
 deepseek-v4-flash
 
@@ -8738,6 +8772,16 @@ deepseek-v4-pro
 
 24元
 
+deepseek-v4-flash-0731
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+全球
+
+1元
+
+2元
+
 deepseek-v4-flash
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
@@ -8769,6 +8813,16 @@ deepseek-v4-pro
 12元
 
 24元
+
+deepseek-v4-flash-0731
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+全球
+
+1元
+
+2元
 
 deepseek-v4-flash
 

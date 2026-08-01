@@ -1,63 +1,64 @@
 # llm application
 
-`llm application` 是阿里云百炼平台面向开发者提供的大语言模型应用构建能力集合，支持通过零代码、低代码或高代码方式，将 LLM 与知识库、外部工具（MCP/插件）、多模态文件处理等能力深度集成，以突破模型原生能力边界，构建可解决真实业务问题的 AI 应用。核心形态包括智能体（Agent）、工作流（Workflow）和高代码应用三类，分别适用于动态规划、固定流程编排和深度定制场景。
+百炼平台的 LLM Application 是面向业务场景的 AI 应用构建范式，旨在突破大语言模型在私有知识接入、实时信息获取、流程可控性及复杂任务规划等方面的原生局限。通过智能体（Agent）、工作流（Workflow）和高代码应用三种模式，开发者可基于零代码、低代码或专业编码方式，快速集成知识库、MCP 工具、记忆、数据连接器等能力，构建可落地的 AI 服务。所有应用均需发布后方可调用，计费以模型调用、知识库、MCP 等实际资源消耗为准。
 
 ## 支持的模型与功能
 
 - **模型支持**：  
-  智能体应用支持千问系列（如 `千问-Max`、`千问-Plus-Latest`、`千问-VL-Max`）、DeepSeek 及开源模型等；其中 `千问-VL` 系列具备多模态能力，可直接解析图片/视频，无需预解析 [原文标题](../../raw/application-user-guide/llm-application/new-single-agent-application.md)。  
-  > **注意**：文档 3 中提及“插件”作为独立能力，而文档 1 明确指出新版智能体已统一采用 MCP 协议接入所有外部工具（含原插件），旧版插件机制已逐步迁移。实际开发中应优先使用 MCP [原文标题](../../raw/application-user-guide/llm-application/new-single-agent-application.md)。
+  - 智能体与工作流应用推荐使用 `千问-Max`、`千问-Plus-Latest` 等具备强工具调用与多步规划能力的模型；`千问-VL` 系列模型原生支持图片/视频解析，即使关闭预解析也可直接处理视觉文件 [原文标题](../../raw/application-user-guide/llm-application/new-single-agent-application.md)。  
+  - 文件问答场景支持文本模型（如 `千问Turbo`、`千问Long`）及视觉模型（如 `千问VL-Max`、`千问VL-OCR`），具体以控制台实时列表为准 [原文标题](../../raw/application-user-guide/llm-application/file-q-a.md)。  
+  - 高代码应用支持所有百炼托管模型，并可通过 MCP 协议接入自定义部署模型 [原文标题](../../raw/application-user-guide/llm-application/rich-code-application.md)。
 
 - **核心功能**：  
-  - **知识库（RAG）**：支持切片检索与全文引用两种模式，可与上传文件混合检索 [原文标题](../../raw/application-user-guide/llm-application/file-q-a.md)；新版智能体将知识库作为自主规划调用的工具之一，支持标签过滤提升精度。  
-  - **工具调用**：内置沙箱工具（`bash`、`read`、`write` 等）及 MCP 服务（官方 MCP 广场或自定义服务），支持多步 ReAct 规划。  
-  - **文件处理**：提供三种模式——**全文引用**（适合总结/翻译）、**切片检索**（适合长文档问答）、**自定义处理**（需配置 MCP/插件，适合图像风格转换等复杂操作）。  
-  - **记忆**：支持 0–30 轮短期记忆；[长期记忆](../concepts/long-term-memory.md)暂未开放。  
-  - **技能（Skill）**：可复用的能力包，自动识别任务并调用，无需编码。
+  - **智能体（Agent）**：以提示词驱动自主决策，统一调度知识库、MCP、内置工具（`bash`/`read`/`edit` 等）及技能（Skill），支持 ReAct 多轮规划与过程可视化回溯。  
+  - **工作流（Workflow）**：通过可视化节点编排（大模型、意图分类、变量处理、智能体群组等）实现确定性流程，支持会话变量全局共享与多轮记忆（`historyList`/`imageList`）。  
+  - **高代码应用**：基于 Python 项目一键部署为 Serverless Function 或 K8s 服务，支持 MCP 工具一站式接入、自定义前端（Spark Design）、API 网关及企业级可观测能力。
+
+> **注意**：文档 2 与文档 3 对智能体版本的描述存在关键差异——文档 2 明确指出“旧版智能体（Agent 1.0）与新版（Agent 2.0）基于不同技术架构，彼此不兼容，无法升级”，而文档 3 未提及此限制且仍提供 Agent 1.0 的独立入口。实际开发中应以文档 2 的结论为准，新项目务必选用 Agent 2.0。
 
 ## 关键参数
 
-| 参数 | 说明 | 取值范围/示例 | 备注 |
-|------|------|----------------|------|
-| `enable_thinking` | 是否开启思考模式（仅支持模型） | `true` / `false` | 开启后可展示“规划-执行-反思”链路，仅限支持该能力的模型（如 `千问-Max`）；不支持时参数不可见 [原文标题](../../raw/application-user-guide/llm-application/new-single-agent-application.md) |
-| `ReAct 最大轮次` | 单次会话中工具调用最大次数 | 1–50 | 超限后强制退出工具链并生成最终回复 |
-| `最长回复长度` | 模型生成内容的 token 上限（不含提示词） | 正整数 | 影响输出完整性，需结合模型上下文窗口设置 |
-| `温度系数` | 控制输出随机性与多样性 | 0.0–2.0 | 数值越高越随机，建议问答场景设为 0.1–0.6 |
-| `单文件最大解析长度`（全文引用） | 单个文件提取的 token 数上限 | 正整数 | 超出部分从文件末尾截断 [原文标题](../../raw/application-user-guide/llm-application/file-q-a.md) |
-| `召回片段数`（切片检索） | 每次问答最多引用的知识片段数 | 正整数 | 配合 `最大拼装长度` 控制输入 token 消耗 |
+| 参数类别 | 参数名 | 说明 | 适用场景 |
+|----------|--------|------|----------|
+| **模型层** | `temperature` | 控制生成随机性，值越高输出越多样 | 所有应用类型通用 |
+| | `enable_thinking` | 开启后支持模型展示推理链（Thinking step），仅限支持思考模式的模型 | 新版智能体（Agent 2.0） |
+| | `ReAct 最大轮次`（1–50） | 限制单次会话中工具调用总次数，超限则终止调用并生成最终回复 | 新版智能体 |
+| **文件处理** | `单文件最大解析长度` / `最大拼装长度` | 全文引用模式下控制 token 截断位置（从文件末尾截断） | [文件问答](../../raw/application-user-guide/llm-application/file-q-a.md) |
+| | `召回片段数` / `最大拼装长度` | 切片检索模式下控制 RAG 检索结果数量与总 token 上限 | 同上 |
+| **记忆与上下文** | 短期记忆轮数（0–30） | 控制多轮对话上下文窗口大小，0 表示禁用 | 新版智能体 |
+| | `自定义缓存`（工作流） | 启用后模型可跨节点记住全局对话历史（`historyList`） | 工作流应用中的大模型/意图分类节点 |
 
 ## 使用方式
 
-1. **创建与配置**：  
-   - 访问百炼控制台 → 应用管理 → 创建应用 → 选择类型（推荐 `智能体应用（Agent 2.0）`）。  
-   - 在模型选择器中选定模型（如 `千问-Plus-Latest`），通过参数配置器调整关键参数。  
-   - 配置系统提示词（定义角色、约束、工具引导）、知识库、MCP 工具、文件处理模式等。
+- **创建与配置**：  
+  - 智能体：控制台 → 应用管理 → 创建应用 → 选择 **智能体应用 > Agent 2.0**，配置模型、系统提示词、知识库、MCP 及工具 [原文标题](../../raw/application-user-guide/llm-application/new-single-agent-application.md)。  
+  - 工作流：拖拽节点（开始/大模型/意图分类/结束等）构建执行链路，通过 `${sys.query}` 引用用户输入，用 `/` 插入节点输出变量 [原文标题](../../raw/application-user-guide/llm-application/workflow-application.md)。  
+  - 高代码：选择模板或上传 `.whl` 包，配置部署方式（Serverless/K8s）、资源规格及 MCP 工具，部署后通过 API 测试或网关发布 [原文标题](../../raw/application-user-guide/llm-application/rich-code-application.md)。
 
-2. **调试与测试**：  
-   - 在右侧对话框输入问题（如 `你是谁？`），支持文本输入与文件上传（单会话 ≤10 个文件，单文件 ≤10MB）。  
-   - 新版智能体以卡片流形式展示“思考”与“工具调用”步骤，便于过程分析。
+- **调用前提**：  
+  所有应用必须先点击 **发布** 按钮完成发布，才能通过 API、SDK 或第三方渠道（钉钉/微信公众号）调用。未发布应用无法访问。
 
-3. **发布与调用**：  
-   - **必须发布**后方可调用：点击右上角“发布”，确认变更后生效。  
-   - API 调用：在“发布渠道”页签 → “API调用” → 查看接口文档与鉴权方式；文件需通过 `file_list`（URL）或 `session_file_id`（上传 API）传递 [原文标题](../../raw/application-user-guide/llm-application/file-q-a.md)。  
-   - 高代码应用支持 Serverless Function 或 K8s 部署，可通过网关暴露生产 API。
+- **文件交互**：  
+  智能体支持三种文件处理模式：  
+  - **全文引用**：解析后全文注入 [prompt](prompt.md)，适合短文档总结；  
+  - **切片检索（RAG）**：检索相关片段，适合长文档精准问答；  
+  - **自定义处理**：模型自主调用 MCP/插件处理文件（如图片风格转换），需提前挂载对应工具。
 
-## 限制和注意事项
+## 限制与注意事项
 
-- **版本兼容性**：Agent 1.0 与 Agent 2.0 架构不兼容，无法升级或降级，需重新创建应用 [原文标题](../../raw/application-user-guide/llm-application/new-single-agent-application.md)。  
-- **文件有效期**：聊天窗口上传的文件仅在当前会话有效；通过 `session_file_id` 上传的有效期为 24 小时；URL 方式依赖源地址可用性。  
-- **计费逻辑**：  
-  - 模型调用费用按输入/输出 token 计费，**知识库召回内容计入输入 token**；  
-  - 全文引用模式 token 消耗显著高于切片检索；  
-  - MCP 工具可能产生额外费用（第三方 API 费用由服务商收取）。  
-- **工具超时**：自定义 MCP 超时限制为 5 秒，超时将中断调用 [原文标题](../../raw/application-user-guide/llm-application/single-agent-application.md)。  
-- **缓存支持**：仅支持隐式缓存（自动生效，不可配置），暂不支持显式缓存。  
-- **地域限制**：文件问答功能当前仅支持中国大陆版（北京地域）。
+- **文件限制**：单次会话最多上传 10 个文件，单文件 ≤ 10MB；上传文件仅在当前会话有效，刷新页面即失效 [原文标题](../../raw/application-user-guide/llm-application/file-q-a.md)。生产环境推荐使用 `session_file_id` 方式上传大文件。
+- **工具超时**：自定义插件调用超时限制为 5 秒，超时将中断执行 [原文标题](../../raw/application-user-guide/llm-application/single-agent-application.md)。
+- **[长期记忆](../concepts/long-term-memory.md)**：新版智能体暂不支持[长期记忆](../concepts/long-term-memory.md)功能，该能力计划在未来迭代中上线；当前仅支持短期记忆（0–30 轮上下文）。
+- **计费要点**：  
+  - 知识库召回内容计入模型输入 token，可能增加推理费用；  
+  - 隐式缓存自动生效（公共前缀按 20% 计费），但显式缓存暂不支持；  
+  - MCP 服务若涉及第三方 API（如天气、地图），其费用由第三方收取，百炼不代收。
+- **地域限制**：文件问答功能目前仅支持中国大陆版（北京地域）[原文标题](../../raw/application-user-guide/llm-application/file-q-a.md)。
 
 ## 来源文档
 
-- [新版智能体应用](../../raw/application-user-guide/llm-application/new-single-agent-application.md)
 - [应用类型介绍](../../raw/application-user-guide/llm-application/application-introduction.md)
+- [新版智能体应用](../../raw/application-user-guide/llm-application/new-single-agent-application.md)
 - [智能体应用](../../raw/application-user-guide/llm-application/single-agent-application.md)
 - [高代码应用](../../raw/application-user-guide/llm-application/rich-code-application.md)
 - [工作流应用](../../raw/application-user-guide/llm-application/workflow-application.md)

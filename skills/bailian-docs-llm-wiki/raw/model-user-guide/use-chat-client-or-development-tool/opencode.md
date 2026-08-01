@@ -220,6 +220,9 @@ OpenCode 是一款终端 AI 编程工具，可以通过按量计费、Coding Pla
         "deepseek-v4-flash": {
           "name": "DeepSeek V4 Flash"
         },
+        "deepseek-v4-flash-0731": {
+          "name": "DeepSeek V4 Flash 0731"
+        },
         "deepseek-v3.2": {
           "name": "DeepSeek V3.2"
         },
