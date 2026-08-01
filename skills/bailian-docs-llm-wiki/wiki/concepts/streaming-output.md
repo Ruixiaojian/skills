@@ -1,48 +1,41 @@
 # 流式输出
 
-流式输出（Streaming Output）是指模型在生成过程中，将结果以增量、分块的方式实时返回给客户端，而非等待全部内容生成完毕后一次性返回。这种机制显著降低端到端延迟，提升交互实时性，是语音助手、实时翻译、长文本生成等低延迟场景的核心能力。
+流式输出（Streaming Output）是指模型服务在生成响应过程中，将结果以增量方式分块、实时推送至客户端，而非等待全部内容生成完毕后一次性返回。这种方式显著降低用户感知延迟，提升交互流畅度，是构建实时对话、语音合成、长文本生成等场景的关键能力。
 
 ## 在百炼平台的不同场景中如何使用
 
-- **Realtime API（WebSocket/WebRTC/AOQ）**：  
-  所有实时交互类模型（如 `qwen3.5-omni-realtime`、`qwen-audio-3.0-realtime-plus`）默认启用流式输出。服务端通过事件流（如 `response.text.delta`、`response.audio.delta`、`conversation.item.input_audio_transcription.delta`）持续推送文本片段或音频帧，客户端可即时渲染或播放，实现“边说边听、边生成边响应”。
-
-- **Qwen 系列文本生成 API（OpenAI/Anthropic/DashScope 兼容接口）**：  
-  通过设置 `stream: true` 参数启用流式响应。DashScope 原生接口返回 JSON Lines 格式（每行一个 JSON 对象），[OpenAI 兼容接口](openai-compatible-interface.md)返回 Server-Sent Events（SSE）格式（`data: {...}`）。适用于对话续写、代码补全、长文档摘要等需快速反馈的场景。
-
-- **ASR/TTS 模型（如 `qwen-audio-3.0-asr-flash-streaming`、`cosyvoice-v3.5-plus`）**：  
-  流式输出体现为实时语音识别结果（逐字/逐词转录）或合成音频流（PCM 分片），配合 VAD（语音活动检测）实现“说话即识别、生成即播放”的无缝体验。
-
-- **多模态理解与生成（如 `qwen3.7-plus` 图文理解、`wan2.7-i2v` 视频生成）**：  
-  当前主要支持非流式输出；但部分长视频生成任务可通过 `enable_thinking` + 结构化分步输出模拟类流式行为（如分阶段返回关键帧描述），严格意义上的流式视频帧输出暂未开放。
+- **模型 API 调用（Qwen 系列）**：通过 DashScope 原生接口或 [OpenAI 兼容接口](openai-compatible-interface.md)（`/chat/completions`）设置 `stream=true`，即可启用逐 token 流式响应；Anthropic 兼容接口也支持流式，但事件格式（如 `content_block_delta`）与前两者不兼容，需单独适配。
+- **应用调用（Application Call）**：仅 OpenAI 兼容的 Responses API 支持 `stream=true`；DashScope 原生应用接口暂不支持流式。注意：工作流类应用必须在控制台「结束节点」手动开启“流式输出”开关并重新发布，否则即使请求中设置 `stream=true` 也不会生效。
+- **实时多模态 API（Omni Realtime / Realtime API）**：原生基于 WebSocket 或 AOQ 的事件驱动架构天然支持流式。文本输出以 `response.text.delta` 事件形式推送；音频输出以 `response.audio.delta` 分片推送（PCM 格式），无需额外参数，流式为默认行为。
+- **RAG 与智能体应用**：在应用配置中启用流式后，模型生成、插件调用返回、知识库检索结果均可按阶段流式透出；配合 `incremental_output=true` 可确保每次只返回新增内容，避免重复渲染。
 
 ## 关键参数和配置
 
-- **通用开关**：  
-  - `stream: true`（所有 HTTP 类 API 必填）  
-  - WebSocket Realtime API 中无需显式设置，流式为协议默认行为  
+| 参数 | 类型 | 说明 | 默认值 | 生效范围 |
+|------|------|------|--------|----------|
+| `stream` | boolean | 启用基础流式模式（逐 token 或逐事件推送） | `false` | 所有支持流式的 API（Qwen 模型、Application Responses、Omni Realtime 等） |
+| `incremental_output` | boolean | 在 `stream=true` 基础上启用增量模式：每次仅返回本次新增内容，不重复发送历史片段 | `false` | DashScope 原生接口、Application SDK（推荐搭配 `stream=true` 使用） |
+| `modalities` | array | 实时 API 中控制输出模态，如 `["text", "audio"]` 表示同时流式返回文本与音频分片 | `["text","audio"]` | Omni Realtime / Realtime API |
 
-- **Realtime API 特有控制**：  
-  - `smooth_output`: 仅 `qwen3-omni-flash-realtime` 支持，设为 `true` 可优化口语化文本流的连贯性（减少停顿词、增强语句衔接）  
-  - `turn_detection.type`: 使用 `semantic_vad` 可提升流式响应与用户语音中断的协同精度，避免过早截断或延迟响应  
+> ⚠️ 注意事项：
+> - `stream=true` 与异步模式（如 `background=true`）互斥，不可同时启用；
+> - Anthropic Messages 接口的流式响应结构与 OpenAI/DashScope 不同，需按其规范解析 `delta.text` 字段；
+> - 工作流应用未开启节点级流式开关时，`stream=true` 请求将退化为同步响应；
+> - 流式响应的 HTTP 状态码仍为 `200 OK`，但 Content-Type 为 `text/event-stream`，需使用 EventSource 或自定义流解析器处理。
 
-- **文本生成 API 参数影响流式体验**：  
-  - `temperature` / `top_p`: 值越低，token 生成越确定，流式输出更稳定；过高可能导致首 token 延迟增加  
-  - `max_tokens`: 不影响流式触发，但限制总长度；建议结合业务预期合理设置，避免无意义截断  
-  - `enable_thinking`: 开启后流式输出包含推理步骤（`"type": "thinking"` 事件），便于前端展示思考过程  
+## 面向开发者：简洁实用建议
 
-- **注意事项**：  
-  - `qwen-omni-turbo-realtime` 等轻量模型不支持调节 `temperature`/`top_p`，流式行为由模型固有策略决定  
-  - WebSocket Realtime API 的 `modalities` 若设为 `["text"]`，则仅流式返回文本；设为 `["text","audio"]` 时，文本与音频 delta 事件并行推送，需分别处理  
-  - [OpenAI 兼容接口](openai-compatible-interface.md)的流式响应中，`delta.content` 为空字符串表示 token 生成结束；DashScope 接口则通过 `"finish_reason": "stop"` 字段标识终止  
-
-面向开发者：优先选用 WebSocket Realtime API 实现端到端流式交互；HTTP 类流式调用请务必处理好 SSE 或 JSON Lines 解析逻辑，并做好连接保活与错误重试。
+- ✅ **首选 SDK**：使用 `dashscope` SDK（v1.20.0+）调用模型或应用，内置流式迭代器（如 `for chunk in response: ...`），自动处理 SSE 解析与重连；
+- ✅ **错误处理**：流式请求可能中途断连，建议监听 `error` 事件并实现指数退避重试（SDK 已内置）；
+- ✅ **前端渲染**：对文本流，推荐累积 `chunk.output.text` 并防抖更新 UI；对音频流，可直接将 `response.audio.delta` Base64 数据喂入 Web Audio API；
+- ❌ **避免陷阱**：不要在流式响应中依赖 `response.usage`（该字段仅在最终 `done` 事件中出现）；不要在 `stream=true` 时尝试读取 `response.output.text` 全量字段（为空或不完整）。
 
 ## 关联主题页
 
+- [qwen api reference](../api/qwen-api-reference.md)
+- [application call](../api/application-call.md)
 - [omni realtime api](../api/omni-realtime-api.md)
 - [realtime api user guide](../api/realtime-api-user-guide.md)
-- [model experience](../guides/model-experience.md)
-- [qwen api reference](../api/qwen-api-reference.md)
+- [application support](../guides/application-support.md)
 
 

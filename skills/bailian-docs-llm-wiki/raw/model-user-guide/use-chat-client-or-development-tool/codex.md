@@ -82,7 +82,7 @@ Codex 是 OpenAI 推出的终端 AI 编程助手。可通过 Token Plan 个人�
 
 ### Token Plan 个人版
 
-`model`请选择[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)，可用模型包括 qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro。将`OPENAI_API_KEY`环境变量设置为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。
+`model`请选择[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)，可用模型包括 qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro、deepseek-v4-flash-0731。将`OPENAI_API_KEY`环境变量设置为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。
 
 #### Responses API（qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-plus、qwen3.6-flash）
 

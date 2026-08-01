@@ -1,58 +1,69 @@
 # [more](more.md) about models
 
-百炼平台提供多种模型调用机制与配套能力，覆盖同步/异步任务、多模态文件处理、子空间隔离、连接优化等核心场景。本文面向开发者，系统梳理关键能力、参数约束、使用方式及限制条件，帮助构建稳定、高效、安全的模型服务集成。
+百炼平台提供多种模型调用机制与配套能力，以支持不同场景下的开发需求。本文档面向开发者，系统梳理模型调用的核心能力：包括异步任务管理、子业务空间隔离、临时文件上传、连接复用优化，以及安全的临时 API Key 生成机制。所有能力均基于 DashScope 统一 API 层，需配合有效的 API Key 使用。
 
 ## 支持的模型/功能
 
-百炼支持两类主要模型调用模式：  
-- **同步模型**（如 `qwen-plus`、`qwen-vl-plus`）：适用于文本生成、多模态理解等低延迟场景，直接返回结果；  
-- **异步模型**（如图像生成 `wanx2.1-t2i-turbo`、视频生成 `wanx2.1-kf2v-plus`、语音识别 `paraformer-16k-1`）：因处理耗时长，需通过任务 ID 分步提交与查询，详见 [异步任务管理 API](../../raw/model-api-reference/more-about-models/manage-asynchronous-tasks.md)。  
+百炼平台支持同步与异步两类模型调用模式：
+- **同步模型**（如 `qwen-plus`、`qwen-vl-plus`）：适用于文本生成、多模态理解等毫秒级响应场景，直接返回结果。
+- **异步模型**（如图像生成 `wanx2.1-t2i-turbo`、视频生成 `wanx2.1-kf2v-plus`、语音识别 `paraformer-16k-1`）：因处理耗时长，采用“提交任务 → 查询状态 → 获取结果”三步流程，详见[异步任务管理 API](../../raw/model-api-reference/more-about-models/manage-asynchronous-tasks.md)。
 
-此外，平台支持：
-- **子业务空间模型调用**：通过独立 API Key 和专属 endpoint（如 `https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/...`）实现模型权限隔离与费用分账，适用于多租户或精细化管控场景；  
-- **临时文件托管**：上传本地图片/音频/视频后获取 `oss://` 格式临时 URL（有效期 48 小时），用于多模态模型输入，但**必须与目标模型严格绑定**且调用时显式添加请求头 `X-DashScope-OssResourceResolve: enable`；  
-- **事件驱动通知**：通过事件总线（EventBridge）配置 HTTP 回调或 RocketMQ 接收 `dashscope:System:AsyncTaskFinish` 事件，替代轮询，提升实时性并规避 20 QPS 限流，详见 [通过HTTP回调URL或MQ接收异步任务完成通知](../../raw/model-api-reference/more-about-models/async-task-api.md)。
+此外，平台提供以下关键辅助功能：
+- **子业务空间模型调用**：通过独立 API Key 和权限管控，实现模型访问隔离与费用分账，适用于多租户或业务线分治场景 [子业务空间的模型调用](../../raw/model-api-reference/more-about-models/model-calling-in-sub-workspace.md)。
+- **本地文件上传获取临时 URL**：为多模态模型提供 `oss://` 格式临时存储地址（有效期 48 小时），上传时必须指定目标模型且与后续调用一致 [上传本地文件获取临时URL](../../raw/model-api-reference/more-about-models/get-temporary-file-url.md)。
+- **HTTP 回调或 RocketMQ 接收异步通知**：替代轮询，通过事件总线主动推送任务完成事件（`dashscope:System:AsyncTaskFinish`），提升实时性并规避 20 QPS 限流 [通过HTTP回调URL或MQ接收异步任务完成通知](../../raw/model-api-reference/more-about-models/async-task-api.md)。
 
-> **注意**：文档 4 中提到“调用在阿里云百炼[调优](https://help.aliyun.com/zh/model-studio/model-training-overview)并部署的模型，无需模型调用授权”，但该描述与实际权限模型存在偏差——调优模型仍需在子空间中显式授权方可调用，否则返回 `Forbidden` 错误。请以控制台「模型调用权限」配置为准。
+> **注意**：文档 4 中提到“调用在阿里云百炼[调优](https://help.aliyun.com/zh/model-studio/model-training-overview)并部署的模型，无需模型调用授权”，但该描述与文档 2 中“异步任务仅支持当前 API Key 所属主账号下的任务”存在隐含冲突——调优模型实际仍受主账号及空间权限双重约束，开发者应以控制台实际配置的模型调用权限为准。
 
 ## 关键参数
 
-| 参数 | 说明 | 约束 | 来源 |
-|------|------|------|------|
-| `expire_in_seconds` | 临时 API Key 有效期 | 范围 `[1, 1800]` 秒，默认 60 秒 | [生成临时API Key](../../raw/model-api-reference/more-about-models/generate-temporary-api-key.md) |
-| `task_id` | 异步任务唯一标识 | UUID 格式字符串，由创建接口返回 | [异步任务管理 API](../../raw/model-api-reference/more-about-models/manage-asynchronous-tasks.md) |
-| `model_name` | 文件上传时指定的模型名 | 必须与后续模型调用的 `model` 字段完全一致，否则调用失败 | [上传本地文件获取临时URL](../../raw/model-api-reference/more-about-models/get-temporary-file-url.md) |
-| `connectionPoolSize`（Java） / `limit`（Python aiohttp） | 连接池最大连接数 | Java 默认 32，建议高并发场景调至 256；Python aiohttp 默认 100 | [DashScope SDK连接复用配置](../../raw/model-api-reference/more-about-models/connection-multiplexing-configuration.md) |
+| 参数 | 说明 | 示例值 | 来源 |
+|------|------|--------|------|
+| `task_id` | 异步任务唯一标识符，用于查询、取消任务 | `a8532587-xxxx-xxxx-xxxx-0c46b17950d1` | [异步任务管理 API](../../raw/model-api-reference/more-about-models/manage-asynchronous-tasks.md) |
+| `expire_in_seconds` | 临时 API Key 有效期（秒），范围 `[1, 1800]` | `1800`（30 分钟） | [生成临时API Key](../../raw/model-api-reference/more-about-models/generate-temporary-api-key.md) |
+| `model_name` | 文件上传时必需指定的模型名，决定存储策略与后续调用兼容性 | `qwen-vl-plus` | [上传本地文件获取临时URL](../../raw/model-api-reference/more-about-models/get-temporary-file-url.md) |
+| `X-DashScope-OssResourceResolve: enable` | 使用 `oss://` URL 调用模型时**必须显式声明**的请求头 | — | [上传本地文件获取临时URL](../../raw/model-api-reference/more-about-models/get-temporary-file-url.md) |
+| `connectionPoolSize`（Java） / `limit`（Python） | SDK 连接池核心参数，直接影响高并发吞吐能力 | Java 默认 `32`，推荐生产环境设为 `256`；Python `limit=100` | [DashScope SDK连接复用配置](../../raw/model-api-reference/more-about-models/connection-multiplexing-configuration.md) |
 
 ## 使用方式
 
-### 1. 安全调用（不可信环境）
-在浏览器或移动 App 中调用模型时，**禁止硬编码永久 API Key**。应通过可信后端调用 `/api/v1/tokens` 接口生成临时 Key，并设置合理 TTL（如 `expire_in_seconds=1800`），临时 Key 自动过期且不可手动删除。
+### 1. 异步任务全流程（推荐结合事件通知）
+```bash
+# 步骤1：提交异步任务（如文生图）
+curl -X POST "https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis" \
+  -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
+  -d '{"model": "wanx2.1-t2i-turbo", "input": {"prompt": "a cat"}}'
 
-### 2. 异步任务流程
-- **提交任务**：调用对应模型的异步创建接口（如文生图），获取 `task_id`；  
-- **查询结果**：轮询 `GET /api/v1/tasks/{task_id}`（≤20 QPS）或配置 EventBridge 事件通知；  
-- **批量管理**：使用 `GET /api/v1/tasks/` 按 `start_time`/`end_time`/`status`/`model_name` 等条件筛选；  
-- **取消任务**：仅支持取消 `PENDING` 状态任务，调用 `POST /api/v1/tasks/{task_id}/cancel`。
+# 步骤2：配置事件总线监听 dashscope:System:AsyncTaskFinish 事件（避免轮询）
+# 步骤3：收到通知后，用 task_id 查询结果
+curl -X GET "https://dashscope.aliyuncs.com/api/v1/tasks/{task_id}" \
+  -H "Authorization: Bearer $DASHSCOPE_API_KEY"
+```
 
-### 3. 子空间调用
-- 使用子空间专属 API Key；  
-- OpenAI 兼容模式：`base_url` 设为 `https://dashscope.aliyuncs.com/compatible-mode/v1`（北京）或 `https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`（新加坡）；  
-- DashScope 原生模式：北京地域无需 `base_url`，新加坡需设为 `https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1`。
+### 2. 子业务空间调用（OpenAI 兼容模式）
+- 使用**该子空间专属 API Key**；
+- 设置 `base_url` 为对应地域兼容地址（北京：`https://dashscope.aliyuncs.com/compatible-mode/v1`；新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`）；
+- 模型名（如 `qwen-plus`）与默认空间一致，但权限由子空间独立管控。
 
-### 4. 多模态文件处理
-- 上传前确认模型支持该文件类型（如 `qwen-vl-plus` 支持图片）；  
-- 调用 `GET /api/v1/uploads?action=getPolicy&model={model_name}` 获取上传策略；  
-- 上传后获得 `oss://` URL，**必须在模型调用请求头中添加 `X-DashScope-OssResourceResolve: enable`**。
+### 3. 临时文件上传与使用
+- 调用 `GET /api/v1/uploads?action=getPolicy&model=qwen-vl-plus` 获取上传凭证；
+- 用凭证直传 OSS，获得 `oss://...` URL；
+- 在模型请求中传入该 URL，并**必须添加 Header**：`X-DashScope-OssResourceResolve: enable`。
+
+### 4. SDK 连接复用（Java/Python）
+- **Java**：通过 `Constants.connectionConfigurations` 全局配置连接池参数（如 `connectionPoolSize=256`）；
+- **Python**：创建 `requests.Session()` 或 `aiohttp.ClientSession()` 并传入 `session=` 参数至 `Generation.call()` 或 `AioGeneration.call()`。
 
 ## 限制和注意事项
 
-- **临时文件限制**：单文件 ≤ 1 GB；上传限流 100 QPS（按主账号+模型维度）；文件仅限同主账号下使用；**严禁用于生产环境**，生产推荐使用 OSS 长期存储；  
-- **异步任务保留期**：任务完成后默认保留 24 小时（具体以各模型文档为准），超时后无法查询；  
-- **临时 API Key 权限继承**：继承生成它的永久 Key 的全部权限（含模型/知识库访问限制），请勿授予过高权限；  
-- **连接复用配置**：Java SDK 默认启用连接池，Python SDK 需显式传入 `session`；未配置时高并发易触发连接耗尽或超时；  
-- **地域一致性**：API Key、Endpoint、临时 [Token](../concepts/token.md) 生成地址必须同地域（北京/新加坡/弗吉尼亚），跨地域调用将失败；  
-- **错误码统一处理**：所有接口均遵循标准错误结构（`code`/`message`/`request_id`），请参考 [错误码文档](https://help.aliyun.com/zh/model-studio/error-code) 进行重试或告警。
+- **临时 API Key**：继承源 API Key 的全部权限（含模型/知识库访问限制），且**无法手动删除**，仅能等待 TTL 到期自动失效 [生成临时API Key](../../raw/model-api-reference/more-about-models/generate-temporary-api-key.md)。
+- **临时文件**：  
+  - 有效期严格为 **48 小时**，过期后 URL 失效；  
+  - 上传限流为 **100 QPS（按主账号+模型维度）**，**禁止用于生产环境或压测**；  
+  - 生产环境务必使用阿里云 OSS 等长期稳定存储。
+- **异步任务生命周期**：任务完成后保留 **24 小时**，超时后数据被自动清理，不可恢复。
+- **地域与 Endpoint 绑定**：北京、新加坡、弗吉尼亚等地域的 API Key **不通用**，且各 Endpoint（如 `dashscope.aliyuncs.com` vs `maas.aliyuncs.com`）不可混用，需严格匹配。
+- **连接复用生效前提**：Python SDK 的 `session` 参数仅对 `Generation.call()` 和 `AioGeneration.call()` 生效；Java SDK 的全局配置需在首次调用前完成初始化。
 
 ## 来源文档
 

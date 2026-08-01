@@ -49,7 +49,7 @@ npm install -g @anthropic-ai/claude-code
 
 ### Token Plan 个人版
 
-将 YOUR\_API\_KEY 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型：qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro。完整说明参见 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
+将 YOUR\_API\_KEY 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型：qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro、deepseek-v4-flash-0731。完整说明参见 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
 
 ```
 {
@@ -65,6 +65,8 @@ npm install -g @anthropic-ai/claude-code
     }
 }
 ```
+
+**提示**：上述配置将 `CLAUDE_CODE_SUBAGENT_MODEL` 设为 `qwen3.7-max`，该模型不享受 `qwen3.8-max-preview` 的预览期优惠，子任务（如文件搜索、Plan 模式）调用将按常规速率消耗 Credits。如需子任务同样享受预览期优惠，可将 `CLAUDE_CODE_SUBAGENT_MODEL` 改为 `qwen3.8-max-preview`。
 
 **重要**
 

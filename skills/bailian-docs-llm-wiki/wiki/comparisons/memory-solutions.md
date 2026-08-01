@@ -1,65 +1,61 @@
-# [长期记忆](../concepts/long-term-memory.md)与知识库方案对比
+# [长期记忆](../concepts/long-term-memory.md)方案对比：Long-term Memory vs Memory Library
 
-为帮助开发者在百炼平台上科学选型，本文系统对比「[长期记忆](../concepts/long-term-memory.md)（新）」与「知识库」两大核心能力组件。二者虽均基于语义检索与大模型协同，但设计目标、数据范式与适用边界存在本质差异：**[长期记忆](../concepts/long-term-memory.md)聚焦于用户级、会话级的动态行为沉淀与个性化建模；知识库则面向组织级、领域级的静态知识注入与通用问答增强**。本对比旨在厘清技术定位，避免能力误用（如用知识库管理用户偏好、用长期记忆托管产品手册），提升 RAG 与 Agent 构建效率。
+为帮助开发者在百炼平台中高效选型[长期记忆](../concepts/long-term-memory.md)能力，本文对当前两类主流方案——**Long-term Memory（新）** 与 **Memory Library（记忆库）** 进行系统性对比。二者虽同属“[长期记忆](../concepts/long-term-memory.md)”能力范畴，但在设计定位、技术实现、使用范式及适用边界上存在显著差异。本对比基于最新平台文档（2024年Q3）、API行为实测及典型工程实践整理，旨在消除概念混淆，明确各方案的适用前提与集成路径。
+
+---
 
 ## 关键维度对比
 
-| 维度 | 长期记忆（新） | 知识库 |
-|------|----------------|---------|
-| **核心定位** | 用户级个性化记忆持久化：跨会话保存用户意图、习惯、偏好、画像等动态语义片段 | 组织级领域知识注入：将私有文档、结构化数据等非结构化/半结构化内容转化为可检索的知识源 |
-| **输入格式** | • `messages`：对话数组（最多 50 条，一问一答计 2 条）<br>• `custom_content`：纯文本（≤512 字符），优先级高于 `messages`<br>• 支持自动信息提取（意图/事实/事件） | • 多格式文件：PDF/DOCX/TXT/CSV/JSON/图片/音视频（单文件 ≤150 MB）<br>• 支持元数据（metadata）字段配置（常量、变量、LLM 提取、正则等）<br>• 不支持直接传入对话流或自然语言文本 |
-| **输出格式** | • `memory_nodes`：结构化记忆片段列表，含 `content`（提炼文本）、`timestamp`、`meta_data`、`score` 等字段<br>• `user_profile`：JSON 对象，严格遵循 `profile_schema` 定义的字段结构 | • `retrieved_chunks`：非结构化文本切片列表，含 `content`、`score`、`source`（文件名/页码/时间戳）、`metadata` 等<br>• 可选封装为问答结果（含引用溯源、拒答控制、多轮规划） |
-| **支持模型** | • **无需显式指定模型**：能力由平台统一调度，底层模型对开发者透明<br>• 依赖预置记忆库与画像模板，不开放模型替换 | • **显式支持多模型协同**：<br>– 向量模型：`text-embedding-v4`、`qwen3-vl-embedding`<br>– 排序模型：`qwen3-rerank`<br>– 生成模型：`qwen3.7-plus`、`qwen2.5`、`DeepSeek-R1`、`Llama3.1` 等（含开源与第三方）<br>– 路由/改写模型：`qwen-plus` |
-| **API 端点** | • Base URL：`https://dashscope.aliyuncs.com/api/v2/apps/memory/`<br>• 标准 REST 接口：`AddMemory`、`SearchMemory`、`ListMemory`、`DeleteMemory`、`UpdateMemory`<br>• SDK 封装：`agentscope-runtime`（Python） | • Base URL：`https://dashscope.aliyuncs.com/api/v2/knowledgebase/`（需通过 `bailian20231229` SDK 或控制台调用）<br>• 核心接口：`CreateKnowledgeBase`、`UploadFile`、`IndexDocument`、`Retrieve`、`AskQuestion`<br>• 控制台服务：知识检索服务、知识问答服务（含极速/多轮模式） |
-| **计费方式** | • **按调用次数计费（QPM 限流）**：<br>– 所有接口总 QPM ≤ 3000<br>– `AddMemory` 单独限流 120 QPM<br>– `SearchMemory` 单独限流 300 QPM<br>• **无模型 [Token](../concepts/token.md) 费用**：平台内部调度，不向用户收取 embedding/rerank/generation 费用 | • **按模型 [Token](../concepts/token.md) + 资源用量计费**：<br>– Query 向量化（每请求）<br>– Rerank 排序（按召回 TopK 数量线性计费）<br>– 生成回答（按输出 [Token](../concepts/token.md) 计费）<br>– 存储费用（标准版 100 GB / 旗舰版 9,999 GB）<br>• 知识库数量越多，向量化与 rerank 成本越高 |
-| **典型场景** | • 智能客服中记住用户历史投诉与偏好（“上次说空调噪音大，这次优先查售后工单”）<br>• 个人助理中管理日程提醒、健康习惯、会议纪要摘要<br>• 多租户 SaaS 应用中隔离各租户用户画像与行为记忆<br>• OpenClaw Agent 的 `autoCapture`/`autoRecall` 自动记忆闭环 | • 企业内部知识中枢：员工手册、IT SOP、产品文档智能问答<br>• 客服知识库：FAQ、工单记录、合同条款精准检索<br>• 多模态应用：图片中文字识别+文档检索、音视频关键帧+字幕问答<br>• 数据查询：CSV 表格数据语义化搜索（如“上季度销售额超百万的华东客户”） |
-| **数据隔离粒度** | • **强租户隔离**：以 `user_id` 为唯一隔离单元，天然支持多租户<br>• 可选 `memory_library_id` + `project_id` 进行二级分组 | • **应用/空间级隔离**：知识库归属业务空间（Business Space），同一空间内共享；不原生支持 `user_id` 级别隔离（需业务层实现） |
-| **生命周期管理** | • 记忆片段默认有效期 180 天（控制台可配：7/30/180 天或永不过期）<br>• **无自动失效机制**：需业务侧主动调用 `DeleteMemory` 或设置 `expiration_days` | • 文档上传后永久有效（除非手动删除）<br>• 支持增量更新（重传同名文件触发索引刷新）<br>• 无 TTL 机制，依赖人工运维 |
-| **扩展性与定制** | • 支持自定义 `profile_schema` 定义用户画像结构<br>• 支持 `meta_data` 标签分类管理<br>• `UpdateMemory` 需直调 REST API（SDK 暂未封装） | • 支持多知识库联合检索（最多 15 个）<br>• 支持标签过滤、元数据字段精确匹配<br>• 支持 Query 改写、混合检索（向量+关键词）、Rerank 策略配置 |
+| 维度 | Long-term Memory（新） | Memory Library（记忆库） |
+|------|------------------------|---------------------------|
+| **核心定位** | **开箱即用的结构化状态管理服务**：聚焦用户级状态持久化，强调自动提取 + 严格 Schema 约束 + 全生命周期 API | **通用语义记忆基础设施**：面向 Agent 场景设计，支持记忆片段 + 用户画像双模态，强调跨会话上下文注入与插件化集成 |
+| **输入格式** | `messages`（最多50条对话消息，role/content结构）或 `custom_content`（≤512字符纯文本）；**不支持多模态输入** | 同样支持 `messages` 或 `custom_content`；OpenClaw 插件额外支持 `query` 字段用于检索；**暂未开放图像/音频等多模态输入接口** |
+| **输出格式** | `AddMemory` 返回结构化 `memory_node_id` + 提取字段（如 `intent`, `action`, `time`）；`SearchMemory` 返回带 `score` 的记忆片段数组，含 `content`, `meta_data`, `created_at` 等标准字段 | 输出结构一致，但 `SearchMemory` 在 OpenClaw 插件中默认返回 `top_k=5`，且支持 `autoRecall` 自动注入至 Prompt；用户画像查询（`GetUserProfile`）返回强 Schema 化 JSON 对象 |
+| **支持模型** | **无用户可选模型**：底层由平台统一调度专用记忆模型（非公开 ID），不可替换、不可微调 | **同 Long-term Memory（新）**：底层共享同一专用记忆模型，开发者无需指定模型参数；**不依赖外部 LLM 或向量模型** |
+| **API 端点** | 统一 Base URL：<br>`https://dashscope.aliyuncs.com/api/v2/apps/memory/`<br>端点示例：`/add`, `/search`, `/list`, `/delete` | 实际使用相同 Base URL 和端点（如 `/api/v2/apps/memory/search`）；<br>**注意**：旧文档中 `/memory_nodes/search` 已统一归并，当前以 `/search` 为准 |
+| **计费方式** | **按调用次数计费**：<br>- `AddMemory` / `SearchMemory` / `ListMemory` 等均为独立计费项<br>- 无存储容量费用，无按记忆条数/时长收费 | **同 Long-term Memory（新）**：<br>计费粒度完全一致，均为 API 调用次数计费；<br>**无额外存储费、无 Schema 管理费、无插件使用费** |
+| **用户画像（Profile）支持** | ✅ 支持，需通过 `CreateProfileSchema` 预定义模板，并在 `AddMemory` 中传入 `profile_schema` 参数启用 | ✅ 支持，且为记忆库核心能力之一；OpenClaw 插件提供 `autoCapture` 自动触发画像抽取，支持多轮渐进式填充 |
+| **记忆生命周期管理** | ❌ **无自动过期机制**：所有记忆永久有效，需业务侧主动调用 `DeleteMemory` 或通过 `UpdateMemory` 修改 `meta_data` 标记状态 | ✅ **支持配置有效期**：控制台可为记忆库设置默认规则（7/30/180天或永不过期）；`project_id` 可绑定不同过期策略，实现分场景生命周期控制 |
+| **典型场景** | - 需强一致性用户状态管理（如健康提醒、日程承诺、偏好声明）<br>- 要求字段级结构校验与 Schema 版本控制<br>- 企业级应用中需审计追踪的记忆变更 | - Agent 多轮对话中上下文延续（如客服助手记住用户问题背景）<br>- 需自动注入记忆至 Prompt 提升回复连贯性<br>- 快速搭建带记忆的智能体原型（尤其配合 OpenClaw） |
+
+---
 
 ## 适用场景建议
 
-### ✅ 选择「长期记忆（新）」当：
-- 需要**跨会话维护单个用户的个性化状态**（如偏好设置、待办事项、历史交互摘要）；
-- 构建**多租户 Agent 应用**，要求严格 `user_id` 级数据隔离与隐私合规；
-- 希望**零模型配置成本**，快速接入记忆能力（无需选 embedding/rerank/LLM）；
-- 场景以**短文本、对话驱动、高时效性**为主（如聊天机器人、个人助手）；
-- 需要**结构化用户画像**（年龄、职业、兴趣标签等）并支持后续规则化运营。
+### ✅ 推荐选用 **Long-term Memory（新）** 的场景：
+- **业务逻辑驱动的状态管理**：例如金融 App 中记录用户“已开通基金定投”，需确保字段（`product_id`, `amount`, `frequency`）严格符合 Schema，且后续可精确查询/更新；
+- **高确定性记忆写入**：当输入内容高度结构化（如表单提交、指令解析结果），希望跳过语义模糊性，直接存入标准化节点；
+- **需细粒度权限隔离**：利用 `user_id` + `memory_library_id` 实现租户级/项目级记忆空间隔离，且不依赖插件框架；
+- **规避插件耦合风险**：项目技术栈未采用 OpenClaw，或要求纯 API 集成、避免运行时依赖插件 SDK。
 
-### ✅ 选择「知识库」当：
-- 需要**注入大量静态领域知识**（如 PDF 手册、数据库表、音视频资料）；
-- 目标是**提升大模型在专业领域的回答准确性与事实性**（RAG 核心诉求）；
-- 场景涉及**复杂文档理解、多模态检索、结构化数据语义查询**；
-- 需要**精细控制检索链路**（如调整 TopK、相似度阈值、Rerank 模型、元数据过滤）；
-- 已有成熟知识管理体系，需对接**自动化知识更新流水线**（CI/CD 触发上传与索引）。
+### ✅ 推荐选用 **Memory Library（记忆库）** 的场景：
+- **Agent 原型快速验证**：使用 OpenClaw 时开启 `autoCapture`/`autoRecall`，5 分钟内即可让 Agent “记住用户上次说过的地址”；
+- **混合记忆需求**：既需非结构化事件记忆（如“用户抱怨物流慢”），又需结构化画像（如“收货城市=杭州”），且两者需协同检索；
+- **动态记忆策略**：需为不同用户群配置差异化记忆保留周期（如 VIP 用户记忆永不过期，试用用户 7 天自动清理）；
+- **团队协作开发**：前端/后端/Agent 开发者共用同一套记忆库配置，通过控制台统一管理规则与 Schema，降低联调成本。
 
-### ⚠️ 避免混用的典型误区：
-- ❌ 用知识库存储用户聊天记录 → 导致数据污染、检索噪声大、成本激增；
-- ❌ 用长期记忆托管公司产品说明书 → 无法支持全文检索、多文件关联、版本管理；
-- ❌ 在知识库中为每个用户创建独立知识库 → 违背设计初衷，严重浪费资源且不可维护；
-- ❌ 期望长期记忆支持 PDF 解析或音视频理解 → 其输入仅限文本/对话，无多模态能力。
+> ⚠️ 注意：二者**非互斥关系**。实际项目中常组合使用——例如用 Memory Library 的 `autoCapture` 捕获原始对话记忆，再用 Long-term Memory（新）的 `AddMemory` 将关键承诺（如“明天下午3点会议”）提取为强约束状态节点，实现“宽泛记忆 + 精确状态”双层架构。
+
+---
 
 ## 技术选型参考（面向开发者）
 
-| 选型考量点 | 推荐方案 | 说明 |
-|------------|----------|------|
-| **是否需要 `user_id` 级强隔离？** | 长期记忆（新） | 知识库无原生支持，需业务层封装（如前缀拼接 `user_id` 到 metadata），增加复杂度与风险 |
-| **输入数据主要是对话流还是文档文件？** | 对话流 → 长期记忆；文档 → 知识库 | 混合场景可组合使用：用长期记忆管用户状态，用知识库管领域知识 |
-| **是否关注模型成本与调用链路透明度？** | 长期记忆（新）更轻量 | 知识库涉及多个模型调用，费用与延迟随配置变化显著，需精细化压测与调优 |
-| **是否需支持多模态（图片/音视频）？** | 知识库 | 长期记忆仅支持文本输入，不处理原始媒体文件 |
-| **是否要求开箱即用的问答服务（含拒答、溯源）？** | 知识库（问答服务） | 长期记忆仅提供检索结果，生成逻辑需自行集成 LLM |
-| **是否需 OpenClaw 插件自动捕获/召回？** | 长期记忆（新） | 知识库需手动触发检索，无 `autoCapture` 机制 |
+| 选型考量 | Long-term Memory（新） | Memory Library（记忆库） |
+|----------|-------------------------|---------------------------|
+| **集成复杂度** | ★★☆☆☆（需手动管理 `user_id`/`memory_library_id`，`UpdateMemory` 需直调 HTTP） | ★★★★☆（OpenClaw 插件封装 `memory_store`/`memory_search` 工具，SDK 调用更简洁） |
+| **可控性** | ★★★★★（全 API 显式控制，无隐式行为，适合合规敏感场景） | ★★★☆☆（`autoCapture` 等自动机制提升效率，但也引入黑盒行为，需充分测试） |
+| **扩展性** | ★★★☆☆（Schema 管理能力强，但当前不支持自定义 embedding 或索引策略） | ★★★★☆（支持 `project_id` 多规则、`profile_schema` 多模板，便于演进） |
+| **调试友好性** | ★★★★☆（返回字段清晰，错误码明确，控制台支持按 `user_id` 直查记忆列表） | ★★★☆☆（OpenClaw 日志需结合插件上下文分析，纯 API 调试体验一致） |
+| **未来兼容性** | ★★★★☆（作为新一代统一记忆底座，是平台重点演进方向） | ★★★★☆（记忆库是 Memory Library 的正式命名，与 Long-term Memory（新）同属 V2 架构，非替代关系） |
 
-> **最佳实践建议**：在复杂 Agent 应用中，**二者常协同使用**——例如：  
-> 1. 用户首次咨询“我的订单状态”，`SearchMemory` 召回其历史订单 ID 与偏好（如“常用快递”）；  
-> 2. 同时调用知识库检索《订单履约 SOP》与《物流异常处理指南》；  
-> 3. 将两路结果融合注入 Prompt，由大模型生成个性化、专业化的响应。  
-> 此模式兼顾用户连续性与领域专业性，是百炼平台推荐的高阶架构范式。
+**最终建议**：  
+- 若项目已采用 OpenClaw 或计划构建标准 Agent 应用 → **优先从 Memory Library 入手**，利用其插件化能力快速落地；  
+- 若项目为传统 Web/小程序后端，需对接多个异构系统且强调状态一致性 → **首选 Long-term Memory（新）**，以 API 纯净性和 Schema 严谨性保障交付质量；  
+- 所有新项目均应**避免使用已下线的旧版 Long-term Memory（V1）**，其向量库依赖、手动 embedding、无 Schema 约束等设计已被上述两方案全面取代。
 
 ## 被对比主题页
 
 - [long term memory new](../api/long-term-memory-new.md)
-- [knowledge base](../guides/knowledge-base.md)
 - [memory library overview](../guides/memory-library-overview.md)
 
 

@@ -86,7 +86,7 @@ How do you want to hatch your bot?
 
 ### **Token Plan 个人版**
 
-将 `YOUR_API_KEY` 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型包括 qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro，完整列表请参考 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
+将 `YOUR_API_KEY` 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型包括 qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro、deepseek-v4-flash-0731，完整列表请参考 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
 
 **API Key**
 
@@ -182,6 +182,15 @@ Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/to
             "contextWindow": 163840,
             "maxTokens": 32768,
             "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
+          },
+          {
+            "id": "deepseek-v4-flash-0731",
+            "name": "deepseek-v4-flash-0731",
+            "reasoning": false,
+            "input": ["text"],
+            "contextWindow": 1000000,
+            "maxTokens": 393216,
+            "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
           }
         ]
       }
@@ -198,7 +207,8 @@ Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/to
         "bailian-token-plan/qwen3.7-plus": {},
         "bailian-token-plan/qwen3.6-flash": {},
         "bailian-token-plan/glm-5.2": {},
-        "bailian-token-plan/deepseek-v4-pro": {}
+        "bailian-token-plan/deepseek-v4-pro": {},
+        "bailian-token-plan/deepseek-v4-flash-0731": {}
       }
     }
   },
@@ -339,6 +349,15 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
                 "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
               },
               {
+                "id": "deepseek-v4-flash-0731",
+                "name": "deepseek-v4-flash-0731",
+                "reasoning": false,
+                "input": ["text"],
+                "contextWindow": 1000000,
+                "maxTokens": 393216,
+                "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
+              },
+              {
                 "id": "deepseek-v3.2",
                 "name": "deepseek-v3.2",
                 "reasoning": false,
@@ -434,6 +453,7 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
             "bailian-token-plan/qwen3.6-flash": {},
             "bailian-token-plan/deepseek-v4-pro": {},
             "bailian-token-plan/deepseek-v4-flash": {},
+            "bailian-token-plan/deepseek-v4-flash-0731": {},
             "bailian-token-plan/deepseek-v3.2": {},
             "bailian-token-plan/kimi-k2.7-code": {},
             "bailian-token-plan/kimi-k2.6": {},
@@ -566,6 +586,15 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
                 "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
               },
               {
+                "id": "deepseek-v4-flash-0731",
+                "name": "deepseek-v4-flash-0731",
+                "reasoning": false,
+                "input": ["text"],
+                "contextWindow": 1000000,
+                "maxTokens": 393216,
+                "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
+              },
+              {
                 "id": "deepseek-v3.2",
                 "name": "deepseek-v3.2",
                 "reasoning": false,
@@ -661,6 +690,7 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
             "bailian-token-plan/qwen3.6-flash": {},
             "bailian-token-plan/deepseek-v4-pro": {},
             "bailian-token-plan/deepseek-v4-flash": {},
+            "bailian-token-plan/deepseek-v4-flash-0731": {},
             "bailian-token-plan/deepseek-v3.2": {},
             "bailian-token-plan/kimi-k2.7-code": {},
             "bailian-token-plan/kimi-k2.6": {},

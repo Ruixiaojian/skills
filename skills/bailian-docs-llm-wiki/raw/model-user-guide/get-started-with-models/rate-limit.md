@@ -3911,6 +3911,12 @@ deepseek-v4-pro
 
 1,200,000
 
+deepseek-v4-flash-0731
+
+15,000
+
+1,200,000
+
 deepseek-v4-flash
 
 15,000
@@ -4027,6 +4033,14 @@ deepseek-v4-pro-us
 
 1,200,000
 
+deepseek-v4-flash-0731
+
+全球
+
+15,000
+
+1,200,000
+
 deepseek-v4-flash
 
 全球
@@ -4067,6 +4081,14 @@ deepseek-v4-pro
 
 1,200,000
 
+deepseek-v4-flash-0731
+
+国际
+
+10,000
+
+1,200,000
+
 deepseek-v4-flash
 
 国际
@@ -4100,6 +4122,14 @@ deepseek-v3.2
 > **含输入与输出Token**
 
 deepseek-v4-pro
+
+全球
+
+15,000
+
+1,200,000
+
+deepseek-v4-flash-0731
 
 全球
 
@@ -4152,6 +4182,14 @@ deepseek-v4-pro
 全球
 
 10,000
+
+1,200,000
+
+deepseek-v4-flash-0731
+
+全球
+
+15,000
 
 1,200,000
 

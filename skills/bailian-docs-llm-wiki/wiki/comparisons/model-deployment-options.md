@@ -1,77 +1,67 @@
-# 模型部署方式对比：托管服务、高并发推理与自定义部署
+# 模型部署方案对比：Model Deployment vs Model Production
 
-为帮助开发者在百炼平台上高效、可靠地将模型投入生产，本文系统对比三种主流部署路径：**托管服务（Model Production）**、**高并发推理（Model High Speed Inference）** 和 **自定义部署（Model Deployment 1）**。三者定位不同——托管服务聚焦“从微调到上线”的端到端闭环；高并发推理面向已上线模型的**性能保障与加速**；自定义部署则提供**资源隔离、精细调控与多计费模式**的生产级服务化能力。本对比旨在厘清能力边界、明确适用条件，辅助技术选型决策。
+本文旨在帮助开发者清晰区分百炼平台中两类核心模型服务化能力——**Model Deployment（模型部署）** 与 **Model Production（模型生产）**，明确其定位、能力边界与适用阶段。随着大模型应用从实验验证走向规模化落地，选择恰当的服务化路径直接影响开发效率、资源成本与运维复杂度。本文基于当前平台能力（截至 2025 年 Q3），从技术实现、模型支持、计费逻辑与生命周期管理等维度进行客观对比，为工程化选型提供依据。
 
----
+## 关键维度对比
 
-## 关键维度对比表
+| 维度 | Model Deployment | Model Production |
+|------|------------------|------------------|
+| **定位与目标** | 快速将**已有模型**（预置或 LoRA）转化为高可用推理服务，聚焦“即开即用”的服务化交付 | 支持从**训练/微调到上线**的端到端闭环，聚焦“定制化模型诞生→稳定服务”的全生命周期管理 |
+| **输入格式** | • 预置模型 ID（如 `qwen3-8b`）<br>• LoRA 模型 ZIP 包（含 `adapter_model.safetensors` + `config.json`，需满足 rank 一致性与 VIT 冻结约束） | • 微调任务输出的完整模型 ID（如 `ft-qwen2-7b-20240510-123456`）<br>• 或已导入的完整模型快照（GGUF/Safetensors 格式，需含权重、tokenizer、config） |
+| **输出格式** | 统一 RESTful API 接口（`/v1/chat/completions`），模型参数通过 `model=deployed_model_id` 指定；返回标准 OpenAI 兼容响应体 | 独立 HTTP endpoint URL（如 `https://dashscope.aliyuncs.com/v1/endpoint/ep-xxx/chat/completions`），需显式构造请求地址；响应结构与 Model Deployment 一致 |
+| **支持模型类型** | • ✅ 预置大模型（Qwen、DeepSeek、GLM、Kimi、CosyVoice 等）<br>• ✅ LoRA 微调模型（仅限 LoRA，不支持 QLoRA/Adapter/全参微调）<br>• ❌ 不支持 GGUF、独立 Safetensors 完整模型 | • ✅ 全参微调（SFT）产出的完整模型快照<br>• ✅ 手动导入的 GGUF / Safetensors 完整模型<br>• ⚠️ LoRA 权重需先调用 `merge_lora=true` 合并为完整模型后方可部署（不支持纯 LoRA 推理） |
+| **API 端点与调用方式** | • 创建：`POST /api/v1/deployments`（统一部署接口）<br>• 调用：复用 `/v1/chat/completions`，`model` 参数传入部署 ID<br>• SDK 支持：`Generation.call(model='deployed_id', ...)` | • 创建：`POST /v1/deployments`（需指定 `model_id` + `instance_type`）<br>• 调用：专用 endpoint URL 的 `/v1/chat/completions`（非共享路径）<br>• SDK 支持：需手动构造请求或使用 `EndpointClient` |
+| **计费方式** | • **PTU 模式**：预付费吞吐额度（input/output TPM），超限可自动溢出计费<br>• **MU 模式**：按模型单元规格（如 MU1）+ 副本数预付费，支持 PD 分离与限流<br>• **Token 计费**：按实际 token 使用量计费（仅 LoRA 模型可用，API 中 `"plan": "lora"` 实为 `"plan": "token"` 别名） | • **按实例规格计费**：基于所选 ECS 实例类型（如 `ecs.gn7i-c16g1.4xlarge`）按秒/小时计费<br>• **无预置吞吐或模型单元概念**，费用 = 实例运行时长 × 单价<br>• 微调任务单独计费（GPU 小时） |
+| **典型场景** | • 快速验证预置模型效果<br>• 为 LoRA 微调结果提供低成本、弹性推理服务<br>• 高并发稳态业务（PTU）、高性能隔离需求（MU）、A/B 测试（Token 计费） | • 需要全参微调以适配垂直领域任务（如金融问答、医疗报告生成）<br>• 要求模型完全可控、可审计、可回滚的生产环境<br>• 需灰度发布、多版本共存、细粒度实例资源控制 |
+| **扩缩容能力** | • PTU/MU 模式：支持自动扩缩容（基于负载指标）<br>• Token 计费：天然弹性，无需预设容量 | • 手动扩缩容：通过更新 deployment 的 `instance_count` 或重建 deployment 实现<br>• 无自动扩缩容能力（需自行集成监控与调度逻辑） |
+| **生命周期管理** | • 部署即服务，无版本概念；删除即释放全部资源<br>• PTU/MU 预付费资源需单独退订 | • 显式版本管理：`fine_tuning_job_id` → `model_id` → `endpoint_id`<br>• 支持灰度发布、版本回滚、多 endpoint 关联同一 model_id |
 
-| 维度 | 托管服务（`model production`） | 高并发推理（`model high speed inference`） | 自定义部署（`model deployment 1`） |
-|------|------------------------------|------------------------------------------|-----------------------------------|
-| **核心定位** | 微调模型 → 生产部署的一体化流程（含训练、版本管理、灰度发布） | 对**已存在模型服务**进行吞吐保障（TPM预留）或解码加速（Fast Mode） | 将预置/导入模型部署为**独立、资源隔离的推理服务**，支持多种资源模型 |
-| **输入格式** | 标准 OpenAI 兼容格式（`messages` 或 `prompt`/`completion`），仅支持 `.jsonl` 微调数据集 | 完全兼容标准 API 输入（`/v1/chat/completions` 等），无需格式变更 | 完全兼容标准 [OpenAI 兼容接口](../concepts/openai-compatible-interface.md)（`/v1/chat/completions`, `/v1/embeddings` 等） |
-| **输出格式** | 标准 OpenAI 兼容响应（含 `choices[0].message.content`）；不支持 Fast Mode 特有字段 | ✅ TPM 预留：同标准格式<br>✅ 快速模式：需解析 `delta.reasoning_content` + `delta.content`（流式专属结构） | 标准 OpenAI 兼容响应；MU 模式可选启用 `thinking` 流式分阶段输出 |
-| **支持模型** | ✅ 平台内微调产出的模型（`model_id`）<br>❌ 不支持任意本地模型直传；仅限官方模型库或微调结果 | ✅ 主流预置模型（Qwen、GLM、DeepSeek、Kimi 等）的**标准版**<br>✅ 快速模式仅限 `glm-5.2-fast-preview`（北京/新加坡） | ✅ 全量预置模型（Qwen3/Qwen2.5/VL/Omni、GLM-4.7/5.x、DeepSeek-v3/v4、Kimi-K2.5）<br>✅ LoRA 微调后导入模型（OSS 导入）<br>❌ 全参微调模型暂不支持 |
-| **API 端点** | `https://{workspace_id}.cn-beijing.maas.aliyuncs.com/v1/chat/completions`（部署后返回专属 `endpoint`） | ✅ TPM 预留：复用标准域名，仅需替换 `model` 参数为专属 code<br>✅ 快速模式：**必须使用专属域名** `https://{workspace_id}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1` | `https://{workspace_id}.cn-beijing.maas.aliyuncs.com/v1/chat/completions`（统一标准 endpoint，通过 `model_name` 路由） |
-| **计费方式** | ✅ 按实例规格（`instance_type`）+ 运行时长计费（秒级）<br>✅ 副本数（`replicas`）决定并发能力与成本 | ✅ TPM 预留：按**预购输入/输出 TPM（kTPM/月）** 计费，溢出部分按量计费<br>✅ 快速模式：**按实际 token 消耗计费**（无额外加速费用，但 TPS 提升间接降低单位 token 成本） | ✅ PTU 模式：按预购 `input_tpm` / `output_tpm`（token/分钟）计费，支持缓存折扣与长输入阶梯系数<br>✅ MU 模式：按 **模型单元（MU）规格 × 副本数 × 运行时长** 计费<br>✅ LoRA 模式：按 token 按量计费（仅用于效果验证） |
-| **弹性扩缩容** | ✅ 支持 `PATCH /deployments/{id}` 动态调整 `replicas`（需注意实例类型不可变） | ❌ TPM 预留：容量固定，缩容/退订产生违约金<br>❌ 快速模式：无扩缩容能力，依赖底层资源池 | ✅ PTU：额度固定，但请求自动溢出至按量（可配置）<br>✅ MU：支持动态增减 `capacity`（副本数），实时生效<br>✅ LoRA：无扩缩容概念（按量计费） |
-| **灰度与版本控制** | ✅ 原生支持 `traffic_split`（如 `{ "v1": 80, "v2": 20 }`）<br>✅ 每个微调作业生成唯一 `model_id`，部署时指定 `model_version` | ❌ 不提供灰度能力<br>❌ 无版本管理（TPM/Fast Mode 作用于模型 code 层） | ✅ MU/PTU 模式支持多 `deployed_model` 实例并存，可手动路由流量<br>❌ 无内置灰度分流 API，需业务层实现 |
-| **典型场景** | - 新模型快速验证上线<br>- 垂类任务（客服问答、合同解析）微调后一键部署<br>- 需要版本回滚与 A/B 测试的迭代场景 | - 高峰期保障核心模型不被限流（TPM 预留）<br>- AI 编程助手、Agent 多步推理等对首 token 延迟敏感场景（Fast Mode）<br>- 已上线模型的 SLA 提升需求 | - 长上下文（最高 256K）、前缀缓存等高级推理需求（PTU）<br>- 需 PD 分离、自定义 `max_context_length` 或 RPM/TPM 限流的定制化服务（MU）<br>- LoRA 微调效果快速验证（LoRA 模式） |
+## 各方案的适用场景建议
 
----
+### ✅ 优先选择 **Model Deployment** 当：
+- 你使用的是百炼平台预置的主流大模型（如 Qwen3、GLM-5），且无需修改模型结构；
+- 你已完成 LoRA 微调，并希望以最低门槛、最快速度上线推理服务（尤其适合 PoC、MVP 或轻量级业务）；
+- 业务流量可预测（选 PTU）、需强性能隔离（选 MU），或需按调用量精确分摊成本（选 Token 计费）；
+- 团队希望避免基础设施运维，专注业务逻辑与 [prompt](../guides/prompt.md) 工程。
 
-## 各方案适用场景建议
+### ✅ 优先选择 **Model Production** 当：
+- 你需要对模型进行**全参监督微调（SFT）**，例如适配私有知识库、重构输出格式、提升特定任务指标；
+- 你拥有自研或第三方训练好的完整模型（GGUF/Safetensors），要求 100% 模型自主权与可复现性；
+- 生产环境要求严格合规：需审计模型来源、支持灰度发布、保留历史版本、实现故障快速回滚；
+- 你具备一定的 DevOps 能力，愿意为更精细的资源控制（如 GPU 型号、内存配额、并发上限）承担额外配置成本。
 
-### ✅ 托管服务（`model production`）适合：
-- **快速验证闭环**：从数据准备 → 微调 → 部署 → 灰度发布的全流程自动化需求；
-- **垂类模型轻量上线**：如客服对话、知识库问答等 SFT 场景，且对长上下文、极致延迟无严苛要求；
-- **需要强版本控制与回滚能力**：当模型迭代频繁、需保障线上服务稳定性时；
-- **团队协作开发**：微调作业与部署实例绑定清晰，便于权限与生命周期管理。
+### ⚠️ 注意规避的误用情形
+- **不要用 Model Production 部署 LoRA**：其 API 要求 `model_id` 对应完整模型快照；若强行传入 LoRA ID，将报错 `Model not found`。LoRA 场景请坚定使用 Model Deployment 的 `"plan": "lora"`（即 Token 计费）模式。
+- **不要用 Model Deployment 运行全参微调模型**：它不接受 `.bin`/`.safetensors` 完整权重包，仅支持预置模型 ID 或 LoRA ZIP 包。
+- **高 SLA 要求场景慎用 Token 计费**：虽弹性好，但无容量保障，突发流量可能导致延迟升高；关键业务建议选用 PTU 或 MU 模式。
 
-> ⚠️ 注意：不适用于需独占算力、超长上下文（>32K）、或需对接已有运维体系（如 Prometheus 监控集成）的重载生产环境。
+## 技术选型决策树（面向开发者）
 
-### ✅ 高并发推理（`model high speed inference`）适合：
-- **存量服务性能加固**：已有基于百炼标准 API 的应用，需应对流量洪峰或降低首 token 延迟；
-- **SLA 敏感型业务**：如实时对话机器人、低延迟 Agent，无法容忍 429 错误或 >100ms 首 token；
-- **临时性加速需求**：快速模式处于 preview 阶段，适合技术预研与 PoC 验证；
-- **成本可控的吞吐保障**：TPM 预留提供确定性容量，避免按量计费波动风险。
+```text
+开始选型
+│
+├─ 你的模型是「预置模型」或「LoRA 微调结果」？ → 是 → 进入 Model Deployment
+│   ├─ 需要极致低成本 & 流量波动大？ → 选 Token 计费（"plan": "lora"）
+│   ├─ 流量稳定且需确定性性能？ → 选 PTU 模式（预置吞吐）
+│   └─ 需要首 Token 低延迟、自定义上下文长度或硬性限流？ → 选 MU 模式
+│
+└─ 你的模型是「全参微调产出」或「自研完整模型」？ → 是 → 进入 Model Production
+    ├─ 是否需要灰度发布/版本回滚/多 endpoint 管理？ → 是 → Model Production（必选）
+    └─ 是否需指定 GPU 型号、精确控制并发数？ → 是 → Model Production（优势明显）
+```
 
-> ⚠️ 注意：非部署方案，**必须已有可用模型服务**；快速模式地域与模型限制严格，生产环境需密切关注控制台状态更新。
-
-### ✅ 自定义部署（`model deployment 1`）适合：
-- **生产级稳定服务**：要求资源隔离、独立监控、SLA 可承诺（如 99.9% 可用性）；
-- **复杂推理策略**：需启用 Thinking 模式、自定义上下文长度、RPM/TPM 精细限流；
-- **长文本与缓存优化场景**：文档解析、法律合同审查等需 64K–256K 上下文及前缀缓存；
-- **混合计费策略**：如核心服务用 PTU 保底 + 非核心用 LoRA 按量验证；
-- **企业级治理需求**：需对接内部审批流、配额管理、审计日志等。
-
-> ⚠️ 注意：API 部署当前仅支持华北2（北京）地域；MU 模式需关注 `deploy_spec` 与模型显存匹配；LoRA 导入有严格 OSS 权限与参数约束。
-
----
-
-## 技术选型参考（面向开发者）
-
-| 你的需求 | 推荐方案 | 关键理由 |
-|----------|----------|----------|
-| “我刚微调完一个 Qwen2.5 模型，想立刻上线测试效果，并支持灰度发布” | ✅ 托管服务 | 原生支持 `model_id` 直接部署 + `traffic_split`，5 分钟完成从微调到灰度 |
-| “我们的客服机器人调用 Qwen3，高峰期常触发 429，但不想重构代码” | ✅ 高并发推理（TPM 预留） | 仅需替换 `model` 参数，零代码改造即可锁定专属吞吐，保障 SLA |
-| “AI 编程助手要求首 token <80ms，且需多步 reasoning 输出” | ✅ 高并发推理（快速模式） + ✅ 自定义部署（MU 模式） | 快速模式专为低延迟设计；若需长期稳定，MU 模式可启用 `enable_thinking` 并定制硬件规格 |
-| “要部署一个支持 200K 上下文的法律大模型，且需前缀缓存降低成本” | ✅ 自定义部署（PTU 模式） | PTU 明确支持 256K 上下文与缓存折扣，长输入阶梯系数可精准控本 |
-| “我们有多个 LoRA 微调模型，需低成本验证效果，再择优上线” | ✅ 自定义部署（LoRA 模式） | 专为 LoRA 设计，按 token 计费，无资源预留成本，验证完毕可无缝迁至 PTU/MU |
-| “需要将本地训练的全参微调模型（非 LoRA）部署上线” | ❌ 当前均不支持 | 百炼平台暂未开放全参微调模型导入能力，请关注后续 `model import` 功能演进 |
-
-> 💡 **组合使用提示**：  
-> - 托管服务部署的模型，可叠加高并发推理（如为 `qwen2.5-ft-xxx` 创建 TPM 预留）；  
-> - 自定义部署的 PTU/MU 服务，可作为托管服务的上游模型源（通过 `model_id` 引用）；  
-> - 快速模式与 TPM 预留**暂不兼容**（`glm-5.2-fast-preview` 尚未开放 TPM 预留入口），需权衡优先级。
+> 💡 **一句话总结**：  
+> **Model Deployment 是“模型即服务”（Model-as-a-Service）的极简实现，追求开箱即用与弹性经济；**  
+> **Model Production 是“模型工厂”（Model Factory）的生产流水线，追求定制自由与工程可控。**  
+> 二者非替代关系，而是互补演进：LoRA 快速验证 → Model Production 全参精调 → Model Deployment 批量交付多个 LoRA 变体，构成高效迭代闭环。
 
 ---  
-*最后更新：2024年10月 | 文档依据：百炼平台 v2.3 API 规范与用户指南*
+*最后更新：2025年7月28日*  
+*文档状态：正式版（v2.3）*
 
 ## 被对比主题页
 
-- [model production](../api/model-production.md)
-- [model high speed inference](../guides/model-high-speed-inference.md)
 - [model deployment 1](../guides/model-deployment-1.md)
+- [model production](../api/model-production.md)
 
 

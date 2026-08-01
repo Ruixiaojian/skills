@@ -8,7 +8,7 @@ Token Plan 个人版目前仅支持**华北2（北京）**地域。
 
 ## **核心特性**
 
--   **Credits 统一计量** ：通过 Credits 统一抵扣不同模型和 Harness 工具的费用。
+-   **Credits 统一计量**：通过 Credits 统一抵扣不同模型和 Harness 工具的费用。
     
 -   **多模态模型支持**：覆盖文本生成、推理、视觉理解、图片生成、语音合成、语音识别、视频生成等能力。
     
@@ -181,6 +181,10 @@ DeepSeek
 deepseek-v4-pro
 
 推理模型、文本生成
+
+deepseek-v4-flash-0731
+
+推理模型、文本生成（暂不支持 Responses API）
 
 万相
 
