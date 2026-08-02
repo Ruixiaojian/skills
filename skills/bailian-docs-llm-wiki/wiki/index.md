@@ -13,7 +13,7 @@
 - [bailian application calling](guides/bailian-application-calling.md) — 3 篇源文档
 - [data connection overview](guides/data-connection-overview.md) — 1 篇源文档
 - [fine tuning](guides/fine-tuning.md) — 9 篇源文档
-- [get started with models](guides/get-started-with-models.md) — 6 篇源文档
+- [get started with models](guides/get-started-with-models.md) — 7 篇源文档
 - [knowledge base](guides/knowledge-base.md) — 8 篇源文档
 - [llm application](guides/llm-application.md) — 6 篇源文档
 - [managed agents](guides/managed-agents.md) — 6 篇源文档
@@ -48,11 +48,11 @@
 - [knowledge](api/knowledge.md) — 1 篇源文档
 - [long term memory new](api/long-term-memory-new.md) — 1 篇源文档
 - [managed agents api](api/managed-agents-api.md) — 7 篇源文档
-- [model production](api/model-production.md) — 2 篇源文档
+- [model production](api/model-production.md) — 6 篇源文档
 - [more](api/more.md) — 3 篇源文档
 - [more about models](api/more-about-models.md) — 6 篇源文档
 - [more models](api/more-models.md) — 6 篇源文档
-- [omni realtime api](api/omni-realtime-api.md) — 6 篇源文档
+- [omni realtime api](api/omni-realtime-api.md) — 5 篇源文档
 - [preparations](api/preparations.md) — 4 篇源文档
 - [qwen api reference](api/qwen-api-reference.md) — 1 篇源文档
 - [realtime api user guide](api/realtime-api-user-guide.md) — 12 篇源文档
@@ -64,20 +64,20 @@
 
 - [OpenAI 兼容接口](concepts/openai-compatible-interface.md) — 关联 5 个主题
 - [Prompt 工程](concepts/prompt-engineering.md) — 关联 5 个主题
-- [Token 计量与管理](concepts/token.md) — 关联 6 个主题
+- [Token 计量与计费](concepts/token.md) — 关联 5 个主题
 - [函数调用](concepts/function-calling.md) — 关联 4 个主题
-- [文件输入与管理](concepts/file-input.md) — 关联 5 个主题
+- [多模态能力](concepts/multi-modal.md) — 关联 5 个主题
+- [智能体工具集成](concepts/agent-tool-integration.md) — 关联 5 个主题
 - [检索增强生成](concepts/rag.md) — 关联 5 个主题
-- [模型上下文协议（MCP）](concepts/mcp.md) — 关联 5 个主题
-- [模型部署与服务化](concepts/model-deployment.md) — 关联 5 个主题
 - [流式输出](concepts/streaming-output.md) — 关联 5 个主题
-- [长期记忆](concepts/long-term-memory.md) — 关联 4 个主题
+- [知识库](concepts/knowledge-base.md) — 关联 5 个主题
+- [长期记忆](concepts/long-term-memory.md) — 关联 5 个主题
 
 ## 对比分析
 
-- [图像生成与视频生成对比](comparisons/image-vs-video-generation.md) — 对比 2 个主题
-- [实时 API 方案对比：Omni Realtime API vs Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
-- [应用调用方式对比：Application Call vs Bailian Application Calling](comparisons/application-calling-methods.md) — 对比 2 个主题
-- [模型部署方案对比：Model Deployment vs Model Production](comparisons/model-deployment-options.md) — 对比 2 个主题
-- [长期记忆方案对比：Long-term Memory vs Memory Library](comparisons/memory-solutions.md) — 对比 2 个主题
+- [多模态生成能力对比：图像、视频与3D生成](comparisons/generation-modalities-comparison.md) — 对比 3 个主题
+- [实时 API 方案对比：Realtime API vs Omni Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
+- [模型部署方式对比：高并发推理、压缩与生产部署](comparisons/model-deployment-options.md) — 对比 3 个主题
+- [知识管理方案对比：Knowledge API vs Knowledge Base](comparisons/knowledge-solutions-comparison.md) — 对比 2 个主题
+- [长期记忆方案对比：Long Term Memory vs Memory Library](comparisons/memory-solutions-comparison.md) — 对比 2 个主题
 

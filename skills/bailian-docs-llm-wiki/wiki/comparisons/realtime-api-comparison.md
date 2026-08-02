@@ -1,73 +1,56 @@
-# 实时 API 方案对比：Omni Realtime API vs Realtime API
+# 实时 API 方案对比：Realtime API vs Omni Realtime API
 
-本文旨在帮助开发者清晰理解百炼平台两大实时交互方案的核心差异，辅助技术选型决策。随着智能语音助手、实时客服、多模态对话等场景对低延迟、高保真、多协议适配能力提出更高要求，百炼平台提供了两类定位互补的实时 API 能力：
-
-- **Omni Realtime API**：聚焦「单点极致体验」，是专为语音优先、强交互性、端到端可控的多模态对话场景深度优化的 WebSocket 原生接口；
-- **Realtime API**：面向「全场景工程落地」，提供 AOQ / WebRTC / WebSocket 三协议统一抽象，强调跨终端兼容性、弱网鲁棒性与企业级集成能力。
-
-二者并非简单替代关系，而是分层协作：Omni Realtime API 是 Realtime API 生态中面向高端语音对话场景的**旗舰子集**（当前仅通过 WebSocket 协议暴露），而 Realtime API 则是覆盖更广模型类型、更多传输协议、更强基础设施支持的**统一接入层**。
-
-以下从关键维度展开对比分析，所有信息均基于最新稳定版文档（2024 Q3）整理。
+为帮助开发者在百炼平台中高效选型，本文对两类核心实时交互能力——**Realtime API** 与 **Omni Realtime API**——进行系统性对比分析。二者均面向低延迟、多模态 AI 实时场景（如语音对话、实时翻译、音视频增强），但设计哲学、协议架构、能力边界与适用范式存在显著差异。本对比聚焦技术可行性、集成成本、功能完备性与运维复杂度，旨在为产品架构师与一线开发者提供可落地的选型决策依据。
 
 ## 关键维度对比
 
-| 维度 | Omni Realtime API | Realtime API |
-|------|-------------------|--------------|
-| **协议支持** | 仅 WebSocket（`wss://.../api-ws/v1/realtime`） | ✅ AOQ（移动端原生）、✅ WebRTC（浏览器/WebApp）、✅ WebSocket（服务端/原型验证） |
-| **输入格式** | PCM 音频（16 kHz，小端序，16-bit）；JPG/JPEG 图像（≤1080p，Base64 编码） | 同 Omni Realtime API（PCM 音频 + 图像），但 **AOQ/WebRTC 支持原生音视频轨道流**（无需手动切片/编码） |
-| **输出格式** | 文本（`response.text.delta`）、PCM 音频（24 kHz，小端序，16-bit） | 同 Omni Realtime API；AOQ/WebRTC 还支持直接接收 `MediaStreamTrack` 或 `AudioBuffer`，免解码 |
-| **支持模型** | 仅限 Omni 系列实时模型：<br>• `qwen3.5-omni-realtime`（旗舰）<br>• `qwen3-omni-flash-realtime`（高性能）<br>• `qwen-omni-turbo-realtime`（超低延迟） | 更广泛：<br>• Omni 全系列（`qwen3.5-omni-plus-realtime` 等）<br>• ASR 模型（如 `Qwen-Audio-3.0-ASR-Flash-Streaming`）<br>• TTS 模型（如 `CosyVoice`）<br>• 语音对话模型（`qwen-audio-3.0-realtime-plus`）<br>• 多模态开发套件（`multimodal-dialog`） |
-| **API 端点** | 固定 WebSocket 地址：<br>`wss://{WorkspaceId}.{region}.maas.aliyuncs.com/api-ws/v1/realtime` | 协议差异化：<br>• AOQ：`wss://.../aoq/v1/realtime`（需 `x-dashscope-rtc-transport: moq`）<br>• WebRTC：SDP 协商后动态 ICE endpoint（白名单开放）<br>• WebSocket：同 Omni 端点，但 URL 参数需显式指定 `?model=...` |
-| **计费方式** | 按 **实际音频处理时长（秒） + 文本 token 数量** 计费；语音流空闲期（idle）不计费；工具调用、搜索等扩展能力单独计费 | 同 Omni 计费逻辑，但 **按协议/模型粒度拆分计费项**：<br>• AOQ/WebRTC：含信令、媒体转发、AI 推理三部分费用<br>• WebSocket：仅 AI 推理费用（无信令/转发成本）<br>• ASR/TTS 模型独立计费单元 |
-| **VAD 能力** | • `server_vad`（声学级，全模型支持）<br>• `semantic_vad`（语义级，仅 `qwen3.5-omni-realtime` 支持）<br>• `idle_timeout_ms` 仅在 `server_vad` + 特定模型下生效 | • 默认推荐 `semantic_vad`（全协议通用）<br>• `server_vad` 可选，兼容性更广<br>• `idle_timeout_ms` 在 AOQ/WebRTC 中由 SDK 自动管理，WebSocket 下需手动配置 |
-| **工具调用（Function Calling）** | ✅ 支持，需客户端回传结果并显式触发 `response.create` | ✅ 支持（Omni 系列模型），但 ASR/TTS 等单向模型不支持 |
-| **联网搜索（Search）** | ✅ `qwen3.5-omni-realtime` 支持 `enable_search`（与 `tools` 互斥） | ✅ 同 Omni，且 `qwen3.5-omni-plus-realtime` 等模型亦支持 |
-| **声音复刻集成** | ✅ 支持，需先调用 `qwen-voice-enrollment`，再于 `session.update` 中指定 `voice` | ✅ 支持，但音色 ID 需与目标模型严格匹配（如 `Ethan` 仅适用于 `qwen3.5-omni-plus-realtime`） |
-| **SDK 与客户端控制粒度** | DashScope SDK 提供 `update_session`、`append_audio_buffer` 等细粒度方法；事件驱动模型要求开发者管理状态机 | • AOQ SDK：提供 `enableSendMediaStream()` 等媒体流生命周期控制<br>• WebRTC：依赖原生 API，控制自由度高<br>• WebSocket：与 Omni SDK 接口高度一致，但缺少 AOQ 的弱网自适应逻辑 |
-| **弱网对抗能力** | ❌ 无内置抗丢包、FEC、带宽自适应机制；依赖 WebSocket 底层 TCP 重传，易受网络抖动影响 | ✅ AOQ 协议内置前向纠错（FEC）、动态码率调整、QUIC 传输优化<br>✅ WebRTC 支持 NACK/PLI/FIR、拥塞控制（GCC）<br>❌ WebSocket 无额外优化 |
+| 维度 | Realtime API | Omni Realtime API |
+|------|--------------|-------------------|
+| **协议支持** | ✅ AOQ（原生端首选）、✅ WebRTC（浏览器端）、✅ WebSocket（服务端/原型验证）<br>• 三协议统一模型接口，能力分层明确 | ❌ 仅支持 WebSocket<br>• 纯事件驱动流式通信，无原生音视频栈封装 |
+| **输入格式** | • 音频：Opus（AOQ/WebRTC）、PCM（WebSocket）<br>• 视频：原始帧 / JPEG 编码帧（AOQ 支持自定义输入）<br>• 文本/指令：`session.update` 事件配置 | • 音频：16 kHz PCM（Base64 编码）<br>• 图像：JPG/JPEG（≤1080p，Base64 后 ≤256 KB，需在首段音频后发送）<br>• 文本/指令：标准化客户端事件（`session.update`, `input_audio_buffer.append` 等） |
+| **输出格式** | • 文本：UTF-8 字符流<br>• 音频：Opus（AOQ/WebRTC）、PCM（WebSocket）<br>• 视频：AI 生成画面原始帧或 JPEG 流（AOQ 支持自定义播放）<br>• 多模态同步：支持音画严格时间对齐（AOQ 原生支持） | • 文本：`response.text.delta` / `response.text.done`<br>• 音频：固定 24 kHz PCM（`response.audio.delta`）<br>• **不支持视频输出**<br>• 输出模态仅限 `["text"]` 或 `["text","audio"]`，不可动态切换 |
+| **支持模型** | • 全模态模型：<br> `qwen3.5-omni-plus-realtime`, `qwen3.5-omni-flash-realtime`, `qwen3.5-livetranslate-flash-realtime`<br>• 多模态套件：`multimodal-dialog`<br>• 独立 ASR/TTS：<br> ASR：`Qwen-Audio-3.0-ASR-Flash-Streaming`, `Fun-ASR-Realtime系列`<br> TTS：`CosyVoice系列`<br>• 实时语音对话模型：<br> `qwen-audio-3.0-realtime-plus`, `qwen-audio-3.0-realtime-flash` | • 专属 Omni 系列模型：<br> `qwen3.5-omni-realtime`, `qwen3.5-omni-plus-realtime`, `qwen3.5-omni-flash-realtime`, `qwen3-omni-flash-realtime`, `qwen-omni-turbo-realtime`<br>• **内置 ASR**：`qwen3-asr-flash-realtime`（不可替换）<br>• **不支持独立 TTS 模型调用**（TTS 与模型强绑定） |
+| **API 端点与接入方式** | • 协议级端点分离：<br> AOQ：`https://dashscope.aliyuncs.com/api/v1/realtime/aoq/connect`（需服务端鉴权 + 凭证下发）<br> WebRTC：白名单专属 STUN/TURN Endpoint（需商务开通）<br> WebSocket：`wss://.../api-ws/v1/realtime`（标准 WebSocket 连接）<br>• 强依赖 SDK（AOQ/WebRTC）或手动信令（WebRTC） | • 统一 WebSocket 端点：<br> `wss://{WorkspaceId}.{Region}.maas.aliyuncs.com/api-ws/v1/realtime`<br>• 无专用 SDK，基于标准 WebSocket 客户端实现<br>• 事件驱动：所有交互通过 JSON-RPC 风格事件（`session.created`, `response.audio.delta` 等）完成 |
+| **计费方式** | • 按 **会话时长（秒） + 模型调用次数** 双维度计费<br>• AOQ/WebRTC 会话按连接时长计费（含空闲期）；WebSocket 按实际媒体流传输时长计费<br>• ASR/TTS 模型单独计费（按音频时长） | • 按 **Token 数量 + 音频处理时长** 计费<br>• 输入 Token（文本+音频转录结果）、输出 Token（文本+音频合成等效 Token）均计入<br>• 音频处理时长 = ASR 耗时 + TTS 耗时（以毫秒为单位折算）<br>• **不区分协议或连接时长** |
+| **典型场景** | • 原生 App 语音助手（iOS/Android/HarmonyOS）<br>• 浏览器端实时会议增强（背景降噪、实时字幕）<br>• 工业音视频质检（多模态联合分析）<br>• 需弱网对抗、端侧音视频深度定制的高要求场景 | • Web 应用/小程序实时对话（客服、教育陪练）<br>• 快速验证多模态对话逻辑（工具调用、联网搜索）<br>• 对视频无需求、聚焦语音+文本闭环的轻量级产品<br>• 需要语义级 VAD（`semantic_vad`）或主动引导（`idle_timeout_ms`）的交互设计 |
 
 ## 适用场景建议
 
-### ✅ 选择 Omni Realtime API 当：
-- 构建**高保真语音助手或虚拟人对话系统**，对语音合成自然度、响应延迟（端到端 < 300ms）、语义 VAD 准确性有极致要求；
-- 已具备成熟的 WebSocket 客户端基础设施（如 Electron 桌面应用、Node.js 服务端代理、Flutter Web）；
-- 场景以**语音+文本为主，偶发图像理解需求**（如拍照问答），无需 ASR/TTS 独立调用；
-- 开发团队熟悉事件驱动编程模型，能自主管理 `session` 状态、音频缓冲区、工具调用闭环；
-- 业务部署环境网络质量稳定（如内网、5G 专网），无需强弱网容错。
+### ✅ 推荐选用 **Realtime API** 当：
+- 目标平台为 **原生移动应用（iOS/Android/HarmonyOS）**，且需极致低延迟（<200ms 端到端）与弱网鲁棒性；
+- 业务涉及 **独立 ASR/TTS 模型选型或混搭**（例如：用 Fun-ASR 做方言识别 + CosyVoice 做情感合成）；
+- 需要 **视频流输入/输出能力**（如 AI 教师实时生成手势动画、AR 场景叠加）；
+- 要求 **端侧音视频链路完全可控**（自定义采集、前处理、播放器集成）；
+- 已有成熟 WebRTC 基础设施，且仅需浏览器端语音对话（注意：WebRTC 不支持 ASR/TTS）。
 
-> 📌 典型客户案例：金融远程银行坐席助手、车载语音交互中控、教育类口语陪练 App（Web 端原型验证阶段）。
+### ✅ 推荐选用 **Omni Realtime API** 当：
+- 主要运行环境为 **Web 浏览器或跨平台框架（React Native/Flutter）**，追求快速上线与轻量集成；
+- 核心需求是 **语音+文本双模态闭环**，且接受统一 ASR/TTS 与模型强耦合；
+- 需要 **语义级语音活动检测（`semantic_vad`）** 或 **静默超时主动引导**（`idle_timeout_ms`）提升对话自然度；
+- 业务逻辑依赖 **工具调用（Function Calling）或联网搜索（`enable_search`）**，且使用 `qwen3.5-omni-realtime` 系列模型；
+- 团队具备 WebSocket 事件处理经验，能自主管理状态机（如 VAD 切换、工具回调、响应消费）；
+- 对视频无需求，且希望规避 Opus 插件集成、SDP 信令、ICE 连接等底层复杂度。
 
-### ✅ 选择 Realtime API 当：
-- 需要**跨平台统一接入**：同一套业务逻辑需同时支持 iOS/Android/HarmonyOS（AOQ）、Chrome/Safari（WebRTC）、以及后台服务（WebSocket）；
-- 场景涉及**混合模型调用**：例如前端用 WebRTC 实时语音对话 + 后端用 WebSocket 异步调用 ASR 分析历史录音；
-- 面向**公网弱网用户**（如三四线城市移动网络），需保障 3G/弱 Wi-Fi 下的可用性与流畅度；
-- 已有 WebRTC 基础设施（如自研音视频 SDK、SFU 架构），希望复用现有信令与媒体栈；
-- 需要**精细化媒体流控制**：如动态开关麦克风/摄像头、混音、音效注入、自定义编解码参数；
-- 企业级部署要求**API Key 严格隔离**：AOQ 强制服务端鉴权，杜绝密钥泄露风险。
+## 技术选型参考指南
 
-> 📌 典型客户案例：在线医疗问诊平台（医生端 WebRTC + 患者端 AOQ）、跨国会议实时翻译系统（ASR+TTS+Omni 多模型协同）、IoT 设备语音中控（AOQ 低功耗长连接）。
+| 选型考量项 | Realtime API | Omni Realtime API | 建议动作 |
+|------------|--------------|-------------------|----------|
+| **开发周期** | ⚠️ 中高（AOQ 需集成 SDK + Opus 插件；WebRTC 需信令开发） | ✅ 低（纯 WebSocket + JSON 事件，1 小时可跑通 Hello World） | 快速验证选 Omni；长期产品化选 Realtime |
+| **维护成本** | ⚠️ 中高（协议兼容性、SDK 版本升级、Opus 编解码适配） | ✅ 低（协议单一，事件接口稳定，无客户端依赖） | 运维人力有限时优先 Omni |
+| **功能扩展性** | ✅ 高（支持自定义音视频处理、多模型组合、协议级优化） | ⚠️ 中（模型能力由 Omni 系列限定，无法替换 ASR/TTS） | 需深度定制或未来扩展模型能力 → Realtime |
+| **跨平台覆盖** | ✅ 全平台（AOQ：原生；WebRTC：浏览器；WebSocket：通用） | ✅ 广泛（任何支持 WebSocket 的环境） | 若需同时覆盖 App + Web → Realtime（三协议）更优 |
+| **合规与安全** | ✅ 强（API Key 服务端下发、AOQ 端到端加密、Relay IP 调度） | ✅ 强（同 Realtime，基于统一鉴权体系） | 两者均满足金融/政务级安全要求 |
 
-## 技术选型参考指南（面向开发者）
+> **重要提醒**：  
+> - WebRTC 协议在 Realtime API 中 **不支持 ASR/TTS 模型**，若需浏览器端语音合成，请选择 AOQ（通过 WebView 容器）或 Omni Realtime API；  
+> - Omni Realtime API 的 `enable_search` 与 `tools` 功能 **互斥且仅限 `qwen3.5-omni-realtime` 系列**，选型时务必核对模型文档；  
+> - Realtime API 的 AOQ 方案要求客户端 **必须监听 `session.updated` 后再启用媒体流**，否则服务端拒绝接收数据——这是常见集成失败根源，请严格遵循 SDK 控制逻辑。  
 
-| 选型考量点 | 推荐方案 | 说明 |
-|------------|----------|------|
-| **首次集成，快速验证 MVP** | ✅ Omni Realtime API（WebSocket） | 无需申请白名单、无需集成 SDK、无信令协商复杂度；DashScope SDK 开箱即用，5 分钟完成 Hello World 对话 |
-| **生产环境，面向海量终端用户** | ✅ Realtime API（AOQ for Mobile / WebRTC for Web） | AOQ 提供最佳移动端体验与弱网稳定性；WebRTC 是浏览器实时交互事实标准；两者均通过百炼统一 Token 鉴权，安全合规 |
-| **需要 ASR 或 TTS 独立能力** | ✅ Realtime API | Omni Realtime API 仅封装全模态模型，不提供纯 ASR/TTS 接口；Realtime API 显式支持 `Qwen-Audio-3.0-ASR-Flash-Streaming` 等专用模型 |
-| **已有 WebRTC 技术栈** | ✅ Realtime API（WebRTC 协议） | 复用 SDP/ICE/DTLS 流程，仅需对接百炼信令服务；避免 WebSocket 封装音频帧带来的额外延迟与 CPU 开销 |
-| **定制化语音处理链路** | ✅ Realtime API（AOQ） | AOQ SDK 提供 `onAudioFrameReceived` 等底层回调，支持在发送前注入降噪、回声消除、VAD 后处理逻辑 |
-| **严格遵循最小权限原则（安全合规）** | ✅ Realtime API（AOQ） | 客户端仅持有短期 `aoqTokenForClient`，服务端完全掌控 API Key；WebSocket/AOQ 直连模式必须经后端 Token 中转，否则违反百炼安全规范 |
-
-> ⚠️ 重要提醒：  
-> - **Omni Realtime API 是 Realtime API 的子集，非并列关系**。其功能、模型、事件规范均遵循 Realtime API 总体设计，差异在于协议收敛与能力聚焦。  
-> - 所有 WebSocket 接入方式（无论 Omni 或 Realtime）**均不推荐在前端 JavaScript 中直连**（存在 API Key 泄露风险），务必通过自有服务端代理鉴权与请求转发。  
-> - 若选用 WebRTC，请提前联系商务开通 Endpoint 白名单，并预留至少 3 个工作日完成环境联调。
-
-如需进一步评估具体场景的架构适配性，建议结合 [Realtime API 概述](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-overview.md) 中的协议兼容性矩阵，或使用百炼控制台「实时 API 调试沙箱」进行多协议压测对比。
+根据您的具体技术栈、交付节奏与长期演进规划，合理匹配方案可显著降低开发风险、提升用户体验一致性。建议初期用 Omni Realtime API 快速验证核心交互逻辑，再平滑迁移至 Realtime API 承载高阶能力。
 
 ## 被对比主题页
 
-- [omni realtime api](../api/omni-realtime-api.md)
 - [realtime api user guide](../api/realtime-api-user-guide.md)
+- [omni realtime api](../api/omni-realtime-api.md)
 
 

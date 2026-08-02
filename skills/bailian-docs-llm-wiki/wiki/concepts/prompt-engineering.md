@@ -1,56 +1,45 @@
 # Prompt 工程
 
-Prompt 工程是指在百炼平台上，通过系统化设计、迭代与优化提示词（Prompt），以精准引导大语言模型行为、提升输出质量、可控性与业务适配性的工程实践。它不是一次性编写文本，而是涵盖模板构建、上下文注入、自动增强、反馈调优与效果验证的闭环方法论。
+Prompt 工程是系统性设计、管理、优化和迭代提示词（Prompt）的技术实践，旨在通过结构化模板、高质量样例、自动化增强与反馈驱动的迭代，提升大语言模型输出的准确性、一致性、可控性与业务适配度。它不是一次性编写指令，而是贯穿模型调用全生命周期的工程化方法论。
 
-## 在百炼平台的不同场景中，这个概念如何使用
+## 在百炼平台的不同场景中如何使用
 
-Prompt 工程在百炼平台中并非孤立能力，而是贯穿于多个核心场景的底层支撑能力：
+Prompt 工程能力深度集成于百炼核心应用层，按使用方式与目标可分为四类落地场景：
 
-- **Prompt 模板管理**：作为最基础的工程载体，支持预置模板（开箱即用）和自定义模板（`text-generation` / `image-generation` 类型）。开发者通过控制台或 API 创建模板，利用占位符（如 `{{topic}}`）实现动态渲染，确保提示词可复用、可版本化、可跨应用共享。
+- **模板化驱动（推荐首选）**：在智能体（Agent 2.0）、工作流（Workflow）或高代码应用中，将 Prompt 封装为可复用、可变量注入的模板（如 `{{input}}`、`{{knowledge}}`）。预置模板覆盖营销文案、摘要抽取等通用任务；自定义模板支持 ICIO/CRISPE/RASCEF 等工程框架，适用于需强格式约束或角色设定的场景（如“作为金融合规专员，逐条核对合同条款”）。  
+- **样例引导（谨慎使用）**：通过少样本（few-shot）样例库注入高质量问答对，辅助模型理解输出风格与结构。**注意：该功能已标记为“不再维护”，仅限历史存量应用；新项目请统一迁移到 RAG 表格[知识库](knowledge-base.md)替代**——RAG 提供更稳定、可检索、易更新的上下文注入机制。  
+- **自动优化（快速启动）**：对原始 Prompt（如“帮我写一封辞职信”）一键触发大模型重写，自动注入角色设定、明确输出约束、强化安全边界，并生成可直接部署的优化版本。适合无 Prompt 工程经验的开发者快速获得可用基线。  
+- **反馈优化（垂直精调）**：基于真实业务数据（5–10 条初始样例 + ≥20 条评测数据），在推理模型上多轮反思与迭代生成 Prompt。效果显著优于纯文本优化，特别适用于汽车维修话术、医疗术语解释等强领域约束任务。
 
-- **智能体（Agent 2.0）构建**：系统提示词（System Prompt）是智能体的“行为契约”，直接影响其角色设定、工具调用逻辑与思考链生成。工程重点在于明确指令边界（如“仅回答事实，不虚构”）、注入领域约束（如“输出必须为 JSON Schema 格式”），并配合 `enable_thinking` 参数可视化推理过程。
-
-- **工作流（Workflow）节点编排**：在大模型节点中，Prompt 是连接上游变量（如 `${sys.query}`、`${node1.output}`）与下游处理的关键接口。工程实践强调结构化输入（如将多轮历史拼接为 `<user>...<assistant>...` 格式）与显式格式要求（如 `请用 Markdown 表格返回结果`），保障流程确定性。
-
-- **RAG 应用优化**：Prompt 与检索结果协同工作——需设计能理解 RAG 片段语义的指令（如“基于以下参考内容回答，未提及信息请回答‘暂无依据’”），避免幻觉；同时通过评测反馈（见下文）持续优化提示词对召回片段的利用效率。
-
-- **模型/应用评测闭环**：Prompt 工程的成效需被量化验证。在 `application evaluation` 和 `model evaluation` 中，高质量 Prompt 是评测基准的前提；而评测结果（如幻觉率、格式错误率）又直接驱动 Prompt 迭代——例如，若评测发现“数字提取不准”，可针对性增强 Prompt 中的格式约束与示例。
-
-> ⚠️ 注意：已弃用的 Prompt 样例库（Few-shot）功能不再维护，新项目应统一采用 **RAG 表格库 + 结构化 Prompt 设计** 或 **反馈优化（Prompt Feedback Optimization）** 作为少样本增强替代方案。
+> ✅ 最佳实践：**优先使用模板 + RAG 替代样例库；新项目避免依赖样例库；复杂任务优先启用反馈优化验证模板效果。**
 
 ## 关键参数和配置
 
-| 参数 | 说明 | 使用建议 |
-|------|------|----------|
-| `workspaceId` | 业务空间 ID，所有 Prompt 相关 API（如 `GetPromptTemplate`）必需 | 从控制台或 OpenAPI 文档获取，华北2（北京）地域专属，不可跨域复用 |
-| `promptTemplateId` | 模板唯一标识符 | 控制台模板卡片右上角「复制 ID」，用于程序化加载与渲染 |
-| `variables` | 模板中自动解析的占位符列表（如 `["topic", "platform"]`） | 运行时传入 JSON 对象填充，无需手动声明；确保变量名与模板内 `{{xxx}}` 严格一致 |
-| `temperature` | 控制输出随机性（0.0–1.0） | 确定性任务（如结构化提取）设为 `0.0`；创意生成可设 `0.7–0.9`；智能体默认 `0.3` 平衡稳定性与灵活性 |
-| `enable_thinking` | 开启模型推理链输出（Thinking step） | 仅 Agent 2.0 及支持思考模式的模型（如 `qwen-max`）有效；调试阶段开启，生产环境可关闭以节省 Token |
-| `ReAct 最大轮次`（1–50） | 限制单次会话中工具调用总次数 | 防止死循环，推荐初设 `5–10`，根据实际工具复杂度调整 |
+| 参数 | 说明 | 使用位置 | 注意事项 |
+|------|------|----------|----------|
+| `workspaceId` | 业务空间 ID，所有 Prompt 操作必需 | 所有 API（`CreatePromptTemplate` 等）、控制台操作上下文 | 必须通过控制台获取，不可猜测；地域隔离（当前仅华北2可用） |
+| `promptTemplateId` | 模板唯一标识符 | API 调用（如 `GetPromptTemplate`）、智能体/工作流配置中引用 | 预置模板 ID 在控制台可见；自定义模板创建后生成；**不支持文生图类模板** |
+| `has_thoughts: true` | 启用样例检索调试模式 | 智能体 API 请求头或 Query 参数 | 响应中返回 `thoughts` 字段含召回详情；仅对已关联样例库的应用生效（不推荐新用） |
+| 召回片段数 | 单次请求注入的样例数量 | 智能体应用配置页（“样例库”设置） | 默认 5，上限 10；影响上下文长度与 Token 消耗 |
+| `temperature` / `max_output_tokens` | 控制输出随机性与长度 | 智能体/工作流/高代码应用的模型配置项 | 属模型级参数，非 Prompt 专属，但直接影响 Prompt 效果稳定性 |
 
-## 面向开发者，简洁实用
+## 面向开发者：简洁实用指南
 
-- **起步最快路径**：  
-  1. 控制台 → [提示词](https://bailian.console.aliyun.com/?tab=app#/component-manage/prompt) → 选一个预置模板（如“会议纪要生成”）→ 点击「创建应用」一键填充；  
-  2. 在智能体应用中，将该模板粘贴至「系统提示词」框，替换占位符后发布测试；  
-  3. 调用 SDK 时，用 `GetPromptTemplate` 获取模板内容，再 `render()` 填充变量，最后传给 `chat.completions.create()`。
-
-- **进阶提效技巧**：  
-  - ✅ **用反馈优化代替人工调参**：准备 5–10 条真实 query-answer 样例 + ≥20 条评测数据，在控制台启动「反馈优化」任务，自动生成更贴合业务的 Prompt；  
-  - ✅ **结构化优于自由发挥**：文本 Prompt 推荐「角色+任务+约束+示例」四段式（如 `你是一名电商客服，请将用户问题分类为【售后】【物流】【咨询】三类，仅输出类别名，不要解释。示例：……`）；图像/视频 Prompt 必须遵循官方公式（主体+场景+运动+风格）；  
-  - ✅ **成本敏感配置**：启用 `prompt_extend=false`（文生图）或 `stream=true`（长文本）减少冗余 Token；避免在 Prompt 中重复注入知识库内容，改用 RAG 检索片段动态注入；  
-  - ❌ **规避已弃用路径**：勿依赖样例库（`has_thoughts=true` 等参数已失效），勿在非北京地域尝试 Prompt 功能（全域报错）。
-
-- **调试黄金法则**：  
-  > 所有 Prompt 修改后，务必用 **同一组测试用例** 对比输出差异；结合 `application evaluation` 的「幻觉检测」「格式校验」评估器定位问题；优化目标始终是「降低人工修正率」，而非单纯提升模型得分。
+- **起步**：控制台 → [提示词](https://bailian.console.aliyun.com/?tab=app#/component-manage/prompt) → “复制模板”选用预置模板，再编辑变量占位符（如 `{{product_name}}`），立即用于智能体系统提示词。  
+- **进阶**：在 [反馈优化](https://bailian.console.aliyun.com/?tab=app#/component-manage/prompt/feedback-optimize) 页面上传 5 条典型输入+理想输出（如用户咨询+标准回复），搭配 20+ 条测试问题，启动优化任务，导出结果后保存为新模板。  
+- **API 集成**：调用 `CreatePromptTemplate` 创建模板，再在智能体 API 的 `input` 中通过 `{"prompt_template_id": "xxx", "variables": {"input": "xxx"}}` 注入动态内容。  
+- **避坑提醒**：  
+  - 不要手动拼接长 Prompt —— 使用模板变量；  
+  - 不要为新项目启用样例库 —— 改用 RAG 表格[知识库](knowledge-base.md)；  
+  - 文生图任务勿尝试创建 Prompt 模板 —— 当前 API 明确不支持；  
+  - 所有 Prompt 操作必须指定 `workspaceId`，否则报错 `InvalidParameter.WorkspaceIdMissing`。
 
 ## 关联主题页
 
 - [prompt](../guides/prompt.md)
 - [llm application](../guides/llm-application.md)
+- [application component api reference](../api/application-component-api-reference.md)
+- [model experience](../guides/model-experience.md)
 - [application evaluation](../guides/application-evaluation.md)
-- [model evaluation introduction](../guides/model-evaluation-introduction.md)
-- [use cases](../guides/use-cases.md)
 
 
