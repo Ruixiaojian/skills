@@ -1,54 +1,47 @@
 # model data overview
 
-百炼平台的模型数据管理功能为开发者提供统一的数据集创建、版本控制与处理能力，支撑模型调优（SFT/DPO/CPT）、评测及数据增强等核心场景。数据集分为训练集与评测集两类，支持多种导入方式与结构化处理流程，所有操作均通过控制台完成，API 仅支持引用已发布数据集 ID。数据存储默认使用平台 OSS，亦可挂载用户自有 OSS Bucket。
+百炼平台的模型数据管理功能为大模型调优与评测提供统一的数据集生命周期支持，涵盖训练集（SFT/DPO/CPT/多模态/图生视频）和评测集的创建、导入、版本管理、清洗增强及日志回流。所有数据集均支持结构化格式校验与 OSS 加密存储，核心能力聚焦于开发者实际工作流中的数据准备效率与质量保障。
 
 ## 支持的模型/功能
 
-- **训练集**：支持文本生成、多模态理解、图生视频（首帧/首尾帧）四类训练场景；对应训练方法包括 SFT（监督微调）、DPO（直接偏好优化）和 CPT（持续预训练）。其中 SFT 和 DPO 文本生成训练集支持草稿状态，CPT 及图生视频训练集创建即发布。
-- **评测集**：仅支持文本生成场景，用于模型泛化能力评估，不可用于训练。
-- **数据处理**：仅支持 SFT-文本生成训练集（ChatML 格式），提供数据清洗（如敏感信息打码、特殊内容移除）与数据增强（通用/分类/抽取/创作四类场景）能力；不支持 DPO 或多模态训练集处理 [数据清洗或增强](../../raw/model-user-guide/model-data-overview/data-processing.md)。
-- **日志回流**：将 SLS 推理日志转化为结构化 JSONL 数据集，支持训练集（SFT/DPO/CPT）与评测集（文本生成），当前仅在华北2（北京）和新加坡 Region 可用 [日志回流](../../raw/model-user-guide/model-data-overview/model-log-backflow.md)。
+- **训练集类型**：支持文本生成、多模态理解（图/视频→文本）、图生视频（首帧、首尾帧）四类训练场景；对应训练方法包括 SFT（监督微调）、DPO（直接偏好优化）、CPT（持续预训练）。其中 CPT 和图生视频训练集仅支持北京地域，且不支持草稿状态 [训练集与评测集](../../raw/model-user-guide/model-data-overview/training-set-and-evaluation-set.md)。
+- **评测集类型**：仅支持文本生成场景，可用于模型泛化能力评估，不支持 OSS 导入和 OSS 挂载存储 [训练集与评测集](../../raw/model-user-guide/model-data-overview/training-set-and-evaluation-set.md)。
+- **数据处理功能**：支持对 **SFT-文本生成训练集（ChatML 格式）** 进行数据清洗（如敏感信息打码、URL 移除）和数据增强（通用/分类/抽取/创作场景），暂不支持 DPO、多模态或 CPT 训练集 [数据清洗或增强](../../raw/model-user-guide/model-data-overview/data-processing.md)。
+- **日志回流**：支持将 SLS 推理日志转化为结构化 JSONL 数据集，适用于训练集（SFT/DPO/CPT）和评测集（文本生成），当前在华北2（北京）和新加坡 Region 可用 [日志回流](../../raw/model-user-guide/model-data-overview/model-log-backflow.md)。
 
-> **注意**：文档1称“DPO/CPT 训练方法、云存储挂载仅支持北京地域”，而文档2明确日志回流在**北京和新加坡**均可用。此处以文档2为准，新加坡 Region 同样支持日志回流创建 DPO/CPT 训练集。
+> **注意**：文档 2 明确指出“数据处理暂不支持 SFT-图片理解训练集和 DPO-文本生成训练集”，而文档 1 中“训练方法与场景”表格未排除 DPO 的数据处理可能性，此处以文档 2 的明确限制为准。
 
 ## 关键参数
 
-| 参数 | 说明 | 是否必填 | 取值范围/约束 |
-|------|------|----------|----------------|
-| 数据集名称 | 唯一标识符 | 是 | ≤50 字符，支持中文、英文、数字、下划线、连字符、点（文档1）或斜杠（文档2） |
-| 数据集类型 | 训练集 / 评测集 | 是 | 创建后不可变更 |
-| 训练场景 | 文本生成 / 多模态理解 / 图生视频（首帧/首尾帧） | 是 | 评测集仅允许“文本生成” |
-| 训练方法 | SFT / DPO / CPT | 是 | 仅训练集显示；CPT 不支持草稿与数据继承 |
-| 存储位置 | 平台 OSS 存储 / 云存储挂载（OSS 挂载） | 是 | 评测集不支持 OSS 挂载；OSS 挂载需提前添加 Bucket 标签 `bailian-datahub-access=read` [训练集与评测集](../../raw/model-user-guide/model-data-overview/training-set-and-evaluation-set.md) |
-| 导入方式 | 本地上传 / OSS 导入 / 日志回流 | 是 | 评测集不支持 OSS 导入；日志回流单次上限 10 万条，支持多次追加至不同版本 |
+| 参数 | 说明 | 约束 |
+|------|------|------|
+| **数据集名称** | 最长 50 字符，支持中文、英文、数字、下划线、连字符、点（文档 1）或斜杠（文档 3） | 创建后不可修改 |
+| **数据集类型** | `训练集` 或 `评测集`，创建后不可变更 | 必填；评测集仅支持文本生成场景 |
+| **训练场景** | 文本生成 / 多模态理解 / 图生视频（首帧）/ 图生视频（首尾帧） | 仅训练集需选；多模态/图生视频不支持草稿与数据继承 |
+| **训练方法** | SFT / DPO / CPT | CPT 仅北京地域；DPO 仅北京地域；CPT 不支持草稿 |
+| **存储位置** | `平台 OSS 存储`（免费，默认）或 `云存储挂载`（OSS 挂载） | 评测集不支持 OSS 挂载；OSS 挂载需额外授权角色 [日志回流](../../raw/model-user-guide/model-data-overview/model-log-backflow.md) |
+| **导入方式** | 本地上传 / OSS 导入 / 日志回流 | 评测集不支持 OSS 导入；日志回流单次上限 10 万条，仅支持最近 30 天日志 [训练集与评测集](../../raw/model-user-guide/model-data-overview/training-set-and-evaluation-set.md) |
 
 ## 使用方式
 
-1. **创建数据集**：进入 [数据管理 > 数据集](https://bailian.console.aliyun.com/#/efm/model_data)，点击“新增数据集”，按向导填写参数并选择导入方式。
-2. **导入数据**：
-   - *本地上传*：直接上传符合格式要求的文件（如 SFT 的 JSONL），支持多文件。
-   - *OSS 导入*：需目标 Bucket 已配置标签 `bailian-datahub-access=read`，适用于大批量数据。
-   - *日志回流*：需先完成 SLS 审计日志与推理日志授权（含服务关联角色），筛选时间范围（最近30天）、API Key 与模型后触发回流 [日志回流](../../raw/model-user-guide/model-data-overview/model-log-backflow.md)。
-3. **版本管理**：已发布数据集可通过“新增版本”迭代，支持“继承模式”（增量修改）或“新建模式”（全量替换）；CPT 训练集强制新建模式。
-4. **数据处理**：仅对 SFT-文本生成训练集（草稿或已发布版本）生效，在“数据流”页签创建清洗/增强任务，输出为独立新版本，原数据集不受影响。
+- **创建数据集**：在控制台 **数据管理 > 数据集 > 新增数据集**，按向导填写名称、类型、场景、方法、存储位置及导入方式；SFT/DPO 文本生成支持草稿，CPT/图生视频必须立即发布。
+- **数据处理（清洗/增强）**：仅限 SFT-文本生成训练集（ChatML 格式）。在 **数据管理 > 数据流** 创建自定义数据流（如先敏感信息打码、再通用增强），再通过 **任务列表 > 从数据流列表创建任务** 绑定目标训练集。处理结果自动保存为新版本，不覆盖原数据 [数据清洗或增强](../../raw/model-user-guide/model-data-overview/data-processing.md)。
+- **日志回流**：需先在 **模型监控** 页面完成审计日志 + 推理日志双授权（顺序不可逆），再通过模型监控页、模型详情页或数据管理页入口配置时间范围、API Key、模型等参数。平台存储模式下导入完成后自动发布；OSS 挂载模式需手动发布，且不支持“新增版本”操作，须通过“导入数据”页追加 [日志回流](../../raw/model-user-guide/model-data-overview/model-log-backflow.md)。
+
+> **注意**：文档 2 明确声明“阿里云百炼目前暂未提供可用的 API 进行数据处理”，而文档 1 提到“模型调优 API 可通过 `training_file_ids` 参数引用已发布的训练集 ID”。二者无冲突——前者指数据处理本身无 API，后者指下游调优可编程引用数据集 ID。
 
 ## 限制和注意事项
 
-- **地域限制**：CPT 和图生视频训练集、云存储挂载功能仅限北京地域；数据清洗与增强功能也仅限北京地域 [数据清洗或增强](../../raw/model-user-guide/model-data-overview/data-processing.md)。
-- **不可逆操作**：数据集发布后不可编辑；删除操作不可恢复，仅草稿版本可删除。
-- **格式与兼容性**：
-  - SFT 文本生成训练集必须为 ChatML 格式 JSONL；DPO/CPT/评测集格式要求详见[调优数据上传规则](https://help.aliyun.com/zh/model-studio/text-generation-tuning-data-upload-rules)。
-  - 数据处理不支持非 ChatML 格式，也不支持 DPO、多模态或 CPT 训练集。
-- **日志回流限制**：
-  - 单次任务最多回流 10 万条日志（非总量限制），可分批追加至不同版本。
-  - 预估数据量为近似值，实际结果可能存在偏差。
-  - OSS 挂载数据集不支持“新增版本”，只能通过“导入数据”页追加。
-- **计费提示**：数据管理功能本身免费，但平台 OSS 存储、OSS 挂载、SLS 日志服务等下游资源按各自产品计费。
+- **地域限制**：DPO/CPT 训练、数据清洗/增强、日志回流（部分功能）均仅限华北2（北京）；日志回流额外支持新加坡 Region [日志回流](../../raw/model-user-guide/model-data-overview/model-log-backflow.md)。
+- **格式与兼容性**：数据处理仅接受 ChatML 格式的 SFT-文本生成训练集；多模态、DPO、CPT 训练集无法使用该功能 [数据清洗或增强](../../raw/model-user-guide/model-data-overview/data-processing.md)。各场景数据格式模板请严格参照 [训练集与评测集](../../raw/model-user-guide/model-data-overview/training-set-and-evaluation-set.md) 中的“数据格式与模板”章节。
+- **不可逆操作**：数据集发布后不可编辑；删除已发布版本或整个数据集均不可恢复；日志回流任务失败后需排查原因并重试，不支持手动终止 [训练集与评测集](../../raw/model-user-guide/model-data-overview/training-set-and-evaluation-set.md)。
+- **容量与配额**：单次日志回流上限 10 万条（可多次追加）；OSS 导入需 Bucket 添加 `bailian-datahub-access=read` 标签；CPT 训练建议数据量 ≥5000 万 Token；SFT 建议 ≥1000 条样本 [训练集与评测集](../../raw/model-user-guide/model-data-overview/training-set-and-evaluation-set.md)。
+- **计费提示**：数据管理功能本身免费，但平台 OSS 存储、OSS 挂载、SLS 日志服务分别产生独立费用，详见百炼计费页面。
 
 ## 来源文档
 
 - [训练集与评测集](../../raw/model-user-guide/model-data-overview/training-set-and-evaluation-set.md)
-- [日志回流](../../raw/model-user-guide/model-data-overview/model-log-backflow.md)
 - [数据清洗或增强](../../raw/model-user-guide/model-data-overview/data-processing.md)
+- [日志回流](../../raw/model-user-guide/model-data-overview/model-log-backflow.md)
 
 

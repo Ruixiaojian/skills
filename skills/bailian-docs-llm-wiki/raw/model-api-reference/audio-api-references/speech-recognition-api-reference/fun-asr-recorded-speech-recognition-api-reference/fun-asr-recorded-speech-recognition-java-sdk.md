@@ -30,7 +30,7 @@
 
 ### **异步提交任务+同步等待任务结束**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2681245871/CAEQURiBgMCO2_fRpxkiIDBlNzI4YmMyNTU3ODRlM2Y4NjUxZWU4YmUxNjliMmFl4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2369765871/CAEQURiBgMCO2_fRpxkiIDBlNzI4YmMyNTU3ODRlM2Y4NjUxZWU4YmUxNjliMmFl4709861_20241015153444.149.svg)
 
 1.  配置[请求参数](#48ea212b1d08r)。
     
@@ -96,7 +96,7 @@ public class Main {
 
 ### **异步提交任务+异步查询任务执行结果**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2681245871/CAEQURiBgIDnxvjRpxkiIGI1NjJjOTgyNTVhMTRiMjM4OWVjYzFmZTExNGZjYzE14709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2369765871/CAEQURiBgIDnxvjRpxkiIGI1NjJjOTgyNTVhMTRiMjM4OWVjYzFmZTExNGZjYzE14709861_20241015153444.149.svg)
 
 1.  配置[请求参数](#48ea212b1d08r)。
     
@@ -248,7 +248,7 @@ List<String>
 
 音视频文件转写的URL列表，支持HTTP / HTTPS协议，单次请求仅支持1个URL。关于支持的音频格式、文件大小限制、时长限制等输入要求，请参见[音频规格](https://help.aliyun.com/zh/model-studio/asr-model/#asr-audio-spec02)。
 
-若录音文件存储在阿里云OSS，使用RESTful API方式支持使用以`oss://`为前缀的临时 URL，使用SDK方式不支持使用以 oss://为前缀的临时 URL。。
+若录音文件存储在阿里云OSS，使用RESTful API方式支持使用以`oss://`为前缀的临时 URL，使用SDK方式不支持使用以 oss://为前缀的临时 URL。
 
 **重要**
 

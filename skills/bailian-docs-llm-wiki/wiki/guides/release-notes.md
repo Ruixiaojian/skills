@@ -1,52 +1,36 @@
 # release notes
 
-本页汇总百炼平台近期模型与功能更新，涵盖新模型上线、已有模型能力增强、平台功能迭代及关键使用变更。所有信息均基于官方发布文档整理，面向开发者提供可直接落地的参考依据。建议结合具体业务场景选择适配模型，并关注下线通知以规避服务中断风险。
+百炼平台的 Release Notes 汇总了模型、功能、API 及基础设施层面的重要更新，涵盖新模型上架、能力升级、接口新增与计费策略调整等核心变更。所有变更均面向开发者设计，强调可集成性、稳定性与成本可控性。本文档按逻辑结构组织关键信息，便于快速定位适配点。
 
 ## 支持的模型/功能
 
-百炼平台持续扩展多模态模型矩阵，覆盖文本生成、语音识别与合成、图像与视频生成、3D建模、向量嵌入等核心能力域。新增模型包括：
+- **新增模型**：2026年7月起，华北2（北京）地域陆续上线多模态与垂直领域模型，包括 `qwen3.7-flash`（原生VL Flash）、`qwen-image-3.0-pro`（高精度图生图）、`qwen-audio-3.0-realtime-plus/flash`（双工语音对话）、`pixverse/pixverse-motioncontrol`（动作迁移）、`vidu/viduq3-ad_reference2video`（广告专用视频生成）等。完整清单详见 [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)。
+- **模型能力扩展**：Qwen3.7系列全面支持视觉理解与Agent混合智能体能力；GLM-5.2新增Fast模式（[GLM-5.2 Fast mode 模式降价通知](../../raw/model-user-guide/release-notes/model-release-notes.md)）；Kimi K3支持100万token上下文与原生视觉理解。
+- **平台级功能**：[知识库](../concepts/knowledge-base.md)RAG新增联合检索与混合排序（[知识检索服务上线](../../raw/model-user-guide/release-notes/model-release-notes.md)）；智能体托管运行时API正式发布（[智能体托管运行时上线](../../raw/model-user-guide/release-notes/model-release-notes.md)）；模型评测新增排行榜与BLEU_4等综合评估器。
 
-- **语音识别**：`qwen-audio-3.0-asr-flash-streaming`（实时）、`qwen-audio-3.0-asr-flash-filetrans`（非实时）等系列，支持汉语七大方言、20+地区口音、古诗词优化及30语种识别；详见[模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)。
-- **文本生成与智能体**：`qwen3.7-flash`、`kimi/kimi-k3`（100万token上下文）、`glm-5.2-fast-preview`（TPS提升1.5–2倍）等，强化长程推理、Agent执行与多模态交互能力。
-- **图像生成**：`qwen-image-3.0-pro`（支持4.5k token输入、10px小字渲染、12国语言原生字体）、`vidu/viduq3-pro-fast_img2video`（16秒视频生成）等。
-- **视频生成**：`pixverse/pixverse-motioncontrol`（动作迁移）、`vidu/viduq3-drama_reference2video`（剧集专用）、`wan2.7-r2v-2026-06-12`（5图/视频混合参考）等。
-- **向量与OCR**：`qwen3.7-text-embedding`（支持256–2560维自定义维度）、`qwen3.5-ocr`（卡证关键信息抽取显著提升）。
-- **平台级功能**：新增知识检索服务、智能体托管运行时API、Skill能力包、数据连接模块（MySQL/语雀/OSS）、多模态翻译API、模型压缩模块等；详见[模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)。
-
-> **注意**：文档1中 `kimi/kimi-k2.7-code` 与 `kimi/kimi-k2.7-code-highspeed` 均标注为“同一模型但输出速度不同”，但文档2未提及该高速版；实际调用时请以控制台或API返回的模型能力描述为准，避免依赖过时别名。
+> **注意**：文档1中“6月23日 [知识库](../concepts/knowledge-base.md)RAG 知识检索服务上线”与文档2未提及该服务API细节，实际调用需以 [知识检索服务上线](../../raw/model-user-guide/release-notes/model-release-notes.md) 文档为准；文档2中部分模型（如`qwen3.7-max-2026-06-08`）标注“增加视觉模态理解能力”，但文档1对应日期（6月9日）仅提及Skill能力包上线，未说明视觉能力同步落地，建议以模型文档ID为准验证能力可用性。
 
 ## 关键参数
 
-- **上下文长度**：`kimi/kimi-k3`、`glm-5.2`、`deepseek-v4-pro` 等主流大模型支持 **100万token**；`qwen3.7-max-2026-06-08` 新增视觉模态后仍维持同等上下文能力。
-- **向量维度**：`qwen3.7-text-embedding` 支持用户自定义 **256–2560维**，需在请求参数中显式指定 `dimension` 字段。
-- **输入限制**：
-  - 图片生成类（如 `vidu/viduq3-fast_reference2image`）支持 **0–14张参考图**；
-  - 视频生成类（如 `pixverse/pixverse-v6-r2v`）支持 **2–7张图像输入**；
-  - 实时语音对话模型（如 `qwen-audio-3.0-realtime-plus`）要求音频流符合 **16kHz单声道PCM** 格式，且端到端延迟 ≤300ms。
-- **性能指标**：`kimi-k2.7-code-highspeed` 在短上下文场景下可达 **260 Token/s**；`qwen3.7-flash` 相比 `qwen3.6-27b` 在Agentic coding任务中推理速度提升显著。
+- **上下文长度**：`kimi/kimi-k3`、`glm-5.2`、`deepseek-v4-pro` 等主流模型支持 1M token 超长上下文；`qwen-audio-3.0-asr-flash-streaming` 支持实时流式识别，`qwen3.5-ocr` 在卡证类业务场景中关键信息抽取准确率显著提升。
+- **性能指标**：`glm-5.2-fast-preview` 输出TPS达标准版1.5～2倍；`kimi-k2.7-code-highspeed` 编程场景下输出速度约180 Token/s（中位数输入）；`qwen-audio-3.0-tts-plus` 在噪声混响环境下鲁棒性增强，音质与表现力优于Flash版。
+- **部署单元**：模型部署支持按模型单元（MU）时长计费（[使用 API 部署新增预置模型与按模型单元时长计费](../../raw/model-user-guide/release-notes/model-release-notes.md)），适用于qwen-flash/qwen-plus等预置模型。
 
 ## 使用方式
 
-- **模型调用**：统一通过 DashScope API 接入，推荐使用新版 [智能体应用 DashScope API](https://help.aliyun.com/zh/model-studio/new-agent-application-api-reference)（文档2中5月11日首发），支持单轮/多轮、流式、文件问答与视觉理解。
-- **部署与调优**：
-  - 预置模型（如 `qwen-flash`）可通过 [模型部署 API](https://help.aliyun.com/zh/model-studio/model-deployment-quick-start) 快速部署，支持按模型单元（MU）时长计费；
-  - 自定义训练支持 SFT（LoRA/全参）、DPO 偏好训练（千问2.5/3系列）、强化学习（RL，邀约制）及图像/视频/视觉理解模型专项调优（文档2中5月28日、1月22日、1月21日更新）。
-- **平台能力集成**：
-  - 知识库RAG：使用新增的 [知识检索服务](https://help.aliyun.com/zh/model-studio/rag-knowledge-retrieval) 实现多知识库联合检索；
-  - 数据连接：通过 [数据连接模块](https://help.aliyun.com/zh/model-studio/data-connection) 接入 MySQL/语雀/OSS，驱动动态内容生成；
-  - Prompt工程：调用 [Prompt 工程 API](https://help.aliyun.com/zh/model-studio/api-bailian-2023-12-29-dir-prompt-engineering) 管理模板，提升提示词复用性。
+- **API调用**：文本生成API已聚合OpenAI Responses与Anthropic Messages两类接口；Responses API支持`background=true`异步调用（[Responses API 新增异步调用](../../raw/model-user-guide/release-notes/model-release-notes.md)）；异步任务可通过事件总线EventBridge接收HTTP回调或RocketMQ推送，避免轮询。
+- **SDK接入**：多模态交互开发套件提供Linux C++、Android/iOS Lite、RTOS C及Java SDK；Coding Plan支持Kilo CLI工具接入（[接入客户端开发工具新增 Kilo CLI](../../raw/model-user-guide/release-notes/model-release-notes.md)）。
+- **模型导入与调优**：国际站支持从OSS导入LoRA微调模型（[模型导入功能国际站上线](../../raw/model-user-guide/release-notes/model-release-notes.md)）；模型调优支持SFT（全参/LoRA）、DPO偏好训练、强化学习（RL，邀约制）及0代码安全合规强化。
 
 ## 限制和注意事项
 
-- **模型下线**：部分老旧模型已启动下线流程，包括 `qwen-turbo` 资源包（6月28日启动退市）、企业知识库（旧）（7月16日下线）、以及多批“老旧长尾模型”（7月9日、7月10日通知）。请查阅 [模型下线机制说明](https://help.aliyun.com/zh/model-studio/model-depreciation) 并及时迁移。
-- **地域与合规**：新增美国、德国、日本地域部署（6月12日），但部分模型（如 `fun-music-v1`）仅限中国内地调用；涉及音视频生成的服务需遵守《生成式AI服务管理暂行办法》，禁止生成违法不良信息。
-- **计费变更**：记忆库、Managed Agent、GLM-5.2 Fast mode 等已商业化（7月相关通知），免费额度用完即停功能默认启用（7月29日上线），超额调用将触发 `AllocationQuota.FreeTierOnly` 错误码。
-- **兼容性风险**：文档1中 `qwen3.7-max` 与 `qwen3.7-max-2026-05-20`、`qwen3.7-max-2026-06-08` 等版本存在能力差异（后者新增视觉模态），但文档2未明确其API兼容策略；建议优先使用带时间戳的完整模型ID（如 `qwen3.7-max-2026-06-08`）以确保行为确定性。
-- **SDK支持**：多模态交互开发套件已提供 Linux C++、Android/iOS Lite、RTOS C 及 Java SDK（文档2中2月、4月更新），但 `fun-music-preview` 等预览模型暂不保证所有SDK通道可用。
+- **模型下线**：老旧模型分批下线，含“部分老旧模型”“部分老旧长尾模型”及`qwen-turbo`资源包退市（[部分老旧模型下线通知](../../raw/model-user-guide/release-notes/model-release-notes.md)、[qwen-turbo 资源包启动退市通知](../../raw/model-user-guide/release-notes/model-release-notes.md)）。具体清单与过渡期请严格参照 [模型下线机制说明](../../raw/model-user-guide/release-notes/model-release-notes.md)。
+- **免费额度**：新人免费额度启用“用完即停”策略，耗尽后返回错误码 `AllocationQuota.FreeTierOnly`（[新增免费额度用完即停功能](../../raw/model-user-guide/release-notes/model-release-notes.md)）；团队版新增共享Credits弹性用量包，但跨坐席抵扣需配置权限。
+- **地域与兼容性**：美国、德国、日本地域于6月12日新增部署（[新增地域与部署范围](../../raw/model-user-guide/release-notes/model-release-notes.md)）；Spring AI Alibaba框架已支持调用百炼智能体应用（[Spring AI Alibaba 调用百炼应用文档上线](../../raw/model-user-guide/release-notes/model-release-notes.md)），但需确认SDK版本兼容性。
 
 ## 来源文档
 
-- [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)
 - [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)
+- [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)
 
 

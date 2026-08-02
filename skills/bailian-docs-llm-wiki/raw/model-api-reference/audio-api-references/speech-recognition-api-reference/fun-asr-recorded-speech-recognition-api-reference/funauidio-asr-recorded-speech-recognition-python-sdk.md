@@ -30,7 +30,7 @@
 
 ### **异步提交任务+同步等待任务结束**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5381245871/CAEQURiBgMCvo5zjpxkiIDQyNzUwZjVjMWM3MjQ5Nzg4ODBjNDRjNzE1ZGFiOGFj4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7269765871/CAEQURiBgMCvo5zjpxkiIDQyNzUwZjVjMWM3MjQ5Nzg4ODBjNDRjNzE1ZGFiOGFj4709861_20241015153444.149.svg)
 
 1.  调用[核心类（Transcription）](#adcb5e9bddbyq)的`async_call`方法并设置[请求参数](#340f6879fci7d)。
     
@@ -77,7 +77,7 @@ if transcribe_response.status_code == HTTPStatus.OK:
 
 ### **异步提交任务+异步查询任务执行结果**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6381245871/CAEQURiBgMCN3qzkpxkiIGE0YmU4YTdjMWNiNzRmYjJhMjFlMWZkZmFmOWQ1NmEx4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7269765871/CAEQURiBgMCN3qzkpxkiIGE0YmU4YTdjMWNiNzRmYjJhMjFlMWZkZmFmOWQ1NmEx4709861_20241015153444.149.svg)
 
 1.  调用[核心类（Transcription）](#adcb5e9bddbyq)的`async_call`方法并设置[请求参数](#340f6879fci7d)。
     
@@ -186,7 +186,7 @@ list\[str\]
 
 音视频文件转写的URL列表，支持HTTP / HTTPS协议，单次请求仅支持1个URL。关于支持的音频格式、文件大小限制、时长限制等输入要求，请参见[音频规格](https://help.aliyun.com/zh/model-studio/asr-model/#asr-audio-spec02)。
 
-若录音文件存储在阿里云OSS，使用RESTful API方式支持使用以`oss://`为前缀的临时 URL，使用SDK方式不支持使用以 oss://为前缀的临时 URL。。
+若录音文件存储在阿里云OSS，使用RESTful API方式支持使用以`oss://`为前缀的临时 URL，使用SDK方式不支持使用以 oss://为前缀的临时 URL。
 
 **重要**
 
@@ -925,7 +925,7 @@ def fetch(cls,
     "results": [
         {
             "file_url": "{YOUR_AUDIO_URL}",
-            "code": "InvalidFile.DownloadFailed",
+            "code": "FILE_DOWNLOAD_FAILED",
             "message": "The audio file cannot be downloaded.",
             "subtask_status": "FAILED"
         }
