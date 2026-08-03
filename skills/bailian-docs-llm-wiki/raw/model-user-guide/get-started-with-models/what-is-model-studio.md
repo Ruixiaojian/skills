@@ -118,7 +118,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
     
     -   千问 Max：Qwen 系列效果最好的模型，适合处理复杂、多步骤任务。
         
-        > 最新的 qwen3.7-max 推理能力全面超越前代，推荐选用。
+        > 最新的 qwen3.8-max 推理能力全面超越前代，推荐选用。
         
     -   千问 Plus：效果、速度和成本均衡，是多数场景的**推荐选择**。
         

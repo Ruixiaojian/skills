@@ -36,7 +36,7 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
 
 需先购买 Token Plan 个人版套餐且套餐处于有效期内。可在[Token Plan 个人版页面](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)购买套餐。
 
-将 `YOUR_API_KEY` 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型：qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro，完整列表请参考 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
+将 `YOUR_API_KEY` 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型：qwen3.8-max、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro，完整列表请参考 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
 
 ```
 {
@@ -50,6 +50,18 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
         "apiKey": "YOUR_API_KEY"
       },
       "models": {
+        "qwen3.8-max": {
+          "name": "Qwen3.8 Max",
+          "contextWindow": 983616,
+          "maxOutputTokens": 131072,
+          "reasoning": true,
+          "options": {
+            "thinking": {
+              "type": "enabled",
+              "budgetTokens": 262144
+            }
+          }
+        },
         "qwen3.8-max-preview": {
           "name": "Qwen3.8 Max Preview",
           "contextWindow": 983616,
@@ -58,7 +70,7 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
           "options": {
             "thinking": {
               "type": "enabled",
-              "budgetTokens": 262144
+              "budgetTokens": 99072
             }
           }
         },
@@ -133,6 +145,18 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
         "apiKey": "YOUR_API_KEY"
       },
       "models": {
+        "qwen3.8-max": {
+          "name": "Qwen3.8 Max",
+          "contextWindow": 983616,
+          "maxOutputTokens": 131072,
+          "reasoning": true,
+          "options": {
+            "thinking": {
+              "type": "enabled",
+              "budgetTokens": 262144
+            }
+          }
+        },
         "qwen3.8-max-preview": {
           "name": "Qwen3.8 Max Preview",
           "contextWindow": 983616,
@@ -141,7 +165,7 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
           "options": {
             "thinking": {
               "type": "enabled",
-              "budgetTokens": 262144
+              "budgetTokens": 99072
             }
           }
         },

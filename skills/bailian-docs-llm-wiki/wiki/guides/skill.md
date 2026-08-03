@@ -1,38 +1,45 @@
 # skill
 
-Skill 是百炼平台提供的可插拔能力包，用于扩展智能体在对话中自动处理特定任务的能力（如文件解析、数据清洗等），无需开发者编写集成代码。官方 Skill 开箱即用，自定义 Skill 支持通过 ZIP 包上传实现业务定制。其核心机制依赖 `SKILL.md` 中的语义描述驱动智能体自动识别与调用 [原文标题](../../raw/application-user-guide/skill/introduction-to-skill.md)。
+Skill 是百炼平台中用于扩展智能体任务处理能力的可复用能力包，支持在不编写代码的前提下，让智能体自动识别并执行文件处理、数据分析等专业任务。Skill 分为平台预置的官方 Skill 和用户自主开发的自定义 Skill 两类，均通过语义描述驱动调用决策。其核心机制依赖于 `SKILL.md` 中的 `description` 字段对触发条件与能力边界的精准刻画，详见 [Skill (raw/application-user-guide/skill/introduction-to-skill.md)](../../raw/application-user-guide/skill/introduction-to-skill.md)。
 
 ## 支持的模型/功能
 
-- **官方 Skill**：平台预置、统一维护的通用能力，覆盖 `.xlsx`, `.csv`, `.pdf`, `.docx` 等常见格式的读写、转换、清洗等操作，无需配置即可添加使用。最新列表请参考控制台 [Skill 管理](https://bailian.console.aliyun.com/?tab=app#/skill) 页面 [原文标题](../../raw/application-user-guide/skill/introduction-to-skill.md)。
-- **自定义 Skill**：通过上传符合规范的 ZIP 包实现，适用于行业专属逻辑（如发票结构化、医疗报告解析）。ZIP 包必须包含根目录下的 `SKILL.md` 文件，并满足命名唯一性、10 MB 大小限制等要求 [原文标题](../../raw/application-user-guide/skill/introduction-to-skill.md)。
+- **适用模型**：Skill 当前仅支持接入基于百炼大模型（如 Qwen 系列）构建的智能体应用，不适用于纯规则引擎或非百炼托管的推理服务。
+- **核心功能**：
+  - 自动识别用户意图与输入文件/数据特征，匹配最相关的 Skill；
+  - 执行文件解析（如 PDF、XLSX、CSV）、格式转换、结构化清洗、表格生成等操作；
+  - 输出结果以文件形式返回（如 `.xlsx`, `.pdf`, `.json`），不支持流式响应或中间状态交互；
+  - 官方 Skill（如 `xlsx`、`pdf-reader`）由平台统一维护，功能稳定且持续迭代；自定义 Skill 的行为完全由 ZIP 包内代码与 `SKILL.md` 描述共同决定。
+
+> **注意**：原始文档中未明确说明 Skill 是否支持多模态输入（如图像+文本混合指令），但根据 [Skill (raw/application-user-guide/skill/introduction-to-skill.md)](../../raw/application-user-guide/skill/introduction-to-skill.md) 中所有示例均为文本+文件组合，当前版本暂不支持纯图像输入触发 Skill，该限制需在开发自定义 Skill 时主动规避。
 
 ## 关键参数
 
-所有 Skill 的行为由 `SKILL.md` 中的 YAML 字段决定：
-- `name`（必填）：唯一标识符，仅支持小写字母、数字和连字符（如 `invoice-parser`）。
-- `description`（必填）：**决定调用准确性的核心字段**，需明确说明适用输入类型、支持操作、触发关键词及不适用场景。描述越精确，智能体匹配越可靠。
-
-> **注意**：`description` 不是简单功能说明，而是供大模型推理的语义指令。示例中 xlsx Skill 明确排除“产出 Word 文档”等场景，避免误触发——此设计直接影响实际调用效果，不可省略 [原文标题](../../raw/application-user-guide/skill/introduction-to-skill.md)。
+| 参数 | 位置 | 必填 | 说明 |
+|------|------|------|------|
+| `name` | `SKILL.md` 根级字段 | 是 | Skill 唯一标识符，须全小写、仅含字母/数字/连字符（如 `invoice-parser`），同一账号下不可重复。 |
+| `description` | `SKILL.md` 根级字段 | 是 | **最关键参数**：决定智能体是否调用该 Skill。必须清晰声明适用输入类型、支持操作、典型触发关键词及明确排除场景。质量直接影响召回率与误触发率。参考 [Skill (raw/application-user-guide/skill/introduction-to-skill.md)](../../raw/application-user-guide/skill/introduction-to-skill.md) 中 xlsx 示例的完整结构。 |
+| ZIP 包大小 | 上传时校验 | — | ≤ 10 MB，超限将被拒绝。 |
 
 ## 使用方式
 
-1. **添加 Skill**  
-   - 方式一：在 [Skill 管理](../../raw/application-user-guide/skill/introduction-to-skill.md) 页点击 Skill 卡片 → “添加到智能体” → 选择目标应用。  
-   - 方式二：进入智能体应用的“应用配置” → “技能”区域 → 点击 Skill 右侧“+”号添加。
+1. **创建 Skill**：
+   - 官方 Skill：直接在 [Skill 管理](https://bailian.console.aliyun.com/?tab=app#/skill) 页面查看并添加；
+   - 自定义 Skill：准备符合规范的 ZIP 包（含 `SKILL.md` 及可执行逻辑），在控制台 **组件 > Skill 管理 > 自定义 Skill** 中上传。
 
-2. **测试效果**  
-   在应用配置页右侧对话窗格中发送典型用户指令（如“把附件里的销售数据按季度汇总成表格”），观察是否自动调用对应 Skill 并返回预期结果（如生成 `.xlsx` 文件）。
+2. **添加到智能体**：
+   - 方式一：从 Skill 详情页点击 **添加到智能体**，选择目标应用；
+   - 方式二：进入智能体 **应用配置 > 技能** 区域，点击 `+` 号选择 Skill。
 
-3. **更新自定义 Skill**  
-   修改本地 ZIP 包（含更新后的 `SKILL.md`）并重新上传同名包，审查通过后已接入该 Skill 的智能体将自动升级至新版本。
+3. **测试验证**：
+   - 在应用配置页右侧对话窗格中发送典型指令（如 `帮我把附件里的 CSV 按销售额排序并导出为 Excel`），观察是否触发对应 Skill 并正确返回文件。
 
 ## 限制和注意事项
 
-- ZIP 包总大小 ≤ 10 MB；`SKILL.md` 必须位于 ZIP 根目录。
-- `name` 在当前账号下全局唯一，重复上传同名包会创建新版本而非覆盖。
-- 官方 Skill 版本由平台自动更新，无需手动操作；自定义 Skill 需主动上传新 ZIP 包触发版本迭代。
-- `description` 中若未明确排除不适用场景（如“不处理图片中的文字”），可能导致误触发——这是当前最常见的配置错误根源。
+- **版本更新行为差异**：官方 Skill 更新后，已添加的应用**自动生效最新版本**；而自定义 Skill 需重新上传同名 ZIP 包才生成新版本，且已添加的应用**立即切换至新版本**（无灰度期），请确保向后兼容。
+- **description 误写风险高**：若 `description` 中遗漏“不适用场景”或触发关键词覆盖不足，将导致 Skill 被错误调用或完全不触发。强烈建议按文档示例组织描述，避免模糊表述（如“处理数据”应改为“清洗含缺失值和重复行的 CSV 表格，并输出去重后的 .xlsx”）。
+- **调试支持有限**：当前平台不提供 Skill 运行时日志或中间变量查看能力，排查失败需依赖 `description` 语义合理性验证与 ZIP 内代码本地测试。
+- **安全约束**：自定义 Skill 运行于沙箱环境，禁止访问外网、读写宿主机文件系统、执行系统命令；ZIP 包中不得包含二进制可执行文件（`.exe`, `.so` 等），仅支持 Python 脚本及依赖（需满足 `requirements.txt` 规范）。
 
 ## 来源文档
 

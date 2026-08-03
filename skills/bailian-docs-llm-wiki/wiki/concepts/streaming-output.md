@@ -1,48 +1,53 @@
 # 流式输出
 
-流式输出（Streaming Output）是指模型服务在生成响应过程中，将结果以增量方式分块、实时返回给客户端，而非等待全部内容生成完毕后一次性返回。这种方式显著降低端到端延迟，提升用户体验，尤其适用于对话交互、实时语音合成、长文本生成等对响应速度敏感的场景。
+流式输出（Streaming Output）是指模型响应内容以增量、分块的方式持续返回，而非等待全部生成完成后再一次性返回。这种机制显著降低首 [Token](token.md) 延迟（Time to First [Token](token.md), TTFT），提升用户感知的实时性与交互自然度，是语音对话、实时翻译、智能客服等低延迟场景的核心能力支撑。
 
-## 在百炼平台的不同场景中如何使用
+## 在百炼平台的不同场景中，这个概念如何使用
 
-流式输出在百炼平台中广泛支持于多种协议与模型类型，但具体行为和字段结构因接口协议而异：
+- **Realtime API（实时多模态交互）**：  
+  所有协议（AOQ/WebRTC/WebSocket）均默认启用流式输出。文本以 `text.delta` 事件逐字/逐词推送；音频以 PCM 分片（chunk）形式持续下发（如 `audio.delta`），采样率固定为 24kHz，客户端需按序拼接并实时播放。VAD 检测（如 `semantic_vad`）与流式生成深度协同，实现“边说边想、边想边说”。
 
-- **[OpenAI 兼容接口](openai-compatible-interface.md)**（如 `/v1/chat/completions`）：启用 `stream=True` 后，服务按 token 粒度返回 `delta.content` 字段；客户端需累积拼接 `delta.content` 得到完整回复。工具调用（Function Calling）的 `delta.tool_calls` 也以流式方式逐段返回参数片段。
-  
-- **DashScope 原生接口**：通过 `stream=True` 开启流式，响应体中 `output.text` 字段为当前批次新增文本（非全量），配合 `incremental_output=True` 可确保每次仅返回新生成内容（避免重复传输历史内容）。
+- **Omni Realtime API（WebSocket 多模态实时接口）**：  
+  采用事件驱动流式模型：服务端通过 `text.delta`、`audio.delta`、`tool_call` 等事件持续推送中间结果。`smooth_output: true`（仅 `qwen3-omni-flash-realtime` 支持）可进一步优化文本流节奏，减少停顿感；`max_tokens` 仅控制最终截断，不影响流式过程。
 
-- **Realtime API（WebSocket/AOQ/WebRTC）**：底层默认采用流式事件驱动模型。文本输出通过 `content.text.delta` 事件实时推送；语音输出则以 PCM 音频帧形式分片下发（如 `audio.delta`），支持低延迟播放。VAD（语音活动检测）与 TTS 合成均依赖流式机制实现端到端实时性。
+- **Managed Agents（托管智能体）**：  
+  通过 Server-Sent Events（SSE）提供流式事件订阅（`/sessions/{id}/events/stream`）。开发者可实时监听 `message.delta`（文本增量）、`tool_call`（工具触发）、`tool_output`（工具执行结果）等事件，实现渐进式响应渲染与异步任务状态同步。
 
-- **Application/Assistant API**：`stream=True` 触发逐 token 流式响应；若同时设置 `incremental_output=True`，则每个 chunk 仅含本次生成的新 token，便于前端做精准增量渲染（如打字机效果），无需维护上下文拼接逻辑。
+- **Qwen 原生 API（DashScope 文本生成）**：  
+  通过 `stream: true` 参数启用流式响应。服务端返回 `text` 字段的增量片段（如 `"content": "今天"` → `"content": "天气"`），客户端需按 SSE 或 chunked transfer 编码解析。`incremental_output: true`（DashScope 原生接口特有）可进一步优化首 [Token](token.md) 调度，降低 TTFT。
 
-> ⚠️ 注意：流式响应不改变模型生成逻辑，仅影响传输方式；所有流式接口仍受 `max_tokens`、速率限制及配额约束。
+- **Application Monitoring（应用观测）**：  
+  流式输出行为直接影响可观测指标：`LLM` 节点的「延时」统计包含完整流式生命周期（从首 Token 到末 Token）；「Token 总量」累计所有流式分块的输入与输出 token 数，用于精准计费与性能分析。
 
 ## 关键参数和配置
 
-| 参数 | 类型 | 说明 | 生效范围 |
-|------|------|------|----------|
-| `stream` | `boolean` | 必须设为 `true` 才启用流式响应；设为 `false` 或省略时为同步阻塞模式 | 全部文本生成类接口（Qwen、Omni、Realtime、Assistant） |
-| `incremental_output` | `boolean` | 仅在 `stream=True` 时生效；启用后每个响应 chunk 仅含本次新增内容（非累计），避免客户端重复解析 | DashScope 原生接口、Application/Assistant API |
-| `modalities`（Realtime） | `array` | 指定输出模态（如 `["text", "audio"]`），决定流式事件类型（`text.delta` / `audio.delta`） | Omni Realtime、Realtime API |
+| 参数 | 所属场景 | 类型 | 说明 | 是否必需 |
+|------|----------|------|------|-----------|
+| `stream` | Qwen 原生 / OpenAI 兼容 API | boolean | 启用流式响应（返回 `text.delta` 分块） | 否（默认 `false`） |
+| `incremental_output` | DashScope 原生 API | boolean | 启用增量调度优化，显著降低首 Token 延迟 | 否（默认 `false`） |
+| `modalities: ["text","audio"]` | Realtime / Omni Realtime API | array | 指定启用文本+音频双流输出（单 `["audio"]` 不生效） | 是（若需音频） |
+| `smooth_output` | Omni Realtime（`qwen3-omni-flash-realtime`） | boolean | 平滑文本流节奏，避免短句卡顿 | 否 |
+| SSE `event` 类型 | Managed Agents | string | `message.delta`、`tool_call`、`tool_output` 等事件标识流式内容类型 | — |
 
-- **HTTP Header 要求**：使用 WebSocket 或 AOQ 协议时，`stream` 由会话初始化参数控制（如 `session.update` 中的 `stream: true`），无需额外 Header；HTTP 接口需在请求体中显式传入。
-- **SDK 支持**：DashScope Python SDK 的 `Generation.call()`、`AioGeneration.call()` 及 `RealtimeClient` 均原生支持流式；OpenAI 兼容 SDK（如 `openai>=1.0`）需使用 `stream=True` 并迭代 `response` 对象。
+> ⚠️ 注意：  
+> - Realtime API 中，音频流必须配合 `output_audio_format: "pcm"` 和 `sampleRate: 24000` 使用；  
+> - 所有流式接口均要求客户端具备分块解析与状态维护能力（如累积 `delta`、处理 `done` 事件）；  
+> - `qwen-omni-turbo-realtime` 等极低延迟模型禁用 `temperature`/`top_p` 等参数，但流式行为不受影响。
 
-## 面向开发者：简洁实用建议
+## 面向开发者，简洁实用
 
-- ✅ **必做**：始终检查响应状态码（200）和 `done` 标志（如 OpenAI 的 `finish_reason`、DashScope 的 `is_last` 字段），确认流式结束。
-- ✅ **推荐**：前端使用 `TextEncoder` + `ReadableStream` 或 `EventSource` 解析流式响应；服务端建议复用 HTTP 连接池（如 Python 的 `aiohttp.TCPConnector(limit_per_host=30)`）。
-- ⚠️ **避坑**：
-  - [OpenAI 兼容接口](openai-compatible-interface.md)返回 `delta.content` 为空字符串 `""` 表示该 chunk 无新文本（如仅触发 tool call），需跳过拼接；
-  - DashScope 原生接口流式响应中 `output.text` 可能为空，应以 `output.choices[0].finish_reason` 判定终结；
-  - `incremental_output=True` 不兼容部分旧版 SDK，请确保使用 DashScope SDK ≥ 4.28.0。
-- 🚀 **进阶**：结合 `temperature`/`top_p` 控制生成稳定性，避免流式过程中出现频繁回退或重复；对语音场景，建议搭配 `turn_detection.silence_duration_ms` 优化 VAD 敏感度，减少流式中断。
+- ✅ **必做**：启用流式时，始终监听 `done` 或 `session.ended` 事件作为流终止信号，避免遗漏结尾；  
+- ✅ **推荐**：对文本流做简单缓冲（如 50ms 合并），避免 UI 频繁重绘；对音频流严格按时间戳/采样数对齐播放；  
+- ✅ **调试**：在 Application Monitoring 中筛选 `LLM` Span，查看 `TTFT`、`ITL`（Inter-Token Latency）和 `TTL`（Time to Last Token）三指标定位流式瓶颈；  
+- ❌ **避免**：在 WebSocket 或 SSE 连接中手动 `JSON.parse()` 整个响应体——应使用标准流式解析器（如 `fetch().body.getReader()` 或 `EventSource`）；  
+- 📦 **SDK 提示**：Python `dashscope` SDK 自动处理 `stream=True` 的分块合并；Node.js SDK 需显式调用 `.on('data', ...)`；Realtime AOQ SDK 提供 `onAudioDelta` 回调直接接收 PCM buffer。
 
 ## 关联主题页
 
-- [qwen api reference](../api/qwen-api-reference.md)
-- [omni realtime api](../api/omni-realtime-api.md)
 - [realtime api user guide](../api/realtime-api-user-guide.md)
-- [application support](../guides/application-support.md)
-- [more about models](../api/more-about-models.md)
+- [omni realtime api](../api/omni-realtime-api.md)
+- [managed agents](../guides/managed-agents.md)
+- [application monitoring](../guides/application-monitoring.md)
+- [qwen api reference](../api/qwen-api-reference.md)
 
 

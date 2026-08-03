@@ -39,7 +39,7 @@ OpenAI gpt-4o-transcribe、Whisper
 -   **非实时（录音文件识别）**：基于HTTP协议，提交音频文件获取识别结果。适用于呼叫中心录音、播客和访谈等场景。推荐使用 `qwen-audio-3.0-asr-flash-filetrans`（热词、Prompt上下文、说话人分离）。
     
 
-Qwen-Audio-3.0-ASR-Flash-Streaming 和 Fun-ASR-Realtime 系列模型还支持通过 AOQ 协议接入，协议对比与选型请参见[Realtime API 概述](https://help.aliyun.com/zh/model-studio/realtime-api-overview#rtov-s02h2)。
+Qwen-Audio-3.0-ASR-Flash-Streaming 和 Fun-ASR-Realtime 系列模型还支持通过 AOQ 协议接入；如果是客户端对接，且更看重稳定的延迟、弱网下的交互能力、实时双工的降噪与回声消除，可优先考虑 AOQ，协议对比与选型请参见[Realtime API 概述](https://help.aliyun.com/zh/model-studio/realtime-api-overview#rtov-s02h2)。
 
 Qwen-Audio-3.0-ASR-Flash-Streaming、Qwen-Audio-3.0-ASR-Flash-Filetrans，以及 Fun-ASR 和 Qwen-ASR 的实时模型支持通过 DashScope SDK（Java、Python）接入。Qwen-Audio-3.0-ASR-Flash-Streaming、Qwen-Audio-3.0-ASR-Flash-Filetrans 和 Fun-ASR 模型还支持 Android、iOS SDK 接入，速度快。其他模型需根据对应的 WebSocket 或 HTTP 协议直接调用。
 

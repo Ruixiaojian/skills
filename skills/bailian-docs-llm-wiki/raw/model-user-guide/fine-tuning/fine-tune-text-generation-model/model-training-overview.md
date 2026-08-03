@@ -25,7 +25,7 @@
 
 ### **模型调优流程**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6199935871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3414275871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
 
 详情参见：
 
@@ -755,7 +755,7 @@ qwen-plus-character-2025-11-06
         
 -   **图像大小：**
     
-    -   以公网URL传入时：Qwen3.7系列、Qwen3.6系列、Qwen3.5系列单个图像不超过 `20MB`，其他模型单个图像不超过`10MB`
+    -   以公网URL传入时：Qwen3.8系列、Qwen3.7系列、Qwen3.6系列、Qwen3.5系列单个图像不超过 `20MB`，其他模型单个图像不超过`10MB`
         
     -   以本地路径传入时：单个图像不超过`10MB`
         
@@ -768,7 +768,7 @@ qwen-plus-character-2025-11-06
     
     -   以公网URL或本地路径传入时：
         
-        -   Qwen3.7-Plus：最多 2048 张
+        -   Qwen3.8-Max、Qwen3.7-Plus：最多 2048 张
             
         -   Qwen3.7-Flash、Qwen3.6-Plus、Qwen3.6-Flash、Qwen3.5-Plus、Qwen3.5-Flash、Qwen3-VL、Qwen-VL、QVQ系列：最多 256 张
             
@@ -784,7 +784,7 @@ qwen-plus-character-2025-11-06
 
 -   **以图像列表传入，图像列表的数量有如下限制：**
     
-    -   `qwen3.7`系列、`qwen3.6`系列、`qwen3.5` 系列：最少传入 4 张图片，最多 8000 张图片
+    -   `qwen3.8`系列、`qwen3.7`系列、`qwen3.6`系列、`qwen3.5` 系列：最少传入 4 张图片，最多 8000 张图片
         
     -   `qwen3-vl-plus` 系列、`qwen3-vl-flash` 系列、`qwen3-vl-235b-a22b-thinking`、`qwen3-vl-235b-a22b-instruct`：最少传入 4 张图片，最多 2000 张图片
         
@@ -798,7 +798,7 @@ qwen-plus-character-2025-11-06
         
         -   以公网URL传入时：
             
-            -   `qwen3.7`系列、`qwen3.6`系列、`qwen3.5` 系列、`Qwen3-VL`系列、`qwen-vl-max` ：不超过 2GB；
+            -   `qwen3.8`系列、`qwen3.7`系列、`qwen3.6`系列、`qwen3.5` 系列、`Qwen3-VL`系列、`qwen-vl-max` ：不超过 2GB；
                 
             -   `qwen-vl-plus` 系列、其他`qwen-vl-max`模型、`Qwen2.5-VL`开源系列及`QVQ`系列模型：不超过 1GB；
                 
@@ -813,7 +813,7 @@ qwen-plus-character-2025-11-06
         
     -   **视频时长：**
         
-        -   `qwen3.7`系列、`qwen3.6`系列、`qwen3.5` 系列：2秒至2小时；
+        -   `qwen3.8`系列、`qwen3.7`系列、`qwen3.6`系列、`qwen3.5` 系列：2秒至2小时；
             
         -   `qwen3-vl-plus`系列、`qwen3-vl-flash`系列、`qwen3-vl-235b-a22b-thinking`、`qwen3-vl-235b-a22b-instruct`：2 秒至 1 小时；
             
@@ -834,7 +834,7 @@ qwen-plus-character-2025-11-06
 
 ###### **文件传入方式**
 
--   **公网URL**：提供一个公网可访问的文件地址，支持HTTP或HTTPS协议。为获得最佳稳定性和性能，可将文件[上传至OSS](https://help.aliyun.com/zh/oss/user-guide/console-quick-start)或[上传文件获取临时URL](https://help.aliyun.com/zh/model-studio/get-temporary-file-url)，获取公网 URL。
+-   **公网URL**：提供一个公网可访问的文件地址，支持HTTP或HTTPS协议。为获得最佳稳定性和性能，可将文件[上传至OSS](https://help.aliyun.com/zh/oss/user-guide/console-quick-start/)或[上传文件获取临时URL](https://help.aliyun.com/zh/model-studio/get-temporary-file-url)，获取公网 URL。
     
     **重要**
     

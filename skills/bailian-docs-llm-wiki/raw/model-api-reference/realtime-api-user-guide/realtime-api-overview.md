@@ -125,6 +125,8 @@ qwen3.5-omni-flash-realtime
 
 支持
 
+实时语音翻译
+
 qwen3.5-livetranslate-flash-realtime
 
 支持

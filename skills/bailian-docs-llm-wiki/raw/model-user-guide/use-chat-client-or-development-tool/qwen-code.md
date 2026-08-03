@@ -65,6 +65,17 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
   "modelProviders": {
     "openai": [
       {
+        "id": "qwen3.8-max",
+        "name": "[Token Plan 个人版] qwen3.8-max",
+        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": {
+            "enable_thinking": true
+          }
+        }
+      },
+      {
         "id": "qwen3.8-max-preview",
         "name": "[Token Plan 个人版] qwen3.8-max-preview",
         "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
@@ -162,6 +173,17 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
   },
   "modelProviders": {
     "openai": [
+      {
+        "id": "qwen3.8-max",
+        "name": "[Token Plan 团队版] qwen3.8-max",
+        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": {
+            "enable_thinking": true
+          }
+        }
+      },
       {
         "id": "qwen3.8-max-preview",
         "name": "[Token Plan 团队版] qwen3.8-max-preview",
@@ -324,7 +346,7 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
     "region": "china"
   },
   "model": {
-    "name": "qwen3.8-max-preview"
+    "name": "qwen3.8-max"
   },
   "$version": 3
 }

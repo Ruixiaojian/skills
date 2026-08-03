@@ -1,36 +1,48 @@
 # release notes
 
-百炼平台的 Release Notes 汇总了模型、功能、API 及基础设施层面的重要更新，涵盖新模型上架、能力升级、接口新增与计费策略调整等核心变更。所有变更均面向开发者设计，强调可集成性、稳定性与成本可控性。本文档按逻辑结构组织关键信息，便于快速定位适配点。
+本页汇总百炼平台近期模型与功能更新的核心信息，面向开发者提供可直接用于集成与调用的关键变更。内容聚焦于新增/下线模型、平台能力升级、关键参数调整及使用约束，所有信息均源自官方发布文档，不包含营销性描述或主观评价。
 
 ## 支持的模型/功能
 
-- **新增模型**：2026年7月起，华北2（北京）地域陆续上线多模态与垂直领域模型，包括 `qwen3.7-flash`（原生VL Flash）、`qwen-image-3.0-pro`（高精度图生图）、`qwen-audio-3.0-realtime-plus/flash`（双工语音对话）、`pixverse/pixverse-motioncontrol`（动作迁移）、`vidu/viduq3-ad_reference2video`（广告专用视频生成）等。完整清单详见 [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)。
-- **模型能力扩展**：Qwen3.7系列全面支持视觉理解与Agent混合智能体能力；GLM-5.2新增Fast模式（[GLM-5.2 Fast mode 模式降价通知](../../raw/model-user-guide/release-notes/model-release-notes.md)）；Kimi K3支持100万token上下文与原生视觉理解。
-- **平台级功能**：[知识库](../concepts/knowledge-base.md)RAG新增联合检索与混合排序（[知识检索服务上线](../../raw/model-user-guide/release-notes/model-release-notes.md)）；智能体托管运行时API正式发布（[智能体托管运行时上线](../../raw/model-user-guide/release-notes/model-release-notes.md)）；模型评测新增排行榜与BLEU_4等综合评估器。
+- **新增模型**：截至2026年8月，平台新增多类旗舰模型，包括：
+  - 文本与多模态：`qwen3.8-max`（2.4万亿参数MoE架构）、`kimi/kimi-k3`（2.8万亿参数，100万token上下文）、`glm-5.2-fast-preview`（1M上下文，TPS提升1.5–2倍）；
+  - 语音识别：`qwen-audio-3.0-asr-flash-streaming`等3个ASR子型号，支持30语种、方言及古诗词优化；
+  - 图像生成：`qwen-image-3.0-pro`（支持4.5k token输入、10px小字渲染、12国语言原生字体）；
+  - 视频生成：`vidu/viduq3-pro-fast_img2video`（16秒时长）、`pixverse/pixverse-motioncontrol`（动作迁移）、`wan2.7-t2v-2026-06-12`（文生视频快照）；
+  - 向量与合成：`qwen3.7-text-embedding`（支持256–2560维自定义维度）、`qwen-audio-3.0-tts-plus`（高表现力）与`qwen-audio-3.0-tts-flash`（首包延时<200ms）。
+- **平台功能扩展**：新增知识检索服务与知识问答服务（[原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md)）、智能体托管运行时API（[原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md)）、模型导入API（[原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md)）、多模态翻译API目录（[原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md)）等关键能力。
 
-> **注意**：文档1中“6月23日 [知识库](../concepts/knowledge-base.md)RAG 知识检索服务上线”与文档2未提及该服务API细节，实际调用需以 [知识检索服务上线](../../raw/model-user-guide/release-notes/model-release-notes.md) 文档为准；文档2中部分模型（如`qwen3.7-max-2026-06-08`）标注“增加视觉模态理解能力”，但文档1对应日期（6月9日）仅提及Skill能力包上线，未说明视觉能力同步落地，建议以模型文档ID为准验证能力可用性。
+> **注意**：文档1中多次出现`kimi-k2.7-code`与`kimi/kimi-k2.7-code`两种ID写法，且`kimi/kimi-k3`在文档1中标注为“全球首个开源的3万亿级别模型”，但该表述与公开技术事实不符（Kimi K3未开源），请以[模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)中实际可用模型ID为准，避免依赖非官方口径。
 
 ## 关键参数
 
-- **上下文长度**：`kimi/kimi-k3`、`glm-5.2`、`deepseek-v4-pro` 等主流模型支持 1M token 超长上下文；`qwen-audio-3.0-asr-flash-streaming` 支持实时流式识别，`qwen3.5-ocr` 在卡证类业务场景中关键信息抽取准确率显著提升。
-- **性能指标**：`glm-5.2-fast-preview` 输出TPS达标准版1.5～2倍；`kimi-k2.7-code-highspeed` 编程场景下输出速度约180 Token/s（中位数输入）；`qwen-audio-3.0-tts-plus` 在噪声混响环境下鲁棒性增强，音质与表现力优于Flash版。
-- **部署单元**：模型部署支持按模型单元（MU）时长计费（[使用 API 部署新增预置模型与按模型单元时长计费](../../raw/model-user-guide/release-notes/model-release-notes.md)），适用于qwen-flash/qwen-plus等预置模型。
+- **上下文长度**：`kimi/kimi-k3`、`glm-5.2`、`deepseek-v4-pro`、`xiaomi/mimo-v2.5-pro`等主流大模型均支持100万token上下文；`qwen3.5-livetranslate-flash-realtime`支持60种语言输入、29种语言输出。
+- **性能指标**：
+  - `qwen-audio-3.0-tts-flash`首包延时≤200ms；
+  - `kimi/kimi-k2.7-code-highspeed`输出速度约180–260 [Token](../concepts/token.md)/s；
+  - `qwen3.7-text-embedding`向量维度支持256–2560可调；
+  - `qwen-image-3.0-pro`支持最大4.5k token输入与10px级文字渲染精度。
+- **多模态能力**：`qwen3.8-max`、`qwen3.7-plus`、`stepfun/step-3.7-flash`等明确标注支持视觉理解与Agent混合交互；`pixverse/pixverse-lipsync`支持音频/TTS与嘴部动作精准同步。
 
 ## 使用方式
 
-- **API调用**：文本生成API已聚合OpenAI Responses与Anthropic Messages两类接口；Responses API支持`background=true`异步调用（[Responses API 新增异步调用](../../raw/model-user-guide/release-notes/model-release-notes.md)）；异步任务可通过事件总线EventBridge接收HTTP回调或RocketMQ推送，避免轮询。
-- **SDK接入**：多模态交互开发套件提供Linux C++、Android/iOS Lite、RTOS C及Java SDK；Coding Plan支持Kilo CLI工具接入（[接入客户端开发工具新增 Kilo CLI](../../raw/model-user-guide/release-notes/model-release-notes.md)）。
-- **模型导入与调优**：国际站支持从OSS导入LoRA微调模型（[模型导入功能国际站上线](../../raw/model-user-guide/release-notes/model-release-notes.md)）；模型调优支持SFT（全参/LoRA）、DPO偏好训练、强化学习（RL，邀约制）及0代码安全合规强化。
+- **模型调用**：所有新模型通过标准DashScope API接入，文本生成类支持OpenAI Responses与Anthropic Messages兼容接口（[原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md)）；实时语音类（如`qwen-audio-3.0-realtime-flash`）需启用流式响应与双工协议。
+- **平台能力集成**：
+  - 知识库RAG场景应优先使用新增的`知识检索服务`与`知识问答服务`（支持多知识库联合检索与混合排序）；
+  - 智能体开发推荐使用`智能体托管运行时API`（平台托管会话与工具执行）；
+  - 自定义模型部署需通过`模型导入API`上传LoRA微调模型（国际站已支持OSS导入）；
+  - 异步任务建议采用事件总线HTTP回调或RocketMQ推送，避免轮询（[原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md)）。
 
 ## 限制和注意事项
 
-- **模型下线**：老旧模型分批下线，含“部分老旧模型”“部分老旧长尾模型”及`qwen-turbo`资源包退市（[部分老旧模型下线通知](../../raw/model-user-guide/release-notes/model-release-notes.md)、[qwen-turbo 资源包启动退市通知](../../raw/model-user-guide/release-notes/model-release-notes.md)）。具体清单与过渡期请严格参照 [模型下线机制说明](../../raw/model-user-guide/release-notes/model-release-notes.md)。
-- **免费额度**：新人免费额度启用“用完即停”策略，耗尽后返回错误码 `AllocationQuota.FreeTierOnly`（[新增免费额度用完即停功能](../../raw/model-user-guide/release-notes/model-release-notes.md)）；团队版新增共享Credits弹性用量包，但跨坐席抵扣需配置权限。
-- **地域与兼容性**：美国、德国、日本地域于6月12日新增部署（[新增地域与部署范围](../../raw/model-user-guide/release-notes/model-release-notes.md)）；Spring AI Alibaba框架已支持调用百炼智能体应用（[Spring AI Alibaba 调用百炼应用文档上线](../../raw/model-user-guide/release-notes/model-release-notes.md)），但需确认SDK版本兼容性。
+- **模型下线**：2026年7月起分批下线老旧模型，包括`部分老旧模型`（7月10日）、`部分老旧长尾模型`（7月9日），具体清单需参考[模型下线机制说明](https://help.aliyun.com/zh/model-studio/model-depreciation)；`qwen-turbo`资源包已于6月28日启动退市。
+- **地域与部署**：新增美国、德国、日本地域部署（6月12日），但部分模型（如`qwen3.8-max`）当前仅限华北2（北京）可用，跨地域调用需确认模型部署状态。
+- **计费与额度**：`记忆库`、`Managed Agent`、`GLM-5.2 Fast mode`等已商业化（7月通知）；新人免费额度启用“用完即停”策略（返回`AllocationQuota.FreeTierOnly`错误码），避免意外扣费。
+- **兼容性风险**：`qwen3.7-max`系列存在多个快照版本（如`qwen3.7-max-2026-05-20`、`qwen3.7-max-2026-06-08`），其中后者新增视觉模态能力，而`qwen3.7-max-2026-05-17`（预览版）仅支持思考模式——生产环境应严格按版本后缀区分能力边界。
 
 ## 来源文档
 
-- [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)
 - [模型上下架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)
+- [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)
 
 

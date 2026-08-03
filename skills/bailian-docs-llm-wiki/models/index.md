@@ -1,6 +1,6 @@
 # 百炼模型市场索引
 
-> 自动生成 · 共 175 个模型家族 · 393 个主干模型 · 更新于 2026-08-03
+> 自动生成 · 共 176 个模型家族 · 394 个主干模型 · 更新于 2026-08-04
 
 **机器查询走结构化文件**：
 
@@ -247,7 +247,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [音乐生成](groups/fun-music.json) — 百聆音乐生成大模型（Fun音乐大模型）支持输入开放性歌曲的创作要求或歌词，生成整首男/女声演唱的中文或英文歌曲。歌曲通俗易懂，情绪由浅入深，是人类灵感与大模型能力的完美结合。
   - 模型：`fun-music-preview`, `fun-music-v1`
 
-## 推理 `Reasoning` — 14 个家族
+## 推理 `Reasoning` — 15 个家族
 
 - [DeepSeek](groups/deepseek.json) — DeepSeek是由深度求索提供的开源模型，包含 V3.1、V3、R1以及基于Qwen2.5系列蒸馏的大语言模型。
   - 模型：`deepseek-r1`, `deepseek-r1-0528`, `deepseek-r1-distill-qwen-1.5b`, `deepseek-r1-distill-qwen-14b`, `deepseek-r1-distill-qwen-32b`, `deepseek-r1-distill-qwen-7b`, `deepseek-v3`, `deepseek-v3.1`, `deepseek-v3.2`, `deepseek-v3.2-exp`, `deepseek-v4-flash`, `deepseek-v4-flash-0731`, `deepseek-v4-pro`
@@ -277,6 +277,8 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen3.6-plus`
 - [Qwen3.7-Max](groups/qwen3.7-max.json) — Qwen3.7系列中规模最大、综合能力最强的Max模型，当前开放纯文本模型能力供体验。Qwen3.7是面向智能体时代的新一代旗舰模型，核心优势在于智能体能力的广度与深度：在编程、办公与生产力、长周期自…
   - 模型：`qwen3.7-max`, `qwen3.7-max-preview`
+- [Qwen3.8-Max](groups/qwen3.8-max.json) — Qwen3.8原生视觉语言系列Max模型，是通义千问迄今能力最强的旗舰模型，拥有2.4万亿参数，采用MoE架构，展现出与当前顶尖前沿模型相媲美的卓越性能，模型效果相较3.7系列显著提升。
+  - 模型：`qwen3.8-max`
 
 ## 语音识别 `ASR` — 14 个家族
 

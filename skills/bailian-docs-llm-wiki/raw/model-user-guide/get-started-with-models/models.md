@@ -8,37 +8,27 @@
 
 [
 
-qwen3.8-max-preview
+qwen3.8-max
 
-](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)
-
-仅 Token Plan 可用
-
-qwen3.8-max-preview 目前仅面向 Token Plan 订阅用户提供，[前往开通 Token Plan →](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)
-
-[
-
-qwen3.7-max
-
-](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-max)
+](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.8-max)
 
 华北2（北京）新加坡日本（东京）德国（法兰克福）美国（弗吉尼亚）
 
 OpenAI 兼容Anthropic 兼容DashScope
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://[{WorkspaceId}](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management).cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
 
 API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-key)
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://[{WorkspaceId}](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management).cn-beijing.maas.aliyuncs.com/apps/anthropic`
 
 API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-key)
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://[{WorkspaceId}](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management).cn-beijing.maas.aliyuncs.com/api/v1`
 
@@ -46,19 +36,19 @@ API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-
 
 OpenAI 兼容Anthropic 兼容DashScope
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=globalset#/efm/business_management).ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
 
 API Key[获取↗](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=model#/api-key)
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=globalset#/efm/business_management).ap-southeast-1.maas.aliyuncs.com/apps/anthropic`
 
 API Key[获取↗](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=model#/api-key)
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=globalset#/efm/business_management).ap-southeast-1.maas.aliyuncs.com/api/v1`
 
@@ -66,19 +56,19 @@ API Key[获取↗](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=mod
 
 OpenAI 兼容Anthropic 兼容DashScope
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-northeast-1?tab=globalset#/efm/business_management).ap-northeast-1.maas.aliyuncs.com/compatible-mode/v1`
 
 API Key[获取↗](https://modelstudio.console.aliyun.com/ap-northeast-1?tab=model#/api-key)
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-northeast-1?tab=globalset#/efm/business_management).ap-northeast-1.maas.aliyuncs.com/apps/anthropic`
 
 API Key[获取↗](https://modelstudio.console.aliyun.com/ap-northeast-1?tab=model#/api-key)
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-northeast-1?tab=globalset#/efm/business_management).ap-northeast-1.maas.aliyuncs.com/api/v1`
 
@@ -86,19 +76,19 @@ API Key[获取↗](https://modelstudio.console.aliyun.com/ap-northeast-1?tab=mod
 
 OpenAI 兼容Anthropic 兼容DashScope
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/eu-central-1?tab=globalset#/efm/business_management).eu-central-1.maas.aliyuncs.com/compatible-mode/v1`
 
 API Key[获取↗](https://modelstudio.console.aliyun.com/eu-central-1?tab=model#/api-key)
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/eu-central-1?tab=globalset#/efm/business_management).eu-central-1.maas.aliyuncs.com/apps/anthropic`
 
 API Key[获取↗](https://modelstudio.console.aliyun.com/eu-central-1?tab=model#/api-key)
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/eu-central-1?tab=globalset#/efm/business_management).eu-central-1.maas.aliyuncs.com/api/v1`
 
@@ -106,19 +96,19 @@ API Key[获取↗](https://modelstudio.console.aliyun.com/eu-central-1?tab=model
 
 OpenAI 兼容Anthropic 兼容DashScope
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
 
 API Key[获取↗](https://modelstudio.console.aliyun.com/us-east-1?tab=model#/api-key)
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://dashscope-us.aliyuncs.com/apps/anthropic`
 
 API Key[获取↗](https://modelstudio.console.aliyun.com/us-east-1?tab=model#/api-key)
 
-模型 ID`qwen3.7-max`
+模型 ID`qwen3.8-max`
 
 Base URL`https://dashscope-us.aliyuncs.com/api/v1`
 
@@ -699,6 +689,114 @@ API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-
 分析图片和视频内容，返回文本描述或结构化结果
 
 [查看更多 →](https://help.aliyun.com/zh/model-studio/vision-model/)
+
+[
+
+qwen3.8-max
+
+](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.8-max)
+
+华北2（北京）新加坡日本（东京）德国（法兰克福）美国（弗吉尼亚）
+
+OpenAI 兼容Anthropic 兼容DashScope
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://[{WorkspaceId}](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management).cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
+
+API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-key)
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://[{WorkspaceId}](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management).cn-beijing.maas.aliyuncs.com/apps/anthropic`
+
+API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-key)
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://[{WorkspaceId}](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management).cn-beijing.maas.aliyuncs.com/api/v1`
+
+API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-key)
+
+OpenAI 兼容Anthropic 兼容DashScope
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=globalset#/efm/business_management).ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
+
+API Key[获取↗](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=model#/api-key)
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=globalset#/efm/business_management).ap-southeast-1.maas.aliyuncs.com/apps/anthropic`
+
+API Key[获取↗](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=model#/api-key)
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=globalset#/efm/business_management).ap-southeast-1.maas.aliyuncs.com/api/v1`
+
+API Key[获取↗](https://modelstudio.console.aliyun.com/ap-southeast-1?tab=model#/api-key)
+
+OpenAI 兼容Anthropic 兼容DashScope
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-northeast-1?tab=globalset#/efm/business_management).ap-northeast-1.maas.aliyuncs.com/compatible-mode/v1`
+
+API Key[获取↗](https://modelstudio.console.aliyun.com/ap-northeast-1?tab=model#/api-key)
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-northeast-1?tab=globalset#/efm/business_management).ap-northeast-1.maas.aliyuncs.com/apps/anthropic`
+
+API Key[获取↗](https://modelstudio.console.aliyun.com/ap-northeast-1?tab=model#/api-key)
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/ap-northeast-1?tab=globalset#/efm/business_management).ap-northeast-1.maas.aliyuncs.com/api/v1`
+
+API Key[获取↗](https://modelstudio.console.aliyun.com/ap-northeast-1?tab=model#/api-key)
+
+OpenAI 兼容Anthropic 兼容DashScope
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/eu-central-1?tab=globalset#/efm/business_management).eu-central-1.maas.aliyuncs.com/compatible-mode/v1`
+
+API Key[获取↗](https://modelstudio.console.aliyun.com/eu-central-1?tab=model#/api-key)
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/eu-central-1?tab=globalset#/efm/business_management).eu-central-1.maas.aliyuncs.com/apps/anthropic`
+
+API Key[获取↗](https://modelstudio.console.aliyun.com/eu-central-1?tab=model#/api-key)
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/eu-central-1?tab=globalset#/efm/business_management).eu-central-1.maas.aliyuncs.com/api/v1`
+
+API Key[获取↗](https://modelstudio.console.aliyun.com/eu-central-1?tab=model#/api-key)
+
+OpenAI 兼容Anthropic 兼容DashScope
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+
+API Key[获取↗](https://modelstudio.console.aliyun.com/us-east-1?tab=model#/api-key)
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://dashscope-us.aliyuncs.com/apps/anthropic`
+
+API Key[获取↗](https://modelstudio.console.aliyun.com/us-east-1?tab=model#/api-key)
+
+模型 ID`qwen3.8-max`
+
+Base URL`https://dashscope-us.aliyuncs.com/api/v1`
+
+API Key[获取↗](https://modelstudio.console.aliyun.com/us-east-1?tab=model#/api-key)
 
 [
 
