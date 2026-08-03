@@ -4,7 +4,7 @@
 
 ## 做 AI 编程或 Agent 开发（OpenClaw、Claude Code、Hermes 等）该选哪个模型？
 
-推荐 `qwen3.7-plus`——能力与成本均衡，完整工具调用支持，1M 上下文适合大型代码库。如需最强推理能力，可选择`qwen3.8-max-preview`（ Token Plan 可用），或 `qwen3.7-max`。
+推荐 `qwen3.7-plus`——能力与成本均衡，完整工具调用支持，1M 上下文适合大型代码库。如需最强推理能力，可选择`qwen3.8-max`。
 
 ## 从闭源模型迁移到百炼?
 
@@ -18,7 +18,7 @@
 
 GPT-5.5、Claude Opus 4.7、Gemini 3.1 Pro
 
-`qwen3.7-max`、`qwen3.8-max-preview`（仅 Token Plan 可用）
+`qwen3.8-max`
 
 平衡
 
@@ -34,7 +34,7 @@ GPT-5.4-mini、Claude Haiku 4.5、Gemini 3.1 Flash
 
 ## 应用场景
 
-聊天机器人、内容生成、摘要总结、文档处理等场景，推荐使用 `qwen3.7-plus`，能力与成本均衡，拥有100万上下文窗口和完整的内置工具。确认效果满足需求后，可以尝试 `qwen3.7-flash` 来降低成本，效果接近旗舰模型，且拥有相同的上下文长度和功能支持。如需最强推理能力，可选择 `qwen3.7-max`（百万 token 上下文）；也可选择 `qwen3.8-max-preview`（ Token Plan 可用）。
+聊天机器人、内容生成、摘要总结、文档处理等场景，推荐使用 `qwen3.7-plus`，能力与成本均衡，拥有100万上下文窗口和完整的内置工具。确认效果满足需求后，可以尝试 `qwen3.7-flash` 来降低成本，效果接近旗舰模型，且拥有相同的上下文长度和功能支持。如需最强推理能力，可选择 `qwen3.8-max`。
 
 ### 办公场景（非编程）
 
@@ -42,7 +42,7 @@ GPT-5.4-mini、Claude Haiku 4.5、Gemini 3.1 Flash
 
 确认效果满足需求后，可尝试 `qwen3.7-flash` 降低成本，效果接近旗舰模型，且拥有相同的上下文长度和功能支持。
 
-如需最强推理能力（如复杂数据分析、多步逻辑推演），可选择 `qwen3.7-max`，但成本较高；也可选择 `qwen3.8-max-preview`（仅 Token Plan 可用）。
+如需最强推理能力（如复杂数据分析、多步逻辑推演），可选择 `qwen3.8-max`，但成本较高。
 
 处理超长文档（如同时审阅多份合同、大规模文献梳理）时，推荐 `qwen-long`——上下文窗口达 1000 万 Token，可完整处理大体量文档。
 
@@ -106,11 +106,7 @@ GPT-5.4-mini、Claude Haiku 4.5、Gemini 3.1 Flash
 
 **结构化输出**
 
-`qwen3.7-max`
-
-查看快照版本
-
-`qwen3.7-max-preview` `qwen3.7-max-2026-06-08` `qwen3.7-max-2026-05-20` `qwen3.7-max-2026-05-17`
+`qwen3.8-max`
 
 1M
 
@@ -120,7 +116,7 @@ GPT-5.4-mini、Claude Haiku 4.5、Gemini 3.1 Flash
 
 支持
 
-不支持
+支持
 
 `qwen3.7-plus`
 
@@ -143,22 +139,6 @@ GPT-5.4-mini、Claude Haiku 4.5、Gemini 3.1 Flash
 查看快照版本
 
 `qwen3.7-flash-2026-07-15`
-
-1M
-
-支持
-
-支持
-
-支持
-
-支持
-
-`qwen3.6-flash`
-
-查看快照版本
-
-`qwen3.6-flash-2026-04-16`
 
 1M
 
@@ -246,6 +226,36 @@ GPT-5.4-mini、Claude Haiku 4.5、Gemini 3.1 Flash
 
 以下模型不再作为首选推荐。新项目建议使用Qwen3.6或Qwen3.5系列。如需查看模型详细参数（上下文窗口、计费等），请前往模型广场。
 
+### **Qwen3.7**
+
+**模型ID**
+
+**上下文**
+
+**思考模式**
+
+**Function Calling**
+
+**内置工具**
+
+**结构化输出**
+
+`qwen3.7-max`
+
+查看快照版本
+
+`qwen3.7-max-preview` `qwen3.7-max-2026-06-08` `qwen3.7-max-2026-05-20` `qwen3.7-max-2026-05-17`
+
+1M
+
+支持
+
+支持
+
+支持
+
+支持
+
 #### Qwen3.6
 
 **模型ID**
@@ -277,6 +287,22 @@ GPT-5.4-mini、Claude Haiku 4.5、Gemini 3.1 Flash
 查看快照版本
 
 `qwen3.6-plus-2026-04-02`
+
+1M
+
+支持
+
+支持
+
+支持
+
+支持
+
+`qwen3.6-flash`
+
+查看快照版本
+
+`qwen3.6-flash-2026-04-16`
 
 1M
 

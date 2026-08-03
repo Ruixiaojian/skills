@@ -117,7 +117,7 @@ Qwen-Audio-TTS/CosyVoice 和 Qwen 系列的 WebSocket 模型支持通过 DashSco
 
 选择 WebSocket 接入请参考**实时语音合成**，选择 HTTP 接入请参考**非实时语音合成**。
 
-CosyVoice 系列模型还支持通过 AOQ 协议接入，协议对比与选型请参见[Realtime API 概述](https://help.aliyun.com/zh/model-studio/realtime-api-overview#rtov-s02h2)。
+CosyVoice 系列模型还支持通过 AOQ 协议接入；如果是客户端对接，且更看重稳定的延迟、弱网下的交互能力、实时双工的降噪与回声消除，可优先考虑 AOQ，协议对比与选型请参见[Realtime API 概述](https://help.aliyun.com/zh/model-studio/realtime-api-overview#rtov-s02h2)。
 
 ## 指令控制
 

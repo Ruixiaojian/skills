@@ -14,6 +14,45 @@
 
 **更新说明**
 
+v1.1.0
+
+Android
+
+[AoqClientSdk-v1.1.0.aar](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260803/mzfhfm/AoqClientSdk-v1.1.0.aar)
+
+[libPluginOpus.zip](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260803/mnwwkr/libPluginOpus.zip)
+
+2026-07-31
+
+1.  支持ASR模型
+    
+2.  支持TTS模型
+    
+3.  支持多模态交互套件
+    
+4.  新增支持linux 平台
+    
+5.  优化性能
+    
+6.  解决已知的稳定性问题
+    
+
+iOS
+
+[AoqClientSdk-v1.1.0.zip](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260803/bhiqbu/AoqClientSdk-v1.1.0.zip)
+
+[PluginOpus.framework.zip](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260803/shapwe/PluginOpus.framework.zip)
+
+Harmony
+
+[AoqClientSdk-v1.1.0.har](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260803/qtyubq/AoqClientSdk-v1.1.0.har)
+
+[libPluginOpus.zip](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260803/hugetl/libPluginOpus.zip)
+
+Linux
+
+[AoqClientSdk.zip](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260803/swaqde/AoqClientSdk.zip)
+
 v1.0.1
 
 Android

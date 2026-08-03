@@ -9,6 +9,10 @@
 -   **模型独立限流**：不同模型限流额度相互独立，具体参见下方表格。
     
 
+**说明**
+
+部分模型，如 Qwen-3.8 采用 [动态限流（新）](https://help.aliyun.com/zh/model-studio/quota-management)的方式，根据百炼月消费档位进行软限流。且不支持自助提升临时限流额度。
+
 ## FAQ
 
 ### 为什么触发限流？
@@ -180,6 +184,14 @@
 **每分钟消耗Token数（TPM）**
 
 > **含输入与输出Token**
+
+qwen3.8-max
+
+> 用[Batch API](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)调用服务时，不受限流限制。
+
+30,000
+
+5,000,000
 
 qwen3.7-max
 
@@ -487,6 +499,14 @@ qwen-long-2025-01-25
 
 > **含输入与输出Token**
 
+qwen3.8-max
+
+全球
+
+30,000
+
+5,000,000
+
 qwen3.7-max
 
 全球
@@ -750,6 +770,14 @@ qwen-flash-2025-07-28-us
 **每分钟消耗Token数（TPM）**
 
 > **含输入与输出Token**
+
+qwen3.8-max
+
+国际
+
+600
+
+1,000,000
 
 qwen3.7-max
 
@@ -1041,6 +1069,14 @@ qwen-turbo
 
 > **含输入与输出Token**
 
+qwen3.8-max
+
+全球
+
+30,000
+
+5,000,000
+
 qwen3.7-max
 
 全球
@@ -1296,6 +1332,14 @@ qwen-flash-2025-07-28
 **每分钟消耗Token数（TPM）**
 
 > **含输入与输出Token**
+
+qwen3.8-max
+
+全球
+
+30,000
+
+5,000,000
 
 qwen3.7-max
 

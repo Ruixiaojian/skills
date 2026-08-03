@@ -25,13 +25,50 @@ Codex 是 OpenAI 推出的终端 AI 编程助手。可通过 Token Plan 个人�
 
 ### 配置模型元数据
 
-使用自定义模型（如 qwen3.8-max-preview）时，需要配置模型元数据文件，使 Codex 正确识别模型的上下文窗口、推理深度等参数。
+使用自定义模型（如 qwen3.8-max）时，需要配置模型元数据文件，使 Codex 正确识别模型的上下文窗口、推理深度等参数。
 
 1.  新建文件 `~/.codex/model-catalog.local.json`，写入以下内容：
     
     ```
     {
       "models": [
+        {
+          "slug": "qwen3.8-max",
+          "display_name": "qwen3.8-max",
+          "description": "DashScope model: qwen3.8-max",
+          "default_reasoning_level": "xhigh",
+          "supported_reasoning_levels": [
+            {
+              "effort": "low",
+              "description": "Fast responses with lighter reasoning"
+            },
+            {
+              "effort": "medium",
+              "description": "Greater reasoning depth for complex problems"
+            },
+            {
+              "effort": "xhigh",
+              "description": "Extra high reasoning depth for complex problems"
+            }
+          ],
+          "context_window": 983616,
+          "effective_context_window_percent": 95,
+          "supports_parallel_tool_calls": false,
+          "supports_image_detail_original": true,
+          "input_modalities": ["text", "image"],
+          "shell_type": "default",
+          "visibility": "list",
+          "supported_in_api": true,
+          "priority": 1,
+          "base_instructions": "",
+          "support_verbosity": false,
+          "supports_reasoning_summaries": false,
+          "experimental_supported_tools": [],
+          "truncation_policy": {
+            "mode": "bytes",
+            "limit": 10000
+          }
+        },
         {
           "slug": "qwen3.8-max-preview",
           "display_name": "qwen3.8-max-preview",
@@ -82,15 +119,15 @@ Codex 是 OpenAI 推出的终端 AI 编程助手。可通过 Token Plan 个人�
 
 ### Token Plan 个人版
 
-`model`请选择[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)，可用模型包括 qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro、deepseek-v4-flash-0731。将`OPENAI_API_KEY`环境变量设置为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。
+`model`请选择[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)，可用模型包括 qwen3.8-max、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro、deepseek-v4-flash-0731（deepseek-v4-flash-0731 暂不支持 Responses API）。将`OPENAI_API_KEY`环境变量设置为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。
 
-#### Responses API（qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-plus、qwen3.6-flash）
+#### Responses API（qwen3.8-max、qwen3.7-max、qwen3.7-plus、qwen3.6-plus、qwen3.6-flash）
 
-qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-plus 和 qwen3.6-flash 支持 Responses API，可使用最新版 Codex。
+qwen3.8-max、qwen3.7-max、qwen3.7-plus、qwen3.6-plus 和 qwen3.6-flash 支持 Responses API，可使用最新版 Codex。
 
 ```
 model_provider = "Model_Studio_Token_Plan_Personal"
-model = "qwen3.8-max-preview"
+model = "qwen3.8-max"
 [model_providers.Model_Studio_Token_Plan_Personal]
 name = "Model_Studio_Token_Plan_Personal"
 base_url = "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
@@ -207,13 +244,13 @@ wire_api = "chat"
 
 `model`请选择[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-overview)。将`OPENAI_API_KEY`环境变量设置为 Token Plan 团队版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/uac-admin/organization/members/list)。
 
-#### Responses API（qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-plus、qwen3.6-flash）
+#### Responses API（qwen3.8-max、qwen3.7-max、qwen3.7-plus、qwen3.6-plus、qwen3.6-flash）
 
-qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-plus 和 qwen3.6-flash 支持 Responses API，可使用最新版 Codex。
+qwen3.8-max、qwen3.7-max、qwen3.7-plus、qwen3.6-plus 和 qwen3.6-flash 支持 Responses API，可使用最新版 Codex。
 
 ```
 model_provider = "Model_Studio_Token_Plan"
-model = "qwen3.8-max-preview"
+model = "qwen3.8-max"
 [model_providers.Model_Studio_Token_Plan]
 name = "Model_Studio_Token_Plan"
 base_url = "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"

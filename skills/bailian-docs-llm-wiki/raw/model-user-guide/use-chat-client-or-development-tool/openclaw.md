@@ -86,7 +86,9 @@ How do you want to hatch your bot?
 
 ### **Token Plan 个人版**
 
-将 `YOUR_API_KEY` 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型包括 qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro、deepseek-v4-flash-0731，完整列表请参考 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
+**配置项**
+
+**说明**
 
 **API Key**
 
@@ -124,6 +126,16 @@ Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/to
         "apiKey": "YOUR_API_KEY",
         "api": "anthropic-messages",
         "models": [
+          {
+            "id": "qwen3.8-max",
+            "name": "qwen3.8-max",
+            "reasoning": true,
+            "input": ["text", "image"],
+            "contextWindow": 983616,
+            "maxTokens": 131072,
+            "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+            "compat": { "thinkingFormat": "openai" }
+          },
           {
             "id": "qwen3.8-max-preview",
             "name": "qwen3.8-max-preview",
@@ -199,9 +211,10 @@ Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/to
   "agents": {
     "defaults": {
       "model": {
-        "primary": "bailian-token-plan/qwen3.8-max-preview"
+        "primary": "bailian-token-plan/qwen3.8-max"
       },
       "models": {
+        "bailian-token-plan/qwen3.8-max": {},
         "bailian-token-plan/qwen3.8-max-preview": {},
         "bailian-token-plan/qwen3.7-max": {},
         "bailian-token-plan/qwen3.7-plus": {},
@@ -232,7 +245,9 @@ Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/to
 
 ### **Token Plan 团队版**
 
-将 `YOUR_API_KEY` 替换为 Token Plan 团队版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/uac-admin/organization/members/list)。可用模型请参考 Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-overview)。
+**配置项**
+
+**说明**
 
 **API Key**
 
@@ -280,6 +295,16 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
             "apiKey": "YOUR_API_KEY",
             "api": "anthropic-messages",
             "models": [
+              {
+                "id": "qwen3.8-max",
+                "name": "qwen3.8-max",
+                "reasoning": true,
+                "input": ["text", "image"],
+                "contextWindow": 983616,
+                "maxTokens": 131072,
+                "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+                "compat": { "thinkingFormat": "openai" }
+              },
               {
                 "id": "qwen3.8-max-preview",
                 "name": "qwen3.8-max-preview",
@@ -443,9 +468,10 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
       "agents": {
         "defaults": {
           "model": {
-            "primary": "bailian-token-plan/qwen3.8-max-preview"
+            "primary": "bailian-token-plan/qwen3.8-max"
           },
           "models": {
+            "bailian-token-plan/qwen3.8-max": {},
             "bailian-token-plan/qwen3.8-max-preview": {},
             "bailian-token-plan/qwen3.7-max": {},
             "bailian-token-plan/qwen3.7-plus": {},
@@ -518,6 +544,16 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
             "api": "anthropic-messages",
             "models": [
               {
+                "id": "qwen3.8-max",
+                "name": "qwen3.8-max",
+                "reasoning": true,
+                "input": ["text", "image"],
+                "contextWindow": 983616,
+                "maxTokens": 131072,
+                "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+                "compat": { "thinkingFormat": "openai" }
+              },
+              {
                 "id": "qwen3.8-max-preview",
                 "name": "qwen3.8-max-preview",
                 "reasoning": true,
@@ -680,9 +716,10 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
       "agents": {
         "defaults": {
           "model": {
-            "primary": "bailian-token-plan/qwen3.8-max-preview"
+            "primary": "bailian-token-plan/qwen3.8-max"
           },
           "models": {
+            "bailian-token-plan/qwen3.8-max": {},
             "bailian-token-plan/qwen3.8-max-preview": {},
             "bailian-token-plan/qwen3.7-max": {},
             "bailian-token-plan/qwen3.7-plus": {},
@@ -727,7 +764,9 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
 
 ### **Coding Plan**
 
-将 `YOUR_API_KEY` 替换为 Coding Plan 专属 [API Key](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/efm/coding_plan)（格式为 `sk-sp-xxxxx`）。可用模型请参考 Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-plan)。
+**配置项**
+
+**说明**
 
 **API Key**
 
@@ -1079,7 +1118,9 @@ Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-pla
 
 ### **按量付费**
 
-将 `YOUR_API_KEY` 替换为[阿里云百炼 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)（格式为 `sk-xxxxx`）。可用模型请参考[模型广场](https://bailian.console.aliyun.com/?tab=model#/model-market)。
+**配置项**
+
+**说明**
 
 **API Key**
 

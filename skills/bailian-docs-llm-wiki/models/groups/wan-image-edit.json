@@ -120,9 +120,7 @@
       "versionTag": "MAJOR",
       "latestOnlineAt": "2026-04-01T05:32:16.000+00:00",
       "trainingTypes": {
-        "sft": [
-          "lora"
-        ]
+        "sft": []
       },
       "inferenceProvider": "aliyun-bailian",
       "name": "Wan2.7-Image-Pro",

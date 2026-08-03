@@ -125,7 +125,7 @@ clientIp
 {
     "sid": "1d06b55683db49bba67a407902f62d02:1782706970:69aecdc5...",
     "aoqTokenForClient": "ecc1a46015d5496ca4ff7a48281eb739",
-    "clientRelayEndpoints": [{"endpoint": "121.199.XX.XX", "port": 8443}],
+    "clientRelayEndpoints": [{"endpoint": "121.199.XX.XX", "port": 8443, "route_index": 0}],
     "clientRelayCertFingerprint": "sha256/99843495...",
     "sidExpiresInSecs": 7200,
     "extraInfo": {"workspaceIdHash": "2021b6f98cea4cff"}
@@ -177,8 +177,10 @@ let config = AoqConnectConfig()
 config.token = resp.aoqTokenForClient
 config.sid = resp.sid
 config.certFingerprint = resp.clientRelayCertFingerprint
-config.relayEndpoints = resp.clientRelayEndpoints.map { item in
+config.relayEndpoints = resp.clientRelayEndpoints.enumerated().map { index, item in
     let ep = AoqRelayEndpoint()
+    // route_index 缺省时按数组下标兜底
+    ep.routeIndex = item.routeIndex ?? index
     ep.endpoint = item.endpoint
     ep.port = item.port
     return ep
@@ -209,6 +211,8 @@ if (arr != null) {
     for (int i = 0; i < arr.length(); i++) {
         JSONObject o = arr.optJSONObject(i);
         AoqClientEngine.AoqRelayEndpoint ep = new AoqClientEngine.AoqRelayEndpoint();
+        // route_index 缺省时按数组下标兜底
+        ep.routeIndex = o.has("route_index") ? o.optInt("route_index", i) : i;
         ep.endpoint = o.optString("endpoint", "");
         ep.port = o.optInt("port", 0);
         cfg.relayEndpoints.add(ep);
@@ -238,7 +242,9 @@ const cfg: AoqConnectConfig = {
     token: String(obj['aoqTokenForClient'] ?? ''),
     sid: String(obj['sid'] ?? ''),
     certFingerprint: String(obj['clientRelayCertFingerprint'] ?? ''),
-    relayEndpoints: (obj['clientRelayEndpoints'] as Array<any>).map(item => ({
+    // route_index 缺省时按数组下标兜底
+    relayEndpoints: (obj['clientRelayEndpoints'] as Array<any>).map((item, index) => ({
+        routeIndex: Number(item['route_index'] ?? index),
         endpoint: String(item['endpoint'] ?? ''),
         port: Number(item['port'] ?? 0)
     })),
@@ -345,7 +351,6 @@ Authorization
 
 ```
 import websocket, os
-
 API_KEY = os.getenv("DASHSCOPE_API_KEY")
 URL = "wss://dashscope.aliyuncs.com/api-ws/v1/realtime?model=qwen3.5-omni-plus-realtime"
 ws = websocket.WebSocketApp(URL, header=["Authorization: Bearer " + API_KEY])

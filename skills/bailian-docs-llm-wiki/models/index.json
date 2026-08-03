@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-08-03",
-  "totalFamilies": 175,
-  "totalModels": 393,
+  "updatedAt": "2026-08-04",
+  "totalFamilies": 176,
+  "totalModels": 394,
   "profileCoverage": {
-    "full": 314,
-    "partial": 15,
-    "structured-only": 64,
+    "full": 316,
+    "partial": 34,
+    "structured-only": 44,
     "none": 0
   },
   "capabilityDistribution": {
@@ -13,7 +13,7 @@
     "IG": 31,
     "VG": 26,
     "TTS": 16,
-    "Reasoning": 14,
+    "Reasoning": 15,
     "ASR": 14,
     "VU": 9,
     "Realtime-ASR": 8,
@@ -27,7 +27,7 @@
     "3D-generation": 1
   },
   "providerDistribution": {
-    "qwen": 106,
+    "qwen": 107,
     "qwen-domain-model": 34,
     "wan": 13,
     "happyhorse": 4,
@@ -2324,6 +2324,24 @@
       "itemCount": 1,
       "items": [
         "qwen3.7-plus"
+      ],
+      "maxContextWindow": 1000000
+    },
+    {
+      "slug": "qwen3.8-max",
+      "name": "Qwen3.8-Max",
+      "primaryCapability": "Reasoning",
+      "capabilities": [
+        "Reasoning",
+        "VU",
+        "TG"
+      ],
+      "providers": [
+        "qwen"
+      ],
+      "itemCount": 1,
+      "items": [
+        "qwen3.8-max"
       ],
       "maxContextWindow": 1000000
     },

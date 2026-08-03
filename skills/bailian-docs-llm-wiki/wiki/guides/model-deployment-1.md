@@ -1,62 +1,46 @@
 # model deployment 1
 
-百炼平台的 `model deployment 1` 是面向生产环境的模型服务化能力，支持将预置模型或用户调优/导入的 LoRA 模型部署为资源独占、性能可预期的专属推理服务。该能力提供三种正交计费与调度模式：预置吞吐（PTU）、模型单元（MU）和按 Token 用量计费，分别适配高并发低延迟、强定制化长时任务、以及低成本效果验证等典型场景。部署后服务通过标准 API 接入，支持 OpenAI、Anthropic 和 DashScope 多协议兼容。
+百炼平台的 `model deployment 1` 指代以 **预置吞吐（PTU）** 方式部署模型的核心能力，专为高并发、低延迟、流量可预估的生产场景设计。它通过预留确定性算力资源保障稳定 TPM 吞吐，支持长输入处理与前缀缓存优化，并提供细粒度额度监控与溢出策略控制。本文档聚焦 PTU 部署的关键技术事实，不涵盖模型单元（MU）或按 [Token](../concepts/token.md) 计费等其他部署模式。
 
-## 支持的模型/功能
+## 支持的模型与功能
 
-- **支持模型类型**：
-  - **预置模型**：千问系列（Qwen3/Qwen2.5/Qwen-VL/Qwen-Omni）、DeepSeek 系列（v3/v4）、GLM 系列（GLM-5/GLM-4.7）、Kimi-K2.5、CosyVoice 等，详见[模型部署简介](../../raw/model-user-guide/model-deployment-1/model-deployment-introduction.md)中的价格表。
-  - **调优后模型**：所有通过百炼平台完成 LoRA 微调的任务产出模型（含 SFT 后模型），支持全部三种部署方式；全参微调模型仅支持 PTU 和 MU 方式，不支持 `lora` 计费模式。
-  - **导入模型**：仅支持从阿里云 OSS 导入符合约束的 LoRA 模型（rank ∈ {8,16,32,64}，未修改 vocab/chat_template，视觉模型需冻结 VIT），不支持全参微调模型导入 [原文标题](../../raw/model-user-guide/model-deployment-1/model-import.md)。
-
+- **支持模型**：仅限平台预置的 PTU 可部署模型，包括 `glm-5.1`、`deepseek-v4-pro`、`qwen3.7-plus-2026-05-26` 等（具体清单以控制台实时可选为准）。调优后的 LoRA 模型**不支持 PTU 部署**，详见[模型导入](../../raw/model-user-guide/model-deployment-1/model-import.md)文档。
 - **核心功能**：
-  - **长输入与前缀缓存**：PTU 部署支持最高 256K token 输入（如 `qwen3.7-plus-2026-05-26`），并提供阶梯容量系数与缓存折扣（如 `glm-5.1` 缓存命中部分按 20% 折算额度）[原文标题](../../raw/model-user-guide/model-deployment-1/ptu-long-input-and-cache.md)。
-  - **PD 分离计算模式**：在模型单元（MU）部署中可选，将 Prefill 与 Decode 阶段拆分至不同节点，显著降低首 Token 延迟、提升吞吐 [原文标题](../../raw/model-user-guide/model-deployment-1/model-deployment-introduction.md)。
-  - **多推理模式支持**：部分模型（如 `qwen-plus-2025-12-01`）在 MU 部署时可配置 `enable_thinking: true/false`，分别启用思考模式或非思考模式；Instruct/Thinking 类型模型可在部署时动态选择 [原文标题](../../raw/model-user-guide/model-deployment-1/model-deployment-introduction.md)。
+  - **长输入支持**：部分模型支持远超 32K token 的输入（如 `glm-5.1` 最高 200K，`deepseek-v4-pro` 最高 256K），超出基础长度部分按阶梯系数折算 TPM 消耗。
+  - **前缀缓存**：对重复请求前缀自动缓存，命中时按模型专属折扣率（如 `glm-5.1` 为 0.2）折算输入额度，显著降低多轮对话与长文档分析成本。
+  - **溢出策略**：创建时可选「自动溢出至按量计费」（默认，业务不中断）或「仅使用 PTU 容量」（超出返回 HTTP 429）。
 
-> **注意**：文档 1 中“支持模型”表格称“部分预置模型与所有调优后模型”支持模型单元方式，但文档 4 明确指出“全参微调模型仅支持 PTU 和 MU 方式”，二者存在隐含矛盾——实际限制是：**全参微调模型不可通过 `lora` 计费方式部署，但可使用 `mu` 或 `ptu` 方式部署**。开发者应以 API 创建时的实际参数校验为准。
+> **注意**：文档 2 中表格显示 `glm-5.1` 输入上限为 `64K`，但文档 1 明确标注其支持 `200K`。以 [预置吞吐长输入与缓存](../../raw/model-user-guide/model-deployment-1/ptu-long-input-and-cache.md) 的权威说明为准，`glm-5.1` 实际上限为 200K token。
 
 ## 关键参数
 
-| 参数名 | 适用模式 | 说明 | 示例值 |
-|--------|----------|------|--------|
-| `plan` | 全部 | 计费模式标识：`ptu`（预置吞吐）、`mu`（模型单元）、`lora`（Token 用量） | `"ptu"`, `"mu"`, `"lora"` |
-| `ptu_capacity.input_tpm` / `.output_tpm` | `ptu` | 预置吞吐额度（每分钟 Token 数），决定基线服务能力 | `{ "input_tpm": 10000, "output_tpm": 1000 }` |
-| `deploy_spec` / `capacity` | `mu` | 模型单元规格（如 `"MU1"`）与副本数（`capacity: 4`），共同决定算力总量 | `"MU1"`, `4` |
-| `enable_thinking` | `mu` | 是否启用思考模式（仅部分模型支持） | `true` |
-| `max_context_length` | `mu` | 最长上下文长度（token），部分模型支持自定义 | `10000` |
-| `rpm_limit` / `tpm_limit` | `mu` | 服务级限流阈值（每分钟请求数 / 每分钟 Token 数） | `500`, `1000` |
-| `model_name` | 全部 | 模型唯一标识符（如 `"qwen-flash-2025-07-28"` 或自定义 LoRA 模型 ID） | `"qwen3-8b-ft-202511132025-0260"` |
-
-- **溢出策略**（仅 `ptu`）：创建时指定 `overflow_strategy`（默认 `"auto"`），`"auto"` 表示超额度自动转按量计费（响应头含 `x-dashscope-ptu-overflow:true`），`"reject"` 表示直接返回 HTTP 429。
-- **缓存控制**（仅 `ptu`）：无显式参数，由请求内容自动触发前缀缓存；可通过 `cached_tokens` 响应字段验证是否生效 [原文标题](../../raw/model-user-guide/model-deployment-1/ptu-long-input-and-cache.md)。
+| 参数 | 说明 | 来源 |
+|------|------|------|
+| `input_tpm` / `output_tpm` | 预置的每分钟输入/输出 [Token](../concepts/token.md) 数（KTPM），决定基础吞吐保障能力 | [使用 API或命令行进行模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md) |
+| `ptu_capacity` | API 请求体中承载 `input_tpm` 和 `output_tpm` 的对象字段 | [使用 API或命令行进行模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md) |
+| 缓存折扣率 | 模型级固定值（如 `glm-5.1` 为 0.2），用于计算 `cached_tokens` 对应的额度减免 | [预置吞吐长输入与缓存](../../raw/model-user-guide/model-deployment-1/ptu-long-input-and-cache.md) |
+| 阶梯系数 | 按输入长度分段应用（如 `glm-5.1` 在 `[0,32K)` 区间系数为 1.0，在 `[32K,200K]` 区间输入系数为 1.33） | [预置吞吐长输入与缓存](../../raw/model-user-guide/model-deployment-1/ptu-long-input-and-cache.md) |
 
 ## 使用方式
 
-- **控制台部署**：访问 [模型部署控制台](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/efm/model_deploy/create)，填写服务名称、选择模型、计费方式及对应参数（如 PTU 容量或 MU 规格），点击确认即可。部署状态变为 `RUNNING` 即可用。
-- **API 部署**（推荐自动化）：
-  - **PTU 模式**：`POST /api/v1/deployments`，传入 `plan: "ptu"` 和 `ptu_capacity` 对象（见[文档 3](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md)示例）。
-  - **MU 模式**：`POST /api/v1/deployments`，传入 `plan: "mu"`、`deploy_spec`、`capacity` 及可选 `enable_thinking` 等参数。
-  - **Token 计费模式**：`POST /api/v1/deployments`，传入 `plan: "lora"`；注意 `capacity` 字段必须填写但无效，扩缩容需走控制台申请。
-- **调用方式**：部署成功后，使用 `model_name`（即 `deployed_model` ID）调用 `/api/v1/services/{model_name}/completions`（DashScope 协议）或标准 [OpenAI 兼容接口](../concepts/openai-compatible-interface.md)。务必确保 API Key 所属业务空间与部署空间一致 [原文标题](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md)。
+1. **控制台操作**：在百炼控制台 > **模型部署** > **创建部署**，选择「预置吞吐（PTU）」，填写模型、名称、`输入 KTPM` 和 `输出 KTPM`，并展开「预置吞吐额度计算器」辅助估算。
+2. **API 调用**：使用 `POST /api/v1/deployments`，`plan` 字段设为 `"ptu"`，并在 `ptu_capacity` 对象中指定 `input_tpm` 与 `output_tpm` 值（单位：KTPM）。示例见 [使用 API或命令行进行模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md)。
+3. **额度验证**：调用成功后，API 响应中 `service_tier` 字段为 `"ptu-standard"` 表示使用 PTU；`usage.prompt_tokens_details.cached_tokens`（OpenAI 兼容格式）或 `usage.input_tokens_details.cached_tokens`（DashScope 格式）大于 0 即表示缓存生效。
 
 ## 限制和注意事项
 
-- **地域限制**：API 部署仅支持华北2（北京）地域，控制台部署需确认当前控制台所在 Region [原文标题](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md)。
-- **权限要求**：API 调用需确保业务空间已授权目标模型的部署权限，且 API Key 归属账号在该空间拥有操作权限；常见报错 `Workspace xxx does not have deployment privilege for model xxxx` 需在业务空间管理中手动授权 [原文标题](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md)。
-- **OSS 导入约束**：从 OSS 导入 LoRA 模型时，Bucket 必须添加标签 `bailian-datahub-access=read`，且模型文件须置于子目录（非根目录）；文件必须包含 `adapter_model.safetensors`、`adapter_config.json`、`config.json`，且 rank、vocab、chat_template 等严格符合约束 [原文标题](../../raw/model-user-guide/model-deployment-1/model-import.md)。
-- **计费与生命周期**：
-  - 所有部署方式均**创建即计费**，即使未发起任何推理请求。
-  - PTU 预付费订单无法提前终止，到期后延后 2 小时停服；后付费欠费后保留资源 24 小时。
-  - MU 模式下，若购买失败（如资源售罄），将全额退款。
-  - `lora` 模式仅对实际 Token 用量计费，无闲置成本。
-- **性能边界**：单次输入超过模型上限（如千问 128K、DeepSeek 64K）时，无论 PTU/MU 模式，均自动降级为按量计费，且可能受公共流量管控影响性能 [原文标题](../../raw/model-user-guide/model-deployment-1/ptu-long-input-and-cache.md)。
+- **模型限制**：仅预置模型支持 PTU；LoRA 导入模型仅支持模型单元（MU）或按 [Token](../concepts/token.md) 计费，**不可部署为 PTU**，此限制在 [模型导入](../../raw/model-user-guide/model-deployment-1/model-import.md) 文档中明确说明。
+- **输入上限硬约束**：单次请求输入 token 数超过模型物理上限（如千问系列为 128K，DeepSeek 系列为 64K）时，无论 PTU 是否充足，均自动转为按量计费。
+- **额度监控要点**：
+  - 利用率 > 100% 属正常现象，因阶梯系数导致折算后消耗高于原始 token 数。
+  - `provisioned_tokens` 字段反映已应用阶梯与缓存折扣的最终额度消耗，是计费依据。
+- **溢出策略影响**：选择「仅使用 PTU 容量」时，超出额度的请求直接返回 429，无额外费用；选择「自动溢出」时，超出部分按对应模型的按量单价计费，响应头含 `x-dashscope-ptu-overflow:true`。
 
 ## 来源文档
 
-- [模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-introduction.md)
 - [预置吞吐长输入与缓存](../../raw/model-user-guide/model-deployment-1/ptu-long-input-and-cache.md)
-- [使用 API或命令行进行模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md)
+- [模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-introduction.md)
 - [模型导入](../../raw/model-user-guide/model-deployment-1/model-import.md)
+- [使用 API或命令行进行模型部署](../../raw/model-user-guide/model-deployment-1/model-deployment-quick-start.md)
 
 

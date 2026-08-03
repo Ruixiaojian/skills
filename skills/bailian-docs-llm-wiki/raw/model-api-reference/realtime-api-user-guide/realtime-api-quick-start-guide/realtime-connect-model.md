@@ -11,7 +11,7 @@
 
 ## **AOQ 接入**
 
-AOQ 基于 QUIC 协议深度定制，适合移动端原生应用，支持音频/视频/数据混合传输，内置极致抗弱网能力。以下以实时全模态（Omni）的 iOS Demo 为例介绍 AOQ 接入流程。AOQ SDK API 详情请参见[AOQ客户端API](https://help.aliyun.com/zh/model-studio/realtime-api-aoq-api/)。
+AOQ 基于 QUIC 协议深度定制，适合移动端原生应用，支持音频/视频/数据混合传输，内置极致抗弱网能力。以下以实时全模态（Omni）的 iOS Demo 为例介绍 AOQ 接入流程。AOQ SDK API 详情请参见[AOQ客户端SDK](https://help.aliyun.com/zh/model-studio/realtime-api-aoq-api/)。
 
 ### **整体流程时序图**
 
@@ -289,8 +289,12 @@ WebRTC 仅支持服务端 VAD 模式（`server_vad` 或 `semantic_vad`），不�
 
 -   [实时全模态](https://help.aliyun.com/zh/model-studio/realtime#bdaa43cdd7hsd)
     
+-   [实时语音翻译](https://help.aliyun.com/zh/model-studio/qwen3-5-livetranslate-flash-realtime)
+    
 -   [多模态开发套件](https://help.aliyun.com/zh/model-studio/multimodal-interaction-protocol/)
     
 -   [实时语音识别](https://help.aliyun.com/zh/model-studio/fun-asr-realtime-websocket-api)
     
 -   [实时语音合成](https://help.aliyun.com/zh/model-studio/cosyvoice-websocket-api)
+    
+-   [实时语音对话](https://help.aliyun.com/zh/model-studio/fun-audiochat-realtime-websocket-api)

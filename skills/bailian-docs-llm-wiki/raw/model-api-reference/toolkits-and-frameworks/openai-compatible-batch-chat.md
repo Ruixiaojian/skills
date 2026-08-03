@@ -54,9 +54,9 @@
 
 只需修改 API 端点（base\_url），即可轻松将现有的实时推理请求切换至批量推理。请根据调用方式，配置正确的 API 端点。
 
-**SDK配置：**将`base_url`设置为`https://batch.dashscope.aliyuncs.com/compatible-mode/v1`
+**SDK配置：**将`base_url`设置为`https://batch.{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
 
-**HTTP调用：**请求端点为`POST https://batch.dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`
+**HTTP调用：**请求端点为`POST https://batch.{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions`
 
 ### 步骤2：发起调用
 
@@ -77,7 +77,7 @@ from openai import OpenAI
 client = OpenAI(
    # 若没有配置环境变量,可用阿里云百炼API Key将下行替换为：api_key="sk-xxx",但不建议在生产环境中直接将API Key硬编码到代码中,以减少API Key泄露风险.
     api_key=os.getenv("DASHSCOPE_API_KEY"),
-    base_url="https://batch.dashscope.aliyuncs.com/compatible-mode/v1",  # 阿里云百炼Batch chat API 的 URL
+    base_url="https://batch.{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",  # 阿里云百炼Batch chat API 的 URL
 ).with_options(timeout=1800.0) # 设置1800秒（30分钟）的等待时间，最长3600秒
 
 completion = client.chat.completions.create(
@@ -113,7 +113,7 @@ public class Main {
         OpenAIClient client = OpenAIOkHttpClient.builder()
                 // 若没有配置环境变量，可用百炼API Key将下行替换为：.apiKey("sk-xxx")。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
                 .apiKey(System.getenv("DASHSCOPE_API_KEY"))
-                .baseUrl("https://batch.dashscope.aliyuncs.com/compatible-mode/v1")  // # 阿里云百炼Batch chat API 的 URL
+                .baseUrl("https://batch.{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1")  // # 阿里云百炼Batch chat API 的 URL
                 .timeout(Duration.ofSeconds(1800)) // 设置等待时间1800秒（半小时），最长3600秒
                 .build();
 
@@ -151,7 +151,7 @@ const openai = new OpenAI(
     {
         // 若没有配置环境变量，请用百炼API Key将下行替换为：apiKey: "sk-xxx",但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
         apiKey: process.env.DASHSCOPE_API_KEY,
-        baseURL: "https://batch.dashscope.aliyuncs.com/compatible-mode/v1", // 阿里云百炼Batch chat API的 URL
+        baseURL: "https://batch.{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1", // 阿里云百炼Batch chat API的 URL
         // 在这里添加超时设置 (单位：毫秒)
         // 1800秒 * 1000 = 1,800,000 毫秒，最长支持 3,600,000 毫秒
         timeout: 1800 * 1000,
@@ -207,6 +207,7 @@ package main
 
 import (
     "context"
+    "fmt"
     "os"
     "time"
 
@@ -218,7 +219,7 @@ func main() {
     client := openai.NewClient(
     option.WithAPIKey(os.Getenv("DASHSCOPE_API_KEY")),
     // 阿里云百炼Batch chat API 的 URL
-    option.WithBaseURL("https://batch.dashscope.aliyuncs.com/compatible-mode/v1"),
+    option.WithBaseURL("https://batch.{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"),
     )
     // 设置超时时间：1800秒 = 30分钟，最长支持3600秒
     ctx, cancel := context.WithTimeout(context.Background(), 3600*time.Second)
@@ -237,7 +238,7 @@ func main() {
     panic(err.Error())
     }
 
-    println(chatCompletion.Choices[0].Message.Content)
+    fmt.Println(chatCompletion.Choices[0].Message.Content)
 }
 ```
 
@@ -278,7 +279,7 @@ class Program
         }
 
         // 设置请求 URL 和内容
-        string url = "https://batch.dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"; // Batch chat API 的 URL
+        string url = "https://batch.{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions"; // Batch chat API 的 URL
         // 此处以qwen-plus为例，可按需更换模型名称。
         string jsonContent = @"{
             ""model"": ""qwen-plus"",
@@ -359,7 +360,7 @@ class Program
 ```
 <?php
 // 设置Batch Chat 请求 的 URL
-$url = 'https://batch.dashscope.aliyuncs.com/compatible-mode/v1/chat/completions'; 
+$url = 'https://batch.{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions'; 
 // 若没有配置环境变量，请用百炼API Key将下行替换为：$apiKey = "sk-xxx";
 $apiKey = getenv('DASHSCOPE_API_KEY');
 // 设置请求头
@@ -438,7 +439,7 @@ echo $response;
 > 设置最长等待时间max-time为1800秒，最长支持3600秒。
 
 ```
-curl -X POST https://batch.dashscope.aliyuncs.com/compatible-mode/v1/chat/completions \
+curl -X POST https://batch.{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions \
 --max-time 1800 \
 -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
 -H "Content-Type: application/json" \

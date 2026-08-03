@@ -48,6 +48,22 @@
 
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
+qwen3.8-max
+
+> [Batch调用](https://help.aliyun.com/zh/model-studio/batch-interfaces-compatible-with-openai/)半价
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+非思考和思考模式
+
+0<Token≤1M
+
+12元
+
+36元
+
+100万Token
+
 qwen3.7-max
 
 > 当前能力等同于qwen3.7-max-2026-05-20
@@ -284,6 +300,20 @@ qwen-max
 
 > **思维链+回答**
 
+qwen3.8-max
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+全球
+
+非思考和思考模式
+
+0<Token≤1M
+
+12元
+
+36元
+
 qwen3.7-max
 
 > 当前能力等同于qwen3.7-max-2026-05-20
@@ -431,6 +461,20 @@ qwen3-max-preview
 **输出单价（每百万Token）**
 
 > **思维链+回答**
+
+qwen3.8-max
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+国际
+
+非思考和思考模式
+
+0<Token≤1M
+
+14.988元
+
+44.965元
 
 qwen3.7-max
 
@@ -638,6 +682,20 @@ qwen-max
 
 > **思维链+回答**
 
+qwen3.8-max
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+全球
+
+非思考和思考模式
+
+0<Token≤1M
+
+12元
+
+36元
+
 qwen3.7-max
 
 > 当前能力等同于qwen3.7-max-2026-05-20
@@ -821,6 +879,20 @@ qwen3-max-preview
 **输出单价（每百万Token）**
 
 > **思维链+回答**
+
+qwen3.8-max
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+全球
+
+非思考和思考模式
+
+0<Token≤1M
+
+12元
+
+36元
 
 qwen3.7-max
 

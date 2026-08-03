@@ -52,7 +52,7 @@
 - [more](api/more.md) — 3 篇源文档
 - [more about models](api/more-about-models.md) — 6 篇源文档
 - [more models](api/more-models.md) — 6 篇源文档
-- [omni realtime api](api/omni-realtime-api.md) — 5 篇源文档
+- [omni realtime api](api/omni-realtime-api.md) — 6 篇源文档
 - [preparations](api/preparations.md) — 4 篇源文档
 - [qwen api reference](api/qwen-api-reference.md) — 1 篇源文档
 - [realtime api user guide](api/realtime-api-user-guide.md) — 12 篇源文档
@@ -63,21 +63,21 @@
 ## 横切概念
 
 - [OpenAI 兼容接口](concepts/openai-compatible-interface.md) — 关联 5 个主题
-- [Prompt 工程](concepts/prompt-engineering.md) — 关联 5 个主题
-- [Token 计量与计费](concepts/token.md) — 关联 5 个主题
-- [函数调用](concepts/function-calling.md) — 关联 4 个主题
-- [多模态能力](concepts/multi-modal.md) — 关联 5 个主题
-- [智能体工具集成](concepts/agent-tool-integration.md) — 关联 5 个主题
+- [Token](concepts/token.md) — 关联 5 个主题
+- [函数调用](concepts/function-calling.md) — 关联 5 个主题
+- [工具调用](concepts/tool-use.md) — 关联 5 个主题
+- [提示词工程](concepts/prompt-engineering.md) — 关联 5 个主题
+- [数据连接](concepts/data-connection.md) — 关联 5 个主题
 - [检索增强生成](concepts/rag.md) — 关联 5 个主题
+- [模型上下文协议](concepts/mcp.md) — 关联 5 个主题
 - [流式输出](concepts/streaming-output.md) — 关联 5 个主题
-- [知识库](concepts/knowledge-base.md) — 关联 5 个主题
-- [长期记忆](concepts/long-term-memory.md) — 关联 5 个主题
+- [长期记忆](concepts/memory.md) — 关联 5 个主题
 
 ## 对比分析
 
-- [多模态生成能力对比：图像、视频与3D生成](comparisons/generation-modalities-comparison.md) — 对比 3 个主题
+- [多模态生成 API 对比：图像、视频与3D生成](comparisons/generation-apis-comparison.md) — 对比 3 个主题
 - [实时 API 方案对比：Realtime API vs Omni Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
-- [模型部署方式对比：高并发推理、压缩与生产部署](comparisons/model-deployment-options.md) — 对比 3 个主题
-- [知识管理方案对比：Knowledge API vs Knowledge Base](comparisons/knowledge-solutions-comparison.md) — 对比 2 个主题
-- [长期记忆方案对比：Long Term Memory vs Memory Library](comparisons/memory-solutions-comparison.md) — 对比 2 个主题
+- [应用调用方式对比：Application Call vs Bailian Application Calling](comparisons/application-calling-methods.md) — 对比 2 个主题
+- [模型部署方案对比：Model Production vs Model Deployment 1](comparisons/model-deployment-options.md) — 对比 2 个主题
+- [知识库与长期记忆能力对比](comparisons/knowledge-base-vs-long-term-memory.md) — 对比 2 个主题
 
