@@ -1,45 +1,45 @@
 # skill
 
-Skill 是百炼平台中用于扩展智能体任务处理能力的可复用能力包，支持在不编写代码的前提下，让智能体自动识别并执行文件处理、数据分析等专业任务。Skill 分为平台预置的官方 Skill 和用户自主开发的自定义 Skill 两类，均通过语义描述驱动调用决策。其核心机制依赖于 `SKILL.md` 中的 `description` 字段对触发条件与能力边界的精准刻画，详见 [Skill (raw/application-user-guide/skill/introduction-to-skill.md)](../../raw/application-user-guide/skill/introduction-to-skill.md)。
+Skill 是百炼平台提供的可插拔能力包，用于扩展智能体在对话中自动处理特定任务（如文件解析、数据清洗等）的能力，无需额外编码或工具集成。开发者可通过官方 Skill 快速启用通用功能，或通过自定义 ZIP 技能包实现业务定制化能力。所有 Skill 均由智能体根据 `description` 语义自动触发调用，其准确性高度依赖元信息描述质量。
 
 ## 支持的模型/功能
 
-- **适用模型**：Skill 当前仅支持接入基于百炼大模型（如 Qwen 系列）构建的智能体应用，不适用于纯规则引擎或非百炼托管的推理服务。
-- **核心功能**：
-  - 自动识别用户意图与输入文件/数据特征，匹配最相关的 Skill；
-  - 执行文件解析（如 PDF、XLSX、CSV）、格式转换、结构化清洗、表格生成等操作；
-  - 输出结果以文件形式返回（如 `.xlsx`, `.pdf`, `.json`），不支持流式响应或中间状态交互；
-  - 官方 Skill（如 `xlsx`、`pdf-reader`）由平台统一维护，功能稳定且持续迭代；自定义 Skill 的行为完全由 ZIP 包内代码与 `SKILL.md` 描述共同决定。
+Skill 本身不依赖特定大模型，而是作为独立于模型推理流程的“能力模块”被智能体调度。当前支持两类 Skill：
+- **官方 Skill**：平台预置、统一维护的通用能力，覆盖 `.xlsx`/`.csv`/`.pdf` 等常见格式的读写、转换与清洗，详情见 [Skill 管理](https://bailian.console.aliyun.com/?tab=app#/skill) 页面；完整说明请参阅 [原文标题](../../raw/application-user-guide/skill/introduction-to-skill.md)。
+- **自定义 Skill**：通过上传 ZIP 包实现，适用于行业专属逻辑（如医疗报告结构化解析、金融报表校验），需严格遵循 [原文标题](../../raw/application-user-guide/skill/introduction-to-skill.md) 中定义的 SKILL.md 规范与 ZIP 结构约束。
 
-> **注意**：原始文档中未明确说明 Skill 是否支持多模态输入（如图像+文本混合指令），但根据 [Skill (raw/application-user-guide/skill/introduction-to-skill.md)](../../raw/application-user-guide/skill/introduction-to-skill.md) 中所有示例均为文本+文件组合，当前版本暂不支持纯图像输入触发 Skill，该限制需在开发自定义 Skill 时主动规避。
+> **注意**：官方 Skill 的功能列表和触发逻辑可能随平台更新动态调整，而自定义 Skill 的行为完全由其 `description` 字段决定——该字段是智能体调用决策的唯一依据，而非代码逻辑。因此，务必参考 [原文标题](../../raw/application-user-guide/skill/introduction-to-skill.md) 中的 description 编写建议，避免因描述模糊导致误触发或漏触发。
 
 ## 关键参数
 
-| 参数 | 位置 | 必填 | 说明 |
-|------|------|------|------|
-| `name` | `SKILL.md` 根级字段 | 是 | Skill 唯一标识符，须全小写、仅含字母/数字/连字符（如 `invoice-parser`），同一账号下不可重复。 |
-| `description` | `SKILL.md` 根级字段 | 是 | **最关键参数**：决定智能体是否调用该 Skill。必须清晰声明适用输入类型、支持操作、典型触发关键词及明确排除场景。质量直接影响召回率与误触发率。参考 [Skill (raw/application-user-guide/skill/introduction-to-skill.md)](../../raw/application-user-guide/skill/introduction-to-skill.md) 中 xlsx 示例的完整结构。 |
-| ZIP 包大小 | 上传时校验 | — | ≤ 10 MB，超限将被拒绝。 |
+仅 `SKILL.md` 文件中的两个 YAML 字段为必填且生效：
+- `name`：全局唯一标识符，仅支持小写字母、数字和连字符（如 `invoice-parser`），不可与同账号下已有 Skill 名称重复；
+- `description`：纯文本字段，必须明确包含四类信息：适用输入类型、支持操作、触发关键词、不适用场景。该字段直接影响智能体调用准确率，是 Skill 行为的“契约声明”。
+
+ZIP 包本身无其他配置参数，但受以下硬性约束：
+- 整包体积 ≤ 10 MB；
+- 根目录必须存在且仅有一个 `SKILL.md`；
+- 不支持嵌套子目录以外的任意执行环境（如 Python 运行时、Docker 镜像等）。
 
 ## 使用方式
 
-1. **创建 Skill**：
-   - 官方 Skill：直接在 [Skill 管理](https://bailian.console.aliyun.com/?tab=app#/skill) 页面查看并添加；
-   - 自定义 Skill：准备符合规范的 ZIP 包（含 `SKILL.md` 及可执行逻辑），在控制台 **组件 > Skill 管理 > 自定义 Skill** 中上传。
+1. **创建**：
+   - 官方 Skill：直接在 [Skill 管理](https://bailian.console.aliyun.com/?tab=app#/skill) 页面点击“添加到智能体”；
+   - 自定义 Skill：按 [原文标题](../../raw/application-user-guide/skill/introduction-to-skill.md) 要求编写 `SKILL.md` 并打包 ZIP，进入控制台 **组件 > Skill 管理 > 自定义 Skill** 上传。
 
-2. **添加到智能体**：
-   - 方式一：从 Skill 详情页点击 **添加到智能体**，选择目标应用；
-   - 方式二：进入智能体 **应用配置 > 技能** 区域，点击 `+` 号选择 Skill。
+2. **绑定**：
+   - 方式一：在 Skill 详情页点击“添加到智能体”，选择目标应用；
+   - 方式二：进入目标智能体的 **应用配置 > 技能** 区域，点击“+”从列表中选取。
 
-3. **测试验证**：
-   - 在应用配置页右侧对话窗格中发送典型指令（如 `帮我把附件里的 CSV 按销售额排序并导出为 Excel`），观察是否触发对应 Skill 并正确返回文件。
+3. **测试**：在应用配置页右侧对话窗格输入典型用户指令（如“把附件里的销售数据转成 Excel 并按季度汇总”），观察是否自动调用并返回预期结果。
 
 ## 限制和注意事项
 
-- **版本更新行为差异**：官方 Skill 更新后，已添加的应用**自动生效最新版本**；而自定义 Skill 需重新上传同名 ZIP 包才生成新版本，且已添加的应用**立即切换至新版本**（无灰度期），请确保向后兼容。
-- **description 误写风险高**：若 `description` 中遗漏“不适用场景”或触发关键词覆盖不足，将导致 Skill 被错误调用或完全不触发。强烈建议按文档示例组织描述，避免模糊表述（如“处理数据”应改为“清洗含缺失值和重复行的 CSV 表格，并输出去重后的 .xlsx”）。
-- **调试支持有限**：当前平台不提供 Skill 运行时日志或中间变量查看能力，排查失败需依赖 `description` 语义合理性验证与 ZIP 内代码本地测试。
-- **安全约束**：自定义 Skill 运行于沙箱环境，禁止访问外网、读写宿主机文件系统、执行系统命令；ZIP 包中不得包含二进制可执行文件（`.exe`, `.so` 等），仅支持 Python 脚本及依赖（需满足 `requirements.txt` 规范）。
+- 自定义 Skill 无沙箱执行环境，所有逻辑必须由百炼平台内置能力（如文件解析引擎、表格计算服务）完成，**不支持上传可执行二进制或运行任意代码**；
+- 官方 Skill 版本更新后，已绑定的智能体会自动升级，但自定义 Skill 必须手动重新上传 ZIP 才能生效；
+- `description` 中若未明确排除某类场景（如“不处理图片中的表格”），智能体可能在不符合预期的输入下错误触发；
+- 单个智能体最多绑定 50 个 Skill（含官方与自定义），超出需移除未使用项；
+- ZIP 审查失败时，错误提示仅反馈 `SKILL.md` 格式或字段缺失问题，不校验业务逻辑正确性——开发者需自行验证描述与实际能力的一致性。
 
 ## 来源文档
 

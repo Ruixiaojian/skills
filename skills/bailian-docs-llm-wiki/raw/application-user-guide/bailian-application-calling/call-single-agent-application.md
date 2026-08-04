@@ -10,7 +10,7 @@
     
     -   API Key：前往[密钥管理](https://bailian.console.aliyun.com/?tab=model#/api-key)页面，创建并[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
         
-    -   阿里云百炼应用ID：前往[应用管理](https://bailian.console.aliyun.com/?tab=app#/app-center)页面创建[智能体应用](https://help.aliyun.com/zh/model-studio/single-agent-application)，并在应用卡片上复制其APP\_ID。
+    -   阿里云百炼应用ID：前往[应用管理](https://bailian.console.aliyun.com/?tab=app#/app-center)页面创建[智能体应用（Agent 1.0）](https://help.aliyun.com/zh/model-studio/single-agent-application)，并在应用卡片上复制其APP\_ID。
         
 2.  **安装DashScope SDK**
     
@@ -102,7 +102,7 @@ from dashscope import Application
 response = Application.call(
     # 若没有配置环境变量，可用百炼API Key将下行替换为：api_key="sk-xxx"。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
     api_key=os.getenv("DASHSCOPE_API_KEY"),
-    app_id='YOUR_APP_ID',# 替换为实际的应用 ID
+    app_id='APP_ID',# 替换为实际的应用 ID
     prompt='你是谁？')
 
 if response.status_code != HTTPStatus.OK:
@@ -117,7 +117,7 @@ else:
 **响应示例**
 
 ```
-我是阿里云开发的一款超大规模语言模型，我叫通义千问。我被设计用来帮助用户生成各种类型的文本，如文章、故事、诗歌、故事等，并能根据不同的场景和需求进行调整和优化。此外，我还能够回答各种问题，提供信息和解释，辅助学习和研究。如果您有任何需要，欢迎随时向我提问！
+我是阿里云开发的一款超大规模语言模型，我叫千问。我被设计用来帮助用户生成各种类型的文本，如文章、故事、诗歌、故事等，并能根据不同的场景和需求进行调整和优化。此外，我还能够回答各种问题，提供信息和解释，辅助学习和研究。如果您有任何需要，欢迎随时向我提问！
 ```
 
 ### Java
@@ -137,7 +137,7 @@ public class Main {
         ApplicationParam param = ApplicationParam.builder()
                 // 若没有配置环境变量，可用百炼API Key将下行替换为：.apiKey("sk-xxx")。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
                 .apiKey(System.getenv("DASHSCOPE_API_KEY"))
-                .appId("YOUR_APP_ID")
+                .appId("APP_ID")
                 .prompt("你是谁？")
                 .build();
 
@@ -163,7 +163,7 @@ public class Main {
 **响应示例**
 
 ```
-text: 我是阿里云开发的一款超大规模语言模型，我叫通义千问。
+text: 我是阿里云开发的一款超大规模语言模型，我叫千问。
 ```
 
 ### HTTP
@@ -173,7 +173,7 @@ text: 我是阿里云开发的一款超大规模语言模型，我叫通义千�
 **请求示例**
 
 ```
-curl -X POST https://dashscope.aliyuncs.com/api/v1/apps/YOUR_APP_ID/completion \
+curl -X POST https://dashscope.aliyuncs.com/api/v1/apps/APP_ID/completion \
 --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
 --header 'Content-Type: application/json' \
 --data '{
@@ -185,14 +185,14 @@ curl -X POST https://dashscope.aliyuncs.com/api/v1/apps/YOUR_APP_ID/completion \
 }'
 ```
 
-> YOUR\_APP\_ID替换为实际的应用 ID。
+> APP\_ID替换为实际的应用 ID。
 
 **响应示例**
 
 ```
 {"output":{"finish_reason":"stop",
 "session_id":"232ea2e9e6ef448db6b14465c06a9a56",
-"text":"我是来自阿里云的超大规模语言模型，我叫通义千问。我是一个能够回答问题、创作文字，还能表达观点、撰写代码的AI助手。如果您有任何问题或需要帮助，请随时告诉我，我会尽力为您提供帮助。"},
+"text":"我是来自阿里云的超大规模语言模型，我叫千问。我是一个能够回答问题、创作文字，还能表达观点、撰写代码的AI助手。如果您有任何问题或需要帮助，请随时告诉我，我会尽力为您提供帮助。"},
 "usage":{"models":[{"output_tokens":51,"model_id":"qwen-max","input_tokens":121}]},
 "request_id":"661c9cad-e59c-9f78-a262-78eff243f151"}%
 ```
@@ -206,7 +206,7 @@ curl -X POST https://dashscope.aliyuncs.com/api/v1/apps/YOUR_APP_ID/completion \
 
 # 若没有配置环境变量，可用百炼API Key将下行替换为：$api_key="sk-xxx"。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
 $api_key = getenv("DASHSCOPE_API_KEY");
-$application_id = 'YOUR_APP_ID'; // 替换为实际的应用 ID
+$application_id = 'APP_ID'; // 替换为实际的应用 ID
 
 $url = "https://dashscope.aliyuncs.com/api/v1/apps/$application_id/completion";
 
@@ -273,7 +273,7 @@ else {
 **响应示例**
 
 ```
-我是来自阿里云的超大规模语言模型，我叫通义千问。
+我是来自阿里云的超大规模语言模型，我叫千问。
 ```
 
 #### Node.js
@@ -292,7 +292,7 @@ const axios = require('axios');
 async function callDashScope() {
     // 若没有配置环境变量，可用百炼API Key将下行替换为：apiKey='sk-xxx'。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
     const apiKey = process.env.DASHSCOPE_API_KEY;
-    const appId = 'YOUR_APP_ID';// 替换为实际的应用 ID
+    const appId = 'APP_ID';// 替换为实际的应用 ID
 
     const url = `https://dashscope.aliyuncs.com/api/v1/apps/${appId}/completion`;
 
@@ -334,7 +334,7 @@ callDashScope();
 **响应示例**
 
 ```
-我是来自阿里云的大规模语言模型，我叫通义千问。
+我是来自阿里云的大规模语言模型，我叫千问。
 ```
 
 #### C#
@@ -353,7 +353,7 @@ class Program
     {
         //若没有配置环境变量，可用百炼API Key将下行替换为：apiKey="sk-xxx"。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。 
         string apiKey = Environment.GetEnvironmentVariable("DASHSCOPE_API_KEY") ?? throw new InvalidOperationException("DASHSCOPE_API_KEY environment variable is not set.");
-        string appId = "YOUR_APP_ID"; // 替换为实际的应用ID
+        string appId = "APP_ID"; // 替换为实际的应用ID
 
         string url = $"https://dashscope.aliyuncs.com/api/v1/apps/{appId}/completion";
 
@@ -404,7 +404,7 @@ class Program
     "output": {
         "finish_reason": "stop",
         "session_id": "c274e14a58d9492f9baeffdc003a97c5",
-        "text": "我是阿里云开发的一款超大规模语言模型，我叫通义千问。我被设计用来帮助用户生成各种类型的文本，如文章、故事、诗歌、故事等，并能根据不同的场景和需求进行变换和创新。此外，我还能够回答各种问题，提供信息和解释，帮助用户解决问题和获取知识。如果你有任何问题或需要帮助，请随时告诉我！"
+        "text": "我是阿里云开发的一款超大规模语言模型，我叫千问。我被设计用来帮助用户生成各种类型的文本，如文章、故事、诗歌、故事等，并能根据不同的场景和需求进行变换和创新。此外，我还能够回答各种问题，提供信息和解释，帮助用户解决问题和获取知识。如果你有任何问题或需要帮助，请随时告诉我！"
     },
     "usage": {
         "models": [
@@ -438,7 +438,7 @@ import (
 func main() {
 	// 若没有配置环境变量，可用百炼API Key将下行替换为：apiKey := "sk-xxx"。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
 	apiKey := os.Getenv("DASHSCOPE_API_KEY")
-	appId := "YOUR_APP_ID" // 替换为实际的应用 ID
+	appId := "APP_ID" // 替换为实际的应用 ID
 
 	if apiKey == "" {
 		fmt.Println("请确保设置了DASHSCOPE_API_KEY。")
@@ -507,7 +507,7 @@ func main() {
     "output": {
         "finish_reason": "stop",
         "session_id": "6105c965c31b40958a43dc93c28c7a59",
-        "text": "我是通义千问，由阿里云开发的AI助手。我被设计用来回答各种问题、提供信息和与用户进行对话。有什么我可以帮助你的吗？"
+        "text": "我是千问，由阿里云开发的AI助手。我被设计用来回答各种问题、提供信息和与用户进行对话。有什么我可以帮助你的吗？"
     },
     "usage": {
         "models": [
@@ -809,7 +809,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     die("JSON encoding failed with error: " . json_last_error_msg());
 }
 
-// 初始化 cURL 对话
+// 初始化 cURL 会话
 $ch = curl_init($url);
 
 // 设置 cURL 选项
@@ -831,7 +831,7 @@ if ($response === false) {
 
 // 获取 HTTP 状态码
 $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-// 关闭 cURL 对话
+// 关闭 cURL 会话
 curl_close($ch);
 // 解码响应数据
 $response_data = json_decode($response, true);
@@ -891,7 +891,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     die("JSON encoding failed with error: " . json_last_error_msg());
 }
 
-// 初始化 cURL 对话
+// 初始化 cURL 会话
 $ch = curl_init($url);
 
 // 设置 cURL 选项
@@ -913,7 +913,7 @@ if ($response === false) {
 
 // 获取 HTTP 状态码
 $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-// 关闭 cURL 对话
+// 关闭 cURL 会话
 curl_close($ch);
 // 解码响应数据
 $response_data = json_decode($response, true);
@@ -1672,7 +1672,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     die("JSON encoding failed with error: " . json_last_error_msg());
 }
 
-// 初始化 cURL 对话
+// 初始化 cURL 会话
 $ch = curl_init($url);
 
 // 设置 cURL 选项
@@ -1694,7 +1694,7 @@ if ($response === false) {
 
 // 获取 HTTP 状态码
 $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-// 关闭 cURL 对话
+// 关闭 cURL 会话
 curl_close($ch);
 
 // 解码响应数据
@@ -2139,7 +2139,7 @@ public class Main {
                 .incrementalOutput(true)
                 .build();
         Application application = new Application();
-        // .streamCall（）：流式输出内容
+        // .streamCall()：流式输出内容
         Flowable<ApplicationResult> result = application.streamCall(param);
         result.blockingForEach(data -> {
             System.out.printf("%s\n",
@@ -2270,7 +2270,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     die("JSON encoding failed with error: " . json_last_error_msg());
 }
 
-// 初始化 cURL 对话
+// 初始化 cURL 会话
 $ch = curl_init($url);
 
 // 设置 cURL 选项
@@ -2297,7 +2297,7 @@ if ($response === false) {
 
 // 获取 HTTP 状态码
 $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-// 关闭 cURL 对话
+// 关闭 cURL 会话
 curl_close($ch);
 
 if ($status_code != 200) {
@@ -2875,7 +2875,7 @@ biz_params = {
 
 **重要**
 
-确保应用内添加的自定义变量名和API调用时传递的调用名一致。
+确保应用内添加的自定义变量名和API调用时传递的变量名一致。
 
 `user_defined_params`
 
@@ -2928,8 +2928,12 @@ API调用示例如下：
 
 1.  在控制台的**智能体应用**内添加自定义变量，并在提示词中引用，然后**发布**应用。示例：
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/9864148471/p960772.png)
-    
+    1.  单击**\+ 自定义变量**按钮添加变量。
+        
+    2.  配置变量信息：变量名为 `city`，描述为城市名，默认值为杭州。
+        
+    3.  在提示词编辑区输入引用变量的提示词，例如：`根据城市名 ${city}，给出该城市的三种美食推荐，只显示美食名称，逗号隔开。`
+        
 2.  API调用，示例如下：
     
     ##### **Python**
@@ -3056,7 +3060,7 @@ API调用示例如下：
             "models": [
                 {
                     "output_tokens": 11,
-                    "model_id": "qwen-turbo-latest",
+                    "model_id": "qwen-turbo",
                     "input_tokens": 78
                 }
             ]
@@ -3096,7 +3100,7 @@ API调用示例如下：
         die("JSON encoding failed with error: " . json_last_error_msg());
     }
     
-    // 初始化 cURL 对话
+    // 初始化 cURL 会话
     $ch = curl_init($url);
     
     // 设置 cURL 选项
@@ -3118,7 +3122,7 @@ API调用示例如下：
     
     // 获取 HTTP 状态码
     $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    // 关闭 cURL 对话
+    // 关闭 cURL 会话
     curl_close($ch);
     // 解码响应数据
     $response_data = json_decode($response, true);
@@ -3304,7 +3308,7 @@ API调用示例如下：
             "models": [
                 {
                     "output_tokens": 11,
-                    "model_id": "qwen-turbo-latest",
+                    "model_id": "qwen-turbo",
                     "input_tokens": 78
                 }
             ]
@@ -3411,7 +3415,7 @@ API调用示例如下：
             "models": [
                 {
                     "output_tokens": 11,
-                    "model_id": "qwen-turbo-latest",
+                    "model_id": "qwen-turbo",
                     "input_tokens": 78
                 }
             ]
@@ -3595,7 +3599,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     die("JSON encoding failed with error: " . json_last_error_msg());
 }
 
-// 初始化 cURL 对话
+// 初始化 cURL 会话
 $ch = curl_init($url);
 
 // 设置 cURL 选项
@@ -3617,7 +3621,7 @@ if ($response === false) {
 
 // 获取 HTTP 状态码
 $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-// 关闭 cURL 对话
+// 关闭 cURL 会话
 curl_close($ch);
 // 解码响应数据
 $response_data = json_decode($response, true);
@@ -4128,7 +4132,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     die("JSON encoding failed with error: " . json_last_error_msg());
 }
 
-// 初始化 cURL 对话
+// 初始化 cURL 会话
 $ch = curl_init($url);
 
 // 设置 cURL 选项
@@ -4150,7 +4154,7 @@ if ($response === false) {
 
 // 获取 HTTP 状态码
 $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-// 关闭 cURL 对话
+// 关闭 cURL 会话
 curl_close($ch);
 // 解码响应数据
 $response_data = json_decode($response, true);
@@ -4673,7 +4677,7 @@ func main() {
         die("JSON encoding failed with error: " . json_last_error_msg());
     }
     
-    // 初始化 cURL 对话
+    // 初始化 cURL 会话
     $ch = curl_init($url);
     
     // 设置 cURL 选项
@@ -4695,7 +4699,7 @@ func main() {
     
     // 获取 HTTP 状态码
     $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    // 关闭 cURL 对话
+    // 关闭 cURL 会话
     curl_close($ch);
     // 解码响应数据
     $response_data = json_decode($response, true);
@@ -5207,7 +5211,7 @@ func main() {
             die("JSON encoding failed with error: " . json_last_error_msg());
         }
         
-        // 初始化 cURL 对话
+        // 初始化 cURL 会话
         $ch = curl_init($url);
         
         // 设置 cURL 选项
@@ -5229,7 +5233,7 @@ func main() {
         
         // 获取 HTTP 状态码
         $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        // 关闭 cURL 对话
+        // 关闭 cURL 会话
         curl_close($ch);
         // 解码响应数据
         $response_data = json_decode($response, true);
@@ -5721,7 +5725,7 @@ func main() {
         die("JSON encoding failed with error: " . json_last_error_msg());
     }
     
-    // 初始化 cURL 对话
+    // 初始化 cURL 会话
     $ch = curl_init($url);
     
     // 设置 cURL 选项
@@ -5743,7 +5747,7 @@ func main() {
     
     // 获取 HTTP 状态码
     $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    // 关闭 cURL 对话
+    // 关闭 cURL 会话
     curl_close($ch);
     // 解码响应数据
     $response_data = json_decode($response, true);
@@ -6047,8 +6051,6 @@ func main() {
     
 -   **查看回答来源信息：**单击**知识库**开关旁的**配置**，在页面中打开**展示回答来源**开关，然后**发布**应用，可在调用的返回结果中查看回答来源。
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2935773571/p949493.png)
-    
 
 ### **深度思考**
 
@@ -6204,7 +6206,7 @@ public class Main {
                 .incrementalOutput(true)
                 .build();
         Application application = new Application();
-        // .streamCall（）：流式输出内容
+        // .streamCall()：流式输出内容
         Flowable<ApplicationResult> result = application.streamCall(param);
         result.blockingForEach(data -> {
             System.out.printf("%s\n",
@@ -6364,7 +6366,7 @@ data:{"output":{"thoughts":[{"action":"reasoning","thought":"","action_type":"re
 
 **步骤 2: 创建长期记忆体**
 
-调用[CreateMemory](https://help.aliyun.com/zh/model-studio/developer-reference/api-bailian-2023-12-29-creatememory?spm=a2c4g.11186623.0.0.586c6610Kg0bkj)接口，创建一个长期记忆体，从响应中获得一个唯一的`memoryId`。
+调用[CreateMemory](https://help.aliyun.com/zh/model-studio/api-bailian-2023-12-29-creatememory)接口，创建一个长期记忆体，从响应中获得一个唯一的`memoryId`。
 
 **步骤 3: 保存对话信息**
 
@@ -6653,7 +6655,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     die("JSON encoding failed with error: " . json_last_error_msg());
 }
 
-// 初始化 cURL 对话
+// 初始化 cURL 会话
 $ch = curl_init($url);
 
 // 设置 cURL 选项
@@ -6675,7 +6677,7 @@ if ($response === false) {
 
 // 获取 HTTP 状态码
 $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-// 关闭 cURL 对话
+// 关闭 cURL 会话
 curl_close($ch);
 // 解码响应数据
 $response_data = json_decode($response, true);
@@ -6729,7 +6731,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     die("JSON encoding failed with error: " . json_last_error_msg());
 }
 
-// 初始化 cURL 对话
+// 初始化 cURL 会话
 $ch = curl_init($url);
 
 // 设置 cURL 选项
@@ -6751,7 +6753,7 @@ if ($response === false) {
 
 // 获取 HTTP 状态码
 $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-// 关闭 cURL 对话
+// 关闭 cURL 会话
 curl_close($ch);
 // 解码响应数据
 $response_data = json_decode($response, true);
@@ -7332,7 +7334,7 @@ func main() {
 -   **视觉理解**：通过**通义千问VL系列模型**分析图片中的**图像内容**（如物体、场景、动作等），无需依赖文字信息。
     
 
-如需在控制台操作上传文件并与大模型进行问答请参阅[上传文件](https://help.aliyun.com/zh/model-studio/user-guide/file-interaction?spm=a2c4g.11186623.help-menu-search-2400256.d_0)。
+如需在控制台操作上传文件并与大模型进行问答请参阅[上传文件](https://help.aliyun.com/zh/model-studio/file-q-a)。
 
 API方式操作请参阅以下内容。
 
@@ -7362,7 +7364,7 @@ API方式操作请参阅以下内容。
 2.  验证文件状态为FILE\_IS\_READY。
     
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2073150671/CAEQWhiBgICSiLDquBkiIDA3ODdmMzY4NTMyNTQ5OGE4NWM4MThjNTM5YTMwZjE05224266_20250529113200.258.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/4136485871/CAEQWhiBgICSiLDquBkiIDA3ODdmMzY4NTMyNTQ5OGE4NWM4MThjNTM5YTMwZjE05224266_20250529113200.258.svg)
 
 **步骤三：API调用应用**
 
@@ -7541,7 +7543,7 @@ API方式操作请参阅以下内容。
         die("JSON encoding failed with error: " . json_last_error_msg());
     }
     
-    // 初始化 cURL 对话
+    // 初始化 cURL 会话
     $ch = curl_init($url);
     
     // 设置 cURL 选项
@@ -7563,7 +7565,7 @@ API方式操作请参阅以下内容。
     
     // 获取 HTTP 状态码
     $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    // 关闭 cURL 对话
+    // 关闭 cURL 会话
     curl_close($ch);
     // 解码响应数据
     $response_data = json_decode($response, true);
@@ -7877,11 +7879,11 @@ API方式操作请参阅以下内容。
     
     [在线调试](https://api.aliyun.com/api/bailian/2023-12-29/ApplyFileUploadLease)ApplyFileUploadLease接口。
     
-    **发起调用图示**
+    **操作说明**
     
     **重要参数说明**
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/1194987471/p958857.png)
+    将 **CategoryType** 设置为 `SESSION_FILE`，完成参数配置后单击**发起调用**。
     
     **CategoryId**: 务必填写default。
     
@@ -7965,7 +7967,29 @@ API方式操作请参阅以下内容。
     
     **CategoryType**: 务必填写SESSION\_FILE。
     
-    **调用成功图示**![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/1194987471/p958861.png)
+    **调用成功响应**
+    
+    调用成功后，返回如下 JSON 响应（敏感字段已脱敏）：
+    
+    ```
+    {
+        "Status": "200",
+        "Message": "",
+        "RequestId": "519DD942-4701-xxx",
+        "Data": {
+            "FileUploadLeaseId": "ed76eb4xxx",
+            "Type": "OSS.PreSignedUrl",
+            "Param": {
+                "Headers": {
+                    "X-bailian-extra": "MTY3MzAyNxxx==",
+                    "Content-Type": "application/msword"
+                },
+                "Method": "PUT",
+                "Url": "https://dashscope-file-datacenter-xxx"
+            }
+        }
+    }
+    ```
     
     **说明**
     
@@ -8198,9 +8222,23 @@ API方式操作请参阅以下内容。
     
     **CategoryType**: 务必填写SESSION\_FILE。
     
-    **调用成功图示**
+    **调用成功响应**
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/1194987471/p958863.png)
+    调用成功后返回如下 JSON 响应，其中 `FileId` 为会话文件 ID，将用于后续所有与此文档相关的 API 操作。
+    
+    ```
+    {
+      "Status": 200,
+      "Message": "",
+      "RequestId": "AD2FB14B-8A0E-5DCB-xxx",
+      "Data": {
+        "FileId": "file_session_6c6bb333395xxx",
+        "Parser": "DASHSCOPE_DOCMIND"
+      },
+      "Code": "Success",
+      "Success": true
+    }
+    ```
     
     **说明**
     
@@ -8273,12 +8311,12 @@ API方式操作请参阅以下内容。
     
     必须等到`Status`字段值显示为`FILE_IS_READY`才能开始后续的API调用。
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/1194987471/p958899.png)
+    在 DescribeFile 接口调试页面，填写 **WorkspaceId** 和 **FileId** 参数后单击**发起调用**，确认返回结果中 `Status` 为 `FILE_IS_READY`，`Parser` 为 `DASHSCOPE_DOCMIND`。
     
 5.  完成有效的会话文件ID获取后，可进入上述步骤三：API调用应用。
     
 
-如需查看上述获取ID步骤中的接口参数详细说明请参阅[API上传文件](https://help.aliyun.com/zh/model-studio/developer-reference/upload-files-by-calling-api?spm=a2c4g.11186623.0.0.2e2183749WPvAJ)。
+如需查看上述获取ID步骤中的接口参数详细说明请参阅[API上传文件](https://help.aliyun.com/zh/model-studio/rag-knowledge-base-api-guide)。
 
 #### **视觉理解**
 
@@ -8439,7 +8477,7 @@ API方式操作请参阅以下内容。
         die("JSON encoding failed with error: " . json_last_error_msg());
     }
     
-    // 初始化 cURL 对话
+    // 初始化 cURL 会话
     $ch = curl_init($url);
     
     // 设置 cURL 选项
@@ -8461,7 +8499,7 @@ API方式操作请参阅以下内容。
     
     // 获取 HTTP 状态码
     $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    // 关闭 cURL 对话
+    // 关闭 cURL 会话
     curl_close($ch);
     // 解码响应数据
     $response_data = json_decode($response, true);
@@ -8761,7 +8799,7 @@ API方式操作请参阅以下内容。
     response = Application.call(
         # 若没有配置环境变量，可用阿里云百炼API Key将下行替换为：api_key="sk-xxx"。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
         api_key=os.getenv("DASHSCOPE_API_KEY"),
-        app_id='YOUR_APP_ID',# 替换为实际的应用 ID
+        app_id='APP_ID',# 替换为实际的应用 ID
         prompt='你是谁？')
     
     if response.status_code != HTTPStatus.OK:
@@ -8788,7 +8826,7 @@ API方式操作请参阅以下内容。
             ApplicationParam param = ApplicationParam.builder()
                     // 若没有配置环境变量，可用阿里云百炼API Key将下行替换为：.apiKey("sk-xxx")。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
                     .apiKey(System.getenv("DASHSCOPE_API_KEY"))
-                    .appId("YOUR_APP_ID")
+                    .appId("APP_ID")
                     .prompt("你是谁？")
                     .build(); 
             // 配置私网终端节点
@@ -8816,7 +8854,7 @@ API方式操作请参阅以下内容。
     这里给出curl代码示例。
     
     ```
-    curl -X POST https://ep-2zei6917b47eed******.dashscope.cn-beijing.privatelink.aliyuncs.com/api/v1/apps/YOUR_APP_ID/completion \
+    curl -X POST https://ep-2zei6917b47eed******.dashscope.cn-beijing.privatelink.aliyuncs.com/api/v1/apps/APP_ID/completion \
     --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
     --header 'Content-Type: application/json' \
     --data '{
@@ -8828,26 +8866,26 @@ API方式操作请参阅以下内容。
     }'
     ```
     
-    > `YOUR_APP_ID`替换为实际的应用ID。
+    > `APP_ID`替换为实际的应用ID。
     
 
 ## API参考
 
-通过[应用调用API参考](https://help.aliyun.com/zh/model-studio/agent-and-workflow-application-api-reference)查看完整的参数列表。
+通过[工作流与旧版智能体应用 API](https://help.aliyun.com/zh/model-studio/agent-and-workflow-application-api-reference)查看完整的参数列表。
 
 ## **错误码**
 
-如果调用失败并返回报错信息，请参阅[错误信息](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
+如果调用失败并返回报错信息，请参阅[错误码](https://help.aliyun.com/zh/model-studio/error-code)进行解决。
 
 ## **相关文档**
 
--   在调用应用时，如需将模型回复的文本信息转成语音，请参阅[语音合成-CosyVoice/Sambert](https://help.aliyun.com/zh/model-studio/text-to-speech)。
+-   在调用应用时，如需将模型回复的文本信息转成语音，请参阅[实时语音合成-CosyVoice /Sambert](https://help.aliyun.com/zh/model-studio/text-to-speech)。
     
--   关于应用的构建和使用请参阅[智能体应用](https://help.aliyun.com/zh/model-studio/single-agent-application)。
+-   关于应用的构建和使用请参阅[智能体应用（Agent 1.0）](https://help.aliyun.com/zh/model-studio/single-agent-application)。
     
 -   关于应用内Prompt辅助工具的使用请参阅[Prompt工程](https://help.aliyun.com/zh/model-studio/use-prompt-engineering-to-communicate-with-large-models)。
     
--   在前端生产环境下使用请参阅[10分钟给网站添加AI助手](https://help.aliyun.com/zh/model-studio/add-an-ai-assistant-to-your-website-in-10-minutes)。
+-   在前端生产环境下使用请参阅[在网站上增加一个AI助手](https://help.aliyun.com/zh/model-studio/add-an-ai-assistant-to-your-website-in-10-minutes)。
     
 
 ## 常见问题
@@ -8905,7 +8943,7 @@ API方式操作请参阅以下内容。
 
 -   `session_id`： 用于云端托管的多轮对话，自动维护对话上下文。 有效期1小时，最大历史轮数50。 无需调用者自行维护上下文，但需在下一轮对话中传入上一轮对话的`session_id`。
     
--   `memory_id`： 用于创建长期记忆体，存储特定信息。 需调用[CreateMemory](https://help.aliyun.com/zh/model-studio/developer-reference/api-bailian-2023-12-29-creatememory?spm=a2c4g.11186623.0.0.586c6610Kg0bkj)接口创建，获取`memoryId`。 在后续对话中引用特定信息，需传入`memoryId`。
+-   `memory_id`： 用于创建长期记忆体，存储特定信息。 需调用[CreateMemory](https://help.aliyun.com/zh/model-studio/api-bailian-2023-12-29-creatememory)接口创建，获取`memoryId`。 在后续对话中引用特定信息，需传入`memoryId`。
     
 
 两者分别服务于短期对话和长期信息存储。

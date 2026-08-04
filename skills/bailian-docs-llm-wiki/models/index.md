@@ -1,6 +1,6 @@
 # 百炼模型市场索引
 
-> 自动生成 · 共 176 个模型家族 · 394 个主干模型 · 更新于 2026-08-04
+> 自动生成 · 共 177 个模型家族 · 395 个主干模型 · 更新于 2026-08-05
 
 **机器查询走结构化文件**：
 
@@ -92,7 +92,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [通义法睿-Plus-32K](groups/farui-plus.json) — 通义法睿是以通义千问为基座经法律行业数据和知识专门训练的法律行业大模型产品，综合运用了模型精调、强化学习、 RAG检索增强、法律Agent技术，具有回答法律问题、推理法律适用、推荐裁判类案、辅助案情分…
   - 模型：`farui-plus`
 
-## 图像生成 `IG` — 31 个家族
+## 图像生成 `IG` — 32 个家族
 
 - [AI试衣-Plus版](groups/aitryon-plus.json) — aitryon-plus是一款效果出众的虚拟试衣图片生成模型，可基于服饰平拍图片以及人物正面全身照，输出服饰的人物试衣效果图片。 相较于aitryon模型，aitryon-plus模型在图片清晰度、服…
   - 模型：`aitryon-plus`
@@ -110,6 +110,8 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen-image-2.0`
 - [Qwen-Image-2.0-Pro](groups/qwen-image-2.0-pro.json) — Qwen-Image-2.0系列满血版模型，实现了图片生成和图片编辑的融合；具备更专业的文字渲染1k token指令支持能力、更细腻的真实质感，细腻刻画写实场景、更强的语义遵循能力。满血版具备2.0系…
   - 模型：`qwen-image-2.0-pro`
+- [Qwen-Image-3.0](groups/qwen-image-3.0.json) — 指令理解清晰：支持最大 4.5k token 输入，复杂图文指令一次生成到位。 文字渲染稳定：10px 小字、12 国语言、20+ 字体清晰可辨，信息图和界面直接可用。 批量产出趁手：海报、网页、界面…
+  - 模型：`qwen-image-3.0`
 - [Qwen-Image-3.0-Pro](groups/qwen-image-3.0-pro.json) — 内容丰实：支持最大 4.5k token 输入，支持图中图密集信息排版，让报纸、分镜、菜单、试卷等复杂版面一次生成。 细节真实：支持 10px 小字精准渲染，微表情、毛孔、发丝等细节生动还原，逼近真实…
   - 模型：`qwen-image-3.0-pro`
 - [Qwen-Image-Edit-Max](groups/qwen-image-edit-max.json) — 千问图像编辑模型Max系列，提供更稳定、更丰富的编辑能力：提升工业设计与几何推理能力；提升角色一致性；减轻偏移问题；集成Lora能力，可以进行更多功能的图像编辑。此版本为2026年1月16日快照。

@@ -2,10 +2,6 @@
 
 千问-图像生成与编辑3.0模型同时支持文生图（T2I）和图生图/图像编辑（I2I），可根据文本提示词直接生成图像，也可基于1-3张参考图结合编辑指令进行精确编辑。
 
-**重要**
-
-该模型目前处于邀测阶段，您需要前往模型广场申请开通后方可使用。
-
 ## **模型概览**
 
 **模型名称**
@@ -16,7 +12,7 @@
 
 qwen-image-3.0-pro
 
-千问图像生成与编辑3.0模型，同时支持文生图（T2I）和图生图/图像编辑（I2I）。
+千问图像生成与编辑3.0 Pro系列，同时支持文生图（T2I）和图生图/图像编辑（I2I）。
 
 图像分辨率：
 
@@ -28,6 +24,10 @@ qwen-image-3.0-pro
     
 
 图像格式：png
+
+qwen-image-3.0
+
+千问图像生成与编辑3.0标准模型，同时支持文生图（T2I）和图生图/图像编辑（I2I），兼顾质量与速度。
 
 ## **前提条件**
 
@@ -129,7 +129,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 **model** `_string_` **（必选）**
 
-模型名称，当前可用模型为`qwen-image-3.0-pro`。
+模型名称，可选值为`qwen-image-3.0-pro`和`qwen-image-3.0`。
 
 **input** `_object_` **（必选）**
 
@@ -192,7 +192,16 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 **prompt\_extend** `_boolean_` （可选）
 
-是否开启提示词智能改写，默认值为 `true`（建议开启）。开启后，模型会优化正向提示词，对描述较简单的提示词效果提升明显。
+是否开启提示词智能改写，默认值为 `true`（建议开启）。开启后，模型会按照`prompt_extend_mode`指定的方式优化正向提示词，对描述较简单的提示词效果提升明显。
+
+**prompt\_extend\_mode** `_string_` （可选）
+
+提示词改写方式，默认值为`direct`。可选值：
+
+-   `direct`：直接提示词增强（DPE），适用于大多数场景。T2I和I2I均支持。
+    
+-   `agent`：智能体提示词增强（APE），提供更精细的改写效果。仅支持文生图（T2I），图生图（I2I）场景传入`agent`将返回400错误。
+    
 
 **n** `_integer_` （可选）
 
@@ -202,9 +211,9 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 设置输出图像的分辨率，格式为`宽*高`，例如`"1024*1024"`。未指定时由模型根据提示词自动推荐分辨率。
 
--   **文生图（T2I）**：像素范围512\*512至2048\*2048。
+-   **文生图（T2I）**：像素面积范围512\*512至2048\*2048，宽高比限制1:8至8:1。
     
--   **图生图（I2I）**：像素范围512\*512至2048\*2048。
+-   **图生图（I2I）**：像素面积范围512\*512至2048\*2048，宽高比限制1:8至8:1。
     
 
 **negative\_prompt** `_string_` （可选）
@@ -243,9 +252,12 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
         ]
     },
     "usage": {
-        "width": 1024,
-        "height": 1024,
-        "image_count": 1
+        "output_height": 1024,
+        "output_width": 1024,
+        "input_image_count": 1,
+        "input_image_type": "qima_input_1k",
+        "output_image_count": 1,
+        "output_image_type": "qima_output_1k"
     },
     "request_id": "571ae02f-5c9d-436c-83c2-f221e6df0xxx"
 }
@@ -305,17 +317,29 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 **属性**
 
-**width** `_integer_`
+**output\_width** `_integer_`
 
-生成图像的宽度（像素）。
+最终输出图片的宽度（像素）。
 
-**height** `_integer_`
+**output\_height** `_integer_`
 
-生成图像的高度（像素）。
+最终输出图片的高度（像素）。
 
-**image\_count** `_integer_`
+**input\_image\_count** `_integer_`
 
-生成图像的张数。
+用户请求中输入图片的数量。文生图（T2I）时为0，图生图（I2I）按实际输入图片数返回。
+
+**input\_image\_type** `_string_`
+
+输入图片计量档位。按输出分辨率像素面积判断：面积≤2,250,000为`qima_input_1k`，面积>2,250,000为`qima_input_2k`。
+
+**output\_image\_count** `_integer_`
+
+实际返回的输出图片数量。
+
+**output\_image\_type** `_string_`
+
+输出图片计量档位。按输出分辨率像素面积判断：面积≤2,250,000为`qima_output_1k`，面积>2,250,000为`qima_output_2k`。
 
 **request\_id** `_string_`
 

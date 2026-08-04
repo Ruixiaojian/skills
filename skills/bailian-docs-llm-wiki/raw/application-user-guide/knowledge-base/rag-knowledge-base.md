@@ -1245,7 +1245,7 @@
     
     **方式二（适用智能体应用与工作流应用）**
     
-    1.  将图片上传至公网可访问位置并获取完整 URL。推荐使用 OSS，具体操作请参见[将图片上传至OSS并使用其文件URL](https://help.aliyun.com/zh/oss/user-guide/console-quick-start/)。
+    1.  将图片上传至公网可访问位置并获取完整 URL。推荐使用 OSS，具体操作请参见[将图片上传至OSS并使用其文件URL](https://help.aliyun.com/zh/oss/user-guide/console-quick-start)。
         
     2.  在文件中插入完整 URL（不支持相对路径）。**不支持直接在文档中嵌入图片文件**（如通过复制粘贴或菜单插入本地图片），必须使用公网可访问的URL链接引用图片。
         
@@ -1294,7 +1294,7 @@
     
     ## **使用图片问答类知识库**
     
-    1.  将图片上传至公网可访问位置并获取完整 URL。推荐使用 OSS，具体操作请参见[将图片上传至OSS并使用其文件URL](https://help.aliyun.com/zh/oss/user-guide/console-quick-start/)。
+    1.  将图片上传至公网可访问位置并获取完整 URL。推荐使用 OSS，具体操作请参见[将图片上传至OSS并使用其文件URL](https://help.aliyun.com/zh/oss/user-guide/console-quick-start)。
         
     2.  在[表格](https://bailian.console.aliyun.com/?tab=app#/data-center?dataType=1)页签中新建数据表，并添加 **image\_url** 类型字段用于存储图片的完整 URL。
         

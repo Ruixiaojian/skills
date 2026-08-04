@@ -16,13 +16,13 @@
 
 Nano Banana Pro、GPT Image、Seedream 4.0
 
-`wan2.7-image-pro`、`qwen-image-2.0-pro`
+`qwen-image-3.0-pro`、`wan2.7-image-pro`
 
 平衡
 
 Imagen 4 Ultra、Midjourney v7
 
-`wan2.7-image`、`qwen-image-2.0`
+`qwen-image-3.0`、`wan2.7-image`
 
 快速低成本
 
@@ -32,7 +32,14 @@ FLUX.2
 
 ## 文生图
 
-推荐使用`wan2.7-image-pro`，它在一个模型中集成了文字渲染、品牌色控制、角色一致性多图生成以及图片编辑功能。文生图最高支持4096x4096分辨率，图片编辑最高支持2048x2048分辨率。详细使用方法请参见[文本生成图像](https://help.aliyun.com/zh/model-studio/text-to-image)。
+推荐使用`qwen-image-3.0-pro`，千问图像3.0旗舰版，支持agent prompt智能改写，擅长文本渲染，能精准生成贴合物理材质的中英文详细使用方法请参见[文本生成图像](https://help.aliyun.com/zh/model-studio/text-to-image)。
+
+### 何时使用wan2.7-image-pro
+
+-   需要品牌色控制，调色盘功能
+    
+-   需要更高分辨率，`wan2.7-image-pro`文生图最高支持4096x4096分辨率
+    
 
 ### 何时使用z-image-turbo
 
@@ -43,22 +50,13 @@ FLUX.2
 -   写实人像和产品照片
     
 
-### 何时使用Qwen Image
-
--   需要使用负向提示词排除输出中的特定元素
-    
--   需要每次调用生成最多6张图片变体（Wan标准模式最多支持4张）
-    
--   需要复杂版面生成、小字精准渲染或多语言字体支持 → 选择 qwen-image-3.0-pro（邀测中）
-    
-
 ## 图片编辑
 
-推荐使用`wan2.7-image-pro`，它支持多图参考（最多9张输入图片）、边界框交互式编辑以及角色一致性多图生成。详细使用方法请参见[图像编辑-千问](https://help.aliyun.com/zh/model-studio/qwen-image-edit-guide)和[图像编辑-万相2.7/2.6/2.5](https://help.aliyun.com/zh/model-studio/wan-image-edit)。
+推荐使用`qwen-image-3.0-pro`，具备强大的复杂内容生成与高保真渲染能力，支持最大 4.5k token 输入，可生成复杂版面，并兼容图中图与密集信息排版，接近真实摄影质感。
 
-### 何时使用Qwen Image
+### 何时使用wan2.7-image-pro
 
-如果编辑时需要使用负向提示词，请使用`qwen-image-3.0-pro`（邀测中）或`qwen-image-2.0-pro`（生成和编辑使用同一个模型ID）。
+支持多图参考（最多9张输入图片）、边界框交互式编辑以及角色一致性多图生成。
 
 ## 推荐模型
 
@@ -73,6 +71,30 @@ FLUX.2
 **最大输出数**
 
 **最大分辨率**
+
+`qwen-image-3.0-pro`
+
+复杂版面生成、小字渲染、多语言字体
+
+支持
+
+支持
+
+6
+
+2048x2048
+
+`qwen-image-3.0`
+
+同上，生成速度更快
+
+支持
+
+支持
+
+6
+
+2048x2048
 
 `wan2.7-image-pro`
 
@@ -107,30 +129,6 @@ FLUX.2
 不支持
 
 1
-
-2048x2048
-
-`qwen-image-3.0-pro`
-
-复杂版面生成、小字渲染、多语言字体
-
-支持
-
-支持
-
-6
-
-2048x2048
-
-`qwen-image-2.0`
-
-qwen-image-2.0-pro的快速版本
-
-支持
-
-支持
-
-6
 
 2048x2048
 
@@ -275,6 +273,16 @@ qwen-image-2.0-pro的快速版本
 **最大分辨率**
 
 `qwen-image-3.0-pro`
+
+支持
+
+支持
+
+6
+
+2048x2048
+
+`qwen-image-3.0`
 
 支持
 

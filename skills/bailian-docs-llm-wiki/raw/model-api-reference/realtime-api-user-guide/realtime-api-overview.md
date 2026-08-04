@@ -107,7 +107,7 @@ Android / iOS / HarmonyOS
 
 **WebSocket**
 
-实时全模态
+[实时全模态](https://help.aliyun.com/zh/model-studio/realtime)
 
 qwen3.5-omni-plus-realtime
 
@@ -125,7 +125,7 @@ qwen3.5-omni-flash-realtime
 
 支持
 
-实时语音翻译
+[实时语音翻译](https://help.aliyun.com/zh/model-studio/qwen3-5-livetranslate-flash-realtime)
 
 qwen3.5-livetranslate-flash-realtime
 
@@ -135,7 +135,7 @@ qwen3.5-livetranslate-flash-realtime
 
 支持
 
-多模态开发套件
+[多模态开发套件](https://help.aliyun.com/zh/model-studio/multimodal-products-overview)
 
 multimodal-dialog
 
@@ -145,7 +145,7 @@ multimodal-dialog
 
 支持
 
-实时语音识别
+[实时语音识别](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition-user-guide)
 
 Qwen-Audio-3.0-ASR-Flash-Streaming、Fun-ASR-Realtime系列模型
 
@@ -155,7 +155,7 @@ Qwen-Audio-3.0-ASR-Flash-Streaming、Fun-ASR-Realtime系列模型
 
 支持
 
-实时语音合成
+[实时语音合成](https://help.aliyun.com/zh/model-studio/realtime-tts-user-guide)
 
 CosyVoice系列模型
 
@@ -165,7 +165,7 @@ CosyVoice系列模型
 
 支持
 
-实时语音对话
+[实时语音对话](https://help.aliyun.com/zh/model-studio/qwen-audio-realtime-user-guides)
 
 qwen-audio-3.0-realtime-plus、qwen-audio-3.0-realtime-flash
 

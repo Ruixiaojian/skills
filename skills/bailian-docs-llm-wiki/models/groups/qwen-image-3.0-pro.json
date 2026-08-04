@@ -18,6 +18,32 @@
       ],
       "provider": "qwen",
       "model": "qwen-image-3.0-pro",
+      "prices": [
+        {
+          "priceUnit": "每张",
+          "price": "0.02",
+          "type": "qima_input_1k",
+          "priceName": "1K图片输入"
+        },
+        {
+          "priceUnit": "每张",
+          "price": "0.02",
+          "type": "qima_input_2k",
+          "priceName": "2K图片输入"
+        },
+        {
+          "priceUnit": "每张",
+          "price": "0.25",
+          "type": "qima_output_1k",
+          "priceName": "1K图片生成"
+        },
+        {
+          "priceUnit": "每张",
+          "price": "0.5",
+          "type": "qima_output_2k",
+          "priceName": "2K图片生成"
+        }
+      ],
       "qpmInfo": {
         "model-default-actual": {
           "count_limit_period": 60,
@@ -30,6 +56,7 @@
           "type": "model-default"
         }
       },
+      "priceTimeBands": [],
       "capabilities": [
         "IG"
       ],

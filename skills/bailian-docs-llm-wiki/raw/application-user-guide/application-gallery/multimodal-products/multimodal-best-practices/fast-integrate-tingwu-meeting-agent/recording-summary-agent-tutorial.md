@@ -4,41 +4,42 @@
 
 新建多模态应用后，在「多模态交互控制台-Agent-推荐应用」中勾选「录音纪要」点击确认即可添加。
 
-![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/4413777671/p1041701.png)
-
 ## **开通服务**
 
 首次使用录音纪要Agent，需要开通通义听悟服务，请前往[通义听悟-智能纪要](https://bailian.console.aliyun.com/?tab=app#/app/app-market/tingwu/tingwu-meeting-summary)进行开通并发布应用。
 
-![截屏2026-01-07 14](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/4413777671/p1042451.png)
-
 1.  在通义听悟-智能纪要应用中点击右上角「立即开通」。
     
 
-![截屏2026-01-07 14](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3413777671/p1042460.png)
+在开通页面，选择**听悟Agent按量付费**，单击**立即购买**完成开通。
 
-![截屏2026-01-07 14](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3413777671/p1042474.png)
-
-![截屏2026-01-07 14](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3413777671/p1042476.png)
+在弹出的确认订单页面，确认**通义听悟Agent服务**订单信息（付费方式为**按量付费**），阅读并同意**产品服务协议**和**服务等级协议**，然后单击**立即开通**完成服务开通。
 
 2.  完成开通操作后，点击通义听悟-智能纪要控制台右上角「创建应用」，进行应用配置并发布。
     
 
-![截屏2026-01-07 14](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3413777671/p1042357.png)
+在**调试配置**页签中完成以下配置：
 
-![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3413777671/p1041614.png)
+1.  在**选择音频输入方式**中选择所需模式（如**实时转写**）。
+    
+2.  选择**转写模型**（如 paraformer-v2）。
+    
+3.  在**转写配置**中设置**角色分离**人数和**识别语种**。
+    
+4.  在**翻译**区域设置**内容翻译**的目标语言。
+    
+
+配置完成后，单击右上角**发布**按钮发布应用。
 
 ## **应用配置**
 
 在通义听悟-智能纪要控制台创建应用并发布后，您需要在多模态交互控制台页面中选择对应的通义听悟应用。（如需调整应用能力，可以前往通义听悟-智能纪要控制台进行调整[去配置](https://bailian.console.aliyun.com/?tab=app#/app/app-market/tingwu/tingwu-meeting-summary)）
 
-![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3413777671/p1041615.png)
-
 ### **实时录音总结设置**
 
 您可以在右侧配置中设置实时录音总结的启动指令、退出/暂停唤醒词、恢复指令。
 
-![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/4413777671/p1041612.png)
+退出/暂停唤醒词说明：录音中只有识别到唤醒词，才会识别是否需要退出或暂停录音，避免误退出。默认唤醒词为**小云**。建议将唤醒词加入通义听悟热词中，提升识别准确性。每项指令支持单击**+**添加多条，字符上限为 100。
 
 指令参考：
 
@@ -114,8 +115,6 @@
 
 您还可以设置录音文件总结的启动指令、退出指令、暂停指令以及恢复指令。
 
-![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3413777671/p1041699.png)
-
 指令参考：
 
 启动指令
@@ -190,12 +189,10 @@
 
 使用之前配置的启动指令开启录音总结，如“开启实时转写”，即可开始转写，同时您也可以查看双语字幕。
 
-![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3413777671/p1041613.png)
+发送指令后，系统提示**已成功下发meeting\_state\_change指令**，AI 回复确认已开启实时语音转文字，并说明转写结束后将自动总结录音纪要。右侧语音交互体验面板底部出现实时转写区域，显示转写计时及**单句/完整**切换按钮。
 
 ### **退出实时转写**
 
 使用之前已配置的**唤醒词加上退出指令**即可退出实时转写，如“小云，退出实时转写”。点击「查看分析结果」可前往通义听悟查看智能纪要。
 
-![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3413777671/p1041617.png)
-
-![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3413777671/p1041616.png)
+通义听悟的智能纪要页面左侧展示对话内容的语音转写文本及翻译结果，底部提供播放控件（含播放按钮、进度条、倍速设置）；右侧为分析结果区域，包含**智能速览**、**思维导图**、**自定义Prompt**三个 Tab，可查看自动提取的关键词标签、全文概要、章节速览和要点回顾等智能分析内容。

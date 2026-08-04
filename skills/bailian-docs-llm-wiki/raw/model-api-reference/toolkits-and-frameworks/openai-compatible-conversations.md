@@ -898,12 +898,12 @@ conversation = client.conversations.create(
 )
 
 response1 = client.responses.create(
-    conversation=conversation.id, model="qwen3.7-plus", input="李红今年多大了"
+    conversation=conversation.id, model="qwen3.8-max", input="李红今年多大了"
 )
 print(f"第一轮响应: {response1.output_text}")
 
 response2 = client.responses.create(
-    conversation=conversation.id, model="qwen3.7-plus", input="她的兴趣爱好是什么？"
+    conversation=conversation.id, model="qwen3.8-max", input="她的兴趣爱好是什么？"
 )
 print(f"第二轮响应: {response2.output_text}")
 ```
@@ -930,14 +930,14 @@ const conversation = await client.conversations.create({
 
 const response1 = await client.responses.create({
   conversation: conversation.id,
-  model: "qwen3.7-plus",
+  model: "qwen3.8-max",
   input: "李红今年多大了"
 });
 console.log("第一轮响应:", response1.output_text);
 
 const response2 = await client.responses.create({
   conversation: conversation.id,
-  model: "qwen3.7-plus",
+  model: "qwen3.8-max",
   input: "她的兴趣爱好是什么？"
 });
 console.log("第二轮响应:", response2.output_text);

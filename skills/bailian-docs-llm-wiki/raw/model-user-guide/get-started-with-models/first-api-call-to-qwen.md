@@ -367,7 +367,13 @@ pip --version
 
 以Windows的CMD为例：
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2419779371/p914717.png)
+```
+C:\Users\Administrator>python -V
+Python 3.13.2
+
+C:\Users\Administrator>pip --version
+pip 24.3.1 from C:\Users\Administrator\AppData\Local\Programs\Python\Python313\Lib\site-packages\pip (python 3.13)
+```
 
 #### **常见问题**
 
@@ -386,7 +392,9 @@ Q：执行`python -V`、`pip --version`报错：
 
 ##### **Windows系统**
 
-1.  请确认是否已参考[安装Python](https://help.aliyun.com/zh/sdk/developer-reference/installing-python)，在您的计算环境中安装Python，并将python.exe添加至环境变量PATH中。![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/0405879371/p917218.png)
+1.  请确认是否已参考[安装Python](https://help.aliyun.com/zh/sdk/developer-reference/installing-python)，在您的计算环境中安装Python，并将python.exe添加至环境变量PATH中。
+    
+    安装 Python 3.13.2 时，在安装向导底部勾选**Add python.exe to PATH**，将 Python 添加到系统环境变量，然后单击**Install Now**完成安装。
     
 2.  如果已安装了Python并添加了环境变量，仍报此错，请关闭当前终端，重新打开一个新的终端窗口，再进行尝试。
     
@@ -460,8 +468,6 @@ Q：执行`python -V`、`pip --version`报错：
 pip install -U openai
 ```
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/0405879371/p917092.png)
-
 当终端出现`Successfully installed ... openai-x.x.x`的提示后，表示您已经成功安装OpenAI Python SDK。
 
 ## 安装 DashScope Python SDK
@@ -473,8 +479,6 @@ pip install -U openai
 pip install -U dashscope
 ```
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/0405879371/p917093.png)
-
 当终端出现`Successfully installed ... dashscope-x.x.x`的提示后，表示您已经成功安装DashScope Python SDK。
 
 ### **步骤 2：调用大模型API**
@@ -482,6 +486,20 @@ pip install -U dashscope
 ## OpenAI Python SDK
 
 如果您安装完成了Python以及OpenAI的Python SDK，可以参考以下步骤发送您的API请求。
+
+**重要**
+
+示例代码中的`import os`用于读取环境变量，请勿省略。如果您使用`.env`文件管理API Key，需同时导入`os`和`dotenv`：
+
+```
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+api_key = os.getenv("DASHSCOPE_API_KEY")
+```
+
+缺少`import os`会导致`NameError`，请勿将其误判为`.env`文件加载失败。
 
 1.  新建一个文件，命名为`hello_qwen.py`。
     
@@ -500,7 +518,7 @@ pip install -U dashscope
         )
     
         completion = client.chat.completions.create(
-            model="qwen-plus",  # 模型列表: https://help.aliyun.com/model-studio/getting-started/models
+            model="qwen3.8-max",  # 模型列表: https://help.aliyun.com/model-studio/getting-started/models
             messages=[
                 {'role': 'system', 'content': 'You are a helpful assistant.'},
                 {'role': 'user', 'content': '你是谁？'}
@@ -522,8 +540,6 @@ pip install -U dashscope
     我是阿里云开发的一款超大规模语言模型，我叫千问。
     ```
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/0405879371/p917326.png)
-    
 
 ## DashScope Python SDK
 
@@ -535,25 +551,24 @@ pip install -U dashscope
     
     ```
     import os
-    from dashscope import Generation
+    from dashscope import MultiModalConversation
     import dashscope
     
     # 以下为华北2（北京）地域的URL，各地域的URL不同。调用时请将{WorkspaceId}替换为真实的业务空间ID。
     dashscope.base_http_api_url = 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1'
     messages = [
-        {'role': 'system', 'content': 'You are a helpful assistant.'},
-        {'role': 'user', 'content': '你是谁？'}
+        {'role': 'system', 'content': [{'text': 'You are a helpful assistant.'}]},
+        {'role': 'user', 'content': [{'text': '你是谁？'}]}
     ]
-    response = Generation.call(
+    response = MultiModalConversation.call(
         # 若没有配置环境变量，请用阿里云百炼API Key将下行替换为：api_key = "sk-xxx",
         api_key=os.getenv("DASHSCOPE_API_KEY"), 
-        model="qwen-plus",   # 模型列表：https://help.aliyun.com/model-studio/getting-started/models
+        model="qwen3.8-max",   # 模型列表：https://help.aliyun.com/model-studio/getting-started/models
         messages=messages,
-        result_format="message"
     )
     
     if response.status_code == 200:
-        print(response.output.choices[0].message.content)
+        print(response.output.choices[0].message.content[0]["text"])
     else:
         print(f"HTTP返回码：{response.status_code}")
         print(f"错误码：{response.code}")
@@ -573,8 +588,6 @@ pip install -U dashscope
     我是来自阿里云的大规模语言模型，我叫千问。
     ```
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/0405879371/p917332.png)
-    
 
 ## Node.js
 
@@ -591,7 +604,13 @@ npm -v
 
 以Windows的CMD为例：
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2419779371/p914719.png)
+```
+C:\Users\Administrator>node -v
+v22.14.0
+
+C:\Users\Administrator>npm -v
+10.9.2
+```
 
 这将打印出您当前Node.js 版本。如果您的环境中没有Node.js，请访问[Node.js官网](https://nodejs.org/en/download/package-manager)进行下载。
 
@@ -615,8 +634,6 @@ npm config set registry https://registry.npmmirror.com/
 
 配置镜像源后，您可以重新运行安装SDK的命令。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/0405879371/p917106.png)
-
 当终端出现`added xx package in xxs`的提示后，表示您已经成功安装OpenAI SDK。您可以使用`npm list openai`查询具体版本信息。
 
 ### 步骤 2：调用大模型API
@@ -638,7 +655,7 @@ npm config set registry https://registry.npmmirror.com/
             }
         );
         const completion = await openai.chat.completions.create({
-            model: "qwen-plus",  //模型列表: https://help.aliyun.com/model-studio/getting-started/models
+            model: "qwen3.8-max",  //模型列表: https://help.aliyun.com/model-studio/getting-started/models
             messages: [
                 { role: "system", content: "You are a helpful assistant." },
                 { role: "user", content: "你是谁？" }
@@ -669,8 +686,13 @@ npm config set registry https://registry.npmmirror.com/
     ```
     我是来自阿里云的语言模型，我叫千问。
     ```
-    
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/0405879371/p917344.png)
+    ```
+    PS D:\node_project> node hello_qwen.mjs
+    (node:25072) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+    (Use `node --trace-deprecation ...` to show where the warning was created)
+    我是来自阿里云的语言模型，我叫通义千问。
+    PS D:\node_project>
+    ```
     
 
 ## Java
@@ -689,7 +711,17 @@ mvn --version
 
 以Windows的CMD为例：
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2419779371/p914723.png)
+```
+C:\Users\Administrator>java --version
+java 23.0.2 2025-01-21
+Java(TM) SE Runtime Environment (build 23.0.2+7-58)
+Java HotSpot(TM) 64-Bit Server VM (build 23.0.2+7-58, mixed mode, sharing)
+
+C:\Users\Administrator>mvn --version
+Apache Maven 3.9.9 (8e8579a9e76f7d015ee5ec7bfcdc97d260186937)
+Maven home: C:\Program Files\apache-maven-3.9.9
+Java version: 23.0.2
+```
 
 为了使用DashScope Java SDK，您的Java需要在Java 8或以上版本。您可以查看打印信息中的第一行确认Java版本，例如打印信息：`openjdk version "16.0.1" 2021-04-20`表明当前Java版本为Java 16。如果您当前计算环境没有Java，或版本低于Java 8，请前往[Java下载](https://www.oracle.com/cn/java/technologies/downloads/)进行下载与安装。
 
@@ -719,7 +751,46 @@ mvn --version
 
 以Windows的IDEA集成开发环境为例：
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/0405879371/p917125.png)
+```
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema ...
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dashscope-sdk-java</artifactId>
+            <!-- 请将 'the-latest-version' 替换为最新版本号：https://mvnrepository.com/artifact/com.alibaba... -->
+            <version>2.18.2</version>
+        </dependency>
+    </dependencies>
+</project>
+```
+```
+~\Desktop\test_project
+mvn compile
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ----------------------< org.example:test_project >----------------------
+[INFO] Building test_project 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ test_project ---
+[INFO] skip non existing resourceDirectory C:\Users\Administrator\Desktop\test_project\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ test_project ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.627 s
+[INFO] Finished at: 2025-02-17T13:15:30+08:00
+[INFO] ------------------------------------------------------------------------
+```
 
 ## Gradle
 
@@ -745,7 +816,46 @@ mvn --version
 
 以Windows的IDEA集成开发环境为例：
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/0405879371/p917168.png)
+build.gradle 完整文件示例：
+
+```
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.apache.groovy:groovy:4.0.14'
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation group: 'com.alibaba', name: 'dashscope-sdk-java', version: '2.18.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+```
+
+执行构建命令后，终端输出结果：
+
+```
+~/Desktop/test_project
+./gradlew build --refresh-dependencies
+
+Welcome to Gradle 8.10!
+
+Here are the highlights of this release:
+  - Support for Java 23
+  - Faster configuration cache
+  - Better configuration cache reports
+
+For more details see https://docs.gradle.org/8.10/release-notes.html
+
+BUILD SUCCESSFUL in 7m 51s
+2 actionable tasks: 2 executed
+```
 
 ### **步骤 2：调用大模型API**
 
@@ -754,43 +864,44 @@ mvn --version
 ```
 import java.util.Arrays;
 import java.lang.System;
-import com.alibaba.dashscope.aigc.generation.Generation;
-import com.alibaba.dashscope.aigc.generation.GenerationParam;
-import com.alibaba.dashscope.aigc.generation.GenerationResult;
-import com.alibaba.dashscope.common.Message;
+import com.alibaba.dashscope.aigc.multimodalconversation.MultiModalConversation;
+import com.alibaba.dashscope.aigc.multimodalconversation.MultiModalConversationParam;
+import com.alibaba.dashscope.aigc.multimodalconversation.MultiModalConversationResult;
+import com.alibaba.dashscope.common.MultiModalMessage;
+import java.util.Collections;
 import com.alibaba.dashscope.common.Role;
 import com.alibaba.dashscope.exception.ApiException;
 import com.alibaba.dashscope.exception.InputRequiredException;
 import com.alibaba.dashscope.exception.NoApiKeyException;
-import com.alibaba.dashscope.protocol.Protocol;
+import com.alibaba.dashscope.exception.UploadFileException;
+import com.alibaba.dashscope.utils.Constants;
 
 public class Main {
-    public static GenerationResult callWithMessage() throws ApiException, NoApiKeyException, InputRequiredException {
-        // 以下为华北2（北京）地域的URL，各地域的URL不同。调用时请将{WorkspaceId}替换为真实的业务空间ID。
-        Generation gen = new Generation(Protocol.HTTP.getValue(), "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1");
-        Message systemMsg = Message.builder()
+    static {Constants.baseHttpApiUrl="https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1";}
+    public static MultiModalConversationResult callWithMessage() throws ApiException, NoApiKeyException, InputRequiredException, UploadFileException {
+        MultiModalConversation conv = new MultiModalConversation();
+        MultiModalMessage systemMsg = MultiModalMessage.builder()
                 .role(Role.SYSTEM.getValue())
-                .content("You are a helpful assistant.")
+                .content(Arrays.asList(Collections.singletonMap("text", "You are a helpful assistant.")))
                 .build();
-        Message userMsg = Message.builder()
+        MultiModalMessage userMsg = MultiModalMessage.builder()
                 .role(Role.USER.getValue())
-                .content("你是谁？")
+                .content(Arrays.asList(Collections.singletonMap("text", "你是谁？")))
                 .build();
-        GenerationParam param = GenerationParam.builder()
+        MultiModalConversationParam param = MultiModalConversationParam.builder()
                 // 若没有配置环境变量，请用阿里云百炼API Key将下行替换为：.apiKey("sk-xxx")
                 .apiKey(System.getenv("DASHSCOPE_API_KEY"))
                 // 模型列表：https://help.aliyun.com/model-studio/getting-started/models
-                .model("qwen-plus")
+                .model("qwen3.8-max")
                 .messages(Arrays.asList(systemMsg, userMsg))
-                .resultFormat(GenerationParam.ResultFormat.MESSAGE)
                 .build();
-        return gen.call(param);
+        return conv.call(param);
     }
     public static void main(String[] args) {
         try {
-            GenerationResult result = callWithMessage();
-            System.out.println(result.getOutput().getChoices().get(0).getMessage().getContent());
-        } catch (ApiException | NoApiKeyException | InputRequiredException e) {
+            MultiModalConversationResult result = callWithMessage();
+            System.out.println(result.getOutput().getChoices().get(0).getMessage().getContent().get(0).get("text"));
+        } catch (ApiException | NoApiKeyException | InputRequiredException | UploadFileException e) {
             System.err.println("错误信息："+e.getMessage());
             System.out.println("请参考文档：https://help.aliyun.com/model-studio/developer-reference/error-code");
         }
@@ -824,7 +935,7 @@ curl -X POST "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode
 -H "Authorization: Bearer %DASHSCOPE_API_KEY%" ^
 -H "Content-Type: application/json" ^
 -d "{
-    \"model\": \"qwen-plus\",
+    \"model\": \"qwen3.8-max\",
     \"messages\": [
         {
             \"role\": \"system\",
@@ -845,7 +956,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
 -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
 -H "Content-Type: application/json" \
 -d '{
-    "model": "qwen-plus",
+    "model": "qwen3.8-max",
     "messages": [
         {
             "role": "system",
@@ -882,7 +993,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
     },
     "created": 1728353155,
     "system_fingerprint": null,
-    "model": "qwen-plus",
+    "model": "qwen3.8-max",
     "id": "chatcmpl-39799876-eda8-9527-9e14-2214d641cf9a"
 }
 ```
@@ -894,20 +1005,20 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
 **Windows**
 
 ```
-curl -X POST "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/text-generation/generation" ^
+curl -X POST "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation" ^
 -H "Authorization: Bearer %DASHSCOPE_API_KEY%" ^
 -H "Content-Type: application/json" ^
 -d "{
-  \"model\": \"qwen-plus\",
+  \"model\": \"qwen3.8-max\",
   \"input\": {
     \"messages\": [
       {
         \"role\": \"system\",
-        \"content\": \"You are a helpful assistant.\"
+        \"content\": [{\"text\": \"You are a helpful assistant.\"}]
       },
       {
         \"role\": \"user\",
-        \"content\": \"你是谁？\"
+        \"content\": [{\"text\": \"你是谁？\"}]
       }
     ]
   },
@@ -920,20 +1031,20 @@ curl -X POST "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services
 **Linux/macOS**
 
 ```
-curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/text-generation/generation \
+curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation \
 -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
 -H "Content-Type: application/json" \
 -d '{
-    "model": "qwen-plus",
+    "model": "qwen3.8-max",
     "input":{
         "messages":[
             {
                 "role": "system",
-                "content": "You are a helpful assistant."
+                "content": [{"text": "You are a helpful assistant."}]
             },
             {
                 "role": "user",
-                "content": "你是谁？"
+                "content": [{"text": "你是谁？"}]
             }
         ]
     },
@@ -1001,7 +1112,7 @@ func main() {
 	// 构建请求体
 	requestBody := RequestBody{
 		// 模型列表：https://help.aliyun.com/model-studio/getting-started/models
-		Model: "qwen-plus",
+		Model: "qwen3.8-max",
 		Messages: []Message{
 			{
 				Role:    "system",
@@ -1061,7 +1172,7 @@ $headers = [
 // 设置请求体
 $data = [
     // 模型列表：https://help.aliyun.com/model-studio/getting-started/models
-    "model" => "qwen-plus",
+    "model" => "qwen3.8-max",
     "messages" => [
         [
             "role" => "system",
@@ -1118,7 +1229,7 @@ class Program
         string url = "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions";
         // 模型列表：https://help.aliyun.com/model-studio/getting-started/models
         string jsonContent = @"{
-            ""model"": ""qwen-plus"",
+            ""model"": ""qwen3.8-max"",
             ""messages"": [
                 {
                     ""role"": ""system"",
@@ -1196,15 +1307,11 @@ A：请根据您的使用情况参考以下步骤：
 
 1.  单击左下角的设置按钮，在**模型服务**栏中找到**阿里云百炼**，**API 密钥**输入您的 API Key，获取方法请参见：[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)；**API 地址**填入`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/`（请将WorkspaceId替换为业务空间ID）；单击**添加**。
     
-    ![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3274214671/p920483.png)![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3274214671/p920483.png)
-    
 2.  在**模型 ID**填入您需要使用的千问模型，此处以 qwen-max-latest 为例（更多可用的模型请参考[选择模型](https://help.aliyun.com/zh/model-studio/models)中的千问模型）； **模型名称**与**分组名称**会自动生成。
-    
-    ![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7845540471/p920486.png)
     
 3.  在界面上方选中添加的模型，部分模型支持联网搜索，打开输入框处的联网搜索按钮。输入“杭州天气咋样？”进行测试：
     
-    ![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7845540471/p920490.png)
+    联网搜索按钮为输入框下方工具栏中的地球图标。开启后，模型成功返回杭州实时天气信息及未来几天天气预报，验证联网搜索功能正常。
     
 
 ## Cline
@@ -1219,7 +1326,7 @@ A：请根据您的使用情况参考以下步骤：
 
 **查看更多模型**
 
-示例代码以 qwen-plus 模型为例，阿里云百炼还支持其他千问模型与 DeepSeek、Llama 等第三方模型，**支持的模型**以及对应的**API参考**文档请参见[选择模型](https://help.aliyun.com/zh/model-studio/models)。
+示例代码以 qwen3.8-max 模型为例，阿里云百炼还支持其他千问模型与 DeepSeek、Llama 等第三方模型，**支持的模型**以及对应的**API参考**文档请参见[选择模型](https://help.aliyun.com/zh/model-studio/models)。
 
 **了解进阶用法**
 
@@ -1234,3 +1341,7 @@ A：请根据您的使用情况参考以下步骤：
 **0代码进行大模型微调**
 
 通常来说，对大模型微调需要有人工智能知识背景与工程能力，阿里云百炼提供了0代码对大模型进行微调的功能，您仅需提供数据集即可。详情请参见[在控制台进行模型调优](https://help.aliyun.com/zh/model-studio/model-training-on-console)。
+
+**调用自训练模型**
+
+如果您在百炼平台部署了自训练模型，调用时需使用模型部署页面生成的模型 code 作为`model`参数，而非模型 ID，否则将报错 Model not exist。详情请参见[模型部署简介](https://help.aliyun.com/zh/model-studio/model-deployment-introduction)中的「部署后调用」章节。
