@@ -20,7 +20,7 @@
 3.  推理结果回到接入地域存储，再响应给应用（用户静态数据始终存于所选地域）。
     
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7931094871/CAEQchiBgIDh6dzL_BkiIDk2MmRhMjdmMGQyNTQ5N2ZiNzNlMGM4NjllMDBjMTUy7466796_20260515102254.505.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/8754285871/CAEQchiBgIDh6dzL_BkiIDk2MmRhMjdmMGQyNTQ5N2ZiNzNlMGM4NjllMDBjMTUy7466796_20260515102254.505.svg)
 
 各地域支持的服务部署范围如下：
 
@@ -110,7 +110,7 @@ RPM 为1000，TPM 按模型区分
 
 **协议支持**
 
-HTTP、SSE、WebSocket、WebRTC
+HTTP、SSE、WebSocket、WebRTC、AOQ
 
 HTTP、SSE、WebSocket
 
@@ -369,3 +369,5 @@ HTTP、SSE
 -   [获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key) — 创建和管理 Key
     
 -   [Base URL总览](https://help.aliyun.com/zh/model-studio/base-url) — 模型服务调用地址
+    
+-   [Realtime API参考](https://help.aliyun.com/zh/model-studio/realtime-api-overview)

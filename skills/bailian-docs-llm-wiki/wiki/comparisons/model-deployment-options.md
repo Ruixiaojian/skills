@@ -1,67 +1,60 @@
-# 模型部署方案对比：Model Production vs Model Deployment 1
+# 模型部署方式对比：Model Deployment、High-Speed Inference 与 Model Production
 
-本文旨在帮助开发者清晰区分百炼平台中两类关键模型服务化路径：**Model Production**（模型生产）与 **Model Deployment 1**（即以预置吞吐 PTU 为核心的模型部署方案）。二者虽均面向“将模型投入线上服务”，但定位、能力边界、适用阶段和运维范式存在本质差异。正确理解其差异，是避免部署失败、计费异常或资源浪费的前提，尤其在涉及自定义微调模型、长文本处理、成本敏感型业务等场景时尤为关键。
-
----
+为帮助开发者在百炼平台上高效、可靠地将模型投入实际业务，本文系统对比三种核心模型服务化能力：**Model Deployment（模型部署）**、**High-Speed Inference（高性能推理）** 和 **Model Production（模型生产）**。三者定位不同——Model Deployment 聚焦**生产级服务化交付**，High-Speed Inference 专注**性能维度的定向增强**，Model Production 则面向**训练-微调-上线的端到端自动化流水线**。本对比旨在厘清能力边界、适用条件与技术约束，辅助团队基于 SLA 要求、运维复杂度、成本模型及开发流程选择最优路径。
 
 ## 关键维度对比
 
-| 维度 | Model Production | Model Deployment 1（PTU） |
-|------|------------------|---------------------------|
-| **核心定位** | **端到端模型工业化流程**：覆盖微调 → Checkpoint 提取 → 发布 → 部署 → 运维全生命周期，强调“从训练成果到可服务实例”的转化闭环 | **确定性算力保障型部署模式**：专为高并发、低延迟、流量可预估的生产环境设计，聚焦“已发布模型”的稳定、高效、可计量推理服务交付 |
-| **输入格式** | 支持多模态输入（文本、图像、视频、语音），具体取决于所选微调模型类型（如 `wan2.5-i2v-preview` 接收图像+文本提示）；API 请求体结构由模型 schema 决定 | 仅支持**文本输入**（含长上下文）；严格遵循 OpenAI 兼容或 DashScope 标准格式（`messages` / `prompt` + `max_tokens` 等）；不支持图像/视频/语音原始数据直接传入 |
-| **输出格式** | 多模态输出：文本生成、图像 URL、视频直链（含 `video_path`）、语音 WAV 下载地址等，由模型能力决定；响应结构高度异构 | **纯文本输出**（含流式响应）；返回标准 `choices[].message.content` 或 `output.text`；视频/图像类模型**不可通过 PTU 部署**，故无对应输出字段 |
-| **支持模型来源** | ✅ 用户自定义微调模型（Custom Models）：<br>• 文本：`qwen3-14b`（SFT）、`qwen-plus-...`<br>• 图像：`wan2.7-image-pro`<br>• 视频：`wan2.5-i2v-preview`<br>• 语音：`cosyvoice-v3-flash`<br>❌ 不支持平台预置基础模型（需用其他部署方式） | ✅ 平台预置模型（Base Models）：<br>• `glm-5.1`、`deepseek-v4-pro`、`qwen3.7-plus-2026-05-26` 等<br>❌ **明确不支持任何 LoRA 或微调后模型**（包括通过 Model Production 发布的 custom model）；LoRA 模型仅支持 MU/CU 部署 |
-| **API 端点与调用范式** | 分阶段多端点：<br>• `/api/v1/fine-tunes/{job_id}`（任务管理）<br>• `/api/v1/fine-tunes/{job_id}/checkpoints`（Checkpoint 列举）<br>• `/api/v1/deployments/models?model_source=custom`（查可部署模型）<br>• `/api/v1/deployments`（创建部署，`plan` 可选 `"mu"`/`"cu"`/`"lora"`/`"ptu"`） | 单一核心端点：<br>• `POST /api/v1/deployments`（仅当 `plan="ptu"` 时触发 PTU 部署）<br>• 必须携带 `ptu_capacity: {input_tpm, output_tpm}` 对象<br>• 部署成功后，推理调用仍使用统一 `/v1/services/{deployed_model}/chat/completions` 端点 |
-| **计费方式** | 按**资源单元（MU/CU）或 LoRA 实例数**计费：<br>• MU：按 `capacity`（单位：base_capacity 的整数倍）× 时长计费<br>• CU：按 GPU 卡时计费<br>• LoRA：按共享实例数计费<br>• **无 TPM 预留费用** | 按**预置吞吐额度（KTPM）** 计费：<br>• 固定月费 = `input_tpm × 单价 + output_tpm × 单价`<br>• 超额部分自动溢出至按量计费（可选关闭）<br>• 实际消耗按阶梯系数 + 缓存折扣动态折算（`provisioned_tokens` 为计费依据） |
-| **典型场景** | • 需要对私有数据微调专属模型（如金融问答、医疗报告生成）<br>• 多模态生成任务（图文生成、视频合成、语音克隆）<br>• 需精细化控制 Checkpoint 选择与验证（如筛选最优图像生成效果）<br>• 模型迭代频繁、需快速回滚至历史版本 | • 客服对话系统（高并发、低延迟、长上下文）<br>• 企业知识库检索与摘要（需 100K+ token 输入）<br>• SaaS 产品嵌入式 AI 功能（流量可预测，需 SLA 保障）<br>• 成本敏感型批量推理（利用前缀缓存降低长对话成本） |
+| 维度 | Model Deployment | High-Speed Inference | Model Production |
+|------|------------------|-----------------------|------------------|
+| **本质定位** | 生产就绪的模型服务化平台（含资源隔离、SLA 保障、全生命周期管理） | 推理性能增强插件（非独立服务，需依附于基础 API 或已部署模型） | 端到端模型工程平台（覆盖微调、部署、作业管理的 API-first 流水线） |
+| **输入格式** | 标准 OpenAI/DashScope 兼容请求体（`messages`, `prompt`, `max_tokens` 等）；PTU 模式支持超长输入（最高 1M token） | 同标准 API 格式；快速模式需额外解析 `delta.reasoning_content` 字段 | 百炼专属 RESTful 请求体（`model`, `name`, `scale_type`），调用时需显式指定 `endpoint` URL |
+| **输出格式** | 完全兼容 OpenAI/DashScope 响应结构（含 `choices[0].message.content`, `usage`, `service_tier`, `x-dashscope-ptu-overflow` 等） | 同标准 API；快速模式响应中 `delta` 包含 `reasoning_content` 与 `content` 双流字段 | 百炼定制化 JSON（含 `id`, `endpoint`, `status`, `created_at`），推理调用需直连 `endpoint` 并遵循 `/v1/chat/completions` 协议 |
+| **支持模型** | ✅ 预置模型（Qwen/DeepSeek/GLM/Kimi/CosyVoice/VL/Omni 全系列）<br>✅ LoRA 微调模型（OSS 导入，rank∈{8,16,32,64}，VIT 冻结等约束）<br>❌ 全参微调模型 | ✅ TPM 预留：主流预置模型（Qwen/GLM/DeepSeek/Kimi 等）<br>✅ 快速模式：仅 `glm-5.2-fast-preview`（Preview 阶段）<br>❌ 自定义模型（LoRA/FT）不支持 | ✅ 微调完成模型（`ft-xxx` ID）<br>✅ OSS 导入模型（通过 `/import_models` API）<br>❌ 预置模型（不可直接部署，需先微调或导入） |
+| **API 端点** | 统一 DashScope 域名：<br>`https://dashscope.aliyuncs.com/api/v1/deployments`（创建）<br>`https://dashscope.aliyuncs.com/api/v1/chat/completions`（调用） | • TPM 预留：复用标准 DashScope 域名，仅 `model` 参数替换为专属 code<br>• 快速模式：专用 MaaS 域名：<br>`https://{workspace_id}.{region}.maas.aliyuncs.com/compatible-mode/v1` | 独立 MaaS 域名：<br>`https://{workspace_id}.{region}.maas.aliyuncs.com/api/v1/deployments`（创建）<br>调用使用返回的 `endpoint`（如 `https://xxx.maaS.aliyuncs.com/v1/chat/completions`） |
+| **计费方式** | 三模式可选：<br>• **PTU**：预付费吞吐额度（TPM），含缓存折扣与长输入阶梯系数<br>• **MU**：包月模型单元（MU1/MU2…），支持 PD 分离与限流<br>• **按 [Token](../concepts/token.md)**：后付费，无资源预留 | • **TPM 预留**：预付费锁定吞吐（kTPM），溢出可选自动转按量<br>• **快速模式**：按标准 token 计费，**不享受缓存折扣**，无容量保障 | 按实际 GPU 实例运行时长计费（秒级），实例规格由模型自动匹配；微调作业单独计费（GPU 小时） |
+| **资源隔离性** | ✅ 完全独占资源（PTU/MU 模式）<br>✅ 支持扩缩容、状态监控（`PENDING`/`RUNNING`/`DELETING`） | ❌ TPM 预留：逻辑隔离（专属吞吐配额），物理资源共享<br>❌ 快速模式：无资源隔离，共享调度队列 | ✅ 物理实例隔离（每个部署为独立容器）<br>⚠️ 最小实例数固定为 1（无法暂停），自动扩缩容上限受账号配额限制（最多 5 个活跃部署） |
+| **典型场景** | • 高并发 SaaS 应用（需稳定低延迟）<br>• 企业级 AI 助手（需长上下文+前缀缓存）<br>• LoRA 微调后生产上线 | • 大促期间流量洪峰保障（TPM 预留）<br>• Agent 多步推理链路（快速模式提升 TPS）<br>• 对 P99 延迟敏感但无需长期独占资源的实验性服务 | • 私有数据微调 → 自动部署闭环（CI/CD 集成）<br>• 多版本模型 A/B 测试（快速创建/销毁部署）<br>• 无控制台权限的 DevOps 自动化流水线 |
 
----
+## 各方案适用场景建议
 
-## 适用场景建议
+### ✅ 优先选择 **Model Deployment** 当：
+- 需要**长期稳定、可预期性能**的生产服务（如客服机器人、内容审核系统）；
+- 使用**LoRA 微调模型**并要求资源独占与生命周期管理；
+- 业务涉及**超长文本处理**（如法律合同分析、代码库理解），需 PTU 的前缀缓存与 1M token 支持；
+- 团队具备控制台操作能力，或可通过 API 实现标准化部署（支持 PTU/MU/Lora 三模式灵活切换）。
 
-### ✅ 选择 **Model Production** 当：
-- 你已完成模型微调（SFT/Efficient-SFT），并希望将 **Checkpoint 转化为线上服务**；
-- 你需要部署 **图像生成、视频生成或语音合成类模型**；
-- 你依赖 **Checkpoint 验证产物**（如预览图、首帧、视频链接）进行人工审核后再上线；
-- 你要求 **灵活扩缩容**（如按请求峰值动态调整 MU 数量）或 **LoRA 多租户共享部署**；
-- 你的模型来自私有训练，**非平台预置列表中的型号**。
+### ✅ 优先选择 **High-Speed Inference** 当：
+- 已有标准 API 调用链路，**仅需临时提升性能**（如大促、发布会期间）；
+- 场景对**单次响应速度极度敏感**（如编程助手实时补全），且能接受 Preview 功能的演进风险；
+- 需要**细粒度吞吐保障**（如承诺 500 RPM 不抖动），但不愿承担独占资源的固定成本；
+- **组合使用**：为关键模型（如 `qwen3.8-max`）申请 TPM 预留，再叠加其 fast-preview 变体，兼顾稳定性与速度。
 
-### ✅ 选择 **Model Deployment 1（PTU）** 当：
-- 你使用的是平台**预置大模型**（如 `glm-5.1`, `deepseek-v4-pro`），且**无需微调**；
-- 你的业务对 **TPM 稳定性、P99 延迟、长文本处理（>32K）有硬性要求**；
-- 你希望获得 **前缀缓存带来的成本优化**（如多轮客服对话、文档分析）；
-- 你能预估月度流量，并愿意为确定性算力支付固定费用（性价比优于按量）；
-- 你接受 **模型能力受限于 PTU 白名单**，且不涉及多模态输出需求。
+### ✅ 优先选择 **Model Production** 当：
+- 工作流以**模型迭代为核心**（频繁微调 → 验证 → 上线），需 API 驱动的全自动流水线；
+- 团队采用**GitOps/CI-CD 实践**，要求部署动作可版本化、可审计、可回滚；
+- 无控制台访问权限（如安全合规限制），所有操作必须通过程序化 API 完成；
+- 需要**统一管理微调作业与部署实例**（如批量终止失败任务、查询历史模型版本）。
 
-### ⚠️ 明确不兼容场景：
-- **不要尝试将 Model Production 发布的 custom model（如 `qwen3-14b-ft-xxx`）部署为 PTU** —— 系统会拒绝或返回 400 错误；
-- **不要在 PTU 部署中期望获取视频/图像 URL 输出** —— PTU 仅支持文本模型；
-- **不要在 Model Production 流程中跳过 Checkpoint 验证直接部署** —— 可能导致服务不可用（尤其视频/图像模型需验证产物有效性）。
+## 技术选型参考指南（面向开发者）
 
----
+| 选型关注点 | 推荐方案 | 关键依据 |
+|------------|----------|----------|
+| **是否需要控制台可视化操作？** | Model Deployment > Model Production > High-Speed Inference | Model Deployment 与 Model Production 均提供控制台入口（后者仅限 API 创建，无部署配置界面）；High-Speed Inference 仅支持控制台配置 TPM 预留，快速模式需手动构造域名。 |
+| **是否需支持 LoRA 模型上线？** | **仅 Model Deployment** | Model Production 虽支持导入模型，但文档未明确 LoRA 兼容性；High-Speed Inference 明确不支持自定义模型。 |
+| **能否接受 Preview 功能？** | High-Speed Inference（快速模式）需谨慎评估 | 快速模式为 Preview，模型 ID、性能、地域支持可能变更；Model Deployment 与 Model Production 均为 GA 级别能力。 |
+| **是否要求最小实例数可设为 0（按需启停）？** | **均不支持** | Model Production 最小实例数固定为 1；Model Deployment 所有模式均持续计费；High-Speed Inference 无实例概念。建议搭配业务层开关或负载均衡路由实现逻辑“暂停”。 |
+| **API 兼容性优先级** | Model Deployment ≈ High-Speed Inference > Model Production | 前两者完全兼容 OpenAI/DashScope SDK；Model Production 需适配百炼专属 endpoint 与认证方式，迁移成本较高。 |
+| **成本优化潜力** | Model Deployment（PTU 缓存折扣） > High-Speed Inference（TPM 溢出可控） > Model Production（纯按量） | PTU 模式通过前缀缓存显著降低长文本 token 消耗；TPM 预留支持溢出策略避免服务中断；Model Production 无任何容量优化机制。 |
 
-## 技术选型参考（面向开发者）
-
-| 你的需求 | 推荐方案 | 关键依据 |
-|----------|----------|----------|
-| “我微调了一个 `qwen3-14b`，想上线提供 API” | **Model Production** | 自定义模型唯一入口；支持文本生成全流程；需通过 `list-checkpoints` 获取 `model_name` 后部署 |
-| “我要部署 `glm-5.1` 做客服机器人，日均 500 万 tokens，要求首字延迟 <300ms” | **Model Deployment 1（PTU）** | PTU 提供确定性吞吐与前缀缓存；`glm-5.1` 在 PTU 白名单内；长输入支持达 200K |
-| “我有一个 LoRA 适配器，想让 10 个客户共享同一个基座模型” | **Model Production（LoRA 部署）** | PTU 明确不支持 LoRA；Model Production 提供 `lora` 部署计划，支持多租户隔离 |
-| “我需要上传一张图，生成描述 + 生成相似图” | **Model Production** | 多模态输入/输出仅 Model Production 支持；`wan2.7-image-pro` 等模型不在 PTU 白名单 |
-| “我已有 `qwen3.7-plus-2026-05-26`，想低成本跑长文档摘要（80K tokens）” | **Model Deployment 1（PTU）** | 该模型支持 PTU；阶梯系数 + 缓存折扣可显著降低长输入成本；无需自行运维实例 |
-
-> 💡 **最佳实践提示**：  
-> - 若项目初期不确定是否需微调，**优先用 PTU 部署预置模型验证业务逻辑**；待 MVP 成熟后，再通过 Model Production 引入定制模型。  
-> - 所有 Model Production 部署均需关注 `expire_time` 和 Region 限制（Checkpoint API 目前仅北京可用）；PTU 部署无此约束。  
-> - PTU 的 `provisioned_tokens` 消耗可通过 `/v1/usage` 接口实时监控，而 Model Production 的 MU/CU 使用量需通过资源账单查看。  
-
----  
-*最后更新：2025年4月 | 百炼平台技术文档组*
+> **重要提醒**：  
+> - **地域限制**：Model Deployment 的 API 部署仅支持华北2（北京），其他地域需使用控制台；High-Speed Inference 的 TPM 预留支持北京与新加坡；Model Production 全地域可用（以 API 文档为准）。  
+> - **权限差异**：Model Deployment 要求模型部署权限（`Workspace xxx does not have deployment privilege`）；Model Production 依赖微调与部署双权限；High-Speed Inference 仅需基础调用权限。  
+> - **演进趋势**：Model Production 正逐步集成 Model Deployment 的 MU 模式能力（如限流、Thinking 模式），未来可能收敛为统一 API 层。当前阶段请严格按文档边界设计架构。
 
 ## 被对比主题页
 
-- [model production](../api/model-production.md)
 - [model deployment 1](../guides/model-deployment-1.md)
+- [model high speed inference](../guides/model-high-speed-inference.md)
+- [model production](../api/model-production.md)
 
 

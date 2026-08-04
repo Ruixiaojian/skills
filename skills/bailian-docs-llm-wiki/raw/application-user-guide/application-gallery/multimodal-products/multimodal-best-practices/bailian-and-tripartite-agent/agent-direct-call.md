@@ -4,7 +4,9 @@
 
 ## 直连Agent配置方法
 
-您可以关闭「文本模型」，开启「直连Agent」开关，通过直连Agent方式调用其它百炼应用或第三方Agent。![截屏2026-03-30 17](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/8925294771/p1063619.png)
+您可以关闭「文本模型」，开启「直连Agent」开关，通过直连Agent方式调用其它百炼应用或第三方Agent。
+
+在**理解和生成**配置面板中，开启**意图识别**开关，关闭**文本模型**开关，并开启**直连 Agent**开关。开启直连 Agent 后，用户请求将直接透传给百炼平台创建的应用（包括 Agent、工作流、智能体编排）以及三方 Agent（通过 A2A 协议对接）。
 
 **说明**
 
@@ -17,12 +19,12 @@
 
 当前您可以在多模态应用中使用该方式。套件提供两种方式接入您的业务Agent。
 
-1.  百炼Agent：参见[接入百炼平台应用](https://help.aliyun.com/zh/model-studio/multimodal-call-app)创建和配置说明。
+1.  百炼Agent：参见[接入百炼智能体应用](https://help.aliyun.com/zh/model-studio/multimodal-call-app)创建和配置说明。
     
 2.  三方Agent：您完成 A2A 服务部署后在管控台集成，参见 [AgentCard](https://help.aliyun.com/zh/model-studio/multimodal-integration-a2a/#854b8c0b10ozm)。
     
 
-![image.png](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/1007419671/p1048468.png)
+在 Agent 配置面板中，单击**百炼应用**区域右上角的**+**按钮添加百炼平台应用，单击**三方应用**区域右上角的**+**按钮添加 A2A 应用。
 
 ## 建联传参
 

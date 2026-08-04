@@ -23,6 +23,32 @@
 
 ## 2026年
 
+**8月**
+
+**日期**
+
+**功能模块**
+
+**功能点**
+
+**功能说明**
+
+8月4日
+
+平台功能
+
+模型升级通知
+
+模型升级通知[了解详情](https://www.aliyun.com/notice/118516)
+
+8月3日
+
+平台功能
+
+阿里云百炼个人版 Token Plan 用户权益升级
+
+阿里云百炼个人版 Token Plan 用户权益升级[了解详情](https://www.aliyun.com/notice/118513)
+
 **7月**
 
 **日期**
@@ -201,7 +227,7 @@ Coding Plan
 
 Coding Plan 联网搜索 MCP 升级
 
-Coding Plan 联网搜索 MCP 升级 Streamable HTTP 协议，前 2000 次免费，[了解详情](https://help.aliyun.com/zh/model-studio/web-search-mcp)
+Coding Plan 联网搜索 MCP 升级 Streamable HTTP 协议，前 2000 次免费，[了解详情](https://help.aliyun.com/zh/model-studio/web-search-for-coding-plan)
 
 6月10日
 

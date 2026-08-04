@@ -27,7 +27,7 @@ client = OpenAI(
     base_url="https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
 )
 completion = client.chat.completions.create(
-    model="qwen3.7-plus",
+    model="qwen3.8-max",
     messages=[{'role': 'user', 'content': '你是谁？'}]
 )
 print(completion.choices[0].message.content)
@@ -53,7 +53,7 @@ const openai = new OpenAI(
 
 async function main() {
     const completion = await openai.chat.completions.create({
-        model: "qwen3.7-plus",
+        model: "qwen3.8-max",
         messages: [{ role: "user", content: "你是谁？"}],
     });
     console.log(completion.choices[0].message.content)
@@ -82,7 +82,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
 -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
 -H "Content-Type: application/json" \
 -d '{
-    "model": "qwen3.7-plus",
+    "model": "qwen3.8-max",
     "messages": [
         {
             "role": "user",

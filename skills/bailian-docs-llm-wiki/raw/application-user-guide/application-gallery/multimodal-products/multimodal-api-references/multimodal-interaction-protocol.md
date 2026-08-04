@@ -477,7 +477,7 @@ int
 
 否
 
-合成音频的比特率，取值范围：6~510kbps，默认值为32，单位kbps，只在合成音频格式为opus或raw-opus时生效
+合成音频的比特率，取值范围：6~510kbps，默认值为32，单位kbps，只在合成音频格式为mp3, opus或raw-opus时生效
 
 intermediate\_text
 

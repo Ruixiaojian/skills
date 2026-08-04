@@ -2038,7 +2038,7 @@ Skill 是可扩展的能力模块，Agent 会根据请求自动匹配并加载�
 
 ### 接入 MCP 服务
 
-OpenClaw 支持通过 MCP（Model Context Protocol）插件扩展 Agent 的工具调用能力，例如联网搜索、网页抓取等。具体案例可以参考[添加联网搜索MCP](https://help.aliyun.com/zh/model-studio/web-search-mcp)。
+OpenClaw 支持通过 MCP（Model Context Protocol）插件扩展 Agent 的工具调用能力，例如联网搜索、网页抓取等。具体案例可以参考[添加联网搜索MCP](https://help.aliyun.com/zh/model-studio/web-search-for-coding-plan)。
 
 ## 常见问题
 

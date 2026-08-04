@@ -1,57 +1,60 @@
 # managed agents
 
-Managed Agents 是百炼平台提供的智能体托管运行时，专为多步[工具调用](../concepts/tool-use.md)、代码执行、文件处理等长时运行任务设计。平台在服务端统一托管会话状态、沙箱环境与工具执行生命周期，支持事件历史持久化与 SSE 流式订阅。开发者可聚焦于 Agent 逻辑本身，无需自行实现代理循环、沙箱编排或工具执行基础设施，详见 [概述](../../raw/application-user-guide/managed-agents/managed-agents-introduction.md)。
+Managed Agents 是百炼平台提供的智能体托管运行时，专为多步工具调用、代码执行、[文件处理](../concepts/file-processing.md)等长时运行任务设计。平台统一托管会话状态、沙箱环境与工具执行生命周期，智能体在隔离的云端容器中自主执行命令、读写文件、安装依赖，并通过服务端持久化的事件流反馈全过程。其核心价值在于将开发者从代理循环编排、沙箱运维和状态管理中解放出来，聚焦于 Agent 逻辑本身。
 
 ## 支持的模型与功能
 
-- **模型支持**：当前支持 `qwen3-max`、`qwen3.7-plus` 等 Qwen 系列大模型（具体列表以控制台下拉菜单为准），模型通过 `model.id` 字段指定。
-- **核心功能**：
-  - 多步自主[工具调用](../concepts/tool-use.md)（bash、read、write、edit、glob、grep、download_file）
-  - 沙箱内代码执行（支持 apt/pip 包安装、网络访问配置）
-  - 文件系统操作（挂载上传文件、URL 下载、读写编辑）
-  - MCP 服务与 Skill 集成（可选扩展）
-  - 会话级上下文保持（含挂载资源隔离副本）
+- **模型支持**：当前支持 `qwen3-max`、`qwen3.7-plus` 等 Qwen 系列大模型（详见 [快速开始](../../raw/application-user-guide/managed-agents/managed-agents-quick-start.md) 中的模型下拉列表）；模型需通过 `model.id` 字段显式指定。
+- **内置工具集**：默认提供 7 个基础工具：`bash`（命令执行）、`read`/`write`/`edit`（文件操作）、`glob`/`grep`（文件搜索）、`download_file`（URL 下载）。可通过 `tools: [{"type": "builtin_toolkit"}]` 启用全部，或按需定制子集。
+- **扩展能力**：
+  - MCP 服务：接入外部工具服务（如数据库、API 网关），需在智能体配置中显式声明；
+  - Skill：预置的端到端任务封装（如“数据清洗”、“PDF 解析”），可挂载复用；
+  - 文件挂载：支持上传文件或从 URL 下载，挂载路径固定为 `/mnt/session/uploads/`（参见 [Agent 上下文管理](../../raw/application-user-guide/managed-agents/managed-agents-context.md)）。
 
-> **注意**：文档 1 示例中使用 `qwen3.7-plus` 作为模型 ID，而文档 2 的“支持的工具”部分未明确列出模型兼容性；实际可用模型请以控制台实时下拉选项或 [快速开始](../../raw/application-user-guide/managed-agents/managed-agents-quick-start.md) 页面为准，避免硬编码过期 ID。
+> **注意**：文档 2 中示例使用 `qwen3-max`，而文档 1 的概述表格中列出 `qwen3.7-plus` 作为示例模型。实际可用模型以控制台下拉列表或 [模型服务文档](https://help.aliyun.com/zh/model-studio/model-list) 为准，二者无本质矛盾，仅反映不同时间点的典型值。
 
 ## 关键参数
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `name` | string | 是 | 智能体名称，仅用于标识，不参与执行逻辑 |
-| `model.id` | string | 是 | 模型 ID，如 `"qwen3-max"`，必须为平台支持的模型 |
-| `system` / `instructions` | string | 是 | 系统提示词，定义角色与行为边界（SDK 差异见下文） |
-| `tools` | array | 否（默认全启用内置工具） | 如 `[{"type": "builtin_toolkit"}]`，禁用需显式传空数组 |
-| `environment_id` | string | 创建 Session 时必填 | 运行环境 ID，指向独立托管的沙箱容器 |
-| `resources` | array | 否 | 挂载资源列表，格式为 `[{ "id": "res_xxx", "mount_path": "/mnt/session/uploads/data.csv" }]` |
+| 参数 | 类型 | 说明 | 是否必需 |
+|------|------|------|----------|
+| `agent` | string | 智能体 ID（创建后返回），用于绑定会话 | ✅ |
+| `environment_id` | string | 运行环境 ID，决定沙箱配置与预装依赖 | ✅ |
+| `title` | string | 会话标题，仅用于标识，不影响执行 | ❌ |
+| `resources` | array | 资源 ID 列表，指定挂载的文件或 URL 资源 | ❌（挂载文件时必需） |
+| `timeout` | number | SSE 流超时（秒），默认 120，最大 3600 | ❌（推荐显式设置） |
 
-> **注意**：Python SDK 使用 `system_prompt` 参数，Java SDK 使用 `instructions`，Bash API 使用 `system` 字段 —— 三者语义一致但命名不统一，需按 SDK 文档适配，详见 [构建 Agent](../../raw/application-user-guide/managed-agents/managed-agents-agent.md)。
+环境配置关键字段：
+- `config.type`: 必须为 `"cloud"`（当前仅支持云端托管）；
+- `config.packages`: 支持 `apt`（系统包）与 `pip`（Python 包）两类预装项；
+- `config.networking.type`: 可选 `"unrestricted"` 或 `"restricted"`（后者禁用外网访问）。
 
 ## 使用方式
 
-1. **创建智能体**：配置模型、系统提示词与工具（[快速开始](../../raw/application-user-guide/managed-agents/managed-agents-quick-start.md) 提供控制台向导与 API 示例）。
-2. **创建运行环境**：定义云端沙箱类型、预装包（apt/pip）、网络策略（[配置 Agent 环境](../../raw/application-user-guide/managed-agents/managed-agents-environment.md)）。
-3. **发起会话**：绑定智能体 ID 与环境 ID，可同时挂载资源（[委派任务给 Agent](../../raw/application-user-guide/managed-agents/managed-agents-session.md)）。
-4. **交互与监控**：
-   - 发送用户消息事件（`role: user`, `type: message`）
-   - 订阅 SSE 事件流（`/sessions/{id}/events/stream`），监听 `message`、`tool_call`、`tool_output`、`session_status` 等事件类型
-   - 调试时可通过控制台“预览调试”标签页实时筛选事件类型
+1. **创建智能体**：调用 `/api/v1/agentstudio/agents` 接口，传入 `name`、`model.id`、`system` 和 `tools`。智能体 ID 可复用于多个会话（参见 [构建 Agent](../../raw/application-user-guide/managed-agents/managed-agents-agent.md)）。
+2. **创建环境**：调用 `/api/v1/agentstudio/environments`，指定 `config.type="cloud"` 及所需 `packages`。环境可被多个会话共享（参见 [配置 Agent 环境](../../raw/application-user-guide/managed-agents/managed-agents-environment.md)）。
+3. **发起会话**：调用 `/api/v1/agentstudio/sessions`，绑定 `agent` 与 `environment_id`，并可选传入 `resources` 挂载文件。
+4. **交互与监听**：
+   - 发送用户消息：`POST /sessions/{id}/events`，`input` 中包含 `role: "user"` 的 message；
+   - 接收事件流：`GET /sessions/{id}/events/stream`，使用 SSE 协议解析 `message`、`tool_output`、`session_status` 等事件类型（参见 [委派任务给 Agent](../../raw/application-user-guide/managed-agents/managed-agents-session.md)）。
 
 ## 限制和注意事项
 
-- **文件大小限制**：单个上传挂载文件 ≤ 10 MB（[Agent 上下文管理](../../raw/application-user-guide/managed-agents/managed-agents-context.md)）。
-- **沙箱隔离性**：同一资源挂载到多个会话时，各会话获得独立副本；会话内修改不影响原始资源或其他会话。
-- **会话生命周期**：会话无活跃事件超 2 小时自动终止（`session_status: terminated`），不可续接；需新建会话继续任务。
-- **[工具调用](../concepts/tool-use.md)范围**：内置工具仅限沙箱内执行，无法访问宿主机或外部私有网络（除非环境配置 `networking.type: unrestricted` 且白名单放行）。
-- **权限要求**：操作前需确保账号在目标工作空间具备 `ManagedAgentsFullAccess` 或等效自定义权限。
+- **文件限制**：单个上传文件 ≤ 10 MB；挂载后路径固定为 `/mnt/session/uploads/`，不可自定义根路径。
+- **会话隔离性**：同一资源挂载到多个会话时，各会话获得独立副本，修改互不影响；卸载后副本自动清理，原始资源保留。
+- **超时控制**：SSE 流默认超时 120 秒，长任务建议显式设置 `timeout=3600`（最大值）；会话空闲超时为 30 分钟，超时后自动终止。
+- **工具执行约束**：
+  - `bash` 命令受沙箱权限限制，禁止 `sudo`、`reboot` 等高危操作；
+  - `pip install` 仅在会话首次启动时生效，后续执行不重装（依赖需在环境 `packages` 中预置）；
+  - `download_file` 仅支持 HTTP/HTTPS 协议，不支持认证头。
+- **状态持久化**：事件历史在服务端完整留存，但会话 `status` 为 `terminated` 后不可再发送新事件；若需续接，必须新建会话并重新挂载资源。
 
 ## 来源文档
 
-- [快速开始](../../raw/application-user-guide/managed-agents/managed-agents-quick-start.md)
 - [概述](../../raw/application-user-guide/managed-agents/managed-agents-introduction.md)
+- [快速开始](../../raw/application-user-guide/managed-agents/managed-agents-quick-start.md)
 - [构建 Agent](../../raw/application-user-guide/managed-agents/managed-agents-agent.md)
 - [配置 Agent 环境](../../raw/application-user-guide/managed-agents/managed-agents-environment.md)
-- [Agent 上下文管理](../../raw/application-user-guide/managed-agents/managed-agents-context.md)
 - [委派任务给 Agent](../../raw/application-user-guide/managed-agents/managed-agents-session.md)
+- [Agent 上下文管理](../../raw/application-user-guide/managed-agents/managed-agents-context.md)
 
 

@@ -25,7 +25,7 @@
 
 ### **模型调优流程**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3414275871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3319085871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
 
 详情参见：
 
@@ -834,7 +834,7 @@ qwen-plus-character-2025-11-06
 
 ###### **文件传入方式**
 
--   **公网URL**：提供一个公网可访问的文件地址，支持HTTP或HTTPS协议。为获得最佳稳定性和性能，可将文件[上传至OSS](https://help.aliyun.com/zh/oss/user-guide/console-quick-start/)或[上传文件获取临时URL](https://help.aliyun.com/zh/model-studio/get-temporary-file-url)，获取公网 URL。
+-   **公网URL**：提供一个公网可访问的文件地址，支持HTTP或HTTPS协议。为获得最佳稳定性和性能，可将文件[上传至OSS](https://help.aliyun.com/zh/oss/user-guide/console-quick-start)或[上传文件获取临时URL](https://help.aliyun.com/zh/model-studio/get-temporary-file-url)，获取公网 URL。
     
     **重要**
     
