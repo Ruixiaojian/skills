@@ -119,11 +119,11 @@ Codex 是 OpenAI 推出的终端 AI 编程助手。可通过 Token Plan 个人�
 
 ### Token Plan 个人版
 
-`model`请选择[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)，可用模型包括 qwen3.8-max、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro、deepseek-v4-flash-0731（deepseek-v4-flash-0731 暂不支持 Responses API）。将`OPENAI_API_KEY`环境变量设置为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。
+`model`请选择[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。将`OPENAI_API_KEY`环境变量设置为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。
 
-#### Responses API（qwen3.8-max、qwen3.7-max、qwen3.7-plus、qwen3.6-plus、qwen3.6-flash）
+#### Responses API
 
-qwen3.8-max、qwen3.7-max、qwen3.7-plus、qwen3.6-plus 和 qwen3.6-flash 支持 Responses API，可使用最新版 Codex。
+若所选模型支持 [OpenAI Responses API](https://help.aliyun.com/zh/model-studio/qwen-api-via-openai-responses)，可使用最新版 Codex。
 
 ```
 model_provider = "Model_Studio_Token_Plan_Personal"
@@ -244,9 +244,9 @@ wire_api = "chat"
 
 `model`请选择[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-overview)。将`OPENAI_API_KEY`环境变量设置为 Token Plan 团队版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/uac-admin/organization/members/list)。
 
-#### Responses API（qwen3.8-max、qwen3.7-max、qwen3.7-plus、qwen3.6-plus、qwen3.6-flash）
+#### Responses API
 
-qwen3.8-max、qwen3.7-max、qwen3.7-plus、qwen3.6-plus 和 qwen3.6-flash 支持 Responses API，可使用最新版 Codex。
+若所选模型支持 [OpenAI Responses API](https://help.aliyun.com/zh/model-studio/qwen-api-via-openai-responses)，可使用最新版 Codex。
 
 ```
 model_provider = "Model_Studio_Token_Plan"
@@ -592,13 +592,63 @@ codex
 
 如果正常进入对话界面，说明配置成功。
 
+## **使用 CC Switch**
+
+[CC Switch](https://github.com/farion1231/cc-switch) 是社区开源的桌面 GUI，支持在多个 API Key 或计费套餐之间一键切换，无需手动修改 `~/.codex/config.toml`。
+
+### 安装
+
+-   macOS：执行 `brew tap farion1231/ccswitch && brew install --cask cc-switch`，或从 [Releases](https://github.com/farion1231/cc-switch/releases) 下载 `.dmg`。
+    
+-   Windows：从 [Releases](https://github.com/farion1231/cc-switch/releases) 下载 `.msi` 安装包或便携版 `.zip`。
+    
+-   Linux：Arch 发行版执行 `paru -S cc-switch-bin`；其他发行版从 [Releases](https://github.com/farion1231/cc-switch/releases) 下载 `.deb` / `.rpm` / `.AppImage`。
+    
+
+### 添加供应商
+
+1.  在 CC Switch 主界面顶部图标栏选中 Codex 图标，点击右上角 **+** 进入**添加新供应商**，按下表填入配置后点击**添加**。
+    
+    **计费方案**
+    
+    **配置信息**
+    
+    Token Plan 团队版
+    
+    供应商名称：百炼-Token Plan
+    
+    API Key：[控制台获取](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/uac-admin/organization/members/list)
+    
+    请求地址：`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
+    
+    Coding Plan
+    
+    供应商名称：百炼-Coding Plan
+    
+    API Key：[控制台获取](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/efm/coding_plan)
+    
+    请求地址：`https://coding.dashscope.aliyuncs.com/v1`
+    
+    按量计费
+    
+    供应商名称：百炼-按量计费
+    
+    API Key：[百炼 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)
+    
+    请求地址：`https://dashscope.aliyuncs.com/compatible-mode/v1`
+    
+2.  展开**高级选项**填写模型名称，从对应套餐[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-overview)中选择，例如 `qwen3.7-max`（Coding Plan 不支持）。
+    
+3.  回到主界面，点击该供应商右侧**启用**按钮，然后重新打开终端窗口执行 `codex` 使配置生效。
+    
+
 ## 常见问题
 
 ### **第三方工具提示“不支持国内模型”或“检查被拒 / Bad request (400)”怎么办？**
 
 **原因**：部分第三方管理工具（如 CC-Switch）在切换供应商时会发起“健康检查/连接测试”探测请求，该探测请求的格式与 Codex 实际调用的请求格式不同，百炼网关可能因此返回 400 Bad request 并提示“检查被拒”，工具据此显示“不支持国内模型”。此提示仅代表健康检查探测未通过，**并不代表百炼不支持中国内地模型，也不影响 Codex 的实际使用。**
 
-**说明**：百炼支持通过 Codex 使用 qwen3.7-max、qwen3.7-plus、qwen3.6-plus、qwen3.6-flash、glm-5 等中国内地模型，配置方式详见上文[配置接入凭证](#cdx-config)。
+**说明**：百炼支持通过 Codex 使用中国内地模型，配置方式详见上文[配置接入凭证](#cdx-config)。
 
 **解决方案**：建议参照上文配置接入凭证，直接在`~/.codex/config.toml`中完成配置，无需依赖第三方工具的健康检查结果；配置完成后参照[验证配置](#cdx-verify)启动 Codex，若能正常进入对话界面即表示可正常使用中国内地模型。
 

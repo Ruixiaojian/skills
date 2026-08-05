@@ -1,15 +1,15 @@
 {
-  "updatedAt": "2026-08-05",
-  "totalFamilies": 177,
-  "totalModels": 395,
+  "updatedAt": "2026-08-06",
+  "totalFamilies": 175,
+  "totalModels": 393,
   "profileCoverage": {
-    "full": 331,
-    "partial": 20,
-    "structured-only": 44,
+    "full": 329,
+    "partial": 14,
+    "structured-only": 50,
     "none": 0
   },
   "capabilityDistribution": {
-    "TG": 36,
+    "TG": 34,
     "IG": 32,
     "VG": 26,
     "TTS": 16,
@@ -28,7 +28,7 @@
   },
   "providerDistribution": {
     "qwen": 108,
-    "qwen-domain-model": 34,
+    "qwen-domain-model": 32,
     "wan": 13,
     "happyhorse": 4,
     "pixverse": 4,
@@ -1062,22 +1062,6 @@
       ]
     },
     {
-      "slug": "qwen-coder-plus",
-      "name": "Qwen-Coder-Plus",
-      "primaryCapability": "TG",
-      "capabilities": [
-        "TG"
-      ],
-      "providers": [
-        "qwen-domain-model"
-      ],
-      "itemCount": 1,
-      "items": [
-        "qwen-coder-plus"
-      ],
-      "maxContextWindow": 131072
-    },
-    {
       "slug": "qwen-coder-turbo",
       "name": "Qwen-Coder-Turbo",
       "primaryCapability": "TG",
@@ -1336,22 +1320,6 @@
         "qwen-math-plus-0816",
         "qwen-math-plus-0919",
         "qwen-math-plus-latest"
-      ],
-      "maxContextWindow": 4096
-    },
-    {
-      "slug": "qwen-math-turbo",
-      "name": "Qwen-Math-Turbo",
-      "primaryCapability": "TG",
-      "capabilities": [
-        "TG"
-      ],
-      "providers": [
-        "qwen-domain-model"
-      ],
-      "itemCount": 1,
-      "items": [
-        "qwen-math-turbo"
       ],
       "maxContextWindow": 4096
     },

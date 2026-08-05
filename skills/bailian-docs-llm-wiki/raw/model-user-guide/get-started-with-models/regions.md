@@ -20,7 +20,7 @@
 3.  推理结果回到接入地域存储，再响应给应用（用户静态数据始终存于所选地域）。
     
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/8754285871/CAEQchiBgIDh6dzL_BkiIDk2MmRhMjdmMGQyNTQ5N2ZiNzNlMGM4NjllMDBjMTUy7466796_20260515102254.505.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/8009195871/CAEQchiBgIDh6dzL_BkiIDk2MmRhMjdmMGQyNTQ5N2ZiNzNlMGM4NjllMDBjMTUy7466796_20260515102254.505.svg)
 
 各地域支持的服务部署范围如下：
 

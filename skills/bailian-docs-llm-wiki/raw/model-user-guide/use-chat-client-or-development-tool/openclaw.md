@@ -137,16 +137,6 @@ Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/to
             "compat": { "thinkingFormat": "openai" }
           },
           {
-            "id": "qwen3.8-max-preview",
-            "name": "qwen3.8-max-preview",
-            "reasoning": true,
-            "input": ["text", "image"],
-            "contextWindow": 983616,
-            "maxTokens": 131072,
-            "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
-            "compat": { "thinkingFormat": "openai" }
-          },
-          {
             "id": "qwen3.7-max",
             "name": "qwen3.7-max",
             "reasoning": false,
@@ -215,7 +205,6 @@ Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/to
       },
       "models": {
         "bailian-token-plan/qwen3.8-max": {},
-        "bailian-token-plan/qwen3.8-max-preview": {},
         "bailian-token-plan/qwen3.7-max": {},
         "bailian-token-plan/qwen3.7-plus": {},
         "bailian-token-plan/qwen3.6-flash": {},
@@ -231,17 +220,6 @@ Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/to
   }
 }
 ```
-
-**重要**
-
-**qwen3.8-max-preview 思考模式说明**：
-
--   thinking：始终开启，不支持关闭。
-    
--   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
-    
--   reasoning\_effort：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
-    
 
 ### **Token Plan 团队版**
 
@@ -298,16 +276,6 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
               {
                 "id": "qwen3.8-max",
                 "name": "qwen3.8-max",
-                "reasoning": true,
-                "input": ["text", "image"],
-                "contextWindow": 983616,
-                "maxTokens": 131072,
-                "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
-                "compat": { "thinkingFormat": "openai" }
-              },
-              {
-                "id": "qwen3.8-max-preview",
-                "name": "qwen3.8-max-preview",
                 "reasoning": true,
                 "input": ["text", "image"],
                 "contextWindow": 983616,
@@ -472,7 +440,6 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
           },
           "models": {
             "bailian-token-plan/qwen3.8-max": {},
-            "bailian-token-plan/qwen3.8-max-preview": {},
             "bailian-token-plan/qwen3.7-max": {},
             "bailian-token-plan/qwen3.7-plus": {},
             "bailian-token-plan/qwen3.6-plus": {},
@@ -554,16 +521,6 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
                 "compat": { "thinkingFormat": "openai" }
               },
               {
-                "id": "qwen3.8-max-preview",
-                "name": "qwen3.8-max-preview",
-                "reasoning": true,
-                "input": ["text", "image"],
-                "contextWindow": 983616,
-                "maxTokens": 131072,
-                "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
-                "compat": { "thinkingFormat": "openai" }
-              },
-              {
                 "id": "qwen3.7-max",
                 "name": "qwen3.7-max",
                 "reasoning": false,
@@ -720,7 +677,6 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
           },
           "models": {
             "bailian-token-plan/qwen3.8-max": {},
-            "bailian-token-plan/qwen3.8-max-preview": {},
             "bailian-token-plan/qwen3.7-max": {},
             "bailian-token-plan/qwen3.7-plus": {},
             "bailian-token-plan/qwen3.6-plus": {},
@@ -749,17 +705,6 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
 3.  **保存并应用**
     
     先单击 **Save** 按钮将配置写入磁盘，再单击 **Apply** 按钮重启网关使配置生效。
-    
-
-**重要**
-
-**qwen3.8-max-preview 思考模式说明**：
-
--   thinking：始终开启，不支持关闭。
-    
--   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
-    
--   reasoning\_effort：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
     
 
 ### **Coding Plan**
@@ -1678,6 +1623,84 @@ openclaw gateway restart
 ```
 
 3.  在 QQ 中向机器人发送消息进行测试。
+    
+
+### 邮箱
+
+通过邮箱渠道，您可以使用 163 邮箱等支持 IMAP/SMTP 协议的邮箱与 OpenClaw 进行交互。
+
+#### 步骤一：安装邮箱渠道插件
+
+1.  在终端中执行以下命令安装邮箱渠道插件：
+    
+    ```
+    openclaw plugins install @openclaw/email
+    ```
+    
+2.  安装完成后，执行以下命令确认插件已加载：
+    
+    ```
+    openclaw plugins list
+    ```
+    
+    输出中应包含 `email` 插件且状态为 `loaded`。
+    
+
+#### 步骤二：配置邮箱渠道
+
+在 `~/.openclaw/openclaw.json` 中添加 `channels` 和 `plugins.allow` 配置。请将 `channels` 和 `plugins` 添加到已有配置文件的对应位置，不要覆盖已有的 `models`、`agents` 等配置。
+
+以 163 邮箱为例，将 `YOUR_EMAIL` 替换为您的 163 邮箱地址，将 `YOUR_AUTH_CODE` 替换为 163 邮箱的授权码（非登录密码，需在 163 邮箱设置中开启 IMAP 服务后获取）。
+
+```
+{
+  "channels": {
+    "email": {
+      "enabled": true,
+      "imap": {
+        "host": "imap.163.com",
+        "port": 993,
+        "secure": true,
+        "user": "YOUR_EMAIL",
+        "password": "YOUR_AUTH_CODE"
+      },
+      "smtp": {
+        "host": "smtp.163.com",
+        "port": 465,
+        "secure": true,
+        "user": "YOUR_EMAIL",
+        "password": "YOUR_AUTH_CODE"
+      }
+    }
+  },
+  "plugins": {
+    "allow": ["email"],
+    "entries": {
+      "email": {
+        "enabled": true
+      }
+    }
+  }
+}
+```
+
+#### 步骤三：测试
+
+1.  执行以下命令重启网关。
+    
+    ```
+    openclaw gateway restart
+    ```
+    
+2.  执行以下命令检查邮箱渠道状态。
+    
+    ```
+    openclaw status
+    ```
+    
+    在 Channels 部分，Email 应显示为 `ON` 且状态为 `OK`。
+    
+3.  向配置的邮箱地址发送一封邮件，验证机器人是否自动回复。
     
 
 ## 常见命令
