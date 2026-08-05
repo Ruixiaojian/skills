@@ -75,6 +75,12 @@ Base URL 是模型 API 的调用地址。Base URL必须与同一计费方案的 
 
 `https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/eu-central-1?tab=globalset#/efm/business_management).eu-central-1.maas.aliyuncs.com/apps/anthropic`
 
+美国（弗吉尼亚）
+
+`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/us-east-1?tab=globalset#/efm/business_management).us-east-1.maas.aliyuncs.com/compatible-mode/v1`
+
+`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/us-east-1?tab=globalset#/efm/business_management).us-east-1.maas.aliyuncs.com/apps/anthropic`
+
 ### 试用域名
 
 支持跨业务空间的 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/api_key) 调用。

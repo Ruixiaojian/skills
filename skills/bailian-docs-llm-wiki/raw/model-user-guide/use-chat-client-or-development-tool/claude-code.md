@@ -49,7 +49,7 @@ npm install -g @anthropic-ai/claude-code
 
 ### Token Plan 个人版
 
-将 YOUR\_API\_KEY 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型：qwen3.8-max、qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro、deepseek-v4-flash-0731。完整说明参见 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
+将 YOUR\_API\_KEY 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型参见 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
 
 ```
 {
@@ -67,17 +67,6 @@ npm install -g @anthropic-ai/claude-code
 ```
 
 **提示**：上述配置将 `CLAUDE_CODE_SUBAGENT_MODEL` 设为 `qwen3.7-max`，子任务（如文件搜索、Plan 模式）将使用该模型。如需子任务也使用 `qwen3.8-max`，可将 `CLAUDE_CODE_SUBAGENT_MODEL` 改为 `qwen3.8-max`。
-
-**重要**
-
-**qwen3.8-max-preview 思考模式说明**：
-
--   **thinking**：始终开启，不支持关闭。
-    
--   **temperature**：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
-    
--   **reasoning\_effort**：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
-    
 
 ### Token Plan 团队版
 
@@ -97,17 +86,6 @@ npm install -g @anthropic-ai/claude-code
     }
 }
 ```
-
-**重要**
-
-**qwen3.8-max-preview 思考模式说明**：
-
--   **thinking**：始终开启，不支持关闭。
-    
--   **temperature**：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
-    
--   **reasoning\_effort**：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
-    
 
 ### Coding Plan
 
@@ -223,7 +201,7 @@ Claude Code 默认使用 200K 上下文窗口。如果需要处理大型代码�
     
     Token Plan 团队版
     
-    供应商名称：百炼-Token Plan
+    供应商名称：百炼-Token Plan 团队版
     
     API Key：[控制台获取](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/uac-admin/organization/members/list)
     

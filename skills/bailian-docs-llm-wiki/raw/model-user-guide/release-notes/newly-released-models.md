@@ -1,4 +1,4 @@
-# 模型上下架与更新
+# 模型上架与更新
 
 **模型上架**详见下表，**模型下线**规则及清单请参考[模型下线机制说明](https://help.aliyun.com/zh/model-studio/model-depreciation)。
 

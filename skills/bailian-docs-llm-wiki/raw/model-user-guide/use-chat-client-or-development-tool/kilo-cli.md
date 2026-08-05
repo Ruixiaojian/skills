@@ -36,41 +36,30 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
 
 需先购买 Token Plan 个人版套餐且套餐处于有效期内。可在[Token Plan 个人版页面](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)购买套餐。
 
-将 `YOUR_API_KEY` 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型：qwen3.8-max、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro，完整列表请参考 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
+将 `YOUR_API_KEY` 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型请参考 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
 
 ```
 {
   "$schema": "https://kilo.ai/config.json",
   "provider": {
     "bailian-token-plan-personal": {
-      "npm": "@ai-sdk/openai-compatible",
+      "npm": "@ai-sdk/anthropic",
       "name": "Alibaba Cloud Model Studio",
       "options": {
-        "baseURL": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "baseURL": "https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic/v1",
         "apiKey": "YOUR_API_KEY"
       },
       "models": {
         "qwen3.8-max": {
           "name": "Qwen3.8 Max",
-          "contextWindow": 983616,
-          "maxOutputTokens": 131072,
-          "reasoning": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "options": {
             "thinking": {
               "type": "enabled",
               "budgetTokens": 262144
-            }
-          }
-        },
-        "qwen3.8-max-preview": {
-          "name": "Qwen3.8 Max Preview",
-          "contextWindow": 983616,
-          "maxOutputTokens": 131072,
-          "reasoning": true,
-          "options": {
-            "thinking": {
-              "type": "enabled",
-              "budgetTokens": 99072
             }
           }
         },
@@ -85,15 +74,10 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
         },
         "qwen3.7-plus": {
           "name": "Qwen3.7 Plus",
-          "options": {
-            "thinking": {
-              "type": "enabled",
-              "budgetTokens": 8192
-            }
-          }
-        },
-        "qwen3.6-plus": {
-          "name": "Qwen3.6 Plus",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "options": {
             "thinking": {
               "type": "enabled",
@@ -103,29 +87,37 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
         },
         "qwen3.6-flash": {
           "name": "Qwen3.6 Flash",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "options": {
             "thinking": {
               "type": "enabled",
               "budgetTokens": 8192
             }
           }
+        },
+        "glm-5.2": {
+          "name": "GLM-5.2",
+          "options": {
+            "thinking": {
+              "type": "enabled",
+              "budgetTokens": 8192
+            }
+          }
+        },
+        "deepseek-v4-pro": {
+          "name": "DeepSeek V4 Pro"
+        },
+        "deepseek-v4-flash-0731": {
+          "name": "DeepSeek V4 Flash 0731"
         }
       }
     }
   }
 }
 ```
-
-**重要**
-
-**qwen3.8-max-preview 思考模式说明**：
-
--   thinking：始终开启，不支持关闭。
-    
--   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
-    
--   reasoning\_effort：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
-    
 
 ### Token Plan 团队版
 
@@ -138,34 +130,23 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
   "$schema": "https://kilo.ai/config.json",
   "provider": {
     "bailian-token-plan": {
-      "npm": "@ai-sdk/openai-compatible",
+      "npm": "@ai-sdk/anthropic",
       "name": "Alibaba Cloud Model Studio",
       "options": {
-        "baseURL": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "baseURL": "https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic/v1",
         "apiKey": "YOUR_API_KEY"
       },
       "models": {
         "qwen3.8-max": {
           "name": "Qwen3.8 Max",
-          "contextWindow": 983616,
-          "maxOutputTokens": 131072,
-          "reasoning": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "options": {
             "thinking": {
               "type": "enabled",
               "budgetTokens": 262144
-            }
-          }
-        },
-        "qwen3.8-max-preview": {
-          "name": "Qwen3.8 Max Preview",
-          "contextWindow": 983616,
-          "maxOutputTokens": 131072,
-          "reasoning": true,
-          "options": {
-            "thinking": {
-              "type": "enabled",
-              "budgetTokens": 99072
             }
           }
         },
@@ -180,6 +161,10 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
         },
         "qwen3.7-plus": {
           "name": "Qwen3.7 Plus",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "options": {
             "thinking": {
               "type": "enabled",
@@ -189,6 +174,10 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
         },
         "qwen3.6-plus": {
           "name": "Qwen3.6 Plus",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "options": {
             "thinking": {
               "type": "enabled",
@@ -198,6 +187,10 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
         },
         "qwen3.6-flash": {
           "name": "Qwen3.6 Flash",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "options": {
             "thinking": {
               "type": "enabled",
@@ -280,17 +273,6 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
 }
 ```
 
-**重要**
-
-**qwen3.8-max-preview 思考模式说明**：
-
--   thinking：始终开启，不支持关闭。
-    
--   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
-    
--   reasoning\_effort：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
-    
-
 ### Coding Plan
 
 将 `YOUR_API_KEY` 替换为 Coding Plan 专属 [API Key](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/efm/coding_plan)。可用模型请参考 Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-plan-overview#b01f82a4218kx)。
@@ -309,6 +291,10 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
       "models": {
         "qwen3.7-plus": {
           "name": "Qwen3.7 Plus",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "options": {
             "thinking": {
               "type": "enabled",
@@ -318,6 +304,10 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
         },
         "qwen3.6-plus": {
           "name": "Qwen3.6 Plus",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "options": {
             "thinking": {
               "type": "enabled",
@@ -400,6 +390,10 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
       "models": {
         "qwen3.7-plus": {
           "name": "Qwen3.7 Plus",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "options": {
             "thinking": {
               "type": "enabled",
@@ -409,6 +403,10 @@ Kilo CLI 是 Kilo Code 的命令行客户端，可以通过按量计费、Coding
         },
         "qwen3.6-plus": {
           "name": "Qwen3.6 Plus",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "options": {
             "thinking": {
               "type": "enabled",

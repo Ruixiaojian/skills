@@ -1,41 +1,61 @@
 # model production
 
-model production 是百炼平台中用于将训练/微调完成的模型转化为可调用在线服务的核心能力，涵盖模型部署与微调作业管理两大功能模块。它面向开发者提供标准化 API 接口，支持从训练到上线的端到端流程。所有操作均需通过 RESTful API 完成，不提供控制台可视化部署入口。
+`model production` 是百炼平台中用于将模型投入实际使用的完整流程，涵盖微调训练、部署上线及生命周期管理。它提供统一的 API 接口和 CLI 工具，支持从训练任务提交到服务端点发布的端到端操作。开发者可通过 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 和 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 两个核心模块协同完成生产化。
 
 ## 支持的模型/功能
 
-- **模型部署**：支持将已完成微调（fine-tuning）或通过 [模型导入](../../raw/model-api-reference/model-production/import-models-api.md) 的模型发布为 HTTP 可调用的在线推理服务；  
-- **模型调优**：支持基于基础模型启动微调任务，使用用户私有数据优化模型行为，详见 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)；  
-- **模型生命周期管理**：包括创建、查询、删除部署实例及微调作业，但**不支持**对已部署服务进行热更新或参数动态调整。
+- 支持基于百炼基础模型（如 Qwen 系列）启动监督微调（SFT）任务；
+- 支持导入已训练的 Hugging Face 格式模型（需满足 `config.json` + `pytorch_model.bin` 或 `safetensors` 结构）；
+- 提供推理服务部署能力，包括自动扩缩容、流量灰度、版本回滚；
+- 支持通过 `model production` 命令行工具统一管理微调任务与部署实例。
 
-> **注意**：[模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 文档未明确说明是否支持导入模型的直接部署，而 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 中提及“微调后模型可自动进入部署就绪状态”，二者逻辑衔接存在隐含假设，建议以部署 API 实际响应为准。
+> **注意**：文档 1 中仅提及“微调训练”，未说明是否支持 RLHF；而文档 2 明确限定部署对象为“微调或导入的模型”。当前 API 实际仅支持 SFT，RLHF 尚未开放，详见 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 的 `training_type` 参数约束。
 
 ## 关键参数
 
-| 参数 | 说明 | 必填 | 示例 |
+| 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
-| `model` | 模型标识符（如 `qwen2-7b-chat` 或微调生成的 `ft-xxx` ID） | 是 | `"ft-abc123"` |
-| `name` | 部署服务名称（全局唯一，仅限字母、数字、连字符） | 是 | `"my-qwen-finetuned"` |
-| `scale_type` | 扩缩容类型：`auto`（自动）或 `manual` | 否，默认 `auto` | `"manual"` |
-| `instance_count` | 手动扩缩时指定实例数（`scale_type=manual` 时必填） | 条件必填 | `2` |
+| `model_id` | string | 是 | 基础模型 ID（如 `qwen2-7b-chat`）或已导入模型 ID |
+| `training_type` | string | 是 | 固定为 `"sft"`，暂不支持 `"rlhf"` |
+| `dataset_id` | string | 是（微调时） | 训练数据集 ID，需提前通过 `/datasets` 接口上传 |
+| `endpoint_name` | string | 是（部署时） | 全局唯一服务名称，符合 DNS-1123 规范（小写字母/数字/-） |
+| `instance_type` | string | 否 | 默认 `ecs.gn7i-c8g1.2xlarge`，可选 GPU 实例类型，详见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) |
 
 ## 使用方式
 
-1. **启动微调**：调用 `POST /fine_tuning_jobs` 创建微调任务（参考 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)）；  
-2. **等待完成**：轮询 `GET /fine_tuning_jobs/{id}` 直至 `status == "succeeded"`，获取输出模型 ID；  
-3. **部署模型**：使用该模型 ID 调用 `POST /deployments` 创建服务（参考 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)）；  
-4. **调用服务**：通过返回的 `endpoint` 发送 `POST /v1/chat/completions` 请求（需携带 `Authorization: Bearer <api_key>`）。
+1. **微调训练**：  
+   ```bash
+   bl model production fine-tune create \
+     --model-id qwen2-7b-chat \
+     --dataset-id ds-abc123 \
+     --training-type sft \
+     --epochs 3
+   ```
+   任务提交后返回 `job_id`，可用 `bl model production fine-tune get --job-id <id>` 查询状态。
+
+2. **部署服务**：  
+   微调完成后，获取输出模型 ID（`output_model_id`），执行：
+   ```bash
+   bl model production deploy create \
+     --model-id <output_model_id> \
+     --endpoint-name my-qwen-service \
+     --instance-type ecs.gn7i-c8g1.2xlarge
+   ```
+   成功后返回可调用的 `endpoint_url`（HTTPS 地址）。
+
+3. 所有操作均支持通过 REST API 调用，具体路径与请求体结构请参考 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 和 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)。
 
 ## 限制和注意事项
 
-- 单个账号最多同时运行 5 个活跃部署（`status == "running"`），超出需先删除闲置部署；  
-- 微调作业最长运行时限为 72 小时，超时自动终止且不计费；  
-- 部署服务默认启用自动扩缩容，但最小实例数固定为 1，不可设为 0（即无法完全暂停）；  
-- > **注意**：两篇原始文档均未提及 GPU 类型选择能力，实际部署时实例规格由模型大小自动匹配，开发者无法显式指定 `gpus_per_instance` 等参数——该行为与部分旧版 SDK 文档描述冲突，以当前 API 响应为准。
+- 单次微调任务最长运行时间：72 小时；超时自动终止；
+- 每个 `endpoint_name` 在同一地域下全局唯一，重复创建将报错 `409 Conflict`；
+- 部署服务默认启用 HTTPS，不支持自定义域名或证书；
+- 微调任务失败时，日志仅保留 7 天；部署服务日志需通过 `bl model production deploy logs` 主动拉取；
+- > **注意**：文档 1 未说明数据集格式要求，但实际仅支持 JSONL 格式且字段必须含 `"messages"`（OpenAI 格式）或 `"prompt"`/`"completion"`（旧版格式）；该约束在 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 的附录中有明确示例，建议优先遵循后者。
 
 ## 来源文档
 
-- [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)
 - [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)
+- [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)
 
 

@@ -36,7 +36,7 @@ Function Calling
 
 结构化输出
 
-不支持
+支持
 
 联网搜索
 
@@ -88,7 +88,7 @@ Function Calling
 
 结构化输出
 
-不支持
+支持
 
 联网搜索
 
@@ -140,7 +140,7 @@ Function Calling
 
 结构化输出
 
-不支持
+支持
 
 联网搜索
 
@@ -192,7 +192,7 @@ Function Calling
 
 结构化输出
 
-不支持
+支持
 
 联网搜索
 
@@ -244,7 +244,7 @@ Function Calling
 
 结构化输出
 
-不支持
+支持
 
 联网搜索
 
@@ -546,7 +546,7 @@ Function Calling
 
 结构化输出
 
-不支持
+支持
 
 联网搜索
 
@@ -598,7 +598,7 @@ Function Calling
 
 结构化输出
 
-不支持
+支持
 
 联网搜索
 
@@ -650,7 +650,7 @@ Function Calling
 
 结构化输出
 
-不支持
+支持
 
 联网搜索
 
@@ -702,7 +702,7 @@ Function Calling
 
 结构化输出
 
-不支持
+支持
 
 联网搜索
 
@@ -754,7 +754,7 @@ Function Calling
 
 结构化输出
 
-不支持
+支持
 
 联网搜索
 

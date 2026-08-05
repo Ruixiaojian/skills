@@ -25,7 +25,7 @@
 
 ### **模型调优流程**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3319085871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/9388195871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
 
 详情参见：
 
@@ -755,11 +755,13 @@ qwen-plus-character-2025-11-06
         
 -   **图像大小：**
     
-    -   以公网URL传入时：Qwen3.8系列、Qwen3.7系列、Qwen3.6系列、Qwen3.5系列单个图像不超过 `20MB`，其他模型单个图像不超过`10MB`
+    -   以公网URL传入时：Qwen3.8系列、Qwen3.7系列、Qwen3.6系列、Qwen3.5系列、Qwen3-VL系列单个图像不超过 `20MB`，其他模型单个图像不超过`10MB`
         
     -   以本地路径传入时：单个图像不超过`10MB`
         
-    -   以 Base64 编码传入时：编码后的字符串不超过`10MB`
+    -   以 Base64 编码传入时（OpenAI 兼容接口或DashScope）：Qwen3.8系列、Qwen3.7系列、Qwen3.6系列、Qwen3.5、Qwen3-VL系列编码前的原始图像文件不超过 `20MB`，其他模型不超过`10MB`；且编码后的 Data URI 字符串不超过 `20MB`。
+        
+    -   以 Base64 编码传入时（Anthropic 兼容接口）：受**请求体整体不超过** `**6MB**` 的限制，**多张图像**时需共享此额度。
         
     
     > 如需压缩文件体积请参见 [如何将图像或视频压缩到满足要求的大小](https://help.aliyun.com/zh/model-studio/vision#ec8e0a8e03moe) 。

@@ -43,7 +43,7 @@ OpenCode 是一款终端 AI 编程工具，可以通过按量计费、Coding Pla
 
 需先购买 Token Plan 个人版套餐且套餐处于有效期内。可在[Token Plan 个人版页面](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)购买套餐。
 
-将 `YOUR_API_KEY` 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型包括 qwen3.8-max、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro，详细列表请参考 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
+将 `YOUR_API_KEY` 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型请参考 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
 
 ```
 {
@@ -61,24 +61,15 @@ OpenCode 是一款终端 AI 编程工具，可以通过按量计费、Coding Pla
           "name": "Qwen3.8 Max",
           "contextWindow": 983616,
           "maxOutputTokens": 131072,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "options": {
             "thinking": {
               "type": "enabled",
               "budgetTokens": 262144
             },
-            "reasoning": true
-          }
-        },
-        "qwen3.8-max-preview": {
-          "name": "Qwen3.8 Max Preview",
-          "contextWindow": 983616,
-          "maxOutputTokens": 131072,
-          "options": {
-            "thinking": {
-              "type": "enabled",
-              "budgetTokens": 99072
-            },
-            "temperature": 0.6,
             "reasoning": true
           }
         },
@@ -104,19 +95,6 @@ OpenCode 是一款终端 AI 编程工具，可以通过按量计费、Coding Pla
             }
           }
         },
-        "qwen3.6-plus": {
-          "name": "Qwen3.6 Plus",
-          "modalities": {
-            "input": ["text", "image"],
-            "output": ["text"]
-          },
-          "options": {
-            "thinking": {
-              "type": "enabled",
-              "budgetTokens": 8192
-            }
-          }
-        },
         "qwen3.6-flash": {
           "name": "Qwen3.6 Flash",
           "modalities": {
@@ -129,23 +107,27 @@ OpenCode 是一款终端 AI 编程工具，可以通过按量计费、Coding Pla
               "budgetTokens": 8192
             }
           }
+        },
+        "glm-5.2": {
+          "name": "GLM-5.2",
+          "options": {
+            "thinking": {
+              "type": "enabled",
+              "budgetTokens": 8192
+            }
+          }
+        },
+        "deepseek-v4-pro": {
+          "name": "DeepSeek V4 Pro"
+        },
+        "deepseek-v4-flash-0731": {
+          "name": "DeepSeek V4 Flash 0731"
         }
       }
     }
   }
 }
 ```
-
-**重要**
-
-**qwen3.8-max-preview 思考模式说明**：
-
--   thinking：始终开启，不支持关闭。
-    
--   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
-    
--   reasoning\_effort：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
-    
 
 ### Token Plan 团队版
 
@@ -169,24 +151,15 @@ OpenCode 是一款终端 AI 编程工具，可以通过按量计费、Coding Pla
           "name": "Qwen3.8 Max",
           "contextWindow": 983616,
           "maxOutputTokens": 131072,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "options": {
             "thinking": {
               "type": "enabled",
               "budgetTokens": 262144
             },
-            "reasoning": true
-          }
-        },
-        "qwen3.8-max-preview": {
-          "name": "Qwen3.8 Max Preview",
-          "contextWindow": 983616,
-          "maxOutputTokens": 131072,
-          "options": {
-            "thinking": {
-              "type": "enabled",
-              "budgetTokens": 99072
-            },
-            "temperature": 0.6,
             "reasoning": true
           }
         },
@@ -324,17 +297,6 @@ OpenCode 是一款终端 AI 编程工具，可以通过按量计费、Coding Pla
   }
 }
 ```
-
-**重要**
-
-**qwen3.8-max-preview 思考模式说明**：
-
--   thinking：始终开启，不支持关闭。
-    
--   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
-    
--   reasoning\_effort：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
-    
 
 ### Coding Plan
 

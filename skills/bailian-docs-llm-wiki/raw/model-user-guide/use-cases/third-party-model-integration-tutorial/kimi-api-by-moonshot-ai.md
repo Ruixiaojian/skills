@@ -711,7 +711,7 @@ kimi/kimi-k2.5
 
 -   `stream_options`仅支持设置为`true`，`temperature`、`top_p`、`repetition_penalty`、`presence_penalty`不支持设置为其他值；
     
--   kimi/kimi-k3 支持 `reasoning_effort` 参数，唯一支持值为 `max`。
+-   kimi/kimi-k3 支持 `reasoning_effort` 参数，唯一支持值 `max`。
     
 -   在思考模式下，使用 Kimi 模型进行工具调用时：必须在每轮 assistant 消息中保留 `reasoning_content` 字段；对于`tool_choice`参数，`kimi-k3` 支持 `auto` / `none` / `required` 三档；其他模型不支持 `required`，传入会报错。`kimi-k3` 支持动态加载工具，详细用法请参见[动态加载工具](https://platform.kimi.com/docs/guide/use-dynamic-tool-loading)。
     

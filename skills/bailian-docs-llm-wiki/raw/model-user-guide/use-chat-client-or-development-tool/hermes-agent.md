@@ -48,14 +48,14 @@ Hermes Agent 是一款终端 AI 编程工具，可以通过按量计费、Coding
 
 ### Token Plan 个人版
 
-将 `YOUR_API_KEY` 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型：qwen3.8-max-preview、qwen3.7-max、qwen3.7-plus、qwen3.6-flash、glm-5.2、deepseek-v4-pro，完整列表请参考 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
+将 `YOUR_API_KEY` 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型请参考 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
 
 ```
 hermes config set model.provider custom
 hermes config set model.base_url https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic
 hermes config set model.api_mode anthropic_messages
 hermes config set model.api_key YOUR_API_KEY
-hermes config set model.default qwen3.8-max-preview
+hermes config set model.default qwen3.8-max
 ```
 
 以上命令将配置写入 `~/.hermes/config.yaml`。也可以直接编辑该文件，写入以下内容：
@@ -64,23 +64,12 @@ config.yaml 配置示例
 
 ```
 model:
-  default: qwen3.8-max-preview
+  default: qwen3.8-max
   provider: custom
   base_url: https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic
   api_mode: anthropic_messages
   api_key: YOUR_API_KEY
 ```
-
-**重要**
-
-**qwen3.8-max-preview 思考模式说明**：
-
--   thinking：始终开启，不支持关闭。
-    
--   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
-    
--   reasoning\_effort：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
-    
 
 ### Token Plan 团队版
 
@@ -91,7 +80,7 @@ hermes config set model.provider custom
 hermes config set model.base_url https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic
 hermes config set model.api_mode anthropic_messages
 hermes config set model.api_key YOUR_API_KEY
-hermes config set model.default qwen3.8-max-preview
+hermes config set model.default qwen3.8-max
 ```
 
 以上命令将配置写入 `~/.hermes/config.yaml`。也可以直接编辑该文件，写入以下内容：
@@ -100,23 +89,12 @@ config.yaml 配置示例
 
 ```
 model:
-  default: qwen3.8-max-preview
+  default: qwen3.8-max
   provider: custom
   base_url: https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic
   api_mode: anthropic_messages
   api_key: YOUR_API_KEY
 ```
-
-**重要**
-
-**qwen3.8-max-preview 思考模式说明**：
-
--   thinking：始终开启，不支持关闭。
-    
--   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
-    
--   reasoning\_effort：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
-    
 
 ### Coding Plan
 

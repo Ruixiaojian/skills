@@ -76,17 +76,6 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
         }
       },
       {
-        "id": "qwen3.8-max-preview",
-        "name": "[Token Plan 个人版] qwen3.8-max-preview",
-        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
-        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
-        "generationConfig": {
-          "extra_body": {
-            "enable_thinking": true
-          }
-        }
-      },
-      {
         "id": "qwen3.7-max",
         "name": "[Token Plan 个人版] qwen3.7-max",
         "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
@@ -142,17 +131,6 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
 }
 ```
 
-**重要**
-
-**qwen3.8-max-preview 思考模式说明**：
-
--   thinking：始终开启，不支持关闭。
-    
--   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
-    
--   reasoning\_effort：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
-    
-
 ### Token Plan 团队版
 
 启动 Qwen Code 后输入 `/auth`，依次选择 **订阅计划** > **阿里云百炼 Token Plan**，输入 Token Plan 团队版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/uac-admin/organization/members/list) 即可完成配置。可用模型请参考 Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-overview)。
@@ -176,17 +154,6 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
       {
         "id": "qwen3.8-max",
         "name": "[Token Plan 团队版] qwen3.8-max",
-        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
-        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
-        "generationConfig": {
-          "extra_body": {
-            "enable_thinking": true
-          }
-        }
-      },
-      {
-        "id": "qwen3.8-max-preview",
-        "name": "[Token Plan 团队版] qwen3.8-max-preview",
         "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
         "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
         "generationConfig": {
@@ -351,17 +318,6 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
   "$version": 3
 }
 ```
-
-**重要**
-
-**qwen3.8-max-preview 思考模式说明**：
-
--   thinking：始终开启，不支持关闭。
-    
--   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
-    
--   reasoning\_effort：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
-    
 
 ### Coding Plan
 
