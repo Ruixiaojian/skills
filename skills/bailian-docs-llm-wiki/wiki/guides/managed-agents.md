@@ -1,53 +1,54 @@
 # managed agents
 
-Managed Agents 是百炼平台提供的智能体托管运行时，专为多步工具调用、代码执行、文件处理等长时运行任务设计。平台统一托管会话状态、沙箱环境与工具执行生命周期，智能体在隔离的云端容器中自主执行命令、读写文件、安装依赖，并通过服务端持久化的事件历史实现中断续接。相比无状态的智能体应用，Managed Agents 更适合需要有状态上下文、文件系统语义和可控执行环境的场景。
+Managed Agents 是百炼平台提供的智能体托管运行时，专为多步工具调用、代码执行、文件处理等长时运行任务设计。平台统一托管会话状态、沙箱环境与工具执行生命周期，智能体在隔离的云端容器中自主执行命令、读写文件、安装依赖，并通过服务端持久化的事件历史实现中断续接与调试可观测性。其核心价值在于将代理循环、沙箱编排与工具调度等基础设施复杂度下沉，使开发者聚焦于 Agent 逻辑本身。
 
 ## 支持的模型与功能
 
-- **模型支持**：当前支持 `qwen3-max`、`qwen3.7-plus` 等 Qwen 系列大模型（详见 [快速开始](../../raw/application-user-guide/managed-agents/managed-agents-quick-start.md)）；模型通过 `model.id` 字段指定，创建后不可变更。
-- **核心功能**：
-  - 命令执行（`bash`）：在沙箱中运行任意 shell 命令；
-  - 文件操作（`read`/`write`/`edit`/`glob`/`grep`/`download_file`）：支持读写、搜索、编辑沙箱内文件；
-  - MCP 服务接入：通过标准 MCP 协议集成外部工具服务；
-  - Skill 封装：复用预置的端到端任务流程（如数据分析、文档解析）；
-  - 资源挂载：上传文件或从 URL 下载后挂载至 `/mnt/session/uploads/` 下指定路径，供智能体直接访问（详见 [Agent 上下文管理](../../raw/application-user-guide/managed-agents/managed-agents-context.md)）。
+- **模型支持**：当前支持 `qwen3-max`、`qwen3.7-plus` 等 Qwen 系列大模型（详见[快速开始](../../raw/application-user-guide/managed-agents/managed-agents-quick-start.md)）；模型需在创建 Agent 时显式指定，不支持运行时动态切换。
+- **内置工具集**：默认提供 7 个基础工具：`bash`（命令执行）、`read`/`write`/`edit`（文件操作）、`glob`/`grep`（文件搜索）、`download_file`（URL 下载）。所有工具均在沙箱内受限执行，无跨会话文件访问能力。
+- **扩展能力**：
+  - **MCP 服务**：通过标准 MCP 协议接入外部工具服务；
+  - **Skill**：复用预置的端到端工具组合（如数据清洗、PDF 解析等）；
+  - **自定义工具**：暂未开放用户自定义工具注册接口，仅支持平台内置及 MCP/Skill 两类。
 
-> **注意**：文档 2 中示例使用 `qwen3-max`，但文档 1 的概述表格中列出的是 `qwen3.7-plus`；实际可用模型以控制台下拉列表或 [API 文档](https://help.aliyun.com/zh/model-studio/agent-create) 为准，建议优先参考控制台实时枚举值。
+> **注意**：文档 1 中称“支持安装依赖”，但文档 2 的 API 示例中 `packages` 配置仅允许在 Environment 创建阶段声明（如 `pip: ["pandas"]`），**不支持运行时动态 `pip install`**；实际执行中若 Agent 尝试在 `bash` 工具中调用 `pip install`，将因沙箱权限限制失败。该行为以[配置 Agent 环境](../../raw/application-user-guide/managed-agents/managed-agents-environment.md)为准。
 
 ## 关键参数
 
-| 参数 | 说明 | 示例值 | 来源 |
-|------|------|--------|------|
-| `agent.id` | 智能体唯一标识，创建后用于绑定会话 | `"agent_xxx"` | [构建 Agent](../../raw/application-user-guide/managed-agents/managed-agents-agent.md) |
-| `environment_id` | 运行环境 ID，决定沙箱类型、预装包与网络策略 | `"env_xxx"` | [配置 Agent 环境](../../raw/application-user-guide/managed-agents/managed-agents-environment.md) |
-| `resources` | 创建会话时指定的挂载资源列表（ID + 挂载路径） | `[{"id": "res_abc", "mount_path": "/mnt/session/uploads/data.csv"}]` | [Agent 上下文管理](../../raw/application-user-guide/managed-agents/managed-agents-context.md) |
-| `input`（事件） | 用户消息内容，需为符合 OpenAI-style 的 `message` 数组 | `[{"role": "user", "type": "message", "content": [{"type": "text", "text": "分析 sales.csv"}]}]` | [委派任务给 Agent](../../raw/application-user-guide/managed-agents/managed-agents-session.md) |
+| 参数 | 位置 | 说明 | 是否必需 |
+|------|------|------|----------|
+| `model.id` | Agent 创建 | 指定底层大模型 ID，如 `"qwen3-max"` | 是 |
+| `system` / `instructions` | Agent 创建 | 系统提示词，定义角色与行为边界；影响工具选择与输出格式 | 是 |
+| `tools` | Agent 创建 | 工具列表，支持 `"builtin_toolkit"`（全量内置）或细粒度枚举（如 `[{"type": "bash"}]`） | 否（默认启用全部） |
+| `config.type` | Environment 创建 | 沙箱类型，仅支持 `"cloud"`（百炼托管容器） | 是 |
+| `config.packages` | Environment 创建 | 预装依赖，支持 `apt`（系统包）和 `pip`（Python 包）字段 | 否 |
+| `resources` | Session 创建 | 挂载资源列表，格式为 `[{"id": "res_xxx", "mount_path": "/mnt/session/uploads/data"}]` | 否 |
 
 ## 使用方式
 
-1. **创建智能体**：定义名称、模型、系统提示词与启用的工具（内置工具集默认全选），返回 `agent.id`；
-2. **创建运行环境**：指定沙箱类型（`cloud`）、预装包（`apt`/`pip`）、网络策略（如 `"unrestricted"`），返回 `environment_id`；
-3. **创建会话**：绑定 `agent.id` 与 `environment_id`，可选传入 `resources` 挂载文件；
-4. **发送事件**：向会话 POST 用户消息（`input` 字段），触发智能体执行；
-5. **接收事件流**：通过 SSE 接口（`/sessions/{id}/events/stream`）订阅实时事件，包括 `message`、`tool_call`、`tool_output`、`session_status` 等类型。
-
-所有步骤均支持控制台向导与 API 双路径，推荐开发者优先使用 SDK（Python/Java/Bash 示例见 [快速开始](../../raw/application-user-guide/managed-agents/managed-agents-quick-start.md)）。
+1. **创建 Agent**：通过控制台向导或 API 定义名称、模型、系统提示词与工具集。Agent 创建后获得唯一 ID（如 `agent_xxx`），可被多个会话复用 —— 参见[构建 Agent](../../raw/application-user-guide/managed-agents/managed-agents-agent.md)。
+2. **创建 Environment**：独立配置沙箱环境，指定预装包与网络策略（如 `unrestricted`）。Environment 亦可被多个会话共享 —— 参见[配置 Agent 环境](../../raw/application-user-guide/managed-agents/managed-agents-environment.md)。
+3. **创建 Session**：绑定 Agent ID 与 Environment ID，可选挂载资源（如上传的 CSV 文件）。Session 启动后即进入 `idle` 状态，等待事件输入 —— 参见[委派任务给 Agent](../../raw/application-user-guide/managed-agents/managed-agents-session.md)。
+4. **发送事件与接收流**：
+   - 发送 `user` 消息触发执行（`POST /sessions/{id}/events`）；
+   - 订阅 SSE 流（`GET /sessions/{id}/events/stream`）实时接收 `message`、`tool_call`、`tool_output`、`session_status` 等事件；
+   - 事件历史在服务端完整持久化，支持断点续查。
 
 ## 限制和注意事项
 
-- **文件限制**：单个上传文件 ≤ 10 MB；挂载后路径固定为 `/mnt/session/uploads/` 下子路径，不可自定义根目录；
-- **沙箱隔离性**：同一资源被多个会话挂载时，各会话获得独立副本，修改互不影响；卸载后副本自动清理；
-- **会话生命周期**：会话状态（`idle`/`running`/`terminated`）由服务端维护，不依赖客户端连接；超时未活动会话可能被自动终止（默认超时时间需查阅最新 API 文档）；
-- **工具权限**：`bash` 工具默认禁止危险命令（如 `rm -rf /`、`shutdown`），具体黑名单策略以平台实际执行为准；
-- **模型能力约束**：工具调用逻辑高度依赖模型对 `system_prompt` 和工具描述的理解，复杂流程建议显式在提示词中说明调用顺序与错误处理机制。
+- **文件大小限制**：单个上传文件 ≤ 10 MB（见[Agent 上下文管理](../../raw/application-user-guide/managed-agents/managed-agents-context.md)）；沙箱内文件操作受容器磁盘配额约束（默认 5 GB）。
+- **会话生命周期**：空闲会话（无新事件）将在 30 分钟后自动终止；活跃会话最长运行 24 小时，超时强制终止。
+- **资源挂载路径**：所有挂载文件统一出现在 `/mnt/session/uploads/` 下，不可自定义根路径；系统提示词中须使用该绝对路径引用（如 `/mnt/session/uploads/report.pdf`）。
+- **工具执行隔离**：每个会话拥有独立沙箱实例，`bash` 命令、文件修改、`pip install`（即使环境预装）均无法跨会话生效。
+- **错误处理**：工具执行失败（如命令返回非零码、文件不存在）将生成 `error` 类型事件，Agent 可据此自主重试或终止；平台不自动重试。
 
 ## 来源文档
 
 - [概述](../../raw/application-user-guide/managed-agents/managed-agents-introduction.md)
 - [快速开始](../../raw/application-user-guide/managed-agents/managed-agents-quick-start.md)
-- [配置 Agent 环境](../../raw/application-user-guide/managed-agents/managed-agents-environment.md)
-- [委派任务给 Agent](../../raw/application-user-guide/managed-agents/managed-agents-session.md)
 - [构建 Agent](../../raw/application-user-guide/managed-agents/managed-agents-agent.md)
+- [委派任务给 Agent](../../raw/application-user-guide/managed-agents/managed-agents-session.md)
+- [配置 Agent 环境](../../raw/application-user-guide/managed-agents/managed-agents-environment.md)
 - [Agent 上下文管理](../../raw/application-user-guide/managed-agents/managed-agents-context.md)
 
 

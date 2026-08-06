@@ -1,57 +1,36 @@
 # model production
 
-`model production` 是百炼平台中用于将模型投入实际使用的完整流程，涵盖微调训练、部署上线及生命周期管理。它提供统一的 API 接口和 CLI 工具，支持从训练任务提交到服务端点发布的端到端操作。开发者可通过 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 和 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 两个核心模块协同完成生产化。
+`model production` 是百炼平台中用于将模型投入实际应用的核心能力集合，涵盖从微调训练到在线服务部署的完整生命周期。开发者可通过 API 或控制台完成模型定制与发布，适用于业务场景适配与规模化推理需求。该能力依赖于底层模型服务基础设施，需配合对应权限与资源配额使用。
 
 ## 支持的模型/功能
 
-- 支持基于百炼基础模型（如 Qwen 系列）启动监督微调（SFT）任务；
-- 支持导入已训练的 Hugging Face 格式模型（需满足 `config.json` + `pytorch_model.bin` 或 `safetensors` 结构）；
-- 提供推理服务部署能力，包括自动扩缩容、流量灰度、版本回滚；
-- 支持通过 `model production` 命令行工具统一管理微调任务与部署实例。
-
-> **注意**：文档 1 中仅提及“微调训练”，未说明是否支持 RLHF；而文档 2 明确限定部署对象为“微调或导入的模型”。当前 API 实际仅支持 SFT，RLHF 尚未开放，详见 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 的 `training_type` 参数约束。
+- **微调训练（Fine-tuning）**：支持对百炼托管的基础大模型（如 Qwen 系列）进行监督微调，适配垂直领域任务；训练数据需为 JSONL 格式，支持 LoRA 等轻量适配方法。  
+- **模型部署（Deployment）**：支持将微调完成的模型或通过 [模型导入](../../raw/model-api-reference/model-production/import-models-api.md) 接入的第三方模型，发布为 HTTP 可调用的在线推理服务。  
+- **版本管理与灰度发布**：每个部署可维护多版本，支持按流量比例灰度切流，详见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 文档。
 
 ## 关键参数
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `model_id` | string | 是 | 基础模型 ID（如 `qwen2-7b-chat`）或已导入模型 ID |
-| `training_type` | string | 是 | 固定为 `"sft"`，暂不支持 `"rlhf"` |
-| `dataset_id` | string | 是（微调时） | 训练数据集 ID，需提前通过 `/datasets` 接口上传 |
-| `endpoint_name` | string | 是（部署时） | 全局唯一服务名称，符合 DNS-1123 规范（小写字母/数字/-） |
-| `instance_type` | string | 否 | 默认 `ecs.gn7i-c8g1.2xlarge`，可选 GPU 实例类型，详见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) |
+| 参数 | 说明 | 示例值 |
+|------|------|--------|
+| `model_id` | 微调任务或部署所引用的模型唯一标识（如 `qwen2-7b-chat-hf` 或微调生成的 `ft-xxx`） | `ft-abc123` |
+| `instance_type` | 部署实例规格，影响并发与延迟；必须与模型显存需求匹配 | `gpu-a10-2x` |
+| `max_concurrency` | 单实例最大并发请求数，超限触发排队或拒绝 | `10` |
+| `training_type`（仅微调） | 指定微调方式，当前仅支持 `lora` | `lora` |
+
+> **注意**：文档 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 中提及“支持全参数微调”，但实际 API 已下线该能力，仅保留 LoRA；请以 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 中的 `instance_type` 兼容性列表为准，避免因规格不匹配导致部署失败。
 
 ## 使用方式
 
-1. **微调训练**：  
-   ```bash
-   bl model production fine-tune create \
-     --model-id qwen2-7b-chat \
-     --dataset-id ds-abc123 \
-     --training-type sft \
-     --epochs 3
-   ```
-   任务提交后返回 `job_id`，可用 `bl model production fine-tune get --job-id <id>` 查询状态。
-
-2. **部署服务**：  
-   微调完成后，获取输出模型 ID（`output_model_id`），执行：
-   ```bash
-   bl model production deploy create \
-     --model-id <output_model_id> \
-     --endpoint-name my-qwen-service \
-     --instance-type ecs.gn7i-c8g1.2xlarge
-   ```
-   成功后返回可调用的 `endpoint_url`（HTTPS 地址）。
-
-3. 所有操作均支持通过 REST API 调用，具体路径与请求体结构请参考 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 和 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)。
+1. **微调流程**：提交训练数据 → 调用 `/fine_tuning_jobs` 创建任务 → 监听 `status=completed` → 获取输出模型 ID  
+2. **部署流程**：调用 `/deployments` 创建部署 → 指定 `model_id` 和 `instance_type` → 等待 `status=ready` → 使用返回的 `endpoint_url` 发起推理请求  
+3. 所有操作均需携带 `Authorization: Bearer <token>`，且 `project_id` 必须在请求头中显式声明。
 
 ## 限制和注意事项
 
-- 单次微调任务最长运行时间：72 小时；超时自动终止；
-- 每个 `endpoint_name` 在同一地域下全局唯一，重复创建将报错 `409 Conflict`；
-- 部署服务默认启用 HTTPS，不支持自定义域名或证书；
-- 微调任务失败时，日志仅保留 7 天；部署服务日志需通过 `bl model production deploy logs` 主动拉取；
-- > **注意**：文档 1 未说明数据集格式要求，但实际仅支持 JSONL 格式且字段必须含 `"messages"`（OpenAI 格式）或 `"prompt"`/`"completion"`（旧版格式）；该约束在 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 的附录中有明确示例，建议优先遵循后者。
+- 微调任务最长运行时间为 72 小时，超时自动终止；训练数据大小上限为 500 MB。  
+- 单个部署默认最多 5 个活跃版本；历史版本保留 30 天后自动清理。  
+- 部署实例启动后不可变更 `instance_type`，如需升级需重建部署；详情见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)。  
+- 微调输出模型仅可在同一项目内直接部署，跨项目使用需先执行模型导出与导入操作。
 
 ## 来源文档
 

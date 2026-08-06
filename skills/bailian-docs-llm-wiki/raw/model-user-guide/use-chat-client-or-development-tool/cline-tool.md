@@ -37,7 +37,7 @@ Chatbox 是一款跨平台 AI 客户端应用，可以通过 Token Plan 个人�
 
 **模型**
 
-填入 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)，如 `qwen3.8-max-preview`。
+填入 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
 
 ### Token Plan 团队版
 

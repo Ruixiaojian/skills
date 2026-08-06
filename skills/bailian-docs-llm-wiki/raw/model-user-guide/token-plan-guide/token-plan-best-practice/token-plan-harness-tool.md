@@ -40,7 +40,7 @@ Token Plan 支持的部分 Qwen 模型内置 Harness 工具，可为 AI 编程�
 
 **支持的工具**
 
-qwen3.8-max-preview
+qwen3.8-max
 
 联网搜索、代码解释器、网页抓取、以图搜图、文搜图
 
@@ -58,7 +58,7 @@ qwen3.7-plus
 
 **支持的工具**
 
-qwen3.8-max-preview
+qwen3.8-max
 
 联网搜索、代码解释器、网页抓取、以图搜图、文搜图
 
@@ -77,3 +77,7 @@ Harness 工具按成功调用次数计费，费用从套餐 Credits 中抵扣。
 ## **使用方式**
 
 将 AI 编程工具的模型切换为上述支持 Harness 的 Qwen 模型，在对话中直接提问即可。模型会根据问题自动调用相应的内置工具，无需额外配置。
+
+**说明**
+
+Harness 工具依赖模型的内置工具（联网搜索、代码解释器、网页抓取等）能力，需通过 **Responses API** 调用才会自动触发。若所用客户端仅支持 OpenAI Chat Completions 协议，模型不会自动调用这些内置工具。请选择兼容 Responses API 的 AI 编程工具，或改用 Responses API 接入（参见《创建响应》Responses API 文档）。

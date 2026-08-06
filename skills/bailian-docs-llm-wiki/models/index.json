@@ -1,17 +1,17 @@
 {
-  "updatedAt": "2026-08-06",
-  "totalFamilies": 175,
-  "totalModels": 393,
+  "updatedAt": "2026-08-07",
+  "totalFamilies": 178,
+  "totalModels": 396,
   "profileCoverage": {
-    "full": 329,
-    "partial": 14,
-    "structured-only": 50,
+    "full": 335,
+    "partial": 18,
+    "structured-only": 43,
     "none": 0
   },
   "capabilityDistribution": {
-    "TG": 34,
+    "TG": 36,
     "IG": 32,
-    "VG": 26,
+    "VG": 27,
     "TTS": 16,
     "Reasoning": 15,
     "ASR": 14,
@@ -28,8 +28,8 @@
   },
   "providerDistribution": {
     "qwen": 108,
-    "qwen-domain-model": 32,
-    "wan": 13,
+    "qwen-domain-model": 34,
+    "wan": 14,
     "happyhorse": 4,
     "pixverse": 4,
     "mini-max": 3,
@@ -1062,6 +1062,22 @@
       ]
     },
     {
+      "slug": "qwen-coder-plus",
+      "name": "Qwen-Coder-Plus",
+      "primaryCapability": "TG",
+      "capabilities": [
+        "TG"
+      ],
+      "providers": [
+        "qwen-domain-model"
+      ],
+      "itemCount": 1,
+      "items": [
+        "qwen-coder-plus"
+      ],
+      "maxContextWindow": 131072
+    },
+    {
       "slug": "qwen-coder-turbo",
       "name": "Qwen-Coder-Turbo",
       "primaryCapability": "TG",
@@ -1320,6 +1336,22 @@
         "qwen-math-plus-0816",
         "qwen-math-plus-0919",
         "qwen-math-plus-latest"
+      ],
+      "maxContextWindow": 4096
+    },
+    {
+      "slug": "qwen-math-turbo",
+      "name": "Qwen-Math-Turbo",
+      "primaryCapability": "TG",
+      "capabilities": [
+        "TG"
+      ],
+      "providers": [
+        "qwen-domain-model"
+      ],
+      "itemCount": 1,
+      "items": [
+        "qwen-math-turbo"
       ],
       "maxContextWindow": 4096
     },
@@ -2523,7 +2555,7 @@
     },
     {
       "slug": "tongyi-xiaomi-analysis-flash",
-      "name": "通义晓蜜-对话分析-flash",
+      "name": "伶鹊-对话分析-flash",
       "primaryCapability": "TG",
       "capabilities": [
         "TG"
@@ -2539,7 +2571,7 @@
     },
     {
       "slug": "tongyi-xiaomi-analysis-pro",
-      "name": "通义晓蜜-对话分析-pro",
+      "name": "伶鹊-对话分析-pro",
       "primaryCapability": "TG",
       "capabilities": [
         "TG"
@@ -2824,6 +2856,21 @@
       "itemCount": 1,
       "items": [
         "wan2.7-videoedit"
+      ]
+    },
+    {
+      "slug": "wan-video",
+      "name": "Wan-Video",
+      "primaryCapability": "VG",
+      "capabilities": [
+        "VG"
+      ],
+      "providers": [
+        "wan"
+      ],
+      "itemCount": 1,
+      "items": [
+        "wan3.0-video"
       ]
     },
     {

@@ -1,75 +1,64 @@
-# 知识管理方案对比：Knowledge vs Knowledge Base vs Data Connection Overview
+# 知识能力方案对比：Knowledge API vs Knowledge Base
 
-## 概述
-
-本文档面向百炼平台开发者，旨在清晰区分三种核心知识管理能力的定位、技术边界与适用场景：  
-- **`knowledge`**：面向快速集成的**语义检索与端到端流式问答 API 服务**，聚焦“即用即查”，不暴露底层索引或模型控制权；  
-- **`knowledge base`**：面向精细化 RAG 工程的**可配置、可扩展、可监控的知识库系统**，提供全生命周期管理（创建→解析→索引→检索→重排→计费）；  
-- **`data connection overview`**：面向数据接入层的**统一外部数据源抽象与安全桥接能力**，解决“数据从哪来、如何进、怎样管”的问题，是知识库与 [knowledge](../api/knowledge.md) 能力的数据底座。
-
-三者并非互斥替代关系，而是构成典型的**分层协作架构**：  
-`Data Connection` 提供数据输入通道 → `Knowledge Base` 构建结构化、可检索的知识资产 → `knowledge` API 提供开箱即用的业务级服务能力。  
-本对比旨在帮助开发者根据项目阶段（MVP 验证 / 生产部署 / 多源治理）、技术诉求（低代码 / 高可控 / 强集成）和运维要求（自助配置 / 平台托管 / 权限隔离）做出精准选型。
+为帮助开发者在百炼平台上高效构建 RAG（[检索增强生成](../concepts/rag.md)）应用，本文系统对比两种核心知识能力方案：**Knowledge API**（面向服务调用的轻量级知识网关）与 **Knowledge Base**（面向全生命周期管理的完整知识库平台）。二者定位不同、能力分层、适用场景互补。本对比旨在厘清技术边界、明确选型依据，避免因能力误用导致开发返工或成本失控。
 
 ---
 
-## 关键维度对比表
+## 关键维度对比
 
-| 维度 | `knowledge` | `knowledge base` | `data connection overview` |
-|------|-------------|------------------|----------------------------|
-| **本质定位** | **业务就绪型 API 服务**：封装完整的 RAG 推理链（规划→检索→生成），开箱即用 | **RAG 基础设施平台**：提供知识库创建、索引构建、参数调优、效果监控等全栈能力 | **数据接入网关**：统一纳管外部异构数据源（文件/OSS/数据库/语雀等），为上层提供标准化数据供给 |
-| **输入格式** | 仅支持文本 query（如 `"如何申请API Key？"`）；依赖**已发布**的知识库作为隐式数据源 | 支持多模态原始数据：<br>• 非结构化：PDF/DOCX/MD/PNG/JPG/MP4/MP3<br>• 结构化：CSV/XLSX（含图像 URL 字段）<br>• 实时数据：MySQL/PostgreSQL/PolarDB-X 的元数据或 SQL 查询结果 | 支持多种数据源类型：<br>• 平台托管：本地上传文件、Excel 表格<br>• 流处理：OSS Bucket、MySQL、PostgreSQL、PolarDB-X、语雀知识库、飞书文档（需配置） |
-| **输出格式** | • 检索接口：JSON 数组，含 `content`, `source`, `score` 等字段的文本切片<br>• 问答接口：SSE 流式事件（`plan`/`tool_call`/`answer`），最终拼接为完整回答 | • 检索结果：JSON 对象，含 `chunks`（带元数据、相似度、来源路径）、`rerank_scores` 等<br>• 问答结果：同步 JSON 或流式 SSE（取决于应用配置），内容经重排序与 LLM 生成 | 无直接输出；作为数据源被其他能力调用：<br>• 被 `knowledge base` 用于构建索引<br>• 被 `knowledge` 间接使用（因 [knowledge](../api/knowledge.md) 依赖已发布的知识库）<br>• 被智能体工作流直接调用 `sql_query` 或 `knowledge_retrieval` 工具 |
-| **支持模型** | **不支持显式指定模型**；底层由平台固定调度 RAG 专用推理栈（含向量模型 + 重排模型 + 生成模型），开发者不可见、不可替换 | **完全可选配**：<br>• 向量模型：`text-embedding-v4`（默认）等<br>• 重排模型：`qwen3-rerank`, `qwen3-vl-rerank` 等<br>• 生成模型：`qwen3.7-plus`, `qwen2.5-turbo`, `deepseek-r1`, `llama3.1-70b` 等数十种预置/自定义模型 | **不直接调用模型**；但不同连接器对模型有隐式要求：<br>• 文件/OSS 连接器启用 Qwen-VL 解析 → 需搭配多模态模型（如 `qwen-vl-plus`）<br>• 数据库连接器执行 SQL → 需模型支持 `sql_query` 工具调用能力 |
-| **API 端点** | • 检索：`POST https://{workspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/indices/knowledge/search`<br>• 问答：`POST https://{workspaceId}.cn-beijing.maas.aliyuncs.com/api/v2/apps/knowledge/chat` | • SDK 主要入口：`CreateIndex`, `ListIndices`, `SearchIndex`, `QueryIndex` 等 OpenAPI<br>• 控制台 REST 接口：`/v1/knowledge_bases/{kb_id}/search`（需鉴权） | • 无独立业务 API；所有操作通过控制台或 SDK 的 `CreateConnector`, `ImportFile`, `SyncDataSource` 等管理类接口完成<br>• 数据访问由上层能力（如 [knowledge](../api/knowledge.md) base）触发，不暴露直连端点 |
-| **计费方式** | **按调用量计费**：<br>• 检索请求：0.001 元/次（含向量+关键词双路召回）<br>• 问答请求：按实际消耗 [Token](../concepts/token.md) 计费（含规划、检索、生成各阶段 [Token](../concepts/token.md)）<br>• **无知识库规格费** | **双重计费**：<br>1. **知识库规格费**：标准版 0.03 元/小时；旗舰版按 RCU（0.2 元/RCU/小时）<br>2. **模型调用费**：向量（`text-embedding-v4`）、重排（`qwen3-rerank`）、生成（`qwen3.7-plus`）均按 [Token](../concepts/token.md) 单独计费；**重排费用基于初步召回总切片数** | **按数据源类型与用量计费**：<br>• 文件/OSS 连接器：免费（含 1 TB 平台存储额度）<br>• 数据库连接器：DMS 同步流量费 + RDS/PolarDB-X 实例自身费用<br>• 语雀连接器：语雀 API 调用费（由语雀侧收取）<br>• **不单独收取“连接器”费用**，但数据导入/同步可能触发下游知识库构建费用 |
-| **典型场景** | • 客服对话机器人快速上线（无需管理知识库生命周期）<br>• 内部知识助手 MVP 验证（5 分钟接入，验证语义检索效果）<br>• 需要 SSE 流式响应的 Web 应用前端集成 | • 金融/医疗等强合规场景：需精细控制切片策略、相似度阈值、标签过滤、审计日志<br>• 多知识库联合检索（如“合同库+法规库+案例库”混排）<br>• 需 A/B 测试不同重排模型或生成模型的效果<br>• 需定时同步（分钟级）外部文档更新 | • 统一纳管企业散落各处的数据：OSS 中的 PDF 报告、MySQL 中的客户信息、语雀中的 SOP 文档<br>• 构建跨源知识图谱：将表格数据（客户表）与文档数据（服务协议）关联注入同一知识库<br>• 实现“数据变更 → 自动触发知识库更新”的闭环（如 OSS 新增文件 → 触发知识库增量索引） |
-
----
-
-## 适用场景建议（面向开发者）
-
-| 项目阶段与需求 | 推荐方案 | 关键理由 |
-|----------------|----------|----------|
-| **快速验证 RAG 效果（1–3 天 MVP）** | ✅ `knowledge` | 无需创建知识库、无需配置解析策略、无需理解向量/重排概念；只需 workspaceId + API Key + 已发布的知识库，即可调用检索/问答 API，最快 10 分钟跑通端到端流程。适合产品、运营同学主导的可行性验证。 |
-| **生产环境部署，需高可用、可审计、可调优** | ✅ `knowledge base` | 提供完整的可观测性（检索日志、耗时分布、召回率统计）、细粒度参数控制（TopK、相似度阈值、混排模型）、多版本知识库灰度发布、RCU 弹性扩缩容，满足 SLA 要求与合规审计需求。 |
-| **数据源分散、格式多样、需统一纳管与自动同步** | ✅ `data connection overview` | 是 `knowledge base` 和 `knowledge` 的**前置必要条件**。当你的数据在 OSS、MySQL、语雀、钉钉等多个系统中时，必须先通过[数据连接](../concepts/data-connection.md)器完成接入、分类、权限管控，才能被上层知识能力消费。不选它，其他两者无法发挥价值。 |
-| **需要混合使用结构化与非结构化数据** | ✅ `data connection overview` + `knowledge base` | 单独使用 `knowledge` 或纯 `knowledge base` 无法原生支持“SQL 查询 + 文档检索”联合推理。必须通过[数据连接](../concepts/data-connection.md)器分别接入 MySQL（建表）和 OSS（存 PDF），再在同一个知识库中配置“结构化字段过滤”与“多模态解析”，最后由 `knowledge base` 的混排能力融合结果。 |
-| **仅需简单文档问答，且数据量小、更新不频繁** | ⚠️ 可选 `knowledge`（轻量）或 `knowledge base`（自主） | 若追求极简，`knowledge` 足够；若需未来扩展（如加标签、改切片、换模型），则 `knowledge base` 更可持续。避免为 10 页 PDF 单独建复杂[数据连接](../concepts/data-connection.md)器。 |
-| **需实时查询数据库并生成自然语言回答** | ✅ `data connection overview`（MySQL/PostgreSQL） + `knowledge base`（启用 SQL 工具） | `knowledge` 不支持 SQL；纯 `data connection` 不生成答案。必须组合：用数据连接器接入数据库 → 在知识库中启用 `sql_query` 工具 → 由知识库问答接口调用该工具并融合结果。 |
+| 维度 | Knowledge API | Knowledge Base |
+|------|--------------|----------------|
+| **本质定位** | **知识能力网关**：提供标准化 RESTful 接口，封装底层知识检索与问答逻辑，聚焦“即用即调”的服务消费 | **知识基础设施**：提供端到端知识管理平台，覆盖数据接入、向量化索引、[多模态](../concepts/multimodal.md)检索、效果调优、监控运维等全链路能力 |
+| **输入格式** | - `/search`：纯文本 `query` 字符串（≤8192 字符）<br>- `/chat`：标准 OpenAI-style `messages` 数组（含 role/content），支持单轮或多轮对话结构 | - 支持多源异构数据：PDF/DOCX/MD/Excel/CSV/图片（JPG/PNG）、音视频（MP4/MOV/WAV）、网页链接等<br>- 可配置 Meta 信息抽取规则（如 `product_id`, `department`），作为结构化检索条件 |
+| **输出格式** | - `/search`：JSON 格式，返回 `chunks` 数组（含 `content`, `score`, `source` 等字段）<br>- `/chat`：支持 SSE 流式响应（默认）或完整 JSON；输出含三阶段标记（`plan`/`tool_call`/`generate`），最终为自然语言回答 | - 控制台调试页：可视化召回切片列表（含相似度分数、来源文档高亮、Meta 属性）<br>- API 调用（`Retrieve`）：返回带 `metadata` 和 `score` 的结构化 `nodes` 数组<br>- 工作流/智能体集成：自动注入上下文至 LLM 提示词，不暴露原始切片细节 |
+| **支持模型** | - 仅限知识增强型模型：<br> • `/chat` 默认 `qwen-plus`，可显式指定 `qwen-max`<br> • **不支持** `qwen-turbo`、`qwen-coder`、[多模态](../concepts/multimodal.md)模型（如 Qwen-VL）及第三方模型<br>- 不开放向量模型（如 `text-embedding-v1`）调用 | - 广泛支持：<br> • 千问全系：`qwen3`, `qwen2.5`, `qwen-max`, `qwen-plus`, `qwen-turbo`, `qwen-coder`, `qwq`, `long` 等<br> • [多模态](../concepts/multimodal.md)：`qwen-vl-max`, `qwen-vl-plus`, `qwen-vl-flash`, OCR 模型<br> • 第三方：`deepseek-r1`, `llama3.1`, `yi-large` 等（以控制台可选为准）<br>- 向量模型、重排（Rerank）模型、OCR 模型均可独立配置与计费 |
+| **API 端点** | - 统一网关入口：<br> • 检索：`POST /api/v1/indices/knowledge/search`<br> • 问答：`POST /api/v2/apps/knowledge/chat`<br>- 基于业务空间（Workspace）URL 构造，强绑定 API Key | - 分层 API 体系：<br> • 管理类：`POST /v1/knowledge_bases`（创建）、`PUT /v1/knowledge_bases/{id}/sync`（同步）<br> • 检索类：`POST /v1/knowledge_bases/{id}/retrieve`（单库）、`POST /v1/retrieve`（多库混排）<br> • 高级能力：`POST /v1/knowledge_bases/{id}/query`（富文本搜索）、`POST /v1/knowledge_bases/{id}/video_search`（音视频）<br>- 支持 SDK 封装（Python/Java/Node.js） |
+| **计费方式** | - **统一按调用次数计费**：<br> • `/search`：按请求次数计费（无论返回多少 chunk）<br> • `/chat`：按完整问答会话计费（含内部检索+LLM 生成），**不区分向量/Rerank/生成 [Token](../concepts/token.md)**<br>- 无知识库规格费用，无存储费用 | - **分项精细化计费**：<br> • **规格费**：标准版（0.03 元/小时）或旗舰版（0.2 元/RCU/小时）<br> • **存储费**：超出免费额度（标准版 100 GB）后按量计费<br> • **计算费**：<br>  ✓ 向量化：按上传文档 [Token](../concepts/token.md) 数计费<br>  ✓ Rerank：按初步召回切片总数 × 平均切片 [Token](../concepts/token.md) 数计费<br>  ✓ 问答生成：按 LLM 输入（含上下文）+ 输出 Token 计费<br> • 多知识库费用线性叠加 |
+| **典型场景** | - 快速验证语义检索效果<br>- 构建轻量级客服机器人（无需复杂知识治理）<br>- 在已有应用中嵌入“一键问答”功能<br>- 对接低代码平台（如宜搭、钉钉宜搭）的简单知识插件 | - 企业级知识中枢建设（如 IT 运维知识库、销售产品手册库）<br>- 多模态知识应用（图文问答、会议纪要音视频检索）<br>- 需要精细调优的 RAG 应用（调整切片策略、相似度阈值、Meta 规则）<br>- 需要 SLS 日志监控、命中率分析、A/B 测试的生产级应用 |
 
 ---
 
-## 技术选型决策树（开发者速查）
+## 适用场景建议
 
-```mermaid
-graph TD
-    A[你的核心目标是什么？] --> B{是否只需快速验证语义检索/问答效果？}
-    B -->|是| C[选 `knowledge`：<br>• 优势：零配置、流式响应、API 简洁<br>• 注意：依赖已有知识库，不可控模型]
-    B -->|否| D{是否需管理多个异构数据源？<br>（OSS/MySQL/语雀/飞书等）}
-    D -->|是| E[必选 `data connection overview`：<br>• 所有外部数据接入的唯一入口<br>• 为后续能力提供数据基座]
-    D -->|否| F{是否需深度调优 RAG 效果？<br>（切片策略/重排模型/多库混排/审计日志）}
-    F -->|是| G[选 `knowledge base`：<br>• 全生命周期管理<br>• 模型、参数、规格完全可控]
-    F -->|否| H[考虑 `knowledge` 或 `knowledge base` 简化版：<br>• 小规模静态文档 → `knowledge`<br>• 需基础管理界面 → `knowledge base` 标准版]
-    E --> I{数据接入后，如何使用？}
-    I -->|直接调用 API 问答| J[用 `knowledge base` 的 `/search` 或 `/chat` 接口]
-    I -->|嵌入智能体工作流| K[在 Agent 中拖入“知识库”节点或“SQL 查询”节点]
-    I -->|前端直连| L[仍需通过 `knowledge` API，因其专为前端流式设计]
-```
+### ✅ 选择 **Knowledge API** 当：
+- 你已拥有结构清晰、状态稳定的知识库（已在控制台发布），仅需快速调用其检索/问答能力；
+- 开发周期紧张，希望绕过知识库创建、索引配置、效果调优等环节，直接集成 RESTful 接口；
+- 应用对知识治理要求低（如临时项目、POC 演示、内部工具），无需版本管理、定时同步或 Meta 扩展；
+- 团队熟悉 OpenAI-style `messages` 接口，且仅需 `qwen-plus`/`qwen-max` 等主流模型支撑。
 
-> **重要提醒**：  
-> - `knowledge` 与 `knowledge base` **均严格限定于华北2（北京）地域**，国际站用户需注意区域适配。  
-> - 所有方案均**强制要求业务空间（workspaceId）与有效 API Key**，权限需授予 `AliyunBailianDataFullAccess` 或更细粒度策略。  
-> - `data connection` 是能力基石，但**不产生直接业务价值**；它的价值体现在 `knowledge base` 的丰富度与 `knowledge` 的准确性上。请勿跳过此层直接构建上层能力。  
+### ✅ 选择 **Knowledge Base** 当：
+- 你需要从零构建私有知识资产：上传原始文件、定义 Meta 字段、配置智能切分、设置相似度阈值；
+- 业务涉及多模态数据（如产品说明书 PDF + 宣传图 + 培训视频），需统一索引与跨模态检索；
+- 要求生产环境可观测：通过 SLS 日志分析慢查询、拒答率、召回准确率，并持续优化切片策略；
+- 需要灵活调度资源：根据流量峰值动态升降旗舰版 RCU，或为不同知识库分配差异化规格；
+- 计费敏感且需精细化控制：例如通过降低 `初步向量检索 TopK` 减少 Rerank 费用，或关闭非必要 Meta 抽取节省向量化成本。
 
----  
-*最后更新：2024年10月*  
-*本文档依据百炼平台 v3.7.x 版本功能编写，具体以控制台最新说明及 OpenAPI 文档为准。*
+> ⚠️ **重要提醒**：  
+> - Knowledge API **不替代** Knowledge Base —— 它依赖后者已发布的知识库作为数据源。未创建/发布知识库时，Knowledge API 调用将返回空结果或 `404`。  
+> - Knowledge Base 提供的 `Retrieve` API 与 Knowledge API 的 `/search` 功能存在重叠，但前者支持更细粒度参数（如 `filter`、`rerank_model`），后者更强调开箱即用与协议简洁性。
+
+---
+
+## 技术选型参考（面向开发者）
+
+| 决策问题 | 推荐方案 | 理由说明 |
+|----------|----------|----------|
+| **是否需要上传/管理原始文档？** | Knowledge Base | Knowledge API 无文档上传接口，所有知识必须预先在 Knowledge Base 中完成入库与发布。 |
+| **是否需支持图片/音视频/表格等多模态检索？** | Knowledge Base | Knowledge API 仅支持文本语义检索；Knowledge Base 原生支持图文理解、音视频帧提取与剧情解析。 |
+| **是否需在控制台进行可视化调试与命中测试？** | Knowledge Base | Knowledge API 无前端调试界面，问题定位依赖日志与客户端模拟；Knowledge Base 提供实时 Query 测试沙箱。 |
+| **是否需对接飞书/钉钉/OSS 等外部系统实现自动同步？** | Knowledge Base | Knowledge Base 支持文件连接器配置分钟级同步；Knowledge API 无同步能力，需自行实现定时任务调用 `Retrieve`。 |
+| **是否追求最低接入成本与最快上线速度？** | Knowledge API | 无需创建知识库、无需配置索引、无需学习 Meta 规则，仅需构造 HTTP 请求即可调用，适合 MVP 快速验证。 |
+| **是否需严格控制 RAG 各环节成本（向量/Rerank/生成）？** | Knowledge Base | Knowledge Base 提供各环节独立计费明细与调优参数（如 `top_k`, `similarity_threshold`），便于成本建模；Knowledge API 将全部成本封装为单一调用费。 |
+
+> 💡 **最佳实践组合**：  
+> 大多数生产级 RAG 应用采用 **Knowledge Base + Knowledge API 混合架构**：  
+> - 使用 **Knowledge Base** 完成知识资产建设、多模态索引、效果调优与监控；  
+> - 使用 **Knowledge API** 作为对外服务统一入口，简化下游应用集成复杂度，提升网关层可观测性与限流管控能力。  
+> 此模式兼顾灵活性与工程效率，是百炼平台推荐的成熟落地范式。
 
 ## 被对比主题页
 
 - [knowledge](../api/knowledge.md)
 - [knowledge base](../guides/knowledge-base.md)
-- [data connection overview](../guides/data-connection-overview.md)
 
 

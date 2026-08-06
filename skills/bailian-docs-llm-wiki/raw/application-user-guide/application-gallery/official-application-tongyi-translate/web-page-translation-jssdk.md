@@ -18,13 +18,13 @@
 
 **版本号**
 
-`3.0.0`
+`3.0.1`
 
 CDN 根路径
 
-`https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/`
+`https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.1/`
 
-下文示例中的版本号均以 `3.0.0` 为准，升级时请同步替换 CDN 链接中的版本号。
+下文示例中的版本号均以 `3.0.1` 为准，升级时请同步替换 CDN 链接中的版本号。
 
 * * *
 
@@ -66,10 +66,10 @@ SDK 提供两种翻译模式：
 
 全量包（核心 + 插件）
 
-[https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/index.js](https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/index.js)
+[https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.1/index.js](https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/index.js)
 
 ```
-<script src="https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/index.js"></script>
+<script src="https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.1/index.js"></script>
 ```
 
 ### 方式二：按需拆包引入
@@ -86,24 +86,24 @@ SDK 提供两种翻译模式：
 
 核心 SDK
 
-[https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/core.js](https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/core.js)
+[https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.1/core.js](https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/core.js)
 
 `page.js`
 
 页面翻译插件
 
-[https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/page.js](https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/page.js)
+[https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.1/page.js](https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/page.js)
 
 `paragraph.js`
 
 段落对照插件
 
-[https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/paragraph.js](https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/paragraph.js)
+[https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.1/paragraph.js](https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/paragraph.js)
 
 ```
 <!-- 页面翻译 -->
-<script src="https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/core.js"></script>
-<script src="https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/page.js"></script>
+<script src="https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.1/core.js"></script>
+<script src="https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.1/page.js"></script>
 
 <!-- 段落对照：将 page.js 换成 paragraph.js -->
 <!-- 两种模式都要用：同时引入 page.js 与 paragraph.js -->
@@ -123,7 +123,7 @@ SDK 提供两种翻译模式：
 ### 页面翻译（Pure Page）
 
 ```
-<script src="https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/index.js"></script>
+<script src="https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.1/index.js"></script>
 <script>
   AliTranslate.pageTranslate({
     getToken: async (params) => {
@@ -137,6 +137,7 @@ SDK 提供两种翻译模式：
     tgtLanguage: 'en',
     targetSelectors: ['#app'],
     excludeSelectors: ['.no-translate', 'code', 'pre'],
+    translateAttributes: ['placeholder'],
     lazyload: true,
     dynamic: true,
   });
@@ -146,7 +147,7 @@ SDK 提供两种翻译模式：
 ### 段落对照翻译（Paragraph Compare）
 
 ```
-<script src="https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/index.js"></script>
+<script src="https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.1/index.js"></script>
 <script>
   AliTranslate.paragraphTranslate({
     getToken: async (params) => {
@@ -160,6 +161,7 @@ SDK 提供两种翻译模式：
     tgtLanguage: 'en',
     targetSelectors: ['#article'],
     excludeSelectors: ['.no-translate', 'code', 'pre'],
+    translateAttributes: ['placeholder'],
     lazyload: true,
     dynamic: true,
     extraBlockSelectors: ['.article-title', 'h1', 'h2', 'h3'],
@@ -282,6 +284,14 @@ SDK 提供两种翻译模式：
 
 排除节点（命中后整棵子树不翻译）
 
+`translateAttributes`
+
+`string | string[]`
+
+否
+
+翻译支持的元素属性
+
 `lazyload`
 
 `boolean`
@@ -398,6 +408,14 @@ SDK 提供两种翻译模式：
 
 排除节点（命中后不参与段落提取）
 
+`translateAttributes`
+
+`string | string[]`
+
+否
+
+翻译支持的元素属性
+
 `lazyload`
 
 `boolean`
@@ -504,7 +522,7 @@ interface TransStyleRule {
 SDK 提供了 `mutator`（可回滚变更操作器），支持在 hooks 中做安全 DOM 操作，并在 `removeTranslations()` 时自动回滚。
 
 ```
-<script src="https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/index.js"></script>
+<script src="https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.1/index.js"></script>
 <script>
   AliTranslate.paragraphTranslate({
     getToken: async (params) => {
@@ -579,7 +597,7 @@ AliTranslate.destroy()
 ## 完整示例（段落对照 + rules + hooks）
 
 ```
-<script src="https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.0/index.js"></script>
+<script src="https://g.alicdn.com/code/npm/@alife/translate-js-sdk/3.0.1/index.js"></script>
 <script>
   AliTranslate.paragraphTranslate({
     getToken: async (params) => {
@@ -1348,6 +1366,12 @@ public class NodeSignature {
 发布时间
 
 发布内容
+
+3.0.1
+
+2026年8月6日
+
+支持页面元素的属性内容翻译（配置参数）
 
 3.0.0
 

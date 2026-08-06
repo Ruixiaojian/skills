@@ -44,7 +44,7 @@ API Key
 
 Model ID
 
-填入 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)，如 `qwen3.8-max-preview`。
+填入 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
 
 ### Token Plan 团队版
 
@@ -66,7 +66,7 @@ API Key
 
 Model ID
 
-填入 Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-overview)，如 `qwen3.8-max-preview`。
+填入 Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-overview)。
 
 ### Coding Plan
 
@@ -88,7 +88,7 @@ API Key
 
 Model ID
 
-填入 Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-plan)，如 `qwen3.7-plus`。
+填入 Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-plan)。
 
 ### 按量计费
 

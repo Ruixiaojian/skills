@@ -101,7 +101,8 @@
         "model-experience",
         "prefix-completion",
         "structured-outputs",
-        "web-search"
+        "web-search",
+        "batch"
       ],
       "provider": "qwen",
       "model": "qwen3.8-max",
@@ -126,6 +127,18 @@
         },
         {
           "priceUnit": "每百万tokens",
+          "price": "6",
+          "type": "input_token_batch",
+          "priceName": "输入（Batch File）"
+        },
+        {
+          "priceUnit": "每百万tokens",
+          "price": "18",
+          "type": "output_token_batch",
+          "priceName": "输出（Batch File）"
+        },
+        {
+          "priceUnit": "每百万tokens",
           "price": "15",
           "type": "input_token_cache_creation_5m",
           "priceName": "显式缓存创建"
@@ -135,6 +148,20 @@
           "price": "1",
           "type": "input_token_cache_read",
           "priceName": "显式缓存命中"
+        },
+        {
+          "priceUnit": "每百万tokens",
+          "price": "12",
+          "discount": 0.5,
+          "type": "input_token_batch_chat",
+          "priceName": "输入（Batch Chat)"
+        },
+        {
+          "priceUnit": "每百万tokens",
+          "price": "36",
+          "discount": 0.5,
+          "type": "output_token_batch_chat",
+          "priceName": "输出（Batch Chat)"
         }
       ],
       "qpmInfo": {

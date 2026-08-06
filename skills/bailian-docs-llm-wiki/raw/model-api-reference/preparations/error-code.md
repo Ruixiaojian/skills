@@ -16,6 +16,23 @@ AI 助理准确分析出原因，并给出解决方案：
 
 分析结果表明账号因欠费导致访问被拒绝，可能原因包括账号欠费、余额不足或充值延迟。建议登录阿里云控制台进入**费用与成本**页面检查账户状态，完成充值后等待几分钟让系统更新即可恢复正常访问。
 
+## **如何获取 Request ID？**
+
+Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），包含在 API 响应的 Header 或 Body 中，建议在调用失败时记录该值，便于自助排查或提交工单时提供。
+
+若未记录 Request ID，可登录**模型监控**页面，在目标模型的**日志**页签查询调用记录（含 Request ID、状态码、错误码、请求和响应内容等）。
+
+前置条件：
+
+-   需由主账号或已授权的子账号先开通推理日志。
+    
+-   仅支持华北2（北京）、新加坡、美国（弗吉尼亚）地域的部分模型。
+    
+-   数据存在分钟级延迟，开通前的历史调用记录不可追溯。
+    
+
+详情请参见模型监控文档。
+
 ## **400-InvalidParameter**
 
 ### **parameter.enable\_thinking must be set to false for non-streaming calls****/**parameter.enable\_thinking only support stream call
@@ -1052,6 +1069,12 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 前往[费用与成本](https://usercenter2.aliyun.com/home)查看账号是否欠费：欠费请及时充值（充值后系统余额可能存在延迟，请稍候后重试）；未欠费请确认调用所用的 API Key 是否属于当前账号。
 
+### **isv.OUT\_OF\_SERVICE**
+
+**原因：** 阿里云账户余额不足，导致服务被暂停。其底层原因与本节的 Arrearage（`Access denied, please make sure your account is in good standing.`）一致，均为账户欠费。
+
+**解决方案：** 前往[费用与成本](https://usercenter2.aliyun.com/home)为阿里云账户充值，余额充足后服务自动恢复。
+
 ## **400-**DataInspectionFailed/data\_inspection\_failed
 
 ### **Input or output data may contain inappropriate content. / Input data may contain inappropriate content. / Output data may contain inappropriate content.**
@@ -1077,6 +1100,17 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 **原因：** 本地网络问题，通常是因为开启了代理。
 
 **解决方案：** 请关闭或者重启代理。
+
+### **The operation was canceled. / Connection reset**
+
+**原因：** 客户端设置的超时时间过短或网络波动，可能导致请求被取消（如 `The operation was canceled`）或连接重置（如 `Connection reset`）。
+
+**解决方案：**
+
+-   适当放宽客户端超时配置（如调整至 50 秒以上）。
+    
+-   使用 `curl` 命令测试网络连通性，以排除本地网络问题。
+    
 
 ## **400-**InvalidFile.DownloadFailed
 
@@ -1957,6 +1991,10 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
     
 -   若在使用 Coding Plan 时遇到此问题，通常是配置错误所致。Coding Plan 需要配置专属的 Base URL 和 [API Key](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/efm/coding_plan)，详情请参见[Coding Plan快速开始](https://help.aliyun.com/zh/model-studio/coding-plan-quickstart)。
     
+-   关闭开关后仍报错，或控制台显示已有额度但调用仍被拒绝时，请检查 **API Key** 是否发生变动或失效，建议重置 API Key 或新建 Key 后重新测试。
+    
+-   若控制台的调用记录中没有对应请求，可能是请求未到达服务端，请检查客户端插件配置或本地网络连接是否正常。
+    
 
 ## **404-**ModelNotFound/**model\_not\_found**
 
@@ -1992,6 +2030,8 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 ### **WorkSpace can not be found.**
 
 **原因：** 工作空间不存在。
+
+**解决方案：**请确认 Base URL 中填写的 WorkspaceId 正确。WorkspaceId 为您的百炼业务空间 ID，可在[业务空间管理](https://bailian.console.aliyun.com/?tab=globalset#/efm/business_management)页面查看。如仍报错，请确认您的账号是该业务空间的成员。
 
 ## **404-NotFound**
 

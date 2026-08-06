@@ -60,7 +60,7 @@ Token Plan 的 API Key 以 `sk-sp-` 开头，与百炼通用 API Key（`sk-` 开
 
 [**Cherry Studio**多模型桌面客户端](https://help.aliyun.com/zh/model-studio/cherry-studio)
 
-[**Chatbox**跨平台 AI 桌面客户端](https://help.aliyun.com/zh/model-studio/chatbox)
+[**Chatbox**跨平台 AI 桌面客户端](https://help.aliyun.com/zh/model-studio/cline-tool)
 
 [**Cline**VS Code 扩展，智能代码补全和调试](https://help.aliyun.com/zh/model-studio/cline)
 
@@ -82,4 +82,4 @@ Token Plan 个人版支持多模态生成模型（wan2.7-image、happyhorse-1.1-
 
 **重要**
 
-Harness 工具为 Responses API 的内置工具，不支持通过 Chat Completions 接口调用。如需使用 Harness 工具，请确保您的 AI 工具通过 Responses API 接入。
+Harness 工具需通过 **Responses API** 调用才会自动触发。若所用 AI 工具仅支持 Chat Completions 协议，模型可正常响应，但不会自动调用 Harness 工具，相关请求将按量付费计费，不消耗套餐 Credits 中的 Harness 工具额度。如需使用 Harness 工具，请选择兼容 Responses API 的 AI 工具（详见[接入 Harness 工具](https://help.aliyun.com/zh/model-studio/token-plan-harness-tool)）。

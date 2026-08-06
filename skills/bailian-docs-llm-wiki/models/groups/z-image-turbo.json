@@ -22,14 +22,12 @@
         {
           "priceUnit": "每张",
           "price": "0.1",
-          "timeBand": "standard",
           "type": "image_standard",
           "priceName": "图片生成（标准）"
         },
         {
           "priceUnit": "每张",
           "price": "0.2",
-          "timeBand": "standard",
           "type": "image_thinking",
           "priceName": "图片生成（思考）"
         }
@@ -46,9 +44,7 @@
           "type": "model-default"
         }
       },
-      "priceTimeBands": [
-        "standard"
-      ],
+      "priceTimeBands": [],
       "capabilities": [
         "IG"
       ],

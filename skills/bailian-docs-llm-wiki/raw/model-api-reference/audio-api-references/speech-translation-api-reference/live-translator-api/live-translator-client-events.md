@@ -70,6 +70,27 @@
 }
 ```
 
+源语种和目标语种均为英语，并跳过文本和音频输出的示例：
+
+```
+{
+  "event_id": "event_xxx",
+  "type": "session.update",
+  "session": {
+    "input_audio_transcription": {
+      "language": "en"
+    },
+    "translation": {
+      "language": "en",
+      "same_language_skip_options": {
+        "skip_text": true,
+        "skip_audio": true
+      }
+    }
+  }
+}
+```
+
 **session** `_object_` （可选）
 
 会话配置。
@@ -139,9 +160,9 @@
 
 **model** `_string_` （可选）
 
-语音识别模型。配置后，服务端会在翻译的同时返回输入音频的语音识别结果（源语言原文），通过`conversation.item.input_audio_transcription.text`和`conversation.item.input_audio_transcription.completed`事件返回。
+语音识别模型，默认值为 `qwen3-asr-flash-realtime`，ASR 默认启用。服务端会在翻译的同时返回输入音频的语音识别结果（源语言原文），通过`conversation.item.input_audio_transcription.text`和`conversation.item.input_audio_transcription.completed`事件返回。如需关闭 ASR，请将此参数显式设置为 `null`。
 
-可选值：`qwen3-asr-flash-realtime`。
+可选值：`qwen3-asr-flash-realtime`（默认，启用 ASR）、`null`（关闭 ASR）。
 
 **language** `_string_` （可选）
 
@@ -200,6 +221,20 @@ VAD 检测灵敏度。值越低，越容易将微弱声音（包括背景噪音�
 **language** `_string_` （可选）
 
 翻译目标语种，可选值：[支持的语种](https://help.aliyun.com/zh/model-studio/qwen3-5-livetranslate-flash-realtime#4ffd192226f0s)。默认值为`en`。
+
+**same\_language\_skip\_options** `_object_` （可选）
+
+同语种输出配置。当源语种与目标语种相同时，可跳过文本输出、音频输出或两者。仅当`translation.language`为`zh`或`en`时生效。
+
+**属性**
+
+**skip\_text** `_boolean_` （可选）
+
+是否在源语种与目标语种相同时跳过文本输出。
+
+**skip\_audio** `_boolean_` （可选）
+
+是否在源语种与目标语种相同时跳过音频输出。
 
 **corpus** `_object_` （可选）
 

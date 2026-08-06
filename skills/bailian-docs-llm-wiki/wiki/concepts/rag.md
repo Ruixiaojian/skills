@@ -1,64 +1,53 @@
 # 检索增强生成
 
-检索增强生成（Retrieval-Augmented Generation，RAG）是百炼平台的核心范式，指在大语言模型（LLM）生成响应前，先从私有或结构化知识源中实时检索相关上下文片段，并将检索结果与用户查询共同输入模型，从而提升回答的准确性、时效性与事实一致性。该范式天然解耦“知识存储”与“推理生成”，使模型无需微调即可动态接入最新业务数据。
+检索增强生成（Retrieval-Augmented Generation，RAG）是一种将大语言模型（LLM）的生成能力与外部知识源的精准检索能力相结合的技术范式。它通过在模型推理前动态召回相关上下文片段，并将其注入提示词（[prompt](../guides/prompt.md)），显著提升回答的事实准确性、领域专业性和可解释性，同时降低幻觉风险。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-RAG 在百炼平台并非单一接口，而是贯穿多个能力层的架构模式，开发者可根据需求选择不同抽象层级的实现方式：
+在百炼平台中，“检索增强生成”不是单一接口，而是贯穿多个能力层的**核心架构模式**，具体体现为以下三类协同使用的实践路径：
 
-- **知识库（Knowledge Base）**：最标准的 RAG 实现。通过控制台或 API 创建知识库（支持文档、表格、图片、音视频），系统自动完成解析、切片、向量化与索引构建；后续检索调用 `qwen3-rerank` 等重排模型优化召回质量，最终将 Top-K 片段注入 LLM 上下文生成答案。适用于客服问答、产品手册查询等强知识依赖场景。
+- **知识库（Knowledge Base）作为 RAG 底座**  
+  知识库是百炼 RAG 的基础设施：上传文档 → 自动智能切分 + 向量化索引 → 支持语义检索。所有 RAG 应用均依赖已发布的知识库（状态为 `Active`），其检索结果（文本切片）作为上下文输入给大模型。支持[多模态](multimodal.md)知识源（PDF/DOCX/Excel/图片/音视频），并提供“相似度阈值”“初步召回 TopK”“最大返回数量”等精细化控制参数。
 
-- **知识检索与问答（`/knowledge/search` & `/knowledge/chat`）**：面向快速集成的托管式 RAG 服务。无需管理知识库生命周期，只需传入 `workspaceId` 和 `API Key`，即可发起语义检索或端到端流式问答（含规划→检索→生成三阶段事件）。底层固定使用百炼 RAG 专用推理栈，不暴露模型选择参数。
+- **知识问答 API（`/chat`）作为端到端 RAG 封装**  
+  `/api/v2/apps/knowledge/chat` 接口隐式执行完整 RAG 流程：自动提取用户 query → 联合检索指定知识库 → 融合 top_k 切片与对话历史 → 调用指定模型（如 `qwen-plus` 或 `qwen-max`）生成答案。开发者无需实现检索逻辑，仅需传入 `messages` 和可选 `model`、`top_k` 参数，即可获得流式或同步的增强回答。
 
-- **智能体应用（Agent Application）**：将 RAG 作为可规划工具嵌入自主决策链路。新版 Agent 2.0 支持将知识库与 MCP 工具统一注册为 `tool`，由模型根据用户意图动态决定是否调用、调用哪个知识库，并支持多轮检索-反思闭环。文件处理中的“切片检索”模式即为此类 RAG 的典型用法。
+- **智能体/工作流/框架集成作为 RAG 编排层**  
+  - **智能体应用**：将知识库作为“工具”由 Agent 自主调用，支持标签过滤、混合文件与知识库内容；  
+  - **工作流应用**：通过“知识库”节点显式配置 `content`（查询语句）、`top_k` 和动态知识库变量；  
+  - **LlamaIndex / Spring AI Alibaba 框架**：提供 `DashScopeCloudIndex` 或 `DashScopeDocumentRetriever`，实现代码级 RAG 集成，复用百炼云端索引与重排能力，无需自建向量库。
 
-- **工作流应用（Workflow Application）**：通过可视化节点编排实现确定性 RAG 流程。拖入“知识库”节点，配置 `TopK`、相似度阈值、标签过滤等参数，输出检索结果后连接至“大模型”节点，手动拼接提示词（如 `"基于以下信息回答：{result} \n\n问题：{query}"`），完全掌控上下文构造逻辑。
-
-- **框架集成（LlamaIndex / Spring AI Alibaba）**：面向代码优先开发者的低代码 RAG 方案。LlamaIndex 封装云端知识库为 `DashScopeCloudIndex`，自动处理向量检索与重排；Spring AI Alibaba 提供 `DashScopeDocumentRetriever`，支持流式响应与自定义提示模板，二者均复用百炼托管的向量化与排序能力，不开放嵌入模型替换。
-
-- **应用级集成（网站/企微/钉钉助手）**：RAG 作为开箱即用的业务能力交付。通过 AppFlow 连接流，将百炼智能体应用与知识库绑定，配置“必定调用”或“按需调用”策略，即可在企业微信对话、网站悬浮窗等渠道提供私有知识问答服务，全程无需编写推理逻辑。
+> ✅ 关键共识：百炼所有 RAG 场景均**强制使用平台预置向量模型与索引策略**，不支持替换嵌入模型（如 `text-embedding-v1`）或自定义切分逻辑——这是平台托管型 RAG 的设计边界，确保效果稳定与计费透明。
 
 ## 关键参数和配置
 
-RAG 效果受多层级参数协同影响，关键配置如下（按作用域分组）：
+| 参数 | 所属层级 | 类型 | 默认值 | 说明 | 生效范围 |
+|------|----------|------|--------|------|-----------|
+| `top_k` | `/chat` API、工作流节点、LlamaIndex | integer | `5` | 最终送入大模型的检索切片数量 | `/chat` 中影响内部 Retrieve 阶段；工作流/LlamaIndex 中直接控制输出节点数 |
+| `similarity_cutoff` | LlamaIndex | float | — | 相似度后过滤阈值（如 `0.4`），低于此值的切片被丢弃 | 仅 LlamaIndex 可控，非百炼原生 API 参数 |
+| `similarity_top_k` | LlamaIndex | integer | `5` | 向量召回阶段返回的原始切片数 | 影响重排费用（费用 = 召回数 × 平均切片 [Token](token.md) 数 × 单价） |
+| `index_ids` | `/search` API | string[] | — | 显式指定参与检索的知识库 ID 列表；为空时检索当前应用绑定的所有知识库 | 仅 `/search` 接口可用，用于调试或自定义 RAG 流程 |
+| `model` | `/chat` API、框架集成 | string | `qwen-plus` | 指定生成模型；必须为支持知识增强的模型（如 `qwen-plus`/`qwen-max`），`qwen-turbo` 等不支持 | 不同场景均生效，但模型必须在控制台应用中已启用 |
 
-| 作用域 | 参数名 | 类型 | 说明 | 典型取值 |
-|--------|--------|------|------|----------|
-| **全局检索控制** | `top_k` / `max_retrieval_count` | int | 检索返回的文本切片数量 | 3–5（平衡精度与噪声）；最大支持 20（知识 API）、100（知识库级） |
-| | `similarity_threshold` | float | 相似度过滤阈值（0.01–1.0） | 0.3–0.6（默认 0.4）；设为 0 表示不过滤 |
-| | `knowledge_routing` | boolean | 启用知识库路由（调用 `qwen-plus` 判断应查哪个库） | `true`（多库场景推荐） |
-| **重排序（Rerank）** | `rerank_model` | string | 排序模型 ID | `qwen3-rerank`（文本）、`qwen3-vl-rerank`（多模态） |
-| | `top_n` | int | 重排后返回前 N 条结果 | 默认返回全部；建议显式设为 `top_k` 值保持一致 |
-| **知识库构建** | `chunk_strategy` | string | 切片策略 | `"smart_split"`（推荐，保障语义完整性） |
-| | `vector_model` | string | 向量模型（创建知识库时指定） | `qwen3.7-text-embedding`（长文本）、`qwen3-vl-embedding`（图文混合） |
-| **智能体/工作流** | `retrieval_max_chunk_length` | int | 单个检索片段最大 token 数 | 512–2048（避免截断关键信息） |
-| | `enable_thinking` | boolean | 是否开启模型思考模式（影响检索意图理解） | `true`（Agent 2.0 强烈推荐） |
-
-> ⚠️ 注意：  
-> - 所有 RAG 能力严格限定于 **中国站华北2（北京）地域**，Endpoint 必须为 `https://{workspaceId}.cn-beijing.maas.aliyuncs.com`；  
-> - 知识库检索不支持跨 Region 调用，且 `workspaceId` 是业务空间 ID（非 UID 或租户 ID），需从控制台获取；  
-> - `model` 参数在 `/knowledge/*` 接口**不可用**（会被忽略），仅在智能体、工作流、框架集成等场景生效。
+> ⚠️ 注意事项：  
+> - `top_k` 在 `/chat` 中**不控制最终回答长度**，仅控制检索上下文数量；回答长度由模型自身的 `max_tokens` 参数控制。  
+> - “相似度阈值”（`similarity_cutoff`）在知识库控制台和命中测试页可配置，但**不暴露为 API 参数**，需通过控制台调整后生效。  
+> - 所有 RAG 调用均计入模型输入 [Token](token.md)（含检索切片内容），请合理设置 `top_k` 以平衡效果与成本。
 
 ## 面向开发者，简洁实用
 
-- **快速验证**：用 `curl` 直接调用知识检索 API，确认知识库已发布且 `workspaceId`/`API Key` 正确：
-  ```bash
-  curl -X POST "https://YOUR_WORKSPACE_ID.cn-beijing.maas.aliyuncs.com/api/v1/indices/knowledge/search" \
-    -H "Authorization: Bearer YOUR_API_KEY" \
-    -H "Content-Type: application/json" \
-    -d '{"query":"百炼平台如何上传PDF？", "top_k":3}'
-  ```
+- ✅ **快速上手**：优先使用 `/chat` 接口 + 已发布知识库，3 行代码即可完成 RAG 问答（见 [knowledge.md](../../raw/application-api-reference/knowledge.md) 示例）。  
+- ✅ **调试必做**：在知识库详情页使用「命中测试」功能，输入真实 query，验证切片召回质量、来源文档与相似度分数，再上线。  
+- ✅ **成本优化**：  
+  - 降低 `top_k`（如从 `10` → `5`）可减少输入 [Token](token.md)；  
+  - 提高「相似度阈值」可减少低质切片引入噪声；  
+  - 使用「切片检索」模式（而非全文引用）可大幅节省 Token。  
+- ✅ **避坑指南**：  
+  - 确保知识库状态为 `Published` 且 `Active`，草稿/禁用库不会被检索；  
+  - 文件上传后需等待「索引构建完成」（控制台显示绿色对勾），否则检索为空；  
+  - 第三方框架（LlamaIndex/Spring AI）调用时，务必使用 `DASHSCOPE_API_KEY` 和 `WORKSPACE_ID` 环境变量（兼容性最佳）。  
 
-- **效果调优三步法**：  
-  1. **查得准**：调高 `similarity_threshold`（如 0.5→0.6）或启用 `qwen3-rerank`；  
-  2. **召得全**：增大 `top_k`（如 3→5），并检查知识库切片策略是否为 `smart_split`；  
-  3. **答得好**：在智能体/工作流中增加系统提示词约束，例如 `"请严格依据检索结果作答，未知信息请明确回复'未找到相关信息'"`。
-
-- **避坑指南**：  
-  - 不要尝试在 `/knowledge/chat` 请求中传入 `model` 字段——该接口无此参数；  
-  - 多知识库联合检索时，务必开启 `knowledge_routing`，否则可能漏检；  
-  - 视频/图片类 RAG 必须使用 `qwen3-vl-*` 系列模型（向量+重排），通用文本模型无法处理多模态内容；  
-  - 生产环境优先选用 `qwen3-rerank`（替代已下线的 `gte-rerank`），其性能与兼容性已全面验证。
+RAG 是百炼平台最成熟、开箱即用的增强能力。聚焦知识库质量、合理配置 `top_k`、善用命中测试，即可在分钟级构建高准确率的专业问答系统。
 
 ## 关联主题页
 
@@ -66,8 +55,8 @@ RAG 效果受多层级参数协同影响，关键配置如下（按作用域分�
 - [knowledge base](../guides/knowledge-base.md)
 - [frameworks](../api/frameworks.md)
 - [llm application](../guides/llm-application.md)
+- [application evaluation](../guides/application-evaluation.md)
 - [use cases](../guides/use-cases.md)
-- [application use cases](../guides/application-use-cases.md)
-- [vector and sort](../api/vector-and-sort.md)
+- [application support](../guides/application-support.md)
 
 

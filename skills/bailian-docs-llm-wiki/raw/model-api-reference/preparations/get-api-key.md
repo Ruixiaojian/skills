@@ -397,7 +397,7 @@ echo $env:DASHSCOPE_API_KEY
 
 -   **方式一：在**[**第三方工具**](https://help.aliyun.com/zh/model-studio/use-chat-client-or-development-tool/)**中调用模型**
     
-    常用工具配置：[Chatbox](https://help.aliyun.com/zh/model-studio/chatbox)、[Cline](https://help.aliyun.com/zh/model-studio/cline)、[Claude Code](https://help.aliyun.com/zh/model-studio/claude-code)、[Dify](https://help.aliyun.com/zh/model-studio/dify)、[OpenClaw](https://help.aliyun.com/zh/model-studio/openclaw)、[Postman](https://help.aliyun.com/zh/model-studio/first-call-to-image-and-video-api)、[Qwen Code](https://help.aliyun.com/zh/model-studio/qwen-code)。
+    常用工具配置：[Chatbox](https://help.aliyun.com/zh/model-studio/cline-tool)、[Cline](https://help.aliyun.com/zh/model-studio/cline)、[Claude Code](https://help.aliyun.com/zh/model-studio/claude-code)、[Dify](https://help.aliyun.com/zh/model-studio/dify)、[OpenClaw](https://help.aliyun.com/zh/model-studio/openclaw)、[Postman](https://help.aliyun.com/zh/model-studio/first-call-to-image-and-video-api)、[Qwen Code](https://help.aliyun.com/zh/model-studio/qwen-code)。
     
 -   **方式二：通过代码调用模型**
     
