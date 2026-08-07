@@ -2,6 +2,12 @@
 
 本文档提供了Paraformer实时语音识别Android SDK的详细使用指南，帮助您将语音转换为文本。
 
+**重要**
+
+阿里云百炼为华北2（北京）地域推出了业务空间专属域名，能够为推理请求提供卓越的性能和更高的稳定性，建议从 `dashscope.aliyuncs.com` 迁移至 `{WorkspaceId}.cn-beijing.maas.aliyuncs.com`。
+
+`{WorkspaceId}`需要替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。现有域名仍可正常使用。
+
 **用户指南：**关于模型介绍和选型建议请参见[实时语音识别-Fun-ASR/Paraformer](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition)。
 
 **在线体验**：仅paraformer-realtime-v2、paraformer-realtime-8k-v2和paraformer-realtime-v1支持[在线体验](https://bailian.console.aliyun.com/?tab=model#/efm/model_experience_center/voice)。
@@ -19,7 +25,10 @@
     -   [下载最新SDK整合包](https://help.aliyun.com/zh/isi/sdk-selection-and-download)。
         
     -   解压 ZIP 包。在 `app/libs` 目录中获取 AAR 格式 SDK，并添加到项目依赖。  
-        需要 Android CPP 接入时，使用 ZIP 包内的 `android_libs` 与 `android_include` 获取动态库和头文件。
+        需要 Android CPP 接入时，使用 ZIP 包内的 `android_libs` 与 `android_include` 获取动态库和头文件。  
+          
+          
+          
         
     -   用 Android Studio 打开工程。示例代码位于`DashParaformerSpeechTranscriberActivity.java`，替换 API Key 后体验功能。
         
@@ -53,7 +62,7 @@
     
     ```
     {
-        "url": "wss://dashscope.aliyuncs.com/api-ws/v1/inference",
+        "url": "wss://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api-ws/v1/inference",
         "apikey": "st-****",
         "device_id": "my_device_id",
         "service_mode": "1"
@@ -76,7 +85,7 @@
     
     是
     
-    服务地址，固定为 `wss://dashscope.aliyuncs.com/api-ws/v1/inference`。
+    服务地址，固定为 `wss://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api-ws/v1/inference`。调用时请将`{WorkspaceId}`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
     
     `apikey`
     
@@ -143,7 +152,7 @@
     
     此参数仅在调用[initialize](#ae6d7dd9cfad3)接口时将`save_log`设为true时生效。
     
-    默认值：104857600（100 \* 1024 \* 1024 字节, 即 100MiB）。
+    默认值：104857600（100 \* 1024 \* 1024 字节，即 100MiB）。
     
     `log_track_level`
     
@@ -388,7 +397,7 @@
     
     -   true：在持续发送静音音频的情况下，可保持与服务端的连接不中断。
         
-    -   false：即使持续发送静音音频，连接也将在60秒后因超时而断开。该 60 秒超时为服务端默认行为，客户端不可配置。
+    -   false：即使持续发送静音音频，连接也将在一定时间后因超时而断开。该超时为服务端默认行为，客户端不可配置。
         
     
     该参数仅在模型为v2及更高版本时生效。

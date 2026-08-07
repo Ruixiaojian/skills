@@ -143,7 +143,7 @@
 
 提交单个语音实时转写任务，通过传入本地文件的方式同步阻塞地拿到转写结果。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3558074871/CAEQURiBgMDS0c2RpxkiIDNmYjBlMTE3ODQxYTQ3Nzk4MGMxNTc5MjY3OWVjZjlj4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5323116871/CAEQURiBgMDS0c2RpxkiIDNmYjBlMTE3ODQxYTQ3Nzk4MGMxNTc5MjY3OWVjZjlj4709861_20241015153444.149.svg)
 
 实例化[Recognition类](#adcb5e9bddbyq)，调用`call`方法绑定[请求参数](#d72d661a1brzp)和待识别文件，进行识别并最终获取识别结果。
 
@@ -198,7 +198,7 @@ public class Main {
 
 提交单个语音实时转写任务，通过实现回调接口的方式流式输出实时识别结果。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3558074871/CAEQURiBgID1ooWUpxkiIDcyOTEyYjZiZmUxNzRkZjVhMTNhYmNkYjI2NzYzYTMy4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5323116871/CAEQURiBgID1ooWUpxkiIDcyOTEyYjZiZmUxNzRkZjVhMTNhYmNkYjI2NzYzYTMy4709861_20241015153444.149.svg)
 
 1.  启动流式语音识别
     
@@ -937,7 +937,7 @@ false
 
 -   true：在持续发送静音音频的情况下，可保持与服务端的连接不中断。
     
--   false（默认）：即使持续发送静音音频，连接也将在60秒后因超时而断开。
+-   false（默认）：即使持续发送静音音频，连接也将在一定时间后因超时而断开。
     
     静音音频指的是在音频文件或数据流中没有声音信号的内容。静音音频可以通过多种方法生成，例如使用音频编辑软件如Audacity或Adobe Audition，或者通过命令行工具如FFmpeg。
     

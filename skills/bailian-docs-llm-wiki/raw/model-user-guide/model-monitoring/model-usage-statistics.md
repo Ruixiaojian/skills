@@ -11,7 +11,7 @@
 
 ## 查看免费额度使用情况
 
-免费额度页面顶部提供「免费额度使用概览」，按模型总数、额度充沛、使用超 50%、使用超 80%、无免费额度等维度汇总当前空间下各模型的免费额度消耗情况，并展示「免费额度即将用尽 Top 3」模型列表，便于快速定位需要关注的模型。
+免费额度页面顶部提供「免费额度使用概览」，按模型总数、额度充沛、使用超 50%、使用超 80%、无免费额度等维度汇总当前空间下各模型的免费额度消耗情况，并展示「免费额度即将用尽TOP3模型」列表，便于快速定位需要关注的模型。
 
 「全部模型」表格列出各模型的**模型 Code**、**免费额度剩余量**、**过期时间**、**状态**（未开启/已开启/不支持开启）及**操作**。支持搜索、排序、筛选查找特定模型，点击单条可切换「免费额度用完即停」开关，或查看模型详情抽屉。
 
@@ -60,7 +60,7 @@
 
 ## 查看费用概览
 
-在[费用概览](https://bailian.console.aliyun.com/?tab=costing-balance#/costing-balance/cost-overview)页面，可查看百炼服务的费用汇总信息，包括：
+在[费用概览](https://bailian.console.aliyun.com/?tab=costing-balance#/costing-balance/overview)页面，可查看百炼服务的费用汇总信息，包括：
 
 -   **费用卡片**：展示当前账期的总消费金额、订阅购买费用和账单费用，并可跳转查看明细。
     
@@ -220,3 +220,8 @@ A: 使用阿里云账号（主账号）访问[账单详情](https://usercenter2.
 2.  在**产品名称**中选择**大模型服务平台百炼**
     
 3.  单击表格右上方的下载图标导出账单数据
+    
+
+**Q: 可以在阿里云 App 查看免费额度和模型用量吗？**
+
+A: 暂不支持。阿里云 App 目前不支持查看百炼的免费额度使用情况和模型用量数据。请登录 PC 端，进入百炼控制台的[免费额度](https://bailian.console.aliyun.com/cn-beijing/?tab=costing-balance#/costing-balance/free-quota)或[模型用量](https://bailian.console.aliyun.com/?tab=costing-balance#/costing-balance/usage-statistics)页面查看。

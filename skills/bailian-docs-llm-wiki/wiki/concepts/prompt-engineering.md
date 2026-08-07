@@ -1,47 +1,39 @@
-# 提示工程
+# Prompt 工程
 
-提示工程（Prompt Engineering）是百炼平台上系统化设计、构建与优化大语言模型输入指令（Prompt）的方法论与实践体系，其目标是通过结构化表达、上下文控制、样例引导和自动化迭代等手段，显著提升模型输出的准确性、稳定性、可控性与业务适配性。
+Prompt 工程是指在百炼平台上系统性设计、优化与管理提示词（Prompt）的方法论与实践体系，旨在通过结构化框架、动态变量、样例增强和自动化反馈等手段，提升大模型输出的准确性、一致性、可控性与业务适配度。它不是一次性指令编写，而是覆盖设计、测试、迭代、部署与监控的全生命周期工程活动。
 
-## 在百炼平台的不同场景中，这个概念如何使用
+## 在百炼平台的不同场景中如何使用
 
-在百炼平台中，提示工程不是一次性配置动作，而是贯穿应用全生命周期的核心能力，具体体现为以下四类标准化实践：
-
-- **模板化构建**：通过「Prompt 模板」功能，将角色设定、任务指令、约束条件、输出格式等要素结构化封装（支持 ICIO/CRISPE/RASCEF 等框架），实现跨应用复用。例如，在智能体应用中，将 `system_prompt` 字段直接绑定一个预置模板 ID；在工作流节点中，通过变量注入（如 `${user_query}`）动态填充业务上下文。
-
-- **少样本引导（Few-shot）**：虽原「Prompt 样例库」功能已停止维护，但其核心思想仍延续于 RAG 表格库与智能体工具调度中——开发者可将高质量 Query-Answer 对作为知识片段注入检索上下文，或在 MCP 工具调用时显式提供范例，用于强格式约束（如 JSON Schema 输出）、风格对齐（如法律文书语气）等场景。
-
-- **自动增强与反馈优化**：  
-  - **自动优化**：对模糊、口语化的原始 Prompt（如“帮我写个产品介绍”），平台基于大模型自动注入角色、补充安全边界、重组逻辑结构，适用于快速原型验证；  
-  - **反馈优化**：上传 5–10 条覆盖典型类别的输入-输出样例 + ≥20 条评测数据，平台多轮迭代生成更鲁棒的 Prompt，特别适合高精度分类、规则校验等垂直任务，效果优于纯文本优化。
-
-- **运行时动态编排**：在智能体（Agent 2.0）与工作流中，Prompt 不再是静态字符串，而是与工具调用、记忆管理、多模态输入深度耦合的执行单元。例如：当用户上传图片时，系统自动拼接图文 Prompt；当启用 `enable_thinking` 时，Prompt 需预留 ReAct 推理链路占位符；[长期记忆](long-term-memory.md)模块会将 `historyList` 动态注入 Prompt 上下文。
-
-> ⚠️ 注意：所有 Prompt 相关能力（模板、优化、调试）**仅支持华北2（北京）地域**，跨地域调用将失败。
+- **智能体（Agent）应用**：System Prompt 是智能体行为的“大脑”，需明确定义角色、任务边界、工具调用规范及安全约束；支持嵌入 Few-shot 样例（如“用户问：… → 你答：…”）提升任务理解，但需注意样例会增加输入 [Token](token.md) 消耗。
+- **工作流（Workflow）应用**：每个大模型节点均可独立配置 Prompt 模板，支持变量注入（如 `${query}`、`${historyList}`）实现上下文感知生成；可结合意图分类节点，为不同意图分支绑定专用 Prompt，实现精细化控制。
+- **高代码应用**：开发者可通过 SDK 调用 `GetPromptTemplate` 获取模板内容，运行时动态填充变量后，作为 `system` 或 `user` 消息传入模型 API；适合需强逻辑校验、多步骤组装或与外部服务联动的复杂场景。
+- **模板中心统一管理**：所有 Prompt 均以模板形式组织，支持「预置模板」开箱即用、「自定义模板」按需创建（含 ICIO/CRISPE/RASCEF 等结构化框架），并可在控制台一键复用于多个应用。
+- **自动优化与反馈优化**：对原始 Prompt 可直接启用「自动优化」获得角色注入与指令强化版本；若已有高质量输入-输出样例（5–10 条）和评测集（≥20 条），推荐使用「反馈优化」，由千问-max 多轮反思生成业务定制化 Prompt。
 
 ## 关键参数和配置
 
-| 参数 | 说明 | 使用位置 | 备注 |
-|------|------|----------|------|
-| `workspaceId` | 业务空间唯一标识，所有 Prompt 操作必需 | 所有 API（`CreatePromptTemplate`, `GetPromptTemplate`）、SDK 初始化、控制台模板管理 | 必须通过控制台或 `ListWorkspaces` 获取，不可硬编码 |
-| `promptTemplateId` | 模板唯一 ID，用于引用与调用 | 智能体应用系统提示词字段、工作流节点配置、API 请求体 | 预置模板与自定义模板均分配此 ID |
-| `variables` | 模板中声明的动态变量（如 `["topic", "tone"]`），调用时需传入对应值 | 控制台模板编辑器、API 请求体、SDK 调用参数 | 占位符格式为 `${variable_name}`，长度 ≤6144 字符 |
-| `has_thoughts=true` | 启用调试模式，返回 `thoughts` 字段含 Prompt 解析与样例召回详情 | 智能体应用 API 调用时的 query 参数 | 仅限调试，生产环境请关闭 |
-| `temperature` / `max_tokens` | 控制输出随机性与长度上限 | 智能体/工作流/高代码应用的模型配置项 | 与 Prompt 共同影响最终输出质量，需协同调优 |
+- `promptTemplateId`：模板唯一 ID，API 调用必需，用于 `GetPromptTemplate` 等接口。
+- `workspaceId`：所有 Prompt 操作的上下文标识，必须显式传入，获取方式见 [获取 APP ID 和 Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id)。
+- `variables`：模板中声明的占位符（如 `${topic}`、`${platform}`），需在运行时用实际值替换，建议使用字符串安全替换（如 `content.replace(/\$\{([^}]+)\}/g, (match, key) => data[key] || '')`）。
+- `temperature` / `top_p`：虽非 Prompt 专属参数，但在调用时与 Prompt 协同影响输出稳定性——Prompt 工程效果在低 `temperature=0.1–0.4` 下更易收敛。
+- 地域限制：所有 Prompt 模板功能（创建、管理、调用）仅支持华北2（北京）地域，跨地域请求将失败，请确保 SDK 或 API 请求 endpoint 与 workspace 所在地域一致。
 
-## 面向开发者，简洁实用
+## 面向开发者的实用建议
 
-- ✅ **起步建议**：新项目优先使用预置模板（如“文案生成”“摘要抽取”），复制后按业务微调；避免从零手写长 Prompt。
-- ✅ **变量安全**：所有 `variables` 值需经业务层清洗（如过滤控制字符、截断超长文本），防止注入攻击或 [Token](token.md) 溢出。
-- ✅ **调试闭环**：用控制台右侧调试面板实时验证 Prompt 效果 → 发现问题后，导出 query-answer 对 → 进入「反馈优化」页面提交优化任务 → 替换模板并重新发布。
-- ✅ **性能意识**：单个 Prompt 模板最大 6144 字符；若需长上下文，请优先使用 RAG 表格库或知识库切片检索，而非堆砌文本到 Prompt 中。
-- ✅ **版本管理**：模板无内置版本号，建议在模板名称中添加语义标记（如 `QA_Template_v2_202504`），并通过 Workspace 隔离测试/生产环境。
+- ✅ **优先使用结构化框架**：新建文本类 Prompt 模板时，选择「基于 Prompt 工程创建」模式，ICIO（Identity-Context-Instruction-Output）适合通用任务，CRISPE（Capacity-Role-Insight-Statement-Personality-Experiment）适合角色驱动型应用。
+- ✅ **变量命名清晰且唯一**：避免 `${id}` 与 `${ID}` 混用；生产环境建议在模板中添加注释说明变量用途（如 `<!-- ${product_name}: 用户咨询的具体商品名称 -->`），便于协作维护。
+- ✅ **[Token](token.md) 成本前置校验**：模板长度 + 变量填充后总字符数 ≤ 模型上下文窗口（如 qwen-plus-latest 支持 128K），建议用 `bailian-sdk` 提供的 `countTokens()` 方法预估，避免超限报错。
+- ❌ **勿依赖已下线功能**：Prompt 样例库已停止维护，新项目请迁移至 RAG 表格库或使用反馈优化替代。
+- ❌ **避免硬编码敏感逻辑**：如身份验证规则、业务风控策略等，应通过 MCP 工具或后端服务实现，而非写死在 Prompt 中——既不安全，也难迭代。
+
+> 提示：所有 Prompt 优化过程均不存储用户数据，符合阿里云隐私政策；调试阶段建议开启 `stream=True` 实时观察生成过程，快速定位 Prompt 设计缺陷。
 
 ## 关联主题页
 
 - [prompt](../guides/prompt.md)
+- [llm application](../guides/llm-application.md)
 - [application component api reference](../api/application-component-api-reference.md)
 - [start using](../guides/start-using.md)
-- [llm application](../guides/llm-application.md)
-- [model experience](../guides/model-experience.md)
+- [application support](../guides/application-support.md)
 
 
