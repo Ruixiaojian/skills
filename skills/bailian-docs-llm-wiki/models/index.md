@@ -1,6 +1,6 @@
 # 百炼模型市场索引
 
-> 自动生成 · 共 175 个模型家族 · 393 个主干模型 · 更新于 2026-08-06
+> 自动生成 · 共 178 个模型家族 · 396 个主干模型 · 更新于 2026-08-07
 
 **机器查询走结构化文件**：
 
@@ -17,7 +17,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 `notSuitableFor: []` 表示无已知限制。`profileCompleteness` 为 `structured-only` 时该画像未读过文档，仅机械字段可信。
 硬规格（价格/QPM/contextWindow/openSource）一律看行内顶层字段，不要从 profile 里找。
 
-## 文本生成 `TG` — 34 个家族
+## 文本生成 `TG` — 36 个家族
 
 - [GLM](groups/glm-4.5.json) — GLM是由智谱提供的开源模型。
   - 模型：`glm-4.5`, `glm-4.5-air`, `glm-4.6`, `glm-4.7`, `glm-5`, `glm-5.1`, `glm-5.2`
@@ -31,6 +31,8 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`xiaomi/mimo-v2.5-pro`
 - [MiniMax文本模型](groups/minimax-models-market-place.json) — 由MiniMax提供的MiniMax-M系列文本模型API服务。
   - 模型：`MiniMax/MiniMax-M2.1`, `MiniMax/MiniMax-M2.5`, `MiniMax/MiniMax-M2.7`, `MiniMax/MiniMax-M3`
+- [Qwen-Coder-Plus](groups/qwen-coder-plus.json) — 千问系列代码及编程模型是专门用于编程和代码生成的语言模型，性能出色，效果突出。
+  - 模型：`qwen-coder-plus`
 - [Qwen-Coder-Turbo](groups/qwen-coder-turbo.json) — Qwen-Coder-Turbo模型是专门用于编程和代码生成的语言模型，推理速度快，成本低。
   - 模型：`qwen-coder-turbo`
 - [qwen-deep-research](groups/qwen-deep-research.json) — 千问深入研究是一款面向复杂研究任务的高级智能体系统，具备多轮推理与全局规划能力，能够运用互联网搜索等多种工具，对任务进行精细化拆解，开展推理与分析，最终为用户生成可溯源、逻辑严谨的研究型报告。
@@ -43,6 +45,8 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen-long`, `qwen-long-latest`
 - [Qwen-Math-Plus](groups/qwen-math-plus.json) — Qwen-Math-Plus模型具有强大的数学解题能力,擅长处理中英文数学题，包括方程、计算、证明等方向。
   - 模型：`qwen-math-plus`, `qwen-math-plus-0816`, `qwen-math-plus-0919`, `qwen-math-plus-latest`
+- [Qwen-Math-Turbo](groups/qwen-math-turbo.json) — Qwen-Math-Turbo模型是专门用于数学解题的语言模型，推理速度快，成本低。
+  - 模型：`qwen-math-turbo`
 - [Qwen-Max](groups/qwen-max.json) — 千问2.5系列千亿级别超大规模语言模型，支持中文、英文等不同语言输入。随着模型的升级，qwen-max将滚动更新升级。如果希望使用固定版本，请使用历史快照版本。
   - 模型：`qwen-max`
 - [Qwen-MT-Flash](groups/qwen-mt-flash.json) — 基于Qwen3全面升级的轻量级文本翻译大模型，支持92个语种互译，模型性能和翻译效果全面升级，并提供更稳定的术语定制、格式还原度、领域提示能力，让译文更精准、自然。
@@ -77,14 +81,14 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`stepfun/step-3.7-flash`
 - [Vanchin DeepSeek](groups/vanchin-models-market-place.json) — 由快手万擎提供的DeepSeek系列模型API服务。
   - 模型：`vanchin/deepseek-ocr`, `vanchin/deepseek-r1`, `vanchin/deepseek-v3`, `vanchin/deepseek-v3.1-terminus`, `vanchin/deepseek-v3.2-think`, `vanchin/deepseek-v4-pro`
+- [伶鹊-对话分析-flash](groups/tongyi-xiaomi-analysis-flash.json) — 伶鹊-对话分析-flash是专注于日常任务，如对话信息抽取、场景分类等分析类需求的模型，自定义分析标准遵循与对话语义理解能力显著提升，适用于低时延的离线在线分析任务。
+  - 模型：`tongyi-xiaomi-analysis-flash`
+- [伶鹊-对话分析-pro](groups/tongyi-xiaomi-analysis-pro.json) — 伶鹊-对话分析-pro是专注于高阶复杂分析，如针对具备复杂业务逻辑的复杂质检规则等分析需求的模型，支持自定义更细粒度的分析标准，具备更强的多轮上下文建模、深层语义理解与推理能力。
+  - 模型：`tongyi-xiaomi-analysis-pro`
 - [意图分类模型](groups/tongyi-intent-detect-v3.json) — 意图识别和槽位填充是对话系统中的基础任务。本模型实现了一个基于 API的意图（intent）和槽位参数（slots）联合预测。在一次模型输出中，同时完成多个指令API的返回和槽位参数的填充。返回的结果…
   - 模型：`tongyi-intent-detect-v3`
 - [智谱GLM系列文本模型](groups/zhipu-models-market-place.json) — 由智谱提供的GLM系列文本模型API服务
   - 模型：`ZHIPU/GLM-5`, `ZHIPU/GLM-5.1`, `ZHIPU/GLM-5.2`
-- [通义晓蜜-对话分析-flash](groups/tongyi-xiaomi-analysis-flash.json) — 通义晓蜜-对话分析-flash是专注于日常任务，如对话信息抽取、场景分类等分析类需求的模型，自定义分析标准遵循与对话语义理解能力显著提升，适用于低时延的离线在线分析任务。
-  - 模型：`tongyi-xiaomi-analysis-flash`
-- [通义晓蜜-对话分析-pro](groups/tongyi-xiaomi-analysis-pro.json) — 通义晓蜜-对话分析-pro是专注于高阶复杂分析，如针对具备复杂业务逻辑的复杂质检规则等分析需求的模型，支持自定义更细粒度的分析标准，具备更强的多轮上下文建模、深层语义理解与推理能力。
-  - 模型：`tongyi-xiaomi-analysis-pro`
 - [通义法睿-Plus-32K](groups/farui-plus.json) — 通义法睿是以通义千问为基座经法律行业数据和知识专门训练的法律行业大模型产品，综合运用了模型精调、强化学习、 RAG检索增强、法律Agent技术，具有回答法律问题、推理法律适用、推荐裁判类案、辅助案情分…
   - 模型：`farui-plus`
 
@@ -155,7 +159,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [鞋靴模特](groups/shoemodel-v1.json) — 鞋靴模特支持输入多视角鞋靴系列图片，同时对输入模特模板图的鞋子区域进行鞋靴AI试穿，实现模特鞋靴布局重绘生成，最终生成图片的效果, 布局自然、细节丰富、画面细腻、试穿结果逼真。可用于模特商品图设计、新…
   - 模型：`shoemodel-v1`
 
-## 视频生成 `VG` — 26 个家族
+## 视频生成 `VG` — 27 个家族
 
 - [HappyHorse-I2V](groups/happyhorse-i2v.json) — HappyHorse系列最新图生视频模型，具备高度还原的动态画面生成能力，能够稳定保持与图像一致性，输出流畅自然、细节丰富的高质量视频。
   - 模型：`happyhorse-1.0-i2v`, `happyhorse-1.1-i2v`
@@ -181,6 +185,8 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`wan2.6-r2v`, `wan2.6-r2v-flash`, `wan2.7-r2v`
 - [Wan-T2V](groups/wan-text-to-video.json) — 文字生成视频内容，丝滑动态能力，电影美学控制，精准指令遵循
   - 模型：`wan2.2-t2v-plus`, `wan2.5-t2v-preview`, `wan2.6-t2v`, `wan2.7-t2v`, `wanx2.1-t2v-plus`, `wanx2.1-t2v-turbo`
+- [Wan-Video](groups/wan-video.json) — 多模态全能参考，灵活可控生成视频内容，轻松实现故事创作、创意表达、营销物料制作等
+  - 模型：`wan3.0-video`
 - [Wan-VideoEdit](groups/wan-video-edit.json) — 通过指令对视频进行编辑，支持局部/整体编辑、视频重塑、视频复刻等
   - 模型：`wan2.7-videoedit`
 - [Wan2.1-VACE-Plus](groups/wanx2.1-vace-plus.json) — 万相2.1-VACE-Plus，视频编辑统一模型。支持局部编辑、视频重绘、背景扩展、时长延展、图片参考等多种视频编辑与生成任务，支持文本、图像、视频等多模态条件控制。

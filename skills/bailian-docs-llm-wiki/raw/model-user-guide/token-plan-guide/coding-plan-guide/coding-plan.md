@@ -117,7 +117,7 @@ Coding Plan 专属的 API Key 和 Base URL 与百炼按量计费的 API Key（`s
 
 [**Cherry Studio**多模型桌面客户端](https://help.aliyun.com/zh/model-studio/cherry-studio)
 
-[**Chatbox**跨平台 AI 桌面客户端](https://help.aliyun.com/zh/model-studio/chatbox)
+[**Chatbox**跨平台 AI 桌面客户端](https://help.aliyun.com/zh/model-studio/cline-tool)
 
 [**Cline**VS Code 扩展，智能代码补全和调试](https://help.aliyun.com/zh/model-studio/cline)
 

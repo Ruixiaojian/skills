@@ -6,7 +6,7 @@
 
 -   若您熟悉大模型调用，可直接查看API参考文档[文本生成](https://help.aliyun.com/zh/model-studio/qwen-api-reference/)。
     
--   若您不熟悉编程，可参考[Chatbox](https://help.aliyun.com/zh/model-studio/chatbox)，通过图形化界面与千问模型对话。
+-   若您不熟悉编程，可参考[Chatbox](https://help.aliyun.com/zh/model-studio/cline-tool)，通过图形化界面与千问模型对话。
     
 -   API调用与操作系统版本无关，只要网络能连通即可正常使用。
     
@@ -1301,7 +1301,7 @@ A：请根据您的使用情况参考以下步骤：
 
 ## Chatbox
 
-请参见[Chatbox](https://help.aliyun.com/zh/model-studio/chatbox)。
+请参见[Chatbox](https://help.aliyun.com/zh/model-studio/cline-tool)。
 
 ## Cherry Studio
 

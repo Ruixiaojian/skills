@@ -21,7 +21,7 @@ Token Plan 支持的部分模型（qwen3.7-plus 等）原生支持视觉理解�
 
 **说明**
 
--   qwen3.8-max-preview
+-   qwen3.8-max
     
 -   qwen3.7-plus
     

@@ -1,45 +1,47 @@
-# Prompt 工程
+# 提示工程
 
-Prompt 工程是指在百炼平台上系统性设计、构建、验证与迭代提示词（Prompt）的方法论与实践体系，其目标是通过结构化指令、角色设定、上下文注入、约束定义和反馈优化等技术手段，显著提升大语言模型输出的准确性、一致性、可控性与业务适配度。它不是一次性文本输入，而是一套可复用、可版本化、可评测的工程化资产。
+提示工程（Prompt Engineering）是百炼平台上系统化设计、构建与优化大语言模型输入指令（Prompt）的方法论与实践体系，其目标是通过结构化表达、上下文控制、样例引导和自动化迭代等手段，显著提升模型输出的准确性、稳定性、可控性与业务适配性。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-- **智能体（Agent 2.0）应用**：Prompt 工程直接体现为 `System Prompt` 的精细化编写——需明确角色定位（如“阿里云手机导购专家”）、任务边界（“仅推荐百炼平台支持的机型”）、输出格式（JSON Schema 或 Markdown 表格）、安全约束（禁止虚构参数）及工具调用规范（如“必须先检索知识库再回答”）。Few-shot 样例已由 RAG 表格库承接，不建议在 System Prompt 中硬编码问答对。
+在百炼平台中，提示工程不是一次性配置动作，而是贯穿应用全生命周期的核心能力，具体体现为以下四类标准化实践：
 
-- **工作流（Workflow）应用**：每个「大模型节点」均需独立配置 Prompt，支持变量插值（如 `${user_intent}`）与条件模板（通过上游节点输出动态选择 Prompt 片段）。Prompt 工程在此体现为模块化拆分——将意图识别、内容生成、格式校验等子任务分别封装为专用 Prompt 模板，提升可维护性与复用率。
+- **模板化构建**：通过「Prompt 模板」功能，将角色设定、任务指令、约束条件、输出格式等要素结构化封装（支持 ICIO/CRISPE/RASCEF 等框架），实现跨应用复用。例如，在智能体应用中，将 `system_prompt` 字段直接绑定一个预置模板 ID；在工作流节点中，通过变量注入（如 `${user_query}`）动态填充业务上下文。
 
-- **高代码应用**：开发者可通过 SDK 动态构造 Prompt，例如基于用户画像实时注入个性化约束（`"请用${user_tone}语气回答，重点突出续航和AI拍照"`），或结合 MCP 工具返回结果生成带上下文的链式 Prompt。此时 Prompt 工程与业务逻辑深度耦合，强调运行时可编程性。
+- **少样本引导（Few-shot）**：虽原「Prompt 样例库」功能已停止维护，但其核心思想仍延续于 RAG 表格库与智能体工具调度中——开发者可将高质量 Query-Answer 对作为知识片段注入检索上下文，或在 MCP 工具调用时显式提供范例，用于强格式约束（如 JSON Schema 输出）、风格对齐（如法律文书语气）等场景。
 
-- **模型评测与应用评估**：Prompt 工程成果需被量化验证。在 `application evaluation` 中，优化后的 Prompt 应作为新版本应用发布，并通过同一评测集进行回归对比；在 `model evaluation` 中，可将不同 Prompt 设计（如 ICIO vs RASCEF）作为独立变量，接入相同模型与数据集，横向比对各维度得分差异，实现“Prompt 即实验变量”。
+- **自动增强与反馈优化**：  
+  - **自动优化**：对模糊、口语化的原始 Prompt（如“帮我写个产品介绍”），平台基于大模型自动注入角色、补充安全边界、重组逻辑结构，适用于快速原型验证；  
+  - **反馈优化**：上传 5–10 条覆盖典型类别的输入-输出样例 + ≥20 条评测数据，平台多轮迭代生成更鲁棒的 Prompt，特别适合高精度分类、规则校验等垂直任务，效果优于纯文本优化。
 
-- **RAG 增强场景**：Prompt 工程与知识库协同演进。例如，在切片检索模式下，Prompt 需显式声明“仅依据以下 <context> 回答，禁止编造”，并配合 `recall_k=3` 与 `max_assemble_length=2048` 等参数，确保模型聚焦于高质量召回片段——此时 Prompt 是 RAG 流程的“指挥协议”，而非孤立文本。
+- **运行时动态编排**：在智能体（Agent 2.0）与工作流中，Prompt 不再是静态字符串，而是与工具调用、记忆管理、多模态输入深度耦合的执行单元。例如：当用户上传图片时，系统自动拼接图文 Prompt；当启用 `enable_thinking` 时，Prompt 需预留 ReAct 推理链路占位符；[长期记忆](long-term-memory.md)模块会将 `historyList` 动态注入 Prompt 上下文。
 
-> ⚠️ 注意：旧版「Prompt 样例库」功能已停用，所有少样本能力应迁移至 RAG 表格库；而「基于样例的 Prompt 反馈优化」仍有效，适用于高精度场景（如汽车文章分类），需提供标注好的评测数据集驱动多轮自动迭代。
+> ⚠️ 注意：所有 Prompt 相关能力（模板、优化、调试）**仅支持华北2（北京）地域**，跨地域调用将失败。
 
 ## 关键参数和配置
 
-| 参数 | 说明 | 开发者须知 |
-|------|------|------------|
-| `promptTemplateId` | 模板唯一 ID，用于 API 获取与变量校验 | 必填；通过控制台模板卡片或 `GetPromptTemplate` 接口获取；模板内容含 `variables` 字段，用于前端/SDK 校验填充完整性 |
-| `system_prompt`（智能体） / `prompt`（工作流节点） | 运行时生效的核心指令文本 | 支持 `${variable}` 插值；长度受模型上下文窗口限制（建议 ≤3000 tokens）；避免模糊表述（如“尽量好”），改用可验证约束（如“输出必须包含价格、续航、摄像头三要素”） |
-| `enable_thinking`（智能体） | 是否启用 ReAct 思考链模式 | 开启后模型会输出 `Thought:`/`Action:`/`Observation:` 步骤，便于调试；但增加 [Token](token.md) 消耗，生产环境可关闭 |
-| `recall_k`（RAG 相关） | 知识库召回片段数（默认 5，上限 10） | 与 Prompt 中的“依据以下 context”指令强绑定；增大 recall_k 需同步增强 Prompt 对噪声片段的过滤能力（如加“忽略无关技术参数”） |
-| `temperature`（工作流/评测） | 控制输出随机性（0.0–1.0） | Prompt 工程无法替代温度调控：确定性任务（如格式转换）设为 `0.0`；创意生成任务可设 `0.7`；与 Prompt 中“请给出唯一答案”等指令协同生效 |
+| 参数 | 说明 | 使用位置 | 备注 |
+|------|------|----------|------|
+| `workspaceId` | 业务空间唯一标识，所有 Prompt 操作必需 | 所有 API（`CreatePromptTemplate`, `GetPromptTemplate`）、SDK 初始化、控制台模板管理 | 必须通过控制台或 `ListWorkspaces` 获取，不可硬编码 |
+| `promptTemplateId` | 模板唯一 ID，用于引用与调用 | 智能体应用系统提示词字段、工作流节点配置、API 请求体 | 预置模板与自定义模板均分配此 ID |
+| `variables` | 模板中声明的动态变量（如 `["topic", "tone"]`），调用时需传入对应值 | 控制台模板编辑器、API 请求体、SDK 调用参数 | 占位符格式为 `${variable_name}`，长度 ≤6144 字符 |
+| `has_thoughts=true` | 启用调试模式，返回 `thoughts` 字段含 Prompt 解析与样例召回详情 | 智能体应用 API 调用时的 query 参数 | 仅限调试，生产环境请关闭 |
+| `temperature` / `max_tokens` | 控制输出随机性与长度上限 | 智能体/工作流/高代码应用的模型配置项 | 与 Prompt 共同影响最终输出质量，需协同调优 |
 
 ## 面向开发者，简洁实用
 
-- ✅ **优先用模板，而非硬编码**：所有重复使用的 Prompt（如客服开场白、摘要指令）必须创建为 Prompt 模板，通过 `promptTemplateId` + `variables` 调用，保障一致性与可维护性。
-- ✅ **变量命名即契约**：`variables` 列表中的字段名（如 `product_name`, `user_level`）是前后端约定接口，前端必须传入同名参数，缺失则 API 返回校验错误。
-- ✅ **Prompt 与评测闭环**：每次修改 Prompt 后，必须用同一评测集跑一次 `application evaluation`，重点关注“相关性”“事实准确性”“格式合规性”三类指标变化。
-- ✅ **安全约束写进 Prompt**：显式声明禁止行为（如“不得生成代码”“不得提及竞品”），比依赖模型内置安全层更可靠；百炼平台不存储 Prompt 优化过程数据，但生产 Prompt 本身需符合企业合规要求。
-- ❌ **避免反模式**：不要在 Prompt 中堆砌大量样例（已由 RAG 承载）；不要用自然语言描述格式要求（改用 JSON Schema 或正则示例）；不要跨地域调用（仅华北2可用）。
+- ✅ **起步建议**：新项目优先使用预置模板（如“文案生成”“摘要抽取”），复制后按业务微调；避免从零手写长 Prompt。
+- ✅ **变量安全**：所有 `variables` 值需经业务层清洗（如过滤控制字符、截断超长文本），防止注入攻击或 [Token](token.md) 溢出。
+- ✅ **调试闭环**：用控制台右侧调试面板实时验证 Prompt 效果 → 发现问题后，导出 query-answer 对 → 进入「反馈优化」页面提交优化任务 → 替换模板并重新发布。
+- ✅ **性能意识**：单个 Prompt 模板最大 6144 字符；若需长上下文，请优先使用 RAG 表格库或知识库切片检索，而非堆砌文本到 Prompt 中。
+- ✅ **版本管理**：模板无内置版本号，建议在模板名称中添加语义标记（如 `QA_Template_v2_202504`），并通过 Workspace 隔离测试/生产环境。
 
 ## 关联主题页
 
 - [prompt](../guides/prompt.md)
-- [llm application](../guides/llm-application.md)
+- [application component api reference](../api/application-component-api-reference.md)
 - [start using](../guides/start-using.md)
-- [application evaluation](../guides/application-evaluation.md)
-- [model evaluation introduction](../guides/model-evaluation-introduction.md)
+- [llm application](../guides/llm-application.md)
+- [model experience](../guides/model-experience.md)
 
 

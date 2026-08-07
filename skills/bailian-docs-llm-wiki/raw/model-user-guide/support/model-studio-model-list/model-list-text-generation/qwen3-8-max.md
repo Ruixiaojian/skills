@@ -48,7 +48,7 @@ Function Calling
 
 批量推理
 
-不支持
+支持
 
 模型调优
 
@@ -328,6 +328,18 @@ Function Calling
 
 每百万tokens
 
+输入（Batch File）
+
+6
+
+每百万tokens
+
+输出（Batch File）
+
+18
+
+每百万tokens
+
 显式缓存创建
 
 15
@@ -337,6 +349,18 @@ Function Calling
 显式缓存命中
 
 1
+
+每百万tokens
+
+输入（Batch Chat)
+
+12
+
+每百万tokens
+
+输出（Batch Chat)
+
+36
 
 每百万tokens
 

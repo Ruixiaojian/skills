@@ -68,43 +68,6 @@ Codex 是 OpenAI 推出的终端 AI 编程助手。可通过 Token Plan 个人�
             "mode": "bytes",
             "limit": 10000
           }
-        },
-        {
-          "slug": "qwen3.8-max-preview",
-          "display_name": "qwen3.8-max-preview",
-          "description": "DashScope model: qwen3.8-max-preview",
-          "default_reasoning_level": "xhigh",
-          "supported_reasoning_levels": [
-            {
-              "effort": "low",
-              "description": "Fast responses with lighter reasoning"
-            },
-            {
-              "effort": "medium",
-              "description": "Greater reasoning depth for complex problems"
-            },
-            {
-              "effort": "xhigh",
-              "description": "Extra high reasoning depth for complex problems"
-            }
-          ],
-          "context_window": 983616,
-          "effective_context_window_percent": 95,
-          "supports_parallel_tool_calls": false,
-          "supports_image_detail_original": true,
-          "input_modalities": ["text", "image"],
-          "shell_type": "default",
-          "visibility": "list",
-          "supported_in_api": true,
-          "priority": 1,
-          "base_instructions": "",
-          "support_verbosity": false,
-          "supports_reasoning_summaries": false,
-          "experimental_supported_tools": [],
-          "truncation_policy": {
-            "mode": "bytes",
-            "limit": 10000
-          }
         }
       ]
     }
@@ -229,17 +192,6 @@ wire_api = "chat"
     ```
     
 
-**重要**
-
-**qwen3.8-max-preview 思考模式说明**：
-
--   thinking：始终开启，不支持关闭。
-    
--   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
-    
--   reasoning\_effort：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
-    
-
 ### Token Plan 团队版
 
 `model`请选择[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-overview)。将`OPENAI_API_KEY`环境变量设置为 Token Plan 团队版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/uac-admin/organization/members/list)。
@@ -350,17 +302,6 @@ wire_api = "chat"
     ```
     echo $env:OPENAI_API_KEY
     ```
-    
-
-**重要**
-
-**qwen3.8-max-preview 思考模式说明**：
-
--   thinking：始终开启，不支持关闭。
-    
--   temperature：思考模式下默认值为 0.6；传入值小于 0.6 时自动调整为 0.6。
-    
--   reasoning\_effort：控制推理深度，可选 xhigh、medium、low，默认 xhigh。
     
 
 ### Coding Plan
@@ -714,3 +655,19 @@ codex
 -   检查网络连接是否稳定，关闭 VPN 或代理后重试。
     
 -   等待一段时间后重试，Codex 内置了自动重试机制，多数情况下重试可恢复。
+    
+
+### **报错 429 请求超频或额度用尽怎么办？**
+
+**原因**：429 错误有以下两种情形：
+
+-   **请求超频**（`429 Requests rate limit exceeded`）：短时间内请求过于密集。
+    
+-   **限额用尽**（`429 Allocated quota exceeded` 或 `Your token-plan 5-hour/1-week quota has been exhausted`）：Token Plan 个人版的 5 小时或 7 天限额触顶。
+    
+
+**解决方案**：
+
+-   请求超频：等待一分钟后重试，降低请求频率。
+    
+-   限额用尽：等待对应窗口周期（5 小时或 7 天）结束后额度自动重置；或购买用量包（用量包额度不受窗口限额约束）；或升级套餐。注意：报错信息中的重置时间（如 `The quota will reset at HH:MM:SS UTC`）以协调世界时（UTC）为准，换算为北京时间（CST）需加 8 小时。

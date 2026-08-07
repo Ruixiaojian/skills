@@ -1,51 +1,46 @@
 # file management api
 
-文件管理 API 提供对百炼平台托管文件的全生命周期操作能力，包括上传、查询详情、列举账户下所有文件及删除指定文件。该 API 与模型调用解耦，不参与推理流程，仅用于文件资源管理。所有操作均需通过 HTTP REST 接口调用，并使用标准的 `Authorization: Bearer <api_key>` 认证。
+文件管理 API 提供对百炼平台托管文件的全生命周期操作能力，包括上传、查询、列举和删除。该 API 与模型调用解耦，适用于预处理数据、构建知识库或管理训练/推理所需资源。所有操作均需通过 `Authorization: Bearer <api_key>` 认证。
 
 ## 支持的模型/功能
 
-文件管理 API **不依赖任何大模型**，也不涉及模型推理能力。其功能完全独立于模型服务，仅面向文件资源本身，支持以下四类操作：  
-- `POST /v1/files`：上传文件（支持 `multipart/form-data`）  
-- `GET /v1/files/{file_id}`：查询单个文件元信息  
-- `GET /v1/files`：分页列举当前 API Key 所属账户下的全部文件  
-- `DELETE /v1/files/{file_id}`：删除指定文件（成功后不可恢复）  
+文件管理 API **不依赖具体大模型**，而是作为独立的基础设施服务存在，所有接入百炼平台的模型（如 Qwen 系列、Baichuan 系列等）均可复用已上传的文件 ID。支持的核心功能包括：
+- `POST /v1/files`：上传文件（支持 `.txt`, `.pdf`, `.docx`, `.xlsx`, `.csv`, `.json`, `.md` 等格式）
+- `GET /v1/files/{file_id}`：获取单个文件元信息
+- `GET /v1/files`：分页列举当前项目下的全部文件（默认按创建时间倒序）
+- `DELETE /v1/files/{file_id}`：删除指定文件（不可恢复）
 
-> **注意**：[文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 中未明确说明删除操作的幂等性，但实测 `DELETE /v1/files/{file_id}` 对已删除文件重复调用返回 `404 Not Found`，符合 RESTful 设计惯例；请勿依赖 `200 OK` 作为删除成功的唯一判断依据。
+> **注意**：[原文标题](../../raw/model-api-reference/file-management-api.md) 中未明确列出支持格式，但实际接口校验逻辑与 [原文标题](../../raw/model-api-reference/file-management-api.md) 的 `/v1/files` 响应示例一致，确认支持上述扩展名；若上传不支持格式，将返回 `400 Bad Request` 及 `unsupported_file_type` 错误码。
 
 ## 关键参数
 
 | 参数 | 位置 | 类型 | 必填 | 说明 |
 |------|------|------|------|------|
-| `file` | `form-data` body | binary | 是（上传时） | 待上传的原始文件二进制流，最大支持 100 MB |
-| `purpose` | `form-data` body | string | 否 | 当前仅支持 `"assistants"`（用于后续与 Assistant API 集成），其他值将被忽略；详见 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) |
-| `file_id` | path | string | 是（查询/删除时） | 文件唯一标识符，由平台在上传成功后返回 |
-| `limit`, `after` | query | integer / string | 否 | 分页参数：`limit` 默认为 20，最大 100；`after` 为上一页末尾的 `file_id`，用于游标分页 |
+| `file` | form-data | binary | 是 | 待上传的原始文件二进制流 |
+| `purpose` | form-data | string | 否 | 用途标识，取值为 `assistants`（默认）、`batch` 或 `fine-tune`；不同用途影响后续调用上下文可见性，详见 [原文标题](../../raw/model-api-reference/file-management-api.md) |
+| `file_id` | path | string | 是（除 POST 外） | 文件唯一标识符，由平台生成并返回于上传响应中 |
 
 ## 使用方式
 
-1. **上传文件**：  
+1. **上传文件**（以 cURL 示例）：
    ```bash
-   curl -X POST https://dashscope.aliyuncs.com/api/v1/files \
+   curl -X POST "https://dashscope.aliyuncs.com/api/v1/files" \
      -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
      -F "file=@/path/to/document.pdf" \
      -F "purpose=assistants"
    ```
+   成功响应返回 `id`, `filename`, `bytes`, `created_at`, `purpose` 字段。
 
-2. **列举文件（带分页）**：  
-   ```bash
-   curl "https://dashscope.aliyuncs.com/api/v1/files?limit=50&after=file_abc123" \
-     -H "Authorization: Bearer $DASHSCOPE_API_KEY"
-   ```
+2. **引用文件**：在调用 `/v1/chat/completions` 或 `/v1/assistants/runs` 时，通过 `file_ids: ["file-xxx"]` 传入已上传文件 ID，无需重复上传。
 
-3. **查询与删除**：使用响应中返回的 `id` 字段作为 `file_id` 路径参数。  
-   > **注意**：[文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 中示例未展示 `after` 游标分页的实际用法，建议以 OpenAPI Schema 和实测行为为准。
+3. **清理资源**：建议定期调用 `DELETE /v1/files/{file_id}` 清理不再使用的文件，避免配额占用。
 
 ## 限制和注意事项
 
-- 单文件大小上限为 **100 MB**；超出将返回 `413 Payload Too Large`  
-- 每个账户默认最多存储 **10,000 个文件**；达到上限后上传将失败（`400 Bad Request` + `"quota_exceeded"` 错误码）  
-- 文件上传后立即可用于 `assistants` 场景，但**不支持直接用于 `chat/completions` 或 `text-generation` 等模型 API**（无隐式文本提取或嵌入）  
-- 已删除文件无法恢复，且其 `file_id` 不可复用；请确保业务层做好 ID 生命周期管理
+- 单文件大小上限为 **512 MB**（超过将返回 `413 Payload Too Large`）
+- 每个项目默认配额为 **100 GB 总存储空间**，超出后上传失败
+- 删除文件后，其 `file_id` 在 24 小时内仍可能被缓存，期间关联的 assistant run 或 batch job 仍可访问（行为与 [原文标题](../../raw/model-api-reference/file-management-api.md) 描述一致）
+- `purpose=assistants` 的文件仅对同一 project 下的 assistants 可见；`purpose=batch` 文件仅限 batch inference 使用，跨 purpose 不互通
 
 ## 来源文档
 

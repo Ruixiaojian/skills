@@ -1,42 +1,30 @@
 # toolkits and [frameworks](frameworks.md)
 
-阿里云百炼提供多套 OpenAI 兼容的工具包与框架接口，覆盖文本生成、视觉理解、嵌入向量、批量处理、文件管理、会话状态管理等核心场景。开发者可复用现有 OpenAI 生态代码（如 SDK、LangChain 集成），仅需调整 `base_url`、`api_key` 和模型名即可快速迁移。所有接口均支持[流式输出](../concepts/streaming-output.md)、[Token](../concepts/token.md) 统计与标准错误码体系。
+阿里云百炼提供多种 [OpenAI 兼容接口](../concepts/openai-compatible-interface.md)及配套工具链，支持开发者快速迁移现有应用或构建新场景。所有接口均基于统一的 `compatible-mode/v1` 协议层，通过调整 `base_url`、`api_key` 和 `model` 三要素即可接入，无需重写核心逻辑。各接口在功能定位、模型支持和使用约束上存在明确分工，需按场景选型。
 
 ## 支持的模型/功能
 
-百炼支持的 OpenAI 兼容能力按功能维度划分如下：
+百炼支持的 OpenAI 兼容能力覆盖文本、多模态、向量、文件处理与对话管理五大类：
 
-- **Chat Completions**：支持 Qwen 系列（`qwen-plus`、`qwen3.7-plus` 等）、Qwen-VL、Qwen-Coder、Qwen-Omni、Qwen-Math 及第三方直供模型（DeepSeek、Kimi、GLM、MiniMax）；但 [Qwen-Audio 不支持 OpenAI 兼容协议](../../raw/model-api-reference/toolkits-and-frameworks/compatibility-of-openai-with-dashscope.md)，仅支持 DashScope 原生协议。
-- **Responses API**：专为智能体设计，内置联网搜索、网页抓取、代码解释器等工具，支持更简洁的字符串输入与 `previous_response_id` 上下文自动关联；支持 `qwen3-max`、`qwen3-plus`、`qwen3-flash`、`qwen3-coder` 等全系 Qwen3 模型及 `qwen-plus`。
-- **Vision（多模态）**：支持 `qwen-vl-plus`、`qvq`、`qwen-ocr`，兼容 OpenAI 的 `image_url` 结构化消息格式；其中 [QVQ 模型仅支持流式输出](../../raw/model-api-reference/toolkits-and-frameworks/qwen-vl-compatible-with-openai.md)。
-- **Embedding**：支持 `text-embedding-v1` 至 `v4` 全系列文本向量模型，含多维度配置（如 `dimensions=1024`），但多模态 Embedding（如 `qwen3-vl-embedding`）**不支持** [OpenAI 兼容接口](../concepts/openai-compatible-interface.md)。
-- **Batch 处理**：分为两种模式：
-  - **文件批量（Batch File）**：通过 JSONL 文件提交数百至数千请求，适用于评测、标注等离线任务，支持 `qwen3.7-max` 等大上下文模型（单请求最大 256K tokens）；
-  - **同步 Batch Chat**：单请求阻塞式调用，语义与实时 Chat API 完全一致，仅端点改为 `https://batch.dashscope.aliyuncs.com/compatible-mode/v1`。
-- **Files API**：用于上传文档供 `qwen-long`（长文档问答）、`qwen-doc-turbo`（数据提取）或 Batch 任务使用，`purpose` 参数区分用途（`file-extract` / `batch` / `fine-tune`）。
-- **Conversations API**：提供会话生命周期管理（创建、查询、更新、删除）及消息项追加，配合 Responses API 实现跨设备上下文延续。
+- **Chat Completions**：兼容标准 `chat/completions` 接口，支持 Qwen 系列（`qwen-plus`, `qwen-flash`, `qwen3-*`）、Qwen-VL、Qwen-Coder、DeepSeek、Kimi、GLM、MiniMax 等数十种模型，但 [Qwen-Audio 不支持 OpenAI 兼容协议](../../raw/model-api-reference/toolkits-and-frameworks/compatibility-of-openai-with-dashscope.md)，仅支持 DashScope 原生协议。
+- **Responses API**：作为 Chat Completions 的演进版本，专为智能体（Agent）设计，内置联网搜索、网页抓取、代码解释器等工具，支持 `qwen3-*` 全系列及 `deepseek-v4-flash` 等模型，[文档明确指出其优势在于简化上下文管理与内置工具调用](../../raw/model-api-reference/toolkits-and-frameworks/compatibility-with-openai-responses-api.md)。
+- **Vision（图像理解）**：通过 `chat/completions` 接口支持 `qwen3-vl-plus`, `QVQ`, `Qwen-OCR` 等视觉模型，要求输入格式为 `messages` 中包含 `image_url` 或 Base64 编码内容。
+- **Embedding**：提供 `text-embedding-v1` 至 `v4` 四代文本向量模型，支持多语种及可变维度（`v3/v4` 支持 `dimensions` 参数），但 [多模态 Embedding 模型（如 `qwen3-vl-embedding`）不支持 OpenAI 兼容接口](../../raw/model-api-reference/toolkits-and-frameworks/embedding-interfaces-compatible-with-openai.md)。
+- **Files & Batch**：`files` 接口支持 `file-extract`（文档分析）、`batch`（批量推理）、`fine-tune`（微调数据集）三种用途；`batches` 接口支持异步批量处理，费用为实时调用的 50%，适用于数据分析、评测等非实时场景。
+- **Conversations**：提供会话生命周期管理（创建、查询、更新、删除、追加消息），配合 Responses API 实现跨设备上下文延续，[其新版路径已统一为 `/compatible-mode/v1/conversations`](../../raw/model-api-reference/toolkits-and-frameworks/openai-compatible-conversations.md)。
 
-> **注意**：文档 6 与文档 8 对 `qwen3.7-plus` 等模型在 Batch 场景下的上下文长度描述一致（256K），但文档 2 中 Responses API 的示例响应显示 `input_tokens=49`，未体现该能力上限；实际使用时请以 [OpenAI Responses接口兼容](../../raw/model-api-reference/toolkits-and-frameworks/compatibility-with-openai-responses-api.md) 文档中“支持的模型”列表为准，并确认模型是否启用长上下文能力。
+> **注意**：文档 1 与文档 2 均提及“业务空间专属域名迁移”，但文档 1 未列出德国（法兰克福）地域的 `base_url`，而文档 2 明确给出 `https://{WorkspaceId}.eu-central-1.maas.aliyuncs.com/compatible-mode/v1`。实际开发中应以文档 2 的地域列表为准。
 
 ## 关键参数
 
-所有 [OpenAI 兼容接口](../concepts/openai-compatible-interface.md)共用以下核心参数，行为与 OpenAI 官方一致：
-
-- `model`：必需，模型名称（如 `qwen3.7-plus`、`text-embedding-v4`），需与所选接口支持列表匹配。
-- `base_url`：必需，地域专属端点，**必须使用业务空间域名**（如 `https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`），旧域名（`dashscope.aliyuncs.com`）已不推荐；WorkspaceId 需从控制台获取。
-- `api_key`：必需，百炼 API Key，建议通过环境变量（`DASHSCOPE_API_KEY`）配置。
-- `stream`：布尔值，控制是否[流式输出](../concepts/streaming-output.md)；流式响应末尾可通过 `stream_options={"include_usage": true}` 返回 [Token](../concepts/token.md) 统计。
-- `temperature` / `top_p`：二选一控制生成多样性，避免同时设置。
-- `max_tokens`：软限制，超限将截断输出，不影响模型内部生成逻辑。
-- `stop`：字符串或数组，指定终止词。
-- `seed`：整数，启用确定性输出（相同 seed + 相同输入 → 相同输出）。
-
-此外，特定接口有扩展参数：
-- **Responses API**：`input`（字符串或消息数组）、`previous_response_id`（关联上一轮响应 ID）；
-- **Batch Chat**：需显式设置客户端超时（如 Python SDK 的 `.with_options(timeout=1800.0)`），默认 3600 秒；
-- **Embedding**：`dimensions`（仅 v3/v4 支持）、`encoding_format="float"`；
-- **Files API**：`purpose`（`file-extract`/`batch`/`fine-tune`）；
-- **Conversations API**：`items`（初始消息）、`metadata`（结构化会话元数据）。
+| 参数 | 类型 | 必选 | 说明 | 来源 |
+|------|------|------|------|------|
+| `base_url` | string | 是 | 服务端点，必须匹配地域与接口类型。北京/新加坡需填 `{WorkspaceId}`；弗吉尼亚/东京/法兰克福等地域无 WorkspaceId（见文档 2）。旧域名（如 `dashscope.aliyuncs.com`）已逐步淘汰。 | [OpenAI Chat接口兼容](../../raw/model-api-reference/toolkits-and-frameworks/compatibility-of-openai-with-dashscope.md) |
+| `model` | string | 是 | 模型名称，严格区分大小写与版本后缀（如 `qwen3.8-max` vs `qwen3.7-max`）。部分模型仅限特定地域（如 DeepSeek 仅支持北京/新加坡）。 | [OpenAI Responses接口兼容](../../raw/model-api-reference/toolkits-and-frameworks/compatibility-with-openai-responses-api.md) |
+| `stream` | boolean | 否 | 控制输出模式。`true` 时返回流式 chunk；`false`（默认）返回完整响应。Vision 模型（QVQ）强制流式。 | [OpenAI Vision接口兼容](../../raw/model-api-reference/toolkits-and-frameworks/qwen-vl-compatible-with-openai.md) |
+| `stream_options` | object | 否 | 仅当 `stream=true` 时有效，设 `{"include_usage": true}` 可在最后一 chunk 返回 token 统计。 | [OpenAI Chat接口兼容](../../raw/model-api-reference/toolkits-and-frameworks/compatibility-of-openai-with-dashscope.md) |
+| `previous_response_id` | string | 否 | Responses API 专用，用于自动关联上下文，值为上一轮响应的顶层 `id`（非 `output` 内 `msg_xxx`）。有效期 7 天。 | [OpenAI Responses接口兼容](../../raw/model-api-reference/toolkits-and-frameworks/compatibility-with-openai-responses-api.md) |
+| `purpose` | string | 是（Files） | 文件上传必需字段，取值 `file-extract` / `batch` / `fine-tune`，决定文件用途与格式校验规则。 | [OpenAI文件接口兼容](../../raw/model-api-reference/toolkits-and-frameworks/openai-file-interface.md) |
 
 ## 使用方式
 
@@ -47,14 +35,14 @@ import os
 
 client = OpenAI(
     api_key=os.getenv("DASHSCOPE_API_KEY"),
-    base_url="https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"  # 替换为真实 WorkspaceId
+    base_url="https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",  # 替换为实际 WorkspaceId
 )
 
 # Chat Completions
 resp = client.chat.completions.create(model="qwen-plus", messages=[{"role":"user","content":"你好"}])
 
-# Responses API（智能体）
-resp = client.responses.create(model="qwen3.7-plus", input="今天天气如何？")
+# Responses API（推荐用于 Agent 场景）
+resp = client.responses.create(model="qwen3.8-max", input="你能做什么？")
 
 # Embedding
 resp = client.embeddings.create(model="text-embedding-v4", input="hello world", dimensions=1024)
@@ -64,23 +52,31 @@ file_obj = client.files.create(file=Path("doc.pdf"), purpose="file-extract")
 ```
 
 ### LangChain 集成
-- **OpenAI 兼容层**（`langchain_openai`）：仅支持部分模型（如 `qwen-plus`），需配置 `base_url`；详见 [在LangChain中使用阿里云百炼](../../raw/model-api-reference/toolkits-and-frameworks/use-bailian-in-langchain.md)。
-- **原生 DashScope 层**（`langchain-community` + `dashscope`）：支持全部百炼模型（含部署模型），推荐用于生产环境。
+- **`langchain_openai`**：仅支持 OpenAI 兼容模型（如 `qwen-plus`），配置 `base_url` 即可：
+  ```python
+  from langchain_openai import ChatOpenAI
+  llm = ChatOpenAI(model="qwen-plus", base_url="https://.../compatible-mode/v1")
+  ```
+- **`langchain_community`（`ChatTongyi`）**：支持百炼全量模型（含非 OpenAI 兼容模型），需安装 `dashscope` 包：
+  ```python
+  from langchain_community.chat_models.tongyi import ChatTongyi
+  llm = ChatTongyi(model="qwen-long", dashscope_api_key=os.getenv("DASHSCOPE_API_KEY"))
+  ```
 
-### HTTP 直调
-所有接口均提供标准 RESTful 端点，例如：
-- Chat：`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions`
-- Embedding：`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/embeddings`
-- Batch File 创建：`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/batches`
+### 批量处理（Batch）
+- **文件批量**：上传 JSONL 文件（每行一个请求），调用 `client.batches.create(input_file_id=..., endpoint="/v1/chat/completions")`。
+- **单请求批量**：直接修改 `base_url` 为 `https://batch.dashscope.aliyuncs.com/compatible-mode/v1`，其余参数不变，服务端同步等待并返回结果。
 
 ## 限制和注意事项
 
-- **地域与域名**：北京、新加坡地域**必须使用业务空间专属域名**（含 `{WorkspaceId}`），旧域名虽暂可用但性能与稳定性较低；弗吉尼亚、东京、法兰克福等地域暂无业务空间域名，直接使用 `dashscope-us.aliyuncs.com` 等全局域名。
-- **模型可用性差异**：同一模型在不同接口中支持情况不同——例如 `qwen-vl-plus` 支持 Vision 接口但不支持 Completions 接口；`qwen-coder-turbo` 仅支持 Completions 接口（见 [completions 接口](../../raw/model-api-reference/toolkits-and-frameworks/completions.md)）；`qwen-audio` 完全不支持 OpenAI 协议。
-- **三方模型限制**：DeepSeek、Kimi 等直供模型**仅在中国内地地域可用**，且需在控制台单独开通服务。
-- **Batch 与思考模式**：`qwen3.7`/`qwen3.6`/`qwen3.5` 系列模型在 Batch 场景下默认开启思考模式，会产生额外 `reasoning_tokens` 成本；若无需思考，须显式传入 `enable_thinking=false`（作为 `body` 顶层参数，非 `extra_body`）。
-- **文件配额**：Files API 总存储上限为 100 GB / 10,000 个文件，无有效期；超限时需手动清理。
-- **Conversations 生命周期**：会话 ID（`conv_xxx`）有效期为 7 天，过期后 `previous_response_id` 将失效；会话删除仅移除元数据，不删除关联消息项。
+- **地域与模型绑定**：DeepSeek、Qwen-VL 等部分模型仅在北京/新加坡地域可用；德国法兰克福地域仅支持 Responses API（文档 2），不支持 Chat Completions（文档 1 未覆盖）。
+- **[Token](../concepts/token.md) 限制**：Batch 场景下 `qwen3-*` 系列模型单次请求上下文最大 256K tokens；`qwen3.5-omni-plus` 不支持语音输出；`qwen-coder-turbo`（Completions 接口）仅支持华北2（北京）地域。
+- **兼容性边界**：
+  - Qwen-Audio 不支持 OpenAI 协议，必须使用 DashScope 原生接口。
+  - `completions` 接口（文档 3）仅支持 `qwen-coder-turbo`，且不支持后缀生成前缀。
+  - Conversations API 的旧路径 `/api/v2/apps/protocols/compatible-mode/v1/conversations` 已废弃，必须迁移到 `/compatible-mode/v1/conversations`。
+- **安全实践**：强烈建议将 `DASHSCOPE_API_KEY` 配置为环境变量，避免硬编码；生产环境禁用 `stream_options={"include_usage": true}`（可能暴露 token 统计）。
+- **错误处理**：所有接口遵循 OpenAI 错误格式（`error.code`, `error.message`），通用错误码参考 [错误码文档](https://help.aliyun.com/zh/model-studio/error-code)。
 
 ## 来源文档
 
@@ -90,9 +86,9 @@ file_obj = client.files.create(file=Path("doc.pdf"), purpose="file-extract")
 - [OpenAI Vision接口兼容](../../raw/model-api-reference/toolkits-and-frameworks/qwen-vl-compatible-with-openai.md)
 - [OpenAI文件接口兼容](../../raw/model-api-reference/toolkits-and-frameworks/openai-file-interface.md)
 - [OpenAI兼容-Batch（文件输入）](../../raw/model-api-reference/toolkits-and-frameworks/batch-interfaces-compatible-with-openai.md)
-- [OpenAI Conversations接口兼容](../../raw/model-api-reference/toolkits-and-frameworks/openai-compatible-conversations.md)
 - [OpenAI兼容-Batch Chat](../../raw/model-api-reference/toolkits-and-frameworks/openai-compatible-batch-chat.md)
 - [OpenAI Embedding接口兼容](../../raw/model-api-reference/toolkits-and-frameworks/embedding-interfaces-compatible-with-openai.md)
+- [OpenAI Conversations接口兼容](../../raw/model-api-reference/toolkits-and-frameworks/openai-compatible-conversations.md)
 - [在LangChain中使用阿里云百炼](../../raw/model-api-reference/toolkits-and-frameworks/use-bailian-in-langchain.md)
 
 

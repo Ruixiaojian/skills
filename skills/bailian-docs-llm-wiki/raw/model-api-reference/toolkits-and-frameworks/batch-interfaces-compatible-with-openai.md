@@ -6,7 +6,7 @@
 
 ## **工作流程**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/8960375871/CAEQaxiBgIDB5qWk4BkiIDViYzQ0MWUwNTYyNDQ3NDM5NzM0ZTc4N2Y3NTU2NjA56318723_20260129171731.699.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5136895871/CAEQaxiBgIDB5qWk4BkiIDViYzQ0MWUwNTYyNDQ3NDM5NzM0ZTc4N2Y3NTU2NjA56318723_20260129171731.699.svg)
 
 ## **前提条件**
 
@@ -35,7 +35,7 @@
 
 -   **文本生成模型**
     
-    -   千问 Max：qwen3.7-max、qwen3-max
+    -   千问 Max：qwen3.8-max、qwen3.7-max、qwen3-max
         
     -   千问 Plus：qwen3.7-plus、qwen3.6-plus、qwen3.5-plus、qwen-plus、qwen-plus-latest
         
@@ -47,7 +47,7 @@
         
 -   **多模态模型**
     
-    -   [图像与视频理解](https://help.aliyun.com/zh/model-studio/vision)：qwen3.7-plus、qwen3.6-plus、qwen3.7-flash、qwen3.7-flash-2026-07-15、qwen3.6-flash、qwen3.5-plus、qwen3.5-flash、qwen3-vl-plus、qwen3-vl-flash
+    -   [图像与视频理解](https://help.aliyun.com/zh/model-studio/vision)：qwen3.8-max、qwen3.7-plus、qwen3.6-plus、qwen3.7-flash、qwen3.7-flash-2026-07-15、qwen3.6-flash、qwen3.5-plus、qwen3.5-flash、qwen3-vl-plus、qwen3-vl-flash
         
     -   [文字提取](https://help.aliyun.com/zh/model-studio/qwen-vl-ocr)：qwen-vl-ocr、qwen-vl-ocr-latest
         
@@ -58,11 +58,11 @@
 
 **重要**
 
--   在Batch 场景下，`qwen3.7-max`、`qwen3.7-plus`、`qwen3.6-plus`、`qwen3.7-flash`、`qwen3.7-flash-2026-07-15`、`qwen3.6-flash`、`qwen3.5-plus`、`qwen3.5-flash`和`qwen3.5-omni-plus`单次请求的上下文 Token 数最大支持 256K，`qwen3.5-omni-plus`不支持语音输出。
+-   在Batch 场景下，`qwen3.8-max`、`qwen3.7-max`、`qwen3.7-plus`、`qwen3.6-plus`、`qwen3.7-flash`、`qwen3.7-flash-2026-07-15`、`qwen3.6-flash`、`qwen3.5-plus`、`qwen3.5-flash`和`qwen3.5-omni-plus`单次请求的上下文 Token 数最大支持 256K，`qwen3.5-omni-plus`不支持语音输出。
     
 -   部分模型支持思考模式，开启后会产生思考`tokens`导致成本增加。
     
--   `qwen3.7`、`qwen3.6`和`qwen3.5` 系列模型默认开启思考模式。建议使用混合思考模型时，显式设置`enable_thinking`参数（`true`开启/`false`关闭）。
+-   `qwen3.8`、`qwen3.7`、`qwen3.6`和`qwen3.5` 系列模型默认开启思考模式。建议使用混合思考模型时，显式设置`enable_thinking`参数（`true`开启/`false`关闭）。
     
 -   在 JSONL 请求体中，`enable_thinking` 为 `body` 的顶层参数，须与 `model` 同级传入，不能放在 `extra_body` 中。
     

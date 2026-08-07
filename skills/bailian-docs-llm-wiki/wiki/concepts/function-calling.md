@@ -1,48 +1,51 @@
 # 函数调用
 
-函数调用（Function Calling）是百炼平台中模型主动识别用户意图、结构化生成工具调用请求，并协同外部能力完成复杂任务的核心机制。它不是简单的 API 请求转发，而是模型基于对话上下文与预设工具 Schema，自主决策“何时调用、调用哪个、传什么参数”的推理过程，最终通过标准化协议将结果注入后续推理链。
+函数调用（Function Calling）是百炼平台中模型主动识别用户意图、自主选择并执行外部工具能力的核心机制。它允许大模型在生成响应前，根据对话上下文动态决定是否调用预定义的函数（如搜索、计算、数据库查询、API 调用等），并将结果整合进最终输出，从而实现“思考→决策→行动→反馈”的闭环。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-函数调用在百炼平台中并非单一接口能力，而是贯穿多个抽象层级的横切能力，具体体现为以下四类实践模式：
+- **文本生成模型（如 `qwen3.7-plus`、`qwen3.8-max`）**：通过 `tools` 参数传入函数定义，模型在推理过程中自动判断是否需要调用、调用哪个函数及传入哪些参数；支持结构化 JSON 输出与联网搜索（二者互斥）。
+- **全模态实时模型（如 `qwen3.5-omni-realtime`）**：在 WebSocket 会话中通过 `session.update` 配置 `tools`，模型触发调用后，服务端发送 `tool_call` 事件，客户端需同步回传执行结果（`conversation.item.create`），再由模型继续生成。
+- **[OpenAI 兼容接口](openai-compatible-interface.md)（Responses API）**：作为首选 Agent 接口，原生强化函数调用体验——自动管理工具调用链、上下文延续与错误重试；支持内置工具（联网搜索、代码解释器、网页抓取）与自定义工具混合使用。
+- **多模态模型（如 `qwen3.5-omni-plus`）**：支持跨模态的函数调用，例如结合图像理解结果后调用天气 API，或解析语音转录文本后触发日程创建函数。
 
-- **DashScope 原生 API 的 `tools` + `tool_calls` 交互**：开发者在请求中显式传入 JSON Schema 定义的 `tools` 列表；模型返回 `output.choices[0].message.tool_calls` 数组（含 `function.name` 和 `function.arguments`）；客户端需解析、执行对应 HTTP 调用，并将结果以 `tool_outputs` 形式回填至下一轮请求。适用于需要完全控制工具调度逻辑的高定制场景。
-
-- **Managed Agents 的 Skill 自动路由**：Skill 作为 ZIP 包上传，其 `SKILL.md` 中的 `description` 字段被模型用于语义匹配；当用户输入（如“把 PDF 表格转成 Excel”）命中描述中的触发关键词与输入类型时，智能体自动调用该 Skill，无需显式声明工具列表。强调“零配置、语义驱动”。
-
-- **Application Call（应用调用）中的插件/工作流节点**：在智能体或工作流应用中，插件（Plugin）或 MCP 服务作为预置能力模块被绑定；模型根据对话内容自主决定是否调用（智能体模式），或由工作流引擎按编排顺序强制调用（工作流模式）。调用参数可来自模型抽取（`大模型识别`）或业务系统透传（`biz_params`）。
-
-- **MCP（Model Context Protocol）服务集成**：MCP 是标准化的工具调用协议层，支持 SSE 或 HTTP 方式接入第三方服务（如地图、图表生成）；在智能体中启用后，模型可像调用内置工具一样自然触发 MCP 服务，平台自动处理协议转换、鉴权与结果注入，开发者只需关注服务端实现。
-
-> ⚠️ 注意：`qwen-turbo` 等轻量模型**不支持函数调用**；仅 `qwen-plus`、`qwen-max` 及 VL 系列等高级模型具备此能力。OpenAI 兼容的 Chat Completions 接口**不原生支持函数调用**，需自行封装；而 DashScope 原生、Anthropic Messages、Managed Agents、Application Call 等均原生支持。
+> ⚠️ 注意：函数调用与联网搜索（`enable_search`）互斥，同一请求中不可同时启用；且仅部分模型支持该能力（详见各模型文档的能力矩阵表）。
 
 ## 关键参数和配置
 
-| 参数/配置项 | 所属场景 | 说明 | 示例 |
-|-------------|----------|------|------|
-| `tools` | DashScope / Anthropic Messages | 工具定义数组，每个元素为 JSON Schema 描述的函数元信息（`type`, `function.name`, `function.description`, `function.parameters`） | `[{"type":"function","function":{"name":"calculator","description":"计算数学表达式","parameters":{"type":"object","properties":{"expression":{"type":"string"}}}}}]` |
-| `tool_calls` | DashScope 响应字段 | 模型输出的结构化调用指令，含 `id`、`function.name`、`function.arguments` | `{"id":"call_abc123","function":{"name":"calculator","arguments":"2+3*4"}}` |
-| `tool_outputs` | 下一轮请求字段 | 客户端执行工具后，必须将结果按 `id` 映射回填，格式为 `[{ "tool_call_id": "...", "content": "..." }]` | `[{"tool_call_id":"call_abc123","content":"14"}]` |
-| `description`（`SKILL.md`） | Skill | 决定 Skill 是否被调用的核心语义描述，必须明确输入类型、操作、触发词、排除场景 | `"支持解析.xlsx文件中的销售数据，清洗空值并按月份汇总；触发词：'整理销售表'、'导出月度汇总'；不处理图片表格。"` |
-| `tool_id` | Plugin / Application Call | 插件唯一标识符，用于在应用配置或 API 中引用 | `"quark_search"`, `"code_interpreter"` |
-| `biz_params` | Application Call / Workflows | 业务系统透传的结构化参数，可被模型抽取或直接注入插件/MCP 节点 | `{"city": "杭州", "date": "2025-04-25"}` |
+- `tools`（必需）：JSON 数组，每个元素为标准 OpenAI-style 工具定义，必须包含：
+  - `type`: 固定为 `"function"`
+  - `function.name`: 字符串，函数唯一标识（建议小写字母+下划线）
+  - `function.description`: 简明功能描述（影响模型调用准确性）
+  - `function.parameters`: 符合 JSON Schema 的参数定义（支持 `string`/`number`/`boolean`/`array`/`object` 类型，`required` 字段必填）
+
+- `tool_choice`（可选）：控制调用策略：
+  - `"auto"`（默认）：模型自主决定是否及调用哪个工具
+  - `"none"`：禁用函数调用
+  - `{"type": "function", "function": {"name": "xxx"}}`：强制指定调用某函数（适用于确定性流程）
+
+- `response_format`（推荐配合使用）：设为 `{"type": "json_object"}` 可提升工具参数提取的结构化程度与稳定性。
+
+- 实时 API 中额外约束：
+  - `tools` 仅在 `session.update` 时生效，不可在单次 `input_text` 或 `input_audio` 事件中动态变更；
+  - 工具执行结果需通过 `conversation.item.create` 以 `type="function_call_output"` 形式提交，格式须严格匹配函数定义中的 `parameters` 类型。
 
 ## 面向开发者，简洁实用
 
-- ✅ **首选 DashScope 原生协议**：若需最大灵活性（如动态工具列表、自定义执行逻辑），直接使用 `/api/v1/services/aigc/text-generation/generation` 接口，传 `tools` 并处理 `tool_calls`/`tool_outputs`。
-- ✅ **快速上线选 Managed Agents**：上传 Skill ZIP 包，专注写好 `SKILL.md` 描述，平台自动完成路由与沙箱执行，免去 HTTP 封装与状态管理。
-- ✅ **复用生态用 Application Call**：已发布智能体/工作流应用，直接调用 `POST /apps/{app_id}/completion`，通过 `input` 和 `biz_params` 驱动插件或 MCP 服务。
-- ❌ **避免硬编码内部字段**：如 `payload__input__text` 等非公开字段可能变更，始终以控制台调试器生成结构或官方 API 文档为准。
-- 🔑 **权限必配**：首次使用任何函数调用能力（Skill/Plugin/MCP），必须授权服务关联角色 `AliyunServiceRoleForSFMAccessCloudAPI`，否则调用失败。
-- 📏 **[Token](token.md) 注意**：每次函数调用会增加输入 [Token](token.md)（工具描述+调用结果注入），可能导致总长度超 32768 token 限制，建议精简 `description` 和 `parameters` Schema。
+- ✅ **最佳实践**：为每个工具提供精准、无歧义的 `description` 和最小必要 `parameters` Schema；避免过度泛化的函数名（如 `"do_something"` → `"get_weather_by_city"`）。
+- ✅ **调试技巧**：开启 `stream=true` 时，观察流式响应中的 `delta.tool_calls` 字段，可实时验证模型是否正确识别调用意图。
+- ❌ **常见陷阱**：  
+  - 未在 `tools` 中声明却在 `tool_choice` 中指定函数 → 返回 400 错误；  
+  - 函数返回结果格式与 `parameters` 定义不一致 → 模型可能无法解析，导致后续生成中断；  
+  - 在不支持函数调用的模型（如 `qwen-omni-turbo-realtime`）上配置 `tools` → 参数被忽略，无报错但无效果。
+
+函数调用是构建可靠 Agent 的基石能力。请始终以「最小可行工具集 + 清晰语义契约」为设计原则，优先选用 Responses API 或支持 `tools` 的 `qwen3.*` 系列模型，并通过真实请求日志持续优化工具描述与参数 Schema。
 
 ## 关联主题页
 
-- [qwen api reference](../api/qwen-api-reference.md)
-- [managed agents api](../api/managed-agents-api.md)
-- [application call](../api/application-call.md)
-- [model context protocol](../guides/model-context-protocol.md)
-- [plug in](../guides/plug-in.md)
-- [skill](../guides/skill.md)
+- [model experience](../guides/model-experience.md)
+- [omni realtime api](../api/omni-realtime-api.md)
+- [more about models](../api/more-about-models.md)
+- [toolkits and frameworks](../api/toolkits-and-frameworks.md)
 
 

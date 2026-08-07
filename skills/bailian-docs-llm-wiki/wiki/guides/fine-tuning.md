@@ -1,73 +1,80 @@
 # fine tuning
 
-fine tuning 是百炼平台提供的核心模型优化能力，允许开发者基于自有数据对预训练大模型进行定制化训练，从而提升其在特定业务场景、领域知识或安全合规要求下的表现。该能力覆盖文本生成、多模态理解、图像生成、视频生成及强化学习等多种任务类型，支持全参训练与 LoRA 等高效微调方式，并统一通过 `fine-tunes` API 接口管理生命周期。
+fine tuning（微调）是百炼平台提供的核心模型优化能力，允许开发者基于预训练大模型，使用自有领域数据进行定制化训练，从而提升模型在特定任务、风格或安全合规等维度的表现。它不改变基础模型架构，而是通过参数增量更新（如LoRA）或全量更新方式，将业务知识、表达习惯和价值观对齐目标注入模型。微调适用于图像生成、视频生成、文本生成、语音合成及多模态理解等多种模态，支持SFT、DPO、CPT等多种训练范式。
 
 ## 支持的模型/功能
 
-百炼平台支持多种调优方式与模型类型，按任务域划分如下：
+百炼平台支持跨模态的微调能力，不同模态对应不同的模型系列与训练方式：
 
-- **文本生成**：支持 SFT（监督微调）、CPT（持续预训练）、DPO（直接偏好优化），覆盖 Qwen3 系列（如 `qwen3-8b`, `qwen3-32b`）、Qwen2.5 系列及千问-Plus-Character 等模型；其中 `efficient_sft`（LoRA）为默认推荐方式，兼顾效果与成本 [在控制台进行模型调优](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/model-training-on-console.md)。
-- **视觉理解（千问 VL）**：支持 SFT/DPO，适用于图片/视频输入场景，需注意 `freeze_vit` 参数仅在设为 `true` 时支持按 [Token](../concepts/token.md) 计费 [模型调优简介](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/model-training-overview.md)。
-- **图像生成（万相）**：仅支持 `efficient_sft` 方式，当前可用模型为 `wan2.7-image-pro` 和 `wan2.7-image`，且**仅限华北2（北京）地域** [微调图像生成模型](../../raw/model-user-guide/fine-tuning/wan-image-generation-finetune-guide.md)。
-- **视频生成（万相）**：支持 `efficient_sft`，模型包括 `wan2.7-i2v`（首帧）、`wan2.2-kf2v-flash`（首尾帧）等，同样**仅限华北2（北京）地域** [微调视频生成模型](../../raw/model-user-guide/fine-tuning/wan-video-generation-finetune-guide.md)。
-- **强化学习（RL）**：采用 GSPO 算法，支持 `qwen3.5-9b` 等 MoE/非 MoE 模型，**必须使用模型训练单元（MTU）计费，不支持按 [Token](../concepts/token.md) 计费** [强化学习训练概述](../../raw/model-user-guide/fine-tuning/rl-training-overview.md)。
+- **文本生成**：支持Qwen3系列（如`qwen3-8b`, `qwen3-32b`）、Qwen2.5系列及千问-Plus-Character等模型，涵盖SFT（监督微调）、DPO（直接偏好优化）和CPT（持续预训练）三种方式。其中高效训练（`efficient_sft`）为LoRA实现，推荐用于快速验证与成本敏感场景；全参训练适用于效果优先的生产环境 [在控制台进行模型调优](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/model-training-on-console.md)。
+  
+- **图像生成**：仅支持万相系列模型（`wan2.7-image-pro`, `wan2.7-image`），采用SFT-LoRA高效微调，适用于文生图（t2i）与图生图（i2i）两种模式，需在华北2（北京）地域使用 [微调图像生成模型](../../raw/model-user-guide/fine-tuning/wan-image-generation-finetune-guide.md)。
 
-> **注意**：文档 4 和文档 6 的表格中均列出 `Qwen3.7-Plus-2026-05-26` 支持 SFT，但文档 4 明确标注“调优后部署请联系商务经理”，而文档 6 未提此限制。实际使用前须确认该模型是否已开放部署权限，避免因权限缺失导致部署失败。
+- **视频生成**：支持`wan2.7-i2v`、`wan2.2-kf2v-flash`等万相视频模型，同样采用SFT-LoRA，分为“基于首帧”和“基于首尾帧”两类训练模式，地域限制同图像生成 [微调视频生成模型](../../raw/model-user-guide/fine-tuning/wan-video-generation-finetune-guide.md)。
+
+- **语音合成**：当前仅支持`cosyvoice-v3-flash`模型的SFT高效微调，面向同一发音人的高还原度音色定制，**不支持控制台操作，必须通过API发起** [CosyVoice模型调优](../../raw/model-user-guide/fine-tuning/fine-tune-speech-synthesis-model/fine-tune-speech-synthesis-model-by-api.md)。
+
+- **强化学习（RL）**：提供端到端的Agentic RL训练框架，支持`qwen3.5-9b`等模型，通过Rollout+Reward函数闭环优化Agent策略，但需联系商务经理开通权限，并依赖专属模型训练单元（MTU）计费 [强化学习训练概述](../../raw/model-user-guide/fine-tuning/rl-training-overview.md)。
+
+> **注意**：文档4与文档6中关于Qwen3.7-Plus-2026-05-26模型的部署说明存在矛盾——文档4称“调优后部署请联系商务经理”，而文档6未提及此限制。实际部署前请以最新控制台提示或商务确认为准。
 
 ## 关键参数
 
-不同训练方式与模型类型的关键超参存在差异，开发者应以控制台实时配置为准，以下为通用高频参数：
+微调任务的核心超参数因模型类型与训练方式而异，以下为通用性最强的必填项与典型取值：
 
-| 参数 | 类型 | 必填 | 说明 | 推荐值/约束 |
-|------|------|------|------|-------------|
-| `training_type` | string | 是 | 训练方法：`sft`/`efficient_sft`/`cpt`/`dpo_full`/`dpo_lora` | 图像/视频生成固定为 `efficient_sft` |
-| `n_epochs` 或 `max_steps` | int | 是（二选一） | 训练轮数（SFT/CPT/DPO）或总步数（万相图像/视频） | SFT：数据量 <10k 用 3–5；万相图像：≥500 步 [微调图像生成模型](../../raw/model-user-guide/fine-tuning/wan-image-generation-finetune-guide.md) |
-| `learning_rate` | float | 是 | 权重更新步长 | SFT 全参：`1e-5`；SFT LoRA：`1e-4`；万相图像：`3e-5`；万相视频：`2e-5` |
-| `batch_size` | int | 是 | 单次送入数据条数 | 文本 SFT：16/32；万相视频：`wan2.7-i2v` 用 1，`wan2.2-kf2v-flash` 用 4 [微调视频生成模型](../../raw/model-user-guide/fine-tuning/wan-video-generation-finetune-guide.md) |
-| `lora_rank` | int | 是（LoRA 场景） | 低秩矩阵维数，须为 2 的幂（16/32/64） | 万相图像：32；文本 LoRA：8–32（越大拟合越强，但易过拟合） |
-| `max_length` 或 `max_token_length` | int/string | 是 | 单条数据最大 token 长度（文本）或分辨率上限（多模态） | 文本：8192；万相文生图：`"2k"`（2048×2048） [微调图像生成模型](../../raw/model-user-guide/fine-tuning/wan-image-generation-finetune-guide.md) |
-| `eval_steps` 或 `eval_epochs` | int | 是 | 验证间隔步数/轮数 | SFT：50；万相图像：200；万相视频：20 [微调视频生成模型](../../raw/model-user-guide/fine-tuning/wan-video-generation-finetune-guide.md) |
+- `model`：基础模型ID（如`qwen3-8b`, `wan2.7-image-pro`, `cosyvoice-v3-flash`），必须与所选训练方式兼容。
+- `training_type`：训练方法，常见值包括`efficient_sft`（推荐LoRA）、`sft`（全参）、`dpo_lora`、`cpt`；语音合成固定为`efficient_sft`。
+- `hyper_parameters`：核心配置对象，关键字段如下：
+  - `learning_rate`：学习率。文本SFT推荐`1e-4`（LoRA）或`1e-5`（全参）；图像生成推荐`3e-5`；语音合成LM/FM网络分别独立设置。
+  - `n_epochs` 或 `max_steps`：训练轮次或总步数。文本SFT建议`3~5`轮（数据<10k条）；图像生成要求`≥500`步；视频生成推荐`50`轮（小数据集）或按`steps ≥ 800`换算。
+  - `batch_size`：批次大小。文本SFT常用`16`或`32`；图像生成`t2i`模式为`1`，`i2i`模式为`4`；语音合成LM/FM网络分别为`1000`/`2000`。
+  - `lora_rank`：LoRA低秩矩阵维数，影响参数量与拟合能力，取值须为2的幂（如`8`, `16`, `32`），图像生成默认`32`。
+  - `eval_steps` 或 `eval_epochs`：验证间隔，用于监控收敛性，文本SFT推荐`50`步，图像生成推荐`200`步。
+  - `split`：训练集自动划分比例（如`0.9`表示90%训练/10%验证），当未指定`validation_datasets`时生效。
 
-> **注意**：`max_pixels`（万相）与 `max_length`（文本）语义不同，前者控制图像缩放像素上限（如 `"2k"`=1024×1024），后者控制文本序列长度。混用将导致训练失败。
+其他参数（如`max_length`, `lr_scheduler_type`, `weight_decay`）需根据具体模型在控制台查看默认值，文档7明确指出“**并非所有模型都支持所有参数的调节，请以控制台显示为准**”。
 
 ## 使用方式
 
-全流程分为四步：上传数据 → 创建任务 → 查询状态 → 部署调用。
+微调流程统一为三阶段：**数据准备 → 任务提交 → 部署调用**，支持API与控制台双路径（语音合成除外）：
 
-1. **上传数据集**  
-   - 文本：JSONL 格式，遵循 ChatML 多轮结构（`messages` 数组含 `system`/`user`/`assistant` 角色），单文件 ≤200 MB [调优数据上传规则](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/text-generation-tuning-data-upload-rules.md)。  
-   - 多模态（图像/视频）：ZIP 包含 `data.jsonl` + 原始媒体文件，`data.jsonl` 中 `content` 字段引用图片名（如 `{"image": "a.jpg"}`），单图宽高 ≤1024 px [调优数据上传规则](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/text-generation-tuning-data-upload-rules.md)。  
-   - 调用 `/api/v1/files` 接口上传，获取 `file_id`。
+1. **数据准备**：
+   - 文本SFT/DPO/CPT：使用JSONL格式，遵循ChatML messages结构，单文件≤200MB [调优数据上传规则](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/text-generation-tuning-data-upload-rules.md)。
+   - 图像/视频SFT：打包为ZIP，内含`data.jsonl`与图片/视频文件，`data.jsonl`中`content`字段需包含`image`或`video`引用。
+   - 语音合成：ZIP内含`user_data/data.jsonl`（指定`wav_fn`与`text`）及`train/`目录下的WAV音频（采样率≥16kHz，单条1–30秒）。
 
-2. **创建微调任务**  
-   - 构造 POST `/api/v1/fine-tunes` 请求体，指定 `model`、`training_datasets`（含 `file_id`）、`training_type` 及 `hyper_parameters`。  
-   - 支持 OSS 挂载（`data_source_type: oss_mount`），需提前授权百炼访问 Bucket [使用 API 或命令行进行模型调优](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/fine-tuning-api-guide.md)。
+2. **任务提交**：
+   - 先调用`POST /api/v1/files`上传数据，获取`file_id`。
+   - 再调用`POST /api/v1/fine-tunes`创建任务，传入`model`、`training_file_ids`（或`training_datasets`）、`training_type`及`hyper_parameters`。
+   - 控制台用户可在[模型调优](https://bailian.console.aliyun.com/?tab=model#/efm/model_manager)页面图形化配置，支持OSS挂载与混合训练。
 
-3. **查询任务状态**  
-   - 轮询 `/api/v1/fine-tunes/{job_id}`，直至 `output.status == "SUCCEEDED"`。  
-   - 图像/视频微调耗时较长（万相图像 2K/300 步约 77 分钟；万相视频需数小时），需耐心等待 [微调图像生成模型](../../raw/model-user-guide/fine-tuning/wan-image-generation-finetune-guide.md)。
-
-4. **部署与调用**  
-   - 成功后，用 `finetuned_output` 名称调用 `/api/v1/deployments` 部署为在线服务（`plan: "lora"`）。  
-   - 部署状态变为 `RUNNING` 后，通过对应 AIGC 接口调用（如图像生成用 `/services/aigc/image-generation/generation`），注意万相模型**仅支持异步调用** [微调图像生成模型](../../raw/model-user-guide/fine-tuning/wan-image-generation-finetune-guide.md)。
+3. **部署调用**：
+   - 任务状态变为`SUCCEEDED`后，调用`POST /api/v1/deployments`部署模型，指定`model_name`（即`finetuned_output`）与`plan`（如`lora`）。
+   - 部署成功（`status: RUNNING`）后，即可用新模型ID调用推理API，图像/视频[模型部署](../concepts/model-deployment.md)时需额外配置`aigc_config`中的`lora_prompt_default`以固化特效提示词。
 
 ## 限制和注意事项
 
-- **地域与权限**：图像/视频生成微调**仅限华北2（北京）地域**，且需为子账号授予模型调用、训练、部署权限 [微调图像生成模型](../../raw/model-user-guide/fine-tuning/wan-image-generation-finetune-guide.md)。RL 训练强制要求 MTU 计费，不支持 [Token](../concepts/token.md) 计费 [强化学习训练概述](../../raw/model-user-guide/fine-tuning/rl-training-overview.md)。
-- **文件限制**：单个上传文件 ≤300 MB（API）；ZIP 包内单图 ≤10 MB、宽高 ≤1024 px；视频文件 ≤2 GB（URL 传入） [调优数据上传规则](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/text-generation-tuning-data-upload-rules.md)。
-- **数据格式**：SFT 文本必须为 JSONL，每行一个 `messages` 对象；多模态 ZIP 包中 `data.jsonl` 必须位于根目录，图片路径需与 ZIP 内实际文件名一致 [调优数据上传规则](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/text-generation-tuning-data-upload-rules.md)。
-- **训练失败排查**：若 `Training Loss` 下降而 `Validation Loss` 上升，表明过拟合，建议减少 `n_epochs`、增大 `weight_decay` 或启用数据增强；若两者均不下降，检查数据质量或增大 `learning_rate` [在控制台进行模型调优](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/model-training-on-console.md)。
-- **计费说明**：按训练消耗 Token 总数计费（`Token 总数 × 循环次数 × 单价`），单价依模型而异（如 `qwen3-8b` 为 ¥0.006/千 Token）；RL 训练按 MTU 实例小时计费 [模型调优简介](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/model-training-overview.md)。
+- **地域与权限**：绝大多数微调功能（图像、视频、文本SFT/DPO/CPT）**仅限华北2（北京）地域**，且需使用该地域的API Key；子账号需被授予模型调用、训练、部署的RAM权限。
+- **计费模式**：文本/图像/视频微调默认按[Token](../concepts/token.md)用量计费；强化学习（RL）**强制使用模型训练单元（MTU）计费，不支持[Token](../concepts/token.md)计费**；语音合成训练按[Token](../concepts/token.md)计费（0.2元/千Token），部署按模型单元时长计费。
+- **数据与模型约束**：
+  - 图像训练：单张图片宽高均≤1024px，单张≤10MB；视频训练：首帧/首尾帧分辨率需匹配模型要求（如`wan2.7-i2v`推荐`1k`）。
+  - CosyVoice调优：**严格限定同一发音人**，混合多发音人会导致音色还原度下降；训练语种不可超出基础模型支持范围。
+  - RL训练：需完成阿里云OpenTelemetry、函数计算（FC）、日志服务（SLS）三项服务授权，且依赖离线SDK包（`.whl`）部署Rollout/Reward函数。
+- **工程实践建议**：
+  - 避免过拟合：若训练损失持续下降而验证损失上升，应减少`n_epochs`、增大`weight_decay`或启用数据增强。
+  - 参数调试：文档7强调“**请前往控制台选择相同的模型和训练方式查看实际默认值**”，切勿直接套用文档示例值。
+  - 安全合规：SFT是强化模型安全底线的有效手段，但需配合高质量、覆盖多风险维度的训练数据 [0 代码强化大模型安全合规能力](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/enhance-the-security-compliance-of-large-models.md)。
 
 ## 来源文档
 
 - [微调图像生成模型](../../raw/model-user-guide/fine-tuning/wan-image-generation-finetune-guide.md)
-- [微调视频生成模型](../../raw/model-user-guide/fine-tuning/wan-video-generation-finetune-guide.md)
 - [强化学习训练概述](../../raw/model-user-guide/fine-tuning/rl-training-overview.md)
+- [微调视频生成模型](../../raw/model-user-guide/fine-tuning/wan-video-generation-finetune-guide.md)
 - [模型调优简介](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/model-training-overview.md)
 - [调优数据上传规则](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/text-generation-tuning-data-upload-rules.md)
 - [使用 API 或命令行进行模型调优](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/fine-tuning-api-guide.md)
 - [在控制台进行模型调优](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/model-training-on-console.md)
 - [0 代码强化大模型安全合规能力](../../raw/model-user-guide/fine-tuning/fine-tune-text-generation-model/enhance-the-security-compliance-of-large-models.md)
+- [CosyVoice模型调优](../../raw/model-user-guide/fine-tuning/fine-tune-speech-synthesis-model/fine-tune-speech-synthesis-model-by-api.md)
 
 

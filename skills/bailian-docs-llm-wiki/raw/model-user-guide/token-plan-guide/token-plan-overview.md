@@ -8,7 +8,7 @@ Token Plan 目前仅支持**华北2（北京）**地域，请在[百炼控制台
 
 ## **产品简介**
 
-Token Plan 采用 Credits 统一抵扣机制，一份订阅即可在 Claude Code、Cursor、Qwen Code、Qoder、Qoder CN、OpenClaw 等主流 AI 编程和智能体工具中使用。支持文本生成、图像生成、视频生成、实时语音对话等多种模型，以及联网搜索、代码解释器等 Harness 工具。
+Token Plan 采用 Credits 统一抵扣机制，一份订阅即可在 Claude Code、Cursor、Qwen Code、Qoder、Qoder CN、OpenClaw 等主流 AI 编程和智能体工具中使用。支持文本生成、图像生成、视频生成、语音识别、实时语音对话等多种模型，以及联网搜索、代码解释器等 Harness 工具。
 
 -   **个人版**：面向个人开发者，提供 Lite、Standard、Pro 三档套餐，设有 5 小时和 7 天的 Credits 限额，档位越高额度越大。
     
@@ -39,13 +39,16 @@ Token Plan 采用 Credits 统一抵扣机制，一份订阅即可在 Claude Code
 100 元/个/月  
 20,000 Credits/个  
 
-**5 小时限额**
+**每 5 小时限额**
 
-700 Credits
+700 Credits  
+限时 **无限制**  
 
-3,000 Credits
+3,000 Credits  
+限时 **无限制**  
 
-12,000 Credits
+12,000 Credits  
+限时 **无限制**  
 
 无限制
 
@@ -77,7 +80,7 @@ Token Plan 采用 Credits 统一抵扣机制，一份订阅即可在 Claude Code
 
 **模型**
 
-支持文本生成、图像生成、视频生成、实时语音对话等多种模型（[查看完整列表](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview#tpp01-models)）
+支持文本生成、图像生成、视频生成、语音识别、实时语音对话等多种模型（[查看完整列表](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview#tpp01-models)）
 
 **Harness 工具**
 
@@ -125,7 +128,7 @@ Token Plan 采用 Credits 统一抵扣机制，一份订阅即可在 Claude Code
 
 **模型**
 
-支持文本生成、图像生成、视频生成、实时语音对话等多种模型（[查看完整列表](https://help.aliyun.com/zh/model-studio/token-plan-team-overview#tpt01-models)）
+支持文本生成、图像生成、视频生成、语音识别、实时语音对话等多种模型（[查看完整列表](https://help.aliyun.com/zh/model-studio/token-plan-team-overview#tpt01-models)）
 
 **Harness 工具**
 
@@ -139,14 +142,14 @@ Token Plan 采用 Credits 统一抵扣机制，一份订阅即可在 Claude Code
 
 ### **个人版**
 
-个人版采用 5 小时和 7 天两层固定窗口限额，限额单位为 Credits：
+个人版采用 5 小时滚动窗口和 7 天固定窗口双重限额，限额单位为 Credits：
 
--   **5 小时限额**：自首次调用起开启 5 小时计时窗口，窗口期内累计消耗达到限额后暂停服务，需等待满 5 小时后额度重置。
+-   **5 小时限额**：自首次调用起开启 5 小时滚动窗口，窗口期内累计消耗达到限额后暂停服务，5 小时窗口结束后额度重置。**该限额当前限时取消，暂不限制。**
     
 -   **7 天限额**：自首次调用起开启 7 天计时窗口，窗口期内累计消耗达到限额后暂停服务，需等待满 7 天后额度重置。
     
 
-任一层限额触顶即暂停服务，可购买用量包补充额度继续使用，或等待对应窗口周期结束后额度重置。窗口期内未用完的额度不结转至下一周期。
+限额触顶即暂停服务，可购买用量包补充额度继续使用，或等待窗口周期结束后额度重置。窗口期内未用完的额度不结转至下一周期。
 
 ### **团队版**
 
