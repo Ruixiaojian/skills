@@ -2142,6 +2142,14 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请[删除](https://help.aliyun.com/zh/model-studio/qwen-tts-voice-cloning#c2e73bd5335sz)一部分音色。
 
+## **429-**Throttling.Concurrency
+
+### **Too many concurrent requests.**
+
+**原因：** 当前并发请求数超出平台动态分配的上限。
+
+**解决方案：** 等待片刻后重试即可。平台会根据整体资源负载动态调整并发上限，高峰时段可能触发此限制。如需提升 TPM 额度，可在百炼控制台的[**限流提额**](https://help.aliyun.com/zh/model-studio/rate-limit#h2-title-temp-limit-raise)页面申请临时限流额度提升。
+
 ## **429-CommodityNotPurchased**
 
 ### **Commodity has not purchased yet.**

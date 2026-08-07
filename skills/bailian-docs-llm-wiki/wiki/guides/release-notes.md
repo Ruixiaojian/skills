@@ -1,38 +1,38 @@
 # release notes
 
-百炼平台的 Release Notes 汇总了模型生命周期管理（上架/下线）、平台功能迭代及关键能力变更。本文面向开发者，聚焦可操作信息：当前支持的核心模型与替代关系、关键参数约束、调用方式更新、以及必须规避的限制项。所有模型状态与功能时效性均以官方公告为准，建议通过 [模型下线机制说明](../../raw/model-user-guide/release-notes/model-depreciation.md) 和 [模型上架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md) 实时校验。
+本页面汇总百炼平台近期模型上架、功能更新与下线机制等关键变更，面向开发者提供可操作的版本演进概览。所有信息均来自官方发布文档，重点关注模型能力边界、调用方式变化及生命周期管理策略，不包含营销性描述。
 
 ## 支持的模型/功能
 
-- **新增主力模型（2026年7月起）**：`qwen3.8-max`（2.4T MoE，原生VL）、`qwen3.7-flash`（[多模态](../concepts/multimodal.md)Agent强化）、`qwen-image-3.0`（4.5k token输入，10px小字渲染）、`qwen-audio-3.0-asr-flash-streaming`（支持30语种+方言+古诗词优化）、`kimi/kimi-k3`（2.8T，1M上下文）、`glm-5.2-fast-preview`（TPS提升1.5–2倍）。详见 [模型上架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)。
-- **主流替代路径**：千问Max系列已全面迁移至 `qwen3.7-max` 及 `qwen3.8-max`；千问VL系列主推 `qwen3-vl-plus` 和 `qwen3.6-flash`；语音合成统一升级至 `cosyvoice-v3.5-plus` 或 `qwen-audio-3.0-tts-plus/flash`；图像生成推荐 `qwen-image-3.0` 或 `wan3.0-video`。
-- **功能模块扩展**：2026年6月起支持知识库RAG联合检索与问答服务、智能体托管运行时API、Skill能力包、数据连接（MySQL/OSS/语雀）、[多模态](../concepts/multimodal.md)翻译API、模型压缩（量化部署）、强化学习训练（RL，邀约制）；2026年7月上线记忆库商业化、Managed Agent商业化及企业知识库（旧）下线。
+- **新上架模型**：涵盖多模态生成与理解全栈能力。视频生成类新增 `wan3.0-video`（All-in-One 参考视频生成，最长30秒）、`vidu/viduq3-pro-fast_img2video`（16秒时长扩展）及 `pixverse/pixverse-lipsync`（精准对口型）；图片生成类包括 `qwen-image-3.0`（4.5k token输入、10px小字渲染）与 `qwen-image-3.0-pro`（强调“好用”生产力属性）；文本与视觉理解旗舰模型 `qwen3.8-max`（2.4万亿参数MoE架构）和 `kimi/kimi-k3`（2.8万亿参数、100万token上下文）已上线；语音方向新增 `qwen-audio-3.0-asr-flash-streaming`（实时方言识别）、`qwen-audio-3.0-tts-plus`（高音质表现力）与 `qwen-audio-3.0-realtime-plus`（低延迟双工对话）。完整列表详见 [模型上架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)。
+- **平台功能更新**：2026年7月起，新增智能体托管运行时 API（[了解详情](https://help.aliyun.com/zh/model-studio/managed-agents-api-overview)）、知识检索与问答服务（支持多知识库联合检索）、Responses API 异步调用模式（`background=true`）、模型导入国际站支持（OSS LoRA 导入）及 Spring AI Alibaba 集成文档。6月起支持 PTU 长输入与前缀缓存、新增地域（美/德/日）部署范围、Coding Plan 联网搜索 MCP 升级为 Streamable HTTP 协议。详见 [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)。
+- **下线模型机制**：快照模型（含日期标识）提前30天下线通知，主线模型提前3个月通知。自通知发布日起逐步限流（QPM/TPM缩减），正式下线后停止推理服务，且不再支持新调优与部署（已部署模型不受影响）。下线清单覆盖图像生成（如 `aitryon` 系列）、视频生成（如 `wan2.7-r2v`）、语音合成（如 `qwen-tts`）及大量历史快照模型（如 `qwen3-max-2026-01-23`）。具体规则与列表见 [模型下线机制说明](../../raw/model-user-guide/release-notes/model-depreciation.md)。
 
-> **注意**：文档2中 `qwen3.6-`（末尾截断）为明显录入错误，实际应为 `qwen3.6-plus` 或 `qwen3.6-max`，请以控制台模型列表或 [模型上架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md) 中完整ID为准。
+> **注意**：文档1中 `qwen-image-3.0` 与 `qwen-image-3.0-pro` 的功能描述高度重合（均提及4.5k token输入、10px小字渲染等），但未明确二者定位差异；文档3将 `qwen-image-2.0` 列为 `aitryon` 等下线模型的替代项，而文档1未提及其与 `qwen-image-3.0` 系列的关系。开发者需以控制台实际可用模型为准，并通过 [模型观测](https://bailian.console.aliyun.com/#/model-telemetry) 验证业务效果。
 
 ## 关键参数
 
-- **上下文长度**：`qwen3.7-max`/`qwen3.8-max`/`kimi-k3`/`glm-5.2` 等旗舰模型支持 **1M token**；`qwen3.7-flash`/`qwen-audio-3.0-asr-flash` 等Flash系列侧重低延迟，上下文通常为128K–512K。
-- **限流策略**：主线模型下线前3个月、快照模型下线前30天启动QPM/TPM逐步缩减；具体默认限流值见 [默认限流](https://help.aliyun.com/zh/model-studio/rate-limit)，扩容申请用户将先恢复至该基准再缩减。
-- **地域与部署**：新增美国、德国、日本地域（2026年6月12日）；模型部署支持按模型单元（MU）时长计费（2026年1月23日），PTU部署支持长输入与前缀缓存（2026年6月15日）。
+- **上下文长度**：`kimi/kimi-k3`、`glm-5.2`、`xiaomi/mimo-v2.5-pro` 等支持 100 万 token；`qwen3.8-max` 采用 MoE 架构，参数规模达 2.4 万亿；`qwen3.7-text-embedding` 支持 256~2560 维用户自定义向量维度。
+- **性能指标**：`qwen-audio-3.0-tts-flash` 首包延时 ≤200ms；`qwen-audio-3.0-realtime-flash` 实现“极致响应速度”；`glm-5.2-fast-preview` 输出 TPS 较标准版提升 1.5~2 倍；`kimi/kimi-k2.7-code-highspeed` 编程场景输出速度约 180 [Token](../concepts/token.md)/s（中位数输入）。
+- **多模态能力**：`qwen3.8-max`、`qwen3.7-plus`、`kimi/kimi-k3` 均原生支持视觉理解；`qwen3.5-ocr` 在业务卡证关键信息提取上效果显著提升；`pixverse/pixverse-motioncontrol` 支持从参考视频提取动作并迁移至目标人物图片。
 
 ## 使用方式
 
-- **API调用**：文本生成API已聚合OpenAI Responses与Anthropic Messages接口（2026年5月15日）；Responses API支持异步调用（`background=true`，2026年6月1日）；异步任务可通过事件总线HTTP回调或RocketMQ推送完成事件（2026年4月23日）。
-- **SDK与客户端**：[多模态](../concepts/multimodal.md)交互开发套件提供Linux C++、Android/iOS Lite、RTOS C SDK（2026年2–4月）；新增Codex终端AI编程助手接入（2026年6月24日）；Spring AI Alibaba调用百炼应用文档已上线（2026年6月1日）。
-- **模型调优与部署**：支持视觉理解（VL）、视频生成（Wan/Wanx）、图像生成模型的定制训练（2026年1–5月）；DPO偏好训练覆盖千问2.5/3全量尺寸（2025年9月）；模型导入功能国际站上线，支持OSS导入LoRA（2026年6月5日）。
+- **模型调用**：通过 DashScope API 调用，支持 OpenAI Responses / Anthropic Messages 兼容接口（[API 入口聚合说明](https://help.aliyun.com/zh/model-studio/qwen-api-reference/)）；[异步任务](../concepts/asynchronous-task.md)可通过 `background=true` 提交并轮询结果，或配置事件总线 HTTP 回调/RocketMQ 主动推送。
+- **[模型部署](../concepts/model-deployment.md)与调优**：支持预置模型 API 部署（如 `qwen-flash`/`qwen-plus`），计费模式含按模型单元（MU）时长；模型调优覆盖文本、视觉理解（VL）、图像生成（Wan/Wanx）、视频生成（万相系列）四类，支持 SFT（全参/LoRA）、DPO 偏好训练及强化学习（RL，邀约制）。
+- **配套能力集成**：知识库 RAG 支持多知识库联合检索与混合排序；数据连接模块接入 MySQL/语雀/OSS；Skill 能力包支持添加官方或自定义技能；通义多模态翻译 API 覆盖文本/图片/文档/网页翻译。
 
 ## 限制和注意事项
 
-- **模型下线影响**：自正式下线日起，模型推理服务立即终止；新调优与部署操作不可用（已训练/部署模型不受影响）；控制台功能与文档同步下线。快照模型（如 `qwen-max-2025-01-25`）与主线模型（如 `qwen3-max`）下线通知周期不同，需分别关注 [模型下线机制说明](../../raw/model-user-guide/release-notes/model-depreciation.md)。
-- **兼容性风险**：`qwen-turbo` 资源包已启动退市（2026年6月28日），且 `qwen-turbo` 系列模型本身将于2026年10月10日下线，务必切换至 `qwen3.7/3.8` 系列。
-- **功能弃用**：企业知识库（旧）已于2026年7月16日下线；`gte-rerank` 模型已于2026年5月30日下线，替代模型为 `qwen3-rerank`；`qwen-audio-asr` 等千问Audio旧版模型于2026年3月30日下线，需迁移到 `qwen3-asr-flash` 系列。
-- **地域限制**：部分新模型（如 `wan3.0-video`）仅上架北京、新加坡地域；`qwen-audio-3.0-tts-plus/flash` 等音频模型暂未在全部地域开放，调用前需确认目标Region支持情况。
+- **模型生命周期**：所有下线模型（如 `qwen-turbo`、`qwen-vl-max`、`qwen-audio-asr` 等）自正式下线日起不可用于新推理请求，且无法发起新调优/部署任务。已部署模型可继续运行，但建议尽快迁移至替代模型（如 `qwen3.7-plus` 或 `qwen3.6-flash`）。
+- **地域与权限**：新增美国、德国、日本地域部署，但部分功能（如 Managed Agent 商业化、记忆库 Memory 2.0）可能受限于账号类型或地域；API Key 加密存储与业务空间专属推理域名已升级，需检查客户端配置兼容性。
+- **兼容性风险**：`qwen3.7-plus` 在文档1中被列为多个下线模型（如 `qwen-vl-ocr`、`qwen3-vl-flash`）的替代项，但其自身在文档3中亦被标记为“2026年10月10日将下线”，存在版本迭代冲突。开发者应避免依赖即将下线的替代模型，优先选用 `qwen3.8-max` 或 `qwen3.7-max` 等最新主线模型。
+- **资源约束**：免费额度用完即停功能已启用；部分老旧模型（如 `qwen-turbo` 资源包）已启动退市流程；企业知识库（旧）已于2026年7月16日下线，需迁移至新版知识库服务。
 
 ## 来源文档
 
-- [模型下线机制说明](../../raw/model-user-guide/release-notes/model-depreciation.md)
 - [模型上架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)
 - [模型平台功能更新](../../raw/model-user-guide/release-notes/model-release-notes.md)
+- [模型下线机制说明](../../raw/model-user-guide/release-notes/model-depreciation.md)
 
 

@@ -1,36 +1,43 @@
 # model production
 
-`model production` 是百炼平台中用于将模型投入实际应用的核心能力集合，涵盖从微调训练到在线服务部署的完整生命周期。开发者可通过 API 或控制台完成模型定制与发布，适用于业务场景适配与规模化推理需求。该能力依赖于底层模型服务基础设施，需配合对应权限与资源配额使用。
+model production 是百炼平台中用于将基础模型转化为可交付、可服务的定制化模型的一整套能力，涵盖微调训练与在线部署两个核心阶段。开发者可通过 API 或控制台完成端到端模型生命周期管理。该能力依赖于 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 和 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 两组独立但协同的接口。
 
 ## 支持的模型/功能
 
-- **微调训练（Fine-tuning）**：支持对百炼托管的基础大模型（如 Qwen 系列）进行监督微调，适配垂直领域任务；训练数据需为 JSONL 格式，支持 LoRA 等轻量适配方法。  
-- **模型部署（Deployment）**：支持将微调完成的模型或通过 [模型导入](../../raw/model-api-reference/model-production/import-models-api.md) 接入的第三方模型，发布为 HTTP 可调用的在线推理服务。  
-- **版本管理与灰度发布**：每个部署可维护多版本，支持按流量比例灰度切流，详见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 文档。
+- **支持的模型类型**：仅限百炼平台官方托管的基础模型（如 Qwen 系列、Baichuan 系列），不支持用户自定义架构或本地 PyTorch 模型直接上传。
+- **核心功能**：
+  - 微调训练（Fine-tuning）：支持监督微调（SFT）、指令微调，输入为 JSONL 格式标注数据；
+  - [模型部署](../concepts/model-deployment.md)：将微调完成的模型（或通过 `import_model` 导入的兼容格式模型）发布为 HTTP 推理服务；
+  - 版本管理：每个微调任务生成唯一 `fine_tuning_job_id`，部署时需显式指定该 ID 或对应产出模型 ID。
+
+> **注意**：文档中未明确说明是否支持 LoRA 微调权重的独立部署；实际使用中，[模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 接口要求传入完整模型 ID（即微调后已合并权重的模型），不接受仅传 LoRA adapter 的配置 —— 此行为与部分开源框架实践不同，请以 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 中 `merge_weights: true` 默认策略为准。
 
 ## 关键参数
 
-| 参数 | 说明 | 示例值 |
-|------|------|--------|
-| `model_id` | 微调任务或部署所引用的模型唯一标识（如 `qwen2-7b-chat-hf` 或微调生成的 `ft-xxx`） | `ft-abc123` |
-| `instance_type` | 部署实例规格，影响并发与延迟；必须与模型显存需求匹配 | `gpu-a10-2x` |
-| `max_concurrency` | 单实例最大并发请求数，超限触发排队或拒绝 | `10` |
-| `training_type`（仅微调） | 指定微调方式，当前仅支持 `lora` | `lora` |
-
-> **注意**：文档 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 中提及“支持全参数微调”，但实际 API 已下线该能力，仅保留 LoRA；请以 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 中的 `instance_type` 兼容性列表为准，避免因规格不匹配导致部署失败。
+| 参数 | 说明 | 必填 | 示例 |
+|------|------|------|------|
+| `model` | 基础模型标识符（如 `qwen2-7b-chat`） | ✅ | `"qwen2-7b-chat"` |
+| `training_file` | 微调数据集文件 ID（由 `/files` 上传后获得） | ✅（微调时） | `"file-abc123"` |
+| `n_epochs` | 训练轮数，默认 3 | ❌ | `5` |
+| `deployment_name` | 部署服务名称（全局唯一，长度 3–32 字符） | ✅（部署时） | `"my-ft-qwen"` |
+| `model_id` | 待部署模型 ID（来自微调任务 `fine_tuned_model_id` 或导入模型 ID） | ✅（部署时） | `"ft-qwen2-7b-xyz789"` |
 
 ## 使用方式
 
-1. **微调流程**：提交训练数据 → 调用 `/fine_tuning_jobs` 创建任务 → 监听 `status=completed` → 获取输出模型 ID  
-2. **部署流程**：调用 `/deployments` 创建部署 → 指定 `model_id` 和 `instance_type` → 等待 `status=ready` → 使用返回的 `endpoint_url` 发起推理请求  
-3. 所有操作均需携带 `Authorization: Bearer <token>`，且 `project_id` 必须在请求头中显式声明。
+1. **微调启动**：调用 `POST /v1/fine_tuning/jobs`，传入 `model` 和 `training_file` 等参数，获取 `fine_tuning_job_id`；
+2. **轮询状态**：通过 `GET /v1/fine_tuning/jobs/{job_id}` 查询 `status`，待变为 `succeeded` 后提取 `fine_tuned_model_id`；
+3. **部署服务**：调用 `POST /v1/deployments`，传入 `deployment_name` 和上一步所得 `model_id`；
+4. **调用推理**：使用 `POST /v1/chat/completions`，`model` 参数填写部署名称（如 `"my-ft-qwen"`）。
+
+完整流程示例见 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 与 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 文档中的 curl 示例。
 
 ## 限制和注意事项
 
-- 微调任务最长运行时间为 72 小时，超时自动终止；训练数据大小上限为 500 MB。  
-- 单个部署默认最多 5 个活跃版本；历史版本保留 30 天后自动清理。  
-- 部署实例启动后不可变更 `instance_type`，如需升级需重建部署；详情见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)。  
-- 微调输出模型仅可在同一项目内直接部署，跨项目使用需先执行模型导出与导入操作。
+- 单次微调任务最大训练数据量：2 GB（JSONL 行数建议 ≤ 50 万）；
+- 每个账号最多同时运行 3 个微调任务；
+- 部署服务默认 SLA 为 99.5%，但冷启动延迟（首次请求）可能达 30–60 秒，建议预热；
+- 微调任务失败后，其关联临时模型不会自动清理，需手动调用 `DELETE /v1/models/{model_id}` 清理；
+- > **注意**：[模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 文档中提及“支持 GPU 类型选择”，但当前 API 实际不接受 `gpu_type` 参数 —— 该字段已废弃，资源规格由 `model_id` 对应模型自动匹配，无需指定。
 
 ## 来源文档
 

@@ -62,20 +62,22 @@
 
 ## 横切概念
 
-- [OpenAI 兼容接口](concepts/openai-compatible-api.md) — 关联 6 个主题
-- [Token](concepts/token.md) — 关联 6 个主题
-- [函数调用](concepts/function-calling.md) — 关联 3 个主题
-- [多模态](concepts/multimodal.md) — 关联 7 个主题
-- [检索增强生成](concepts/rag.md) — 关联 7 个主题
-- [模型上下文协议](concepts/mcp.md) — 关联 4 个主题
+- [OpenAI 兼容接口](concepts/openai-compatible-interface.md) — 关联 5 个主题
+- [Token](concepts/token.md) — 关联 5 个主题
+- [函数调用](concepts/function-calling.md) — 关联 4 个主题
+- [异步任务](concepts/asynchronous-task.md) — 关联 5 个主题
+- [提示工程](concepts/prompt-engineering.md) — 关联 5 个主题
+- [检索增强生成](concepts/rag.md) — 关联 6 个主题
+- [模型上下文协议（MCP）](concepts/mcp.md) — 关联 4 个主题
+- [模型部署](concepts/model-deployment.md) — 关联 5 个主题
 - [流式输出](concepts/streaming-output.md) — 关联 5 个主题
 - [长期记忆](concepts/long-term-memory.md) — 关联 4 个主题
 
 ## 对比分析
 
-- [多模态生成能力对比：图像生成、视频生成与3D生成](comparisons/generation-modalities-comparison.md) — 对比 3 个主题
-- [实时 API 方案对比：Omni Realtime API vs Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
-- [应用编排方案对比：Managed Agents vs Application Component API](comparisons/application-orchestration-comparison.md) — 对比 2 个主题
-- [模型部署方式对比：Model Production vs Model Deployment 1](comparisons/model-deployment-options.md) — 对比 2 个主题
-- [知识能力方案对比：Knowledge API vs Knowledge Base](comparisons/knowledge-solutions-comparison.md) — 对比 2 个主题
+- [图像、视频与3D生成能力对比](comparisons/image-video-3d-generation.md) — 对比 3 个主题
+- [实时API方案对比：Omni Realtime API vs Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
+- [模型部署方式对比：高并发推理、模型部署1与模型生产](comparisons/model-deployment-options.md) — 对比 3 个主题
+- [知识库（指南）与知识API（功能）对比](comparisons/knowledge-base-vs-knowledge-api.md) — 对比 2 个主题
+- [长期记忆与记忆库方案对比](comparisons/memory-solutions.md) — 对比 2 个主题
 

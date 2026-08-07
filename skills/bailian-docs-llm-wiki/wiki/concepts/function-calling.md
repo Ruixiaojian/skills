@@ -1,45 +1,51 @@
 # 函数调用
 
-函数调用（Function Calling）是百炼平台支持的一种关键能力，允许大模型在推理过程中动态识别用户意图，并按预定义 Schema 生成结构化工具调用请求（而非直接生成自然语言回复），从而实现与外部系统（如数据库、API、计算器、搜索服务等）的安全、可控交互。该能力是构建智能体（Agent）、自动化工作流和多步骤任务系统的基础设施。
+函数调用（Function Calling）是百炼平台中模型主动识别用户意图、自主选择并执行外部工具能力的核心机制。它允许大模型在生成响应前，根据对话上下文动态决定是否调用预定义的函数（如搜索、计算、数据库查询、API 调用等），并将结果整合进最终输出，从而实现“思考→决策→行动→反馈”的闭环。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-函数调用在百炼平台中并非独立服务，而是**内嵌于特定模型的推理能力中**，需配合支持该能力的模型及正确配置方可启用：
+- **文本生成模型（如 `qwen3.7-plus`、`qwen3.8-max`）**：通过 `tools` 参数传入函数定义，模型在推理过程中自动判断是否需要调用、调用哪个函数及传入哪些参数；支持结构化 JSON 输出与联网搜索（二者互斥）。
+- **全模态实时模型（如 `qwen3.5-omni-realtime`）**：在 WebSocket 会话中通过 `session.update` 配置 `tools`，模型触发调用后，服务端发送 `tool_call` 事件，客户端需同步回传执行结果（`conversation.item.create`），再由模型继续生成。
+- **[OpenAI 兼容接口](openai-compatible-interface.md)（Responses API）**：作为首选 Agent 接口，原生强化函数调用体验——自动管理工具调用链、上下文延续与错误重试；支持内置工具（联网搜索、代码解释器、网页抓取）与自定义工具混合使用。
+- **多模态模型（如 `qwen3.5-omni-plus`）**：支持跨模态的函数调用，例如结合图像理解结果后调用天气 API，或解析语音转录文本后触发日程创建函数。
 
-- **意图理解与工具调度**：`tongyi-intent-detect-v3` 是专为函数调用设计的轻量级模型，适用于快速识别用户指令中的工具调用意图（如“查北京天气”“订明天会议室”），并直接输出符合 OpenAI 工具 Schema 的 `tool_calls` 数组，常用于前端意图解析或 Agent 的第一层路由。
-  
-- **通用大模型增强交互**：`qwen3.7-plus`、`qwen3.7-max-2026-06-08`、`qwen3.5-omni-plus` 等主力文本/全模态模型原生支持函数调用。开发者通过 `tools` 参数传入工具定义后，模型可在单次响应中返回 `tool_calls`（含 `function.name` 和 `function.arguments`），后续由业务逻辑解析并执行真实调用，再将结果以 `tool_message` 形式回填继续对话。
-
-- **端到端语音智能体**：`qwen-audio-3.0-realtime-plus`（S2S 模型）在语音对话流中支持 `enable_function_calling: true`，可实时触发工具调用（如查询日程、控制IoT设备），实现“听—思—调—说”闭环。
-
-> ⚠️ 注意：函数调用能力**不依赖异步任务机制**，所有支持模型均通过同步接口（如 `/api/v1/services/aigc/text-generation/generation` 或 OpenAI 兼容 `/v1/chat/completions`）完成；但若工具执行本身耗时较长（如视频生成），建议由上层业务自行封装为异步流程。
+> ⚠️ 注意：函数调用与联网搜索（`enable_search`）互斥，同一请求中不可同时启用；且仅部分模型支持该能力（详见各模型文档的能力矩阵表）。
 
 ## 关键参数和配置
 
-- **`tools`（必需）**：OpenAI 兼容格式的工具列表，每个工具需包含 `type: "function"`、`function.name`、`function.description` 及 `function.parameters`（JSON Schema）。百炼严格校验 Schema 合法性，非法定义将导致 400 错误。
+- `tools`（必需）：JSON 数组，每个元素为标准 OpenAI-style 工具定义，必须包含：
+  - `type`: 固定为 `"function"`
+  - `function.name`: 字符串，函数唯一标识（建议小写字母+下划线）
+  - `function.description`: 简明功能描述（影响模型调用准确性）
+  - `function.parameters`: 符合 JSON Schema 的参数定义（支持 `string`/`number`/`boolean`/`array`/`object` 类型，`required` 字段必填）
 
-- **`tool_choice`（可选）**：控制调用策略：
-  - `"auto"`（默认）：模型自主决定是否调用及调用哪个工具；
-  - `"none"`：禁用函数调用，强制返回自然语言；
-  - `{"type": "function", "function": {"name": "xxx"}}`：强制指定调用某工具（适用于确定性流程）。
+- `tool_choice`（可选）：控制调用策略：
+  - `"auto"`（默认）：模型自主决定是否及调用哪个工具
+  - `"none"`：禁用函数调用
+  - `{"type": "function", "function": {"name": "xxx"}}`：强制指定调用某函数（适用于确定性流程）
 
-- **`enable_function_calling`（部分模型专用）**：`qwen-audio-3.0-realtime-plus` 等 S2S 模型需显式设置此布尔参数为 `true` 才启用函数调用能力（`tools` 仍需同时提供）。
+- `response_format`（推荐配合使用）：设为 `{"type": "json_object"}` 可提升工具参数提取的结构化程度与稳定性。
 
-- **`response_format`（推荐）**：当需确保模型优先返回工具调用而非自由回答时，可配合设置 `{"type": "json_object"}`，提升结构化输出稳定性。
-
-- **输入消息约束**：`system` message 中避免模糊指令（如“你是一个助手”），建议明确提示：“你必须严格按工具定义执行操作，仅在无法满足用户需求时才返回自然语言解释。”
+- 实时 API 中额外约束：
+  - `tools` 仅在 `session.update` 时生效，不可在单次 `input_text` 或 `input_audio` 事件中动态变更；
+  - 工具执行结果需通过 `conversation.item.create` 以 `type="function_call_output"` 形式提交，格式须严格匹配函数定义中的 `parameters` 类型。
 
 ## 面向开发者，简洁实用
 
-- ✅ **立即验证**：使用 `qwen3.7-plus` + 最小工具集（如一个 `get_weather` 函数），通过 DashScope Python SDK 或 OpenAI SDK 发起一次调用，观察响应中是否含 `choices[0].message.tool_calls` 字段。
-- ✅ **错误排查重点**：若未触发调用，检查——工具 `parameters` 是否为合法 JSON Schema（非 Python dict）、`tools` 是否传入顶层 `messages` 外的参数位置、模型是否确属支持列表（见文档 2 表格，注意快照版本后缀）。
-- ✅ **生产建议**：对 `tool_arguments` 做 JSON 解析容错（模型可能输出语法错误的 JSON），并在工具执行失败后构造 `tool_message` 返回错误信息，交由模型重试或降级处理。
-- ❌ **不支持场景**：函数调用不可跨模型链式触发（如 A 模型调用工具后，结果不能自动喂给 B 模型继续调用）；也不支持在异步任务（如图像生成）的创建请求中启用。
+- ✅ **最佳实践**：为每个工具提供精准、无歧义的 `description` 和最小必要 `parameters` Schema；避免过度泛化的函数名（如 `"do_something"` → `"get_weather_by_city"`）。
+- ✅ **调试技巧**：开启 `stream=true` 时，观察流式响应中的 `delta.tool_calls` 字段，可实时验证模型是否正确识别调用意图。
+- ❌ **常见陷阱**：  
+  - 未在 `tools` 中声明却在 `tool_choice` 中指定函数 → 返回 400 错误；  
+  - 函数返回结果格式与 `parameters` 定义不一致 → 模型可能无法解析，导致后续生成中断；  
+  - 在不支持函数调用的模型（如 `qwen-omni-turbo-realtime`）上配置 `tools` → 参数被忽略，无报错但无效果。
+
+函数调用是构建可靠 Agent 的基石能力。请始终以「最小可行工具集 + 清晰语义契约」为设计原则，优先选用 Responses API 或支持 `tools` 的 `qwen3.*` 系列模型，并通过真实请求日志持续优化工具描述与参数 Schema。
 
 ## 关联主题页
 
-- [more about models](../api/more-about-models.md)
-- [more models](../api/more-models.md)
 - [model experience](../guides/model-experience.md)
+- [omni realtime api](../api/omni-realtime-api.md)
+- [more about models](../api/more-about-models.md)
+- [toolkits and frameworks](../api/toolkits-and-frameworks.md)
 
 

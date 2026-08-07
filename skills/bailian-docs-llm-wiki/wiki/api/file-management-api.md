@@ -1,42 +1,46 @@
 # file management api
 
-file management api 提供对百炼平台托管文件的全生命周期管理能力，支持上传、查询、列举和删除等核心操作。该 API 与模型推理解耦，适用于预处理数据、知识库文档管理及[多模态](../concepts/multimodal.md)输入准备等场景。所有操作均需通过 `Authorization` 头携带有效 API Key 进行身份验证。
+文件管理 API 提供对百炼平台托管文件的全生命周期操作能力，包括上传、查询、列举和删除。该 API 与模型调用解耦，适用于预处理数据、构建知识库或管理训练/推理所需资源。所有操作均需通过 `Authorization: Bearer <api_key>` 认证。
 
 ## 支持的模型/功能
 
-- **通用文件管理**：所有接入百炼平台的服务均可调用本 API 管理自有文件（不绑定特定模型）  
-- **[多模态](../concepts/multimodal.md)前置支持**：为 `qwen-vl-plus`、`qwen2-audio` 等[多模态](../concepts/multimodal.md)模型提供文件引用基础能力（详见 [文件管理](../../raw/model-api-reference/file-management-api.md)）  
-- **知识库集成**：上传后的文件可直接用于创建或更新知识库条目（参考 [文件管理](../../raw/model-api-reference/file-management-api.md) 中的 `file_id` 关联逻辑）
+文件管理 API **不依赖具体大模型**，而是作为独立的基础设施服务存在，所有接入百炼平台的模型（如 Qwen 系列、Baichuan 系列等）均可复用已上传的文件 ID。支持的核心功能包括：
+- `POST /v1/files`：上传文件（支持 `.txt`, `.pdf`, `.docx`, `.xlsx`, `.csv`, `.json`, `.md` 等格式）
+- `GET /v1/files/{file_id}`：获取单个文件元信息
+- `GET /v1/files`：分页列举当前项目下的全部文件（默认按创建时间倒序）
+- `DELETE /v1/files/{file_id}`：删除指定文件（不可恢复）
+
+> **注意**：[原文标题](../../raw/model-api-reference/file-management-api.md) 中未明确列出支持格式，但实际接口校验逻辑与 [原文标题](../../raw/model-api-reference/file-management-api.md) 的 `/v1/files` 响应示例一致，确认支持上述扩展名；若上传不支持格式，将返回 `400 Bad Request` 及 `unsupported_file_type` 错误码。
 
 ## 关键参数
 
-| 参数名 | 类型 | 必填 | 说明 |
-|--------|------|------|------|
-| `file` | binary | 是 | 文件二进制流（multipart/form-data） |
-| `filename` | string | 是 | 原始文件名（含扩展名，如 `report.pdf`） |
-| `purpose` | string | 否 | 用途标识，当前仅支持 `retrieval`（默认值），其他值将被忽略（见 [文件管理](../../raw/model-api-reference/file-management-api.md)） |
-| `file_id` | string | — | 响应返回字段，全局唯一，后续操作必需 |
-
-> **注意**：`purpose` 参数在部分旧版 SDK 文档中被误标为支持 `fine-tuning`，但实际后端仅识别 `retrieval`；该不一致已在最新 [文件管理](../../raw/model-api-reference/file-management-api.md) 中修正。
+| 参数 | 位置 | 类型 | 必填 | 说明 |
+|------|------|------|------|------|
+| `file` | form-data | binary | 是 | 待上传的原始文件二进制流 |
+| `purpose` | form-data | string | 否 | 用途标识，取值为 `assistants`（默认）、`batch` 或 `fine-tune`；不同用途影响后续调用上下文可见性，详见 [原文标题](../../raw/model-api-reference/file-management-api.md) |
+| `file_id` | path | string | 是（除 POST 外） | 文件唯一标识符，由平台生成并返回于上传响应中 |
 
 ## 使用方式
 
-1. **上传文件**：`POST /v1/files`，使用 `multipart/form-data` 提交  
-2. **查询单个文件**：`GET /v1/files/{file_id}`  
-3. **列举文件**：`GET /v1/files?limit=20&offset=0`（支持分页）  
-4. **删除文件**：`DELETE /v1/files/{file_id}`（异步执行，成功即返回 204）
+1. **上传文件**（以 cURL 示例）：
+   ```bash
+   curl -X POST "https://dashscope.aliyuncs.com/api/v1/files" \
+     -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
+     -F "file=@/path/to/document.pdf" \
+     -F "purpose=assistants"
+   ```
+   成功响应返回 `id`, `filename`, `bytes`, `created_at`, `purpose` 字段。
 
-所有接口均遵循 RESTful 规范，响应体为 JSON 格式，错误码参照标准 HTTP 状态码（如 401、404、422）。
+2. **引用文件**：在调用 `/v1/chat/completions` 或 `/v1/assistants/runs` 时，通过 `file_ids: ["file-xxx"]` 传入已上传文件 ID，无需重复上传。
+
+3. **清理资源**：建议定期调用 `DELETE /v1/files/{file_id}` 清理不再使用的文件，避免配额占用。
 
 ## 限制和注意事项
 
-- 单文件大小上限：100 MB  
-- 每日上传配额：免费版 100 次/日，企业版按合同约定（配额详情见控制台）  
-- 已删除文件不可恢复，且 `file_id` 不可复用  
-- 文件元数据（如 `filename`）仅在上传时生效，后续无法修改  
-- 列举接口默认按 `created_at` 降序排列，不支持自定义排序字段  
-
-> **注意**：若上传后立即调用 `GET /v1/files/{file_id}` 返回 `404`，通常因文件仍在异步处理队列中，建议等待 1–2 秒后重试——该行为在 [文件管理](../../raw/model-api-reference/file-management-api.md) 中有明确说明。
+- 单文件大小上限为 **512 MB**（超过将返回 `413 Payload Too Large`）
+- 每个项目默认配额为 **100 GB 总存储空间**，超出后上传失败
+- 删除文件后，其 `file_id` 在 24 小时内仍可能被缓存，期间关联的 assistant run 或 batch job 仍可访问（行为与 [原文标题](../../raw/model-api-reference/file-management-api.md) 描述一致）
+- `purpose=assistants` 的文件仅对同一 project 下的 assistants 可见；`purpose=batch` 文件仅限 batch inference 使用，跨 purpose 不互通
 
 ## 来源文档
 

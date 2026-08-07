@@ -1,47 +1,58 @@
-# 模型上下文协议
+# 模型上下文协议（MCP）
 
-模型上下文协议（Model Context Protocol, MCP）是阿里云百炼平台提供的标准化外部能力接入机制，用于在大模型推理过程中**按需、动态、可组合地调用外部工具服务**（如地图、天气、知识图谱、代码执行等），无需为每个工具定制适配逻辑。MCP 通过统一协议抽象工具语义与通信方式，使大模型能在上下文理解基础上自主决策是否调用、调用哪个工具及如何传参。
+模型上下文协议（Model Context Protocol，简称 MCP）是百炼平台提供的标准化能力接入协议，用于在大语言模型与外部工具之间建立可互操作、声明式调用的信息通道。它基于开源 MCP 规范（[modelcontextprotocol.io](https://modelcontextprotocol.io/)）实现，将工具抽象为统一语义接口，屏蔽底层实现差异，使模型能自动理解、规划并安全调用地图、搜索、图表生成等各类能力。
 
 ## 在百炼平台的不同场景中如何使用
 
-- **智能体应用（Agent 2.0）**：  
-  在「MCP 服务」配置页一次性添加最多 5 个已开通的 MCP 服务（如 `Amap Maps`、`WebSearch`）。模型根据用户输入和对话历史**自主判断调用时机、工具选择与参数生成**，全程无需人工编排。适用于开放域、多跳推理类任务（如“查上海明天天气并规划去外滩的地铁路线”）。
+MCP 是百炼平台统一的能力调度层，**不直接暴露给千问 API（如 `dashscope.ChatCompletion.create`）**，仅在以下三类托管应用中生效：
 
-- **工作流应用（Workflow）**：  
-  使用「MCP 节点」显式接入——每个节点绑定**唯一工具**（如 `maps_weather/get_current_weather`），并通过上游节点（如信息提取、意图识别）输出的结构化结果**显式传递参数**（如 `{"city": "上海"}`）。适用于确定性强、流程固定的业务编排场景。
+- **智能体（Agent 2.0）应用**：  
+  模型自动推理并调用已配置的 MCP 服务（最多 5 个），无需显式指定工具名。例如用户说“帮我画一张近7天北京气温折线图”，模型可自主调用 `QuickChart` 服务，传入结构化参数生成图表。知识库、官方插件（如 `quark_search`）及自定义插件均可一键转换为 MCP 服务后接入。
 
-- **外部客户端调用（如 Cherry Studio、Cursor 或自研系统）**：  
-  通过标准 `Streamable HTTP` 协议直接调用 MCP 服务端点（如 `https://dashscope.aliyuncs.com/api/v1/mcps/WebSearch/mcp`），使用 `mcp.client.streamable_http` SDK 初始化客户端，调用 `list_tools()` 获取可用工具列表，再以 `call_tool(tool_name, parameters)` 方式发起请求。**不支持在直接调用千问 OpenAI 兼容 API（如 `/v1/chat/completions`）时嵌入 MCP 工具调用。**
+- **工作流（Workflow）应用**：  
+  以 MCP 节点形式手动编排，每个节点绑定一个具体 MCP 工具（如 `maps_weather`）。需前置大模型节点提取参数（如城市、日期），后置节点解析返回结果，适合流程确定、结果需精确控制的场景。
 
-> ✅ 提示：旧版插件（Plugin）已统一纳入 MCP 协议体系；所有新开发的自定义插件必须发布为 MCP 服务方可被智能体或工作流调用。
+- **Managed Agents（托管智能体）**：  
+  在沙箱环境中扩展外部能力，通过 `tools: [{"type": "mcp", "service_id": "amap_maps"}]` 声明接入。支持与内置工具（`bash`、`read` 等）协同执行多步任务，例如先调用 `Amap Maps` 获取路线，再用 `bash` 计算通勤时间。
+
+> ✅ 提示：所有 MCP 服务均需先在 [MCP 广场](https://bailian.console.aliyun.com/?tab=mcp#/mcp-market) 开通或部署，再在对应应用中添加使用。
 
 ## 关键参数和配置
 
-| 类别 | 参数 | 说明 | 注意事项 |
-|------|------|------|----------|
-| **协议类型** | `type`（必填） | 指定服务接入协议：`streamableHttp`（推荐，百炼当前默认）、`sse`、`stdio` | 必须与服务端路径严格匹配：<br>• `streamableHttp` → `/mcp`<br>• `sse` → `/sse`<br>配置错误将返回 `11200058` 错误 |
-| **认证凭证** | `DASHSCOPE_API_KEY`（Header: `Authorization: Bearer <key>`） | 外部调用必需，用于鉴权 | API Key 需具备 `MCPInvoke` 权限；无效或过期触发 `11200049` 错误 |
-| **环境密钥** | 如 `AMAP_MAPS_API_KEY` 等 | 官方服务试用版免填；商业化定制或自定义服务需手动注入 | 敏感密钥**必须通过 KMS 凭据管理**，禁止明文写入配置 |
-| **服务地址** | `mcp_url` | 格式为 `https://dashscope.aliyuncs.com/api/v1/mcps/{service_id}/mcp` | 服务 ID 可在 MCP 广场或控制台服务详情页获取 |
+| 参数 | 类型 | 必填 | 说明 | 示例 |
+|------|------|------|------|------|
+| `type` | string | 是 | 协议传输类型，决定连接方式与端点路径 | `"streamableHttp"`（推荐，对应 `/mcp`）；`"sse"`（旧版，对应 `/sse`） |
+| `command` 或 `url` | string | 是 | 启动方式（本地脚本）或远程服务地址 | `npx @modelcontextprotocol/server-memory` 或 `https://your-mcp-service.example.com/mcp` |
+| `env` | object | 否 | 注入环境变量，用于传递密钥、API Key 等敏感信息（建议配合 KMS 加密） | `{ "AMAP_KEY": "${kms://xxx}" }` |
+| `inputSchema` | JSON Schema | 是 | 定义工具输入参数结构，直接影响模型参数生成准确性 | `{ "type": "object", "properties": { "city": { "type": "string" } } }` |
 
-## 面向开发者：快速上手要点
+⚠️ 注意：  
+- `type` 与实际服务端点路径必须严格匹配，否则报错 `11200058`（SSE 路径错误）或 `11200059`（Streamable HTTP 路径错误）；  
+- `inputSchema` 缺失或格式错误将导致 `11200060` 错误，建议使用 [JSON Schema Validator](https://json-schema.org/) 验证；  
+- 自定义 MCP 服务运行于函数计算 FC，**无固定出口 IP**，访问云数据库等资源需配置白名单或 VPC 打通。
 
-- ✅ **开通服务**：前往 [MCP 广场](https://bailian.console.aliyun.com/?tab=mcp#/mcp-market)，一键开通官方服务；或通过「脚本部署（npx/uvx）→ AI 网关封装 → OpenAPI 导入」三种方式发布自定义 MCP 服务。
-- ✅ **集成验证**：  
-  - 智能体：添加服务后，用测试会话发送含工具需求的指令（如“北京今天气温多少？”），观察是否自动触发 `weather_mcp`；  
-  - 工作流：在 MCP 节点配置「工具路径」与「参数映射」，确保上游节点输出字段名与工具 schema 一致；  
-  - 外部调用：用 SDK 执行 `session.list_tools()`，确认返回工具列表后再调用 `call_tool()`。
-- ⚠️ **避坑提醒**：  
-  - MCP 服务托管于函数计算 FC，**无固定出口 IP**，访问 RDS/VPC 内资源需配置白名单或 VPC 对等连接；  
-  - **不支持访问本地文件、硬件设备或 localhost 接口**；此类能力需本地部署 MCP 服务并反向代理至百炼；  
-  - 自定义服务升级后**不会自动同步**，必须手动重新部署；  
-  - 已开通的旧版 SSE 服务需先「取消开通」再「重新开通」，才能升级至 Streamable HTTP 协议。
+## 面向开发者的实用指引
+
+- **快速上手**：优先选用 [MCP 广场](https://bailian.console.aliyun.com/?tab=mcp#/mcp-market) 中的官方服务（如 `Amap Maps`、`WebSearch`），开通即用，无需部署。
+- **自定义接入**：  
+  - 若已有 RESTful API → 使用「AI 网关导入」一键封装为 MCP 工具；  
+  - 若已有 OpenAPI（如阿里云 OSS/ECS）→ 使用「OpenAPI 导入」自动发布；  
+  - 若需完全自研 → 用 `@modelcontextprotocol/server-*` SDK 开发，部署至函数计算（FC），配置 `npx`/`uvx` 启动命令。
+- **调试技巧**：  
+  - 连接失败？先 `curl -v <your-mcp-url>/mcp` 测试端点连通性与响应头；  
+  - 参数不生效？检查 `inputSchema` 是否与模型提示词中期望的字段名一致；  
+  - 外部集成？使用 `mcp` Python SDK，设置 `DASHSCOPE_API_KEY` 和 `streamablehttp_client` 地址即可调用。
+- **计费注意**：  
+  - 官方/三方 MCP 服务按调用次数计费（费用由服务提供方收取）；  
+  - 自定义 MCP 服务按调用时长计费（基础模式 0.000156 元/秒），极速模式另加部署费。
+
+> 🚀 最佳实践：在 Agent 2.0 中启用 `enable_thinking` 并设置 `ReAct 最大轮次 ≥ 3`，可显著提升复杂 MCP 工具链的调用成功率。
 
 ## 关联主题页
 
 - [model context protocol](../guides/model-context-protocol.md)
-- [llm application](../guides/llm-application.md)
 - [plug in](../guides/plug-in.md)
-- [application component api reference](../api/application-component-api-reference.md)
+- [managed agents](../guides/managed-agents.md)
+- [llm application](../guides/llm-application.md)
 
 
