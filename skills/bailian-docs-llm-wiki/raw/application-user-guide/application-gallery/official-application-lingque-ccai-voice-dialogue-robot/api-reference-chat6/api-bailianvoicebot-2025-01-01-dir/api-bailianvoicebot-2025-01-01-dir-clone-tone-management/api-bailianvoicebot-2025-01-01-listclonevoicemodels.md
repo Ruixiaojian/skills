@@ -1,10 +1,10 @@
-# DeleteVariable - 删除变量
+# ListCloneVoiceModels - 获取克隆音模型列表
 
 ## 调试
 
-[您可以在OpenAPI Explorer中直接运行该接口，免去您计算签名的困扰。运行成功后，OpenAPI Explorer可以自动生成SDK代码示例。](https://api.aliyun.com/api/BailianVoiceBot/2025-01-01/DeleteVariable)
+[您可以在OpenAPI Explorer中直接运行该接口，免去您计算签名的困扰。运行成功后，OpenAPI Explorer可以自动生成SDK代码示例。](https://api.aliyun.com/api/BailianVoiceBot/2025-01-01/ListCloneVoiceModels)
 
-[![](https://img.alicdn.com/tfs/TB16JcyXHr1gK0jSZR0XXbP8XXa-24-26.png)调试](https://api.aliyun.com/api/BailianVoiceBot/2025-01-01/DeleteVariable)
+[![](https://img.alicdn.com/tfs/TB16JcyXHr1gK0jSZR0XXbP8XXa-24-26.png)调试](https://api.aliyun.com/api/BailianVoiceBot/2025-01-01/ListCloneVoiceModels)
 
 ## 授权信息
 
@@ -28,9 +28,9 @@
 
 关联操作
 
-bailianvoicebot:DeleteVariable
+bailianvoicebot:ListCloneVoiceModels
 
-delete
+list
 
 \*全部资源
 
@@ -52,25 +52,25 @@ delete
 
 示例值
 
-BusinessUnitId
+PageNumber
 
-string
-
-是
-
-百炼业务空间 ID
-
-llm-rj6aqmctjcit4acy
-
-VariableId
-
-string
+integer
 
 是
 
-变量 ID
+页号
 
-82ea16d1-425c-4c03-9be5-cc91de9779ed
+1
+
+PageSize
+
+integer
+
+是
+
+每页条数
+
+10
 
 ## 返回参数
 
@@ -90,9 +90,9 @@ RequestId
 
 string
 
-请求 ID
+Id of the request
 
-D771A1B6-3D5F-174A-BEE1-98CE1000D337
+CF6D3484-19A1-5C77-863B-AC8B5754D37C
 
 Code
 
@@ -116,15 +116,73 @@ string
 
 错误信息
 
-Instance llm-rj6aqmctjcit4acy does not exist.
+Instance llm-zzu528i29ecnprcl does not exist.
 
 Data
 
+object
+
+克隆音模型分页数据
+
+PageNumber
+
+integer
+
+页号
+
+1
+
+PageSize
+
+integer
+
+每页条数
+
+10
+
+TotalCount
+
+integer
+
+总数量
+
+100
+
+CloneVoiceModels
+
+array<object>
+
+克隆音模型列表
+
+cloneVoiceModel
+
+object
+
+克隆音模型对象
+
+Name
+
 string
 
-变量 ID
+模型名称
 
-82ea16d1-425c-4c03-9be5-cc91de9779ed
+CosyVoice
+
+DisplayName
+
+string
+
+显示名称
+
+CosyVoice
+
+Description
+
+string
+
+描述
+
+口音还原相似度高、韵律流畅
 
 Params
 
@@ -138,7 +196,7 @@ string
 
 动态错误参数
 
-llm-rj6aqmctjcit4acy
+llm-xdne77rxe14ziszr
 
 ## 示例
 
@@ -148,13 +206,24 @@ llm-rj6aqmctjcit4acy
 
 ```
 {
-  "RequestId": "D771A1B6-3D5F-174A-BEE1-98CE1000D337",
+  "RequestId": "CF6D3484-19A1-5C77-863B-AC8B5754D37C",
   "Code": "OK",
   "HttpStatusCode": 200,
-  "Message": "Instance llm-rj6aqmctjcit4acy does not exist.",
-  "Data": "82ea16d1-425c-4c03-9be5-cc91de9779ed",
+  "Message": "Instance llm-zzu528i29ecnprcl does not exist.",
+  "Data": {
+    "PageNumber": 1,
+    "PageSize": 10,
+    "TotalCount": 100,
+    "CloneVoiceModels": [
+      {
+        "Name": "CosyVoice",
+        "DisplayName": "CosyVoice",
+        "Description": "口音还原相似度高、韵律流畅"
+      }
+    ]
+  },
   "Params": [
-    "llm-rj6aqmctjcit4acy"
+    "llm-xdne77rxe14ziszr"
   ]
 }
 ```
@@ -171,8 +240,8 @@ llm-rj6aqmctjcit4acy
 
 操作
 
-2026-03-31
+2026-04-22
 
 新增 OpenAPI
 
-[查看变更详情](https://api.aliyun.com/document/BailianVoiceBot/2025-01-01/DeleteVariable?updateTime=2026-03-31#workbench-doc-change-demo)
+[查看变更详情](https://api.aliyun.com/document/BailianVoiceBot/2025-01-01/ListCloneVoiceModels?updateTime=2026-04-22#workbench-doc-change-demo)

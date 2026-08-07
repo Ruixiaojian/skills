@@ -4,7 +4,7 @@
 
 **重要**
 
-glm-4.6、glm-4.7 将于**2026年7月9日**下架。推荐转用：[qwen3.7-plus](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-plus)、[qwen3.8-max](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.8-max)、[qwen3.7-flash](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-flash)。
+glm-4.6、glm-4.7 将于**2026年10月10日**下架。推荐转用：[qwen3.7-plus](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-plus)、[qwen3.8-max](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.8-max)、[qwen3.7-flash](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-flash)。
 
 ## **服务接入地址**
 
@@ -35,6 +35,24 @@ HTTP 请求地址：`POST https://{WorkspaceId}.eu-central-1.maas.aliyuncs.com/c
 SDK 调用配置的`base_url`：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
 
 HTTP 请求地址：`POST https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1/chat/completions`
+
+## OpenAI兼容-Responses API
+
+**说明**
+
+Responses API 目前仅支持`glm-5.2`模型，且仅在华北2（北京）与新加坡地域提供服务。
+
+## 华北2（北京）
+
+SDK 调用配置的`base_url`：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
+
+HTTP 请求地址：`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/responses`
+
+## 新加坡
+
+SDK 调用配置的`base_url`：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
+
+HTTP 请求地址：`POST https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1/responses`
 
 ## DashScope
 
@@ -1128,6 +1146,85 @@ response = Generation.call(
     clear_thinking=True,
 )
 print(response.usage.input_tokens)
+```
+
+## **Responses API**
+
+`glm-5.2`支持通过 OpenAI 兼容的 Responses API 调用，仅支持华北2（北京）与新加坡地域，服务接入地址参见[服务接入地址](#glm-baseurl-h2)。
+
+通过 Responses API 调用时，可在`tools`参数中添加`web_search`（[联网搜索](https://help.aliyun.com/zh/model-studio/web-search)）、`web_extractor`（[网页抓取](https://help.aliyun.com/zh/model-studio/web-extractor)）与`code_interpreter`（[代码解释器](https://help.aliyun.com/zh/model-studio/qwen-code-interpreter)）工具。
+
+## **Python**
+
+```
+from openai import OpenAI
+import os
+
+client = OpenAI(
+    # 如果没有配置环境变量，请用阿里云百炼API Key替换：api_key="sk-xxx"
+    api_key=os.getenv("DASHSCOPE_API_KEY"),
+    # 以下为华北2（北京）地域的URL。新加坡地域请使用 https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
+    base_url="https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+)
+
+response = client.responses.create(
+    model="glm-5.2",
+    input="你好，请用一句话介绍你自己。",
+    # 可选：通过 tools 参数开启联网搜索、网页抓取与代码解释器工具
+    tools=[
+        {"type": "web_search"},
+        {"type": "web_extractor"},
+        {"type": "code_interpreter"},
+    ],
+)
+
+# 获取模型回复
+print(response.output_text)
+```
+
+## **Node.js**
+
+```
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+    // 如果没有配置环境变量，请用阿里云百炼API Key替换：apiKey: "sk-xxx"
+    apiKey: process.env.DASHSCOPE_API_KEY,
+    // 以下为华北2（北京）地域的URL。新加坡地域请使用 https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
+    baseURL: "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
+});
+
+const response = await openai.responses.create({
+    model: "glm-5.2",
+    input: "你好，请用一句话介绍你自己。",
+    // 可选：通过 tools 参数开启联网搜索、网页抓取与代码解释器工具
+    tools: [
+        { type: "web_search" },
+        { type: "web_extractor" },
+        { type: "code_interpreter" },
+    ],
+});
+
+// 获取模型回复
+console.log(response.output_text);
+```
+
+## **curl**
+
+```
+# 以下为华北2（北京）地域的URL。新加坡地域请使用 https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1/responses
+curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/responses \
+-H "Authorization: Bearer $DASHSCOPE_API_KEY" \
+-H "Content-Type: application/json" \
+-d '{
+    "model": "glm-5.2",
+    "input": "你好，请用一句话介绍你自己。",
+    "tools": [
+        {"type": "web_search"},
+        {"type": "web_extractor"},
+        {"type": "code_interpreter"}
+    ]
+}'
 ```
 
 ## **其它功能**

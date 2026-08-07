@@ -11,6 +11,47 @@
           "Text"
         ]
       },
+      "builtInToolMultiPrices": [
+        {
+          "supportedApi": "Responses API",
+          "name": "web_search",
+          "docUrl": "https://help.aliyun.com/document_detail/2867560.html",
+          "type": "web_search",
+          "prices": [
+            {
+              "priceUnit": "千次调用",
+              "price": "4",
+              "currency": "CNY"
+            }
+          ]
+        },
+        {
+          "supportedApi": "Responses API",
+          "name": "web_extractor",
+          "docUrl": "https://help.aliyun.com/document_detail/3016816.html",
+          "type": "web_extractor",
+          "prices": [
+            {
+              "priceUnit": "",
+              "price": "0",
+              "currency": "CNY"
+            }
+          ]
+        },
+        {
+          "supportedApi": "Responses API",
+          "name": "code_interpreter",
+          "docUrl": "https://help.aliyun.com/document_detail/2990719.html",
+          "type": "code_interpreter",
+          "prices": [
+            {
+              "priceUnit": "",
+              "price": "0",
+              "currency": "CNY"
+            }
+          ]
+        }
+      ],
       "description": "旗舰级 MoE 大模型，总参1.6T、激活 49B，原生支持百万级超长上下文。依托海量高质量训练数据，具备顶尖数学逻辑、复杂推理、专业代码与长文本深度解析能力，适配高阶科研、复杂办公、深度智能代理等高难度场景。",
       "features": [
         "cache",
@@ -77,6 +118,7 @@
       "inferenceProvider": "aliyun-bailian",
       "name": "DeepSeek-V4-Pro",
       "docUrl": "https://help.aliyun.com/document_detail/2868565.html",
+      "category": "Third-party",
       "samples": {
         "openai": {
           "completionsAPI": {
@@ -105,6 +147,47 @@
           "Text"
         ]
       },
+      "builtInToolMultiPrices": [
+        {
+          "supportedApi": "Responses API",
+          "name": "web_search",
+          "docUrl": "https://help.aliyun.com/document_detail/2867560.html",
+          "type": "web_search",
+          "prices": [
+            {
+              "priceUnit": "千次调用",
+              "price": "4",
+              "currency": "CNY"
+            }
+          ]
+        },
+        {
+          "supportedApi": "Responses API",
+          "name": "web_extractor",
+          "docUrl": "https://help.aliyun.com/document_detail/3016816.html",
+          "type": "web_extractor",
+          "prices": [
+            {
+              "priceUnit": "",
+              "price": "0",
+              "currency": "CNY"
+            }
+          ]
+        },
+        {
+          "supportedApi": "Responses API",
+          "name": "code_interpreter",
+          "docUrl": "https://help.aliyun.com/document_detail/2990719.html",
+          "type": "code_interpreter",
+          "prices": [
+            {
+              "priceUnit": "",
+              "price": "0",
+              "currency": "CNY"
+            }
+          ]
+        }
+      ],
       "description": "高效轻量化MoE模型，总参284B，激活13B，原生支持百万超长上下文能力。推理速度快、延迟低、调用成本低廉，综合能力均衡，主打高并发、轻量化任务，适合日常对话、内容创作、基础 RAG、批量文案处理等普惠刚需场景。",
       "features": [
         "cache",
@@ -195,6 +278,47 @@
           "Text"
         ]
       },
+      "builtInToolMultiPrices": [
+        {
+          "supportedApi": "Responses API",
+          "name": "web_search",
+          "docUrl": "https://help.aliyun.com/document_detail/2867560.html",
+          "type": "web_search",
+          "prices": [
+            {
+              "priceUnit": "千次调用",
+              "price": "4",
+              "currency": "CNY"
+            }
+          ]
+        },
+        {
+          "supportedApi": "Responses API",
+          "name": "web_extractor",
+          "docUrl": "https://help.aliyun.com/document_detail/3016816.html",
+          "type": "web_extractor",
+          "prices": [
+            {
+              "priceUnit": "",
+              "price": "0",
+              "currency": "CNY"
+            }
+          ]
+        },
+        {
+          "supportedApi": "Responses API",
+          "name": "code_interpreter",
+          "docUrl": "https://help.aliyun.com/document_detail/2990719.html",
+          "type": "code_interpreter",
+          "prices": [
+            {
+              "priceUnit": "",
+              "price": "0",
+              "currency": "CNY"
+            }
+          ]
+        }
+      ],
       "description": "高效轻量化MoE模型，总参284B，激活13B，原生支持百万超长上下文能力。推理速度快、延迟低、调用成本低廉，综合能力均衡，主打高并发、轻量化任务，适合日常对话、内容创作、基础 RAG、批量文案处理等普惠刚需场景。",
       "features": [
         "cache",

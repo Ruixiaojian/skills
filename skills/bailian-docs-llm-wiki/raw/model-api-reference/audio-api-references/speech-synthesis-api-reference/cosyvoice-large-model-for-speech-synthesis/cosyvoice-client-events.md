@@ -272,7 +272,7 @@ cosyvoice-v1不支持该参数。
 
 文本热修复配置，用于自定义指定词语的发音或对待合成文本进行替换。
 
-qwen-audio-3.0-tts-plus、qwen-audio-3.0-tts-flash、cosyvoice-v2、cosyvoice-v1不支持该功能。
+cosyvoice-v2、cosyvoice-v1不支持该功能。
 
 参数介绍：
 

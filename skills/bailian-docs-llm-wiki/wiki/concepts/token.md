@@ -1,50 +1,37 @@
 # Token
 
-Token 是百炼平台中用于计量大语言模型及多模态模型推理消耗的核心单位，代表模型处理文本、图像、语音等输入内容及生成输出内容的基本计算粒度。在百炼体系中，Token 不仅是计费的基础单元，也是性能监控、成本分析与资源调度的关键指标。
+Token 是百炼平台中用于计量模型输入与输出内容的基本单位，也是计费、配额、性能监控和资源调度的核心度量基准。一个 Token 通常对应文本中的一个词元（如中文字符、英文子词或标点），其具体切分方式由所调用模型的 tokenizer 决定；对于[多模态](multi-modal.md)模型，Token 还可扩展涵盖图像 patch、音频帧等结构化单元。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-- **计费计量**：所有实时推理调用（含 [prompt](../guides/prompt.md) 输入与 response 输出）均以 Token 总量为计费依据。新人免费额度、Token Plan Credits 消耗、按量付费账单均基于 `输入 Token 数 + 输出 Token 数` 计算，不区分方向，也不单独计费缓存 Token（除非显式启用缓存功能并产生额外缓存 Token）。
-  
-- **模型监控**：在「模型监控」中，`model_usage` 指标直接上报 Token 消耗量，支持按业务空间、API Key、模型等维度聚合统计；高级监控还提供 `model_generation_duration_per_token`（每 Token 生成耗时）等精细化性能指标。
-
-- **应用观测**：在「应用观测」中，每个 LLM 节点的 Span 明细页展示该次调用的 `输入 Token 数`、`输出 Token 数` 和 `Token 总量`，可结合延时、首 Token 时间等指标诊断推理效率瓶颈；Embedding 节点则仅统计向量化输入的 Token 数。
-
-- **应用评测**：自动评测任务依赖 `qwen-max`/`qwen-plus` 等模型生成评测集和执行评分，其过程本身会产生可观的 Token 消耗——评测规则中的“分类采样数”和所选评测模型直接影响总 Token 用量，需在成本预算中提前评估。
-
-- **Token Plan 与 Coding Plan 隔离**：Token Plan 使用 Credits 抵扣，但 Credits 消耗由底层 Token 数、模型单价、工具调用次数等动态换算得出，**无固定 Token→Credits 比例**；且 Token Plan 专属密钥（`sk-sp-xxx`）与通用密钥（`sk-xxx`）走不同计费通道，Token 消耗互不抵扣。
+- **计费与额度管理**：所有实时推理调用均以 `输入 Token + 输出 Token` 为计费基础。免费额度（如 100 万 Token/模型）、资源包、节省计划及按量付费均按 Token 数量结算；Batch 调用单价为实时推理的 50%，但同样以总 Token 量计费。
+- **模型调用控制**：`max_tokens` 参数限制单次响应的最大输出 Token 数；`budgetTokens`（如 OpenCode 思维链模式）用于硬性约束推理过程中的中间 Token 消耗，防止失控生成。
+- **性能监控**：高级监控指标如 `model_generation_duration_per_token`（每 Token 生成耗时）、`model_tps_per_request`（每秒输出 Token 数）直接反映模型吞吐效率；应用观测中 `LLM` 节点的 Token 总量 = 输入 Token + 输出 Token，用于归因成本与延迟。
+- **配额与限流**：Coding Plan 虽以“请求次数”为额度单位，但实际限流底层仍依赖 Token 级统计（如单次请求 Token 超限将触发 `429` 错误）；TPM（Tokens Per Minute）是部署级（PTU）和 API 级限流的关键阈值。
+- **[多模态](multi-modal.md)扩展**：全模态模型（如 `qwen3.5-omni-plus`）对图像、视频等输入会自动编码为视觉 Token，并与文本 Token 统一参与计费与长度校验（如 `messages.content` 中 `image_url` 的解析开销计入输入 Token）。
 
 ## 关键参数和配置
 
-- **计量范围**：默认包含 [prompt](../guides/prompt.md) 中全部文本 Token + response 中全部生成 Token；若启用流式响应，Token 统计仍以完整输出为准（非已返回部分）；多模态模型中，图像/音频/视频输入会按平台统一编码规则转换为等效 Token 数（具体换算逻辑由模型实现决定，开发者无需手动计算）。
-
-- **地域约束**：Token 计量与计费严格绑定地域。华北2（北京）是唯一支持新人免费额度、Token Plan 及多数模型高级监控能力的地域；跨地域调用（如华东1）将按量计费，且不计入任何额度。
-
-- **模型快照独立性**：带日期后缀的模型（如 `qwen3.7-max-2026-05-20`）与无后缀版本（如 `qwen3.7-max`）视为不同模型，各自拥有独立的 Token 额度、计费单价与监控数据隔离。
-
-- **缓存 Token**：当启用 Prompt Cache 功能时，重复 [prompt](../guides/prompt.md) 的缓存命中会减少输入 Token 计费量（系统按实际缓存复用后的 Token 数计量），但需注意缓存本身不免费，可能产生额外缓存管理费用。
+- `max_tokens`：必需参数，指定最大输出 Token 数，不得超过模型能力上限（如 `qwen3.7-max` 为 8192）；设为 `0` 将导致调用失败。
+- `budgetTokens`（仅限 Thinking 模式）：用于限制思维链推理过程中的中间 Token 总量，需显式设置且必须 ≤ 模型支持的最大思考长度。
+- `stream` 与 `incremental_output`：启用流式响应时，Token 以增量方式返回；`incremental_output=True` 可避免重复传输历史内容，降低网络开销与客户端处理负担。
+- 计费粒度：Token 计量精确到个位，输入/输出 Token 分别统计、共用免费额度；阶梯计费模型（如 `qwen3-max`）按单次请求**输入 Token 总量**分档，整次请求按最高档单价结算。
 
 ## 面向开发者，简洁实用
 
-- ✅ **务必检查地域与密钥匹配**：调用前确认 API Key 类型（`sk-` 或 `sk-sp-`）与 Base URL 地域（`cn-beijing`）一致，否则 Token 消耗可能落入错误计费通道。
-
-- ✅ **监控 Token 分布**：在应用观测中按 Span 查看各节点 Token 占比，快速识别高 Token 消耗环节（如过长 system prompt、冗余 RAG 片段、未裁剪的图片 base64）。
-
-- ✅ **估算成本**：使用 [模型调用价格页](https://help.aliyun.com/zh/model-studio/pricing) 查询目标模型的单价（元/千 Token），结合预估输入/输出长度，即可粗算单次调用成本。
-
-- ⚠️ **避免隐式 Token 浪费**：  
-  - 不在 prompt 中插入无意义空行或重复指令；  
-  - 对多模态输入，优先使用平台推荐的压缩格式（如 WebP 图像、16kHz 语音）；  
-  - 工作流中慎用 `RETRIEVER` 返回全文，建议配置 `top_k=3` 并启用内容截断。
-
-- 🔍 **调试技巧**：开启「推理日志」后，在模型监控 → 日志页可查看每次调用的精确 Token 数（含分项 breakdown），是定位异常消耗的首选手段。
+- ✅ **务必校验 Token 消耗**：使用 `bailian-cli` 或 SDK 的 `get_usage()` 方法获取实际消耗；调试阶段开启 `enable_thinking` 时，需预留额外 `budgetTokens`。
+- ✅ **规避隐式超限**：[多模态](multi-modal.md)输入（如长图、高清视频）会显著增加 Token 数，建议先用 `text-embedding-v2` 或预处理工具估算输入规模。
+- ✅ **监控与告警联动**：在模型监控中配置 `model_usage` 告警（如单日 Token 超 80% 免费额度），及时发现异常调用。
+- ❌ **不要假设 Token 等价于字符数**：中文平均约 1 字 ≈ 1 Token，但含标点、空格、特殊符号或英文子词时差异显著；使用 `dashscope.Tokenizer` 或官方 tokenizer 工具精确测算。
+- ❌ **不要混用 Key 类型**：Token Plan Key（`sk-sp-`）与 Coding Plan Key（同前缀但不同域名）不可互通，否则将因认证失败或计费错位导致 `401`/`403` 错误。
 
 ## 关联主题页
 
 - [test 1](../guides/test-1.md)
 - [token plan guide](../guides/token-plan-guide.md)
-- [application monitoring](../guides/application-monitoring.md)
+- [preparations](../api/preparations.md)
 - [model monitoring](../guides/model-monitoring.md)
-- [application evaluation](../guides/application-evaluation.md)
+- [application monitoring](../guides/application-monitoring.md)
+- [application support](../guides/application-support.md)
 
 

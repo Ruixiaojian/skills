@@ -2,6 +2,12 @@
 
 本文档提供了Paraformer实时语音识别iOS SDK的详细使用指南，帮助您将语音转换为文本。
 
+**重要**
+
+阿里云百炼为华北2（北京）地域推出了业务空间专属域名，能够为推理请求提供卓越的性能和更高的稳定性，建议从 `dashscope.aliyuncs.com` 迁移至 `{WorkspaceId}.cn-beijing.maas.aliyuncs.com`。
+
+`{WorkspaceId}`需要替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。现有域名仍可正常使用。
+
 **用户指南：**关于模型介绍和选型建议请参见[实时语音识别-Fun-ASR/Paraformer](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition)。
 
 **在线体验**：仅paraformer-realtime-v2、paraformer-realtime-8k-v2和paraformer-realtime-v1支持[在线体验](https://bailian.console.aliyun.com/?tab=model#/efm/model_experience_center/voice)。
@@ -31,7 +37,7 @@
 
 1.  初始化 SDK
     
-2.  按业务需求设置参数：通过[nui\_initialize](#05eab5125e2pm)接口设置[连接与控制参数](#57acf5ecc1w8j)；通过[nui\_set\_param](#763672f3f8dgw)接口设置[语音识别效果参数](#d20cce9518kla)。
+2.  按业务需求设置参数：通过[nui\_initialize](#05eab5125e2pm)接口设置[连接与控制参数](#57acf5ecc1w8j)；通过[nui\_set\_params](#763672f3f8dgw)接口设置[语音识别效果参数](#d20cce9518kla)。
     
 3.  调用[nui\_dialog\_start](#8fe6ea298apzu)启动识别流程。
     
@@ -56,7 +62,7 @@
     
     ```
     {
-        "url": "wss://dashscope.aliyuncs.com/api-ws/v1/inference",
+        "url": "wss://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api-ws/v1/inference",
         "apikey": "st-****",
         "device_id": "my_device_id",
         "service_mode": "1"
@@ -79,7 +85,7 @@
     
     是
     
-    服务地址，固定为 `wss://dashscope.aliyuncs.com/api-ws/v1/inference`。
+    服务地址，固定为 `wss://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api-ws/v1/inference`。调用时请将`{WorkspaceId}`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
     
     `apikey`
     
@@ -134,7 +140,7 @@
     -   "false"：否
         
     
-    此参数仅在调用[nui\_initialize](#05eab5125e2pm)接口时将`save_log`设为true时生效。 同时，`debug_path`也必须被设置。
+    此参数仅在调用[nui\_initialize](#05eab5125e2pm)接口时将`save_log`设为YES时生效。 同时，`debug_path`也必须被设置。
     
     `max_log_file_size`
     
@@ -146,7 +152,7 @@
     
     此参数仅在调用[nui\_initialize](#05eab5125e2pm)接口时将`save_log`设为`YES`时生效。
     
-    默认值：104857600（100 \* 1024 \* 1024 字节, 即 100MiB）。
+    默认值：104857600（100 \* 1024 \* 1024 字节，即 100MiB）。
     
     `log_track_level`
     
@@ -178,7 +184,7 @@
 
 ### **语音识别效果参数**
 
-通过在[nui\_set\_param](#763672f3f8dgw)接口的`params`参数中传入一个JSON字符串来配置。
+通过在[nui\_set\_params](#763672f3f8dgw)接口的`params`参数中传入一个JSON字符串来配置。
 
 -   **参数示例：**以下为 JSON 字符串示例，参数未完整列出。请按实际需求在编码时补充：
     
@@ -391,7 +397,7 @@
     
     -   true：在持续发送静音音频的情况下，可保持与服务端的连接不中断。
         
-    -   false：即使持续发送静音音频，连接也将在60秒后因超时而断开。该 60 秒超时为服务端默认行为，客户端不可配置。
+    -   false：即使持续发送静音音频，连接也将在一定时间后因超时而断开。该超时为服务端默认行为，客户端不可配置。
         
     
     该参数仅在模型为v2及更高版本时生效。
@@ -503,7 +509,7 @@
     返回错误码，参见[错误码查询](https://help.aliyun.com/zh/isi/support/error-codes)。
     
 
-#### nui\_set\_param
+#### nui\_set\_params
 
 以JSON格式设置语音识别效果参数。在 `nui_dialog_start` 之前调用。
 

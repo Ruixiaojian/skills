@@ -621,9 +621,9 @@ curl -X GET https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/tasks/{tas
     },
     "usage": {
         "video_count": 1,
-        "duration": 5,
-        "input_video_duration": 0,
-        "output_video_duration": 5,
+        "duration": 5.0,
+        "input_video_duration": 0.0,
+        "output_video_duration": 5.0,
         "fps": 30,
         "SR": 720,
         "ratio": "16:9"
@@ -728,15 +728,15 @@ task\_id查询有效期为 24 小时，超时后将无法查询，返回以下�
 
 生成视频的数量。固定为1。
 
-**duration** `_integer_`
+**duration** `_float_`
 
 生成视频的时长，单位为秒。
 
-**input\_video\_duration** `_integer_`
+**input\_video\_duration** `_float_`
 
-输入视频的时长，单位为秒。无视频输入时为0。
+输入视频的时长，单位为秒。无视频输入时为0.0。
 
-**output\_video\_duration** `_integer_`
+**output\_video\_duration** `_float_`
 
 输出视频的时长，单位为秒。
 

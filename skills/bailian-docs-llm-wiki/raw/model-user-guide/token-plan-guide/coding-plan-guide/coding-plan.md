@@ -50,9 +50,9 @@ Coding Plan 整合了千问、GLM、Kimi 、MiniMax顶级模型，并兼容主�
 -   每月**90,000** 次请求
     
 
--   **限时优惠**：活动已结束，当前价格以下单页为准。
+-   **新客首月特惠：**首次订阅 Pro 套餐可享首月 ¥39.90（官网目录价 ¥200/月），后续按 ¥200/月 续费，具体以下单页为准。
     
--   **限量抢购**：名额有限、先到先得。每日 09:30:00（UTC+08:00）补充，可前往[Coding Plan 页面](https://www.aliyun.com/benefit/scene/codingplan)抢购。
+-   **限量抢购**：名额有限、先到先得。每日 09:30:00（UTC+08:00）补充，可前往[Coding Plan 页面](https://common-buy.aliyun.com/coding-plan)抢购。
     
 -   **额度消耗：**单次提问将按实际“模型调用次数”扣除额度。简单任务约消耗 5-10 次，复杂任务约 10-30+ 次，实际消耗受任务难度、上下文及工具使用影响。在[Coding Plan 页面](https://bailian.console.aliyun.com/cn-beijing/?tab=plan#/efm/subscription/coding-plan)可以查看用量。
     
@@ -80,11 +80,11 @@ Coding Plan 整合了千问、GLM、Kimi 、MiniMax顶级模型，并兼容主�
 2.  **授予权限：**点击该用户右侧的**权限管理**，添加**管理员**权限，然后点击**确定**完成授权。![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/4734072771/p1057328.png)
     
 
-### **步骤二：获取套餐专属 API Key 和 Base URL**
+### **步骤二：获取套餐 API Key 和 Base URL**
 
-您需要获取并配置套餐专属的 API Key 和 Base URL，才能正确使用并抵扣套餐额度。
+您需要获取并配置套餐的 API Key 和 Base URL，才能正确使用并抵扣套餐额度。
 
--   **API Key**：在[Coding Plan 页面](https://bailian.console.aliyun.com/cn-beijing/?tab=plan#/efm/subscription/coding-plan)，获取Coding Plan 专属 API Key（格式为`sk-sp-xxxxx`）。
+-   **API Key**：在[Coding Plan 页面](https://bailian.console.aliyun.com/cn-beijing/?tab=plan#/efm/subscription/coding-plan)，获取 Coding Plan API Key（格式为`sk-sp-xxxxx`）。
     
 -   **Base URL**：后续需在 AI 工具中配置以下其中一个Base URL（因工具而异），具体操作请参见对应的AI工具文档。
     
@@ -95,7 +95,7 @@ Coding Plan 整合了千问、GLM、Kimi 、MiniMax顶级模型，并兼容主�
 
 **说明**
 
-Coding Plan 专属的 API Key 和 Base URL 与百炼按量计费的 API Key（`sk-xxxxx`）和Base URL（`https://dashscope.aliyuncs.com/xxxxxx`）不互通，请勿混用。
+Coding Plan 的 API Key 和 Base URL 与百炼按量计费的 API Key（`sk-xxxxx`）和Base URL（`https://dashscope.aliyuncs.com/xxxxxx`）不互通，请勿混用。
 
 ### **步骤三：接入AI工具**
 
@@ -129,11 +129,15 @@ Coding Plan 专属的 API Key 和 Base URL 与百炼按量计费的 API Key（`s
 
 [··· **更多工具**其他编程工具](https://help.aliyun.com/zh/model-studio/more-tools)
 
+### **步骤四：开启代码冲浪**
+
+完成以上步骤后，前往[Coding Plan 使用指南](https://bailian.console.aliyun.com/cn-beijing/?tab=doc#/doc/?type=model&url=3023066)开启代码冲浪。
+
 ## **订阅前须知**
 
 Coding Plan 服务**不支持退款**。因此在订阅前请知悉以下重要内容：
 
-1.  **严禁 API 调用**：仅限在编程工具（如 Claude Code、OpenClaw 等）中使用，禁止以 API 调用的形式用于自动化脚本、自定义应用程序后端或任何非交互式批量调用场景。**将套餐 API Key 用于允许范围之外的调用将被视为违规或滥用，可能会导致订阅被暂停或 API Key 被封禁。**
+1.  **严禁 API 调用**：仅限在编程工具（如 Claude Code、Qoder、Qoder CN、OpenClaw 等）中使用，禁止以 API 调用的形式用于自动化脚本、自定义应用程序后端或任何非交互式批量调用场景。**将套餐 API Key 用于允许范围之外的调用将被视为违规或滥用，可能会导致订阅被暂停或 API Key 被封禁。**
     
 2.  **数据使用授权**：使用 Coding Plan 期间，模型输入以及模型生成的内容将用于服务改进与模型优化。停止使用 Coding Plan 服务可终止后续数据授权，但终止授权的范围不涵盖已授权使用的 Coding Plan 数据。详细条款请参见[阿里云百炼服务协议](https://terms.alicdn.com/legal-agreement/terms/common_platform_service/20230728213935489/20230728213935489.html?spm=5176.28197581.0.0.16e829a4HTC9FE)第 5.2 条。
     
@@ -148,7 +152,7 @@ Coding Plan 服务**不支持退款**。因此在订阅前请知悉以下重要�
 
 ### 已购买 Coding Plan，为何仍显示欠费/被扣费？
 
-误用了百炼通用 API Key 和 Base URL，系统会识别为按量付费，导致额外扣费。请改用 Coding Plan 专属 API Key（以`sk-sp-`开头）和专属 Base URL（含`coding.dashscope.aliyuncs.com`），配置方法请参见[获取套餐专属 API Key 和 Base URL](#2531c37fd64f9)。
+误用了百炼通用 API Key 和 Base URL，系统会识别为按量付费，导致额外扣费。请改用 Coding Plan API Key（以`sk-sp-`开头）和套餐 Base URL（含`coding.dashscope.aliyuncs.com`），配置方法请参见[获取套餐 API Key 和 Base URL](#2531c37fd64f9)。
 
 ### **Lite 版为什么停止新购？**
 

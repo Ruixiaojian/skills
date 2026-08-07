@@ -1,5 +1,7 @@
 # 错误码
 
+\[INFO\] Doc info: docId=8654856, topicId=2614202, spaceId=2486 \[INFO\] Document content read: nodeId=4757773, 188539 chars       错误码 
+
 本文介绍使用阿里云百炼服务可能出现的错误信息及解决方案。
 
 ## **使用阿里云 AI 助理**
@@ -31,11 +33,11 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
 -   数据存在分钟级延迟，开通前的历史调用记录不可追溯。
     
 
-详情请参见模型监控文档。
+详情请参见[模型监控](https://help.aliyun.com/zh/model-studio/model-telemetry#t2848898.html)文档。
 
 ## **400-InvalidParameter**
 
-### **parameter.enable\_thinking must be set to false for non-streaming calls****/**parameter.enable\_thinking only support stream call
+### **parameter.enable\_thinking must be set to false for non-streaming calls** **/** parameter.enable\_thinking only support stream call
 
 **原因：** 使用非流式输出方式调用了思考模式模型。
 
@@ -352,7 +354,7 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
 
 **解决方案：** 请检查`messages`字段的JSON结构是否正确。
 
-### **Value error, contents is neither str nor list of str.**: input.contents
+### **Value error, contents is neither str nor list of str.** : input.contents
 
 **原因：** 使用 Embedding 模型时，输入不是字符串也不是字符串数组。
 
@@ -1075,7 +1077,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 前往[费用与成本](https://usercenter2.aliyun.com/home)为阿里云账户充值，余额充足后服务自动恢复。
 
-## **400-**DataInspectionFailed/data\_inspection\_failed
+## **400-** DataInspectionFailed/data\_inspection\_failed
 
 ### **Input or output data may contain inappropriate content. / Input data may contain inappropriate content. / Output data may contain inappropriate content.**
 
@@ -1384,7 +1386,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请上传单人照。
 
-## **400-**InvalidPerson
+## **400-** InvalidPerson
 
 ### The input image has no human body or multi human bodies. Please upload other image with single person.
 
@@ -1408,7 +1410,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请发布流程后再重试。
 
-## **400-**InvalidImage.ImageSize
+## **400-** InvalidImage.ImageSize
 
 ### **The size of image is beyond limit.**
 
@@ -1416,7 +1418,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 要求图片长宽比例不大于2，且最长边不大于4096。
 
-## **400-**InvalidImage.NoHumanFace
+## **400-** InvalidImage.NoHumanFace
 
 ### **No human face detected.**
 
@@ -1424,7 +1426,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请上传包含清晰人脸的图片。
 
-## **400-**InvalidImageResolution
+## **400-** InvalidImageResolution
 
 ### **The input image resolution is too large or small.**
 
@@ -1432,7 +1434,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 图像分辨率不低于256×256像素，不超过5760×3240像素。
 
-## **400-**InvalidImageFormat
+## **400-** InvalidImageFormat
 
 ### **The input image is in invalid format.**
 
@@ -1440,7 +1442,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 使用JPEG、PNG、JPG、BMP、WEBP格式的图片。
 
-## **400-**InvalidURL
+## **400-** InvalidURL
 
 ### Invalid URL provided in your request.
 
@@ -1492,7 +1494,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：**使用JPG、JPEG、PNG、BMP、WEBP格式的图片。
 
-## **400-**InvalidURL.ConnectionRefused
+## **400-** InvalidURL.ConnectionRefused
 
 ### **Connection to xxx refused, please provide available URL.**
 
@@ -1500,7 +1502,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请提供可用的URL。
 
-## **400-**InvalidURL.Timeout
+## **400-** InvalidURL.Timeout
 
 ### **Download xxx timeout, please check network connection.**
 
@@ -1508,7 +1510,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请检查网络连接。
 
-## **400-**BadRequestException
+## **400-** BadRequestException
 
 ### **Invalid part type.**
 
@@ -1516,7 +1518,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请上传Qwen-Long支持的文件类型。
 
-## **400-**BadRequest.EmptyInput
+## **400-** BadRequest.EmptyInput
 
 ### **Required input parameter missing from request.**
 
@@ -1600,7 +1602,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 -   使用[定制热词（Paraformer）](https://help.aliyun.com/zh/model-studio/custom-hot-words/)时，更新、查询或删除接口调用的热词资源不存在。
     
 
-## **400-**Throttling.AllocationQuota
+## **400-** Throttling.AllocationQuota
 
 ### **您当前的配额为xxx**
 
@@ -1636,7 +1638,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请输入数据库Schema信息。
 
-## **400-**InvalidSchemaFormat
+## **400-** InvalidSchemaFormat
 
 ### **Database schema format is invalid for text2sql.**
 
@@ -1644,7 +1646,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请检查并修正数据表信息的格式。
 
-## **400-Audio.**AudioShortError
+## **400-Audio.** AudioShortError
 
 ### **valid audio too short!**
 
@@ -1652,7 +1654,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：**音频时长应尽量控制在 10~15 秒之间。录音时请确保朗读连贯，并包含至少一段超过 5 秒的连续语音。
 
-## **400-Audio.**AudioSilentError
+## **400-Audio.** AudioSilentError
 
 ### **silent audio error.**
 
@@ -1766,7 +1768,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 音频不得超过60秒。
 
-## **401-**InvalidApiKey/invalid\_api\_key
+## **401-** InvalidApiKey/invalid\_api\_key
 
 ### **Invalid API-key provided. / Incorrect API key provided.**
 
@@ -1867,7 +1869,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 -   OpenAI 兼容端点：`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
     
 
-## **403-**AccessDenied/access\_denied
+## **403-** AccessDenied/access\_denied
 
 ### **Current user api does not support asynchronous calls.**
 
@@ -1893,7 +1895,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请前往阿里云百炼控制台，在[模型广场](https://bailian.console.aliyun.com/?tab=model#/model-market)的对应模型卡片下方单击**立即申请**发起测试申请。或改用其他模型，例如千问或万相的文生图模型替代 Flux。
 
-## **403-**AccessDenied.Unpurchased
+## **403-** AccessDenied.Unpurchased
 
 ### **Access to model denied. Please make sure you are eligible for using the model.**
 
@@ -1913,7 +1915,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
     > 如果开通服务时提示“您尚未进行实名认证”，请先进行[实名认证](https://help.aliyun.com/zh/account/verify-your-identity-individual-account)。
     
 
-## **403-**Model.AccessDenied
+## **403-** Model.AccessDenied
 
 ### Model access denied.
 
@@ -1926,7 +1928,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 -   **调用自定义模型**：自定义模型部署成功后，仅能用其所在业务空间的API-KEY调用，且无需模型调用授权。
     
 
-## **403-**App.AccessDenied
+## **403-** App.AccessDenied
 
 ### **App access denied.**
 
@@ -1945,7 +1947,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 -   若上述建议都正确，建议刷新数据重新发布再调用，或尝试重新创建智能体。
     
 
-## **403-**Workspace.AccessDenied
+## **403-** Workspace.AccessDenied
 
 ### **Workspace access denied.**
 
@@ -1960,7 +1962,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 -   也可改为使用主账号的API KEY，主账号具有所有业务空间的权限。
     
 
-## **403-**Endpoint.AccessDenied
+## **403-** Endpoint.AccessDenied
 
 ### **Workspace endpoint access denied.**
 
@@ -1996,7 +1998,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 -   若控制台的调用记录中没有对应请求，可能是请求未到达服务端，请检查客户端插件配置或本地网络连接是否正常。
     
 
-## **404-**ModelNotFound/**model\_not\_found**
+## **404-** ModelNotFound/ **model\_not\_found**
 
 ### **The provided model xxx is not supported by the Batch API.**
 
@@ -2017,7 +2019,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 -   如果您通过国际站 API 端点（如 `dashscope-us.aliyuncs.com`）发起调用，请注意不同地域可用的模型列表不同。调用前请确认目标模型是否在该地域可用，部分模型在美国地域需使用带 `-us` 后缀的模型名称（如 `qwen-max-us`）。
     
 
-## **404-**model\_not\_supported
+## **404-** model\_not\_supported
 
 ### **Unsupported model xxx for OpenAI compatibility mode.**
 
@@ -2057,7 +2059,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请检查接口路径是否正确及是否存在异常字符。
 
-## **409-**Conflict
+## **409-** Conflict
 
 ### **Model instance xxx already exists, please specify a suffix.**
 
@@ -2098,7 +2100,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 -   如需更高调用频率，可参考[限流](https://help.aliyun.com/zh/model-studio/rate-limit)申请提额。
     
 
-## **429-**Throttling.RateQuota/LimitRequests/limit\_requests/ResourceExhausted/Too many requests
+## **429-** Throttling.RateQuota/LimitRequests/limit\_requests/ResourceExhausted/Too many requests
 
 ### **You have exceeded your request limit./Requests rate limit exceeded, please try again later.** /You exceeded your current requests list.
 
@@ -2106,7 +2108,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请参考[限流](https://help.aliyun.com/zh/model-studio/rate-limit)，控制调用频率。
 
-## **429-**Throttling.BurstRate/limit\_burst\_rate
+## **429-** Throttling.BurstRate/limit\_burst\_rate
 
 ### Request rate increased too quickly. To ensure system stability, please adjust your client logic to scale requests more smoothly over time.
 
@@ -2170,7 +2172,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **原因：** 模型推理商品已失效。
 
-## **430-Audio.**DecoderError
+## **430-Audio.** DecoderError
 
 ### Decoder audio file failed.
 
@@ -2178,7 +2180,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案**：建议通过工具（如ffprobe、mediainfo）或命令（如Linux/macOS的file命令）确认音频文件的实际编码格式，以确保符合要求。
 
-## **430-Audio.**FileSizeExceed
+## **430-Audio.** FileSizeExceed
 
 ### **File too large**
 
@@ -2186,7 +2188,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 用于声音复刻的音频文件需10M以内。
 
-## **430-Audio.**AudioRateError
+## **430-Audio.** AudioRateError
 
 ### **File sample rate unsupported**
 
@@ -2194,7 +2196,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 采样率设置为16KHz及以上。
 
-## **430-Audio.**AudioSilentError
+## **430-Audio.** AudioSilentError
 
 ### **Silent file unsupported.**
 
@@ -2256,7 +2258,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请检查`voice`参数，确保指定了正确的音色名称。可用音色请参见[实时语音合成（Qwen-Audio-TTS/CosyVoice）](https://help.aliyun.com/zh/model-studio/cosyvoice-large-model-for-speech-synthesis/)。
 
-## **500-**InternalError.FileUpload
+## **500-** InternalError.FileUpload
 
 ### **oss upload error.**
 
@@ -2264,7 +2266,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请检查OSS配置和网络。
 
-## **500-**InternalError.Upload
+## **500-** InternalError.Upload
 
 ### **Failed to upload result.**
 
@@ -2272,7 +2274,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请检查存储配置或稍后重试。
 
-## **500-**InternalError.Algo
+## **500-** InternalError.Algo
 
 ### **inference internal error.**
 
@@ -2365,7 +2367,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请调整`messages`数组的顺序，确保最后一个元素是 `{"role": "user", ...}`。
 
-## **500-**InternalError.Timeout
+## **500-** InternalError.Timeout
 
 ### **An internal timeout error has occured during execution, please try again later or contact service support.**
 
@@ -2373,7 +2375,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请检查任务执行情况，或联系技术支持。
 
-## **500-**SystemError
+## **500-** SystemError
 
 ### An system error has occured, please try again later.
 
@@ -2381,7 +2383,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请稍后重试。若您使用[调用百炼应用](https://help.aliyun.com/zh/model-studio/spring-ai-alibaba-integrate-llm-application)，请参照示例代码或说明文档，查看是否代码编写有误，若依然无法确定问题，加入[Spring AI Alibaba官网](https://java2ai.com/?spm=4347728f.638c0b20.0.0.23f87982NTcSMy)最下方提供的DING群，联系开发人员进行定位。
 
-## **500-**ModelServiceFailed
+## **500-** ModelServiceFailed
 
 ### **Failed to request model service.**
 
@@ -2389,7 +2391,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请稍后重试。
 
-## **500-**RequestTimeOut
+## **500-** RequestTimeOut
 
 ### **Request timed out, please try again later. / Response timeout! /** I/O error on POST request for "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions": timeout
 
@@ -2453,7 +2455,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请检查文档索引和检索配置。
 
-## **500/503-**ModelServingError
+## **500/503-** ModelServingError
 
 ### **Too many requests. Your requests are being throttled due to system capacity limits. Please try again later.**
 
@@ -2461,7 +2463,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请稍后再进行尝试。
 
-## **503-**ModelUnavailable
+## **503-** ModelUnavailable
 
 ### **Model is unavailable, please try again later.**
 

@@ -2,7 +2,7 @@
 
 选择适合语音合成、声音复刻和声音设计场景的模型。
 
-## 从闭源模型迁移到百炼?
+## 从闭源模型迁移到百炼？
 
 如果你正在使用 ElevenLabs、OpenAI 或 Google 的语音合成服务，可参考下表选择对应的百炼模型。
 
@@ -22,7 +22,7 @@ OpenAI gpt-4o-tts、Google Chirp 3
 
 ElevenLabs Multilingual v3
 
-`qwen-audio-3.0-tts-flash`（声音复刻）、`cosyvoice-v3.5-plus`（声音设计）、`MiniMax/speech-2.8-hd`（声音复刻）
+`qwen-audio-3.0-tts-flash`（声音复刻）、`qwen-audio-3.0-tts-plus`、`qwen-audio-3.0-tts-flash`（声音设计）、`cosyvoice-v3.5-plus`（声音设计）、`MiniMax/speech-2.8-hd`（声音复刻）
 
 ## 标准语音合成还是自定义音色？
 
@@ -54,7 +54,7 @@ ElevenLabs Multilingual v3
 
 `qwen-audio-3.0-tts-plus`、`MiniMax/speech-2.8-hd`
 
-`qwen-audio-3.0-tts-plus`（声音复刻）、`cosyvoice-v3.5-plus`（声音设计）、`MiniMax/speech-2.8-hd`（声音复刻）
+`qwen-audio-3.0-tts-plus`（声音复刻）、`qwen-audio-3.0-tts-plus`、`qwen-audio-3.0-tts-flash`（声音设计）、`cosyvoice-v3.5-plus`（声音设计）、`MiniMax/speech-2.8-hd`（声音复刻）
 
 -   **使用标准语音合成**：当内置音色库能满足需求，希望快速上手、无需额外配置时。
     
@@ -91,7 +91,7 @@ ElevenLabs Multilingual v3
 
 `qwen-audio-3.0-tts-plus`、`qwen-audio-3.0-tts-flash`、`MiniMax/speech-2.8-hd`
 
-`cosyvoice-v3.5-plus`、`cosyvoice-v3.5-flash`
+`qwen-audio-3.0-tts-plus`、`qwen-audio-3.0-tts-flash`、`cosyvoice-v3.5-plus`、`cosyvoice-v3.5-flash`
 
 音色管理服务
 
@@ -123,7 +123,7 @@ CosyVoice 系列模型还支持通过 AOQ 协议接入；如果是客户端对�
 
 用自然语言描述期望的表达方式，可按请求动态控制语速、情绪和风格。例如“用温柔的语气，语速稍慢”或“用激动的播报风格”。适用于情感化内容制作、专业播报、有声读物等需要丰富表现力的场景。
 
-支持指令控制的模型：Qwen-Audio-TTS 系列（`qwen-audio-3.0-tts-plus`、`qwen-audio-3.0-tts-flash`）、CosyVoice 系列（`cosyvoice-v3.5-plus`、`cosyvoice-v3.5-flash`、`cosyvoice-v3-flash`）和 Qwen-TTS 系列（`qwen3-tts-instruct-flash-realtime`、`qwen3-tts-instruct-flash`）。详细使用方式请参见[实时语音合成 > 指令控制](https://help.aliyun.com/zh/model-studio/realtime-tts-user-guide#d815caea76zx8)。
+支持指令控制的模型：Qwen-Audio-TTS 系列（`qwen-audio-3.0-tts-plus`、`qwen-audio-3.0-tts-flash`）、CosyVoice 系列（`cosyvoice-v3.5-plus`、`cosyvoice-v3.5-flash`、`cosyvoice-v3-flash`）和 Qwen-TTS 系列（`qwen3-tts-instruct-flash-realtime`、`qwen3-tts-instruct-flash-realtime-2026-01-22`、`qwen3-tts-instruct-flash`、`qwen3-tts-instruct-flash-2026-01-26`）。详细使用方式请参见[实时语音合成 > 指令控制](https://help.aliyun.com/zh/model-studio/realtime-tts-user-guide#d815caea76zx8)。
 
 ## 推荐模型
 
@@ -149,7 +149,7 @@ WebSocket / HTTP
 
 支持
 
-不支持
+支持
 
 支持
 
@@ -209,7 +209,7 @@ WebSocket / HTTP
 
 支持
 
-不支持
+支持
 
 支持
 
@@ -219,7 +219,7 @@ WebSocket / HTTP
 
 支持
 
-不支持
+支持
 
 支持
 
