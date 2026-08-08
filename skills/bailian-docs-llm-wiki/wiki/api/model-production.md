@@ -4,53 +4,34 @@ model production 是百炼平台中用于将基础模型转化为可交付、可
 
 ## 支持的模型/功能
 
-- **微调训练**：支持对百炼托管的基础模型（如 Qwen 系列）进行监督微调（Supervised Fine-tuning），适配特定任务（如客服问答、金融摘要）。详见 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)。
-- **模型部署**：支持将微调完成的模型或通过 `import_model` 导入的第三方模型（需符合 ONNX 或 PyTorch 格式规范）部署为 HTTP 可调用的推理服务。详见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)。
-- **功能边界**：当前不支持 RLHF、DPO 等高级对齐训练；也不支持跨框架混合部署（如 TensorFlow 模型直接部署）。
+- **微调训练**：支持对百炼托管的基础模型（如 Qwen 系列）进行监督微调（Supervised Fine-tuning），适配特定任务数据集；详见 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)。
+- **[模型部署](../concepts/model-deployment.md)**：支持将微调完成的模型或通过 `import_model` 导入的第三方模型（需符合 ONNX/Triton 格式要求）部署为 HTTP 接口服务；详见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)。
+- **版本管理**：所有微调作业产出及部署实例均绑定唯一 `version_id`，支持灰度发布与回滚。
 
 ## 关键参数
 
-| 参数 | 说明 | 示例值 |
-|------|------|--------|
-| `base_model_id` | 微调所基于的基础模型 ID | `qwen2-7b-chat` |
-| `training_file_id` | 训练数据集 ID（需提前上传至百炼数据空间） | `ds-abc123` |
-| `deployment_name` | 部署服务唯一标识，全局唯一且不可修改 | `prod-faq-v2` |
-| `instance_type` | 推理实例规格，影响并发与延迟 | `gpu-a10-small` |
+| 参数 | 说明 | 示例 |
+|------|------|------|
+| `model_id` | 模型唯一标识符，格式为 `org-id/model-name` | `my-org/qwen2-7b-chat-ft-v1` |
+| `training_job_id` / `deployment_id` | 微调作业或部署实例 ID，全局唯一 | `ft-job-abc123`, `dep-xyz789` |
+| `instance_type` | 部署时指定的 GPU 规格（仅限部署阶段） | `gpu-a10-2` |
+| `max_batch_size` | 推理服务最大批处理尺寸（部署参数） | `8` |
 
-> **注意**：文档 1 中未明确列出 `training_file_id` 的格式要求，但 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 明确要求部署时 `model_id` 必须指向已成功完成的状态为 `succeeded` 的微调任务输出模型——这意味着微调任务必须先完成并生成有效 `model_id`，否则部署将失败。
+> **注意**：文档中未明确 `instance_type` 是否支持 CPU 实例；当前 API 实际仅接受 GPU 类型，CPU 部署暂不支持，请以 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 中的 `instance_type` 枚举值为准。
 
 ## 使用方式
 
-1. **微调启动**：  
-   ```bash
-   curl -X POST https://dashscope.aliyuncs.com/api/v1/fine_tuning/jobs \
-     -H "Authorization: Bearer $API_KEY" \
-     -H "Content-Type: application/json" \
-     -d '{
-           "base_model_id": "qwen2-7b-chat",
-           "training_file_id": "ds-abc123",
-           "hyperparameters": {"n_epochs": 3}
-         }'
-   ```
-2. **轮询状态**：通过 `GET /fine_tuning/jobs/{job_id}` 获取 `status` 和最终 `model_id`。  
-3. **部署服务**：使用上一步返回的 `model_id` 创建部署：  
-   ```bash
-   curl -X POST https://dashscope.aliyuncs.com/api/v1/deployments \
-     -H "Authorization: Bearer $API_KEY" \
-     -H "Content-Type: application/json" \
-     -d '{
-           "model_id": "ft-qwen2-7b-chat-xyz789",
-           "deployment_name": "prod-faq-v2",
-           "instance_type": "gpu-a10-small"
-         }'
-   ```
+1. **微调启动**：调用 `POST /v1/fine_tuning_jobs`，传入 `base_model_id`、训练数据 OSS 路径及超参配置；
+2. **监控状态**：轮询 `GET /v1/fine_tuning_jobs/{job_id}` 获取 `status: succeeded` 后，获取产出 `model_id`；
+3. **部署服务**：调用 `POST /v1/deployments`，传入上一步得到的 `model_id` 及 `instance_type` 等参数；
+4. **调用推理**：使用返回的 `endpoint_url` 发送 `POST /v1/chat/completions` 请求（兼容 OpenAI 格式）。
 
 ## 限制和注意事项
 
-- 微调任务最长运行时间：72 小时；超时自动终止，状态置为 `failed`。
-- 单个账号最多同时运行 5 个微调任务；最多创建 20 个活跃部署（`status=active`）。
-- 部署后模型不可变更：`deployment_name` 和 `instance_type` 创建后不可更新，如需调整需删除重建。
-- > **注意**：[模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 文档中提及“支持中断后恢复”，但实测 v2.3.0 API 中 `resume_from_job_id` 字段已被移除，该功能已下线，请勿依赖。
+- 单次微调作业最长运行时限为 72 小时，超时自动终止；
+- 每个 `model_id` 最多保留 10 个历史版本（含微调产出与手动导入），超出后需显式清理旧版本；
+- 部署实例默认启用自动扩缩容（min=1, max=5），但 `max_batch_size` 和 `max_concurrent_requests` 需在创建时固定，不支持运行时修改；
+- 微调数据集必须为 JSONL 格式且字段名严格匹配 `messages`（Chat）或 `prompt`/`completion`（Completion）；具体约束见 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)。
 
 ## 来源文档
 

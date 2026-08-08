@@ -1,61 +1,47 @@
 # plug in
 
-插件是百炼平台用于扩展大模型能力的核心机制，通过将外部工具（API）集成到模型推理链路中，解决大模型在实时信息获取、精确计算、代码执行、图像生成等场景下的固有局限。开发者可选用官方插件、三方插件或自定义插件，结合智能体应用、工作流应用或 Assistant API 进行调用。插件调用由大模型自主规划（智能体/Assistant 模式）或显式编排（工作流模式）驱动。
+插件是百炼平台用于扩展大模型能力的核心机制，通过将外部工具（API）集成到推理链路中，弥补大模型在实时信息获取、精确计算、代码执行、图像生成等方面的固有局限。插件以“工具集合”形式组织，支持官方预置、三方市场及完全自定义三种类型，可被智能体应用、工作流应用或 Assistant API 主动调用或编排执行。其设计目标是让开发者无需修改模型本身，即可安全、可控地增强应用功能。
 
-## 支持的模型与功能
+## 支持的模型/功能
 
-百炼当前支持以下模型调用插件：`qwen-turbo`、`qwen-plus`、`qwen-max`、`qwen-vl-max`、`qwen-vl-plus`。各模型对插件的支持能力存在差异，**实际兼容性请以控制台运行结果为准**，而非文档静态列表 [插件概述](../../raw/application-user-guide/plug-in/plug-in-overview.md)。
+百炼当前支持插件调用的模型包括：`qwen-turbo`、`qwen-plus`、`qwen-max`、`qwen-vl-max` 和 `qwen-vl-plus`。各模型对插件的兼容性存在差异，**实际可用性以控制台运行结果为准**，不建议依赖文档静态列表做兼容性判断 [插件概述](../../raw/application-user-guide/plug-in/plug-in-overview.md)。
 
-官方插件提供开箱即用能力，包括：
-- `code_interpreter`：执行 Python 代码（支持 matplotlib、pandas、sympy 等依赖，但**不支持网络访问与本地文件上传**）；
-- `calculator`：复杂数学运算；
-- `text_to_image`：文生图（限时免费，需申请开通）；
-- `quark_search`：实时网页搜索（返回标题、关键词、摘要，**不支持访问网页详情**）；
-- `generate_qrcode`：URL 转二维码；
-- `github_search`：GitHub 项目检索（返回标题、链接、摘要，**不支持访问项目详情**）。
+插件功能分为三类：
+- **官方插件**：开箱即用，无需配置参数，涵盖 Python 代码解释器（`code_interpreter`）、计算器（`calculator`）、图片生成（`text_to_image`）、夸克搜索（`quark_search`）、生成二维码（`generate_qrcode`）、GitHub 搜索（`github_search`）等 [官方和第三方插件](../../raw/application-user-guide/plug-in/plugins.md)；
+- **三方插件**：来自阿里云云市场，覆盖商业服务、图像视频、教育等领域，需开通后使用；
+- **自定义插件**：支持通过控制台创建或从云市场导入，允许开发者接入任意 HTTP API，并精细配置鉴权、输入/输出参数及高级调用示例 [自定义插件](../../raw/application-user-guide/plug-in/custom-plug-ins.md)。
 
-三方插件覆盖商业服务、图像视频、教育等领域，需先开通后使用；自定义插件支持完全自主开发，详见 [自定义插件](../../raw/application-user-guide/plug-in/custom-plug-ins.md)。
-
-> **注意**：文档 1 和文档 2 均列出 `quark_search` 和 `github_search` 的能力边界（仅返回摘要，不支持详情访问），但文档 2 在“常见问题”中额外说明“夸克搜索和联网搜索（`enable_search`）有什么区别？”，指出 `enable_search` 是另一套机制，**并非插件**。该字段属于模型参数，与插件无关，开发者不应混淆二者——插件调用必须显式声明 `tools`，而 `enable_search` 是隐式增强，不可控且不返回结构化结果。
+> **注意**：文档 1 和文档 2 均列出 `quark_search` 插件说明，但文档 2 明确指出“夸克搜索插件目前支持检索出网页标题、关键词和摘要，但不支持直接访问网页详情”，而文档 1 仅简述为“不支持直接访问网页详情”。二者实质一致，但文档 2 表述更完整，应以此为准。
 
 ## 关键参数
 
-插件调用依赖以下核心参数：
-
-- **工具 ID（tool_id）**：唯一标识一个工具，如 `calculator`。必须通过控制台插件详情页复制，或在 API 请求中准确传入 [官方和第三方插件](../../raw/application-user-guide/plug-in/plugins.md)。
-- **输入参数（input parameters）**：
-  - `传参方式`：分为 `大模型识别`（从用户输入中抽取）和 `业务透传`（由外部系统通过 `biz_params` 或 `user_defined_params` 注入）；
-  - `类型`：支持 `String`、`Number`、`Boolean`、`Object`（Object 子属性**不能为空**，需显式添加）；
-  - `必填`：勾选后，大模型未识别出该参数时将拒绝调用。
-- **输出参数（output parameters）**：定义 API 返回数据中哪些字段被提取并送入大模型上下文，**所有字段均为必填项**，描述需精简准确，层级应尽量扁平。
-- **鉴权配置**（自定义插件）：
-  - 支持 `Header` 或 `Query` 位置；
-  - `Type` 可选 `basic` / `bearer` / `appcode`，决定 Authorization 头格式；
-  - `Token` 为服务级鉴权凭证，用户级鉴权需配合 `biz_params` 透传。
+插件调用的核心标识是 **工具 ID**（如 `calculator`），必须在 API 请求中准确传递。自定义插件还需关注以下关键配置项：
+- **插件 URL**：工具所在服务的根域名（如 `https://myapi.example.com`），所有工具路径均以此为基准拼接；
+- **工具路径**：以 `/` 开头的相对路径（如 `/query`），与插件 URL 组合成完整请求地址；
+- **输入参数**：需明确定义参数名、类型（String/Number/Object 等）、描述、传参方式（`大模型识别` 或 `业务透传`）；Object 类型子属性**不能为空**，必须显式添加 [自定义插件](../../raw/application-user-guide/plug-in/custom-plug-ins.md)；
+- **鉴权配置**：支持 Header 或 Query 方式，鉴权类型包括 `basic`、`bearer`、`appcode`；[Token](../concepts/token.md) 值需由 API 提供方分配；
+- **高级配置（Value）**：提供用户 Query 到入参 JSON 的映射示例（如 `"查询杭州明天天气" → {"city": "杭州", "date": "2025-04-25"}`），显著提升大模型参数提取准确率。
 
 ## 使用方式
 
-插件可通过三种方式接入：
-
-1. **控制台集成（推荐快速验证）**：
-   - 官方/三方插件：在 [插件市场](https://bailian.console.aliyun.com/#/plugin-market) 页面单击“添加至智能体”，选择目标智能体（**官方插件仅支持同业务空间内关联**），最多添加 10 个工具；
-   - 自定义插件：需先发布为 MCP 服务，再在智能体编排页的“MCP”区块中添加 [自定义插件](../../raw/application-user-guide/plug-in/custom-plug-ins.md)。
-
-2. **工作流应用**：将插件作为独立节点拖入画布，按需编排执行顺序，**不依赖大模型自动决策**。
-
+插件可通过三种方式集成：
+1. **控制台可视化绑定**：在插件市场页面选择工具 → 单击“添加至智能体”，关联到同业务空间的智能体应用；最多支持 10 个工具同时启用 [官方和第三方插件](../../raw/application-user-guide/plug-in/plugins.md)；
+2. **工作流节点编排**：在工作流应用中将插件作为独立节点拖入画布，按需设置输入/输出连接，由人工编排而非模型自主决策；
 3. **API 调用**：
-   - Assistant API：在 `tools` 数组中声明工具定义，请求时携带 `tool_choice` 控制调用策略；
-   - 智能体/工作流 API：通过 `biz_params` 传递业务透传参数或用户级鉴权 [Token](../concepts/token.md)。
+   - Assistant API：在 `tools` 字段中声明工具列表，模型自动选择并触发调用；
+   - DashScope SDK / HTTP 接口：通过 `biz_params` 传递业务透传参数或用户级鉴权 [Token](../concepts/token.md) [自定义插件](../../raw/application-user-guide/plug-in/custom-plug-ins.md)。
 
-> **注意**：文档 1 描述“通过智能体应用或 Assistant API 调用插件后，大模型将根据用户输入、工具名称及工具描述来判断是否调用”，而文档 3 明确要求“工具描述”需用自然语言、给出示例——这表明**工具描述质量直接影响调用准确率**，开发者须避免模糊表述。
+> **注意**：官方插件仅支持与**相同业务空间**内的智能体应用关联；子业务空间首次使用需单独授权 [官方和第三方插件](../../raw/application-user-guide/plug-in/plugins.md)。
 
 ## 限制和注意事项
 
-- **权限前置要求**：首次使用插件前，主账号或 RAM 子账号必须授权服务关联角色 `AliyunServiceRoleForSFMAccessCloudAPI`。RAM 用户需主账号授予 `ram:CreateServiceLinkedRole` 权限，否则无法完成授权 [官方和第三方插件](../../raw/application-user-guide/plug-in/plugins.md)。
-- **[业务空间隔离](../concepts/workspace-isolation.md)**：官方插件仅能与**同一业务空间内的智能体应用**关联；跨空间调用需通过自定义插件 + MCP 方式实现。
-- **调试与发布强约束**：自定义插件的工具必须经“测试工具”成功运行后，再点击“发布”，**草稿状态工具无法被调用**；发布失败常见原因包括参数描述缺失（错误码 130040）、Object 子属性为空（错误码 130022）或 GET 方法下误配 Object 类型入参 [自定义插件](../../raw/application-user-guide/plug-in/custom-plug-ins.md)。
-- **组合调用限制**：单次对话中可同时触发多个插件，但工具总数上限为 10 个（智能体模式）；工作流中无此限制，但需手动编排。
-- **计费提示**：`text_to_image` 和 `quark_search` 为“限时免费，需申请开通”，其余官方插件当前免费；三方插件按所选套餐计费。
+- **权限要求**：主账号或 RAM 子账号首次访问插件市场前，必须授权服务关联角色 `AliyunServiceRoleForSFMAccessCloudAPI`；RAM 用户需额外授予 `ram:CreateServiceLinkedRole` 权限，否则授权失败 [官方和第三方插件](../../raw/application-user-guide/plug-in/plugins.md)；
+- **自定义插件限制**：工具名称长度 ≤ 20 字符；GET 方法不支持 Object 类型输入参数；发布前必须完成在线调试且状态为“成功”；
+- **功能边界**：
+  - `code_interpreter` 不支持网络访问与本地文件上传，预装依赖列表详见 [官方和第三方插件](../../raw/application-user-guide/plug-in/plugins.md)；
+  - `quark_search` 和 `github_search` 仅返回摘要信息，无法加载网页或项目详情页；
+  - 多插件组合调用（如夸克搜索 + 图片生成 + 二维码）可行，但需确保各工具输出格式能被下游工具正确消费；
+- **安全性**：自定义插件的鉴权逻辑完全由开发者控制，百炼平台不校验 [Token](../concepts/token.md) 有效性，仅负责透传；务必确保 API 端点具备防重放、限流等基础防护。
 
 ## 来源文档
 

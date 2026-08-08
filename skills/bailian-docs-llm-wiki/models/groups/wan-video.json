@@ -49,7 +49,7 @@
           "count_limit": 30,
           "async_task_timeout": 480,
           "type": "model-default",
-          "async_user_concurrency_limit": 2
+          "async_user_concurrency_limit": 3
         },
         "model-default": {
           "count_limit_period": 60,
@@ -58,7 +58,7 @@
           "count_limit": 30,
           "async_task_timeout": 480,
           "type": "model-default",
-          "async_user_concurrency_limit": 2
+          "async_user_concurrency_limit": 3
         }
       },
       "priceTimeBands": [],
