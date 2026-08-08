@@ -1,53 +1,45 @@
 # 流式输出
 
-流式输出（Streaming Output）是指模型服务在生成响应过程中，将结果以增量、分块的方式实时推送至客户端，而非等待整个响应完成后再一次性返回。这种方式显著降低端到端延迟，提升用户体验，尤其适用于对话交互、长文本生成、语音合成等对实时性敏感的场景。
+流式输出（Streaming Output）是百炼平台中一种实时、增量式返回模型响应的通信机制，客户端无需等待整个响应生成完成即可逐段接收并处理结果，显著降低端到端延迟，提升交互实时性与用户体验。
 
 ## 在百炼平台的不同场景中如何使用
 
-流式输出在百炼平台多个核心能力中统一支持，但协议格式、触发方式和适用范围略有差异：
+流式输出在以下三类核心能力中被统一支持，但协议形式与使用方式略有差异：
 
-- **Qwen 文本生成 API**（OpenAI/Anthropic/DashScope 协议）：  
-  通过请求参数 `stream=true` 启用。DashScope 原生接口返回标准 SSE 格式（`event: message\ndata: {...}`），[OpenAI 兼容接口](openai-compatible-interface.md)返回纯 `data: {...}` 行；需客户端按行解析并拼接 `delta.content`。注意：工具调用开始时 `delta.content` 可能为空字符串，应忽略该片段。
+- **知识问答（`/api/v2/apps/knowledge/chat`）**：默认启用流式，采用 Server-Sent Events（SSE）协议。服务端按 `event: planning` / `event: tool_call` / `event: generation` 分阶段推送 JSON 数据块，每行以 `data: {...}` 格式发送，客户端需按事件类型解析并组装最终答案。
 
-- **Application Call（智能体/工作流调用）**：  
-  仅同步调用（`background=false`）支持 `stream=true`；异步调用不支持流式。启用后，响应为 SSE 流，包含 `planning`、`tool_calling`、`generation` 等阶段事件，便于前端分阶段渲染（如思考中 → 调用工具 → 生成答案）。
+- **应用调用（Application Call）**：通过 `stream=true` 参数启用（仅同步调用有效），支持 DashScope API 和 Responses（OpenAI 兼容）接口。响应为 SSE 流，包含 `choices[0].delta.content` 字段的增量文本片段，适用于聊天机器人等实时对话场景。
 
-- **Omni Realtime API 与 Realtime API**：  
-  原生基于 WebSocket 或 AOQ/WebRTC 的事件驱动架构，天然支持流式。服务端持续推送 `response.text.delta`、`response.audio.delta` 等事件，无需显式设置 `stream` 参数；客户端需监听对应事件类型并实时消费。
+- **Realtime API（Omni 及通用 Realtime）**：基于 WebSocket 或 AOQ 协议，采用事件驱动模型。服务端主动推送 `response.text.delta`、`response.audio.delta` 等细粒度事件，支持文本+音频混合流式输出，适用于语音助手、实时翻译等低延迟交互场景。
 
-- **Knowledge（知识问答）**：  
-  `/api/v2/apps/knowledge/chat` 接口默认支持 SSE 流式响应，返回 `planning`（检索规划）、`tool_calling`（知识库调用）、`generation`（最终回答）三类事件，每类事件含 `delta` 字段，支持渐进式展示。
+> ⚠️ 注意：异步调用（`background=true`）不支持流式输出；所有流式响应均无 `job_id` 或轮询机制，必须通过长连接持续接收。
 
 ## 关键参数和配置
 
-- **通用开关参数**：  
-  `stream`: `boolean`，设为 `true` 启用流式输出（Qwen API、Application Call、Knowledge 问答均适用）；默认 `false`。
+| 参数 | 位置 | 类型 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `stream` | 请求体（JSON）或 Query 参数 | `boolean` | `true`（知识问答）、`false`（应用调用） | 控制是否启用流式；设为 `false` 时返回完整 JSON 响应（非流式）。 |
+| `event` 字段 | SSE 响应头 | `string` | 如 `planning`、`generation`、`text.delta` | 标识当前数据块语义阶段，客户端需据此做差异化处理。 |
+| `data:` 前缀 | SSE 响应体 | `string` | 必须存在 | 每行以 `data: {...}` 开头，空行分隔事件；需严格按 SSE 规范解析。 |
+| `modalities` | Realtime API 的 `session.update` | `string[]` | `["text","audio"]` | 决定流式输出模态组合，影响事件类型（如是否含 `response.audio.delta`）。 |
 
-- **客户端处理要求**：  
-  - 必须支持 Server-Sent Events（SSE）或 WebSocket 事件解析；  
-  - 对 [OpenAI 兼容接口](openai-compatible-interface.md)，需按 `\n\n` 分割响应块，提取 `data:` 后内容并 JSON 解析；  
-  - 对 DashScope 原生及 Knowledge 接口，需识别 `event:` 头部以区分阶段（如 `event: generation`）；  
-  - 实时 API（Omni/Realtime）需监听具体事件名（如 `response.text.delta`），不可依赖通用 `data` 字段。
+> ✅ 最佳实践：  
+> - 客户端务必设置足够长的连接超时（建议 ≥ 300s），避免因网络波动中断流；  
+> - 解析 SSE 时需忽略空行、跳过注释行（以 `:` 开头），并正确处理换行符 `\n` 或 `\r\n`；  
+> - 对于 Realtime API，需监听 `response.done` 事件作为流结束信号，而非依赖连接关闭。
 
-- **注意事项**：  
-  - 流式响应中 `usage`（token 统计）仅在最后一条消息中完整返回，中间块不含或仅含部分统计；  
-  - 工具调用场景下，`delta.tool_calls` 可能分多次到达，需累积解析；  
-  - 若需保证语义完整性（如避免单词截断），建议在客户端做简单缓冲（如等待标点或空格后再渲染）。
+## 面向开发者提示
 
-## 面向开发者：简洁实用提示
-
-- ✅ **首选 DashScope 原生协议**：流式字段最全（含 `event`、`id`、`usage` 分项），调试友好；  
-- ✅ **前端务必实现增量渲染**：不要等待 `done` 事件才显示内容，优先展示 `delta.content`；  
-- ⚠️ **注意空 content 边界**：[OpenAI 兼容接口](openai-compatible-interface.md)中 `delta.content === ""` 表示工具调用开始，非错误；  
-- ⚠️ **异步调用 ≠ 流式**：`application call` 的 `background=true` 模式不支持 `stream`，勿混用；  
-- 🚀 **Realtime 场景直接用 SDK**：AOQ/WebSocket 客户端已内置流式事件监听与音频 buffer 管理，无需手动解析 SSE。
+- 不要自行拼接 `data:` 行——使用标准 SSE 解析库（如 `EventSource` 浏览器原生 API、`sseclient` Python 库）；
+- 流式响应中 `content` 字段可能为空字符串（如工具调用阶段），请判空处理；
+- 所有流式接口均不透传 LLM 控制参数（如 `temperature`、`max_tokens`）至知识问答接口，该限制已在文档中明确；
+- 若需调试，可临时禁用流式（`stream=false`）获取完整响应结构，再切换回流式实现渐进渲染。
 
 ## 关联主题页
 
-- [qwen api reference](../api/qwen-api-reference.md)
-- [application call](../api/application-call.md)
+- [knowledge](../api/knowledge.md)
 - [omni realtime api](../api/omni-realtime-api.md)
 - [realtime api user guide](../api/realtime-api-user-guide.md)
-- [knowledge](../api/knowledge.md)
+- [application call](../api/application-call.md)
 
 

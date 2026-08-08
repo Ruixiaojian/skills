@@ -1,39 +1,67 @@
 # preparations
 
-在调用阿里云百炼平台的模型或应用前，开发者需完成基础环境准备，包括获取并安全配置 API Key、安装适配的 SDK 或 CLI 工具、理解关键参数约束及常见错误处理机制。这些步骤是所有模型调用的前置依赖，直接影响服务可用性与安全性。
+在调用阿里云百炼平台的模型或应用前，开发者需完成基础环境准备：获取并安全配置 API Key、安装适用的 SDK 或 CLI 工具、理解关键参数约束及常见错误应对方式。这些步骤是所有模型调用（文本、图像、语音、视频、向量等）的统一前置条件，直接影响服务可用性与安全性。
 
 ## 支持的模型/功能
 
-百炼平台支持[多模态](../concepts/multi-modal.md)模型（如 `qwen3-vl-plus`、`qwen-image-2.0`）、文本生成模型（如 `qwen3.7-max`）、语音合成/识别（如 `cosyvoice`、`paraformer`）、向量嵌入（`text-embedding-v2`）及排序模型（`text-rerank`）等。模型能力取决于其类型：纯文本模型不支持 `image_url` 等[多模态](../concepts/multi-modal.md) `content` 元素；而全模态模型（如 `qwen3.5-omni-plus`）则支持图像、音频、视频输入 [原文标题](../../raw/model-api-reference/preparations/use-model-studio-cli.md)。调用前须确认模型是否已开通——未在[模型市场](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market)激活的模型将返回 `Model not exist` 或 `The product is not activated` 错误 [原文标题](../../raw/model-api-reference/preparations/error-code.md)。
+百炼平台支持全模态模型调用，包括但不限于：
+- **文本生成**（如 `qwen3.7-max`, `qwen3-235b-a22b-instruct-2507`）
+- **多模态理解与生成**（如 `qwen3.5-omni-plus`, `qwen-image-2.0`, `happyhorse-1.1-t2v`）
+- **语音合成与识别**（如 `cosyvoice`, `paraformer-real-time`）
+- **向量嵌入与排序**（如 `text-embedding-v3`, `text-rerank-v3`）
 
-> **注意**：文档 3 中列出的 `qwen3.5-omni-plus` 默认模型与文档 2 中 `qwen3.7-max` 的默认值存在不一致。实际调用时应以控制台模型市场当前可用版本为准，并显式指定 `--model` 参数，避免依赖 CLI 或 SDK 的隐式默认值。
+所有模型均通过统一 API Key 鉴权，**无需为不同模型创建独立密钥**；权限由 API Key 所属业务空间决定，同一空间内密钥对所有已授权模型有效 [获取API Key](../../raw/model-api-reference/preparations/get-api-key.md)。调用时需显式指定 `model` 参数，名称必须严格匹配[模型市场](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market)中公布的 ID（区分大小写，不可混用开源社区命名），否则将返回 `Model not exist` 错误 [错误码](../../raw/model-api-reference/preparations/error-code.md)。
+
+> **注意**：文档 3 中提到的 `qwen3.7-max` 为 CLI 默认模型，但实际可用模型列表以控制台为准；部分新模型（如 `qwen3-vl-plus`）仅支持特定输入格式（如 `content` 数组含 `image_url`），纯文本模型传入多模态内容将触发 `Unexpected item type in content` 错误 [错误码](../../raw/model-api-reference/preparations/error-code.md)。
 
 ## 关键参数
 
-核心参数需严格遵循取值范围与格式要求：
-- `temperature` 必须在 `[0.0, 2.0)` 区间，`top_p` 在 `(0.0, 1.0]`；
-- `max_tokens` 不得超出模型最大输出 [Token](../concepts/token.md) 数，`n`（生成数量）限于 `[1, 4]`（图像生成支持最多 6 张，见 CLI 文档）；
-- `seed` 范围为 `[0, 9223372036854775807]`；
-- 启用 `enable_thinking` 时，必须同时设置 `stream=true` 且 `incremental_output=true`，且不可与 `response_format={"type": "json_object"}` 共用；
-- `messages` 中 `content` 字段对纯文本模型必须为字符串，[多模态](../concepts/multi-modal.md)模型则需为合法对象数组（`type` 仅支持 `text`/`image_url`/`video_url` 等） [原文标题](../../raw/model-api-reference/preparations/error-code.md)。
+调用时需关注以下核心参数及其约束：
+
+| 参数 | 说明 | 允许值/范围 | 注意事项 |
+|------|------|-------------|----------|
+| `model` | 模型唯一标识 | 必须为控制台模型市场中精确的 ID | 不可使用 `Qwen/Qwen3-235B...` 等 Hugging Face 格式 [错误码](../../raw/model-api-reference/preparations/error-code.md) |
+| `temperature` | 采样温度 | `[0.0, 2.0)` | 超出范围将报错 `Temperature should be in [0.0, 2.0)` |
+| `top_p` | 核采样阈值 | `(0.0, 1.0]` | 同上，需严格满足开闭区间 |
+| `max_tokens` | 最大输出 token 数 | `[1, 模型最大输出值]` | 超限将返回 `Range of max_tokens should be [1, xxx]` |
+| `enable_thinking` | 是否启用思考模式 | `true`/`false` | 部分模型（如 `qwen3-235b-a22b-thinking-2507`）强制要求 `true`；开启时必须配合 `stream=true` 和 `incremental_output=true`，且禁用 `response_format="json_object"` |
+| `messages` / `prompt` | 输入内容 | 二者必选其一，不可同时为空 | `messages` 为数组，每项 `content` 必须为字符串（纯文本模型）或合法对象数组（多模态模型）；`prompt` 已逐步废弃 |
+
+其他高频参数（如 `seed`, `n`, `stop`, `audio` 输出等）详见 [错误码](../../raw/model-api-reference/preparations/error-code.md) 文档中的具体校验规则。
 
 ## 使用方式
 
-### API Key 获取与配置
-需通过[主账号或具备权限的子账号](https://bailian.console.aliyun.com/?tab=model#/api-key)创建 API Key。按量付费 Key 以 `sk-ws` 开头（安全升级后），[Token](../concepts/token.md) Plan Key 以 `sk-sp-` 开头，二者不可混用。强烈建议将 Key 配置为环境变量 `DASHSCOPE_API_KEY`，而非硬编码 [原文标题](../../raw/model-api-reference/preparations/get-api-key.md)。Windows/macOS/Linux 的配置方法详见该文档。
+### 1. 获取与配置 API Key
+- **获取**：需主账号或具备 `管理员`/`API-Key` 权限的子账号，在对应地域（如华北2、新加坡、美国弗吉尼亚）的 [API Key 页面](https://bailian.console.aliyun.com/?tab=model#/api-key) 创建。新创建密钥以 `sk-ws` 开头，明文仅显示一次，务必立即保存 [获取API Key](../../raw/model-api-reference/preparations/get-api-key.md)。
+- **配置**：**强烈建议**通过环境变量 `DASHSCOPE_API_KEY` 设置，避免硬编码。Linux/macOS/Windows 的永久与临时配置方法详见 [获取API Key](../../raw/model-api-reference/preparations/get-api-key.md)。
 
-### SDK 与 CLI 选择
-- **SDK**：Python 开发者可选 `openai`（OpenAI 兼容协议）或 `dashscope`（原生协议）；Java/Node.js/Go 项目推荐使用对应语言的 OpenAI SDK（需注意兼容性说明）；
-- **CLI**：`bailian-cli`（命令 `bl`）专为 AI Agent 场景设计，支持文本、图像、视频、语音等全模态命令，要求 Node.js ≥ 22.12.0 且仅通过 `npm install -g bailian-cli` 安装 [原文标题](../../raw/model-api-reference/preparations/use-model-studio-cli.md)。
+### 2. 安装调用工具
+- **SDK**：支持 DashScope 官方 SDK（Python/Java）或 OpenAI 兼容 SDK（Python/Node.js/Java/Go）。Python 用户可任选：
+  ```bash
+  pip install -U dashscope    # DashScope SDK
+  pip install -U openai       # OpenAI SDK（需配置 base_url）
+  ```
+  Java/Node.js/Go 安装方式见 [安装SDK](../../raw/model-api-reference/preparations/install-sdk.md)。
+- **CLI**：适用于快速验证与 Agent 集成，需 Node.js ≥ 22.12.0：
+  ```bash
+  npm install -g bailian-cli
+  bl auth login --console  # 推荐浏览器登录
+  # 或
+  bl auth login --api-key sk-xxx  # 手动输入密钥
+  ```
 
-### 协议与端点
-调用时必须指定 `base_url`（即创建 API Key 时显示的 API Host）。[OpenAI 兼容接口](../concepts/openai-compatible-interface.md)与 Anthropic 兼容接口的端点不同，且随地域变化（如华北2、新加坡、美国弗吉尼亚），务必以对应接口文档为准。
+### 3. 发起调用
+- **HTTP 请求**：需在 Header 中携带 `Authorization: Bearer <API_KEY>`，并设置 `base_url`（[OpenAI 兼容接口](../concepts/openai-compatible-interface.md)与 Anthropic 兼容接口的端点不同，且随地域变化）。
+- **SDK 调用**：DashScope SDK 自动读取 `DASHSCOPE_API_KEY` 环境变量；OpenAI SDK 需显式设置 `base_url` 和 `api_key`。
+- **CLI 调用**：认证后直接执行命令，如 `bl text chat --message "hello"`。
 
 ## 限制和注意事项
 
-- **API Key 权限**：Key 的调用范围由其归属业务空间决定。默认空间 Key 可调用所有标准模型；子空间 Key 仅限该空间授权的模型。IP 白名单与模型范围自定义权限仅在华北2、新加坡、东京、法兰克福地域支持，美国（弗吉尼亚）地域不支持 [原文标题](../../raw/model-api-reference/preparations/get-api-key.md)。
-- **安全约束**：API Key 明文仅在创建弹窗中显示一次，关闭后不可恢复；`sk-` 开头的旧 Key 可继续使用，但建议迁移到 `sk-ws` 新格式。CLI 工具严禁在日志、聊天记录或代码中明文暴露 Key，CI/CD 环境应通过密钥管理服务注入 [原文标题](../../raw/model-api-reference/preparations/use-model-studio-cli.md)。
-- **错误排查**：所有失败请求应记录 `Request ID`（UUID 格式），用于自助排查或提交工单。常见错误如 `Arrearage`（欠费）、`InvalidParameter`（参数越界或格式错误）、`Model not exist`（未开通模型）均有明确解决方案，详见错误码文档 [原文标题](../../raw/model-api-reference/preparations/error-code.md)。
+- **API Key 安全**：密钥明文仅在创建时可见，关闭弹窗后无法恢复。丢失需重置或新建。禁止在代码、日志、公开渠道硬编码或泄露密钥 [获取API Key](../../raw/model-api-reference/preparations/get-api-key.md)。
+- **地域与协议**：API Host（`base_url`）因地域和协议（OpenAI/Anthropic）而异，必须从创建 API Key 的弹窗中获取，不可自行拼接。
+- **IP 白名单**：仅华北2（北京）、新加坡、日本（东京）、德国（法兰克福）地域支持自定义 IP 白名单，最多配置 20 个 IPv4/IPv6 地址或网段；美国（弗吉尼亚）地域不支持该功能 [获取API Key](../../raw/model-api-reference/preparations/get-api-key.md)。
+- **错误排查**：所有失败请求应记录 `Request ID`（UUID 格式），用于自助排查或提交工单。常见错误原因与解决方案详见 [错误码](../../raw/model-api-reference/preparations/error-code.md)。
+- **[Token](../concepts/token.md) Plan/Coding Plan**：若使用 [Token](../concepts/token.md) Plan（`sk-sp-` 开头）或 Coding Plan 密钥，需单独配置，不可与按量付费密钥混用 [获取API Key](../../raw/model-api-reference/preparations/get-api-key.md)。
 
 ## 来源文档
 

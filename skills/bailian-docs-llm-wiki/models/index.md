@@ -1,6 +1,6 @@
 # 百炼模型市场索引
 
-> 自动生成 · 共 178 个模型家族 · 396 个主干模型 · 更新于 2026-08-08
+> 自动生成 · 共 177 个模型家族 · 394 个主干模型 · 更新于 2026-08-09
 
 **机器查询走结构化文件**：
 
@@ -17,7 +17,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 `notSuitableFor: []` 表示无已知限制。`profileCompleteness` 为 `structured-only` 时该画像未读过文档，仅机械字段可信。
 硬规格（价格/QPM/contextWindow/openSource）一律看行内顶层字段，不要从 profile 里找。
 
-## 文本生成 `TG` — 36 个家族
+## 文本生成 `TG` — 35 个家族
 
 - [GLM](groups/glm-4.5.json) — GLM是由智谱提供的开源模型。
   - 模型：`glm-4.5`, `glm-4.5-air`, `glm-4.6`, `glm-4.7`, `glm-5`, `glm-5.1`, `glm-5.2`
@@ -41,8 +41,6 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen-doc-turbo`
 - [Qwen-Flash-Character](groups/qwen-flash-character.json) — 千问系列多语言角色扮演模型，本模型是动态更新版本，模型更新会提前通知，适合拟人化的角色扮演，同时优化了限定人设指令遵循、话题推进、倾听共情等能力，支持个性化角色的深度还原。
   - 模型：`qwen-flash-character`
-- [Qwen-Long](groups/qwen-long.json) — Qwen-Long是在通义实验室针对超长上下文处理场景的大语言模型，支持中文、英文等不同语言输入，支持最长1000万tokens(约1500万字或1.5万页文档)的超长上下文对话。配合同步上线的文档服…
-  - 模型：`qwen-long`, `qwen-long-latest`
 - [Qwen-Math-Plus](groups/qwen-math-plus.json) — Qwen-Math-Plus模型具有强大的数学解题能力,擅长处理中英文数学题，包括方程、计算、证明等方向。
   - 模型：`qwen-math-plus`, `qwen-math-plus-0816`, `qwen-math-plus-0919`, `qwen-math-plus-latest`
 - [Qwen-Math-Turbo](groups/qwen-math-turbo.json) — Qwen-Math-Turbo模型是专门用于数学解题的语言模型，推理速度快，成本低。

@@ -1,48 +1,41 @@
 # start using
 
-阿里云百炼平台提供低门槛、高灵活性的 AI 应用构建能力，支持零代码快速搭建私有知识问答应用，也兼容全代码集成与深度定制。本文档面向开发者，聚焦“开始使用”的核心路径：从创建第一个应用到配置关键能力，涵盖模型选择、参数控制、调用方式及重要限制。所有操作均基于控制台或标准 API，无需额外部署基础设施。
+阿里云百炼平台提供开箱即用的智能体应用构建能力，开发者无需编写代码即可快速搭建私有知识问答、多模态交互等AI应用。本文档聚焦“开始使用”路径，涵盖模型与功能选型、关键参数配置、操作流程及重要限制，适用于首次接入百炼平台的开发者。
 
 ## 支持的模型/功能
 
-- **基础模型**：智能体应用默认支持 `qwen-max`（推荐）、`qwq-plus`、`qwq-32b` 等推理增强型模型；工作流应用额外支持 `DeepSeek` 系列模型 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。  
-- **[多模态](../concepts/multi-modal.md)能力**：`qwen-vl-plus-latest` 和 `qwen-vl-plus-2025-01-25`（即 `qwen-vl-plus-0125`）已上线，支持 128k 上下文及图像/视频深度理解 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。  
-- **知识库类型**：支持三类知识库——**文档型**（PDF/DOCX/HTML/Excel）、**数据型**（RDS/DMS/自建 MySQL）、**图片型**（含图文检索与 Qwen-VL 解析）；音视频知识库亦可通过 API 创建 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。  
-- **高级功能**：新版智能体应用（Agent 2.0）统一将知识库、MCP 作为可规划工具；[长期记忆](../concepts/long-term-memory.md)（新）提供自动信息提取、语义检索与用户画像管理能力。
+- **基础模型**：支持千问-Max、QwQ系列（qwq-plus、qwq-32b）、DeepSeek系列、Qwen-VL系列（qwen-vl-plus-latest、qwen-vl-plus-2025-01-25）等主流大模型；其中QwQ模型具备深度推理能力，输出包含显式思考链 [0代码构建私有知识问答应用](../../raw/application-user-guide/start-using/build-knowledge-base-qa-assistant-without-coding.md)。
+- **知识库类型**：支持文档、数据、图片三类非结构化/结构化知识库；自2025年9月起，创建流程已按场景分类优化 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
+- **多模态能力**：支持音视频知识库（2025年12月上线）、图文混合检索（2024年9月支持）、Qwen-VL模型解析复杂图表（2025年5月支持）；智能体应用可通过开启“多模态回复增强”开关启用视觉内容理解 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
+- **高级功能**：[长期记忆](../concepts/long-term-memory.md)（新版API支持自动提取与用户画像）、MCP服务集成、工作流异步运行模式、批量节点处理等。
 
-> **注意**：文档 1 中提及的“千问-Max”为旧称，当前控制台中对应模型标识为 `qwen-max`；且文档 1 未体现 `qwq` 系列、`DeepSeek` 及 `qwen-vl-plus` 等已上线模型，实际可用模型请以 [模型广场](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/all) 实时列表为准。
+> **注意**：文档1中提及的“Assistant API（下线中）”已明确标注为历史接口，不推荐新项目使用；当前标准调用方式应为[Responses API](https://help.aliyun.com/zh/model-studio/synchronous-call-api-reference)，详见[应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)中2025年11月发布的同步/异步调用能力。
 
 ## 关键参数
 
-- **知识库检索配置**：可在智能体应用中开启“知识检索增强”，并设置：
-  - `初步向量检索TopK` 与 `初步关键词检索TopK`：降低数值可减少送入排序模型的 [Token](../concepts/token.md) 量，直接降低成本 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)；
-  - 多知识库权重：当关联多个知识库时，按信息源重要性分配权重，系统优先召回高权重结果；
-  - “[多模态](../concepts/multi-modal.md)回复增强”开关：启用后支持解析知识库中图表与图像内容，生成结合视觉信息的回答。
-- **[长期记忆](../concepts/long-term-memory.md)参数**：新版[长期记忆](../concepts/long-term-memory.md) API 支持自动去重、语义检索及用户画像字段自定义，不依赖手动输入 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
-- **Prompt 控制**：System Prompt 定义角色与任务（如“你是一位阿里云百炼手机导购…”），同时支持 FewShot Prompt 样例库提升回答准确性 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
+- **知识库检索参数**：支持调整`初步向量检索TopK`和`初步关键词检索TopK`以控制召回[Token](../concepts/token.md)量，直接影响模型调用成本 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
+- **知识库权重**：当应用关联多个知识库时，可为各知识库设置权重，系统优先召回高权重知识源 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
+- **Prompt配置**：System Prompt定义角色与任务边界（如“你是一位阿里云百炼手机导购…”），直接影响回答专业性与一致性 [0代码构建私有知识问答应用](../../raw/application-user-guide/start-using/build-knowledge-base-qa-assistant-without-coding.md)。
+- **Embedding模型**：知识库默认使用text-embedding-v4（2025年7月上线），相比v3在语种覆盖与代码片段向量化效果上更优；v3仍可用但非推荐 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
 
 ## 使用方式
 
-1. **零代码构建（推荐入门）**：  
-   - 访问 [应用管理](https://bailian.console.aliyun.com/?tab=app#/app-center)，点击「创建应用」→「智能体应用」→「立即创建」；  
-   - 选择模型（如 `qwen-max`）、配置 System Prompt、欢迎语与预设问题；  
-   - 通过 [数据连接](https://bailian.console.aliyun.com/cn-beijing?tab=app#/connector/list) 上传文档，再在 [知识库](https://bailian.console.aliyun.com/?tab=app#/knowledge-base) 页面一键创建并关联至应用；  
-   - 最后点击「发布」完成部署 —— 全程约 5 分钟，详见 [0代码构建私有知识问答应用](../../raw/application-user-guide/start-using/build-knowledge-base-qa-assistant-without-coding.md)。
-
-2. **API 调用**：  
-   - 同步调用：使用 Responses API（兼容 OpenAI 接口），适用于实时交互场景；  
-   - 异步调用：设置 `background=true`，立即返回 Task ID，后续通过 [任务中心](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/app-task-center) 查询结果；  
-   - 知识库管理：支持 `CreateIndex`、`UpdateIndex`、`GetIndexMonitor` 等标准 API 操作 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
-
-3. **高代码扩展**：  
-   - 高代码应用支持 Python 项目结构部署，内置运维、可观测性与日志服务；  
-   - 工作流应用支持 Dify 一键导入、批量节点、异步运行模式等企业级编排能力。
+1. **创建应用**：访问[应用管理](https://bailian.console.aliyun.com/?tab=app#/app-center)，选择“智能体应用” → “立即创建”，命名并选择模型（如千问-Max）。
+2. **配置Prompt与交互**：设置System Prompt、欢迎语及预设问题，用于引导模型行为与用户启动对话 [0代码构建私有知识问答应用](../../raw/application-user-guide/start-using/build-knowledge-base-qa-assistant-without-coding.md)。
+3. **构建知识库**：
+   - 非结构化知识库：直接上传文档（支持DOCX、PDF、Excel、HTML、音视频等格式），选择“智能切分”策略；
+   - 结构化知识库：支持从DMS、RDS或自建MySQL同步数据表 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
+4. **绑定与发布**：在应用配置页 → “技能” → “知识库”中添加已创建的知识库，确认后点击“发布”。
+5. **调用方式**：
+   - 控制台内测：右侧对话框直接提问；
+   - API调用：使用Responses API（同步/异步模式），兼容OpenAI SDK风格 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
 
 ## 限制和注意事项
 
-- **计费变更**：知识库服务自 2026 年 1 月 4 日起正式商业化，费用 = 规格费 + 模型调用费；支持后付费与 RAG 资源包两种模式 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。  
-- **文件处理限制**：非结构化知识库支持 DOCX/PDF/HTML/Excel/图片/音视频，但单文件大小上限为 100 MB；上传后解析耗时通常为 1–6 分钟，取决于文档复杂度与体积 [0代码构建私有知识问答应用](../../raw/application-user-guide/start-using/build-knowledge-base-qa-assistant-without-coding.md)。  
-- **模型能力边界**：QwQ 系列模型虽具备强推理能力，但**不支持插件、流程编排与音视频交互能力**；`qwen-vl-plus` 模型需配合图文知识库与“[多模态](../concepts/multi-modal.md)回复增强”开关方可生效 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。  
-- **权限与分账**：子账号可独立开通知识库，并通过标签实现分账管理，适用于多部门/多项目成本归属场景 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
+- **计费变更**：知识库服务自2026年1月4日起正式商业化，费用由规格费+模型调用费构成；支持后付费与资源包两种模式 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
+- **模型能力边界**：QwQ系列模型虽支持深度推理，但**不支持插件、流程编排及音视频交互能力**（仅限文本生成场景） [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
+- **调试依赖**：知识库参数在线调试需通过编辑智能体应用时的“调试面板”完成，该功能自2025年9月起可用 [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
+- **[文件处理](../concepts/file-processing.md)限制**：音视频知识库需经ASR/OCR预处理，原始文件大小与时长受控制台上传限制约束；复杂图片解析建议指定qwen-vl-max模型并传入精准Prompt [应用功能动态](../../raw/application-user-guide/start-using/application-release-notes.md)。
 
 ## 来源文档
 

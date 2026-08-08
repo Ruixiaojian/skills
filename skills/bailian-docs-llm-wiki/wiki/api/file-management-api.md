@@ -1,50 +1,60 @@
 # file management api
 
-file management api 提供对百炼平台托管文件的全生命周期管理能力，支持上传、查询、列举和删除等核心操作。该 API 与模型调用解耦，适用于预处理数据、构建知识库或管理训练/推理所需资源等场景。所有操作均需通过 HTTP 接口调用，并依赖有效的 API Key 认证。
+文件管理 API 提供对百炼平台托管文件的全生命周期操作能力，包括上传、查询、列举和删除。该 API 与模型调用解耦，适用于预处理数据、构建知识库或管理训练/推理所需资源。所有操作均通过 RESTful 接口完成，需使用有效的 API Key 进行身份验证。
 
 ## 支持的模型/功能
 
-file management api **不绑定具体大模型**，而是作为独立的基础设施服务存在，所有接入百炼平台的模型（如 Qwen 系列、Baichuan 系列及自定义微调模型）均可复用已上传的文件 ID 进行后续调用（例如在 `messages` 中引用 `file_id`）。其功能严格限定为：  
-- `POST /v1/files`：上传文件（支持 `text/plain`, `application/pdf`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`, `text/csv` 等格式）  
-- `GET /v1/files/{file_id}`：获取单个文件元信息  
-- `GET /v1/files`：分页列举当前项目下的全部文件  
-- `DELETE /v1/files/{file_id}`：删除指定文件  
+文件管理 API **不依赖特定大模型**，而是作为独立服务存在，所有百炼平台用户（无论是否开通模型调用权限）均可使用。支持的核心功能包括：
+- `POST /v1/files`：上传文件（支持 `text/plain`, `application/pdf`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`, `text/csv`, `application/json` 等格式）
+- `GET /v1/files/{file_id}`：按 ID 查询单个文件元信息
+- `GET /v1/files`：分页列举当前项目下的全部文件（默认按创建时间倒序）
+- `DELETE /v1/files/{file_id}`：删除指定文件（不可恢复）
 
-> **注意**：[文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 中未说明文件上传后是否自动触发解析，但实际使用中，仅当文件被用于知识库或 RAG 场景时，才需额外调用 `/v1/knowledge_bases/{kb_id}/files` 接口触发切片与向量化；此行为不属于 file management api 职责范围。
+> **注意**：[文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 中未明确列出支持的 MIME 类型，实际支持范围以 [API 参考手册](../../raw/model-api-reference/file-management-api.md) 的最新版本为准；部分旧文档提及 `image/*` 格式，但当前版本**不支持图像文件上传**，该描述已过时。
 
 ## 关键参数
 
 | 参数 | 位置 | 类型 | 必填 | 说明 |
 |------|------|------|------|------|
-| `file` | form-data | binary | 是 | 待上传的原始文件二进制流 |
-| `purpose` | form-data | string | 否 | 取值为 `"assistants"`（默认）或 `"vision"`；影响后续模型调用时的兼容性，详见 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) |
-| `file_id` | path | string | 是（除列表外） | 文件唯一标识符，由平台生成并返回于上传响应中 |
-| `limit` / `offset` | query | integer | 否 | 列举接口分页参数，默认 `limit=20`, `offset=0` |
+| `file` | form-data | binary | 是 | 待上传的文件二进制内容（仅 `POST /v1/files`） |
+| `purpose` | form-data | string | 否 | 文件用途，当前仅支持 `"assistants"`（默认值），其他值将被忽略 |
+| `file_id` | path | string | 是（除列表外） | 文件唯一标识符，由平台生成，长度为 24 位十六进制字符串 |
+| `limit` | query | integer | 否 | 列举时每页最大数量（1–100，默认 20） |
+| `after` | query | string | 否 | 分页游标，值为上一页响应中的 `last_file_id` |
 
 ## 使用方式
 
-1. **上传文件**：  
+1. **上传文件**（示例 cURL）：
    ```bash
    curl -X POST "https://dashscope.aliyuncs.com/api/v1/files" \
      -H "Authorization: Bearer $API_KEY" \
-     -F "file=@report.pdf" \
+     -F "file=@/path/to/document.pdf" \
      -F "purpose=assistants"
    ```
-   成功响应包含 `id`, `filename`, `size`, `created_at` 等字段。
 
-2. **引用文件**：  
-   在调用 `/v1/chat/completions` 时，可在 `messages` 中以 `{"type": "file_id", "file_id": "file-xxx"}` 形式引用，无需重新上传。
+2. **获取文件列表**（带分页）：
+   ```bash
+   curl "https://dashscope.aliyuncs.com/api/v1/files?limit=50&after=fil_abc123..." \
+     -H "Authorization: Bearer $API_KEY"
+   ```
 
-3. **清理资源**：  
-   删除前请确认该 `file_id` 未被任何知识库或运行中的任务引用，否则将返回 `409 Conflict` 错误。参考 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 的错误码说明。
+3. **删除文件**：
+   ```bash
+   curl -X DELETE "https://dashscope.aliyuncs.com/api/v1/files/fil_def456..." \
+     -H "Authorization: Bearer $API_KEY"
+   ```
+
+详细请求/响应结构及错误码请参阅 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md)。
 
 ## 限制和注意事项
 
-- 单文件大小上限为 **512 MB**；超出将返回 `413 Payload Too Large`  
-- 每个项目（project_id）下最多存储 **10,000 个文件**；达到上限后上传请求将失败  
-- 文件上传后**不自动持久化至长期存储**：若 7 天内未被任何 API（如知识库导入、chat 调用）引用，系统可能自动清理（具体策略以控制台公告为准）  
-- `purpose=vision` 仅支持图片类格式（`image/jpeg`, `image/png`），且仅限于[多模态](../concepts/multi-modal.md)模型调用；混用会导致 `400 Bad Request`  
-- 删除操作不可逆，且不释放已关联的 token 消耗配额（配额按上传时计费）
+- 单文件大小上限为 **512 MB**；超出将返回 `413 Payload Too Large`
+- 每个项目（project_id）最多存储 **10,000 个文件**；达到上限后上传将失败（`400 Bad Request`）
+- 文件上传后**立即可用**，无需额外激活步骤；但若用于知识库或助手，需在对应服务中显式引用 `file_id`
+- 删除操作**不可撤销**，且会同步清除所有关联引用（如已绑定至知识库的文件被删，知识库将无法访问该文件）
+- 所有接口均遵循百炼平台通用限流策略：**100 QPS / 项目**，突发请求可能触发 `429 Too Many Requests`
+
+更多细节与变更日志，请查阅 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md)。
 
 ## 来源文档
 

@@ -1,182 +1,49 @@
-好的，已开启思考模式。
-```
-
-## OpenCode
-
-**开启思考模式**：在配置文件`opencode.json`中添加以下内容：
-
-```json
-"options": {
-  "thinking": {
-    "type": "enabled",
-    "budget[Token](../concepts/token.md)s": 1024
-  }
-}
-```
-
-> `budget[Token](../concepts/token.md)s` 的值需根据模型支持的最大思维链长度进行调整，详见[OpenCode](https://help.aliyun.com/zh/model-studio/opencode)。
-
-### **Coding Plan 支持哪些模型？**
-
-Coding Plan 支持的模型如下表所示。请务必注意：模型名称必须逐字符完全匹配，版本号/子型号任何差异均视为不支持。
-
-| 模型 | 是否支持视觉理解 |
-| --- | --- |
-| qwen3.7-plus | ✅ |
-| qwen3.6-plus | ✅ |
-| kimi-k2.5 | ✅ |
-| glm-5 | ❌ |
-| MiniMax-M2.5 | ❌ |
-| qwen3.5-plus | ✅ |
-| qwen3-max-2026-01-23 | ❌ |
-| qwen3-coder-next | ❌ |
-| qwen3-coder-plus | ❌ |
-| glm-4.7 | ❌ |
-
-### **Coding Plan 支持多模态生成吗？**
-
-不支持。Coding Plan 不支持图像、视频等多模态生成模型（如 wan2.7-image、happyhorse-1.1-t2v 等）。如需使用多模态生成能力，请升级至 Token Plan。
-
-### **Coding Plan 支持 Harness 工具吗？**
-
-不支持。Coding Plan 不支持联网搜索、代码解释器等 Harness 工具。如需使用 Harness 工具，请升级至 Token Plan。
-
-### **Coding Plan 支持 MCP 吗？**
-
-不支持。Coding Plan 不支持 MCP（Model Control Protocol）协议。如需使用 MCP 协议，请升级至 Token Plan。
-
-### **Coding Plan 和 Token Plan 的区别是什么？**
-
-| 对比项 | Coding Plan | Token Plan |
-| --- | --- | --- |
-| **计费方式** | 固定月费 + 请求次数限制 | Credits 统一计量，按模型和工具动态计费 |
-| **支持模型** | 千问、GLM、Kimi、MiniMax 等主流文本模型 | 更多模型，包括 Qwen、DeepSeek、HappyHorse、万相等，覆盖文本、图像、视频、语音全模态 |
-| **支持功能** | 仅支持文本对话 | 支持 Harness 工具（联网搜索、代码解释器等）、MCP、多模态生成 |
-| **适用场景** | 纯文本编程辅助 | 多模态 AI 开发、智能体构建、复杂任务自动化 |
-
-> **推荐**：如需更丰富的模型选择、多模态能力、Harness 工具及 MCP 协议支持，建议使用 Token Plan。
-
-### **Coding Plan Lite 停止新购后，用户如何过渡到 Token Plan？**
-
-Coding Plan Lite 用户可直接购买 Token Plan 个人版或团队版，两者独立计费，无迁移路径。Token Plan 提供更多模型、多模态能力和 Harness 工具支持，是 Coding Plan 的升级替代方案。
-
-### **Coding Plan Pro 是限量抢购，库存售罄后是否还会补充？**
-
-Coding Plan Pro 为限量抢购，库存售罄后不再补充。推荐使用 Token Plan，支持更多模型和 Harness 工具。
-
-### **Coding Plan 的 API Key 能用在 Token Plan 上吗？**
-
-不能。Coding Plan 和 Token Plan 使用不同的 API Key 和 Base URL，不可混用。Token Plan 使用 `sk-sp-` 开头的 Key 和 `token-plan.cn-beijing.maas.aliyuncs.com` 域名，Coding Plan 使用 `sk-sp-` 开头的 Key 和 `coding.dashscope.aliyuncs.com` 域名。
-
-> **注意**：虽然 Key 前缀相同，但域名不同，必须配套使用。
-
-### **Coding Plan 的用量在哪里查看？**
-
-在[Coding Plan 页面](https://bailian.console.aliyun.com/cn-beijing/?tab=plan#/efm/subscription/coding-plan)查看当前订阅的请求额度及消耗情况。
-
-### **Coding Plan 的额度机制是怎样的？**
-
-Coding Plan 采用每 5 小时、每周、每月三重限额，单位为请求次数：
-
--   **每 5 小时额度**：滚动恢复，每分钟自动释放 5 小时前的额度。
-    
--   **每周额度**：每周一 00:00:00（UTC+08:00）重置。
-    
--   **每月额度**：在下一个月订阅日的 00:00:00 (UTC+08:00) 重置。
-    
-
-### **Coding Plan 的额度用完了怎么办？**
-
-额度用完后调用会被阻断，不会按量计费。恢复方式：
-
--   等待额度释放。
-    
--   升级套餐（Lite → Pro）。
-    
--   等待下一周期额度重置。
-    
-
-### **Coding Plan 的用量包是什么？**
-
-Coding Plan 不提供用量包。额度用尽后只能等待周期重置或升级套餐。
-
-### **Coding Plan 的并发限制是多少？**
-
-Coding Plan 的并发上限由平台动态分配，高峰时段可能触发限流。具体数值未公开，建议降低请求频率以避免触发限流。
-
-### **Coding Plan 的限流阈值（TPM/RPM）是多少？能否提升？**
-
-官方未公开具体的 TPM/TPS/RPM 数值，限流阈值会根据整体负载动态调整以保障服务稳定性。套餐限流额度不支持提升。
-
-优化建议：精简上下文、降低任务复杂度以减少单次输入 Token 数量；遇到限流时等待约 1 分钟后重试。
-
-### **Coding Plan 的数据使用政策是什么？**
-
-使用 Coding Plan 期间，模型输入以及模型生成的内容将用于服务改进与模型优化。停止使用 Coding Plan 服务可终止后续数据授权，但终止授权的范围不涵盖已授权使用的 Coding Plan 数据。详细条款请参见[阿里云百炼服务协议](https://terms.alicdn.com/legal-agreement/terms/common_platform_service/20230728213935489/20230728213935489.html?spm=5176.28197581.0.0.16e829a4HTC9FE)第 5.2 条。
-
-### **Coding Plan 的账号使用规范是什么？**
-
-套餐为订阅人专享使用，禁止共享。账号共享可能导致订阅权益受限。同一实名认证主体限购一份。
-
-### **Coding Plan 的 RAM 子账号授权步骤是什么？**
-
-RAM 子账号使用 Coding Plan 前，需主账号完成以下授权：
-
-1.  在 RAM 控制台为该 RAM 用户授予 `AliyunCodingPlanReadOnlyAccess`（只读）或 `AliyunCodingPlanFullAccess`（管理）系统策略。
-    
-2.  在百炼控制台账号管理页面，为该 RAM 用户分配管理员或订阅套餐权限。
-    
-
-### **Coding Plan 的续费规则是什么？**
-
-Coding Plan 支持手动续费和自动续费。续费仅延长订阅有效期，不会叠加补充至当前计费周期的额度。
-
-### **Coding Plan 的退订规则是什么？**
-
-Coding Plan 不支持退订。如需取消服务，请等待订阅到期后不再续费。
-
-### **Coding Plan 的学生代金券能用吗？**
-
-不支持。学生代金券仅适用于活动界面指定的产品，不能用于购买 Coding Plan。
-
-### **Coding Plan 的限时优惠是什么？**
-
-首次订阅 Pro 套餐可享首月 ¥39.90（官网目录价 ¥200/月），后续按 ¥200/月 续费。该活动已于 2026 年 4 月 1 日结束。
-
-### **Coding Plan 的地域支持情况如何？**
-
-Coding Plan 目前仅支持华北2（北京）地域。
-
-### **Coding Plan 的 API Key 格式是什么？**
-
-Coding Plan API Key 以 `sk-sp-` 开头，与百炼通用 API Key（`sk-` 开头）格式不同，两者不可混用。
-
-### **Coding Plan 的 Base URL 是什么？**
-
-Coding Plan Base URL 包含 `coding.dashscope.aliyuncs.com`，具体如下：
-
--   Anthropic 兼容端点：`https://coding.dashscope.aliyuncs.com/apps/anthropic`
-    
--   OpenAI 兼容端点：`https://coding.dashscope.aliyuncs.com/v1`
-    
-
-### **Coding Plan 的模型 ID 白名单是什么？**
-
-Coding Plan 模型 ID 白名单为精确字符串匹配，必须逐字符完全匹配，版本号/子型号任何差异均视为不支持。完整白名单请参见[Coding Plan 文档](https://help.aliyun.com/zh/model-studio/coding-plan#dc0d98da6ev4j)。
-
-### **Coding Plan 的技术支持渠道是什么？**
-
-如遇问题，请通过[阿里云百炼帮助中心](https://help.aliyun.com/zh/model-studio/)获取支持，或联系阿里云客服。
-
-### **Coding Plan 的产品生命周期是什么？**
-
-Coding Plan Lite 已于 2026 年 3 月 20 日起停止新购，并于 4 月 13 日起停止续费与升级。Coding Plan Pro 为限量抢购，库存售罄后不再补充。推荐使用 [Token](../concepts/token.md) Plan 作为长期替代方案。
-
-### **Coding Plan 的未来规划是什么？**
-
-Coding Plan 将逐步被 Token Plan 替代，未来重点发展 Token Plan，提供更多模型、[多模态](../concepts/multi-modal.md)能力和企业级功能。
-
----
+# token plan guide
+
+[Token](../concepts/token.md) Plan 是阿里云百炼推出的 AI 大模型订阅服务，以 Credits 为统一计量单位，支持文本、多模态生成及 Harness 工具调用，适用于个人开发者与团队协作场景。服务当前仅限华北2（北京）地域，需在控制台手动切换地域后方可购买和使用。其核心设计兼顾灵活性与可控性：个人版采用双窗口限额机制（5 小时滚动 + 7 天固定），团队版则采用月度总额度制，并提供席位管理与用量分析能力。
+
+## 支持的模型/功能
+
+[Token](../concepts/token.md) Plan 支持覆盖文本、视觉、语音、视频等多模态能力的模型，以及联网搜索、代码解释器等 Harness 工具：
+
+- **文本与推理模型**：`qwen3.8-max`、`qwen3.7-plus`、`deepseek-v4-pro`、`glm-5.2`、`kimi-k2.5` 等（[原文标题](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-overview.md)）；
+- **多模态生成模型**：图像生成（`wan2.7-image`、`qwen-image-2.0`）、视频生成（`happyhorse-1.1-t2v`）、语音合成（`qwen-audio-3.0-tts-plus`）及实时语音对话（`qwen-audio-3.0-realtime-plus`）；
+- **Harness 工具**：`web_search`、`code_interpreter`、`t2i_search`、`i2i_search`、`web_extractor`，仅 `qwen3.7` 及 `qwen3.8` 系列模型原生支持，且**必须通过 Responses API 调用才可触发并抵扣套餐 Credits**；若工具仅支持 Chat Completions 协议，则 Harness 不生效，相关请求将按量计费（[原文标题](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-harness-tool.md)）；
+- **视觉理解能力**：`qwen3.7-plus`、`qwen3.6-plus`、`kimi-k2.5` 等模型原生支持图片输入；对 `glm-5`、`MiniMax-M2.5` 等纯文本模型，可通过 Skill/Agent 代理调用视觉模型实现（[原文标题](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/add-vision-skill.md)）。
+
+> **注意**：文档 1 和文档 14 均声明 `qwen3.8-max-preview` 已下线，请求自动路由至 `qwen3.8-max`，但文档 2 明确指出该预览版“已结束预览并正式下线”，而文档 14 仅称“已结束预览并正式下线”，未强调“正式下线”状态。实际行为一致（路由生效），但术语表述存在冗余，以文档 2 的明确说明为准。
+
+## 关键参数
+
+| 参数 | 说明 | 示例值 |
+|------|------|--------|
+| **Credits 计量单位** | 所有模型调用与 Harness 工具均按 Credits 抵扣，消耗由模型类型、[Token](../concepts/token.md) 数量、思考模式、工具调用次数等动态决定 | `qwen3.6-plus` 单次请求约 3.18 Credits（见文档 14） |
+| **限额机制（个人版）** | 双窗口：5 小时滚动限额（当前限时取消）、7 天固定窗口限额；额度不结转 | Lite 套餐：7 天限额 2,500 Credits |
+| **限额机制（团队版）** | 月度总额度制，无滚动/固定窗口限制；额度按订阅月一次性发放，到期清零 | 标准坐席：25,000 Credits/坐席/月 |
+| **并发 Agent 数** | 个人版档位决定最大并发数（Lite: 1–2；Standard: 3–4；Pro: 6–8）；团队版无显式并发限制，依赖多租户隔离保障高峰性能 |
+| **用量包** | 补充额度，无窗口限制，有效期 1 个月，需先订阅有效套餐方可购买 | 100 元/个，含 20,000 Credits（个人版）；5,000 元/个，含 625,000 Credits（团队版共享） |
+
+## 使用方式
+
+1. **地域与订阅**：务必在百炼控制台左上角切换至**华北2（北京）**，再访问 [Token Plan 购买页](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview) 完成订阅（[原文标题](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-quick-start.md)）；
+2. **获取凭证**：
+   - API Key：以 `sk-sp-` 开头，仅在生成/重置时完整显示一次，需立即复制保存；
+   - Base URL：OpenAI 兼容为 `https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`，Anthropic 兼容为 `https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic`；
+3. **接入工具**：将上述 Key 和 URL 配置至 Cursor、Claude Code、Qwen Code、Qoder 等兼容工具；**严禁用于自动化脚本或非交互式批量调用**；
+4. **多模态与 Harness 接入**：
+   - 多模态模型（图像/视频/语音）需通过工具的 Skill/Slash Command/Agent 扩展机制调用，不可直接使用 Chat Completions 协议（详见文档 6）；
+   - Harness 工具仅在 Responses API 下自动触发，若工具不支持，需改用 Responses API 或选择兼容工具（如 OpenClaw、Hermes Agent）。
+
+## 限制和注意事项
+
+- **地域限制**：Token Plan（含个人版与团队版）当前仅支持华北2（北京）地域，跨地域调用将失败；
+- **API Key 隔离**：Token Plan、Coding Plan、按量付费三者 Key 与 Base URL 完全隔离，混用将导致 401/403 错误或意外按量扣费；
+- **额度重置**：个人版 7 天限额支持手动重置（2026 年 8 月 5 日起新用户获赠 1 次），重置后已消耗 Credits 归零重新累计；团队版无重置功能，仅靠月度自动重置；
+- **升级与退订**：
+  - 个人版支持升配（补差价，额度按剩余天数折算），**不支持降配**；订阅到期后重新购买将变更 API Key，需重新配置；
+  - 团队版支持加购/升级/回收席位，但**已消耗 Credits 的席位不可退订**；续费仅延长有效期，不补充当期额度；
+- **数据与安全**：个人版数据可能用于服务优化；团队版明确承诺**不使用对话数据训练模型**；
+- **模型兼容性**：调用前须确认模型 ID 精确匹配白名单（如 `qwen3.7-plus` ≠ `qwen3.7`），大小写与版本号均敏感；部分模型（如 `deepseek-v4-flash-0731`）暂不支持 Responses API，无法调用 Harness 工具。
 
 ## 来源文档
 
@@ -184,15 +51,15 @@ Coding Plan 将逐步被 Token Plan 替代，未来重点发展 Token Plan，提
 - [概述](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-overview.md)
 - [快速开始](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-quick-start.md)
 - [常见问题](../../raw/model-user-guide/token-plan-guide/token-plan-personal/token-plan-personal-faq.md)
-- [概述](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-overview.md)
-- [快速开始](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-quickstart.md)
-- [团队管理](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-management.md)
-- [常见问题](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-faq.md)
 - [接入 Harness 工具](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-harness-tool.md)
 - [接入多模态生成模型](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/token-plan-multimodal-gen.md)
 - [联网搜索](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/web-search-for-coding-plan.md)
-- [添加视觉理解能力](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/add-vision-skill.md)
 - [Coding Plan概述](../../raw/model-user-guide/token-plan-guide/coding-plan-guide/coding-plan.md)
+- [添加视觉理解能力](../../raw/model-user-guide/token-plan-guide/token-plan-best-practice/add-vision-skill.md)
 - [常见问题](../../raw/model-user-guide/token-plan-guide/coding-plan-guide/coding-plan-faq.md)
+- [快速开始](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-quickstart.md)
+- [常见问题](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-faq.md)
+- [团队管理](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-management.md)
+- [概述](../../raw/model-user-guide/token-plan-guide/token-plan-team-edition/token-plan-team-overview.md)
 
 
