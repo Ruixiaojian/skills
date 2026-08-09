@@ -1,75 +1,56 @@
-# [模型部署](../concepts/model-deployment.md)方式对比：Model Production、Model Deployment 1 与 Model High Speed Inference
+# 模型部署方式对比：高并发推理、生产部署与模型压缩
 
-## 对比目的与背景
+为帮助开发者在不同业务阶段高效选型，本文系统对比百炼平台三大核心模型部署能力：**高并发推理（High-Speed Inference）**、**生产部署（Model Production）** 与 **模型压缩（Model Compression）**。三者定位迥异——高并发推理聚焦 *已有模型的实时性能保障*，生产部署解决 *定制化模型的全生命周期交付*，模型压缩则面向 *微调后模型的成本与资源优化*。理解其差异是构建稳定、高效、经济 AI 服务的关键前提。
 
-在百炼平台中，模型从训练完成到线上服务落地存在多种技术路径。`Model Production`、`Model Deployment 1` 和 `Model High Speed Inference` 分别面向不同阶段、不同目标的工程需求：前者聚焦**端到端模型生命周期管理（含微调+部署）**，后者强调**生产级服务稳定性与资源可控性**，而第三者专为**极致吞吐或超低延迟场景提供加速能力**。本对比旨在帮助开发者清晰理解三者的定位差异、能力边界与适用约束，避免因选型不当导致开发返工、成本超支或 SLA 不达标等问题。
+## 关键维度对比
 
----
-
-## 关键维度对比表
-
-| 维度 | Model Production | Model Deployment 1 | Model High Speed Inference |
-|------|------------------|----------------------|----------------------------|
-| **核心定位** | 微调训练 + 在线部署一体化流程，支持自定义模型构建与版本化交付 | 生产就绪的专属推理服务，支持多计费模式与精细化资源调度 | 面向高吞吐/低延迟的**推理加速能力**（非独立部署方案，需依附于其他部署形态） |
-| **输入格式** | 微调阶段：JSONL（`messages` 或 `prompt`/`completion` 字段）；部署后推理：OpenAI 兼容格式（`/v1/chat/completions`） | 全模式统一支持 OpenAI/Anthropic 兼容格式；PTU/MU 模式支持长上下文（最高 1M token）；[Token](../concepts/token.md) 计费仅限 LoRA 模型 | 同所依附的底层部署（如 `glm-5.2-fast-preview` 使用标准 OpenAI 格式，但流式响应新增 `delta.reasoning_content` 字段） |
-| **输出格式** | OpenAI 兼容格式（含 `usage`、`choices[0].message.content` 等）；支持流式（`stream: true`） | 完全兼容 OpenAI/Anthropic 格式；MU 模式额外支持 `thinking` 模式输出结构；PTU 模式返回 `cached_tokens` 等额度明细字段 | 标准 OpenAI 格式基础上扩展流式字段（如 `delta.reasoning_content`）；TPM 预留不改变格式，仅提升容量保障 |
-| **支持模型类型** | • 百炼托管基础模型（Qwen 系列等）的监督微调<br>• ONNX/Triton 格式第三方模型（通过 `import_model` 导入） | • 平台预置模型（Qwen3/Qwen2.5/GLM-4.7+/DeepSeek/Kimi/CosyVoice 等）<br>• **仅 LoRA 微调模型**（需满足 rank、vocab、chat_template 等约束）<br>• 不支持全参微调模型 | • TPM 预留：支持主流预置模型（Qwen、GLM、DeepSeek、Kimi）<br>• 快速模式：**仅 preview 阶段支持 `glm-5.2-fast-preview`**（不可泛化至其他模型） |
-| **API 端点** | `POST /v1/fine_tuning_jobs` → `POST /v1/deployments` → `POST {endpoint_url}/v1/chat/completions` | `POST /api/v1/deployments`（指定 `plan: "ptu"`/`"mu"`/`"lora"`）→ 调用通用域名 `dashscope.aliyuncs.com`（PTU/MU）或专属域名（快速模式） | • TPM 预留：使用专属 `model` code（如 `qwen38max-tpm-abc123`），调用通用 DashScope 域名<br>• 快速模式：固定 model ID（`glm-5.2-fast-preview`）+ 地域专属域名（如 `{workspace_id}.cn-beijing.maas.aliyuncs.com`） |
-| **计费方式** | • 微调阶段：按 GPU 小时计费（`instance_type` 决定单价）<br>• 部署阶段：按实例运行时长（小时）计费（GPU 规格 × 时间），**无请求量/[Token](../concepts/token.md) 关联计费** | • **PTU 模式**：预付费，按 kTPM × 天数（保底容量，溢出可自动转按量）<br>• **MU 模式**：后付费，按模型单元（MU）规格 × 运行时长<br>• **[Token](../concepts/token.md) 计费**：按实际输入/输出 token 计费（仅限 LoRA 模型） | • **TPM 预留**：预付费，按 kTPM × 自然日天数（当日 00:00–次日 00:00）<br>• **快速模式**：按 token 计费（输入/输出分别计价），单价高于标准 API（北京地域缓存命中单价 4 元） |
-| **资源控制粒度** | • 实例级 GPU 规格（`instance_type`，如 `gpu-a10-2`）<br>• 批处理大小（`max_batch_size`）、并发请求数（`max_concurrent_requests`）创建时固定，**不支持运行时调整** | • PTU：以吞吐量（TPM）为单位，支持阶梯容量系数与缓存折扣<br>• MU：以模型单元（MU）为单位，支持 PD 分离、自定义推理模式、RPM/TPM 限流<br>• Token 计费：无资源预留，完全按需弹性 | • TPM 预留：锁定专属输入/输出 kTPM，保障高峰期不被公共资源限流<br>• 快速模式：优化 kernel 与调度，提升单请求 TPS（1.5~2×），**不提供资源独占保障** |
-| **典型场景** | • 内部业务模型定制：基于私有数据微调 Qwen，并快速上线验证效果<br>• MLOps 流水线集成：自动化触发微调→评估→部署→灰度发布 | • SaaS 产品核心服务：需稳定 SLA 的对话引擎（PTU 保底+溢出）<br>• AI 编程助手：要求低首 Token 延迟与长上下文（MU + PD 分离）<br>• 效果验证期：低成本试用 LoRA 模型（Token 计费） | • 高并发客服系统：防止流量高峰时被公共资源限流（TPM 预留）<br>• Agent 多步推理链路：对输出速度敏感（快速模式提升 TPS）<br>• 关键链路兜底：TPM 预留 + 快速模式组合使用 |
-
----
+| 维度 | 高并发推理（TPM 预留 / 快速模式） | 生产部署（Model Production） | 模型压缩（Model Compression） |
+|------|----------------------------------|------------------------------|------------------------------|
+| **核心目标** | 提升标准 API 的吞吐量（TPS）与响应确定性，应对流量高峰或低延迟敏感场景 | 将自定义模型（微调/导入）转化为可独立管理、可扩缩容的在线服务 | 在保持可用精度前提下，降低微调模型的部署资源消耗（MU）与成本 |
+| **输入格式** | 标准 OpenAI 兼容请求体（`messages`, `model`, `max_tokens` 等），无需修改结构 | 微调：JSON 格式训练配置（含 `model_id`, `training_dataset_id`）；部署：JSON 配置（含 `instance_type`, `replicas`） | 控制台表单或 API 参数（任务名、源模型 ID、量化模板、校准数据集） |
+| **输出格式** | 标准 OpenAI 兼容响应（含 `choices`, `usage`）；快速模式额外返回 `reasoning_content` 字段 | 微调：返回 `job_id` 及评估指标；部署：返回 `deployment_id` 和专属 `endpoint_url`；推理调用同标准 API | 返回压缩任务 ID；成功后生成新模型 ID（如 `my-qwen-ft-int4`），可在模型中心查看并部署 |
+| **支持模型** | **TPM 预留**：Qwen3.8-Max、GLM-5.2、DeepSeek、Kimi 等主流基础模型（北京/新加坡）<br>**快速模式**：仅 `glm-5.2-fast-preview`（北京/新加坡） | 百炼托管基础模型（如 `qwen2-7b-chat`）的 SFT 微调；支持导入 Hugging Face 格式自定义模型 | **仅限百炼平台完成且状态为 `SUCCEEDED` 的微调模型**（不支持基础模型、第三方导入模型） |
+| **API 端点** | **TPM 预留**：复用标准域名 `https://dashscope.aliyuncs.com/...`，仅需替换 `model` 参数为预留 code<br>**快速模式**：专用域名 `https://{workspace_id}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1` | `/v1/fine_tuning_jobs`（微调）<br>`/v1/deployments`（部署）<br>推理调用：`endpoint_url`（独立 HTTP 地址） | `/v1/model_compression_jobs`（创建/查询任务）；控制台为主要操作入口 |
+| **计费方式** | **TPM 预留**：按 kTPM 预付费（自然日结算）<br>**快速模式**：按输入/输出 token 计费（含缓存优惠） | 微调：按 GPU 小时计费<br>部署：按所选实例规格（GPU/MU）及运行时长计费 | 压缩任务本身限时免费；**压缩后模型部署费用按实际 MU 规格计费**（成本显著降低） |
+| **典型场景** | - 客服机器人峰值会话承载<br>- AI 编程助手多步推理链路<br>- Agent 实时决策响应<br>- 对 SLA 有明确 TPS 要求的 B端接口 | - 垂直领域知识问答服务（如金融合规问答）<br>- 企业私有化客服对话引擎<br>- A/B 测试多个微调版本<br>- 需要独立监控、扩缩容、灰度发布的业务线 | - 微调模型上线后发现资源成本过高<br>- 边缘/轻量级服务节点部署需求<br>- 大规模并发但对绝对精度容忍小幅下降<br>- 快速验证不同量化方案效果 |
 
 ## 各方案适用场景建议
 
-### ✅ 推荐选择 `Model Production` 当：
-- 你需要**从零开始构建定制化模型**（例如：用内部客服对话数据微调 Qwen2-7B）；
-- 你重视**模型版本可追溯性与灰度发布能力**（`version_id` + `model_id` 统一管理）；
-- 你希望**最小化运维复杂度**，接受按 GPU 实例小时计费，且对推理延迟/吞吐无严苛 SLA 要求；
-- 你已有 ONNX/Triton 格式模型，需快速封装为 HTTP 服务。
+### ✅ 高并发推理（推荐当）
+- **你已使用百炼标准 API，但遭遇高峰期限流（429）或 P99 延迟超标** → 优先评估 TPM 预留，锁定容量保障稳定性。
+- **你的应用极度依赖输出速度（如代码补全、实时 Agent 规划），且当前模型为 `glm-5.2-fast-preview`** → 直接启用快速模式，获取 1.5~2 倍 TPS 提升。
+- **你无法修改客户端调用逻辑，但需提升性能** → TPM 预留零改造接入，是兼容性最优解。
 
-> ⚠️ 注意：不适用于需要长上下文（>128K）、LoRA 增量更新、或按 token 精细计费的场景。
+### ✅ 生产部署（推荐当）
+- **你需要将业务专属数据微调后的模型投入正式服务，并要求独立域名、独立监控、自动扩缩容** → 必选 Model Production，获得完整服务治理能力。
+- **你已有 Hugging Face 训练好的模型，希望快速在百炼上托管并提供 API** → 利用导入功能，跳过微调环节直接部署。
+- **你需要管理多个模型版本（如 v1.0/v1.1/v2.0），支持灰度发布与回滚** → Model Production 的版本控制与部署隔离机制是唯一选择。
 
-### ✅ 推荐选择 `Model Deployment 1` 当：
-- 你已拥有**预置模型或 LoRA 微调成果**，需投入生产环境并承担明确 SLA；
-- 你面临**多维度资源诉求**：既要保底吞吐（PTU）、又要低延迟（MU）、还要低成本验证（Token 计费）；
-- 你需要**高级推理控制能力**：如 PD 分离降低首 Token 延迟、`enable_thinking` 模式、自定义 `max_context_length`；
-- 你运营跨地域服务（北京 + 新加坡双地域支持）。
-
-> ⚠️ 注意：全参微调模型无法直接部署；OSS 导入的 LoRA 模型不支持增量更新；API 部署当前仅限北京地域。
-
-### ✅ 推荐选择 `Model High Speed Inference` 当：
-- 你已在使用 `Model Deployment 1` 或其他方式部署模型，但**遭遇高峰期限流或响应速度瓶颈**；
-- 你的业务对**确定性容量（TPM 预留）或单请求输出速率（快速模式）有硬性要求**；
-- 你愿意为性能溢价付费，并能接受 preview 功能的演进风险（尤其快速模式）；
-- 你计划组合使用：例如为 `glm-5.2-fast-preview` 创建 TPM 预留，兼顾容量保障与生成速度。
-
-> ⚠️ 注意：TPM 预留是容量保障机制，**不是独立部署方案**；快速模式目前仅限单一模型，且不承诺生产级 SLA。
-
----
+### ✅ 模型压缩（推荐当）
+- **你已完成微调并部署了模型，但发现 GPU 成本过高或并发承载能力不足** → 在华北2地域，对 `SUCCEEDED` 微调模型发起压缩，可降低 40%~60% MU 成本。
+- **你的业务对响应延迟不敏感，但对单位请求成本高度敏感（如海量轻量级问答）** → 选择更高 MU 编号模板，在精度可接受范围内最大化成本效益。
+- **你需要快速对比多种量化方案效果** → 利用免费期，对同一源模型批量创建不同模板的压缩任务，用真实业务测试集验证精度损失。
 
 ## 技术选型参考指南（面向开发者）
 
-| 你的需求 | 推荐方案 | 关键理由 |
-|----------|----------|----------|
-| “我要用自己标注的数据训练一个专属客服模型，并一周内上线” | **Model Production** | 端到端支持微调+部署，控制台/API 全流程可视化，版本回滚便捷 |
-| “我们 SaaS 产品已上线，现在要保障 99.9% 请求在 2s 内返回，且支持 100K 上下文” | **Model Deployment 1（MU 模式 + PD 分离）** | MU 提供资源独占、PD 分离优化首 Token 延迟、`max_context_length` 可配，SLA 可预期 |
-| “营销活动期间流量激增 3 倍，现有部署频繁返回 429” | **Model High Speed Inference（TPM 预留）** | 锁定专属 kTPM，避免公共资源争抢；支持自动溢出，平滑承接突发流量 |
-| “Agent 任务中，每步推理输出慢导致整体耗时超标” | **Model High Speed Inference（快速模式）** | `glm-5.2-fast-preview` TPS 提升 1.5~2×，显著缩短多步链路总延迟 |
-| “刚训好一个 LoRA 模型，想先小流量验证效果再决定是否采购资源” | **Model Deployment 1（Token 计费模式）** | 零资源预留成本，按实际 token 付费，适合效果验证与 AB 测试 |
-| “我们需要同时支持北京和新加坡用户，且两地模型配置需一致” | **Model Deployment 1（控制台双地域部署）** | 控制台原生支持北京/新加坡双地域，API 部署虽限北京，但可通过多 workspace 实现跨域管理 |
+| 你的需求 | 推荐方案 | 关键原因 | 注意事项 |
+|----------|----------|----------|----------|
+| “我的 Qwen3.8-Max API 在大促期间总被限流，如何保证不丢请求？” | **TPM 预留** | 提供刚性容量保障，溢出策略可控，天然适配基础模型高并发场景 | 需提前预购，按自然日计费；不可与快速模式混用 |
+| “我要用内部销售话术微调 GLM-4，上线后需支持 500 QPS 并能随时扩容” | **生产部署** | 支持微调 + 独立部署 + 自动扩缩容，服务完全自主可控 | 微调耗时较长（最长 72h），需预留测试周期；部署实例需申请 GPU 配额 |
+| “微调好的 Qwen3.5 模型部署成本太高，能否在精度损失 <1% 下降低成本？” | **模型压缩** | 针对微调模型专项优化，实测成本降幅超 50%，且部署接口完全兼容 | 仅限华北2；压缩后模型不可再微调；务必用业务测试集验证精度 |
+| “我想同时用 Qwen3.8-Max 和 GLM-5.2 做 A/B 测试，各自需要独立监控” | **生产部署**（分别微调+部署） | 每个部署拥有独立 endpoint、独立 metrics、独立生命周期 | 若仅调用基础模型，无需微调，应选用高并发推理而非生产部署 |
+| “我的 Agent 应用调用 GLM-5.2 频繁，但每次输出只需 200 tokens，如何提速？” | **快速模式**（若模型匹配） | `glm-5.2-fast-preview` 专为高频小输出优化，TPS 显著提升 | 当前仅此一模型支持；preview 阶段不承诺 SLA，勿用于支付等强实时链路 |
+| “我导入了一个 Llama3-8B HF 模型，想部署但不想微调” | **生产部署**（直接部署） | 支持 HF 格式导入模型一键部署为服务 | 导入模型需满足平台兼容性要求，部署规格需手动配置 |
 
-> 💡 **终极建议**：  
-> - **起步阶段**：优先用 `Model Production` 快速验证模型效果；  
-> - **规模化上线**：迁移到 `Model Deployment 1`，根据负载特征选择 PTU/MU/Token 模式；  
-> - **性能攻坚期**：叠加 `Model High Speed Inference`（TPM 预留或快速模式）解决瓶颈；  
-> - **禁止混用误区**：`Model Production` 部署的实例**不能**直接绑定 TPM 预留或启用快速模式——二者属于不同服务栈，需重新部署。
+> **重要协同提示**：  
+> - **生产部署 + 模型压缩** 是黄金组合：先通过 Model Production 微调出业务模型，再用 Model Compression 优化其部署成本。  
+> - **高并发推理 ≠ 替代生产部署**：TPM 预留/快速模式加速的是 *百炼托管的基础模型*；而 Model Production 部署的是 *你拥有的定制模型*，二者服务对象本质不同。  
+> - **无“万能方案”**：切勿为简单调用基础模型而启动微调流程；也勿为压缩一个未微调的基础模型而浪费资源——严格按模型来源与业务目标匹配能力。
 
 ## 被对比主题页
 
-- [model production](../api/model-production.md)
-- [model deployment 1](../guides/model-deployment-1.md)
 - [model high speed inference](../guides/model-high-speed-inference.md)
+- [model production](../api/model-production.md)
+- [model compression](../guides/model-compression.md)
 
 

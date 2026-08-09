@@ -1,55 +1,53 @@
 # application monitoring
 
-应用观测（Application Monitoring）是阿里云百炼平台提供的端到端可观测能力，用于追踪应用内部调用链路、分析模型响应延时、查看 [Token](../concepts/token.md) 消耗及模型思考过程。该功能基于 OpenTelemetry 构建，支持分钟级指标同步与多维 Span 数据分析，适用于智能体、工作流和高代码三类应用。[应用观测](../../raw/application-user-guide/application-monitoring/application-observation.md) 是当前唯一官方支持的实现方式。
+应用监控（Application Monitoring）是百炼平台提供的端到端可观测能力，用于追踪智能体、工作流及高代码类应用的内部执行链路，采集延时、[Token](../concepts/token.md) 量、状态、输入输出等关键指标。数据以分钟级频率同步至可观测链路 OpenTelemetry 存储，支持深度下钻分析与导出，但**当前不提供 API 接口**，所有操作需通过控制台完成。详细背景和设计目标参见 [应用观测](../../raw/application-user-guide/application-monitoring/application-observation.md)。
 
 ## 支持的模型/功能
 
-- **支持的应用类型**：智能体应用、工作流应用、高代码应用（但高代码应用仅上报根节点 `FullCodeApp`，不支持内部链路追踪）  
-- **核心可观测能力**：
-  - 调用链路追踪（Root Span / All Span / Model Span 三种视图）
-  - 延时指标（平均调用时长、首 [Token](../concepts/token.md) 耗时）
-  - [Token](../concepts/token.md) 统计（输入/输出/总量）
-  - 节点级详情（含原始数据、标注记录、嵌套关系）
-  - 数据导出（JSONL / Excel）、批量导入评测集、标签标注（布尔/分类/数字/文本）
-- **节点类型覆盖**：`CHAIN`、`LLM`、`RETRIEVER`（含 `TextRetriever`/`VectorRetriever`）、`EMBEDDING`、`RERANKER`、`REWRITER`、`TOOL`、`GUARDRAIL`、`AGENT` 等；工作流额外支持 `START`、`END`、`API`、`CLASSIFIER`、`CONDITION` 等节点。详见 [应用观测支持的所有节点类型](../../raw/application-user-guide/application-monitoring/application-observation.md)。
+- **支持的应用类型**：智能体应用（Single Agent）、工作流应用（Workflow）和高代码应用（Rich Code）。  
+- **不支持的应用类型**：通过 Assistant API 创建的智能体应用（[原文标题](../../raw/application-user-guide/application-monitoring/application-observation.md) 明确指出该限制）。  
+- **可观测节点类型**：覆盖全链路关键环节，包括 `CHAIN`（根调用）、`LLM`（大模型推理）、`RETRIEVER`（含 `VectorRetriever`/`TextRetriever`）、`EMBEDDING`、`RERANKER`、`REWRITER`、`TOOL`、`GUARDRAIL`、`API`、`CLASSIFIER` 等；工作流还额外支持 `START`、`CONDITION`、`SCRIPT`、`END` 等节点。  
+- **高代码应用限制**：仅上报 `CHAIN` 节点（名称为 `FullCodeApp`），**不支持追踪其内部调用链路**（[原文标题](../../raw/application-user-guide/application-monitoring/application-observation.md) 中明确说明）。
 
-> **注意**：[通过Assistant API创建的智能体应用](../../raw/application-user-guide/application-monitoring/application-observation.md) 当前不被支持，此限制在文档中明确标注，且无替代方案。
+> **注意**：文档中对 `RETRIEVER` 子节点的描述在“智能体应用”和“工作流应用”两节中完全一致，但未说明是否复用同一套实现逻辑；实际使用中应以控制台实际展示的节点类型为准，避免依赖文档隐含假设。
 
 ## 关键参数
 
-| 参数 | 说明 | 来源 |
-|------|------|------|
-| `Request ID` / `Trace ID` / `Span ID` | 用于精准定位单次调用或节点，可在节点详情页点击「查看 ID」获取 | [应用观测](../../raw/application-user-guide/application-monitoring/application-observation.md) |
-| `Token总量` | = 输入 Token 数 + 输出 Token 数（`LLM` 和 `EMBEDDING` 节点分别统计） | [应用观测](../../raw/application-user-guide/application-monitoring/application-observation.md) |
-| `延时` | `LLM` 节点延时包含流式响应全过程；`CHAIN` 根节点延时为端到端总耗时 | [应用观测](../../raw/application-user-guide/application-monitoring/application-observation.md) |
-| `状态` | 仅 `正常` / `错误` 两类；错误可进一步按类型细分（如 `Guardrail` 触发的 `ManualIntervention`） | [应用观测](../../raw/application-user-guide/application-monitoring/application-observation.md) |
+| 参数 | 说明 | 来源依据 |
+|------|------|----------|
+| **Trace ID / Span ID / Request ID** | 用于跨节点关联与精确检索，可在节点详情页点击“查看 ID”获取 | [原文标题](../../raw/application-user-guide/application-monitoring/application-observation.md) |
+| **延时（调用时长）** | LLM 节点延时包含完整响应过程（含流式首 [Token](../concepts/token.md) 及后续 [Token](../concepts/token.md) 输出）；平均首 Token 耗时单独统计 | [原文标题](../../raw/application-user-guide/application-monitoring/application-observation.md) |
+| **Token 量** | `LLM` 节点 = 输入 Token + 输出 Token；`EMBEDDING` 节点 = 向量化输入 Prompt 的 Token 数 | [原文标题](../../raw/application-user-guide/application-monitoring/application-observation.md) |
+| **状态** | 分为 `正常` 与 `错误`，错误可进一步按类型细分（如 `ManualIntervention`、`SystemIntervention`） | [原文标题](../../raw/application-user-guide/application-monitoring/application-observation.md) |
 
 ## 使用方式
 
-### 前置配置（必需）
-1. 主账号或已授权子账号访问 [应用观测配置](https://bailian.console.aliyun.com/tab=app?tab=app#/app-observe) 页面，完成：
-   - 授权可观测链路 OpenTelemetry 服务角色权限
-   - 开通 OpenTelemetry 服务
-   - 初始化 LogStore 存储（主账号开通通常分钟级生效；子账号需额外配置 `CreateServiceLinkedRole` 权限，详见 [常见问题](../../raw/application-user-guide/application-monitoring/application-observation.md)）
+1. **前提配置**（仅需一次）：  
+   - 主账号或已授权子账号访问 [应用观测](https://bailian.console.aliyun.com/tab=app?tab=app#/app-observe)，点击右上角「应用观测配置」；  
+   - 完成三步：授权 OpenTelemetry 服务角色 → 开通 OpenTelemetry 服务 → 初始化 LogStore；  
+   - 子账号需额外配置 `AliyunBailianFullAccess`、页面权限及 `ram:CreateServiceLinkedRole` 权限（详见 [原文标题](../../raw/application-user-guide/application-monitoring/application-observation.md) 常见问题章节）。
 
-### 启用观测
-- 应用必须已**发布**且属于当前业务空间，否则不会出现在「选择被观测的应用」列表中  
-- 添加后自动采集：所有 Prompt 输入、输出、延时、Token 量等数据以分钟级频率同步至观测后台  
-- 关闭观测后数据停止同步，重新添加仅同步新增数据  
+2. **启用观测**：  
+   - 在应用观测页点击「选择被观测的应用」→「添加」；  
+   - **仅已发布且归属当前业务空间的应用可见**；未发布应用需先通过「管理应用」→「发布」操作启用。
 
-### 数据查看与操作
-- **Span 列表页**：支持按 `Request ID`/`Trace ID`/`Span ID` 搜索、时间范围筛选、表头自定义、状态/名称/输入/输出/延时/Token/标签等多条件过滤  
-- **节点详情页**：展开嵌套结构，查看原始请求/响应、标注记录、ID 信息  
-- **监控统计页**：查看调用次数、失败率、Token 趋势、平均延时等图表（支持按分钟/小时/天聚合，最长30天）  
-- **评测集集成**：支持将 Span 批量映射字段导入评测集（最多50个字段），用于真实场景评测  
+3. **数据查看与筛选**：  
+   - 支持三种 Span 展示模式：`Root Span`（默认）、`All Span`、`Model Span`；  
+   - 过滤器支持按状态、Span Name、输入/输出关键词、延时、Token 量、标签等多维条件组合筛选；  
+   - 表头可自定义，支持按 `Request ID`/`Trace ID`/`Span ID` 搜索。
+
+4. **高级功能**：  
+   - **导出数据**：Trace 列表页右上角支持 JSONL 或 Excel 导出；  
+   - **添加到评测集**：批量选中 Span，映射字段后导入（最多 50 字段）；  
+   - **数据标注**：支持布尔值、分类、数字、文本四类标签，与评测系统共享标签管理。
 
 ## 限制和注意事项
 
-- **无 API 接口**：应用观测目前暂无开放 API，所有操作均需通过控制台完成 —— 此限制在 [应用观测](../../raw/application-user-guide/application-monitoring/application-observation.md) 中明确声明  
-- **高代码应用限制**：仅上报 `FullCodeApp` 根节点，无法观测其内部逻辑；若需链路追踪，必须在代码中集成 `AgentScope-AI` 的 `Tracing` 模块，并部署时启用 `--telemetry enable` 参数  
-- **[长期记忆](../concepts/long-term-memory.md)不可观测**：知识库检索可观测，但[长期记忆](../../raw/application-user-guide/application-monitoring/application-observation.md)中的检索过程暂不支持  
-- **计费说明**：功能本身免费，但底层依赖 OpenTelemetry 服务，产生的日志存储与查询费用需单独承担  
-- **子账号权限要求严格**：除 `AliyunBailianFullAccess` 外，必须显式授予 `创建服务关联角色` 权限，否则配置步骤会失败（详见 [常见问题](../../raw/application-user-guide/application-monitoring/application-observation.md)）
+- **无 API 支持**：应用监控功能当前**暂无 API**，所有配置与查询必须通过控制台完成（[原文标题](../../raw/application-user-guide/application-monitoring/application-observation.md) 明确强调）。  
+- **数据延迟**：指标同步频率为**分钟级**，不适用于毫秒级实时诊断场景。  
+- **存储计费**：功能本身免费，但底层依赖 OpenTelemetry 服务，产生的日志/Trace 数据按 OpenTelemetry 计费规则收费。  
+- **高代码应用可观测性局限**：即使开启观测，也仅能捕获顶层 `FullCodeApp` 节点，无法观测其内部函数、模型调用等细节；若需深度追踪，需在代码中集成 AgentScope-AI Tracing 模块并部署时启用 `--telemetry enable` 参数。  
+- **[长期记忆](../concepts/long-term-memory.md)不可观测**：知识库检索可观测，但[长期记忆](https://help.aliyun.com/zh/model-studio/long-term-memory)中的检索过程**目前暂不支持观测**（[原文标题](../../raw/application-user-guide/application-monitoring/application-observation.md) 多次提及）。
 
 ## 来源文档
 

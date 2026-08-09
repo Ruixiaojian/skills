@@ -1,43 +1,44 @@
 # 流式输出
 
-流式输出（Streaming Output）是百炼平台中一种实时、增量式返回模型响应的通信机制，客户端无需等待整个响应生成完成即可逐段接收并处理结果，显著降低端到端延迟，提升交互实时性与用户体验。
+流式输出（Streaming Output）是指模型服务将生成结果分块、实时、逐段返回给客户端的通信模式，而非等待全部内容生成完毕后一次性返回。该模式显著降低端到端延迟，提升用户体验，并支持前端实时渲染、语音合成流式播放、长文本渐进式展示等典型场景。
 
-## 在百炼平台的不同场景中如何使用
+## 在百炼平台的不同场景中，这个概念如何使用
 
-流式输出在以下三类核心能力中被统一支持，但协议形式与使用方式略有差异：
+流式输出在百炼平台中并非全局默认行为，而是按接口类型和调用方式显式启用，主要应用于以下三类核心场景：
 
-- **知识问答（`/api/v2/apps/knowledge/chat`）**：默认启用流式，采用 Server-Sent Events（SSE）协议。服务端按 `event: planning` / `event: tool_call` / `event: generation` 分阶段推送 JSON 数据块，每行以 `data: {...}` 格式发送，客户端需按事件类型解析并组装最终答案。
+- **[OpenAI 兼容接口](openai-compatible-interface.md)（Chat Completions / Vision / Responses API）**：通过设置 `stream=true` 参数启用。适用于 `qwen-plus`、`qwen3-vl-plus`、`deepseek-v4-flash` 等主流文本与[多模态](multimodal.md)模型。响应为 Server-Sent Events（SSE）格式，每块含 `delta.content` 字段；末尾 chunk 可选包含 token 统计（需额外配置 `stream_options={"include_usage": true}`）。
 
-- **应用调用（Application Call）**：通过 `stream=true` 参数启用（仅同步调用有效），支持 DashScope API 和 Responses（OpenAI 兼容）接口。响应为 SSE 流，包含 `choices[0].delta.content` 字段的增量文本片段，适用于聊天机器人等实时对话场景。
+- **智能体/工作流应用调用（Application Call）**：同步调用时支持 `stream=true`，但需满足前提条件——工作流应用必须在结束节点显式开启「流式输出」开关并重新发布；智能体应用默认支持。**异步调用（`background=true`）不支持流式输出**，此为硬性限制。
 
-- **Realtime API（Omni 及通用 Realtime）**：基于 WebSocket 或 AOQ 协议，采用事件驱动模型。服务端主动推送 `response.text.delta`、`response.audio.delta` 等细粒度事件，支持文本+音频混合流式输出，适用于语音助手、实时翻译等低延迟交互场景。
+- **实时[多模态](multimodal.md)交互接口（Omni Realtime / Realtime API）**：底层基于 WebSocket 或 AOQ 的双向流式协议，天然支持流式。文本输出以 `conversation.item.output.text.delta` 事件实时推送；音频输出则以 PCM 数据帧持续下发（24 kHz），无需额外参数控制，流式为协议级默认行为。
 
-> ⚠️ 注意：异步调用（`background=true`）不支持流式输出；所有流式响应均无 `job_id` 或轮询机制，必须通过长连接持续接收。
+> ⚠️ 注意：文件上传、批量推理（Batch Chat / Batch File）、Embeddings、异步任务查询等非交互式接口**不支持流式输出**。
 
 ## 关键参数和配置
 
-| 参数 | 位置 | 类型 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| `stream` | 请求体（JSON）或 Query 参数 | `boolean` | `true`（知识问答）、`false`（应用调用） | 控制是否启用流式；设为 `false` 时返回完整 JSON 响应（非流式）。 |
-| `event` 字段 | SSE 响应头 | `string` | 如 `planning`、`generation`、`text.delta` | 标识当前数据块语义阶段，客户端需据此做差异化处理。 |
-| `data:` 前缀 | SSE 响应体 | `string` | 必须存在 | 每行以 `data: {...}` 开头，空行分隔事件；需严格按 SSE 规范解析。 |
-| `modalities` | Realtime API 的 `session.update` | `string[]` | `["text","audio"]` | 决定流式输出模态组合，影响事件类型（如是否含 `response.audio.delta`）。 |
+| 参数 | 类型 | 说明 | 是否必需 | 备注 |
+|------|------|------|----------|------|
+| `stream` | boolean | 启用流式响应开关 | 否（默认 `false`） | 所有支持流式的接口均需显式设为 `true`；设为 `true` 后，HTTP 响应头 `Content-Type` 将为 `text/event-stream`。 |
+| `stream_options` | object | 流式增强选项 | 否 | 目前仅 [OpenAI 兼容接口](openai-compatible-interface.md)支持；必须传 `{"include_usage": true}` 才能在最终 chunk 中返回 `usage` 字段（含 `prompt_tokens`/`completion_tokens`）。 |
+| `modalities` | array | 输出模态声明（Realtime 场景） | 是（Realtime API） | 如 `["text"]` 或 `["text","audio"]`；决定服务端是否推送文本 delta 和/或音频帧流。 |
 
-> ✅ 最佳实践：  
-> - 客户端务必设置足够长的连接超时（建议 ≥ 300s），避免因网络波动中断流；  
-> - 解析 SSE 时需忽略空行、跳过注释行（以 `:` 开头），并正确处理换行符 `\n` 或 `\r\n`；  
-> - 对于 Realtime API，需监听 `response.done` 事件作为流结束信号，而非依赖连接关闭。
+- **SDK 使用提示**：
+  - Python（OpenAI SDK）：使用 `for chunk in client.chat.completions.create(..., stream=True): ...` 迭代处理；
+  - DashScope SDK（Python/Java）：调用 `.stream()` 方法（如 `client.chat.completions.stream(...)`）；
+  - Realtime API：无需设置 `stream`，直接监听 `conversation.item.output.text.delta` 或 `audio.delta` 事件即可。
 
-## 面向开发者提示
+## 面向开发者，简洁实用
 
-- 不要自行拼接 `data:` 行——使用标准 SSE 解析库（如 `EventSource` 浏览器原生 API、`sseclient` Python 库）；
-- 流式响应中 `content` 字段可能为空字符串（如工具调用阶段），请判空处理；
-- 所有流式接口均不透传 LLM 控制参数（如 `temperature`、`max_tokens`）至知识问答接口，该限制已在文档中明确；
-- 若需调试，可临时禁用流式（`stream=false`）获取完整响应结构，再切换回流式实现渐进渲染。
+- ✅ **推荐场景**：实时对话界面、语音助手前端、代码补全编辑器、长文档摘要预览。
+- ❌ **禁止场景**：异步任务、批量处理、[Token](token.md) 统计强依赖的离线分析（流式统计需手动累加）。
+- 🔧 **调试技巧**：用 `curl` 测试流式接口时，添加 `-N` 参数禁用缓冲（`curl -N -H "Authorization: Bearer ..." ...`）；浏览器开发者工具 Network 标签页可观察 SSE 流。
+- 📉 **性能注意**：流式不降低总生成耗时，但大幅改善首字延迟（Time to First [Token](token.md)）；高并发下建议复用 HTTP 连接池（参见 [连接复用参数](../../raw/model-api-reference/more-about-models/more-about-models.md#连接复用参数)）。
+- 🛑 **错误处理**：流式请求中断（如网络闪断）后，服务端不会自动重试；客户端需自行实现断点续传逻辑（如记录已接收 `id` 或 `index`）。
 
 ## 关联主题页
 
-- [knowledge](../api/knowledge.md)
+- [more about models](../api/more-about-models.md)
+- [toolkits and frameworks](../api/toolkits-and-frameworks.md)
 - [omni realtime api](../api/omni-realtime-api.md)
 - [realtime api user guide](../api/realtime-api-user-guide.md)
 - [application call](../api/application-call.md)

@@ -72,6 +72,7 @@
       "inferenceProvider": "zhipu-ai",
       "name": "ZHIPU/GLM-5.2",
       "docUrl": "https://bailian.console.aliyun.com/cn-beijing?tab=doc#/doc/?type=model&url=3026315",
+      "category": "Third-party",
       "samples": {
         "openai": {
           "completionsAPI": {
