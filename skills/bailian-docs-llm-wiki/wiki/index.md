@@ -32,9 +32,8 @@
 - [security and compliance](guides/security-and-compliance.md) — 12 篇源文档
 - [skill](guides/skill.md) — 1 篇源文档
 - [start using](guides/start-using.md) — 2 篇源文档
-- [support](guides/support.md) — 3 篇源文档
 - [test 1](guides/test-1.md) — 5 篇源文档
-- [token plan guide](guides/token-plan-guide.md) — 12 篇源文档
+- [token plan guide](guides/token-plan-guide.md) — 14 篇源文档
 - [use cases](guides/use-cases.md) — 27 篇源文档
 - [use chat client or development tool](guides/use-chat-client-or-development-tool.md) — 17 篇源文档
 
@@ -42,41 +41,43 @@
 
 - [3d generation](api/3d-generation.md) — 1 篇源文档
 - [application call](api/application-call.md) — 5 篇源文档
-- [application component api reference](api/application-component-api-reference.md) — 57 篇源文档
+- [application component api reference](api/application-component-api-reference.md) — 58 篇源文档
 - [file management api](api/file-management-api.md) — 1 篇源文档
 - [frameworks](api/frameworks.md) — 3 篇源文档
-- [image generation](api/image-generation.md) — 26 篇源文档
+- [image generation](api/image-generation.md) — 27 篇源文档
 - [knowledge](api/knowledge.md) — 1 篇源文档
 - [long term memory new](api/long-term-memory-new.md) — 1 篇源文档
 - [managed agents api](api/managed-agents-api.md) — 7 篇源文档
 - [model production](api/model-production.md) — 2 篇源文档
 - [more](api/more.md) — 3 篇源文档
-- [more about models](api/more-about-models.md) — 8 篇源文档
+- [more about models](api/more-about-models.md) — 6 篇源文档
 - [more models](api/more-models.md) — 6 篇源文档
 - [omni realtime api](api/omni-realtime-api.md) — 6 篇源文档
 - [preparations](api/preparations.md) — 4 篇源文档
 - [qwen api reference](api/qwen-api-reference.md) — 1 篇源文档
-- [realtime api user guide](api/realtime-api-user-guide.md) — 12 篇源文档
+- [realtime api user guide](api/realtime-api-user-guide.md) — 11 篇源文档
 - [toolkits and frameworks](api/toolkits-and-frameworks.md) — 10 篇源文档
 - [vector and sort](api/vector-and-sort.md) — 4 篇源文档
-- [video generation api](api/video-generation-api.md) — 33 篇源文档
+- [video generation api](api/video-generation-api.md) — 34 篇源文档
 
 ## 横切概念
 
 - [OpenAI 兼容接口](concepts/openai-compatible-interface.md) — 关联 5 个主题
 - [Token](concepts/token.md) — 关联 5 个主题
 - [函数调用](concepts/function-calling.md) — 关联 5 个主题
-- [多模态](concepts/multimodal.md) — 关联 6 个主题
-- [插件](concepts/plugin.md) — 关联 5 个主题
+- [向量化与重排序](concepts/embedding-rerank.md) — 关联 5 个主题
+- [多模态](concepts/multi-modal.md) — 关联 5 个主题
+- [工具集成](concepts/tool-integration.md) — 关联 5 个主题
+- [异步任务](concepts/asynchronous-task.md) — 关联 5 个主题
 - [检索增强生成](concepts/rag.md) — 关联 5 个主题
 - [流式输出](concepts/streaming-output.md) — 关联 5 个主题
 - [长期记忆](concepts/long-term-memory.md) — 关联 5 个主题
 
 ## 对比分析
 
-- [多模态生成能力对比：图像、视频与3D生成API](comparisons/generation-apis-comparison.md) — 对比 3 个主题
-- [实时 API 方案对比：Omni Realtime API vs Realtime API User Guide](comparisons/realtime-api-comparison.md) — 对比 2 个主题
-- [模型部署方式对比：高并发推理、生产部署与模型压缩](comparisons/model-deployment-options.md) — 对比 3 个主题
-- [知识接入方案对比：Knowledge API、知识库与数据连接](comparisons/knowledge-integration-approaches.md) — 对比 3 个主题
-- [长期记忆与记忆库方案对比](comparisons/memory-solutions-comparison.md) — 对比 2 个主题
+- [多模态生成能力对比：图像、视频、3D 生成](comparisons/generation-apis-comparison.md) — 对比 3 个主题
+- [实时交互 API 对比：Omni Realtime API vs Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
+- [模型部署方式对比：Model Production vs Model Deployment](comparisons/model-deployment-options.md) — 对比 2 个主题
+- [知识增强方案对比：Knowledge API vs Knowledge Base](comparisons/knowledge-solutions-comparison.md) — 对比 2 个主题
+- [长期记忆方案对比：Long-term Memory vs Memory Library](comparisons/memory-solutions-comparison.md) — 对比 2 个主题
 

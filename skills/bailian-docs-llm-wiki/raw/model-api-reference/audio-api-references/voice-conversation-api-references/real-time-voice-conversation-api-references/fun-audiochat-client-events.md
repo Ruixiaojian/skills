@@ -2,7 +2,7 @@
 
 Qwen-Audio Realtime API的客户端事件参考。
 
-**用户指南**：[实时语音对话（Qwen-Audio-Realtime）](https://help.aliyun.com/zh/model-studio/qwen-audio-realtime-user-guides)。如需了解事件交互时序，请参见[WebSocket API](https://help.aliyun.com/zh/model-studio/fun-audiochat-realtime-websocket-api)。
+**用户指南**：[实时语音对话（Qwen-Audio-Realtime）](https://help.aliyun.com/zh/model-studio/fun-audiochat-realtime)。如需了解事件交互时序，请参见[WebSocket API](https://help.aliyun.com/zh/model-studio/fun-audiochat-realtime-websocket-api)。
 
 ## **session.update**
 
@@ -115,8 +115,12 @@ TTS 音色名称，默认值为 `longanqian`。支持两种类型，仅可在第
 
 -   **系统音色**：可选值：`longanqian`、`longanlingxin`、`longanlingxi`、`longanxiaoxin`、`longanlufeng`。
     
--   **声音复刻音色**：通过声音复刻 API 创建，将返回的 `voice_id` 填入此参数。详见[音色配置](https://help.aliyun.com/zh/model-studio/qwen-audio-realtime-user-guides#fc60h311)。
+-   **声音复刻音色**：通过声音复刻 API 创建，将返回的 `voice_id` 填入此参数。详见[音色配置](https://help.aliyun.com/zh/model-studio/fun-audiochat-realtime#fc60h311)。
     
+
+**enable\_speech\_emotion** `_boolean_`（可选）
+
+是否开启情绪增强功能。默认值：`true`。可选值：`true`、`false`。
 
 **instructions** `_string_`（可选）
 

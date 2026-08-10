@@ -1,43 +1,37 @@
 # Token
 
-Token 是百炼平台中用于计量模型输入与输出内容的基本单位，也是计费、限流、监控和资源调度的核心粒度。一个 Token 通常对应文本中的一个词元（如中文字符、英文子词或标点），在[多模态](multimodal.md)场景中则按统一规则折算为等效文本 Token 数（如图像、语音、视频的处理开销被映射为 Token 当量）。
+Token 是百炼平台中用于计量模型输入与输出文本单元的基本计费与资源消耗单位。它并非原始字符，而是由模型 tokenizer 对文本进行分词后生成的离散语义单元（如子词、标点或特殊符号），其数量直接决定调用成本、额度消耗及性能指标统计。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-- **计费计量**：所有实时推理调用均按 `输入 Token 数 + 输出 Token 数` 分别计费，单价以“每百万 Token”为单位，阶梯价格由单次请求的输入 Token 总量决定；免费额度、资源包、节省计划均以 Token 为抵扣单位。
-- **模型调用约束**：`max_tokens` 参数直接限制模型单次响应的最大输出 Token 数，必须 ≤ 模型文档声明的上限；超限将触发 `InvalidParameter` 错误。
-- **监控与可观测性**：
-  - **模型监控**：`model_usage` 指标统计各模型的 Token 消耗总量，支持按业务空间、API Key、协议等维度下钻分析；
-  - **应用监控**：`LLM` 类节点明确上报 `input_tokens` 和 `output_tokens`，用于评估智能体/工作流中每个大模型调用的实际开销；`EMBEDDING` 节点仅统计输入 Token 数。
-- **Token Plan 计量**：虽名义为“Token Plan”，但实际计费单位是 Credits —— 不同模型按其计算复杂度设定 Token-to-Credits 折算系数（如 `qwen3.7-max` 的 1000 Token 比 `qwen-plus` 消耗更多 Credits），Token 本身不直接交易，而是底层计量依据。
-- **安全与限流**：内容安全策略、速率限制（Rate Limit）均基于 Token 级别触发（如 `error_type="rate_limit"` 指 Token 级配额超限），而非请求数。
+- **计费与额度管理**：所有按量付费的模型调用（除 Coding Plan 外）均以 `输入 Token 数 + 输出 Token 数` 为计费依据；新人免费额度（100 万 Token/模型）、节省计划、资源包均按 Token 消耗抵扣；Batch 调用享 50% Token 折扣。
+- **高吞吐保障（TPM 预留）**：TPM（Tokens Per Minute）是容量预留的核心单位，按 kTPM（千 Token/分钟）预购专属输入/输出吞吐能力，确保高峰期稳定调用。
+- **性能监控**：模型监控中 `model_usage` 指标即 Token 总消耗量；`model_tps_per_request`（Tokens Per Second）反映输出速度；应用监控中每个 LLM 节点明确展示 `input_tokens` 和 `output_tokens`，支持按 Token 量筛选异常请求。
+- **推理加速（快速模式）**：虽不设 Token 配额，但计费仍基于实际输入/输出 Token 数，且返回结构中 `cached_tokens` 字段体现缓存优化带来的 Token 成本减免。
+- **模型训练与部署**：视频训练按像素与轮数折算 Token 总量；PTU（预置吞吐单元）按 TPM 计费；自定义模型部署不享受免费额度，Token 消耗全额计费。
 
 ## 关键参数和配置
 
-- `max_tokens`：必填参数，指定模型最多生成的 Token 数，取值范围由具体模型决定（例如 `qwen3.8-max` 最高支持 8192），超出将报错。
-- `input_tokens` / `output_tokens`：只读指标，由平台自动统计并暴露于监控日志与可观测链路中，开发者不可设置。
-- Token 折算规则（[多模态](multimodal.md)）：
-  - 图像：单张图片按分辨率和模型要求折算（如 `qwen-image-2.0` 默认按 1024×1024 基准折为约 1280 Token）；
-  - 语音：ASR 输入音频按时长折算（如 `paraformer` 约 1 秒 ≈ 50 Token）；TTS 输出按文本长度计；
-  - 视频：按帧率、时长及模型能力折算（如 `happyhorse-1.1-t2v` 每秒约 2000–5000 Token）；
-  - 所有折算逻辑以[模型用量统计单位说明](https://help.aliyun.com/zh/model-studio/model-usage-statistics)为准，不透明但稳定。
+- **Token 计算方式**：由模型内置 tokenizer 精确计算，开发者无需手动分词；可通过 API 响应中的 `usage.input_tokens` / `usage.output_tokens` 字段获取（流式响应在末尾 `delta` 中返回）。
+- **阶梯计费**：部分模型（如 `qwen3.6-max-preview`）对长输入（如 128K–256K 区间）应用系数加权（如 ×1.33），实际计费 Token = 基础 Token × 阶梯系数。
+- **缓存优惠**：TPM 预留与快速模式均支持缓存，`cached_tokens` 字段显式返回命中缓存的 Token 数，对应部分按折扣单价计费（如 GLM-5.2 缓存折扣率 25%）。
+- **地域约束**：免费额度仅限华北2（北京）地域生效；不同地域模型 Token 单价可能不同，需通过 Base URL 明确调用地域。
 
 ## 面向开发者，简洁实用
 
-- ✅ **务必校验 `max_tokens`**：调用前查阅目标模型文档的 `max_output_tokens` 上限，避免因超限导致失败。
-- ✅ **监控 Token 消耗**：通过控制台「模型用量」或「应用观测」页面，按 `Request ID` 或 `Trace ID` 追踪单次调用的精确 `input_tokens`/`output_tokens`，快速定位高开销环节。
-- ✅ **优化 Token 使用**：
-  - 输入侧：精简 [prompt](../guides/prompt.md)，移除冗余上下文；对长文档优先用 `rerank` + `retriever` 缩减输入长度；
-  - 输出侧：合理设置 `max_tokens`，避免盲目设高；结构化输出（如 JSON）通常比自由文本更紧凑。
-- ❌ **不要假设 Token 数 = 字符数**：中文、标点、特殊符号、系统消息、工具调用参数均计入 Token，建议用 `dashscope.Tokenizer`（Python SDK）或在线 Token 计算器预估。
-- ⚠️ **注意地域与模型快照绑定**：同一模型名（如 `qwen3.7-plus`）在不同地域或不同快照版本（如 `qwen3.7-plus-2026-05-26`）的 Token 折算和计费单价可能不同，务必使用精确模型 ID。
+- ✅ 调用后务必检查响应 `usage` 字段，验证 Token 消耗是否符合预期（尤其长上下文场景）；
+- ✅ 免费额度自动优先抵扣，无需配置；若需控制支出，可在账单设置中开启“免费额度用完即停”；
+- ✅ 监控告警可配置“Token 消耗超阈值”规则，及时发现异常调用；
+- ✅ 使用 TPM 预留时，替换 `model` 参数为专属 model code（如 `qwen3.8-max-tpm-abc123`），域名保持不变；
+- ✅ 快速模式必须使用专属域名（如 `https://{workspace_id}.cn-beijing.maas.aliyuncs.com/...`），且仅支持 `glm-5.2-fast-preview`；
+- ❌ Coding Plan 不计 Token，按请求次数计费，其 API Key 与 Token Plan 不互通，不可混用。
 
 ## 关联主题页
 
-- [preparations](../api/preparations.md)
 - [token plan guide](../guides/token-plan-guide.md)
-- [model monitoring](../guides/model-monitoring.md)
+- [model high speed inference](../guides/model-high-speed-inference.md)
 - [application monitoring](../guides/application-monitoring.md)
+- [model monitoring](../guides/model-monitoring.md)
 - [test 1](../guides/test-1.md)
 
 

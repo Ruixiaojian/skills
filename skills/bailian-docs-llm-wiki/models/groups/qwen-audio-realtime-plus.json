@@ -23,28 +23,24 @@
         {
           "priceUnit": "每百万tokens",
           "price": "40",
-          "timeBand": "standard",
           "type": "audio_input_token",
           "priceName": "输入：音频"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "5",
-          "timeBand": "standard",
           "type": "audio_text_input_token",
           "priceName": "输入：文本"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "40",
-          "timeBand": "standard",
           "type": "audio_text_output_token",
           "priceName": "输出：文本"
         },
         {
           "priceUnit": "每百万tokens",
           "price": "150",
-          "timeBand": "standard",
           "type": "audio_output_token",
           "priceName": "输出：文本+音频（输出的文本不计费）"
         }
@@ -67,9 +63,7 @@
           "type": "model-default"
         }
       },
-      "priceTimeBands": [
-        "standard"
-      ],
+      "priceTimeBands": [],
       "capabilities": [
         "Realtime-Chatting"
       ],

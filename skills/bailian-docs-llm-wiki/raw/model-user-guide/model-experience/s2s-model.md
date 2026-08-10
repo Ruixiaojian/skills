@@ -1356,7 +1356,7 @@ WebSocket
 
 选定模型后，参考对应的调用文档：
 
--   Qwen-Audio Realtime（WebSocket，实时语音对话）→ [实时语音对话（Qwen-Audio-Realtime）](https://help.aliyun.com/zh/model-studio/qwen-audio-realtime-user-guides)
+-   Qwen-Audio Realtime（WebSocket，实时语音对话）→ [实时语音对话（Qwen-Audio-Realtime）](https://help.aliyun.com/zh/model-studio/fun-audiochat-realtime)
     
 -   Qwen3.5-Omni / Qwen3-Omni（WebSocket，实时）→ [实时（Qwen-Omni-Realtime）](https://help.aliyun.com/zh/model-studio/realtime)
     

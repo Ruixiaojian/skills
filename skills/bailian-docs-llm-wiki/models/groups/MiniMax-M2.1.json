@@ -69,7 +69,7 @@
       ],
       "modelAlias": "",
       "versionTag": "SNAPSHOT",
-      "maxOutputTokens": 131072,
+      "maxOutputTokens": 32768,
       "latestOnlineAt": "2026-02-24T15:07:02.000+00:00",
       "contextWindow": 204800,
       "maxInputTokens": 196608,

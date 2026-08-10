@@ -165,7 +165,7 @@ CosyVoice系列模型
 
 支持
 
-[实时语音对话](https://help.aliyun.com/zh/model-studio/qwen-audio-realtime-user-guides)
+[实时语音对话](https://help.aliyun.com/zh/model-studio/fun-audiochat-realtime)
 
 qwen-audio-3.0-realtime-plus、qwen-audio-3.0-realtime-flash
 
