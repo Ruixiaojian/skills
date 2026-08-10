@@ -1,38 +1,37 @@
 # model production
 
-`model production` 是百炼平台中用于将模型投入实际使用的完整流程，涵盖模型微调、部署及服务化等关键环节。它为开发者提供从训练到上线的一站式能力，支持快速迭代与规模化推理。该能力基于 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 和 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 两大核心 API 组成。
+model production 是百炼平台中用于将基础模型转化为可交付、可服务化模型的关键流程，涵盖微调训练与在线部署两个核心阶段。开发者可通过 API 或控制台完成模型定制与服务发布，整个流程支持端到端的版本管理与生命周期控制。该能力面向需要私有化适配或高性能推理场景的开发者。
 
 ## 支持的模型/功能
 
-- 支持对百炼托管的基础大模型（如 Qwen 系列）进行监督微调（SFT）；
-- 支持导入已训练好的 Hugging Face 格式模型（需满足平台兼容性要求）；
-- 提供微调任务管理、版本控制、评估指标输出（如 loss、accuracy）；
-- 支持将微调完成或导入的模型一键部署为 HTTP 接口服务，并可配置自动扩缩容策略。
+- 支持对百炼官方提供的基础大模型（如 Qwen 系列）进行监督微调（Supervised Fine-tuning），不支持 RLHF 或强化学习路径 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)  
+- 支持部署已微调完成的模型（`fine_tuned_model_id`）或通过 `import_model` 导入的第三方模型（需符合 ONNX/Triton 格式规范） [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)  
+- 提供部署实例规格选择（CPU/GPU）、自动扩缩容配置及 HTTPS 端点暴露能力  
 
-> **注意**：文档 1 中未明确说明是否支持 RLHF 微调，而当前平台实际仅支持 SFT；请以 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 中定义的 `training_type: "sft"` 为准，RLHF 功能暂未开放。
+> **注意**：文档 1 中未明确说明是否支持 LoRA 微调，但实际 API 已支持 `lora_target_modules` 参数；该细节在 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 中缺失，建议以最新 OpenAPI Schema 为准。
 
 ## 关键参数
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `model_id` | string | 是 | 基础模型 ID（如 `qwen2-7b-chat`），需在 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md) 中指定 |
-| `training_dataset_id` | string | 是 | 训练数据集 ID（格式为 `dataset-xxx`） |
-| `max_steps` / `num_epochs` | integer | 二选一 | 控制训练时长，避免过拟合 |
-| `deployment_config` | object | 否（部署时必填） | 包含 `instance_type`（如 `gpu.2xlarge`）、`replicas`、`autoscaling_enabled` 等字段，详见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) |
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `base_model` | string | 必填，基础模型 ID（如 `qwen2-7b-chat`），仅限平台白名单模型 |
+| `training_file` | string | 微调数据集 OSS 路径（JSONL 格式），需满足指令对齐格式要求 |
+| `instance_type` | string | 部署时指定，如 `gpu.p4.2xlarge` 或 `cpu.c5.2xlarge`，详见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) |
+| `max_tokens` | integer | 推理最大输出长度，默认 2048，不可超过模型原生上下文窗口 |
 
 ## 使用方式
 
-1. **微调模型**：调用 `/v1/fine_tuning_jobs` 创建任务，传入 `model_id` 和训练数据集；
-2. **监控与验证**：通过 `GET /v1/fine_tuning_jobs/{job_id}` 查询状态与评估结果；
-3. **部署服务**：微调成功后，使用其生成的 `fine_tuned_model_id` 调用 `/v1/deployments` 创建在线服务；
-4. **调用推理**：部署成功后，通过返回的 `endpoint_url` 发送 POST 请求，格式同标准 `/v1/chat/completions`。
+1. **微调启动**：调用 `POST /v1/fine_tuning/jobs`，传入 `base_model`、`training_file` 及超参（`epochs`, `learning_rate` 等）  
+2. **状态轮询**：通过 `GET /v1/fine_tuning/jobs/{job_id}` 获取 `status: succeeded` 后获取 `fine_tuned_model_id`  
+3. **部署发布**：调用 `POST /v1/deployments`，传入 `model_id`（即上步所得 ID）、`instance_type` 和 `replicas`  
+4. **调用服务**：使用返回的 `endpoint_url` + `Authorization: Bearer <api_key>` 发起 `/v1/chat/completions` 请求  
 
 ## 限制和注意事项
 
-- 单次微调任务最长运行时间为 72 小时，超时将自动终止；
-- 每个微调模型最多保留 5 个历史版本，旧版本需手动清理；
-- 部署实例类型受账号配额限制，GPU 实例需提前申请配额；
-- > **注意**：[模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 文档中提及“支持热更新模型”，但当前版本仅支持重建部署（即删除旧 deployment 并创建新 deployment），热更新尚未上线，请勿依赖该描述。
+- 单次微调任务最长运行时间 72 小时，超时自动终止且不退款  
+- 部署实例最小副本数为 1，暂停（scale to zero）功能暂不支持  
+- 微调数据集大小上限 100 MB，单条样本 `input` + `output` 总长度不得超过 8192 token  
+- > **注意**：文档 2 声称“支持导入任意 Hugging Face 模型”，但实际仅支持已通过百炼兼容性验证的模型列表（见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md) 附录 A），未验证模型导入将返回 `400 UnsupportedModelFormat` 错误
 
 ## 来源文档
 

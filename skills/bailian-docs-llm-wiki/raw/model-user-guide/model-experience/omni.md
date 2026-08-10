@@ -48,7 +48,7 @@ Qwen3.5-Omni Realtime（WebSocket）
 
 Qwen-Audio（WebSocket）
 
-[实时语音对话（Qwen-Audio-Realtime）](https://help.aliyun.com/zh/model-studio/qwen-audio-realtime-user-guides)
+[实时语音对话（Qwen-Audio-Realtime）](https://help.aliyun.com/zh/model-studio/fun-audiochat-realtime)
 
 **音视频内容分析**：上传音频或视频文件，AI分析内容并生成文本或语音回复（视频审核、会议纪要、字幕生成）
 

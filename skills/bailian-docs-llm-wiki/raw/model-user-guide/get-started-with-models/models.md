@@ -652,6 +652,22 @@ API Key[获取↗](https://modelstudio.console.aliyun.com/us-east-1?tab=model#/a
 
 [
 
+ZHIPU/GLM-5.2三方直供
+
+](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/ZHIPU%2FGLM-5.2?serviceSite=asia-pacific-china)
+
+华北2（北京）
+
+OpenAI 兼容
+
+模型 ID`ZHIPU/GLM-5.2`
+
+Base URL`https://[{WorkspaceId}](https://bailian.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management).cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
+
+API Key[获取↗](https://bailian.console.aliyun.com/cn-beijing?tab=model#/api-key)
+
+[
+
 MiniMax-M3三方直供
 
 ](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/MiniMax%2FMiniMax-M3)

@@ -163,7 +163,7 @@
 
 语音识别
 
-Fun-ASR、通义千问3-ASR-Flash-Realtime
+Fun-ASR、通义千问3-ASR-Flash-Realtime、Qwen-Audio-3.0-ASR-Flash-Streaming
 
 3x
 
