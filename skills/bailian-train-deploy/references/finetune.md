@@ -41,11 +41,11 @@ CLI 用 `<method>` / `<method>-lora` 约定，提交时在 CLI 边界映射到�
 
 ## 必填 flag
 
-- `--model`：基座模型名（文本如 `qwen3-8b`，音频如 `cosyvoice-v3-flash`，图像如 `wan2.7-image-pro`）。
+- `--base-model`：基座模型名（文本如 `qwen3-8b`，音频如 `cosyvoice-v3-flash`，图像如 `wan2.7-image-pro`）。
 - `--datasets`：file-id 或本地文件路径（逗号分隔多个）；本地路径会先校验上传再取 file-id。文本传 `.jsonl`，音频/图像传 `.zip`。
 
 ## 提交前校验
 
-`bl finetune <模态> create` 提交前会用 listFoundationModels 校验模型是否支持所选 training-type，不支持会快速失败（不耗配额）。若训练集样本数 ≤ batch_size，会在上传/耗配额前被拒。可用 `bl finetune capability --model <base>` 提前确认。
+`bl finetune <模态> create` 提交前会用 listFoundationModels 校验模型是否支持所选 training-type，不支持会快速失败（不耗配额）。若训练集样本数 ≤ batch_size，会在上传/耗配额前被拒。可用 `bl finetune capability --base-model <base>` 提前确认。
 
 > **已知矛盾**：cosyvoice-v3-flash 和 wan2.7 系列的 capability 返回 `supports.sft=false`，但 API 实际接受 `efficient_sft` 训练请求。CLI 已对音频和图像模态自动跳过此检查。

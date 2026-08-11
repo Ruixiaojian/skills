@@ -70,9 +70,7 @@ JSONL 每行格式：
 
 ### 校验
 
-```bash
-bl dataset validate --file <zip-path> --schema video
-```
+视频 ZIP **不走** `bl dataset validate`（该命令 `--schema` 仅支持 chatml/dpo/cpt/tts/image）。直接 `bl dataset upload --file <zip-path>`：CLI 依据 `data.jsonl` 里的 `first_frame_path`/`video_path` 字段自动探测 video schema，并在上传时校验 ZIP 内的文件引用。
 
 ## 创建训练任务
 

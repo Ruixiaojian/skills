@@ -35,7 +35,7 @@ bl dataset validate --file <jsonl-path> --schema dpo  # 显式指定
 
 ```bash
 bl finetune text create \
-  --model qwen3-8b \
+  --base-model qwen3-8b \
   --datasets <path-or-file-id> \
   --training-type sft-lora \
   --n-epochs 3 \
@@ -61,8 +61,8 @@ bl finetune text create \
 
 ```bash
 bl deploy text create \
-  --model <finetuned_output> \
-  --name <display-name> \
+  --model-name <finetuned_output> \
+  --display-name <display-name> \
   --plan lora \
   --output json
 ```
