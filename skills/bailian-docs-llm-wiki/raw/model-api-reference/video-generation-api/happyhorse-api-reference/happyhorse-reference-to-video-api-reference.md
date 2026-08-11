@@ -10,7 +10,7 @@ HappyHorse-参考生视频模型支持传入**多张参考图像**，通过**文
     
 -   **选择 URL**：选择对应的地域 Endpoint URL，支持HTTP URL或 DashScope SDK URL。
     
--   **配置 API Key**：选择地域并[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，再[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
+-   **配置 API Key**：选择地域并[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，再[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
     
 
 **说明**
@@ -44,7 +44,7 @@ HappyHorse-参考生视频模型支持传入**多张参考图像**，通过**文
 
 ## **美国（弗吉尼亚）**
 
-`POST https://dashscope-us.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis`
+`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis`
 
 ## **德国（法兰克福）**
 
@@ -377,7 +377,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 ## **美国（弗吉尼亚）**
 
-`GET https://dashscope-us.aliyuncs.com/api/v1/tasks/{task_id}`
+`GET https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/tasks/{task_id}`
 
 ## **德国（法兰克福）**
 

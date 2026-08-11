@@ -12,7 +12,7 @@
     
 -   **选择 URL**：选择对应的地域 Endpoint URL，支持HTTP URL或 DashScope SDK URL。
     
--   **配置 API Key**：选择地域并[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，再[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
+-   **配置 API Key**：选择地域并[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，再[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
     
 -   **安装 SDK**：如需通过SDK进行调用，请[安装DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk)。
     
@@ -56,7 +56,7 @@
 
 ## **弗吉尼亚**
 
-`POST https://dashscope-us.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis`
+`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis`
 
 ## **法兰克福**
 
@@ -501,7 +501,7 @@ duration直接影响费用。费用 = 单价（基于分辨率）× 时长（秒
 
 ## **弗吉尼亚**
 
-`GET https://dashscope-us.aliyuncs.com/api/v1/tasks/{task_id}`
+`GET https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/tasks/{task_id}`
 
 ## **法兰克福**
 
@@ -769,7 +769,7 @@ SDK 的参数命名与HTTP接口基本一致，参数结构根据语言特性进
 
 ## **弗吉尼亚**
 
-`dashscope.base_http_api_url = 'https://dashscope-us.aliyuncs.com/api/v1'`
+`dashscope.base_http_api_url = 'https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1'`
 
 ## **法兰克福**
 
@@ -983,7 +983,7 @@ if __name__ == '__main__':
 
 ## **弗吉尼亚**
 
-`Constants.baseHttpApiUrl = "https://dashscope-us.aliyuncs.com/api/v1";`
+`Constants.baseHttpApiUrl = "https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1";`
 
 ## **法兰克福**
 

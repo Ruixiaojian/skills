@@ -10,7 +10,7 @@ Cherry Studio 是一款开源 AI 桌面客户端，可以通过 Token Plan 个�
 
 打开 Cherry Studio，点击右上角的设置按钮，在**模型**栏点击**添加**，填写供应商名称（如 Token Plan 团队版），提供商类型选择 OpenAI。
 
-百炼提供三种计费方案，根据需要选择：
+百炼提供四种计费方案，根据需要选择：
 
 -   **Token Plan 个人版**：按 token 消耗抵扣个人 Credits。
     
@@ -93,7 +93,7 @@ Cherry Studio 是一款开源 AI 桌面客户端，可以通过 Token Plan 个�
     
 -   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
     
--   美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+-   美国（弗吉尼亚）：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1`
     
 
 **模型**

@@ -10,7 +10,7 @@ Base URL 是模型 API 的调用地址。Base URL必须与同一计费方案的 
     
 -   业务空间专属域名（`[workspace-id].[region].maas.aliyuncs.com`）：推荐用于生产环境，提供更高吞吐、更低时延与业务空间级流量隔离。
     
--   试用域名（`trail.[region].maas.aliyuncs.com`）：适用于临时测试与快速验证，限流值较小。
+-   试用域名（`trial.[region].maas.aliyuncs.com`）：适用于临时测试与快速验证，限流值较小。
     
 
 ### Dashscope 域名
@@ -37,9 +37,9 @@ Base URL 是模型 API 的调用地址。Base URL必须与同一计费方案的 
 
 美国（弗吉尼亚）
 
-`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1`
 
-`https://dashscope-us.aliyuncs.com/apps/anthropic`
+`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/apps/anthropic`
 
 ### 业务空间专属域名
 
@@ -74,12 +74,6 @@ Base URL 是模型 API 的调用地址。Base URL必须与同一计费方案的 
 `https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/eu-central-1?tab=globalset#/efm/business_management).eu-central-1.maas.aliyuncs.com/compatible-mode/v1`
 
 `https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/eu-central-1?tab=globalset#/efm/business_management).eu-central-1.maas.aliyuncs.com/apps/anthropic`
-
-美国（弗吉尼亚）
-
-`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/us-east-1?tab=globalset#/efm/business_management).us-east-1.maas.aliyuncs.com/compatible-mode/v1`
-
-`https://[{WorkspaceId}](https://modelstudio.console.aliyun.com/us-east-1?tab=globalset#/efm/business_management).us-east-1.maas.aliyuncs.com/apps/anthropic`
 
 ### 试用域名
 

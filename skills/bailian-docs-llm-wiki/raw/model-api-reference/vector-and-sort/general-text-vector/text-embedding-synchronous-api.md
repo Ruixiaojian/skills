@@ -4,6 +4,8 @@
 
 ## **模型概览**
 
+## 北京
+
 **模型名称**
 
 **向量维度**
@@ -78,13 +80,71 @@ text-embedding-v1
 
 中文、英语、西班牙语、法语、葡萄牙语、印尼语
 
+## 新加坡
+
+**模型名称**
+
+**向量维度**
+
+**最大行数**
+
+**单行最大**Token**数**
+
+**单价（每千输入Token）**
+
+**支持语种**
+
+**免费额度**
+
+qwen3.7-text-embedding
+
+2560、2,048、1,536、1,024（默认）、768、512、256
+
+20
+
+128,000
+
+0.000525元
+
+中文、英语、西班牙语、法语、葡萄牙语、印尼语、日语、韩语、德语、俄罗斯语等201种主流语种与方言
+
+100万Token
+
+有效期：百炼开通后90天内
+
+text-embedding-v4
+
+> 属于[Qwen3-Embedding](https://qwenlm.github.io/zh/blog/qwen3-embedding/)系列
+
+2,048、1,536、1,024（默认）、768、512、256、128、64
+
+10
+
+8,192
+
+0.000514元
+
+中文、英语、西班牙语、法语、葡萄牙语、印尼语、日语、韩语、德语、俄罗斯语等100+主流语种及多种编程语言
+
+无免费额度
+
+text-embedding-v3
+
+1,024（默认）、768、512
+
+中文、英语、西班牙语、法语、葡萄牙语、印尼语、日语、韩语、德语、俄罗斯语等50+主流语种
+
+50万Token
+
+有效期：百炼开通后90天内
+
 关于模型限流，请参考[限流](https://help.aliyun.com/zh/model-studio/rate-limit#953ddcd76495l)。
 
 ## **前提条件**
 
 若熟悉OpenAI生态，可使用兼容API快速迁移；DashScope API则提供更丰富的独有特性。请根据您的需求选择。
 
-您需要已[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如果通过SDK调用，还需要[安装DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk)。
+您需要已[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如果通过SDK调用，还需要[安装DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk)。
 
 ## **OpenAI兼容**
 
@@ -113,9 +173,9 @@ client = OpenAI(
 )
 
 completion = client.embeddings.create(
-    model="text-embedding-v4",
+    model="qwen3.7-text-embedding",
     input='衣服的质量杠杠的，很漂亮，不枉我等了这么久啊，喜欢，以后还来这里买',
-    dimensions=1024, # 指定向量维度（仅 text-embedding-v3及 text-embedding-v4支持该参数）
+    dimensions=1024, # 指定向量维度（仅 qwen3.7-text-embedding、text-embedding-v3及 text-embedding-v4支持该参数）
     encoding_format="float"
 )
 
@@ -141,9 +201,9 @@ public class Main {
 
         // 创建向量化请求参数
         EmbeddingCreateParams params = EmbeddingCreateParams.builder()
-                .model("text-embedding-v4")
+                .model("qwen3.7-text-embedding")
                 .input(EmbeddingCreateParams.Input.ofString("衣服的质量杠杠的，很漂亮，不枉我等了这么久啊，喜欢，以后还来这里买"))
-                // 指定向量维度（仅 text-embedding-v3及 text-embedding-v4支持该参数）
+                // 指定向量维度（仅 qwen3.7-text-embedding、text-embedding-v3及 text-embedding-v4支持该参数）
                 .dimensions(1024)
                 .build();
 
@@ -168,7 +228,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-m
 --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
 --header 'Content-Type: application/json' \
 --data '{
-    "model": "text-embedding-v4",
+    "model": "qwen3.7-text-embedding",
     "input": "风急天高猿啸哀，渚清沙白鸟飞回，无边落木萧萧下，不尽长江滚滚来",  
     "dimensions": 1024,  
     "encoding_format": "float"
@@ -190,9 +250,9 @@ client = OpenAI(
 )
 
 completion = client.embeddings.create(
-    model="text-embedding-v4",
+    model="qwen3.7-text-embedding",
     input=['风急天高猿啸哀', '渚清沙白鸟飞回', '无边落木萧萧下', '不尽长江滚滚来'],
-    dimensions=1024,# 指定向量维度（仅 text-embedding-v3及 text-embedding-v4支持该参数）
+    dimensions=1024,# 指定向量维度（仅 qwen3.7-text-embedding、text-embedding-v3及 text-embedding-v4支持该参数）
     encoding_format="float"
 )
 
@@ -236,9 +296,9 @@ public class Main {
             try {
                 // 创建向量化请求参数
                 EmbeddingCreateParams params = EmbeddingCreateParams.builder()
-                        .model("text-embedding-v4")
+                        .model("qwen3.7-text-embedding")
                         .input(EmbeddingCreateParams.Input.ofString(text))
-                        // 指定向量维度（仅 text-embedding-v3及 text-embedding-v4支持该参数）
+                        // 指定向量维度（仅 qwen3.7-text-embedding、text-embedding-v3及 text-embedding-v4支持该参数）
                         .dimensions(1024)
                         .build();
 
@@ -268,7 +328,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-m
 --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
 --header 'Content-Type: application/json' \
 --data '{
-    "model": "text-embedding-v4",
+    "model": "qwen3.7-text-embedding",
     "input": [
         "风急天高猿啸哀",
         "渚清沙白鸟飞回", 
@@ -296,9 +356,9 @@ client = OpenAI(
 # 确保将 'texts_to_embedding.txt' 替换为您自己的文件名或路径
 with open('texts_to_embedding.txt', 'r', encoding='utf-8') as f:
     completion = client.embeddings.create(
-        model="text-embedding-v4",
+        model="qwen3.7-text-embedding",
         input=f,
-        dimensions=1024,# 指定向量维度（仅 text-embedding-v3及 text-embedding-v4支持该参数）
+        dimensions=1024,# 指定向量维度（仅 qwen3.7-text-embedding、text-embedding-v3及 text-embedding-v4支持该参数）
         encoding_format="float"
     )
 print(completion.model_dump_json())
@@ -341,9 +401,9 @@ public class Main {
 
             // 创建向量化请求参数
             EmbeddingCreateParams params = EmbeddingCreateParams.builder()
-                    .model("text-embedding-v4")
+                    .model("qwen3.7-text-embedding")
                     .input(EmbeddingCreateParams.Input.ofString(fileContent.toString()))
-                    // 指定向量维度（仅 text-embedding-v3及 text-embedding-v4支持该参数）
+                    // 指定向量维度（仅 qwen3.7-text-embedding、text-embedding-v3及 text-embedding-v4支持该参数）
                     .dimensions(1024)
                     .build();
 
@@ -374,7 +434,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-m
 --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
 --header 'Content-Type: application/json' \
 --data '{
-    "model": "text-embedding-v4",
+    "model": "qwen3.7-text-embedding",
     "input": ['"$FILE_CONTENT"'],
     "dimensions": 1024,
     "encoding_format": "float"
@@ -527,9 +587,9 @@ from http import HTTPStatus
 dashscope.base_http_api_url = "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1"
 
 resp = dashscope.TextEmbedding.call(
-    model="text-embedding-v4",
+    model="qwen3.7-text-embedding",
     input='衣服的质量杠杠的，很漂亮，不枉我等了这么久啊，喜欢，以后还来这里买',
-    dimension=1024,  # 指定向量维度（仅 text-embedding-v3及 text-embedding-v4支持该参数）
+    dimension=1024,  # 指定向量维度（仅 qwen3.7-text-embedding、text-embedding-v3及 text-embedding-v4支持该参数）
     output_type="dense&sparse"
 )
 
@@ -558,9 +618,9 @@ public final class Main {
             // 构建请求参数
             TextEmbeddingParam param = TextEmbeddingParam
                     .builder()
-                    .model("text-embedding-v4")  // 使用text-embedding-v4模型
+                    .model("qwen3.7-text-embedding")  // 使用text-embedding-v4模型
                     .texts(Arrays.asList("衣服的质量杠杠的，很漂亮，不枉我等了这么久啊，喜欢，以后还来这里买"))  // 输入文本
-                    .parameter("dimension", 1024)  // 指定向量维度（仅 text-embedding-v3及 text-embedding-v4支持该参数）
+                    .parameter("dimension", 1024)  // 指定向量维度（仅 qwen3.7-text-embedding、text-embedding-v3及 text-embedding-v4支持该参数）
                     .build();
 
             // 创建模型实例并调用
@@ -584,7 +644,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
 --header 'Content-Type: application/json' \
 --data '{
-    "model": "text-embedding-v4",
+    "model": "qwen3.7-text-embedding",
     "input": {
         "texts": [
         "风急天高猿啸哀，渚清沙白鸟飞回，无边落木萧萧下，不尽长江滚滚来"
@@ -616,9 +676,9 @@ batch_counter = 0
 for i in range(0, len(inputs), DASHSCOPE_MAX_BATCH_SIZE):
     batch = inputs[i:i + DASHSCOPE_MAX_BATCH_SIZE]
     resp = dashscope.TextEmbedding.call(
-        model="text-embedding-v4",
+        model="qwen3.7-text-embedding",
         input=batch,
-        dimension=1024  # 指定向量维度（仅 text-embedding-v3及 text-embedding-v4支持该参数）
+        dimension=1024  # 指定向量维度（仅 qwen3.7-text-embedding、text-embedding-v3及 text-embedding-v4支持该参数）
     )
     if resp.status_code == HTTPStatus.OK:
         if result is None:
@@ -667,9 +727,9 @@ public final class Main {
         for (int i = 0; i < inputs.size(); i += DASHSCOPE_MAX_BATCH_SIZE) {
             List<String> batch = inputs.subList(i, Math.min(i + DASHSCOPE_MAX_BATCH_SIZE, inputs.size()));
             TextEmbeddingParam param = TextEmbeddingParam.builder()
-                    .model("text-embedding-v4")
+                    .model("qwen3.7-text-embedding")
                     .texts(batch)
-                    .parameter("dimension", 1024)  // 指定向量维度（仅 text-embedding-v3及 text-embedding-v4支持该参数）
+                    .parameter("dimension", 1024)  // 指定向量维度（仅 qwen3.7-text-embedding、text-embedding-v3及 text-embedding-v4支持该参数）
                     .build();
 
             TextEmbedding textEmbedding = new TextEmbedding();
@@ -706,7 +766,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
 --header 'Content-Type: application/json' \
 --data '{
-    "model": "text-embedding-v4",
+    "model": "qwen3.7-text-embedding",
     "input": {
         "texts": [
           "风急天高猿啸哀",
@@ -734,9 +794,9 @@ dashscope.base_http_api_url = "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.co
 
 with open('texts_to_embedding.txt', 'r', encoding='utf-8') as f:
     resp = TextEmbedding.call(
-        model="text-embedding-v4",
+        model="qwen3.7-text-embedding",
         input=f,
-        dimension=1024 # 指定向量维度（仅 text-embedding-v3及 text-embedding-v4支持该参数）
+        dimension=1024 # 指定向量维度（仅 qwen3.7-text-embedding、text-embedding-v3及 text-embedding-v4支持该参数）
     )
 
     if resp.status_code == HTTPStatus.OK:
@@ -770,9 +830,9 @@ public final class Main {
             }
 
             TextEmbeddingParam param = TextEmbeddingParam.builder()
-                    .model("text-embedding-v4")
+                    .model("qwen3.7-text-embedding")
                     .text(content.toString())
-                    .parameter("dimension", 1024)  // 指定向量维度（仅 text-embedding-v3及 text-embedding-v4支持该参数）
+                    .parameter("dimension", 1024)  // 指定向量维度（仅 qwen3.7-text-embedding、text-embedding-v3及 text-embedding-v4支持该参数）
                     .build();
 
             TextEmbedding textEmbedding = new TextEmbedding();
@@ -800,7 +860,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
 --header 'Content-Type: application/json' \
 --data '{
-    "model": "text-embedding-v4",
+    "model": "qwen3.7-text-embedding",
     "input": {
         "texts": ['"$FILE_CONTENT"']
     },

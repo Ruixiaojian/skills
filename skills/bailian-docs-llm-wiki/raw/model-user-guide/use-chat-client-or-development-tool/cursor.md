@@ -10,7 +10,7 @@ Cursor 是一款 AI 编程 IDE，可以通过按量计费、Coding Plan、Token 
 
 在 Cursor 中，点击设置图标，进入 **Cursor Settings** > **Models**。开启 **OpenAI API Key** 和 **Override OpenAI Base URL**，根据所选方案填入对应的 API Key、Base URL 和模型名称。
 
-阿里云百炼提供三种计费方案，根据需要选择：
+阿里云百炼提供四种计费方案，根据需要选择：
 
 -   **Token Plan 个人版**：按 token 消耗抵扣个人 Credits。
     
@@ -81,7 +81,7 @@ Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-pla
     
 -   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
     
--   美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+-   美国（弗吉尼亚）：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1`
     
 
 **可用模型**

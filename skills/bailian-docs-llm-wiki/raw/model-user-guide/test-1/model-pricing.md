@@ -16371,6 +16371,12 @@ text-embedding-async-v1
 
 **输入单价（每百万Token）**
 
+qwen3.7-text-embedding
+
+国际
+
+0.525元
+
 text-embedding-v4
 
 国际

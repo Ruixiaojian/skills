@@ -52,7 +52,7 @@ FLUX.2
 
 ## 图片编辑
 
-推荐使用`qwen-image-3.0-pro`，具备强大的复杂内容生成与高保真渲染能力，支持最大 4.5k token 输入，可生成复杂版面，并兼容图中图与密集信息排版，接近真实摄影质感。
+推荐使用`qwen-image-3.0-pro`，具备强大的复杂内容生成与高保真渲染能力，支持最大 4.5k token 输入，可生成复杂版面，并兼容图中图与密集信息排版，接近真实摄影质感。详细使用方法请参见[图像编辑](https://help.aliyun.com/zh/model-studio/image-edit-guide/)。
 
 ### 何时使用wan2.7-image-pro
 

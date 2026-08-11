@@ -78,7 +78,7 @@ curl -X POST \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer ${DASHSCOPE_API_KEY}" \
   -H "x-dashscope-rtc-transport: moq" \
-  -d '{"clientIp": ${客户端真实IP}}'
+  -d "{\"clientIp\": \"${CLIENT_REAL_IP}\"}"
 ```
 
 #### **参数说明**
@@ -93,7 +93,7 @@ endpoint
 
 根据业务情况选择接入域名
 
-指定对应的接入域名，详情请参见[地域及接入域名](https://help.aliyun.com/zh/model-studio/regions/)
+指定对应的接入域名，详情请参见[选择地域、服务部署范围和接入域名](https://help.aliyun.com/zh/model-studio/regions/)
 
 Content-Type
 
@@ -264,10 +264,6 @@ engine.connect(cfg);
 ### **WebRTC 协议鉴权**
 
 WebRTC 通过 HTTP POST 请求完成 SDP 交换，鉴权在此阶段完成。客户端将 Offer SDP 发送至服务端，服务端返回 Answer SDP。
-
-**重要**
-
-WebRTC 功能目前为白名单开放，请联系商务经理获取 Endpoint。
 
 **配置项**
 

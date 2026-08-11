@@ -44,7 +44,7 @@ HappyHorse文生视频模型，输入文本提示词生成物理真实、运动�
 
 ## **美国（弗吉尼亚）**
 
-`POST https://dashscope-us.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis`
+`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis`
 
 ## **德国（法兰克福）**
 
@@ -275,7 +275,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 ## **美国（弗吉尼亚）**
 
-`GET https://dashscope-us.aliyuncs.com/api/v1/tasks/{task_id}`
+`GET https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/tasks/{task_id}`
 
 ## **德国（法兰克福）**
 

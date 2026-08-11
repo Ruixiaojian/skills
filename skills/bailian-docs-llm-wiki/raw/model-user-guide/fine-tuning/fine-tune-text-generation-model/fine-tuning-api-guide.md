@@ -6,7 +6,7 @@
 
 -   已经完整阅读了[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)，了解模型调优的基本概念、流程及数据格式要求。
     
--   已开通服务并获得API-KEY， 请参考[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
+-   已开通服务并获得API-KEY， 请参考[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
     
 -   [阿里云子账号](https://help.aliyun.com/zh/model-studio/permission-management-overview#24ca2dad7djzs)（[RAM用户](https://help.aliyun.com/zh/ram/user-guide/overview-of-ram-users)）需被授予必要的调用、训练和部署[权限](https://help.aliyun.com/zh/model-studio/use-workspace#895b613347th4)。
     

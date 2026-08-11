@@ -60,7 +60,7 @@ Token Plan 的 API Key 以 `sk-sp-` 开头，与百炼通用 API Key（`sk-` 开
 
 [**Cherry Studio**多模型桌面客户端](https://help.aliyun.com/zh/model-studio/cherry-studio)
 
-[**Chatbox**跨平台 AI 桌面客户端](https://help.aliyun.com/zh/model-studio/cline-tool)
+[**Chatbox**跨平台 AI 桌面客户端](https://help.aliyun.com/zh/model-studio/chatbox)
 
 [**Cline**VS Code 扩展，智能代码补全和调试](https://help.aliyun.com/zh/model-studio/cline)
 

@@ -75,7 +75,7 @@ Token Plan、Coding Plan 和按量付费的 API Key 与 Base URL 完全隔离，
 
 [**Cherry Studio**多模型桌面客户端](https://help.aliyun.com/zh/model-studio/cherry-studio)
 
-[**Chatbox**跨平台 AI 桌面客户端](https://help.aliyun.com/zh/model-studio/cline-tool)
+[**Chatbox**跨平台 AI 桌面客户端](https://help.aliyun.com/zh/model-studio/chatbox)
 
 [**Cline**VS Code 扩展，智能代码补全和调试](https://help.aliyun.com/zh/model-studio/cline)
 

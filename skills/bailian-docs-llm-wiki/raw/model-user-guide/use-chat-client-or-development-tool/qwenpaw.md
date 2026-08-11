@@ -120,7 +120,7 @@ qwenpaw app
     
 -   International (Singapore)：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`，将 `WorkspaceId` 替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
     
--   US (Virginia)：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+-   US (Virginia)：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1`
     
 
 **模型**

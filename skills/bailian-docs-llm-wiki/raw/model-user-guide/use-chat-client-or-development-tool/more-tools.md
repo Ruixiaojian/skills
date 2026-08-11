@@ -88,7 +88,7 @@ OpenAI
 
 新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
 
-美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+美国（弗吉尼亚）：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1`
 
 [阿里云百炼 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)
 

@@ -15,11 +15,11 @@
 
 ## 前提条件
 
-您需要先[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。若通过 OpenAI SDK 进行调用，需要[安装SDK](https://help.aliyun.com/zh/model-studio/install-sdk)。
+您需要先[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。若通过 OpenAI SDK 进行调用，需要[安装SDK](https://help.aliyun.com/zh/model-studio/install-sdk)。
 
 ## 支持的模型
 
-`qwen3-max`、`qwen3-max-2026-01-23`、`qwen3.8-max`、`qwen3.7-max`、`qwen3.7-max-2026-05-20`、`qwen3.7-max-2026-06-08`、`qwen3.7-plus`、`qwen3.7-plus-2026-05-26`、`qwen3.6-plus`、`qwen3.6-plus-2026-04-02`、`qwen3.5-plus`、`qwen3.5-plus-2026-02-15`、`qwen3.5-plus-2026-04-20`、`qwen3.7-flash`、`qwen3.7-flash-2026-07-15`、`qwen3.6-flash`、`qwen3.6-flash-2026-04-16`、`qwen3.5-flash`、`qwen3.5-flash-2026-02-23`、`qwen3.6-35b-a3b`、`qwen3.5-397b-a17b`、`qwen3.5-122b-a10b`、`qwen3.5-27b`、`qwen3.5-35b-a3b`、`qwen-plus`、`qwen-flash`、`qwen3-coder-plus`、`qwen3-coder-flash`、`qwen3-coder-next`、`deepseek-v4-flash`、`deepseek-v4-flash-0731`（DeepSeek 模型仅支持华北2（北京）与新加坡地域）。
+`qwen3-max`、`qwen3-max-2026-01-23`、`qwen3.8-max`、`qwen3.7-max`、`qwen3.7-max-2026-05-20`、`qwen3.7-max-2026-06-08`、`qwen3.7-plus`、`qwen3.7-plus-2026-05-26`、`qwen3.6-plus`、`qwen3.6-plus-2026-04-02`、`qwen3.5-plus`、`qwen3.5-plus-2026-02-15`、`qwen3.5-plus-2026-04-20`、`qwen3.7-flash`、`qwen3.7-flash-2026-07-15`、`qwen3.6-flash`、`qwen3.6-flash-2026-04-16`、`qwen3.5-flash`、`qwen3.5-flash-2026-02-23`、`qwen3.6-35b-a3b`、`qwen3.5-397b-a17b`、`qwen3.5-122b-a10b`、`qwen3.5-27b`、`qwen3.5-35b-a3b`、`qwen-plus`、`qwen-flash`、`qwen3-coder-plus`、`qwen3-coder-flash`、`qwen3-coder-next`、`deepseek-v4-flash`、`deepseek-v4-flash-0731`、`deepseek-v4-pro`、`glm-5.2`（DeepSeek 与 GLM 模型仅支持华北2（北京）与新加坡地域）。
 
 ## 服务地址
 
@@ -44,7 +44,7 @@ SDK 调用配置的`base_url`：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.
 
 HTTP 请求地址：`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/responses`
 
-调用时请将`WorkspaceId`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
+调用时请将`{WorkspaceId}`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
 
 ## **新加坡**
 
@@ -52,13 +52,13 @@ SDK 调用配置的`base_url`：`https://{WorkspaceId}.ap-southeast-1.maas.aliyu
 
 HTTP 请求地址：`POST https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1/responses`
 
-调用时请将`WorkspaceId`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
+调用时请将`{WorkspaceId}`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
 
 ## 美国（弗吉尼亚）
 
-SDK 调用配置的`base_url`：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+SDK 调用配置的`base_url`：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1`
 
-HTTP 请求地址：`POST https://dashscope-us.aliyuncs.com/compatible-mode/v1/responses`
+HTTP 请求地址：`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1/responses`
 
 ## 德国（法兰克福）
 
@@ -66,7 +66,7 @@ SDK 调用配置的`base_url`：`https://{WorkspaceId}.eu-central-1.maas.aliyunc
 
 HTTP 请求地址：`POST https://{WorkspaceId}.eu-central-1.maas.aliyuncs.com/compatible-mode/v1/responses`
 
-调用时请将`WorkspaceId`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
+调用时请将`{WorkspaceId}`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
 
 ## 日本（东京）
 
@@ -74,7 +74,7 @@ SDK 调用配置的`base_url`：`https://{WorkspaceId}.ap-northeast-1.maas.aliyu
 
 HTTP 请求地址：`POST https://{WorkspaceId}.ap-northeast-1.maas.aliyuncs.com/compatible-mode/v1/responses`
 
-调用时请将`WorkspaceId`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
+调用时请将`{WorkspaceId}`替换为真实的[Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
 
 ## 代码示例
 
@@ -1241,6 +1241,6 @@ A：OpenAI Python SDK 在某些版本（如1.99.2）错误移除了该属性，�
 
 -   [创建响应](https://help.aliyun.com/zh/model-studio/qwen-api-via-openai-responses)
     
--   [获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)
+-   [获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)
     
 -   [配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)

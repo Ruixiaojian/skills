@@ -20,9 +20,9 @@ HTTP 请求地址：`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/com
 
 ## 美国（弗吉尼亚）
 
-SDK 调用配置的`base_url`：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+SDK 调用配置的`base_url`：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1`
 
-HTTP 请求地址：`POST https://dashscope-us.aliyuncs.com/compatible-mode/v1/chat/completions`
+HTTP 请求地址：`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1/chat/completions`
 
 ## 德国（法兰克福）
 
@@ -87,14 +87,14 @@ dashscope.base_http_api_url = 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.co
 
 ## 美国（弗吉尼亚）
 
-HTTP 请求地址：`POST https://dashscope-us.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
+HTTP 请求地址：`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
 
 SDK 调用配置的`base_url`：
 
 ## **Python**
 
 ```
-dashscope.base_http_api_url = 'https://dashscope-us.aliyuncs.com/api/v1'
+dashscope.base_http_api_url = 'https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1'
 ```
 
 ## **Java**
@@ -103,14 +103,14 @@ dashscope.base_http_api_url = 'https://dashscope-us.aliyuncs.com/api/v1'
     
     ```
     import com.alibaba.dashscope.protocol.Protocol;
-    Generation gen = new Generation(Protocol.HTTP.getValue(), "https://dashscope-us.aliyuncs.com/api/v1");
+    Generation gen = new Generation(Protocol.HTTP.getValue(), "https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1");
     ```
     
 -   **方式二：**
     
     ```
     import com.alibaba.dashscope.utils.Constants;
-    Constants.baseHttpApiUrl="https://dashscope-us.aliyuncs.com/api/v1";
+    Constants.baseHttpApiUrl="https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1";
     ```
     
 
@@ -155,7 +155,7 @@ SDK 调用配置的`base_url`：`dashscope.base_http_api_url = "https://{Workspa
 
 glm-5.2 、glm-5.2-us 和 glm-5.2-fast-preview 是 GLM 系列最新模型，上下文长度 1M，支持通过`enable_thinking`参数设置思考与非思考模式。运行以下代码快速调用思考模式的 glm-5.2 模型。
 
-需要已[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并完成[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如果通过SDK调用，需要[安装 OpenAI 或 DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk#8833b9274f4v8)。
+需要已[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并完成[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如果通过SDK调用，需要[安装 OpenAI 或 DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk#8833b9274f4v8)。
 
 ## OpenAI兼容
 

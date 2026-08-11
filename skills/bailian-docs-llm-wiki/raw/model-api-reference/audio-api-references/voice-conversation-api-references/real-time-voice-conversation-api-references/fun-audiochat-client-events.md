@@ -120,7 +120,7 @@ TTS 音色名称，默认值为 `longanqian`。支持两种类型，仅可在第
 
 **enable\_speech\_emotion** `_boolean_`（可选）
 
-是否开启情绪增强功能。默认值：`true`。可选值：`true`、`false`。
+是否开启情绪增强功能。开启后，回复音色的情绪变化更明显。默认值：`true`。可选值：`true`、`false`。
 
 **instructions** `_string_`（可选）
 

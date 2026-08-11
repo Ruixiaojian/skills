@@ -22,7 +22,7 @@ Postman 和 cURL仅适用于快速测试与功能验证。对于生产环境�
 
 **HTTP调用示例（文生图）**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/4507315871/CAEQZRiBgICJ0seH1xkiIDgzYWE2MTBkZjkzODRkNDA5NzczNTE0NjBiMGE1Y2Nm5274221_20250627113930.173.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7834246871/CAEQZRiBgICJ0seH1xkiIDgzYWE2MTBkZjkzODRkNDA5NzczNTE0NjBiMGE1Y2Nm5274221_20250627113930.173.svg)
 
 ## **方式一：使用Postman发送请求（推荐）**
 
@@ -95,7 +95,7 @@ curl -X POST https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/imag
         
     -   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
         
-    -   美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis`
+    -   美国（弗吉尼亚）：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis`
         
     
     > 各地域支持的模型请参见百炼控制台，当前地域与服务部署范围为[系统预设绑定关系](https://help.aliyun.com/zh/model-studio/regions/#6e9530261dv6q)，不支持自由组合。
@@ -168,7 +168,7 @@ curl -X POST https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/imag
     
 -   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis`，请将`WorkspaceId`替换为真实的[获取Workspace ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)
     
--   美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis`
+-   美国（弗吉尼亚）：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis`
     
 
 ```

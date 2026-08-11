@@ -264,9 +264,9 @@ API Key 的状态随归属用户（账号）操作的变化：
 
 **为 API Key 设置 IP 访问白名单**
 
-**华北2（北京）**地域的 API Key 支持设置。
+全部地域的 API Key 均支持设置。美国（弗吉尼亚）地域仅支持 IPv4。
 
-**华北2（北京）**地域的 API Key 支持设置。
+全部地域的 API Key 均支持设置。美国（弗吉尼亚）地域仅支持 IPv4。
 
 **管理 API Key**：在百炼控制台左侧导航栏中选择**账号管理**，找到目标 RAM 用户并单击**权限管理**，为该用户添加 API Key 权限。赋予对应 RAM 用户**创建、删除、查看该空间下所有 API Key** 的权限。
 
@@ -282,6 +282,35 @@ RAM 用户默认无权调用百炼**应用**的数据、知识库、Prompt工程
     
 -   [AliyunBailianDataReadOnlyAccess](https://help.aliyun.com/zh/ram/developer-reference/aliyunbailiandatareadonlyaccess)：可调用百炼应用 [API目录](https://help.aliyun.com/zh/model-studio/api-bailian-2023-12-29-dir/)下的**只读类**API，例如[查询文件状态](https://help.aliyun.com/zh/model-studio/api-bailian-2023-12-29-describefile)、[查询知识库创建任务状态](https://help.aliyun.com/zh/model-studio/api-bailian-2023-12-29-getindexjobstatus)等。
     
+
+如需对**知识库**和**记忆库**实现更细粒度的权限控制，可在 [RAM 控制台](https://ram.console.aliyun.com/users)创建**自定义策略**，仅授予所需操作的权限。
+
+知识库相关 Action：`sfm:CreateIndex`、`sfm:UpdateIndex`、`sfm:DeleteIndex`、`sfm:SubmitIndexJob`。记忆库相关 Action：`sfm:CreateMemory`、`sfm:UpdateMemory`、`sfm:DeleteMemory`。
+
+自定义策略示例：
+
+```
+{
+  "Version": "1",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sfm:CreateIndex",
+        "sfm:UpdateIndex",
+        "sfm:DeleteIndex",
+        "sfm:SubmitIndexJob",
+        "sfm:CreateMemory",
+        "sfm:UpdateMemory",
+        "sfm:DeleteMemory"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+创建策略后，将其附加到 RAM 子用户，即可授予知识库和记忆库的**最小 CRUD 权限**。完整 Action 列表请参考「授权信息」。
 
 ### **应用于生产环境**
 

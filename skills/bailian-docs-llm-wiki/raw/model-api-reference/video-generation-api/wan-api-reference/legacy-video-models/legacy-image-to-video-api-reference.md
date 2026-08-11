@@ -54,7 +54,7 @@
 
 ## **弗吉尼亚**
 
-`POST https://dashscope-us.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis`
+`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis`
 
 ## 法兰克福
 
@@ -621,7 +621,7 @@ audio直接影响费用，有声视频与无声视频价格不同，请前往百
 
 ## **弗吉尼亚**
 
-`GET https://dashscope-us.aliyuncs.com/api/v1/tasks/{task_id}`
+`GET https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/tasks/{task_id}`
 
 ## 法兰克福
 
@@ -908,7 +908,7 @@ SDK 的参数命名与[HTTP接口](#42703589880ts)基本一致，参数结构根
 
 ## **弗吉尼亚**
 
-`dashscope.base_http_api_url = 'https://dashscope-us.aliyuncs.com/api/v1'`
+`dashscope.base_http_api_url = 'https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1'`
 
 ## 法兰克福
 
@@ -1172,7 +1172,7 @@ if __name__ == '__main__':
 
 ## **弗吉尼亚**
 
-`Constants.baseHttpApiUrl = "https://dashscope-us.aliyuncs.com/api/v1";`
+`Constants.baseHttpApiUrl = "https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1";`
 
 ## 法兰克福
 
@@ -1488,6 +1488,10 @@ public class Image2Video {
     
 -   **内容审核**：输入的内容（如prompt、图像）、输出视频均会经过内容安全审核，含违规内容将返回 “IPInfringementSuspect”或“DataInspectionFailed”错误，详见参见[错误码](https://help.aliyun.com/zh/model-studio/error-code)。
     
+
+## **已知限制**
+
+使用 **wan2.6-i2v-flash** 生成圆形物体连续旋转（如圆环、齿轮、表盘）的动画时，画面在约 3 秒后可能出现短暂卡顿（画面静止约 1 秒）。如需生成此类连续旋转效果，建议改用[万相2.7-图生视频](https://help.aliyun.com/zh/model-studio/image-to-video-general-api-reference)模型以规避此问题。
 
 ## **错误码**
 

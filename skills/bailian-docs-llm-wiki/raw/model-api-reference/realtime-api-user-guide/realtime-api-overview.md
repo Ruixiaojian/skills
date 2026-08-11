@@ -165,6 +165,14 @@ CosyVoice系列模型
 
 支持
 
+qwen-audio-3.0-tts-flash、qwen-audio-3.0-tts-plus
+
+支持
+
+不支持
+
+支持
+
 [实时语音对话](https://help.aliyun.com/zh/model-studio/fun-audiochat-realtime)
 
 qwen-audio-3.0-realtime-plus、qwen-audio-3.0-realtime-flash

@@ -16,6 +16,8 @@
 
 数据集构建建议（推荐数据规模、多样性与均衡、数据扩充策略）详见[模型调优简介-数据集构建技巧](https://help.aliyun.com/zh/model-studio/model-training-overview#aebd25a7f1g2v)。
 
+强化学习（RL）训练数据格式（jsonl + messages + rollout\_extra，通过 SDK 上传）详见[RL 训练数据格式](#sec-rl)。
+
 ## 训练方式与元素支持矩阵
 
 训练集支持 SFT、DPO、CPT 三种训练方法，各训练方式与元素的支持情况见下文矩阵表。调优推荐顺序为 CPT（可选）→ SFT → DPO（可选），三者递进非互斥。
@@ -61,7 +63,7 @@
 
 ✗
 
-✗
+待确认（DPO+tool 组合，source 未给格式段）
 
 ✓
 
@@ -88,6 +90,8 @@
 ✗
 
 ✗
+
+矩阵表中各训练方式已链接至对应详解节，字段定义详见下条。
 
 训练方法 SFT/DPO/CPT 字段定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)。
 
@@ -138,15 +142,6 @@ SFT 文本生成支持以下样例格式，各样例的完整 JSON 结构见对�
 }
 ```
 
-深度思考内容用 `<think>…</think>` 标签包裹，置于 assistant 输出文本内（与最终答复同属最后一条 assistant 的 content）。规则：
-
--   只能放在最后一条 assistant 输出中；中间的 assistant 输出不加思考标签。
-    
--   思考标签前后的换行符必须保留。
-    
--   若训练样本设置模型不输出思考标签，训练完成后不建议再开启思考模式调用。
-    
-
 ### 工具调用（function calling）
 
 工具调用（function calling）格式样例（tools 定义 + messages 多轮含 tool 角色，tool\_call\_id 一一对应）：
@@ -190,36 +185,6 @@ SFT 文本生成支持以下样例格式，各样例的完整 JSON 结构见对�
   ]
 }
 ```
-
-### 工具字段说明
-
-工具调用（function calling）模式在 messages 多轮结构基础上增加 tools 定义与 tool\_calls/role:tool 机制，字段约束如下：
-
--   tools：工具定义数组，每项含 type:"function" 与 function{name, description, parameters}；parameters 为 JSON Schema（含 type/properties/required）。
-    
--   messages：多轮对话数组，角色含 user、assistant、tool。
-    
--   content：多模态内容数组，可含 image、text、video 等项（与多模态理解格式一致）。
-    
--   assistant.tool\_calls：模型生成的工具调用数组，含 id、type:"function"、function{name, arguments}；arguments 为 JSON 字符串。
-    
--   role:"tool"：工具返回，tool\_call\_id 必须与对应 tool\_calls\[\].id 一一对应，content 内为工具返回结果。
-    
-
-多轮对话最后一条通常为 assistant 基于工具返回的最终答复。
-
-loss\_weight 字段约束：
-
--   邀测参数，取值范围 0.0 至 1.0，数值越大表示该行在训练时的相对重要性越高。
-    
--   SFT 思考模型仅最后一条 assistant 行支持 loss\_weight。
-    
--   如需使用请联系商务经理。
-    
-
-百炼不支持 OpenAI 的 name、weight 参数，所有 assistant 输出都会被训练。从 OpenAI/Azure 迁移的训练数据不可携带 name/weight 字段。
-
-数据多样性与均衡性建议：各场景数据数量应相对均衡，数据比例符合实际场景比例，避免某一类数据过多导致模型偏向于学习该类特征，影响泛化能力。
 
 ### 工具与思考组合
 
@@ -283,6 +248,49 @@ loss\_weight 字段约束：
 }
 ```
 
+### 思考标签规则
+
+深度思考内容用 `<think>…</think>` 标签包裹，置于 assistant 输出文本内（与最终答复同属最后一条 assistant 的 content）。规则：
+
+-   只能放在最后一条 assistant 输出中；中间的 assistant 输出不加思考标签。
+    
+-   思考标签前后的换行符必须保留。
+    
+-   若训练样本设置模型不输出思考标签，训练完成后不建议再开启思考模式调用。
+    
+
+### 工具字段说明
+
+工具调用（function calling）模式在 messages 多轮结构基础上增加 tools 定义与 tool\_calls/role:tool 机制，字段约束如下：
+
+-   tools：工具定义数组，每项含 type:"function" 与 function{name, description, parameters}；parameters 为 JSON Schema（含 type/properties/required）。
+    
+-   messages：多轮对话数组，角色含 user、assistant、tool。
+    
+-   content：多模态内容数组，可含 image、text、video 等项（与多模态理解格式一致）。
+    
+-   assistant.tool\_calls：模型生成的工具调用数组，含 id、type:"function"、function{name, arguments}；arguments 为 JSON 字符串。
+    
+-   role:"tool"：工具返回，tool\_call\_id 必须与对应 tool\_calls\[\].id 一一对应，content 内为工具返回结果。
+    
+
+多轮对话最后一条通常为 assistant 基于工具返回的最终答复。tool 模式属于 SFT 场景，DPO 场景的 tool 数据支持情况见[DPO 文本格式](#sec-dpo-text)。
+
+loss\_weight 字段约束：
+
+-   邀测参数，取值范围 0.0 至 1.0，数值越大表示该行在训练时的相对重要性越高。
+    
+-   SFT 思考模型仅最后一条 assistant 行支持 loss\_weight。
+    
+-   如需使用请联系商务经理。
+    
+
+百炼不支持 OpenAI 的 name、weight 参数，所有 assistant 输出都会被训练。从 OpenAI/Azure 迁移的训练数据不可携带 name/weight 字段。
+
+数据多样性与均衡性建议：各场景数据数量应相对均衡，数据比例符合实际场景比例，避免某一类数据过多导致模型偏向于学习该类特征，影响泛化能力。
+
+ChatML 与 loss\_weight 字段定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)。
+
 ### 评测集格式
 
 评测集仅服务文本生成场景，与 SFT/DPO/CPT 训练方式无关——DPO/CPT 训练后的模型同样使用文本生成评测集进行评测，不区分训练方式。
@@ -325,6 +333,8 @@ SFT 图片训练数据用于千问 VL 多模态理解（控制台 UI 选项为�
     
 
 resized\_width 与 resized\_height 为可选的目标缩放控制参数，用于指定图片目标缩放尺寸，非图片准入上限。图片准入上限为宽高不超过 1024 px、单张不超过 10 MB。图片准入具体数值以控制台实际展示为准。
+
+图片消耗 token 计算详见[图像与视频理解-计费与限流](https://help.aliyun.com/zh/model-studio/vision#10c14b25cdhuh)。
 
 SFT 图片训练样例见下文标签页：
 
@@ -375,7 +385,7 @@ SFT 图片训练样例见下文标签页：
 
 ### 图片加工具
 
-图片加[工具格式](#e4x94vq4cmm00)样例（含图片多模态 content 项与工具调用机制，JSON 逐字保留）：
+图片加工具格式样例（含图片多模态 content 项与工具调用机制，JSON 逐字保留）：
 
 ```
 {
@@ -450,6 +460,8 @@ SFT 视频训练数据用于千问 VL 多模态理解场景，仅 qwen3.5 及以
 **说明**
 
 训练数据中的图片与视频须同时满足模型调用的输入限制（如图像分辨率、视频时长、帧率等），调用限制详见[视觉理解模型使用限制](https://help.aliyun.com/zh/model-studio/vision)。
+
+视频消耗 token 计算详见[图像与视频理解-计费与限流](https://help.aliyun.com/zh/model-studio/vision#10c14b25cdhuh)。
 
 两种模式的字段对比与样例见下文：
 
@@ -664,6 +676,55 @@ CPT 定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/mod
 }
 ```
 
+## RL 训练数据格式
+
+强化学习（RL）训练数据采用 jsonl 格式，每行一个 JSON 对象，含 `messages` 与 `rollout_extra` 两个字段。RL 通过 SDK 上传（`AgenticRL.run()`），非控制台打包通道；计费按 MTU 模型训练单元，非 Token。RL 数据格式、SDK 上传与 Rollout/Reward 函数开发详见[强化学习训练概述](https://help.aliyun.com/zh/model-studio/rl-training-overview/#q87abq1niriw6)。
+
+字段说明：
+
+-   `messages`：用户问题，ChatML 结构（`[{role, content}]`）。只含 prompt（`user`，可前置 `system`），**不含** `**assistant**` **回答**——回答由模型在 Rollout 阶段自主生成。`content` 为字符串。
+    
+-   `rollout_extra`：参考答案或业务数据，dict 类型，透传给 Reward 函数用于评分。支持自定义 key（不限于 `solution`）；框架自动提取 `ground_truth`（参考答案），自定义 key 通过 `rollout_extra["key"]` 读取。
+    
+
+RL 数据**不含** `**reward**` **字段**——reward 由 Reward 函数在训练运行时计算（对比 `rollout_extra` 参考答案评分，输出 0~1 分），不预置在 jsonl 中。与 SFT（messages 含完整 assistant 答案）、DPO（chosen/rejected 对）不同，RL 的 messages 只有 prompt。
+
+数学推理样例（`rollout_extra.solution` 标准答案）：
+
+```
+{"messages": [{"role": "user", "content": "Output the answer when you are ready. The answer should be surrounded by three sharps (###), in the form of ### ANSWER: <answer> ###. 6.6 minus x (3/2) times equals 5.6."}], "rollout_extra": {"solution": "2/3"}}
+```
+
+代码生成样例（`entry_point`/`tests`/`timeout_sec`/`language`）：
+
+```
+{"messages": [{"role": "user", "content": "Write a function add(a, b) that returns the sum of two integers."}], "rollout_extra": {"entry_point": "add", "tests": "def test_add():\n    assert add(1,2)==3\n    assert add(-1,1)==0\n", "timeout_sec": 10, "language": "python"}}
+```
+
+Agent 工具调用样例（`expected_tools`/`success_check`/`max_steps`）：
+
+```
+{"messages": [{"role": "user", "content": "查询订单 ORD-123 的物流状态并告知预计送达日期。"}], "rollout_extra": {"expected_tools": ["query_order", "get_logistics"], "success_check": "SELECT status FROM orders WHERE id='ORD-123'", "max_steps": 6}}
+```
+
+`rollout_extra` 常用 key（按场景）：
+
+-   数学推理：`solution`（标准答案）、`solution_steps`（过程，可选）、`difficulty`（难度，可选）。
+    
+-   Agent 工具调用：`expected_tools`（期望工具集）、`success_check`（成功判定）、`max_steps`（调用效率参考）。
+    
+-   代码生成：`entry_point`（入口函数）、`tests`（单测代码）、`timeout_sec`（执行超时）、`language`（沙盒选型）。
+    
+
+RL 数据约束：
+
+-   数据量需大于 `batch_size`（默认 64）。几十至几百条可验证方案；正式训练数学推理 500~2000 条、Agent ≥1000 条、代码 ≥1000 题，数据量越大效果越优。
+    
+-   训练集与验证集为两个独立 jsonl 文件，分别通过 `TrainingDataset`/`ValidationDataset` 上传（验证集可选）。
+    
+-   RL 通过 SDK 上传（`AgenticRL.run()`），非控制台打包通道；计费按 MTU 模型训练单元，非 Token。SDK 字段与提交方式详见[强化学习训练配置](https://help.aliyun.com/zh/model-studio/rl-training-config-monitoring)。
+    
+
 ## 多模态压缩包打包规则
 
 多模态理解训练数据以 zip 压缩包形式通过**新增数据集**页面上传，打包须满足以下约束：
@@ -774,7 +835,7 @@ CPT 文本生成
 
 超限承接与加密：
 
--   单文件超过 300 MB：走云存储挂载或多模态 ZIP 2 GB 通道。
+-   单文件超过 300 MB：通过云存储挂载或多模态 ZIP 2 GB 通道上传。
     
 -   总配额超额：删除历史文件释放空间。
     
