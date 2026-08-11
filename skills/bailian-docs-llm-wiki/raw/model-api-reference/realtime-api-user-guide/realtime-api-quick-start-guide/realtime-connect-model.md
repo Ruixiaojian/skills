@@ -9,6 +9,14 @@
 -   了解如何进行[Token鉴权](https://help.aliyun.com/zh/model-studio/realtime-token-authentication)
     
 
+## **体验 Demo**
+
+阿里云百炼提供适用于 Android 平台的 Demo，可用于快速验证 AOQ 接入效果。下载 APK 并配置 API Key 和 `workspaceId` 后，即可体验部分模型。
+
+扫描以下二维码下载 Demo：
+
+![Demo 下载二维码](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/1342546871/p1094466.png)
+
 ## **AOQ 接入**
 
 AOQ 基于 QUIC 协议深度定制，适合移动端原生应用，支持音频/视频/数据混合传输，内置极致抗弱网能力。以下以实时全模态（Omni）的 iOS Demo 为例介绍 AOQ 接入流程。AOQ SDK API 详情请参见[AOQ客户端SDK](https://help.aliyun.com/zh/model-studio/realtime-api-aoq-api/)。

@@ -872,9 +872,9 @@ SDK调用配置的base\_url：`https://{WorkspaceId}.ap-southeast-1.maas.aliyunc
 
 ## 美国（弗吉尼亚）
 
-HTTP请求地址：`POST https://dashscope-us.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
+HTTP请求地址：`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
 
-SDK调用配置的base\_url：`https://dashscope-us.aliyuncs.com/api/v1`
+SDK调用配置的base\_url：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1`
 
 **重要**
 

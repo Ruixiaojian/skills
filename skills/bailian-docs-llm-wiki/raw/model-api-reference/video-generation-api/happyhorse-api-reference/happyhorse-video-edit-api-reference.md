@@ -181,7 +181,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
     
 -   文件大小：不超过100MB。
     
--   帧率：大于8fps。
+-   帧率：8-60fps（若输入可变帧率视频，需保证帧率变化均在此范围内）。
     
 
 **说明**

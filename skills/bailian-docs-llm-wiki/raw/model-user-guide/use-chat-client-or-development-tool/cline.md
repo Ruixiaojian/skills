@@ -13,7 +13,7 @@ Cline 是一款 VSCode 智能编程插件，可以通过 Token Plan 个人版、
 
 安装完成后，点击左侧边栏的 Cline 图标进入配置界面。点击 **Bring my own API key**，选择 **OpenAI Compatible** 作为 API Provider，根据所选方案填入对应参数。如果之前使用过 Cline，请点击右上角的设置按钮进入配置界面。
 
-阿里云百炼提供三种计费方案，根据需要选择：
+阿里云百炼提供四种计费方案，根据需要选择：
 
 -   **Token Plan 个人版**：按 token 消耗抵扣个人 Credits。
     
@@ -108,7 +108,7 @@ Base URL
     
 -   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
     
--   美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+-   美国（弗吉尼亚）：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1`
     
 
 API Key
@@ -166,7 +166,7 @@ Model ID
 
 可能原因：
 
--   API Key 与 Base URL 不匹配。三种计费方案的 API Key 不通用，请确认 API Key 和 Base URL 来自同一方案。
+-   API Key 与 Base URL 不匹配。四种计费方案的 API Key 不通用，请确认 API Key 和 Base URL 来自同一方案。
     
 -   按量计费的 API Key 与 Base URL 的地域不一致，请检查二者是否对应同一地域。
     

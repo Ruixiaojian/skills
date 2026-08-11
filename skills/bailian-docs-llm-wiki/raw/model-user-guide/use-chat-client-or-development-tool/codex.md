@@ -21,7 +21,7 @@ Codex 是 OpenAI 推出的终端 AI 编程助手。可通过 Token Plan 个人�
 
 ## **配置接入凭证**
 
-接入需要编辑配置文件`~/.codex/config.toml`并配置环境变量`OPENAI_API_KEY`。根据所选计费方案替换对应值，阿里云百炼提供以下计费方案：
+接入需要编辑配置文件`~/.codex/config.toml`并配置环境变量`OPENAI_API_KEY`。请根据您的接入方式选择对应配置。
 
 ### 配置模型元数据
 

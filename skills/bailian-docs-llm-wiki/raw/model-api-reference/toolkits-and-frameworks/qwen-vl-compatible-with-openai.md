@@ -10,7 +10,7 @@
         
     -   日本（东京）：https://{WorkspaceId}.ap-northeast-1.maas.aliyuncs.com/compatible-mode/v1
         
-    -   美国（弗吉尼亚）：https://dashscope-us.aliyuncs.com/compatible-mode/v1
+    -   美国（弗吉尼亚）：https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1
         
 -   api\_key：替换为[阿里云百炼API Key](https://help.aliyun.com/zh/model-studio/get-api-key)
     
@@ -19,14 +19,14 @@
 
 **重要**
 
-百炼为华北2（北京）、新加坡地域推出了业务空间专属域名，**能够为推理请求提供卓越的性能和更高的稳定性**，建议迁移至新域名：
+阿里云百炼为华北2（北京）、新加坡地域推出了业务空间专属域名，**能够为推理请求提供卓越的性能和更高的稳定性**，建议迁移至新域名：
 
 -   华北2（北京）地域：从 `https://dashscope.aliyuncs.com` 迁移至 `https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com`
     
 -   新加坡地域：从 `https://dashscope-intl.aliyuncs.com` 迁移至 `https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com`
     
 
-其中 `{WorkspaceId}` 为您的业务空间 ID，可在百炼控制台的**业务空间详情**页面查看。现有域名仍可正常使用。
+其中 `{WorkspaceId}` 为您的业务空间 ID，可在阿里云百炼控制台的**业务空间详情**页面查看。现有域名仍可正常使用。
 
 ## **支持的模型**
 
@@ -115,7 +115,7 @@ if __name__=='__main__':
     ```
     
 
--   您需要开通阿里云百炼模型服务并获得API-KEY，详情请参考：[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
+-   您需要开通阿里云百炼模型服务并获得API-KEY，详情请参考：[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
     
 -   我们推荐您将API-KEY配置到环境变量中以降低API-KEY的泄露风险，详情可参考[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。您也可以在代码中配置API-KEY，**但是泄露风险会提高**。
     
@@ -286,7 +286,7 @@ if __name__ == "__main__":
 
 ### **前提条件**
 
--   您需要开通阿里云百炼模型服务并获得API-KEY，详情请参考：[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
+-   您需要开通阿里云百炼模型服务并获得API-KEY，详情请参考：[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
     
 -   我们推荐您将API-KEY配置到环境变量中以降低API-KEY的泄露风险，配置方法可参考[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。您也可以在代码中配置API-KEY，**但是泄露风险会提高**。
     
@@ -297,7 +297,7 @@ if __name__ == "__main__":
 北京：POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions
 新加坡：POST https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1/chat/completions
 日本（东京）：POST https://{WorkspaceId}.ap-northeast-1.maas.aliyuncs.com/compatible-mode/v1/chat/completions
-弗吉尼亚：POST https://dashscope-us.aliyuncs.com/compatible-mode/v1/chat/completions
+弗吉尼亚：POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1/chat/completions
 ```
 
 ### **请求示例**

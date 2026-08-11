@@ -77,7 +77,7 @@ wanx2.0-t2i-turbo
 
 ## 前提条件
 
-在调用前，先[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，再[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如需通过SDK进行调用，请[安装DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk)。
+在调用前，先[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，再[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如需通过SDK进行调用，请[安装DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk)。
 
 **重要**
 
@@ -116,7 +116,7 @@ wanx2.0-t2i-turbo
 
 ### 美国（弗吉尼亚）
 
-`POST https://dashscope-us.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
+`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
 
 #### 请求参数
 
@@ -258,6 +258,12 @@ n直接影响费用。费用 = 单价 × 图片张数，请在调用前确认[�
     
 -   false：关闭智能改写。
     
+
+**说明**
+
+开启智能改写后，改写生成的提示词可能引入受版权保护的内容，从而触发内容审核，返回 `IPInfringementSuspect` 或 `DataInspectionFailed` 报错。
+
+遇到上述报错时，可将 `prompt_extend` 设置为 `false` 后重试。若提示词本身直接包含受版权保护的角色名或作品名，关闭智能改写仍会报错，需修改提示词本身。
 
 **watermark** `_bool_` （可选）
 
@@ -433,7 +439,7 @@ n直接影响费用。费用 = 单价 × 图片张数，请在调用前确认[�
 
 #### 美国（弗吉尼亚）
 
-`POST https://dashscope-us.aliyuncs.com/api/v1/services/aigc/image-generation/generation`
+`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/image-generation/generation`
 
 #### 德国（法兰克福）
 
@@ -598,6 +604,12 @@ n直接影响费用。费用 = 单价 × 图片张数，请在调用前确认[�
 -   false：不开启智能改写。
     
 
+**说明**
+
+开启智能改写后，改写生成的提示词可能引入受版权保护的内容，从而触发内容审核，返回 `IPInfringementSuspect` 或 `DataInspectionFailed` 报错。
+
+遇到上述报错时，可将 `prompt_extend` 设置为 `false` 后重试。若提示词本身直接包含受版权保护的角色名或作品名，关闭智能改写仍会报错，需修改提示词本身。
+
 **watermark** `_bool_` （可选）
 
 是否添加水印标识，水印位于图片右下角，文案固定为“AI生成”。
@@ -700,7 +712,7 @@ n直接影响费用。费用 = 单价 × 图片张数，请在调用前确认[�
 
 #### **美国（弗吉尼亚）**
 
-`GET https://dashscope-us.aliyuncs.com/api/v1/tasks/{task_id}`
+`GET https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/tasks/{task_id}`
 
 #### 德国（法兰克福）
 
@@ -1112,6 +1124,12 @@ n直接影响费用。费用 = 单价 × 图片张数，请在调用前确认[�
 
 示例值：true。
 
+**说明**
+
+开启智能改写后，改写生成的提示词可能引入受版权保护的内容，从而触发内容审核，返回 `IPInfringementSuspect` 或 `DataInspectionFailed` 报错。
+
+遇到上述报错时，可将 `prompt_extend` 设置为 `false` 后重试。若提示词本身直接包含受版权保护的角色名或作品名，关闭智能改写仍会报错，需修改提示词本身。
+
 **watermark** `_boolean_` （可选）
 
 是否添加水印标识，水印位于图片右下角，文案固定为“AI生成”。
@@ -1519,7 +1537,7 @@ SDK 的参数命名与HTTP接口基本一致，参数结构根据语言特性进
 
 #### 美国（弗吉尼亚）
 
-`https://dashscope-us.aliyuncs.com/api/v1`
+`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1`
 
 #### 德国（法兰克福）
 
@@ -2030,7 +2048,7 @@ SDK 的参数命名与HTTP接口基本一致，参数结构根据语言特性进
 
 #### 美国（弗吉尼亚）
 
-`https://dashscope-us.aliyuncs.com/api/v1`
+`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1`
 
 #### 德国（法兰克福）
 

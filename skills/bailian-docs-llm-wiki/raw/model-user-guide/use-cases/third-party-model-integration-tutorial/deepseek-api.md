@@ -20,9 +20,9 @@ HTTP 请求地址：`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/com
 
 ## 美国（弗吉尼亚）
 
-SDK 调用配置的`base_url`：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+SDK 调用配置的`base_url`：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1`
 
-HTTP 请求地址：`POST https://dashscope-us.aliyuncs.com/compatible-mode/v1/chat/completions`
+HTTP 请求地址：`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1/chat/completions`
 
 ## 新加坡
 
@@ -46,7 +46,7 @@ HTTP 请求地址：`POST https://{WorkspaceId}.ap-northeast-1.maas.aliyuncs.com
 
 **说明**
 
-Responses API 目前仅支持`deepseek-v4-flash`、`deepseek-v4-flash-0731`模型，且仅在华北2（北京）与新加坡地域提供服务。
+Responses API 目前仅支持`deepseek-v4-flash`、`deepseek-v4-flash-0731`、`deepseek-v4-pro`模型，且仅在华北2（北京）与新加坡地域提供服务。
 
 ## 华北2（北京）
 
@@ -70,9 +70,9 @@ SDK 调用配置的`base_url`：`dashscope.base_http_api_url = "https://{Workspa
 
 ## 美国（弗吉尼亚）
 
-HTTP 请求地址为`POST https://dashscope-us.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
+HTTP 请求地址为`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
 
-SDK 调用配置的`base_url`：`dashscope.base_http_api_url = "https://dashscope-us.aliyuncs.com/api/v1"`
+SDK 调用配置的`base_url`：`dashscope.base_http_api_url = "https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1"`
 
 ## 新加坡
 
@@ -94,9 +94,9 @@ SDK 调用配置的`base_url`：`dashscope.base_http_api_url = "https://{Workspa
 
 ## **快速开始**
 
-deepseek-v4-pro 是 DeepSeek 系列最新模型，在编程、数学和通用任务方面表现出色。您可以通过`enable_thinking`参数在思考与非思考模式之间切换。以下示例展示如何调用思考模式的 deepseek-v4-pro 模型。
+deepseek-v4-pro 是 DeepSeek 系列旗舰模型，在编程、数学和通用任务方面表现出色。deepseek-v4-flash-0731 是最新发布的版本。您可以通过`enable_thinking`参数在思考与非思考模式之间切换。以下示例展示如何调用思考模式的 deepseek-v4-pro 模型。
 
-需要已[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并完成[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如果通过SDK调用，需要[安装 OpenAI 或 DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk#8833b9274f4v8)。
+需要已[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并完成[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如果通过SDK调用，需要[安装 OpenAI 或 DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk#8833b9274f4v8)。
 
 ## **OpenAI兼容**
 
@@ -604,7 +604,7 @@ print(response.output.choices[0].message.content)
 
 ## **Responses API**
 
-`deepseek-v4-flash`与`deepseek-v4-flash-0731`支持通过 OpenAI 兼容的 Responses API 调用，仅支持华北2（北京）与新加坡地域，服务接入地址参见[服务接入地址](#ds-bu-h2)。
+`deepseek-v4-flash`、`deepseek-v4-flash-0731`与`deepseek-v4-pro`支持通过 OpenAI 兼容的 Responses API 调用，仅支持华北2（北京）与新加坡地域，服务接入地址参见[服务接入地址](#ds-bu-h2)。
 
 通过 Responses API 调用时，可在`tools`参数中添加`web_search`（[联网搜索](https://help.aliyun.com/zh/model-studio/web-search)）、`web_extractor`（[网页抓取](https://help.aliyun.com/zh/model-studio/web-extractor)）与`code_interpreter`（[代码解释器](https://help.aliyun.com/zh/model-studio/qwen-code-interpreter)）工具。
 
@@ -1081,7 +1081,7 @@ deepseek-v4-pro 在编程、数学和通用任务方面表现出色，deepseek-v
 
 ## **Chatbox**
 
-请参见[Chatbox](https://help.aliyun.com/zh/model-studio/cline-tool)。
+请参见[Chatbox](https://help.aliyun.com/zh/model-studio/chatbox)。
 
 ## **Cherry Studio**
 

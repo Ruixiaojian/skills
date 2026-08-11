@@ -2,6 +2,19 @@
 
 Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Plan、Token Plan 个人版或 Token Plan 团队版接入阿里云百炼。
 
+## **应用场景**
+
+Qwen Code 支持以下使用场景：
+
+-   **AI 编程辅助**：在终端通过自然语言完成代码生成、代码补全与代码审查，提升日常开发效率。详见[接入百炼 CLI](#qc-cli-h)。
+    
+-   **Web 开发**：提供目标网站截图，Qwen Code 自动解析页面结构并生成高还原度的前端代码。详见[一句话复刻网站样式](#qc-case1-h)。
+    
+-   **视频制作**：给定开源项目仓库地址，一键生成专属宣传视频。详见[为开源项目制作宣传视频](#qc-case2-h)。
+    
+-   **百炼平台集成**：通过百炼 CLI 在对话中调用百炼的图像生成、视频生成等模型能力，把 Qwen Code 扩展到更多 AI 场景。详见[接入百炼 CLI](#qc-cli-h)。
+    
+
 ## **安装 Qwen Code**
 
 -   **运行安装命令**
@@ -460,7 +473,7 @@ Qwen Code 是一款终端 AI 编程工具，可以通过按量计费、Coding Pl
     
 -   新加坡：`https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1`
     
--   美国（弗吉尼亚）：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+-   美国（弗吉尼亚）：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1`
     
 
 ```

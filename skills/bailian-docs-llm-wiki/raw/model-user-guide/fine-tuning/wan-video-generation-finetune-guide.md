@@ -59,7 +59,7 @@
 
 > 微调后的模型无需提示词即能稳定复现训练集中的特定“时尚杂志”特效。
 
-运行下述代码前，请[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，并[配置API Key](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
+运行下述代码前，请[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，并[配置API Key](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
 
 ### **步骤1：上传数据集**
 
@@ -169,15 +169,15 @@ curl --location 'https://dashscope.aliyuncs.com/api/v1/fine-tunes' \
 
 **超参数（hyper\_parameters）**
 
-**字段**
+字段
 
-**类型**
+类型
 
-**必选**
+必选
 
-**描述**
+描述
 
-**推荐值**
+推荐值
 
 batch\_size
 
@@ -185,7 +185,9 @@ int
 
 是
 
-**批次大小**。一次性送入模型进行训练的数据条数。
+批次大小。一次性送入模型进行训练的数据条数。
+
+该参数为单实例配置，建议使用各模型的推荐值，非必要请勿调整。
 
 -   wan2.7-i2v：推荐为 1。
     
@@ -196,6 +198,8 @@ int
 -   wan2.2-kf2v-flash：推荐为 4。
     
 
+> 训练任务实际运行的实例数量由平台调度决定，训练日志中输出的Global Step可能与估算结果不一致，但不会改变实际训练数据总量，不影响模型最终效果。
+
 以模型为准
 
 n\_epochs
@@ -204,9 +208,9 @@ int
 
 是
 
-**训练循环次数**。steps = n\_epochs × ⌈数据集大小 / batch\_size⌉。建议总步数 ≥ 800。
+训练循环次数。steps = n\_epochs × ⌈数据集大小 / batch\_size⌉。建议总步数 ≥ 800。
 
-> 例如：数据集 5 条，batch\_size=2，每轮步数=⌈5/2⌉=3，最小 n\_epochs = 800/3 ≈ 267。
+> 例如：数据集 5 条，batch\_size=4，每轮步数=⌈5/4⌉=2，最小 n\_epochs = 800/2 = 400。
 
 > 推荐训练轮数会根据数据量自动调整。数据越少，需要更多轮数来充分学习；数据越多，每轮包含的样本越多，因此所需轮数会减少。50 epochs 主要适用于 2 条左右的小数据集；当数据量达到 50-60 条视频时，通常建议训练约 3000-5000 steps 即可。
 
@@ -218,7 +222,7 @@ float
 
 是
 
-**学习率**。控制模型权重更新幅度。过高可能导致模型变差，过低则变化不明显。
+学习率。控制模型权重更新幅度。过高可能导致模型变差，过低则变化不明显。
 
 2e-5
 
@@ -228,7 +232,7 @@ int
 
 是
 
-**验证间隔**。取值需 ≥ `n_epochs/10`。每隔多少个 epoch 进行一次验证评估并保存 Checkpoint。
+验证间隔。取值需 ≥ `n_epochs/10`。每隔多少个 epoch 进行一次验证评估并保存 Checkpoint。
 
 20
 
@@ -238,7 +242,7 @@ int
 
 是
 
-**训练视频的最大分辨率**（像素总数 = 宽×高）。系统仅对超过该值的视频进行缩放处理。
+训练视频的最大分辨率（像素总数 = 宽×高）。系统仅对超过该值的视频进行缩放处理。
 
 -   wan2.7-i2v：推荐 102400。范围 36864～123904。
     
@@ -257,7 +261,7 @@ float
 
 否
 
-**训练集划分比例**。取值 (0,1)，仅在未指定 validation\_datasets 时生效。
+训练集划分比例。取值 (0,1)，仅在未指定 validation\_datasets 时生效。
 
 0.9
 
@@ -267,7 +271,7 @@ int
 
 否
 
-**自动划分验证集的最大样本数**。验证集数量 = min(总数×(1−split), 此值)。
+自动划分验证集的最大样本数。验证集数量 = min(总数×(1−split), 此值)。
 
 5
 
@@ -277,7 +281,7 @@ int
 
 否
 
-**Checkpoint 保存数量上限**。系统只保存最后 N 个 Checkpoint。
+Checkpoint 保存数量上限。系统只保存最后 N 个 Checkpoint。
 
 10
 
@@ -287,7 +291,7 @@ int
 
 否
 
-**LoRA 低秩矩阵维数**。取值须为 2n（16/32/64）。
+LoRA 低秩矩阵维数。取值须为 2n（16/32/64）。
 
 32
 
@@ -297,7 +301,7 @@ int
 
 否
 
-**LoRA 权重缩放系数**。取值须为 2n（16/32/64）。
+LoRA 权重缩放系数。取值须为 2n（16/32/64）。
 
 32
 
@@ -1402,7 +1406,7 @@ curl --location 'https://dashscope.aliyuncs.com/api/v1/fine-tunes/<替换为微�
 -   Prompt：确保触发词为**无意义稀有词**（如 s86b5p），避免使用常用词（如 running）造成干扰。
     
 
-**2\. 调整超参数：**参数说明请参见[超参数](https://help.aliyun.com/zh/model-studio/wan-generation-finetune-api-reference#5f391e4b3cezf)。
+**2\. 调整超参数：**
 
 -   **n\_epochs (训练轮数)**
     
@@ -1412,11 +1416,28 @@ curl --location 'https://dashscope.aliyuncs.com/api/v1/fine-tunes/<替换为微�
         
     -   因此，n\_epochs最小值计算公式：`n_epochs = 800 / 向上取整（数据集大小 / batch_size）`。
         
-    -   示例：假设训练集有5条数据，使用Wan2.5模型（batch\_size=2）。
+    -   示例：假设训练集有5条数据，使用Wan2.5模型（batch\_size=4）。
         
-        -   每轮训练步数：5 / 2 = 2.5，向上取整为3。总的训练轮数： n\_epochs = 800 / 3 ≈ 267。此值为**推荐的最小值**，可根据实际业务适当调高，比如300。
+        -   每轮训练步数：5 / 4 = 1.25，向上取整为2。总的训练轮数：n\_epochs = 800 / 2 = 400。此值为**推荐的最小值**，可根据实际业务适当调高。
             
--   **learning\_rate (学习率)、batch\_size (批次大小)**推荐使用默认值，通常无需修改。
+-   **batch\_size (批次大小)**
+    
+    -   批次大小。一次性送入模型进行训练的数据条数。
+        
+    -   该参数为单实例配置，建议使用各模型的推荐值，非必要请勿调整。
+        
+    -   wan2.7-i2v：推荐为 1。
+        
+    -   wan2.5-i2v-preview：推荐为 4。
+        
+    -   wan2.2-i2v-flash：推荐为 4。
+        
+    -   wan2.2-kf2v-flash：推荐为 4。
+        
+    
+    > 训练任务实际运行的实例数量由平台调度决定，训练日志中输出的Global Step可能与估算结果不一致，但不会改变实际训练数据总量，不影响模型最终效果。
+    
+-   **learning\_rate (学习率)**推荐使用默认值（2e-5），通常无需修改。
     
 
 ## **计费说明**

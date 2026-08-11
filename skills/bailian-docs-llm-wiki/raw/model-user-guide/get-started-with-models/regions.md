@@ -4,18 +4,23 @@
 
 ## **地域概述**
 
-调用百炼前需先选择地域、服务部署范围和接入域名。地域决定接入点和数据存储位置，就近选择可降低延迟；服务部署范围与推理的范围存在关联，百炼会在服务部署范围内进行合理的推理调度；接入域名影响并发上限、超时等服务保障，各地域具有独立的接入域名。
+地域决定**接入点和数据存储位置**，就近选择可降低延迟。
+
+-   服务部署范围：决定**推理执行位置**，有数据合规需求选择特定地理边界的部署范围，无合规需求选择全球部署范围（推理资源池更大）；
+    
+-   接入域名：影响**并发上限、超时等服务保障**，各地域具有独立的接入域名。
+    
 
 一次完整的模型调用流程如下：
 
-1.  应用经接入域名将请求发送到所选地域，请求数据存于该地域；
+1.  应用经接入域名将请求发送到所选**地域**，请求数据存于该地域；
     
-2.  接入地域将请求转发至服务部署范围内的推理节点完成计算（过程数据不持久化，传输全程加密）；
+2.  接入地域将请求转发至**服务部署范围**内的推理节点完成计算（传输全程加密）；
     
 3.  推理结果回到接入地域存储，再响应给应用（用户静态数据始终存于所选地域）。
     
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3932895871/CAEQchiBgICkyp3I_hkiIGFjZmY5ZThjZWM2MzRkMmJhNTk5NWVmYTkwMWY3ZGI07466796_20260515102254.505.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/0220546871/CAEQchiBgICkyp3I_hkiIGFjZmY5ZThjZWM2MzRkMmJhNTk5NWVmYTkwMWY3ZGI07466796_20260515102254.505.svg)
 
 ## 选择地域和服务部署范围
 
@@ -77,7 +82,7 @@ RPM 为1000，TPM 按模型区分
 
 **协议支持**
 
-HTTP、SSE、WebSocket、WebRTC
+HTTP、SSE、WebSocket、WebRTC、AOQ
 
 HTTP、SSE、WebSocket
 
@@ -169,9 +174,9 @@ HTTP、SSE
 
 `us-east-1`
 
-暂不支持
+`[{WorkspaceId}](https://modelstudio.console.aliyun.com/us-east-1?tab=globalset#/efm/business_management).us-east-1.maas.aliyuncs.com`
 
-`dashscope-us.aliyuncs.com`
+不支持
 
 暂不支持
 
@@ -337,6 +342,8 @@ HTTP、SSE
     
 -   [限流](https://help.aliyun.com/zh/model-studio/rate-limit)— RPM、TPM 限制
     
--   [获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key) — 创建和管理 Key
+-   [获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key) — 创建和管理 Key
     
 -   [Base URL总览](https://help.aliyun.com/zh/model-studio/base-url) — 模型服务调用地址
+    
+-   [概述](https://help.aliyun.com/zh/model-studio/realtime-api-overview)

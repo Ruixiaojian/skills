@@ -154,7 +154,21 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
 
 **原因：** 请求体（body）格式不符合接口要求。
 
-**解决方案：** 请检查请求体，确保为标准的JSON字符串。常见问题有：多了`,`、括号未闭合等。可借助阿里云AI助理帮助修复请求体格式。
+**解决方案：** 请检查请求体，确保为标准的JSON字符串。常见问题有：多了`,`、括号未闭合、引号未闭合等。
+
+错误示例（`text` 字段缺少闭合引号，导致请求体不是合法 JSON）：
+
+```
+{"model":"qwen-image-edit","input":{"messages":[{"role":"user","content":[{"image":"https://example.com/img.png"},{"text":"请将图片背景改为蓝色}]}]}}
+```
+
+正确示例：
+
+```
+{"model":"qwen-image-edit","input":{"messages":[{"role":"user","content":[{"image":"https://example.com/img.png"},{"text":"请将图片背景改为蓝色"}]}]}}
+```
+
+提交请求前可使用 jsonlint.com 等 JSON 校验工具检查请求体语法。也可借助阿里云AI助理帮助修复请求体格式。
 
 ### **input content must be a string.**
 
@@ -229,7 +243,7 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
 
 -   **检查模型名称格式：**确认`model`参数大小写是否正确，是否存在多余的空格。
     
--   **使用正确的模型名称：**请对照模型列表中的模型名称，检查输入的`model`是否正确。请勿混用开源社区的模型名与百炼模型ID，如应该使用`qwen3-235b-a22b-instruct-2507`，而非`Qwen/Qwen3-235B-A22B-Instruct-2507`。
+-   **使用正确的模型名称：**请对照[模型列表](https://help.aliyun.com/zh/model-studio/getting-started/models)中的模型名称，检查输入的`model`是否正确。请勿混用开源社区的模型名与百炼模型ID，如应该使用`qwen3-235b-a22b-instruct-2507`，而非`Qwen/Qwen3-235B-A22B-Instruct-2507`。
     
 
 ### **The product is not activated, please confirm that you have activated products and try again after activation.**
@@ -472,6 +486,8 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
     
 -   **服务不稳定：** 源存储服务响应慢或不可达。
     
+-   **安全策略拦截：** 服务端下载公网 URL 时携带的 User-Agent 包含 `DashScopeUserBot` 标识，第三方服务器的安全策略可能拦截该标识导致下载失败。
+    
 
 **解决方案：**
 
@@ -548,6 +564,10 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
     > Base64 编码会增大数据体积，原始文件大小应小于 7 MB。
     
     > 使用 Base64 或本地路径可避免服务端下载超时，提升稳定性。
+    
+-   **放行 `DashScopeUserBot`**
+    
+    若图片托管在您控制的服务器上，请在安全策略中放行 User-Agent 包含 `DashScopeUserBot` 的请求。也可改用[传入本地文件（Base64 编码或文件路径）](https://help.aliyun.com/zh/model-studio/vision#d987f8de5395x)的方式，避免服务端下载公网 URL。
     
 
 ### **Failed to find the requested media resource during the data inspection process.**
@@ -1816,9 +1836,9 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
     
     美国（弗吉尼亚）
     
-    `https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+    `https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1`
     
-    `https://dashscope-us.aliyuncs.com/api/v1`
+    `https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1`
     
     **重要**
     
@@ -1842,14 +1862,14 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **原因：**
 
--   WorkspaceId值无效，或当前账号不是该业务空间的成员。
+-   {WorkspaceId}值无效，或当前账号不是该业务空间的成员。
     
 -   或者请求的接入地址（服务接入点）有误。
     
 
 **解决方案：**
 
--   请确认WorkspaceId值无误且账号已是该业务空间的成员后，再调用接口。
+-   请确认{WorkspaceId}值无误且账号已是该业务空间的成员后，再调用接口。
     
 -   中国站用户请使用**华北2（北京）地域的接入地址；国际站用户请使用新加坡**地域的接入地址。使用[在线调试](https://api.aliyun.com/api/bailian/2023-12-29/CreateIndex)时，确认服务地址正确。
     
@@ -2012,11 +2032,11 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：**
 
--   请对照模型列表中的模型名称，检查您输入的模型名称（参数`model`的取值）是否正确。
+-   请对照[模型列表](https://help.aliyun.com/zh/model-studio/getting-started/models)中的模型名称，检查您输入的模型名称（参数`model`的取值）是否正确。
     
--   请前往模型广场开通模型服务。
+-   请前往[模型广场](https://bailian.console.aliyun.com/?tab=model#/model-market)开通模型服务。
     
--   如果您通过国际站 API 端点（如 `dashscope-us.aliyuncs.com`）发起调用，请注意不同地域可用的模型列表不同。调用前请确认目标模型是否在该地域可用，部分模型在美国地域需使用带 `-us` 后缀的模型名称（如 `qwen-max-us`）。
+-   如果您通过国际站 API 端点（如 `{WorkspaceId}.us-east-1.maas.aliyuncs.com`）发起调用，请注意不同地域可用的模型列表不同。调用前请确认目标模型是否在该地域可用，部分模型在美国地域需使用带 `-us` 后缀的模型名称（如 `qwen-max-us`）。
     
 
 ## **404-** model\_not\_supported
@@ -2033,7 +2053,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **原因：** 工作空间不存在。
 
-**解决方案：**请确认 Base URL 中填写的 WorkspaceId 正确。WorkspaceId 为您的百炼业务空间 ID，可在[业务空间管理](https://bailian.console.aliyun.com/?tab=globalset#/efm/business_management)页面查看。如仍报错，请确认您的账号是该业务空间的成员。
+**解决方案：**请确认 Base URL 中填写的 {WorkspaceId} 正确。{WorkspaceId} 为您的百炼业务空间 ID，可在[业务空间管理](https://bailian.console.aliyun.com/?tab=globalset#/efm/business_management)页面查看。如仍报错，请确认您的账号是该业务空间的成员。
 
 ## **404-NotFound**
 

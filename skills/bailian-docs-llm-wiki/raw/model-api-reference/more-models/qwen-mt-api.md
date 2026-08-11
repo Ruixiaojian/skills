@@ -20,9 +20,9 @@ HTTP 请求地址：`POST https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com
 
 ## **美国（弗吉尼亚）地域**
 
-SDK 调用配置的`base_url`：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+SDK 调用配置的`base_url`：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1`
 
-HTTP 请求地址：`POST https://dashscope-us.aliyuncs.com/compatible-mode/v1/chat/completions`
+HTTP 请求地址：`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1/chat/completions`
 
 ## **新加坡地域**
 
@@ -32,9 +32,9 @@ HTTP 请求地址：`POST https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com
 
 ## **美国（弗吉尼亚）地域**
 
-SDK 调用配置的`base_url`：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+SDK 调用配置的`base_url`：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1`
 
-HTTP 请求地址：`POST https://dashscope-us.aliyuncs.com/compatible-mode/v1/chat/completions`
+HTTP 请求地址：`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1/chat/completions`
 
 ## **北京地域**
 
@@ -44,16 +44,16 @@ HTTP 请求地址：`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/com
 
 **重要**
 
-百炼为华北2（北京）、新加坡地域推出了业务空间专属域名，**能够为推理请求提供卓越的性能和更高的稳定性**，建议迁移至新域名：
+阿里云百炼为华北2（北京）、新加坡地域推出了业务空间专属域名，**能够为推理请求提供卓越的性能和更高的稳定性**，建议迁移至新域名：
 
 -   华北2（北京）地域：从 `https://dashscope.aliyuncs.com` 迁移至 `https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com`
     
 -   新加坡地域：从 `https://dashscope-intl.aliyuncs.com` 迁移至 `https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com`
     
 
-其中 `{WorkspaceId}` 为您的业务空间 ID，可在百炼控制台的**业务空间详情**页面查看。现有域名仍可正常使用。
+其中 `{WorkspaceId}` 为您的业务空间 ID，可在阿里云百炼控制台的**业务空间详情**页面查看。现有域名仍可正常使用。
 
-> 您需要已 [获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key) 并 [配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables) 。若通过OpenAI SDK进行调用，需要 [安装SDK](https://help.aliyun.com/zh/model-studio/install-sdk) 。
+> 您需要已 [获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key) 并 [配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables) 。若通过OpenAI SDK进行调用，需要 [安装SDK](https://help.aliyun.com/zh/model-studio/install-sdk) 。
 
 ### 请求体
 
@@ -954,14 +954,14 @@ dashscope.base_http_api_url = 'https://{WorkspaceId}.ap-southeast-1.maas.aliyunc
 
 ## **美国（弗吉尼亚）地域**
 
-HTTP 请求地址：`POST https://dashscope-us.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
+HTTP 请求地址：`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
 
 SDK调用配置的`base_url`：
 
 ## **Python代码**
 
 ```
-dashscope.base_http_api_url = 'https://dashscope-us.aliyuncs.com/api/v1'
+dashscope.base_http_api_url = 'https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1'
 ```
 
 ## **Java代码**
@@ -970,14 +970,14 @@ dashscope.base_http_api_url = 'https://dashscope-us.aliyuncs.com/api/v1'
     
     ```
     import com.alibaba.dashscope.protocol.Protocol;
-    Generation gen = new Generation(Protocol.HTTP.getValue(), "https://dashscope-us.aliyuncs.com/api/v1");
+    Generation gen = new Generation(Protocol.HTTP.getValue(), "https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1");
     ```
     
 -   **方式二：**
     
     ```
     import com.alibaba.dashscope.utils.Constants;
-    Constants.baseHttpApiUrl="https://dashscope-us.aliyuncs.com/api/v1";
+    Constants.baseHttpApiUrl="https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1";
     ```
     
 
@@ -1012,14 +1012,14 @@ dashscope.base_http_api_url = 'https://{WorkspaceId}.ap-southeast-1.maas.aliyunc
 
 ## **美国（弗吉尼亚）地域**
 
-HTTP 请求地址：`POST https://dashscope-us.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
+HTTP 请求地址：`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
 
 SDK调用配置的`base_url`：
 
 ## **Python代码**
 
 ```
-dashscope.base_http_api_url = 'https://dashscope-us.aliyuncs.com/api/v1'
+dashscope.base_http_api_url = 'https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1'
 ```
 
 ## **Java代码**
@@ -1028,14 +1028,14 @@ dashscope.base_http_api_url = 'https://dashscope-us.aliyuncs.com/api/v1'
     
     ```
     import com.alibaba.dashscope.protocol.Protocol;
-    Generation gen = new Generation(Protocol.HTTP.getValue(), "https://dashscope-us.aliyuncs.com/api/v1");
+    Generation gen = new Generation(Protocol.HTTP.getValue(), "https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1");
     ```
     
 -   **方式二：**
     
     ```
     import com.alibaba.dashscope.utils.Constants;
-    Constants.baseHttpApiUrl="https://dashscope-us.aliyuncs.com/api/v1";
+    Constants.baseHttpApiUrl="https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1";
     ```
     
 
@@ -1045,7 +1045,7 @@ HTTP 请求地址：`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api
 
 SDK 调用无需配置 `base_url`，其默认值为`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1`。
 
-> 您需要已 [获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key) 并 [配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables) 。若通过DashScope SDK进行调用，需要 [安装DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk#f3e80b21069aa) 。
+> 您需要已 [获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key) 并 [配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables) 。若通过DashScope SDK进行调用，需要 [安装DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk#f3e80b21069aa) 。
 
 ### 请求体
 
@@ -1057,7 +1057,7 @@ SDK 调用无需配置 `base_url`，其默认值为`https://{WorkspaceId}.cn-bei
 import os
 import dashscope
 
-# 若使用新加坡地域的模型，请将WorkspaceId替换为真实的业务空间ID，并释放下列注释
+# 若使用新加坡地域的模型，请将{WorkspaceId}替换为真实的业务空间ID，并释放下列注释
 # dashscope.base_http_api_url = "https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1"
 
 messages = [
@@ -1099,7 +1099,7 @@ import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.alibaba.dashscope.utils.Constants;
 
 public class Main {
-    // 若使用新加坡地域的模型，请将WorkspaceId替换为真实的业务空间ID，并释放下列注释
+    // 若使用新加坡地域的模型，请将{WorkspaceId}替换为真实的业务空间ID，并释放下列注释
     // static {Constants.baseHttpApiUrl="https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1";}
     public static GenerationResult callWithMessage() throws ApiException, NoApiKeyException, InputRequiredException {
         Generation gen = new Generation();
@@ -1122,7 +1122,7 @@ public class Main {
         return gen.call(param);
     }
     public static void main(String[] args) {
-        // 以下为华北2（北京）地域的配置，调用时请将WorkspaceId替换为真实的业务空间ID，各地域的配置不同。
+        // 以下为华北2（北京）地域的配置，调用时请将{WorkspaceId}替换为真实的业务空间ID，各地域的配置不同。
         Constants.baseHttpApiUrl = "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1";
         try {
             GenerationResult result = callWithMessage();
@@ -1172,7 +1172,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/
 import os
 import dashscope
 
-# 若使用新加坡地域的模型，请将WorkspaceId替换为真实的业务空间ID，并释放下列注释
+# 若使用新加坡地域的模型，请将{WorkspaceId}替换为真实的业务空间ID，并释放下列注释
 # dashscope.base_http_api_url = "https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1"
 messages = [
     {
@@ -1233,7 +1233,7 @@ import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.alibaba.dashscope.utils.Constants;
 
 public class Main {
-    // 若使用新加坡地域的模型，请将WorkspaceId替换为真实的业务空间ID，并释放下列注释
+    // 若使用新加坡地域的模型，请将{WorkspaceId}替换为真实的业务空间ID，并释放下列注释
     // static {Constants.baseHttpApiUrl="https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1";}
     public static GenerationResult callWithMessage() throws ApiException, NoApiKeyException, InputRequiredException {
         Generation gen = new Generation();
@@ -1320,7 +1320,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/
 import os
 import dashscope
 
-# 若使用新加坡地域的模型，请将WorkspaceId替换为真实的业务空间ID，并释放下列注释
+# 若使用新加坡地域的模型，请将{WorkspaceId}替换为真实的业务空间ID，并释放下列注释
 # dashscope.base_http_api_url = "https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1"
 messages = [
     {
@@ -1376,7 +1376,7 @@ import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.alibaba.dashscope.utils.Constants;
 
 public class Main {
-    // 若使用新加坡地域的模型，请将WorkspaceId替换为真实的业务空间ID，并释放下列注释
+    // 若使用新加坡地域的模型，请将{WorkspaceId}替换为真实的业务空间ID，并释放下列注释
     // static {Constants.baseHttpApiUrl="https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1";}
     public static GenerationResult callWithMessage() throws ApiException, NoApiKeyException, InputRequiredException {
         Generation gen = new Generation();
@@ -1462,7 +1462,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/
 import os
 import dashscope
 
-# 若使用新加坡地域的模型，请将WorkspaceId替换为真实的业务空间ID，并释放下列注释
+# 若使用新加坡地域的模型，请将{WorkspaceId}替换为真实的业务空间ID，并释放下列注释
 # dashscope.base_http_api_url = "https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1"
 
 messages = [
@@ -1505,7 +1505,7 @@ import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.alibaba.dashscope.utils.Constants;
 
 public class Main {
-    // 若使用新加坡地域的模型，请将WorkspaceId替换为真实的业务空间ID，并释放下列注释
+    // 若使用新加坡地域的模型，请将{WorkspaceId}替换为真实的业务空间ID，并释放下列注释
     // static {Constants.baseHttpApiUrl="https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1";}
     public static GenerationResult callWithMessage() throws ApiException, NoApiKeyException, InputRequiredException {
         Generation gen = new Generation();
@@ -1758,7 +1758,7 @@ I didn't laugh after
 
 本次请求的状态码。200 表示请求成功，否则表示请求失败。
 
-> Java SDK不会返回该参数。调用失败会抛出异常，异常信息为**status\_code**和**message**的内容。
+> Java SDK 通过`GenerationResult.getStatusCode()`返回该参数（成功时为 200）。调用失败会抛出异常，可通过`ApiException.getStatus().getStatusCode()`获取错误状态码。
 
 **request\_id** `_string_`
 

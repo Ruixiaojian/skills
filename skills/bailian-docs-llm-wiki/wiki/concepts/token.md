@@ -1,37 +1,44 @@
 # Token
 
-Token 是百炼平台中用于计量模型输入与输出文本单元的基本计费与资源消耗单位。它并非原始字符，而是由模型 tokenizer 对文本进行分词后生成的离散语义单元（如子词、标点或特殊符号），其数量直接决定调用成本、额度消耗及性能指标统计。
+Token 是百炼平台中用于计量模型输入、输出及工具调用消耗的最小计费与资源单位。它并非原始字符或字节，而是由模型 tokenizer 对文本、图像描述、语音指令等内容进行语义化切分后生成的离散单元；一次完整调用的总 Token 量 = 输入 Token + 输出 Token（部分场景如 Embedding 或 Harness 工具调用另有独立计算规则）。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-- **计费与额度管理**：所有按量付费的模型调用（除 Coding Plan 外）均以 `输入 Token 数 + 输出 Token 数` 为计费依据；新人免费额度（100 万 Token/模型）、节省计划、资源包均按 Token 消耗抵扣；Batch 调用享 50% Token 折扣。
-- **高吞吐保障（TPM 预留）**：TPM（Tokens Per Minute）是容量预留的核心单位，按 kTPM（千 Token/分钟）预购专属输入/输出吞吐能力，确保高峰期稳定调用。
-- **性能监控**：模型监控中 `model_usage` 指标即 Token 总消耗量；`model_tps_per_request`（Tokens Per Second）反映输出速度；应用监控中每个 LLM 节点明确展示 `input_tokens` 和 `output_tokens`，支持按 Token 量筛选异常请求。
-- **推理加速（快速模式）**：虽不设 Token 配额，但计费仍基于实际输入/输出 Token 数，且返回结构中 `cached_tokens` 字段体现缓存优化带来的 Token 成本减免。
-- **模型训练与部署**：视频训练按像素与轮数折算 Token 总量；PTU（预置吞吐单元）按 TPM 计费；自定义模型部署不享受免费额度，Token 消耗全额计费。
+- **模型调用计费**：所有文本、[多模态](multi-modal.md)、语音、向量类模型调用均以 Token 为基本计量单位。例如调用 `qwen3.8-max` 时，输入 200 字中文约消耗 250–300 Token，输出 100 字约消耗 120–150 Token（具体取决于 tokenizer 实现和内容复杂度）；图像生成模型（如 `qwen-image-2.0`）则按提示词 Token + 生成分辨率隐式开销综合折算 Credits。
+  
+- **Token Plan 统一抵扣**：Token Plan 不直接暴露 Token 单价，而是将 Token 消耗映射为 Credits 抵扣。同一模型在不同输入长度、输出长度、是否启用 Thinking 模式或调用 Harness 工具（如 `web_search`）时，Credits 消耗非线性增长——例如启用 `code_interpreter` 后，除基础 Token 外还会额外抵扣工具执行成本。
+
+- **可观测性监控核心指标**：
+  - **应用观测**中，“Token 总量”字段精确展示每个 LLM 节点的 `input_tokens + output_tokens`，可用于分析智能体/工作流中各步骤的资源占比；
+  - **模型监控**中，Token 是用量统计的核心维度，支持按 `model`、`apikey_id`、`workspace_id` 等多维下钻，用于成本归因与性能优化；
+  - **评测系统**（应用评测 / 模型评测）中，所有大模型评估器（Grader）的运行均按实际消耗 Token 计费，需在任务配置前预估预算。
+
+- **参数控制边界**：`max_tokens` 是开发者显式控制输出长度的关键参数，直接影响 Token 消耗上限与响应成本。其取值必须在模型文档标明的最大输出 Token 范围内（如 `qwen3.7-plus` 最大为 8192），超限将触发 `Range of max_tokens should be [1, xxx]` 错误。
 
 ## 关键参数和配置
 
-- **Token 计算方式**：由模型内置 tokenizer 精确计算，开发者无需手动分词；可通过 API 响应中的 `usage.input_tokens` / `usage.output_tokens` 字段获取（流式响应在末尾 `delta` 中返回）。
-- **阶梯计费**：部分模型（如 `qwen3.6-max-preview`）对长输入（如 128K–256K 区间）应用系数加权（如 ×1.33），实际计费 Token = 基础 Token × 阶梯系数。
-- **缓存优惠**：TPM 预留与快速模式均支持缓存，`cached_tokens` 字段显式返回命中缓存的 Token 数，对应部分按折扣单价计费（如 GLM-5.2 缓存折扣率 25%）。
-- **地域约束**：免费额度仅限华北2（北京）地域生效；不同地域模型 Token 单价可能不同，需通过 Base URL 明确调用地域。
+| 参数 | 说明 | 开发者须知 |
+|------|------|------------|
+| `max_tokens` | 控制模型最大输出长度的整数参数 | 必须显式传入，且 ≤ 模型支持上限；设为过小值可能导致截断，过大则增加成本与延迟；默认值不生效，未传将报错 |
+| `temperature` / `top_p` | 影响输出多样性，间接影响实际输出 Token 数量 | 虽不直接计费，但高 `temperature` 可能导致更长、更发散的响应，从而增加 Token 消耗 |
+| `enable_thinking=true` | 启用推理链模式（仅特定模型支持） | 强制要求 `stream=true` 和 `incremental_output=true`；思考过程本身产生额外 Token，计入总消耗 |
+| Credits（Token Plan） | Token Plan 的统一计量单位 | 不等于原始 Token 数，而是经模型类型、工具调用、上下文长度加权后的 Credits；实际消耗以控制台「用量明细」为准，不可简单换算 |
 
 ## 面向开发者，简洁实用
 
-- ✅ 调用后务必检查响应 `usage` 字段，验证 Token 消耗是否符合预期（尤其长上下文场景）；
-- ✅ 免费额度自动优先抵扣，无需配置；若需控制支出，可在账单设置中开启“免费额度用完即停”；
-- ✅ 监控告警可配置“Token 消耗超阈值”规则，及时发现异常调用；
-- ✅ 使用 TPM 预留时，替换 `model` 参数为专属 model code（如 `qwen3.8-max-tpm-abc123`），域名保持不变；
-- ✅ 快速模式必须使用专属域名（如 `https://{workspace_id}.cn-beijing.maas.aliyuncs.com/...`），且仅支持 `glm-5.2-fast-preview`；
-- ❌ Coding Plan 不计 Token，按请求次数计费，其 API Key 与 Token Plan 不互通，不可混用。
+- ✅ **必做**：所有 API 调用必须显式指定 `model` 和 `max_tokens`；遗漏 `model` 将返回 `Model not exist.`，遗漏 `max_tokens` 将触发校验失败。
+- ✅ **查用量**：实时 Token 消耗可在控制台「模型监控 → 用量统计」或「应用观测 → Span 详情」中查看，精度达分钟级（高级监控开通后）。
+- ✅ **控成本**：对长上下文场景，优先使用支持 128K 上下文的模型（如 `qwen3.8-max`），避免因分段调用导致 Token 重复编码；对确定性任务（如 JSON 结构化输出），配合 `response_format={"type": "json_object"}` 减少无效重试 Token。
+- ❌ **勿假设**：不要将字符数 ≈ Token 数（中文平均 ~1.2–1.5 Token/字，但标点、emoji、URL、代码会显著拉高）；不要跨模型套用 Token 估算公式（不同 tokenizer 差异大）。
+- 🚨 **注意隔离**：Token Plan 使用 `sk-sp-` 开头的专属 API Key，与通用 `sk-` Key 完全隔离；混用将导致 `404 model not found` 或鉴权失败。
 
 ## 关联主题页
 
 - [token plan guide](../guides/token-plan-guide.md)
-- [model high speed inference](../guides/model-high-speed-inference.md)
+- [preparations](../api/preparations.md)
 - [application monitoring](../guides/application-monitoring.md)
 - [model monitoring](../guides/model-monitoring.md)
-- [test 1](../guides/test-1.md)
+- [application evaluation](../guides/application-evaluation.md)
+- [model evaluation introduction](../guides/model-evaluation-introduction.md)
 
 

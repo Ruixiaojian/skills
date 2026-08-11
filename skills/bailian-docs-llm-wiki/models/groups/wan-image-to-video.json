@@ -16,7 +16,8 @@
       "description": "万相2.7-图生视频，演绎能力全面升级，文戏情感细腻自然，动作戏激烈拳拳到肉，搭配更富有戏剧性和节奏感的镜头切换，实现更强表演能力。",
       "collectionTag": "wan2.7",
       "features": [
-        "model-experience"
+        "model-experience",
+        "fine-tuning"
       ],
       "provider": "wan",
       "model": "wan2.7-i2v",

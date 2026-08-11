@@ -860,6 +860,8 @@ Manual 模式（`turn_detection`为`null`）下，客户端发送`input_audio_bu
 -   Manual 模式下，客户端发送`input_audio_buffer.commit`事件后，服务端会额外创建一个对应用户输入音频的消息项（`content`中包含`{"type": "input_audio"}`）。
     
 
+对于同一个 VAD 片段，服务端会分别创建语音识别结果和翻译结果消息项。语音识别结果消息项的 `item.id` 与翻译结果事件的 `previous_item_id` 相同。客户端可据此关联原文和译文，并同时展示。
+
 **event\_id** `_string_`
 
 本次事件唯一标识符。
@@ -868,8 +870,9 @@ Manual 模式（`turn_detection`为`null`）下，客户端发送`input_audio_bu
 {
     "event_id": "event_xxx",
     "type": "conversation.item.created",
+    "previous_item_id": "item_asr_xxx",
     "item": {
-        "id": "item_xxx",
+        "id": "item_translation_xxx",
         "object": "realtime.item",
         "type": "message",
         "status": "in_progress",
@@ -882,6 +885,10 @@ Manual 模式（`turn_detection`为`null`）下，客户端发送`input_audio_bu
 **type** `_string_`
 
 事件类型，固定为`conversation.item.created`。
+
+**previous\_item\_id** `_string_`
+
+前一消息项的唯一标识符。对于翻译结果事件，该值与同一 VAD 片段的语音识别结果消息项 `item.id` 相同。
 
 **item** `_object_`
 

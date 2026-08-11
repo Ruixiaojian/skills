@@ -4,7 +4,7 @@
 
 **重要**
 
-Moonshot-Kimi-K2-Instruct、kimi-k2-thinking 将于**2026年7月9日**下架。推荐转用：[qwen3.7-plus](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-plus)、[qwen3.7-max](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-max)、[qwen3.6-flash](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.6-flash)。
+Moonshot-Kimi-K2-Instruct、kimi-k2-thinking 将于**2026年7月9日**下架。推荐转用：[qwen3.7-plus](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-plus)、[qwen3.8-max](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.8-max)、[qwen3.6-flash](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.6-flash)。
 
 **支持的地域：**华北2（北京）、新加坡、日本（东京）、美国（弗吉尼亚）、德国（法兰克福）。
 
@@ -22,9 +22,9 @@ HTTP 请求地址：`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/com
 
 ## 美国（弗吉尼亚）
 
-SDK 调用配置的`base_url`：`https://dashscope-us.aliyuncs.com/compatible-mode/v1`
+SDK 调用配置的`base_url`：`https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1`
 
-HTTP 请求地址：`POST https://dashscope-us.aliyuncs.com/compatible-mode/v1/chat/completions`
+HTTP 请求地址：`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/compatible-mode/v1/chat/completions`
 
 ## 德国（法兰克福）
 
@@ -82,16 +82,16 @@ dashscope.base_http_api_url = 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.co
 
 ## 美国（弗吉尼亚）
 
-纯文本模型（如 kimi-k2-thinking）的 HTTP 请求地址为`POST https://dashscope-us.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
+纯文本模型（如 kimi-k2-thinking）的 HTTP 请求地址为`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
 
-多模态模型（如 kimi-k2.7-code、kimi-k2.6、kimi-k2.5）的 HTTP 请求地址为`POST https://dashscope-us.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
+多模态模型（如 kimi-k2.7-code、kimi-k2.6、kimi-k2.5）的 HTTP 请求地址为`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
 
 SDK调用配置的`base_url`：
 
 ## **Python代码**
 
 ```
-dashscope.base_http_api_url = 'https://dashscope-us.aliyuncs.com/api/v1'
+dashscope.base_http_api_url = 'https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1'
 ```
 
 ## **Java代码**
@@ -100,14 +100,14 @@ dashscope.base_http_api_url = 'https://dashscope-us.aliyuncs.com/api/v1'
     
     ```
     import com.alibaba.dashscope.protocol.Protocol;
-    Generation gen = new Generation(Protocol.HTTP.getValue(), "https://dashscope-us.aliyuncs.com/api/v1");
+    Generation gen = new Generation(Protocol.HTTP.getValue(), "https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1");
     ```
     
 -   **方式二：**
     
     ```
     import com.alibaba.dashscope.utils.Constants;
-    Constants.baseHttpApiUrl="https://dashscope-us.aliyuncs.com/api/v1";
+    Constants.baseHttpApiUrl="https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1";
     ```
     
 
@@ -209,7 +209,7 @@ dashscope.base_http_api_url = 'https://{WorkspaceId}.ap-northeast-1.maas.aliyunc
 
 调用时请将`{WorkspaceId}`替换为真实的[业务空间ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
 
-你需要已[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并完成[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如果通过SDK调用，需要[安装SDK](https://help.aliyun.com/zh/model-studio/install-sdk#8833b9274f4v8)。
+你需要已[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并完成[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如果通过SDK调用，需要[安装SDK](https://help.aliyun.com/zh/model-studio/install-sdk#8833b9274f4v8)。
 
 ## **快速开始**
 
@@ -2140,6 +2140,139 @@ Moonshot-Kimi-K2-Instruct
 不支持
 
 支持
+
+## **动态加载工具（Kimi K3）**
+
+当应用需要挂载大量工具时，如果把所有工具的声明一次性放进请求顶层的`tools`字段，会遇到工具定义膨胀（Tool Definition Bloat）问题：每个请求都要携带全部工具的描述和参数 Schema，Token 消耗高；候选工具越多，模型也越容易选错工具、构造出错误的调用参数。
+
+动态加载工具（Dynamically Loaded Tools）允许在对话过程中按需注入工具：先只挂载少量核心工具，当对话进展到需要某个工具时，再把它动态插入`messages`中，从而降低 Token 消耗、提升工具选择的准确性。
+
+**说明**
+
+动态加载工具目前仅 kimi-k3 支持，在其他模型（如 kimi-k2.6）上请求会返回`tokenization failed`错误。
+
+### **在 messages 中注入工具声明**
+
+在`messages`中插入一条`role`为`system`的消息，并通过该消息的`tools`字段声明要加载的工具。声明格式与请求顶层`tools`字段的格式完全一致，且需要提供工具的完整信息（`name`、`description`、`parameters`）。
+
+-   携带`tools`的`system`消息与普通消息地位相同：它出现在`messages`列表的哪个位置，工具就从哪个位置开始对模型可见。
+    
+-   动态加载的工具与请求顶层`tools`字段声明的全局工具并存，模型可以同时看到两类工具。
+    
+-   动态注入的工具声明必须是完整的工具定义，不能只传工具名或引用全局已声明的工具。
+    
+-   携带`tools`的`system`消息不能再携带`content`字段，否则请求会以 400 报错。使用 OpenAI SDK 时可直接在`messages`中透传`tools`字段。
+    
+
+## Python
+
+```
+import os
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.getenv("DASHSCOPE_API_KEY"),
+    # 以下为华北2（北京）地域的URL。请将 {WorkspaceId} 替换为您的百炼业务空间ID，各地域的URL不同。
+    base_url="https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+)
+
+completion = client.chat.completions.create(
+    model="kimi-k3",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "帮我计算一下 23 * 47 的结果。"},
+        # 动态加载工具：在对话中插入一条携带 tools 字段的 system 消息
+        {
+            "role": "system",
+            "tools": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "Calculator",
+                        "description": "计算器，只支持单个算术表达式的求值",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "expr": {
+                                    "type": "string",
+                                    "description": "算术表达式，支持四则运算、指数运算、对数函数、三角函数，使用 JavaScript 语法",
+                                }
+                            },
+                            "required": ["expr"],
+                        },
+                    },
+                }
+            ],
+        },
+    ],
+)
+
+print(completion.choices[0].message.tool_calls)
+```
+
+## curl
+
+```
+# 以下为华北2（北京）地域的URL。请将 {WorkspaceId} 替换为您的百炼业务空间ID，各地域的URL不同。
+curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $DASHSCOPE_API_KEY" \
+-d '{
+    "model": "kimi-k3",
+    "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "帮我计算一下 23 * 47 的结果。"},
+        {
+            "role": "system",
+            "tools": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "Calculator",
+                        "description": "计算器，只支持单个算术表达式的求值",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "expr": {
+                                    "type": "string",
+                                    "description": "算术表达式，支持四则运算、指数运算、对数函数、三角函数，使用 JavaScript 语法"
+                                }
+                            },
+                            "required": ["expr"]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}'
+```
+
+### **结合搜索工具实现按需加载**
+
+API 层面没有专门的工具搜索接口。如果工具数量很多，可以组合"自定义搜索工具 + 动态加载工具"实现按需加载：
+
+1.  会话开始时，在请求顶层`tools`中只声明一个由应用后端实现的`search_tools`工具（按关键词返回匹配的工具名称和简介），以及少量每轮都可能用到的核心工具。
+    
+2.  在 System Prompt 中声明可被搜索的关键词（例如工具目录、领域标签），引导模型在需要工具时先调用`search_tools`。首轮请求可设置`tool_choice: "required"`强制模型先检索再回答，检索完成后将`tool_choice`恢复为`"auto"`。修改`tool_choice`不会破坏前缀缓存。
+    
+3.  根据`search_tools`返回的结果，由应用把对应工具的完整声明通过一条携带`tools`的`system`消息动态插入`messages`。
+    
+4.  模型即可在后续生成中直接调用这些新加载的工具。
+    
+
+这样无论工具总量有多大，每一轮请求中实际存在的工具声明都只有少量几个，上下文窗口和模型的选择压力都可控。
+
+### **注意事项**
+
+-   动态工具声明按请求生效，不会被服务端记住。下一轮请求是否继续携带，由接入方自行决定：继续携带则工具仍然可用，也有利于命中前缀缓存；不再携带则该工具声明失效，如果工具未在其他位置声明，模型将无法调用这个工具，且变更位置之后的前缀缓存可能无法命中。
+    
+-   在`messages`末尾追加动态工具声明，不会影响已有前缀的缓存；删除或修改之前的工具声明，可能影响变更位置之后的缓存命中。在请求顶层`tools`字段声明全局工具同样不影响缓存命中。
+    
+-   携带`tools`的`system`消息同样会占用上下文长度，请只对当前对话真正需要的工具做动态注入。
+    
+-   动态工具声明与全局`tools`声明格式完全统一，接入方无需维护两套 Schema。
+    
 
 ## **参数默认值**
 

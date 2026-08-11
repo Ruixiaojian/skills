@@ -10,7 +10,7 @@
 
 -   您已经完整阅读了[模型部署](https://help.aliyun.com/zh/model-studio/model-deployment-introduction)，熟悉如何在阿里云百炼平台进行模型部署的支持的模型和基本步骤。
     
--   您需要已[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
+-   您需要已[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
     
 
 ## **1\. 部署模型**
