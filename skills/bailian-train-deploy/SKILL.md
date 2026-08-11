@@ -31,7 +31,7 @@ description: 用百炼 CLI (`bl`) 走完"数据→微调训练→导出→部署
 `bl finetune <模态> create` 与 `bl deploy <模态> create` 都是真实写操作，会产生计费资源（微调训练 + 推理部署）。`bl` **没有 `--dry-run`**，所以用**预检命令**代替预演、用**计费确认**把关预留资源。任何写操作前必须先过这三道闸：
 
 1. **预检代替 dry-run**（创建前必跑，确认可行再写）。这些预检命令本身都需先通过下方[前置检查](#前置检查动作流起点)的认证——未认证先 `bl auth login` 再预检：
-   - 训练前：`bl finetune capability --model <base>` —— 确认基座支持你选的 training-type（不支持会快速失败且不耗配额；`create` 提交时也会再校验一次）。
+   - 训练前：`bl finetune capability --base-model <base>` —— 确认基座支持你选的 training-type（不支持会快速失败且不耗配额；`create` 提交时也会再校验一次）。
    - 部署前：`bl deploy models --source custom`（链路 A 微调输出）或 `--source base`（链路 B 基座）—— 确认目标模型可部署、看清可用 plan，再决定 `--plan`。
    - 复用检测：`bl deploy list --status RUNNING` —— 若已有引用同一 `finetuned_output` 且 RUNNING 的部署，直接复用其 `deployed_model`，**不要再建第二个计费实例**。
 2. **计费确认硬闸门（mu/ptu）**：
@@ -54,9 +54,9 @@ description: 用百炼 CLI (`bl`) 走完"数据→微调训练→导出→部署
 
 ## 反幻觉清单
 
-- **`--model` 在不同命令里含义不同，切勿复用**：
-  - `bl finetune <模态> create --model` → 基座模型名（文本 `qwen3-8b`，音频 `cosyvoice-v3-flash`，图像 `wan2.7-image-pro`）。
-  - `bl deploy <模态> create --model` → 导出模型名（链路 A：`qwen3-8b-ft-...` / `cosyvoice-v3-flash-ft-...` / `wan2.7-image-pro-ft-...`；链路 B：基座名）。
+- **`--base-model` / `--model-name` / `--model` 分属不同命令，切勿复用**：
+  - `bl finetune <模态> create --base-model` → 基座模型名（文本 `qwen3-8b`，音频 `cosyvoice-v3-flash`，图像 `wan2.7-image-pro`）。
+  - `bl deploy <模态> create --model-name` → 导出模型名（链路 A：`qwen3-8b-ft-...` / `cosyvoice-v3-flash-ft-...` / `wan2.7-image-pro-ft-...`；链路 B：基座名）。
   - 推理命令 `--model` → 必须用 `deploy <模态> create` 响应里的 `deployed_model`，**不是**你传给 deploy <模态> create 的名字。
 - **`--training-type` 取值穷举**：`sft` / `sft-lora`（默认）/ `dpo` / `dpo-lora` / `cpt`。映射在 CLI 边界完成（`sft-lora`→`efficient_sft`），永远传 CLI 值，不要传服务端字符串。`cpt` 无 `-lora` 变体。音频 TTS 和图像生成都只用 `sft-lora`——`finetune audio create` / `finetune image create` **不暴露此 flag**，仅 `finetune text create` 接受。
 - **`--plan` 取值穷举**：`lora`（默认，token 计费）/ `ptu`（需 `--input-tpm`/`--output-tpm`）/ `mu`（需 `--deploy-spec`/`--capacity`）。链路 B 基座通常**不支持 `lora`**。音频 TTS 微调模型**只支持 `mu`**。图像生成微调模型**只支持 `lora`**。
@@ -64,14 +64,14 @@ description: 用百炼 CLI (`bl`) 走完"数据→微调训练→导出→部署
 - **`--source` 取值穷举**（`bl deploy models`）：`custom`（微调输出）/ `base`（基座）/ `public`。
 - **`--learning-rate` 必须字符串**：传 `"3e-4"`，不要传数字 `3e-4`，避免 JSON 精度丢失（文本适用，音频/图像不需要传此参数）。
 - **推理命令因模态不同**：文本模型用 `bl text chat`，音频 TTS 用 `bl speech synthesize --voice default`，图像生成用异步 API + 触发词（详见 [`references/image.md`](references/image.md#推理与调用)）。
-- **没有这些 flag/子命令**：`bl` 无 `--dry-run`、无裸 `finetune create`/`deploy create`（**必须带模态段**：`finetune text|audio|image create`、`deploy text|audio|image create`）、无 `finetune start`、无 `deploy stop`（CLI 暂无 stop 命令，RUNNING 的 mu/ptu 需到控制台停用）。
-- **必填**：`finetune <模态> create` 的 `--model` / `--datasets`；`deploy <模态> create` 的 `--model` / `--name`。
+- **没有这些 flag/子命令**：`bl` 无 `--dry-run`、无裸 `finetune create`/`deploy create`（**必须带模态段**：`finetune text|audio|image create`、`deploy text|audio|image create`）、无 `finetune start`、无 `deploy stop`（停用/恢复用 `bl deploy pause` / `bl deploy resume`；pause 对 mu/ptu 停止计费）。
+- **必填**：`finetune <模态> create` 的 `--base-model` / `--datasets`；`deploy <模态> create` 的 `--model-name` / `--display-name`。
 
 ## 前置检查（动作流起点）
 
 - 认证：`bl auth status`，确认已配置 API key（`DASHSCOPE_API_KEY` 或 `bl auth login --api-key sk-...`）。
 - 基座选型：查询训练能力用 `bl finetune capability`（查 listFoundationModels，走 API key、无需 console 登录）：
-  - `bl finetune capability --model <base>` —— 该模型支持哪些训练类型。
+  - `bl finetune capability --base-model <base>` —— 该模型支持哪些训练类型。
   - `bl finetune capability --training-type sft-lora` —— 反向查：哪些模型支持该训练类型（返回 `models` 列表，含中文名）。
   - 选定基座后可直接进入第 2 步；`bl finetune <模态> create` 提交前也会再用 listFoundationModels 校验，不支持会快速失败。
   - 文本推理推荐 Qwen3 系列（`qwen3-8b` / `qwen3-14b` / `qwen3.6-flash`）；音频 TTS 用 `cosyvoice-v3-flash`；图像生成用 `wan2.7-image-pro` / `wan2.7-image`。
@@ -95,7 +95,7 @@ description: 用百炼 CLI (`bl`) 走完"数据→微调训练→导出→部署
 
 ```bash
 bl finetune <模态> create \
-  --model <base-model> \
+  --base-model <base-model> \
   --datasets <path-or-file-id> \
   --output json
 ```
@@ -137,14 +137,14 @@ bl finetune export --job-id <JOB_ID> --checkpoint <name> --model-name <自定义
 
 ```bash
 bl deploy <模态> create \
-  --model <model-name> \              # 微调输出名(链路A) 或基座名(链路B)
-  --name <display-name> \
+  --model-name <finetuned-output> \   # 微调输出名(链路A) 或基座名(链路B)
+  --display-name <display-name> \
   --plan <lora|ptu|mu> \              # 见下方说明
   --output json
 ```
 
 - **模态段**（`text` / `audio` / `image`）须与部署模型模态匹配；三个模态子命令 flag 完全相同。
-- `--model`：链路 A 传第 2 步的 `finetuned_output`；链路 B 直接传基座模型名。
+- `--model-name`：链路 A 传第 2 步的 `finetuned_output`；链路 B 直接传基座模型名。
 - `--plan`：
   - 文本微调模型默认 `lora`（token 计费），也可用 `mu`。
   - **音频 TTS 微调模型只支持 `mu`**（不支持 `lora` / `ptu`），需 `--deploy-spec` + `--capacity`。
@@ -154,7 +154,7 @@ bl deploy <模态> create \
 - `--deploy-spec`：mu plan 的部署规格（如 `dps-20260521172224-1vabse`），省略时自动从 catalog 匹配。
 - 不确定支持哪些 plan：链路 A 用 `bl deploy models --source custom`，链路 B 用 `bl deploy models --source base`，按返回的 `plans` 选。
 
-⚠️ **避坑（最高频错误）：`--model` 在 `deploy <模态> create` 与推理命令里含义不同**——`deploy <模态> create --model` 传导出模型名，响应返回的 `output.deployed_model` 才是部署实例 id，推理命令 `--model` 必须用 `deployed_model`，**不要复用**。详见 [`references/deploy.md`](references/deploy.md)。
+⚠️ **避坑（最高频错误）：`--model-name` 与推理命令的 `--model` 含义不同**——`deploy <模态> create --model-name` 传导出模型名，响应返回的 `output.deployed_model` 才是部署实例 id，推理命令 `--model` 必须用 `deployed_model`，**不要复用**。详见 [`references/deploy.md`](references/deploy.md)。
 
 从响应记下：`output.deployed_model`。
 
@@ -195,6 +195,6 @@ bl speech synthesize --model <DEPLOYED_MODEL> --voice default --text "你要合�
 - 常用运维命令：`bl deploy get --deployed-model <id>` 查状态；`bl deploy delete --deployed-model <id>` 删除部署；`bl finetune list` 查历史任务。
 
 ## 收尾提示
-- **闲置计费与删除**：`lora` 闲置一般不计费；`mu`/`ptu` 闲置也计费，不用要清理，且 `bl deploy delete` 有状态约束（CLI 无 stop 命令）。细则见 [`references/deploy.md`](references/deploy.md#计费与运维细则)。
+- **闲置计费与删除**：`lora` 闲置一般不计费；`mu`/`ptu` 闲置也计费，不用要清理；`bl deploy delete` 只能删 STOPPED/FAILED 的部署，RUNNING 的 mu/ptu 可先 `bl deploy pause`（停止计费）再删。细则见 [`references/deploy.md`](references/deploy.md#计费与运维细则)。
 - **复用数据集**：多次训练同一数据时，先 `bl dataset upload` 拿 file-id，再用 `--datasets <file-id>` 避免重复上传。
 - **效果不好**：优先加数据（量与质量），其次调 `n-epochs`/`learning-rate`，最后才考虑全参 `sft`。小数据集（<100 条）效果上限有限，要管理预期。

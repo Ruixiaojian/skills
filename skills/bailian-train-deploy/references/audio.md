@@ -51,7 +51,7 @@ pip install edge-tts
 
 ```bash
 bl finetune audio create \
-  --model cosyvoice-v3-flash \
+  --base-model cosyvoice-v3-flash \
   --datasets <zip-path-or-file-id> \
   --output json
 ```
@@ -72,8 +72,8 @@ bl finetune audio create \
 
 ```bash
 bl deploy audio create \
-  --model <finetuned_output> \
-  --name <display-name> \
+  --model-name <finetuned_output> \
+  --display-name <display-name> \
   --plan mu \
   --deploy-spec <spec-id> \
   --capacity 1 \

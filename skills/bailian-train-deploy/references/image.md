@@ -55,7 +55,7 @@ bl dataset validate --file <zip-path> --schema image  # 显式指定
 
 ```bash
 bl finetune image create \
-  --model wan2.7-image-pro \
+  --base-model wan2.7-image-pro \
   --datasets <zip-path-or-file-id> \
   --output json
 ```
@@ -64,7 +64,7 @@ I2I（图生图）模式**自动检测**——只要 JSONL 中有 `input_img` �
 
 ```bash
 bl finetune image create \
-  --model wan2.7-image-pro \
+  --base-model wan2.7-image-pro \
   --datasets <i2i-zip-path-or-file-id> \
   --output json
 ```
@@ -86,8 +86,8 @@ bl finetune image create \
 
 ```bash
 bl deploy image create \
-  --model <finetuned_output> \
-  --name <display-name> \
+  --model-name <finetuned_output> \
+  --display-name <display-name> \
   --plan lora \
   --capacity 1 \
   --output json

@@ -39,13 +39,13 @@ Tell your agent "train a model" or "deploy my fine-tuned model on Bailian," and 
 - Just want to try a model / one-off chat → `bailian-cli`: `bl text chat --model qwen3-8b --message "..."`
 - Don't know which base model to pick → `bailian-model-recommend`
 - Pure parameter / pricing / context-window lookup → `bailian-docs-llm-wiki`
-- Lifecycle management of existing jobs/deployments (list/stop/delete) → `bl` directly: `bl finetune list` / `bl deploy list` / `bl deploy delete`
+- Lifecycle management of existing jobs/deployments (list/pause/resume/delete) → `bl` directly: `bl finetune list` / `bl deploy list` / `bl deploy pause` / `bl deploy resume` / `bl deploy delete`
 
 ## Safety guardrails
 
 `bl finetune <modality> create` and `bl deploy <modality> create` are real write operations that create billable resources. `bl` has **no `--dry-run`**, so the skill substitutes real pre-checks + a billing gate:
 
-1. **Pre-checks instead of dry-run** — `bl finetune capability --model <base>` (training support), `bl deploy models --source custom|base` (deployable + available plans), `bl deploy list --status RUNNING` (reuse an existing deployment of the same model instead of creating a second billable instance).
+1. **Pre-checks instead of dry-run** — `bl finetune capability --base-model <base>` (training support), `bl deploy models --source custom|base` (deployable + available plans), `bl deploy list --status RUNNING` (reuse an existing deployment of the same model instead of creating a second billable instance).
 2. **Billing gate on `mu`/`ptu`** — `lora` (token-billed, idle usually free) is the safe default; `mu`/`ptu` are reserved resources that bill even when idle, so the skill **asks the user for explicit confirmation before creating them** and never auto-approves reserved resources in non-interactive (agent/CI) contexts.
 3. **Account readiness** — `bl auth status` first; stop if not authenticated.
 
