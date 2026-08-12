@@ -1,61 +1,57 @@
 # 插件
 
-插件是百炼平台用于扩展大模型能力的核心机制，通过将外部工具（如计算、搜索、图像生成、API 服务等）以标准化方式接入，弥补大模型在实时信息获取、精确计算、[多模态](multi-modal.md)生成和确定性执行等方面的固有局限。所有插件均通过智能体应用、工作流应用或 Assistant API 统一调度，由大模型自主规划调用（智能体/Assistant 模式）或显式编排调用（工作流模式）。
+插件是百炼平台用于扩展大模型能力的核心机制，通过将外部工具（API）标准化接入大模型工作流，弥补其在实时信息获取、精确计算、代码执行、多模态生成等方面的固有局限。它以“工具集合”形式组织，支持官方预置、第三方认证及完全自定义三类来源，调用可由大模型自主规划（如智能体场景）或由开发者显式编排（如工作流场景）驱动。
 
-## 在百炼平台的不同场景中，这个概念如何使用
+## 在百炼平台的不同场景中如何使用
 
-- **智能体应用（Agent）**：插件作为“可调用工具”被自动发现与触发。大模型基于用户指令和对话上下文，自主判断是否需要调用插件、调用哪个插件、传入哪些参数。例如：“帮我算一下 127 × 89 的结果”，模型会自动选择 `calculator` 插件并传参；“生成一张赛博朋克风格的猫”，则调用 `text_to_image` 插件。官方/三方插件可一键添加至智能体；自定义插件需先发布为 MCP 服务，再在智能体的“MCP”区块中启用。
+- **智能体（Agent）应用**：插件作为可被大模型动态发现和调用的工具，与知识库、内置工具（如 `read`/`edit`）统一抽象为「MCP 工具」。模型基于用户意图自主选择工具、填充参数并执行，支持完整「思考-执行-反思」链路回溯。需在智能体「规划」模块中启用并配置 MCP 服务。
+  
+- **工作流（Workflow）应用**：插件以独立节点形式拖入画布，由开发者显式控制执行顺序、输入变量（如 `${sys.query}`）和条件分支。不依赖模型决策，适合确定性、强流程约束的业务场景。
 
-- **工作流应用（Workflow）**：插件以独立节点形式显式编排。开发者拖入插件节点（如 `quark_search` 或自定义 MCP 工具），手动配置输入参数（可引用前置节点输出）、超时时间、错误处理逻辑，并连接上下游节点。适用于流程确定、步骤清晰的任务，如“先搜索最新政策 → 再提取关键条款 → 最后生成摘要”。
+- **高代码应用**：通过「工具」Tab 关联已发布的 MCP 服务，可在 Python 函数中直接调用插件工具（如 `tool_call("quark_search", {"query": "AI 趋势"})`），实现深度定制逻辑与系统级集成。
 
-- **Assistant API / DashScope SDK 调用**：在 `tools` 字段中声明插件工具 ID 及其描述（`function.name` + `function.description` + `function.parameters`），平台自动注入工具调用能力。此时插件行为与智能体模式一致——由模型自主决策是否调用及如何调用。注意：纯千问 API（如 `dashscope.ChatCompletion.create`）**不支持插件调用**，必须通过百炼平台容器（智能体/工作流）或 Assistant API 接口。
+- **Assistant API 直接调用**：在请求体的 `tools` 字段中声明插件定义（OpenAPI Schema），通过 `tool_choice` 控制调用策略（`auto` / `required` / 具体工具 ID），适用于 SDK 或 HTTP 自主集成场景。
 
-- **与 Skill、MCP 的关系说明**：
-  - **插件 ≠ Skill**：Skill 是面向文件/文档处理的语义化能力包（如 PDF OCR、Excel 表格解析），由 `SKILL.md` 驱动，无需参数配置，通过自然语言触发；插件是通用工具接口，强调结构化输入/输出与外部系统集成。
-  - **插件 ≈ MCP 服务**：当前百炼平台中，“插件”在技术实现上已全面基于 **Model Context Protocol（MCP）** 协议。官方插件、三方插件、自定义插件均以 MCP 服务形态注册、发布和调用。MCP 是插件的底层通信标准，而“插件”是面向用户的功能抽象层。
+> ⚠️ 注意：所有插件必须处于 **已发布且启用** 状态才可被调用；删除插件将不可逆清除其下所有工具及关联应用。
 
 ## 关键参数和配置
 
-- **工具 ID（`tool_id`）**：插件内具体工具的唯一标识符，API 调用和工作流节点配置时必需。可在控制台插件详情页的“插件工具”列表中复制。
+插件配置分为**插件级**（全局）与**工具级**（单个 API）两类，均在控制台「插件管理」中设置：
 
-- **输入参数（Input Schema）**：必须使用 JSON Schema 明确定义，包括参数名、类型（`string`/`number`/`object` 等）、是否必填、默认值。特别注意：
-  - `object` 类型的子属性**不可为空**（即不能省略字段），否则发布失败；
-  - 建议为复杂参数提供映射示例（如 `"查询杭州明天天气"` → `{"city": "杭州", "date": "2025-04-25"}`），显著提升模型参数提取准确率。
+### 插件级参数
+| 参数 | 说明 | 示例/要求 |
+|------|------|-----------|
+| `插件URL` | 工具路径的根域名，所有工具路径以此为前缀拼接 | `https://api.example.com`（必须以 `https://` 开头） |
+| `是否鉴权` | 启用后需配置鉴权类型、位置、参数名及 [Token](token.md) | 类型：`basic` / `bearer` / `appcode`；位置：`Header` 或 `Query`；参数名如 `Authorization` 或 `api_key` |
+| `Header列表` | 非鉴权场景下可透传的自定义请求头（仅限 `Authorization` 字段有效，其余 Header 将被丢弃） | `{"X-Trace-ID": "xxx"}` → 实际仅 `Authorization` 生效 |
 
-- **鉴权配置**：支持三种方式，均需与后端 API 严格一致：
-  - `basic`：Base64 编码的 `username:password`；
-  - `bearer`：[Token](token.md) 值（平台自动添加前缀 `Bearer `）；
-  - `appcode`：阿里云 AppCode（常用于云市场 API）；
-  - 传参位置可选 `Header`（推荐）或 `Query`。
+### 工具级参数
+| 参数 | 说明 | 示例/要求 |
+|------|------|-----------|
+| `工具路径` | 必须以 `/` 开头的相对路径 | `/search`、`/generate/image` |
+| `请求方法` | 仅支持 `GET` 或 `POST` | — |
+| `提交方式` | `application/json`（推荐）或 `application/x-www-form-urlencoded` | `GET` 方法不支持 `Object` 类型输入参数 |
+| `输入参数` | 明确声明：参数名、描述、类型（`String`/`Number`/`Object`）、传参方式（`大模型识别` 或 `业务透传`） | `Object` 类型子属性必须非空（否则发布失败，错误码 `130022`） |
+| `输出参数` | 所有字段必填，类型与嵌套层级应尽量扁平 | 避免空子属性，如 `{ "data": {} }` 不合法，需为 `{ "data": { "title": "xxx" } }` |
+| `高级配置` | 可添加调用示例（`Value` 字段），显著提升大模型参数提取准确率 | 如 `{"query": "量子计算最新进展"}` |
 
-- **高级配置（可选）**：
-  - `enable_search`（布尔值）：仅适用于部分模型（如 `qwen-turbo`），开启后激活模型内置联网搜索增强，**与 `quark_search` 插件无关**——后者是独立工具调用，返回结构化结果；前者是模型内部能力，不暴露原始搜索内容。
-  - `biz_params`（对象）：用于透传业务参数（如用户 ID、租户上下文）或动态鉴权 [Token](token.md)，需在 API 请求体中显式传入，不参与模型推理。
+> ✅ **调试提示**：所有自定义工具必须先通过控制台「在线调试」验证连通性与返回格式，再发布。调试失败则调用必然失败。
 
-## 面向开发者，简洁实用
+## 面向开发者的关键实践建议
 
-- ✅ **快速起步**：优先使用官方插件（如 `code_interpreter`, `calculator`, `text_to_image`），无需配置，控制台一键添加即可验证。
-- ✅ **自定义开发**：  
-  1. 将你的 HTTP 服务封装为符合 [MCP Streamable HTTP 协议](https://help.aliyun.com/zh/model-studio/user-guide/model-context-protocol-mcp) 的服务（端点 `/mcp`，POST 请求）；  
-  2. 在控制台「MCP 广场」→「自定义服务」→「AI 网关导入」或「OpenAPI 导入」完成注册；  
-  3. 发布后，在智能体或工作流中添加该 MCP 服务即可调用。
-- ⚠️ **必做检查项**：  
-  - 主账号或 RAM 子账号首次使用前，确保已授权服务关联角色 `AliyunServiceRoleForSFMAccessCloudAPI`；  
-  - 自定义插件必须通过「测试工具」验证成功并**发布**，编辑后需重新测试+发布才生效；  
-  - 单个智能体最多关联 10 个插件工具；  
-  - `code_interpreter` 插件沙箱**禁止外网访问和本地文件上传**，依赖库版本固定（如 `pandas`, `matplotlib`），请勿假设可安装新包。
-- 🚫 **避坑提示**：  
-  - 不要依赖文档静态列出的模型兼容性（如 `qwen-vl-plus` 支持插件），实际可用性以控制台运行结果为准；  
-  - `quark_search` 和 `enable_search` 是两类完全不同的能力，切勿混用；  
-  - 使用 `biz_params` 传递敏感信息（如 [Token](token.md)）时，务必通过 KMS 加密环境变量方式管理，避免硬编码。
+- **选型优先级**：优先使用官方插件（开箱即用，无需配置）；三方插件需在控制台开通；自定义插件适用于自有业务系统集成，需完整遵循 OpenAPI 规范。
+- **参数透传**：若工具入参设为 `业务透传`，需通过 `biz_params`（HTTP API）或 SDK 对应参数传递；用户级/服务级鉴权 [Token](token.md) 同样走 `biz_params`。
+- **[Token](token.md) 安全**：切勿硬编码 Token，应在应用「部署」→「配置」中设置环境变量，并通过 `biz_params` 动态注入。
+- **计费意识**：`text_to_image` 与 `quark_search` 为限时免费（需单独申请）；其余插件按调用量计费，`GET` 请求也计入计费。
+- **兼容性验证**：插件实际可用性取决于模型能力与控制台运行结果，而非静态文档列表。推荐在 `qwen-plus` 或 `qwen-max` 上先行验证。
+- **错误排查**：常见失败原因包括：工具未发布、`Object` 子属性为空、`GET` 方法含 `Object` 参数、Header 透传超限（仅 `Authorization` 允许）、超时（默认 5 秒）。
 
 ## 关联主题页
 
 - [plug in](../guides/plug-in.md)
-- [model context protocol](../guides/model-context-protocol.md)
-- [skill](../guides/skill.md)
-- [more](../api/more.md)
-- [application call](../api/application-call.md)
-- [managed agents api](../api/managed-agents-api.md)
+- [llm application](../guides/llm-application.md)
+- [application support](../guides/application-support.md)
+- [model experience](../guides/model-experience.md)
+- [toolkits and frameworks](../api/toolkits-and-frameworks.md)
 
 

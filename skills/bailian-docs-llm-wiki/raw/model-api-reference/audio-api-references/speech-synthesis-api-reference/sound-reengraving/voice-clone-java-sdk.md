@@ -202,6 +202,7 @@ String
 **方法签名**：
 
 ```
+public void updateVoice(String voiceId, String url) throws NoApiKeyException, InputRequiredException
 public void updateVoice(String voiceId, String url, VoiceEnrollmentParam customParam) throws NoApiKeyException, InputRequiredException
 ```
 
@@ -287,7 +288,7 @@ parameter(String, Object)
 
 Object
 
-设置自定义参数，如 parameter("language\_hints", Arrays.asList("zh"))、parameter("max\_prompt\_audio\_length", 10.0f)、parameter("enable\_preprocess", false)。
+设置自定义参数，如 parameter("language\_hints", Arrays.asList("zh"))、parameter("max\_prompt\_audio\_length", 10.0f)、parameter("enable\_preprocess", false)、parameter("enable\_volume\_normalization", "false")。
 
 ### **扩展参数**
 
@@ -312,6 +313,14 @@ boolean
 是否开启音频预处理（降噪、音频增强、音量规整）。有背景噪音时建议开启；安静环境建议关闭以最大程度还原音色。
 
 默认值：false。
+
+enable\_volume\_normalization
+
+String
+
+否
+
+是否对用于声音复刻的样本音频进行音量归一化。取值为`"true"`或`"false"`。开启后，使用所创建音色合成的音频，其音量可能与关闭该参数时创建的音色不同。默认值：`"false"`。
 
 ## **示例代码**
 
@@ -350,6 +359,7 @@ public class Main {
                             .parameter("language_hints", Arrays.asList("zh"))
                             // .parameter("max_prompt_audio_length", 10.0f)
                             // .parameter("enable_preprocess", false)
+                            // .parameter("enable_volume_normalization", "false")
                             .build());
 
             logger.info("Voice creation submitted. Request ID: {}", service.getLastRequestId());

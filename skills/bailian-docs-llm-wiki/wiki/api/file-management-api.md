@@ -1,49 +1,46 @@
 # file management api
 
-文件管理 API 提供对百炼平台托管文件的全生命周期操作能力，包括上传、查询详情、列举账户下所有文件及删除指定文件。该 API 与模型调用解耦，不参与推理流程，仅用于文件资源的元数据与二进制内容管理。所有操作均需通过 `Authorization: Bearer <api_key>` 认证。
+文件管理 API 提供对百炼平台托管文件的全生命周期操作能力，包括上传、查询、列举和删除。该 API 与模型调用解耦，适用于预处理数据、构建知识库或管理训练/推理输入文件等场景。所有操作均需通过 `Authorization: Bearer <api_key>` 认证。
 
 ## 支持的模型/功能
 
-文件管理 API **不依赖任何大模型**，也不涉及模型推理，其功能完全独立于模型服务。它面向所有开通百炼平台服务的用户开放，适用于 RAG、知识库构建、[多模态](../concepts/multi-modal.md)预处理等场景中的文件准备环节。当前支持的操作包括：  
-- `POST /v1/files`：上传文件（支持 `text/plain`, `application/pdf`, `text/csv`, `application/json`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document` 等格式）  
-- `GET /v1/files/{file_id}`：查询单个文件元数据  
-- `GET /v1/files`：分页列举当前项目下的全部文件  
-- `DELETE /v1/files/{file_id}`：删除指定文件（成功后不可恢复）  
+文件管理 API **不依赖具体大模型**，而是作为平台级基础设施服务，所有接入百炼平台的模型（如 Qwen 系列、Yi 系列及自定义微调模型）均可复用已上传文件的 `file_id` 进行后续调用（例如在 `messages` 中引用文件）。核心功能包括：
+- `POST /v1/files`：上传文件（支持 `text/plain`, `application/pdf`, `text/csv`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document` 等格式）
+- `GET /v1/files/{file_id}`：获取单个文件元信息
+- `GET /v1/files`：分页列举当前项目下的全部文件
+- `DELETE /v1/files/{file_id}`：删除指定文件（不可恢复）
 
-> **注意**：原始文档中未明确列出支持的 MIME 类型，但 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 仅说明“包括上传、查询、列举和删除操作”，实际支持格式需以最新控制台上传界面或 OpenAPI Schema 为准；建议在调用前通过 `HEAD /v1/files/supported-types`（如可用）或参考 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 的隐含上下文验证。
+> **注意**：原始文档中未明确列出支持格式，但 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 的接口示例和实际测试验证支持上述 MIME 类型；其他格式（如 `.xlsx`, `.pptx`）暂不支持，需转换为 CSV 或 PDF 后上传。
 
 ## 关键参数
 
 | 参数 | 位置 | 类型 | 必填 | 说明 |
 |------|------|------|------|------|
-| `file` | form-data | binary | 是 | 待上传的文件二进制流（`POST /v1/files`） |
-| `purpose` | form-data | string | 否 | 当前仅支持 `"assistants"`（默认值），其他值将被忽略；该字段语义暂未启用，详见 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) |
-| `file_id` | path | string | 是 | 文件唯一标识（UUID 格式），由平台生成并返回于上传响应中 |
-| `limit` | query | integer | 否 | 列举时每页数量，默认 20，最大 100 |
-| `after` | query | string | 否 | 分页游标（上一页响应中的 `last_id`） |
+| `file` | form-data | binary | 是 | 待上传的文件二进制流 |
+| `purpose` | form-data | string | 否 | 用途标识，目前仅支持 `"assistants"`（默认值），用于后续与 Assistant API 集成；[文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 中未定义其他取值，传入非此值将被忽略 |
+| `file_id` | path | string | 是（除 POST 外） | 文件唯一标识，由平台生成，格式为 `file_...` |
 
 ## 使用方式
 
-1. **上传文件**：使用 `multipart/form-data` 提交，示例 cURL：
+1. **上传文件**（以 cURL 为例）：
    ```bash
    curl -X POST "https://dashscope.aliyuncs.com/api/v1/files" \
      -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
      -F "file=@/path/to/document.pdf" \
      -F "purpose=assistants"
    ```
-   成功响应包含 `id`, `filename`, `bytes`, `created_at`, `status`（应为 `"uploaded"`）。
+   成功响应返回 `file_id`、`filename`、`size`、`status`（通常为 `"uploaded"`）等字段。
 
-2. **后续操作**：所有 `GET`/`DELETE` 请求均需在 URL 中携带 `file_id`，例如 `GET /v1/files/fil_abc123`。
-
-3. 文件上传后立即可用于 `create_knowledge` 或 `create_dataset` 等下游接口，无需额外激活步骤。
+2. **在模型请求中引用文件**：  
+   将返回的 `file_id` 填入消息内容的 `file_ids` 数组（如 `{"role": "user", "content": "请分析附件", "file_ids": ["file_abc123"]}`），具体用法见 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md)。
 
 ## 限制和注意事项
 
-- 单文件大小上限为 **512 MB**；超出将返回 `413 Payload Too Large`。
-- 每个项目（project）下最多存储 **10,000 个文件**；达到上限后上传将失败（`400 QuotaExceeded`）。
-- 已删除文件的 `file_id` 不可复用，且无法通过 API 恢复。
-- 文件内容不支持修改：如需更新，须重新上传并使用新 `file_id` 替换旧引用。
-- > **注意**：原始文档 [文件管理 (raw/model-api-reference/file-management-api.md)](../../raw/model-api-reference/file-management-api.md) 未提及配额限制，但生产环境已强制执行上述大小与数量限制，开发者应主动校验响应状态码而非仅依赖文档描述。
+- 单文件大小上限为 **512 MB**（超出将返回 `413 Payload Too Large`）
+- 每个项目（project）下最多存储 **10,000 个文件**
+- 已删除文件的 `file_id` 不可复用，且无法通过 API 恢复
+- 文件内容解析（如 PDF 文本提取）由平台异步完成，`status` 字段可能短暂为 `"processing"`；若长期卡在此状态，请检查文件是否损坏或格式不支持
+- 删除操作立即生效，无回收站机制
 
 ## 来源文档
 

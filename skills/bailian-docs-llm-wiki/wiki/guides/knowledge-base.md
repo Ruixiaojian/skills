@@ -1,72 +1,57 @@
 # [knowledge](../api/knowledge.md) base
 
-知识库是阿里云百炼平台提供的 RAG（[检索增强生成](../concepts/rag.md)）核心能力，用于为大模型注入私有、结构化或非结构化数据，提升其在垂直领域回答的准确性与时效性。它支持文档搜索、数据查询、图片问答、音视频搜索等多种知识类型，并可通过控制台、工作流、智能体或 API 多种方式集成。知识库功能仅在中国站华北2（北京）地域可用。
+知识库是阿里云百炼平台提供的 RAG（[检索增强生成](../concepts/rag.md)）核心能力，用于为大语言模型注入私有数据和领域知识，提升回答的准确性与专业性。它通过语义检索从结构化或非结构化文档中召回相关内容，并与大模型生成过程协同工作。知识库功能仅在中国站华北2（北京）地域可用，需在业务空间内创建并集成至智能体、工作流或外部应用。
 
 ## 支持的模型/功能
 
-知识库本身不直接运行模型，但其检索流程和上层问答服务深度依赖以下模型：
+知识库支持多种预置与自定义模型，包括千问系列（Qwen3、Qwen2.5、Qwen2、QwQ、Long、Max、Plus、Turbo、Coder、Deep-Research）、千问VL系列（Max/Plus/Flash/OCR）及第三方模型（DeepSeek-R1、Llama3.1、Yi-Large等）。[原文标题](../../raw/application-user-guide/knowledge-base/rag-knowledge-base.md)明确列出支持模型范围，并强调“列表随时可能更新，以控制台实际可选为准”。
 
-- **向量模型**：`text-embedding-v4`（默认文本类）、`qwen3-vl-embedding`（[多模态](../concepts/multi-modal.md)/视觉理解场景），用于文档切片与用户 Query 的向量化；详见 [知识库计费说明](../../raw/application-user-guide/knowledge-base/billing-for-knowledge-base.md) 中 2.2.1 节。
-- **排序模型（Rerank）**：`qwen3-rerank`（文本类）、`qwen3-vl-rerank`（[多模态](../concepts/multi-modal.md)类），用于对初步召回结果进行精排；该能力在 [知识检索](../../raw/application-user-guide/knowledge-base/rag-knowledge-retrieval.md) 和 [知识问答](../../raw/application-user-guide/knowledge-base/rag-knowledge-qa.md) 中均作为可选配置项。
-- **路由模型**：`qwen-plus`，仅在启用“知识库路由”时调用，用于判断多知识库场景下应检索哪些库。
-- **问答生成模型**：所有百炼支持的预置及自定义大模型（如 `Qwen3`、`Qwen2.5`、`DeepSeek-R1`、`Llama3.1` 等）均可作为问答服务的底座模型；具体支持列表以 [知识库 (raw/application-user-guide/knowledge-base/rag-knowledge-base.md)](../../raw/application-user-guide/knowledge-base/rag-knowledge-base.md) 中“支持的模型”章节为准。
+知识库提供多场景功能支持：
+- **文档搜索类**：支持纯文本、富文本文档（含图表/公式）及极速问答三种使用场景，其中“视觉理解”场景自动启用 `qwen3-vl-embedding` 多模态向量模型；
+- **数据查询类**：面向结构化表格（Excel/CSV），单知识库限1个文件；
+- **图片问答类**：支持图片上传与多模态理解，依赖 `multimodal-embedding-v1` 向量模型；
+- **音视频搜索类**：支持语音识别、帧提取与剧情解析，但仅支持删除切片，不支持新增切片 [原文标题](../../raw/application-user-guide/knowledge-base/rag-knowledge-base-specifications.md)。
 
-> **注意**：文档 1 列出的“千问VL-Max/Plus/Flash/OCR”等视觉语言模型，仅适用于**图片问答类知识库**或**文档搜索类中选择“视觉理解”场景**；而文档 7 明确指出 `qwen3-vl-embedding` 是此类场景的**唯一支持向量模型**，二者逻辑一致。但文档 1 中将“千问VL-Max/Plus/Flash/OCR”列为“支持使用知识库的模型”，易引发歧义——这些模型是**问答生成端**可选模型，**非知识库向量化/排序所用模型**。开发者需区分“知识库依赖模型”与“应用调用模型”。
+> **注意**：文档 3 中称“知识库类型创建后不可更改”，而文档 5 的“切片操作限制”表格明确区分了不同知识库类型对编辑/新增/删除切片的支持差异，二者一致；但文档 8 和 9 均提及“最多绑定 15 个知识库”，而文档 5 的“用量配额”未对此设限，属合理补充，无矛盾。
 
 ## 关键参数
 
-知识库检索效果高度依赖以下可配置参数，分为全局与知识库级两类：
+知识库效果高度依赖以下关键参数配置：
 
-| 参数类别 | 参数名 | 取值范围 | 说明 |
-|----------|--------|----------|------|
-| **全局（检索/问答服务）** | 最大召回数量 | 1–20 | 混排后最终返回给大模型的切片总数；直接影响 [Token](../concepts/token.md) 消耗与回答完整性。 |
-| | 知识库路由 | 开/关 | 开启后调用 `qwen-plus` 进行路由判断，产生额外模型费用；适用于绑定 ≥2 个知识库的场景。 |
-| **知识库级（独立配置）** | 初步向量检索 TopK | 1–100 | 向量检索阶段召回的切片数（默认 50）；增大可提升召回率，但显著增加 Rerank 费用（见[知识库计费说明](../../raw/application-user-guide/knowledge-base/billing-for-knowledge-base.md) 2.2.2 节）。 |
-| | 相似度阈值 | 0.01–1.0 | 过滤排序后低分切片；过高易漏召，过低引入噪声；建议通过[命中测试](https://help.aliyun.com/zh/model-studio/rag-optimization#3.4)调优。 |
-| | 权重 | 数值（无固定范围） | 仅在**同类型知识库间生效**（如文档搜索类之间），用于干预多路召回顺序；权重越高，该库切片在加权排序中越靠前。 |
-
-此外，`标签过滤` 和 `结构化字段过滤` 是精准控制检索范围的关键手段，尤其适用于含多品类文件的知识库；其配置与使用详见 [RAG效果优化](../../raw/application-user-guide/knowledge-base/rag-optimization.md) 中 3.2 节。
+- **相似度阈值（0.01–1.0）**：过滤排序后低分切片。值过高易漏召回（如设为 0.6 可能导致无结果），过低则引入噪声。该参数在智能体应用、工作流节点、知识问答及知识检索服务中均需显式设置 [原文标题](../../raw/application-user-guide/knowledge-base/rag-optimization.md)。
+- **召回片段数（TopK）**：控制最终返回给大模型的切片数量（上限 20）。复杂问题（如对比、总结）建议调高，但会增加 [Token](../concepts/token.md) 消耗。
+- **初步向量/关键词检索 TopK（1–100）**：影响 Rerank 阶段费用——费用取决于初步召回总切片数，而非最终返回数 [原文标题](../../raw/application-user-guide/knowledge-base/billing-for-knowledge-base.md)。
+- **Meta信息抽取**：在索引配置阶段启用，为文本切片注入 `key-value` 元数据（如 `name=百炼手机X1`），可显著提升精准过滤能力。**注意：知识库创建后无法再配置 Meta 信息** [原文标题](../../raw/application-user-guide/knowledge-base/rag-knowledge-base.md)。
+- **标签过滤与结构化字段过滤**：支持运行时动态指定 `tags` 或 `metadata_filter` 进行前置筛选，适用于多类别文档管理。
 
 ## 使用方式
 
-知识库可通过三种主要路径集成到业务中：
+知识库可通过三种方式集成：
 
-1. **控制台快速集成（零代码）**：  
-   在 [知识库](https://bailian.console.aliyun.com/?tab=app#/knowledge-base) 页面创建标准版/旗舰版知识库 → 上传文件或配置同步规则（OSS/飞书/钉钉等）→ 在 [应用管理](https://bailian.console.aliyun.com/#/app-center) 中为智能体或工作流应用添加该知识库节点。工作流中需显式连接“知识库节点”与“大模型节点”，并在提示词中引用 `{result}` 变量。
+1. **控制台快速集成**：在智能体或工作流应用配置页，点击“文档知识库”+号添加知识库，设置相似度阈值与权重；工作流中需将知识库节点连接至大模型节点，并在提示词中引用 `{result}` 变量 [原文标题](../../raw/application-user-guide/knowledge-base/rag-knowledge-base.md)。
+2. **API 调用**：通过 `Retrieve` 接口发起检索，请求体需包含 `query`、`index_id` 及可选 `tags`/`metadata_filter`。完整 Python 示例见 [原文标题](../../raw/application-user-guide/knowledge-base/rag-knowledge-base-api-guide.md)，适用于文档搜索类知识库。
+3. **高级服务封装**：使用“知识问答”或“知识检索”服务统一管理多知识库。前者面向端到端问答（支持拒答、防泄漏、引用溯源），后者面向开发者级联合检索（支持混排模型、知识库路由） [原文标题](../../raw/application-user-guide/knowledge-base/rag-knowledge-qa.md)。
 
-2. **API 集成（自动化）**：  
-   通过百炼 SDK 调用 `Retrieve` 接口实现检索，或调用 `CreateIndex`/`AddFile` 等接口完成知识库全生命周期管理；完整示例见 [知识库API指南](../../raw/application-user-guide/knowledge-base/rag-knowledge-base-api-guide.md)。**注意**：该指南明确限定“仅适用于文档搜索类知识库”。
-
-3. **高级服务封装**：  
-   - **知识检索服务**：在知识库页面切换至“知识检索”标签页，创建支持多库联合、混排、路由的统一检索入口，适合需精细化控制召回策略的场景。  
-   - **知识问答服务**：切换至“知识问答”标签页，绑定知识库并选择 `极速`（单轮低延时）或 `多轮智能`（Agentic 自动规划）模式，直接生成自然语言回答。
+所有检索调用日志默认投递至 SLS，可用于审计、用量统计与告警监控，开通路径为知识库列表页右上角“监控配置” [原文标题](../../raw/application-user-guide/knowledge-base/rag-knowledge-base-log-monitoring.md)。
 
 ## 限制和注意事项
 
-- **地域限制**：知识库功能**仅在中国站华北2（北京）地域开通和使用**，新加坡、德国（法兰克福）等其他地域均不支持；此限制在 [知识库 (raw/application-user-guide/knowledge-base/rag-knowledge-base.md)](../../raw/application-user-guide/knowledge-base/rag-knowledge-base.md) 和 [知识库API指南](../../raw/application-user-guide/knowledge-base/rag-knowledge-base-api-guide.md) 中被反复强调。
-  
-- **配额与规格**：  
-  - 标准版知识库：1 QPS 固定并发，100 GB 存储，0.03 元/小时；旗舰版：50–10,000 QPS 可调（1–200 RCU），9,999 GB 存储，0.2 元/RCU/小时；详情见 [知识库配额与限制](../../raw/application-user-guide/knowledge-base/rag-knowledge-base-specifications.md)。  
-  - 单次查询最多召回 **20 个切片**；单个知识库文件数量无硬上限（非结构化类），但单个 Excel 文件限 10 万行；音视频类知识库**不支持新增切片**（仅支持编辑与删除）。
-
-- **关键行为约束**：  
-  - **元数据（Metadata）**：必须在创建知识库时一次性配置，**创建后无法再添加或修改**；但可通过 API 更新单个文件的标签（见 [RAG效果优化](../../raw/application-user-guide/knowledge-base/rag-optimization.md) 3.2 节）。  
-  - **知识库类型不可变**：创建时选定“文档搜索”“数据查询”等类型后，后续无法更改。  
-  - **多轮对话改写**：仅能在创建知识库时开启，**创建后无法补开**，需重新创建知识库。
-
-- **计费提醒**：  
-  自 2026 年 1 月 4 日起正式计费，费用由**规格费用**（按小时）和**模型调用费用**（按 [Token](../concepts/token.md)）两部分构成；其中 Rerank 排序费用取决于**初步召回总切片数**，而非最终返回数，极易因 TopK 设置过高导致成本激增；务必参考 [知识库计费说明](../../raw/application-user-guide/knowledge-base/billing-for-knowledge-base.md) 中 2.2.2 节的计费公式进行预估。
+- **地域与权限**：知识库仅支持华北2（北京）地域；子账号需被授予 `AliyunBailianDataFullAccess` 策略并加入对应业务空间 [原文标题](../../raw/application-user-guide/knowledge-base/rag-knowledge-base-api-guide.md)。
+- **存储与配额**：标准版免费存储 100 GB，旗舰版 9,999 GB；单知识库无文件数量硬上限（非结构化），但业务空间总文件数上限 100,000；单次控制台导入上限 50 个文件 [原文标题](../../raw/application-user-guide/knowledge-base/rag-knowledge-base-specifications.md)。
+- **计费要点**：规格费用（按小时）与模型调用费用（按 [Token](../concepts/token.md)）分离。Rerank 费用取决于初步召回切片总数，非最终返回数；多知识库绑定会使 Query 向量化与 Rerank 费用线性倍增 [原文标题](../../raw/application-user-guide/knowledge-base/billing-for-knowledge-base.md)。
+- **同步与更新**：OSS/飞书/钉钉等来源支持增量同步，但源文件删除不会触发百炼副本自动删除，需手动清理；同步规则启用后，文件解析与向量化可能耗时数小时 [原文标题](../../raw/application-user-guide/knowledge-base/data-sync-guide.md)。
+- **切片管理**：音视频搜索类知识库不支持新增切片；所有类型均支持编辑与删除切片，但编辑仅作用于当前知识库，不影响源文件 [原文标题](../../raw/application-user-guide/knowledge-base/rag-knowledge-base-specifications.md)。
 
 ## 来源文档
 
-- [知识库](../../raw/application-user-guide/knowledge-base/rag-knowledge-base.md)
 - [RAG效果优化](../../raw/application-user-guide/knowledge-base/rag-optimization.md)
 - [知识库定时数据同步指南](../../raw/application-user-guide/knowledge-base/data-sync-guide.md)
-- [知识库API指南](../../raw/application-user-guide/knowledge-base/rag-knowledge-base-api-guide.md)
+- [知识库](../../raw/application-user-guide/knowledge-base/rag-knowledge-base.md)
 - [知识库日志与监控](../../raw/application-user-guide/knowledge-base/rag-knowledge-base-log-monitoring.md)
 - [知识库配额与限制](../../raw/application-user-guide/knowledge-base/rag-knowledge-base-specifications.md)
+- [知识库API指南](../../raw/application-user-guide/knowledge-base/rag-knowledge-base-api-guide.md)
 - [知识库计费说明](../../raw/application-user-guide/knowledge-base/billing-for-knowledge-base.md)
-- [知识检索](../../raw/application-user-guide/knowledge-base/rag-knowledge-retrieval.md)
 - [知识问答](../../raw/application-user-guide/knowledge-base/rag-knowledge-qa.md)
+- [知识检索](../../raw/application-user-guide/knowledge-base/rag-knowledge-retrieval.md)
 
 

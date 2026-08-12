@@ -67,7 +67,7 @@ VoiceEnrollmentService()
 def create_voice(self, target_model: str, prefix: str, url: str,
                  language_hints: List[str] = None,
                  max_prompt_audio_length: float = None,
-                 enable_preprocess: bool = None) -> str
+                 **kwargs) -> str
 ```
 
 **参数说明**：
@@ -225,14 +225,22 @@ bool
 
 默认值：false。
 
+enable\_volume\_normalization
+
+bool
+
+否
+
+是否对用于声音复刻的样本音频进行音量归一化。通过关键字参数直接传入。默认值为`False`。设置为`True`后，使用所创建音色合成的音频，其音量可能与关闭该参数时创建的音色不同。
+
 **返回值**：`str`，音色ID（voice\_id）。
 
-### **list\_voice() - 查询音色列表**
+### **list\_voices() - 查询音色列表**
 
 **方法签名**：
 
 ```
-def list_voice(self, prefix: str = None, page_index: int = 0, page_size: int = 10) -> list
+def list_voices(self, prefix: str = None, page_index: int = 0, page_size: int = 10) -> list
 ```
 
 **参数说明**：
@@ -389,20 +397,24 @@ str
 ### **创建音色**
 
 ```
+import dashscope
 from dashscope.audio.tts_v2 import VoiceEnrollmentService
 # 以下为华北2（北京）地域的配置，调用时请将"{WorkspaceId}"替换为真实的业务空间ID，各地域的配置不同。
 dashscope.base_http_api_url = "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1"
 
+TARGET_MODEL = 'qwen-audio-3.0-tts-flash'
+voice_prefix = 'myvoice'
+url = 'https://your-audio-file-url'
 service = VoiceEnrollmentService()
 
 # 避免频繁调用。每次调用都会创建新音色，达到配额上限后将无法创建。
 voice_id = service.create_voice(
-    target_model='qwen-audio-3.0-tts-flash',
-    prefix='myvoice',
-    url='https://your-audio-file-url'
-    # language_hints=['zh'],
-    # max_prompt_audio_length=10.0,
-    # enable_preprocess=False
+    target_model=TARGET_MODEL,
+    prefix=voice_prefix,
+    url=url,
+    max_prompt_audio_length=10,
+    # enable_preprocess=False,
+    # enable_volume_normalization=True
 )
 
 print(f"Request ID: {service.get_last_request_id()}")
@@ -412,6 +424,7 @@ print(f"Voice ID: {voice_id}")
 ### **查询音色列表**
 
 ```
+import dashscope
 from dashscope.audio.tts_v2 import VoiceEnrollmentService
 # 以下为华北2（北京）地域的配置，调用时请将"{WorkspaceId}"替换为真实的业务空间ID，各地域的配置不同。
 dashscope.base_http_api_url = "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1"
@@ -428,6 +441,7 @@ print(f"Found voices: {voices}")
 ### **查询特定音色**
 
 ```
+import dashscope
 from dashscope.audio.tts_v2 import VoiceEnrollmentService
 # 以下为华北2（北京）地域的配置，调用时请将"{WorkspaceId}"替换为真实的业务空间ID，各地域的配置不同。
 dashscope.base_http_api_url = "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1"
@@ -444,6 +458,7 @@ print(f"Voice Details: {voice_details}")
 ### **更新音色**
 
 ```
+import dashscope
 from dashscope.audio.tts_v2 import VoiceEnrollmentService
 # 以下为华北2（北京）地域的配置，调用时请将"{WorkspaceId}"替换为真实的业务空间ID，各地域的配置不同。
 dashscope.base_http_api_url = "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1"
@@ -459,6 +474,7 @@ print(f"Update submitted. Request ID: {service.get_last_request_id()}")
 ### **删除音色**
 
 ```
+import dashscope
 from dashscope.audio.tts_v2 import VoiceEnrollmentService
 # 以下为华北2（北京）地域的配置，调用时请将"{WorkspaceId}"替换为真实的业务空间ID，各地域的配置不同。
 dashscope.base_http_api_url = "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1"

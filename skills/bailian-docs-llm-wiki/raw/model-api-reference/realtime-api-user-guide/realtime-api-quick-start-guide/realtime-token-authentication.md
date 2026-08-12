@@ -70,11 +70,22 @@ AOQ 采用**服务端代理鉴权**模式：API Key 仅在业务 AppServer 侧�
 
 ![Token鉴权](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3935914871/p1088069.jpg)
 
-#### **curl 示例**
+## **Realtime 协议**
 
 ```
 curl -X POST \
   "https://{endpoint}/api/v1/webrtc/realtime?model=qwen3.5-omni-plus-realtime" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer ${DASHSCOPE_API_KEY}" \
+  -H "x-dashscope-rtc-transport: moq" \
+  -d "{\"clientIp\": \"${CLIENT_REAL_IP}\"}"
+```
+
+## **Inference 协议**
+
+```
+curl -X POST \
+  "https://{endpoint}/api/v1/webrtc/inference?model=fun-asr-realtime" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer ${DASHSCOPE_API_KEY}" \
   -H "x-dashscope-rtc-transport: moq" \
