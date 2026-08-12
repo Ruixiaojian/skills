@@ -203,7 +203,11 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
 
 **Q：我的数据安全吗？阿里云百炼会用我的数据进行训练吗？**
 
-A：不会。阿里云严格保护数据隐私，不会将您的数据用于模型训练。构建应用或训练模型时传输的所有数据均经过加密处理。详情请参见[合规资质与隐私说明](https://help.aliyun.com/zh/model-studio/privacy-notice)。
+A：阿里云严格保护数据隐私，使用百炼按量付费 API 和 Token Plan 团队版时，不会将您的数据用于模型训练。构建应用或训练模型时传输的所有数据均经过加密处理。详情请参见[合规资质与隐私说明](https://help.aliyun.com/zh/model-studio/privacy-notice)。
+
+**重要**
+
+**Token Plan 个人版**和 **Coding Plan** 的数据使用条款与上述承诺不同。使用 Coding Plan 期间，模型输入及模型生成的内容将用于服务改进与模型优化；Token Plan 个人版不包含团队版的"不使用数据训练模型"承诺。具体条款请参见[Token Plan 概述](https://help.aliyun.com/zh/model-studio/token-plan-overview)和[Coding Plan概述](https://help.aliyun.com/zh/model-studio/coding-plan)，以及[《阿里云百炼服务协议》](https://terms.alicdn.com/legal-agreement/terms/common_platform_service/20230728213935489/20230728213935489.html)第 5.2 条。
 
 **Q：阿里云百炼提供哪些地域的服务？不同地域有什么区别？**
 

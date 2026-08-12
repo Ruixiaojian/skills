@@ -1,58 +1,72 @@
 # model monitoring
 
-模型监控（Model Monitoring）是百炼平台提供的核心可观测性能力，用于实时跟踪模型调用行为、性能指标、成本消耗及异常事件。它覆盖从基础用量统计到高级推理日志分析的全链路监控场景，支持开发者快速定位性能瓶颈、成本异常与服务稳定性问题。该功能默认启用基础监控，高级监控（含分钟级延迟日志、Prometheus指标导出等）需手动开通。
+模型监控是百炼平台提供的核心可观测性能力，用于实时跟踪模型调用行为、性能指标与资源消耗。它支持从基础用量统计到分钟级延迟分析的多维度监控，并可基于关键指标（如失败率、TPM、首[Token](../concepts/token.md)延时）配置主动告警。该功能面向生产环境稳定性保障与成本精细化治理，不依赖应用层日志，直接采集服务网关侧原始调用数据。
 
 ## 支持的模型/功能
 
-- **基础监控**：覆盖[模型列表](https://help.aliyun.com/zh/model-studio/models)中所有官方模型及基于其[调优后的自定义模型](https://help.aliyun.com/zh/model-studio/model-deployment-introduction#f17bf700c06k5)，适用于所有地域。
-- **高级监控与告警**：仅支持北京（华北2）、上海（华东2）、新加坡、弗吉尼亚地域下的模型；告警功能当前仅限北京、新加坡、弗吉尼亚地域 [原文标题](../../raw/model-user-guide/model-monitoring/model-telemetry.md)。
-- **推理日志（请求/响应内容）**：并非所有模型均支持，具体支持列表详见[模型监控 (raw/model-user-guide/model-monitoring/model-telemetry.md)](../../raw/model-user-guide/model-monitoring/model-telemetry.md) 中“支持请求和响应的模型”章节。不支持的模型在日志页签会明确提示“当前模型暂不支持日志”。
+- **监控覆盖范围**：  
+  - *普通监控*：支持[模型列表](https://help.aliyun.com/zh/model-studio/models)中所有模型（含调优后的自定义模型）[原文标题](../../raw/model-user-guide/model-monitoring/model-telemetry.md)；  
+  - *高级监控*（含推理日志、TPS、分钟级指标）：仅支持北京、上海、新加坡、弗吉尼亚地域下的模型；  
+  - *告警功能*：仅支持北京、新加坡、弗吉尼亚地域下的模型。  
 
-> **注意**：文档 1 中称“模型列表中的所有模型均支持查看用量”，而文档 2 明确限定高级监控与日志功能的地域与模型范围。二者不矛盾——**用量统计（文档1）是基础能力，全域可用；而细粒度日志、分钟级指标、Prometheus导出等高级能力（文档2）存在地域与模型限制**。实际使用时应以文档 2 的约束为准。
+- **核心功能模块**：  
+  - 调用记录追踪（含 Request ID、状态码、错误码）；  
+  - 四类监控视图：**安全**（内容安全错误次数）、**成本**（单次请求调用量、[Token](../concepts/token.md) 消耗）、**性能**（RPM、TPM、调用时长、首/非首 [Token](../concepts/token.md) 延时）、**错误**（失败次数、限流错误次数）；  
+  - 推理日志回溯（输入/输出内容），但**仅限指定模型版本**（如 `qwen3-plus-2025-12-01` 及之后快照），详见[原文标题](../../raw/model-user-guide/model-monitoring/model-telemetry.md)；  
+  - 日志回流至训练数据集（支持模型微调闭环）。  
+
+> **注意**：文档1中称“模型列表中的所有模型均支持查看用量”，而文档2明确限定高级监控（含日志、TPS、分钟级延迟）仅限特定地域且部分模型不支持请求/响应记录。二者不矛盾——前者指**用量统计口径通用**，后者指**深度可观测能力有地域与模型版本限制**。实际使用应以文档2的[原文标题](../../raw/model-user-guide/model-monitoring/model-telemetry.md)为准。
 
 ## 关键参数
 
 | 参数 | 说明 | 来源 |
 |------|------|------|
-| `workspace_id` | 业务空间 ID，监控数据按此维度隔离与聚合 | [原文标题](../../raw/model-user-guide/model-monitoring/model-telemetry.md) |
+| `workspace_id` | 业务空间 ID，为监控数据隔离的关键维度（子空间成员仅可见本空间数据） | [原文标题](../../raw/model-user-guide/model-monitoring/model-telemetry.md) |
 | `model` | 模型 Code（如 `qwen-plus`），用于指标过滤与告警绑定 | [原文标题](../../raw/model-user-guide/model-monitoring/model-telemetry.md) |
-| `apikey_id` | API Key ID（非密钥本身），用于按调用来源归因 | [原文标题](../../raw/model-user-guide/model-monitoring/model-telemetry.md) |
-| `protocol` / `sub_protocol` | 协议类型（HTTP/SSE/WS）与子协议（DEFAULT/ASYNC），影响延时与吞吐表现 | [原文标题](../../raw/model-user-guide/model-monitoring/model-telemetry.md) |
-| `max_tokens` | 控制输出长度的关键参数，直接影响 [Token](../concepts/token.md) 消耗与费用 | [原文标题](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md) |
+| `apikey_id` | API Key ID（非密钥本身），用于按调用来源归因；值为 `-1` 表示控制台内调用 | [原文标题](../../raw/model-user-guide/model-monitoring/model-telemetry.md) |
+| `protocol` / `sub_protocol` | 协议类型（HTTP/SSE/WS）与子协议（DEFAULT/ASYNC），影响延迟与吞吐特征 | [原文标题](../../raw/model-user-guide/model-monitoring/model-telemetry.md) |
+| `max_tokens` | 控制输出长度的核心参数，直接影响 Token 消耗与费用，建议在 API 调用中显式设置 | [原文标题](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md) |
 
 ## 使用方式
 
-1. **访问入口**  
-   - 基础监控与用量概览：进入百炼控制台 → [模型监控](https://bailian.console.aliyun.com/?tab=model#/model-telemetry) 页面。  
-   - 免费额度与用量详情：进入 [免费额度](https://bailian.console.aliyun.com/?tab=costing-balance#/costing-balance/free-quota) 和 [模型用量](https://bailian.console.aliyun.com/?tab=costing-balance#/costing-balance/usage-statistics) 页面 [原文标题](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)。
+1. **访问入口**：  
+   - 控制台路径：`百炼控制台 > 模型 > 模型监控`（[北京](https://bailian.console.aliyun.com/?tab=model#/model-telemetry) / [新加坡](https://modelstudio.console.aliyun.com/?tab=dashboard#/model-telemetry)）；  
+   - 免费额度与用量统计入口独立：`费用与成本 > 免费额度` / `模型用量`（[原文标题](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)）。
 
-2. **启用高级能力**  
-   - 开通推理日志与审计日志：在目标业务空间的模型监控页面 → 右上角「模型监控配置」→ 启用「推理日志」与「审计日志」。  
-   - 开通 Prometheus 指标：同路径下启用「性能和用量指标监控」，获取 HTTP API 地址后可对接 Grafana 或自建系统 [原文标题](../../raw/model-user-guide/model-monitoring/model-telemetry.md)。
+2. **启用深度能力**：  
+   - 开通**推理日志**：进入目标业务空间的「模型监控配置」→ 启用审计日志 + 推理日志（开通后生效，历史调用不补录）；  
+   - 开启**高级监控**：同上配置页中启用「性能和用量指标监控」（收费功能，TPS 等指标仅在此模式下可用）。
 
-3. **查看与分析**  
-   - **用量趋势**：在「模型用量」页面按时间范围、API Key、模型 Code 筛选，支持分钟/小时/天精度（超 7 天仅支持按天） [原文标题](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)。  
-   - **单次调用详情**：开启推理日志后，在「日志」页签查看 Request ID、输入/输出、[Token](../concepts/token.md) 用量、状态码及错误码。  
-   - **告警配置**：在 [模型告警](https://bailian.console.aliyun.com/?tab=model#/model-alert) 页面创建规则，支持失败率、TPM、首 [Token](../concepts/token.md) 延时等阈值告警，通知方式含钉钉、企业微信、Webhook 等。
+3. **查询与分析**：  
+   - 在「模型监控」列表点击目标模型的 **监控**，切换「调用统计」或「性能指标」页签，按 API Key、推理类型（实时/批量）、时间范围（支持分钟/小时精度）筛选；  
+   - 点击 **日志** 查看单次调用详情（含用量、请求/响应原文）；  
+   - 通过 Prometheus HTTP API 直接拉取指标（需开启高级监控），例如：  
+     ```bash
+     GET {prometheus_api}/api/v1/query_range?query=model_usage{workspace_id="xxx",model="qwen-plus"}&start=...&end=...&step=60s
+     ```
+
+4. **告警配置**：  
+   - 进入「模型告警」页面 → 「创建告警规则」→ 选择模型、指标模板（如「失败率突增」、「Token 消耗超阈值」）→ 设置通知渠道（短信/邮件/钉钉等）与等级（CRITICAL/ERROR/WARNING/INFO）。
 
 ## 限制和注意事项
 
 - **数据延迟**：  
-  - 基础用量统计（调用次数、Token 总量）延迟约 **1 小时**，高峰期可达 1–2 小时；  
-  - 高级监控（推理日志、性能指标）为 **分钟级延迟**，但仅限已开通日志的模型与地域 [原文标题](../../raw/model-user-guide/model-monitoring/model-telemetry.md)。  
-  - 免费额度数据分钟级更新，支持手动刷新同步。
+  - 普通监控（调用次数、总量）延迟约 **1–2 小时**；  
+  - 高级监控（推理日志、TPM/RPM、首Token延时）延迟为 **分钟级**；  
+  - 费用类数据（账单、免费额度）延迟为 **分钟级，支持手动刷新**（[原文标题](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)）。
 
-- **时间范围限制**：  
-  - 模型用量页面仅支持查询 **最近 30 天** 数据；更早数据需通过 [费用与成本](https://billing-cost.console.aliyun.com/finance/expense-report/expense-detail-by-instance) 页面导出账单获取 [原文标题](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)。
+- **地域与模型限制**：  
+  - 推理日志（请求/响应内容）**仅支持北京、新加坡、弗吉尼亚地域**，且仅限文档2中明确列出的模型快照版本；  
+  - 上海地域当前**不支持高级监控与告警**（文档2未提上海支持告警，仅列于监控支持地域中）。
 
-- **地域与权限约束**：  
-  - 子业务空间成员**仅能查看本空间数据**，无法跨空间筛选；  
-  - 高级监控、告警、Prometheus 接入等功能**仅限主账号或具备足够权限的子账号操作**；  
-  - 日志回流、Grafana 接入等功能依赖高级监控开通状态，未开通时对应入口不可见。
+- **功能边界**：  
+  - **不支持跨账号统计**：用量与监控数据严格按业务空间维度聚合，无法按阿里云主账号汇总（[原文标题](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)）；  
+  - **30天窗口限制**：模型用量与监控图表默认最多查看最近30天数据，更早数据需通过[费用与成本](https://billing-cost.console.aliyun.com/...)页面查询；  
+  - **批量推理监控缺失**：当前监控列表与日志页签**仅展示实时推理调用**，批量推理（OpenAI Batch）无独立监控视图，其用量仅计入模型用量总表。
 
-- **模型兼容性**：  
-  - 推理日志（含输入/输出内容）**仅对明确列出的支持模型生效**，且仅记录开通日志后的调用；历史调用无法补录；  
-  - `free-tier-only`（免费额度用完即停）功能开启后，若需关闭，**必须等待免费额度完全消耗完毕**，否则控制台禁用关闭按钮 [原文标题](../../raw/model-user-guide/model-monitoring/model-usage-statistics.md)。
+- **权限要求**：  
+  - 开通日志与高级监控需主账号或具备 `AliyunBailianFullAccess` 权限的子账号；  
+  - 子业务空间成员**无法切换查看其他空间数据**，权限隔离严格。
 
 ## 来源文档
 

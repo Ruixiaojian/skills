@@ -1331,7 +1331,20 @@ Base64 编码的 PCM 音频数据片段。
                     }
                 ]
             }
-        ]
+        ],
+        "usage": {
+            "total_tokens": 377,
+            "input_tokens": 336,
+            "output_tokens": 41,
+            "input_tokens_details": {
+                "text_tokens": 228,
+                "audio_tokens": 108
+            },
+            "output_tokens_details": {
+                "text_tokens": 9,
+                "audio_tokens": 32
+            }
+        }
     }
 }
 ```
@@ -1407,6 +1420,52 @@ Base64 编码的 PCM 音频数据片段。
 **output** `_array_`
 
 响应的输出项列表，包含完整的 item 对象。
+
+**usage** `_object_`
+
+本次响应的 Token 消耗信息。仅在 `status` 为 `completed` 时返回。
+
+**属性**
+
+**total\_tokens** `_integer_`
+
+本次响应消耗的总 Token 数。
+
+**input\_tokens** `_integer_`
+
+输入 Token 数。
+
+**output\_tokens** `_integer_`
+
+输出 Token 数。
+
+**input\_tokens\_details** `_object_`
+
+输入 Token 的分项详情，包含 `text_tokens`（文本 Token 数）和 `audio_tokens`（音频 Token 数，仅在使用音频模态时存在）。
+
+**output\_tokens\_details** `_object_`
+
+输出 Token 的分项详情，包含 `text_tokens`（文本 Token 数）和 `audio_tokens`（音频 Token 数，仅在使用音频模态时存在）。
+
+**plugins** `_object_`（可选）
+
+插件使用计量信息。启用联网搜索（`enable_search`）时返回。
+
+**属性**
+
+**search** `_object_`
+
+联网搜索计量信息。
+
+**属性**
+
+**count** `_integer_`
+
+搜索次数。
+
+**strategy** `_string_`
+
+搜索策略。
 
 ## **voiceprint\_audio\_list.in\_progress**
 

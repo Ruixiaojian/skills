@@ -6,29 +6,36 @@
 
 [您可以在OpenAPI Explorer中直接运行该接口，免去您计算签名的困扰。运行成功后，OpenAPI Explorer可以自动生成SDK代码示例。](https://api.aliyun.com/api/BailianVoiceBot/2025-01-01/GetApplication)
 
-[![](https://img.alicdn.com/tfs/TB16JcyXHr1gK0jSZR0XXbP8XXa-24-26.png)调试](https://api.aliyun.com/api/BailianVoiceBot/2025-01-01/GetApplication)
+ [![](https://img.alicdn.com/tfs/TB16JcyXHr1gK0jSZR0XXbP8XXa-24-26.png) 调试](https://api.aliyun.com/api/BailianVoiceBot/2025-01-01/GetApplication)
 
-## 授权信息
+## **授权信息**
 
 下表是API对应的授权信息，可以在RAM权限策略语句的`Action`元素中使用，用来给RAM用户或RAM角色授予调用此API的权限。具体说明如下：
 
 -   操作：是指具体的权限点。
+    
 -   访问级别：是指每个操作的访问级别，取值为写入（Write）、读取（Read）或列出（List）。
+    
 -   资源类型：是指操作中支持授权的资源类型。具体说明如下：
-    -   对于必选的资源类型，用前面加 \* 表示。
+    
+    -   对于必选的资源类型，用前面加 \* 表示。
+        
     -   对于不支持资源级授权的操作，用`全部资源`表示。
+        
 -   条件关键字：是指云产品自身定义的条件关键字。
+    
 -   关联操作：是指成功执行操作所需要的其他权限。操作者必须同时具备关联操作的权限，操作才能成功。
+    
 
-操作
+**操作**
 
-访问级别
+**访问级别**
 
-资源类型
+**资源类型**
 
-条件关键字
+**条件关键字**
 
-关联操作
+**关联操作**
 
 bailianvoicebot:GetApplication
 
@@ -44,15 +51,15 @@ get
 
 ## 请求参数
 
-名称
+**名称**
 
-类型
+**类型**
 
-必填
+**必填**
 
-描述
+**描述**
 
-示例值
+**示例值**
 
 BusinessUnitId
 
@@ -74,15 +81,15 @@ string
 
 a395011f-a247-400f-bc69-28796749fd52
 
-## 返回参数
+## **返回参数**
 
-名称
+**名称**
 
-类型
+**类型**
 
-描述
+**描述**
 
-示例值
+**示例值**
 
 object
 
@@ -158,7 +165,7 @@ integer
 
 CreatedTime
 
-long
+integer
 
 应用创建时间。
 
@@ -166,7 +173,7 @@ long
 
 UpdatedTime
 
-long
+integer
 
 应用修改的时间。
 
@@ -214,9 +221,12 @@ string
 
 ASR 引擎
 
-枚举值：
+**枚举值：**
 
--   ALIYUN：ALIYUN。
+-   ALIYUN :
+    
+    ALIYUN
+    
 
 ALIYUN
 
@@ -226,11 +236,56 @@ string
 
 ASR 调用方式
 
-枚举值：
+**枚举值：**
 
--   MANAGED：MANAGED。
+-   MANAGED :
+    
+    MANAGED
+    
 
 MANAGED
+
+NlsAccessProfile
+
+object
+
+AccessProfileId
+
+string
+
+VocabularyId
+
+string
+
+EndSilenceTimeout
+
+integer
+
+CustomizationId
+
+string
+
+SpeechNoiseThreshold
+
+integer
+
+Model
+
+string
+
+CorrectionRules
+
+array<object>
+
+object
+
+Pattern
+
+string
+
+Replacement
+
+string
 
 SynthesizerConfig
 
@@ -244,9 +299,12 @@ string
 
 TTS 引擎
 
-枚举值：
+**枚举值：**
 
--   ALIYUN：ALIYUN。
+-   ALIYUN :
+    
+    ALIYUN
+    
 
 ALIYUN
 
@@ -256,9 +314,12 @@ string
 
 TTS 调用方式
 
-枚举值：
+**枚举值：**
 
--   MANAGED：MANAGED。
+-   MANAGED :
+    
+    MANAGED
+    
 
 MANAGED
 
@@ -276,7 +337,9 @@ integer
 
 播报速度
 
-**说明** 取值范围：-500~500。
+**说明**
+
+取值范围：-500~500。
 
 1
 
@@ -294,9 +357,37 @@ integer
 
 音调
 
-**说明** 取值范围：-500~500。
+**说明**
+
+取值范围：-500~500。
 
 5
+
+NlsAccessProfile
+
+object
+
+AccessProfileId
+
+string
+
+Model
+
+string
+
+PronRules
+
+array<object>
+
+object
+
+Pattern
+
+string
+
+Replacement
+
+string
 
 ScriptProfile
 
@@ -318,7 +409,10 @@ string
 
 生成过程中的核采样方法概率阈值
 
-**说明**-   例如，取值为 0.8 时，仅保留概率加起来大于等于 0.8 的最可能 token 的最小集合作为候选集。 \* 取值范围为（0,1.0)，取值越大，生成的随机性越高；取值越低，生成的确定性越高
+**说明**
+
+-   例如，取值为 0.8 时，仅保留概率加起来大于等于 0.8 的最可能 token 的最小集合作为候选集。 \* 取值范围为（0,1.0)，取值越大，生成的随机性越高；取值越低，生成的确定性越高
+    
 
 0.8
 
@@ -328,8 +422,12 @@ string
 
 用于控制模型回复的随机性和多样性
 
-**说明**-   具体来说，temperature 值控制了生成文本时对每个候选词的概率分布进行平滑的程度。 较高的 temperature 值会降低概率分布的峰值，使得更多的低概率词被选择，生成结果更加多样化；而较低的 temperature 值则会增强概率分布的峰值，使得高概率词更容易被选择，生成结果更加确定。
+**说明**
+
+-   具体来说，temperature 值控制了生成文本时对每个候选词的概率分布进行平滑的程度。 较高的 temperature 值会降低概率分布的峰值，使得更多的低概率词被选择，生成结果更加多样化；而较低的 temperature 值则会增强概率分布的峰值，使得高概率词更容易被选择，生成结果更加确定。
+    
 -   取值范围： \[0, 2)，不建议取值为 0，无意义。
+    
 
 0.1
 
@@ -419,8 +517,6 @@ array
 
 知识库 ID 列表
 
-knowledgeBaseIds
-
 string
 
 知识库 ID
@@ -454,8 +550,6 @@ McpServers
 array<object>
 
 MCP 信息配置列表
-
-mcpServers
 
 object
 
@@ -509,9 +603,12 @@ string
 
 ASR 引擎
 
-枚举值：
+**枚举值：**
 
--   ALIYUN：ALIYUN。
+-   ALIYUN :
+    
+    ALIYUN
+    
 
 ALIYUN
 
@@ -521,11 +618,56 @@ string
 
 ASR 调用方式
 
-枚举值：
+**枚举值：**
 
--   MANAGED：MANAGED。
+-   MANAGED :
+    
+    MANAGED
+    
 
 MANAGED
+
+NlsAccessProfile
+
+object
+
+AccessProfileId
+
+string
+
+VocabularyId
+
+string
+
+EndSilenceTimeout
+
+integer
+
+CustomizationId
+
+string
+
+SpeechNoiseThreshold
+
+integer
+
+Model
+
+string
+
+CorrectionRules
+
+array<object>
+
+object
+
+Pattern
+
+string
+
+Replacement
+
+string
 
 SynthesizerConfig
 
@@ -539,9 +681,12 @@ string
 
 TTS 引擎
 
-枚举值：
+**枚举值：**
 
--   ALIYUN：ALIYUN。
+-   ALIYUN :
+    
+    ALIYUN
+    
 
 ALIYUN
 
@@ -551,9 +696,12 @@ string
 
 TTS 调用方式
 
-枚举值：
+**枚举值：**
 
--   MANAGED：MANAGED。
+-   MANAGED :
+    
+    MANAGED
+    
 
 MANAGED
 
@@ -571,7 +719,9 @@ integer
 
 播报速度
 
-**说明** 取值范围：-500~500。
+**说明**
+
+取值范围：-500~500。
 
 \-20
 
@@ -589,9 +739,37 @@ integer
 
 音调
 
-**说明** 取值范围：-500~500。
+**说明**
+
+取值范围：-500~500。
 
 3
+
+NlsAccessProfile
+
+object
+
+AccessProfileId
+
+string
+
+Model
+
+string
+
+PronRules
+
+array<object>
+
+object
+
+Pattern
+
+string
+
+Replacement
+
+string
 
 ScriptProfile
 
@@ -613,7 +791,10 @@ string
 
 生成过程中的核采样方法概率阈值
 
-**说明**-   例如，取值为 0.8 时，仅保留概率加起来大于等于 0.8 的最可能 token 的最小集合作为候选集。 \* 取值范围为（0,1.0)，取值越大，生成的随机性越高；取值越低，生成的确定性越高
+**说明**
+
+-   例如，取值为 0.8 时，仅保留概率加起来大于等于 0.8 的最可能 token 的最小集合作为候选集。 \* 取值范围为（0,1.0)，取值越大，生成的随机性越高；取值越低，生成的确定性越高
+    
 
 0.8
 
@@ -623,8 +804,12 @@ string
 
 用于控制模型回复的随机性和多样性
 
-**说明**-   具体来说，temperature 值控制了生成文本时对每个候选词的概率分布进行平滑的程度。 较高的 temperature 值会降低概率分布的峰值，使得更多的低概率词被选择，生成结果更加多样化；而较低的 temperature 值则会增强概率分布的峰值，使得高概率词更容易被选择，生成结果更加确定。
+**说明**
+
+-   具体来说，temperature 值控制了生成文本时对每个候选词的概率分布进行平滑的程度。 较高的 temperature 值会降低概率分布的峰值，使得更多的低概率词被选择，生成结果更加多样化；而较低的 temperature 值则会增强概率分布的峰值，使得高概率词更容易被选择，生成结果更加确定。
+    
 -   取值范围： \[0, 2)，不建议取值为 0，无意义。
+    
 
 0.1
 
@@ -714,8 +899,6 @@ array
 
 知识库 ID 列表
 
-knowledgeBaseIds
-
 string
 
 知识库 ID
@@ -749,8 +932,6 @@ McpServers
 array<object>
 
 MCP 信息配置列表
-
-mcpServers
 
 object
 
@@ -800,7 +981,7 @@ SSE 路径
     "NluEngine": "PROMPTS",
     "NluAccessType": "MANAGED",
     "DraftVersion": {
-      "VersionId": 743219815472857100,
+      "VersionId": "743219815472857088",
       "TranscriberConfig": {
         "NlsEngine": "ALIYUN",
         "NlsAccessType": "MANAGED",
@@ -839,14 +1020,12 @@ SSE 路径
       },
       "ScriptProfile": {
         "Model": "qwen-plus",
-        "Temperature": 0.8,
-        "TopP": 0.1,
+        "Temperature": "0.8",
+        "TopP": "0.1",
         "AgentProfile": {
           "ScriptProfileTemplateId": "SFM_PROMPTS_DEFAULT",
           "AgentProfileId": "6a50b67072d44788951de29758432d94",
-          "PromptsJson": {
-            "prompts": "我是一个聊天机器人。"
-          },
+          "PromptsJson": "{\"prompts\":\"我是一个聊天机器人。\"}",
           "Description": "聊天机器人"
         }
       },
@@ -914,14 +1093,12 @@ SSE 路径
       },
       "ScriptProfile": {
         "Model": "qwen-plus\n",
-        "Temperature": 0.8,
-        "TopP": 0.1,
+        "Temperature": "0.8",
+        "TopP": "0.1",
         "AgentProfile": {
           "ScriptProfileTemplateId": "SFM_PROMPTS_DEFAULT",
           "AgentProfileId": "b97b6822dd624c32b6c2a54d717db718",
-          "PromptsJson": {
-            "prompts": "我是一个聊天机器人。"
-          },
+          "PromptsJson": "{\"prompts\":\"我是一个聊天机器人。\"}\n",
           "Description": "我是一个聊天机器人"
         }
       },
@@ -955,11 +1132,15 @@ SSE 路径
 
 ## 错误码
 
-HTTP status code
+   
 
-错误码
+**HTTP status code**
 
-错误信息
+**错误码**
+
+**错误信息**
+
+**描述**
 
 400
 
@@ -997,42 +1178,8 @@ NotExists.InstanceId
 
 The specified instance %s does not exist.
 
-访问[错误中心](< https://api.aliyun.com/document/BailianVoiceBot/2025-01-01/errorCode>)查看更多错误码。
+访问[错误中心](https://api.aliyun.com/document/BailianVoiceBot/2025-01-01/errorCode)查看更多错误码。
 
-## 变更历史
+## **变更历史**
 
-变更时间
-
-变更内容概要
-
-操作
-
-2026-05-21
-
-OpenAPI 错误码发生变更、OpenAPI 返回结构发生变更
-
-[查看变更详情](https://api.aliyun.com/document/BailianVoiceBot/2025-01-01/GetApplication?updateTime=2026-05-21#workbench-doc-change-demo)
-
-2026-05-20
-
-OpenAPI 错误码发生变更、OpenAPI 返回结构发生变更
-
-[查看变更详情](https://api.aliyun.com/document/BailianVoiceBot/2025-01-01/GetApplication?updateTime=2026-05-20#workbench-doc-change-demo)
-
-2026-05-12
-
-OpenAPI 错误码发生变更、OpenAPI 返回结构发生变更
-
-[查看变更详情](https://api.aliyun.com/document/BailianVoiceBot/2025-01-01/GetApplication?updateTime=2026-05-12#workbench-doc-change-demo)
-
-2026-05-06
-
-OpenAPI 错误码发生变更、OpenAPI 返回结构发生变更
-
-[查看变更详情](https://api.aliyun.com/document/BailianVoiceBot/2025-01-01/GetApplication?updateTime=2026-05-06#workbench-doc-change-demo)
-
-2026-01-28
-
-新增 OpenAPI
-
-[查看变更详情](https://api.aliyun.com/document/BailianVoiceBot/2025-01-01/GetApplication?updateTime=2026-01-28#workbench-doc-change-demo)
+更多信息，参考[变更详情](https://api.aliyun.com/document/BailianVoiceBot/2025-01-01/GetApplication#workbench-doc-change-demo)。

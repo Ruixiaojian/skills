@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-08-12",
+  "updatedAt": "2026-08-13",
   "totalFamilies": 178,
   "totalModels": 396,
   "profileCoverage": {
-    "full": 308,
-    "partial": 25,
-    "structured-only": 63,
+    "full": 333,
+    "partial": 20,
+    "structured-only": 43,
     "none": 0
   },
   "capabilityDistribution": {

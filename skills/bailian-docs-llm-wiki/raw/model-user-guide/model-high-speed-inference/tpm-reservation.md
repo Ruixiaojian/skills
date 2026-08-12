@@ -95,6 +95,12 @@ PTU（[模型部署](https://help.aliyun.com/zh/model-studio/model-deployment-in
 
 ¥362.90
 
+千问3.7-Flash-2026-07-15
+
+¥2.00
+
+¥8.10
+
 千问3.7-Max-2026-05-20
 
 ¥121.00
@@ -131,6 +137,12 @@ DeepSeek-v4-Flash
 
 ¥20.20
 
+DeepSeek-v4-Flash-0731
+
+¥20.20
+
+¥40.30
+
 DeepSeek-v4-Pro
 
 ¥121.00
@@ -158,6 +170,12 @@ Kimi-K2.6
 ¥151.10
 
 ¥453.20
+
+千问3.7-Flash-2026-07-15
+
+¥2.30
+
+¥9.80
 
 千问3.7-Max-2026-05-20
 
@@ -194,6 +212,12 @@ DeepSeek-v4-Flash
 ¥15.10
 
 ¥30.20
+
+DeepSeek-v4-Flash-0731
+
+¥30.20
+
+¥60.40
 
 DeepSeek-v4-Pro
 
@@ -395,6 +419,10 @@ Kimi-K2.6
 4.  将 API 请求中的 `model` 参数替换为复制的专属模型 code：
     
     > 前提条件：已创建 TPM 预留实例且状态为**运行中**。
+    
+    **说明**
+    
+    GLM-5.2 的 `thinking_budget`参数（限制思考长度）在调用时不生效。
     
     Python
     

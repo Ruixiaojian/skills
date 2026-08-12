@@ -82,7 +82,8 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/
         "target_model": "qwen-audio-3.0-tts-flash",
         "prefix": "myvoice",
         "url": "https://your-audio-url.wav",
-        "language_hints": ["zh"]
+        "language_hints": ["zh"],
+        "enable_volume_normalization": "false"
     }
 }'
 ```
@@ -319,6 +320,23 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/
 
 默认值：false。
 
+**enable\_volume\_normalization** `_string_` （可选）
+
+**重要**
+
+仅适用于Qwen-Audio-TTS/CosyVoice声音复刻（model为`voice-enrollment`时）。
+
+是否对用于声音复刻的样本音频进行音量归一化。取值：
+
+-   `"true"`：开启音量归一化。
+    
+-   `"false"`：关闭音量归一化。
+    
+
+开启后，使用所创建音色合成的音频，其音量可能与关闭该参数时创建的音色不同。
+
+默认值：`"false"`。
+
 ### **返回体**
 
 ## Qwen-Audio-TTS/CosyVoice声音复刻
@@ -411,7 +429,7 @@ Qwen-Audio-TTS/CosyVoice返回`voice_id`字段，Qwen返回`voice`字段。Qwen-
 ```
 # 第三方模型（MiniMax）目前仅支持通过dashscope.aliyuncs.com域名调用，暂不支持专属域名
 curl -X POST 'https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation' \
-  -H "Authorization: Bearer ${DASH_APIKEY}" \
+  -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
   -H 'Content-Type: application/json; charset=utf-8' \
   -d '{
     "input": {
