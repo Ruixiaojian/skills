@@ -18,7 +18,7 @@
     
 -   **选择 URL**：选择对应的地域 Endpoint URL，支持HTTP URL。
     
--   **配置 API Key**：选择地域并[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，再[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
+-   **配置 API Key**：选择地域并[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，再[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
     
 
 ## HTTP调用
@@ -259,7 +259,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 文本提示词。用来描述生成视频中期望包含的元素和视觉特点。
 
-支持中英文，每个汉字/字母占一个字符，不超过2500个字符，超过部分会自动截断。
+支持中英文，每个汉字/字母占一个字符，不超过2500个字符，超过将返回错误。
 
 填写逻辑：
 

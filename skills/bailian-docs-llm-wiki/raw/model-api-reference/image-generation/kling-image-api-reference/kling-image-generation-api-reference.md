@@ -59,7 +59,7 @@ kling/kling-v3-omni-image-generation
 
 1.  **开通服务**：前往[阿里云百炼控制台](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/all)，搜索“可灵”，找到**可灵AI** 模型卡片，单击**立即开通**，在弹窗内确认开通及授权。
     
-2.  **配置API Key**：选择地域并[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，再[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
+2.  **配置API Key**：选择地域并[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，再[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
     
 
 ## HTTP调用
@@ -205,7 +205,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 正向提示词，用于描述期望生成的图像内容、风格和构图。
 
-支持中英文，长度不超过2500个字符，每个汉字、字母、数字或符号计为一个字符，超过部分会自动截断。
+支持中英文，长度不超过2500个字符，每个汉字、字母、数字或符号计为一个字符，超过将返回错误。
 
 示例值：一只坐着的橘黄色的猫，表情愉悦，活泼可爱，逼真准确。
 
@@ -410,7 +410,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 ## 查询任务结果
 
-将`{task_id}`完整替换为上一步接口返回的`task_id`的值。`task_id`查询有效期为24小时。
+将`{task_id}`完整替换为上一步接口返回的`task_id`的值。`task_id`查询有效期为24小时，并请将`{WorkspaceId}`替换为真实的[业务空间ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
 
 ```
 curl -X GET https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/tasks/{task_id} \

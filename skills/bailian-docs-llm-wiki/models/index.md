@@ -1,6 +1,6 @@
 # 百炼模型市场索引
 
-> 自动生成 · 共 178 个模型家族 · 396 个主干模型 · 更新于 2026-08-13
+> 自动生成 · 共 179 个模型家族 · 398 个主干模型 · 更新于 2026-08-14
 
 **机器查询走结构化文件**：
 
@@ -17,7 +17,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 `notSuitableFor: []` 表示无已知限制。`profileCompleteness` 为 `structured-only` 时该画像未读过文档，仅机械字段可信。
 硬规格（价格/QPM/contextWindow/openSource）一律看行内顶层字段，不要从 profile 里找。
 
-## 文本生成 `TG` — 36 个家族
+## 文本生成 `TG` — 37 个家族
 
 - [GLM](groups/glm-4.5.json) — GLM是由智谱提供的开源模型。
   - 模型：`glm-4.5`, `glm-4.5-air`, `glm-4.6`, `glm-4.7`, `glm-5`, `glm-5.1`, `glm-5.2`
@@ -75,6 +75,8 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
   - 模型：`qwen3.7-flash`
 - [Qwen3.7-Plus](groups/qwen3.7-plus.json) — Qwen3.7系列中高性价比Plus模型，在强大文本能力的基础上全面升级了视觉-语言能力，同时保持了在编码、工具使用和生产力工作流方面的完整智能体能力。其核心特色为多模态交互混合智能体能力，能够感知真…
   - 模型：`qwen3.7-plus`
+- [Qwen3.8开源模型](groups/qwen3.8-opensource.json) — Qwen3.8-2.4T-A95B 是通义千问最新旗舰系列的开源版本，2026 年 8 月发布。采用稀疏 MoE 架构，总参数 2.4 万亿，每步激活约 950 亿，配合混合注意力机制，支持 100 …
+  - 模型：`qwen3.8-2.4t-a95b`
 - [SiliconFlow DeepSeek](groups/siliconflow-models.json) — 由硅基流动提供的DeepSeek系列模型API服务。
   - 模型：`siliconflow/deepseek-r1-0528`, `siliconflow/deepseek-v3-0324`, `siliconflow/deepseek-v3.1-terminus`, `siliconflow/deepseek-v3.2`
 - [StepFun推理模型](groups/stepfun-models-market-place.json) — 由阶跃星辰StepFun提供的Step系列推理模型API服务
@@ -176,7 +178,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [PixVerse V5.6](groups/pixverse-market-place.json) — 由爱诗科技提供的PixVerse V系列视频大模型API服务。
   - 模型：`pixverse/pixverse-v5.6-it2v`, `pixverse/pixverse-v5.6-kf2v`, `pixverse/pixverse-v5.6-r2v`, `pixverse/pixverse-v5.6-t2v`
 - [PixVerse V6](groups/pixverse-v6-market-place.json) — 由爱诗科技提供的PixVerse V系列视频大模型API服务。
-  - 模型：`pixverse/pixverse-v6-it2v`, `pixverse/pixverse-v6-kf2v`, `pixverse/pixverse-v6-r2v`, `pixverse/pixverse-v6-t2v`
+  - 模型：`pixverse/pixverse-v6-it2v`, `pixverse/pixverse-v6-kf2v`, `pixverse/pixverse-v6-r2v`, `pixverse/pixverse-v6-r2v-omni`, `pixverse/pixverse-v6-t2v`
 - [Vidu AI生视频](groups/vidu-models-market-place.json) — 由生数科技提供Vidu系列视频生成API服务，电影级画质、一致性保持、精准可控。
   - 模型：`vidu/viduq2_reference2video`, `vidu/viduq2_text2video`, `vidu/viduq2-pro_img2video`, `vidu/viduq2-pro_reference2video`, `vidu/viduq2-pro_start-end2video`, `vidu/viduq2-pro-fast_img2video`, `vidu/viduq2-turbo_img2video`, `vidu/viduq2-turbo_start-end2video`, `vidu/viduq3_reference2video`, `vidu/viduq3-ad_reference2video`, `vidu/viduq3-drama_reference2video`, `vidu/viduq3-mix_reference2video`, `vidu/viduq3-pro_img2video`, `vidu/viduq3-pro_start-end2video`, `vidu/viduq3-pro_text2video`, `vidu/viduq3-pro-fast_img2video`, `vidu/viduq3-turbo_img2video`, `vidu/viduq3-turbo_reference2video`, `vidu/viduq3-turbo_start-end2video`, `vidu/viduq3-turbo_text2video`
 - [Wan-I2V](groups/wan-image-to-video.json) — 图片生成视频内容，稳定保持图像主体、风格和文字等细节信息
@@ -411,7 +413,7 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 
 ## 翻译 `TR` — 2 个家族
 
-- [Qwen-Embedding](groups/qwen-embedding.json) — 基于Qwen模型基座训练的多语言文本统一向量模型，文本检索、聚类、分类性能大幅提升，多语言支持，适用于向量检索、向量化等等场景，可搭配检索增强、文档处理场景使用，支持64~2048维用户自定义向量维度…
+- [Qwen-Embedding](groups/qwen-embedding.json) — 基于Qwen模型基座训练的多语言文本统一向量模型，文本检索、聚类、分类性能大幅提升，多语言支持，适用于向量检索、向量化等等场景，可搭配检索增强、文档处理场景使用，支持64~2560维用户自定义向量维度…
   - 模型：`qwen3.7-text-embedding`, `text-embedding-async-v1`, `text-embedding-async-v2`, `text-embedding-v1`, `text-embedding-v2`, `text-embedding-v3`, `text-embedding-v4`
 - [Qwen-Rerank](groups/qwen-rerank.json) — 基于Qwen LLM底座训练的文本排序模型，对输入的Query和候选Docs进行相关性排序，支持100+语种和长文本输入，适用于文本检索、RAG等场景，效果对齐Qwen家族开源Rerank系列模型。
   - 模型：`gte-rerank-v2`, `qwen3-rerank`, `qwen3-vl-rerank`

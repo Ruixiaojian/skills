@@ -187,13 +187,27 @@ VAD检测阈值。
     "session": {
         "id": "sess_Aih6vAcY5Ddt6jwFx1tCa",
         "object": "realtime.session",
-        "model": "qwen3-omni-flash-realtime",
+        "model": "qwen3.5-omni-flash-realtime",
         "modalities": [
             "text",
             "audio"
         ],
+        "audio": {
+            "input": {
+                "format": {
+                    "type": "pcm",
+                    "sample_rate": 16000
+                }
+            },
+            "output": {
+                "format": {
+                    "type": "wav",
+                    "sample_rate": 24000
+                }
+            }
+        },
         "instructions": "你是个人助理小云，请你准确且友好地解答用户的问题，始终以乐于助人的态度回应。",
-        "voice": "Cherry",
+        "voice": "Tina",
         "input_audio_format": "pcm",
         "output_audio_format": "pcm",
         "input_audio_transcription": {
@@ -266,13 +280,35 @@ VAD检测阈值。
 
 模型的目标与角色。
 
+**audio** `_object_`
+
+回显的音频格式配置。若客户端传入了 `session.audio.input.format` / `session.audio.output.format`，服务端将在 `session.updated` 中按相同嵌套结构回显。未使用嵌套字段的客户端，服务端事件结构保持原有行为。
+
+**属性**
+
+**audio.input.format.type** `_string_`
+
+用户输入音频格式。可选值：`pcm`（默认值）、`wav`。
+
+**audio.input.format.sample\_rate** `_integer_`
+
+用户输入音频采样率，单位为 Hz。
+
+**audio.output.format.type** `_string_`
+
+模型输出音频格式。可选值：`pcm`（默认值）、`wav`。
+
+**audio.output.format.sample\_rate** `_integer_`
+
+模型输出音频采样率，单位为 Hz。
+
 **input\_audio\_format** `_string_`
 
-用户输入音频的格式，当前仅支持设为`pcm`。输入音频要求为16 kHz采样率的PCM音频流。
+历史兼容字段，回显客户端配置的输入音频格式。
 
 **output\_audio\_format** `_string_`
 
-模型输出音频的格式，当前仅支持设为`pcm`。输出音频为24 kHz采样率的PCM音频流。当前不支持自定义输出采样率。
+历史兼容字段，回显客户端配置的输出音频格式。
 
 **input\_audio\_transcription** `_object_`
 

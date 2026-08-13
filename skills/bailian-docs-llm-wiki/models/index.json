@@ -1,15 +1,15 @@
 {
-  "updatedAt": "2026-08-13",
-  "totalFamilies": 178,
-  "totalModels": 396,
+  "updatedAt": "2026-08-14",
+  "totalFamilies": 179,
+  "totalModels": 398,
   "profileCoverage": {
-    "full": 333,
-    "partial": 20,
+    "full": 344,
+    "partial": 11,
     "structured-only": 43,
     "none": 0
   },
   "capabilityDistribution": {
-    "TG": 36,
+    "TG": 37,
     "IG": 32,
     "VG": 27,
     "TTS": 16,
@@ -27,7 +27,7 @@
     "3D-generation": 1
   },
   "providerDistribution": {
-    "qwen": 108,
+    "qwen": 109,
     "qwen-domain-model": 34,
     "wan": 14,
     "happyhorse": 4,
@@ -926,11 +926,12 @@
       "providers": [
         "pixverse"
       ],
-      "itemCount": 4,
+      "itemCount": 5,
       "items": [
         "pixverse/pixverse-v6-it2v",
         "pixverse/pixverse-v6-kf2v",
         "pixverse/pixverse-v6-r2v",
+        "pixverse/pixverse-v6-r2v-omni",
         "pixverse/pixverse-v6-t2v"
       ]
     },
@@ -2357,6 +2358,22 @@
       "itemCount": 1,
       "items": [
         "qwen3.8-max"
+      ],
+      "maxContextWindow": 1000000
+    },
+    {
+      "slug": "qwen3.8-opensource",
+      "name": "Qwen3.8开源模型",
+      "primaryCapability": "TG",
+      "capabilities": [
+        "TG"
+      ],
+      "providers": [
+        "qwen"
+      ],
+      "itemCount": 1,
+      "items": [
+        "qwen3.8-2.4t-a95b"
       ],
       "maxContextWindow": 1000000
     },

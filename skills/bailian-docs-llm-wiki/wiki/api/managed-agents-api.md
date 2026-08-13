@@ -1,64 +1,57 @@
 # [managed agents](../guides/managed-agents.md) api
 
-Managed Agents API 是百炼平台提供的智能体托管运行时服务，由平台统一管理会话生命周期、沙箱环境、工具执行与事件流。开发者通过 REST API 或 SDK 创建 Agent、Environment、Session 等资源，并以事件驱动方式与智能体交互。所有请求需通过 API Key 鉴权，基地址按工作空间与地域动态生成。
+Managed Agents API 是百炼平台提供的智能体托管运行时服务，由平台统一管理会话生命周期、执行沙箱、工具调用与事件流。开发者通过 REST 或 SDK 创建 Agent（智能体配置）、Environment（运行环境）、Session（执行实例）等资源，并以事件驱动方式与智能体交互。所有操作均基于工作空间隔离，需通过 API Key 鉴权。
 
 ## 支持的模型与功能
 
-- **模型支持**：当前仅支持 `qwen-plus` 等百炼托管大模型（详见 [API 总览与认证](../../raw/application-api-reference/managed-agents-api/managed-agents-api-overview.md) 中的示例），不支持自定义模型或外部模型接入。
+- **模型支持**：当前仅支持百炼平台已发布的模型，如 `qwen-plus`；模型 ID 作为 `Agent` 创建/更新时的必填字段（见 [API 总览与认证](../../raw/application-api-reference/managed-agents-api/managed-agents-api-overview.md)）。  
 - **核心功能模块**：
-  - `Agent`：定义模型、系统提示词、技能挂载；支持版本化与软归档（[Agent](../../raw/application-api-reference/managed-agents-api/agent-api.md)）。
-  - `Environment`：配置工具执行沙箱（如 `"type": "cloud"`），支持预装依赖；独立于 Agent 管理，可被多 Session 复用（[Environment](../../raw/application-api-reference/managed-agents-api/environment-api.md)）。
-  - `Session`：绑定 Agent 与 Environment 的运行实例，状态机驱动（`idle` → `running` → `idle`/`terminated`）（[Session and Event](../../raw/application-api-reference/managed-agents-api/session-api.md)）。
-  - `Skill`：以 ZIP 包封装工具组合，上传后需安全扫描，挂载时必须指定具体版本号（[Skill](../../raw/application-api-reference/managed-agents-api/skills-api.md)）。
-  - `File`：支持上传图像、音频、文本等文件，用于消息内容或沙箱挂载；单文件上限 20 MB，审核通过后状态为 `available` 才可使用（[File](../../raw/application-api-reference/managed-agents-api/files-api.md)）。
+  - `Agent`：定义模型、系统提示词、工具集与技能挂载，支持版本化与软归档（见 [Agent](../../raw/application-api-reference/managed-agents-api/agent-api.md)）；
+  - `Environment`：声明沙箱类型（如 `"cloud"`）与预装依赖，独立于 Agent 管理，可被多 Session 复用（见 [Environment](../../raw/application-api-reference/managed-agents-api/environment-api.md)）；
+  - `Session`：绑定 Agent 版本快照与 Environment 实例，驱动状态机（`idle` → `running` → `idle`/`terminated`），是任务执行的最小单元（见 [Session and Event](../../raw/application-api-reference/managed-agents-api/session-api.md)）；
+  - `File`：支持上传 ≤20 MB 文件，用于消息内容（图像/音频）或挂载至沙箱供工具读写；文件需审核为 `available` 状态后方可使用（见 [File](../../raw/application-api-reference/managed-agents-api/files-api.md)）；
+  - `Skill`：以 zip 包封装工具组合，上传后经安全扫描，仅 `active` 状态版本可挂载到 Agent；挂载时必须指定精确 `version`，不支持 `latest`（见 [Skill](../../raw/application-api-reference/managed-agents-api/skills-api.md)）。
 
-> **注意**：文档 2 的快速开始示例中使用 `"model": "qwen-plus"` 字符串形式，而文档 1 的 API 总览中 `POST /agents` 请求体示例写为 `"model": {"id": "qwen-plus"}`。实际接口要求为对象格式 `{"id": "qwen-plus"}`，字符串形式将导致 400 错误 —— 请以 [API 总览与认证](../../raw/application-api-reference/managed-agents-api/managed-agents-api-overview.md) 中的结构为准。
+> **注意**：文档 1 中列出的 `/skills/{skill_id}/versions/{version}/download` 端点返回的是 OSS 预签名 URL，但文档 7 的说明中将其路径误写为 `/content`，正确路径应为 `/download`（与端点表格一致）。请以 [Skill](../../raw/application-api-reference/managed-agents-api/skills-api.md) 文档中的端点表格为准。
 
 ## 关键参数
 
-| 参数 | 位置 | 说明 | 示例 |
-|------|------|------|------|
-| `Authorization` | Header | API Key 鉴权，格式为 `Bearer <your-api-key>` | `Bearer sk-xxx` |
-| `workspace_id` | Endpoint 路径 | 工作空间 ID，形如 `ws_xxxxxxxxxxxx` | `ws_abc123def456` |
-| `region` | Endpoint 路径 | 当前仅支持 `cn-beijing` | `cn-beijing` |
-| `agent.id` & `environment_id` | `POST /sessions` 请求体 | Session 必须显式绑定 Agent ID 与 Environment ID | `"agent": "agent_xxx", "environment_id": "env_yyy"` |
-| `version` | `PATCH /agents/{id}` 请求体 | Agent 更新需携带当前 `version` 值作为乐观锁 | `"version": 3` |
-| `limit` / `page` | 查询类端点 Query | 分页参数，默认 `limit=20`，最大 `limit=100`；`page` 从 1 开始 | `?limit=50&page=2` |
+- **Endpoint 基地址**：`https://{workspace_id}.{region}.maas.aliyuncs.com/api/v1/agentstudio`，其中 `workspace_id`（如 `ws_xxxxxxxxxxxx`）和 `region`（当前仅支持 `cn-beijing`）为必需拼接项（见 [API 总览与认证](../../raw/application-api-reference/managed-agents-api/managed-agents-api-overview.md)）。
+- **鉴权**：全部请求须在 Header 中携带 `Authorization: Bearer <your-api-key>`。
+- **分页参数**：列表接口（如 `/agents`, `/sessions`）支持 `limit`（默认 20，最大 100）与 `page`（首次不传，后续传上一次响应的 `next_page`）。
+- **Agent 版本控制**：更新 Agent 时请求体必须包含当前 `version` 字段用于乐观锁校验；创建 Session 时自动锁定该 Agent 当前版本，后续 Agent 更新不影响已有 Session（见 [Agent](../../raw/application-api-reference/managed-agents-api/agent-api.md)）。
+- **Event 输入格式**：向 `/sessions/{session_id}/events` 发送用户消息时，`input` 字段为消息数组，每条消息需含 `role`（`user`）、`type`（`message`）及 `content`（文本/文件引用等）。
 
 ## 使用方式
 
-1. **准备环境**：开通百炼，创建 API Key 并设为 `DASHSCOPE_API_KEY` 环境变量；获取工作空间 ID 和地域（仅 `cn-beijing`）。
-2. **创建基础资源**：
-   - 调用 `POST /agents` 创建 Agent（含 `model.id`、`system` 等）；
-   - 调用 `POST /environments` 创建 Environment（如 `{"type": "cloud"}`）；
-   - （可选）上传文件 `POST /files`，待状态变为 `available` 后用于消息或挂载。
-3. **启动会话**：
-   - 调用 `POST /sessions` 绑定 Agent 与 Environment，获得 `session_id`；
-   - 调用 `POST /sessions/{session_id}/events` 发送用户消息（`input` 字段为消息数组）；
-   - 调用 `GET /sessions/{session_id}/events/stream` 订阅 SSE 流，监听 `session_status` 变更及输出事件。
-4. **SDK 推荐**：Python SDK v1.26.2+ 或 Java SDK v2.22.24+，提供 `Client.agents.create()`、`client.sessions.events.stream()` 等封装方法（见 [快速开始](../../raw/application-api-reference/managed-agents-api/managed-agents-quickstart.md)）。
+1. **初始化**：设置环境变量 `DASHSCOPE_API_KEY` 和 `AGENTSTUDIO_URL`（含 workspace_id 与 region），或通过 SDK 构造 Client（Python SDK ≥ v1.26.2，Java SDK ≥ v2.22.24）（见 [API 总览与认证](../../raw/application-api-reference/managed-agents-api/managed-agents-api-overview.md) 和 [快速开始](../../raw/application-api-reference/managed-agents-api/managed-agents-quickstart.md)）。
+2. **资源创建**（通常一次性）：
+   - 创建 `Agent`（指定 `model`, `system` 等）；
+   - 创建 `Environment`（指定 `config.type`，如 `"cloud"`）；
+3. **会话执行**（每次任务）：
+   - 调用 `POST /sessions` 绑定 Agent 与 Environment，获取 `session_id`；
+   - 调用 `POST /sessions/{session_id}/events` 提交用户消息；
+   - 调用 `GET /sessions/{session_id}/events/stream` 建立 SSE 连接，监听 `session_status` 变更与 `message` 事件，直至收到 `idle` 或 `terminated`。
+4. **文件与技能集成**：
+   - 先上传文件（`POST /files`），待其 `status` 变为 `available` 后，可在消息 `content` 中引用，或在 `Environment` 配置中挂载；
+   - 技能需先上传 zip 包为 `File`，再用该 `file_id` 创建 `Skill`，扫描为 `active` 后，方可挂载到 Agent 的 `skills` 列表中并指定 `version`。
 
 ## 限制和注意事项
 
-- **地域限制**：Endpoint 仅支持 `cn-beijing`，其他地域请求将返回 404（[API 总览与认证](../../raw/application-api-reference/managed-agents-api/managed-agents-api-overview.md)）。
-- **配额限制**：
-  - 单文件上传上限 20 MB，工作空间总容量 100 GB，文件保留期 30 天（[File](../../raw/application-api-reference/managed-agents-api/files-api.md)）；
-  - 列表接口 `limit` 最大值为 100，超出将被截断。
-- **状态与生命周期**：
-  - Agent、Environment、Skill 的“归档”均为软操作，不影响已存在的 Session；但归档后不可用于新建 Session（[Agent](../../raw/application-api-reference/managed-agents-api/agent-api.md)、[Environment](../../raw/application-api-reference/managed-agents-api/environment-api.md)、[Skill](../../raw/application-api-reference/managed-agents-api/skills-api.md)）；
-  - Session 删除（`DELETE /sessions/{id}`）为硬删除，事件历史不可恢复；
-  - Skill 新版本上传后需等待 `status` 变为 `active` 才能挂载，`rejected` 状态需根据 `error_info` 修复后重传。
-- **版本锁定**：Session 创建时锁定 Agent 当前版本；Skill 挂载必须指定具体 `version`，不支持 `latest`（[Skill](../../raw/application-api-reference/managed-agents-api/skills-api.md)）。
-- **事件语义**：`POST /sessions/{id}/events` 仅用于注入事件（用户消息、中断、工具回填等），不触发执行；执行由平台自动驱动，结果通过 SSE 流推送。
+- **地域限制**：API 当前仅支持 `cn-beijing` 地域，其他 region 将返回错误（见 [API 总览与认证](../../raw/application-api-reference/managed-agents-api/managed-agents-api-overview.md)）。
+- **文件限制**：单文件直传上限 20 MB；工作空间总容量上限 100 GB；文件保留期 30 天，超期可能被自动清理（见 [File](../../raw/application-api-reference/managed-agents-api/files-api.md)）。
+- **环境删除风险**：`DELETE /environments/{environment_id}` 为硬删除，不可恢复；而归档（`POST /environments/{environment_id}/archive`）为软操作，已绑定的运行中 Session 仍可继续使用（见 [Environment](../../raw/application-api-reference/managed-agents-api/environment-api.md)）。
+- **状态终态不可逆**：Session 归档后进入 `terminated` 终态，无法重启；若需新执行，必须创建新 Session（见 [Session and Event](../../raw/application-api-reference/managed-agents-api/session-api.md)）。
+- **SDK 版本要求**：Python SDK 必须 ≥ v1.26.2，Java SDK 必须 ≥ v2.22.24；旧版本不支持 Managed Agents 模块（见 [API 总览与认证](../../raw/application-api-reference/managed-agents-api/managed-agents-api-overview.md) 和 [快速开始](../../raw/application-api-reference/managed-agents-api/managed-agents-quickstart.md)）。
 
 ## 来源文档
 
 - [API 总览与认证](../../raw/application-api-reference/managed-agents-api/managed-agents-api-overview.md)
 - [快速开始](../../raw/application-api-reference/managed-agents-api/managed-agents-quickstart.md)
-- [Session and Event](../../raw/application-api-reference/managed-agents-api/session-api.md)
 - [Agent](../../raw/application-api-reference/managed-agents-api/agent-api.md)
 - [Environment](../../raw/application-api-reference/managed-agents-api/environment-api.md)
-- [Skill](../../raw/application-api-reference/managed-agents-api/skills-api.md)
 - [File](../../raw/application-api-reference/managed-agents-api/files-api.md)
+- [Session and Event](../../raw/application-api-reference/managed-agents-api/session-api.md)
+- [Skill](../../raw/application-api-reference/managed-agents-api/skills-api.md)
 
 

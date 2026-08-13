@@ -110,7 +110,7 @@ Token Plan 套餐本身不提供试用额度，也不包含免费赠送的 Token
     
 -   关闭思考模式（Thinking Mode）以降低推理开销。
     
--   非复杂任务场景下切换至轻量模型（如 qwen3.6-flash 替代 qwen3.7-max）。
+-   非复杂任务场景下切换至轻量模型（如 qwen3.6-plus 替代 qwen3.7-max）。
     
 -   利用缓存机制，缓存命中的 Token 计费价格低于正常 Input Token。
     
@@ -150,11 +150,17 @@ Token Plan 套餐本身不提供试用额度，也不包含免费赠送的 Token
 
 确认使用 Token Plan 个人版 API Key，确保完整且无空格
 
-404 model 'xxx' not found or not supported
+404 model\_not\_found: Model not exist.
 
 模型名称拼写错误或不在支持列表
 
 确认模型名称区分大小写，与套餐支持的模型 ID 一致。
+
+403 AccessDenied.Unpurchased: Access to model denied.
+
+调用的模型仅团队版支持，个人版不支持
+
+改用个人版支持的模型，或使用 Token Plan 团队版
 
 401 invalid access token or token expired
 
@@ -180,17 +186,17 @@ Token Plan 套餐本身不提供试用额度，也不包含免费赠送的 Token
 
 等待窗口释放额度
 
-502 Bad Gateway（错误码 4028）
+400 invalid\_parameter\_error: Unexpected item type in content.
 
-纯文本模型无法处理图像请求，或模型内部异常
+向纯文本模型传入了图像等非文本内容
 
-切换支持的模型重试，并确认请求内容与模型能力匹配
+改用支持该模态的模型，或确认请求内容与模型能力匹配
 
-页面提示“服务不可用，请求已过期”
+502 Bad Gateway
 
-控制台会话超时，或订阅过期后 Key 失效
+服务端偶发异常
 
-刷新页面或重新登录；若曾过期中断后重新订阅，需重新获取并替换 API Key
+稍后重试
 
 ### Token Plan 用量显示为 0 或调用仍扣费/欠费怎么办？
 

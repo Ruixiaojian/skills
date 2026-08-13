@@ -537,6 +537,8 @@ Qwen Code 支持在 VS Code 中以插件方式使用，在 IDE 中提供 AI 编�
 
 Qwen Code Desktop 是 Qwen Code 的图形界面应用，内置 CLI 运行时，无需额外安装命令行工具。桌面版与 CLI 共用同一份 `settings.json` 配置文件，如果已通过 CLI 完成配置，桌面版打开即可直接使用，无需重复配置。
 
+前往 [Qwen Code GitHub Releases](https://github.com/QwenLM/qwen-code/releases) 页面，下载适用于您操作系统（macOS、Windows 或 Linux）的桌面版安装包。
+
 如果尚未配置，可通过桌面版图形界面完成：
 
 1.  打开 Qwen Code Desktop，点击左侧**设置**，选择 **AI** 页签。

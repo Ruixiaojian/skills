@@ -1,4 +1,4 @@
-# 长期记忆（新）API 参考
+# 长期记忆API 参考
 
 长期记忆（新）的完整 API 接口参考文档，包含所有 API 的请求参数、返回结果和示例代码。
 
@@ -23,6 +23,10 @@ Content-Type
 `application/json`
 
 ## 接口概览
+
+**重要**
+
+记忆库将于 **2026 年 8 月 20 日 10:00**（北京时间）正式商业化计费。Add 和 Search 调用区分 **Pro**（开启 Rerank）和 **Lite**（关闭 Rerank）版本。详见[记忆库计费标准](https://help.aliyun.com/zh/model-studio/memory-library#h3-pricing)。
 
 长期记忆（新）提供以下 API 接口：
 
@@ -470,6 +474,14 @@ boolean
 否
 
 是否开启搜索结果的重排序（默认 false）
+
+plan\_version
+
+string
+
+否
+
+策略版本，可选值：`pro`（默认，开启 Rerank）或 `lite`（关闭 Rerank）。大小写不敏感。优先级高于 `enable_rerank`：传了 `plan_version` 时 `enable_rerank` 被忽略。Pro ¥0.001/次，Lite ¥0.00002/次。
 
 enable\_judge
 
@@ -1002,6 +1014,14 @@ string
 
 模板描述，最大 128 个字符
 
+plan\_version
+
+string
+
+否
+
+策略版本，可选值：`pro`（默认）或 `lite`。Pro ¥0.03/次，Lite ¥0.025/次。
+
 attributes
 
 array
@@ -1056,7 +1076,7 @@ curl --location "https://dashscope.aliyuncs.com/api/v2/apps/memory/profile_schem
     "attributes": [
       {"name": "年龄", "description": "用户的年龄", "default_value": "18"},
       {"name": "年龄段", "description": "用户当前所处的年龄阶段（如小学生、初中生、高中生、大学生、青年、中年、老年等）。"},
-      {"name": "民族", "description": "用户的民族或种族背景。"},
+      {"name": "民族", "description": "用户的民族背景。"},
       {"name": "性别", "description": "用户的性别认同或自我表达。"},
       {"name": "家庭成员", "description": "提及的家庭成员及其关系（如父母、兄弟姐妹、子女等）。"},
       {"name": "居住地", "description": "用户目前居住的城市、地区或国家。"},

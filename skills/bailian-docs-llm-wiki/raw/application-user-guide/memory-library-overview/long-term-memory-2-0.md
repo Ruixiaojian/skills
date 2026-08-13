@@ -4,9 +4,9 @@ AI 在长对话中会遗忘关键信息，且跨会话没有记忆，导致上�
 
 ## 核心功能
 
-**说明**
+**重要**
 
-该功能与 API 调用限时免费。
+记忆库将于 **2026 年 8 月 20 日 10:00**（北京时间）正式商业化计费。Add 和 Search 调用区分 **Pro** 和 **Lite** 两个版本，Pro 版检索开启 Rerank 质量更高，Lite 版关闭 Rerank 成本更低。详见[记忆库计费标准](https://help.aliyun.com/zh/model-studio/memory-library#h3-pricing)。
 
 -   **记忆片段**：从对话自动提取关键内容并结构化存储为记忆片段；也可以直接指定要存入的记忆内容；支持基于历史对话检索和动态更新。
     
@@ -94,7 +94,8 @@ curl -X POST https://dashscope.aliyuncs.com/api/v2/apps/memory/memory_nodes/sear
     "messages": [
       {"role": "user", "content": "我需要做什么？"}
     ],
-    "top_k": 5
+    "top_k": 5,
+    "plan_version": "pro"
   }'
 ```
 
@@ -144,7 +145,8 @@ curl -X POST https://dashscope.aliyuncs.com/api/v2/apps/memory/memory_nodes/sear
     "messages": [
       {"role": "user", "content": "我需要做什么？"}
     ],
-    "top_k": 5
+    "top_k": 5,
+    "plan_version": "pro"
   }'
 
 # 删除记忆
@@ -175,6 +177,7 @@ curl -X POST https://dashscope.aliyuncs.com/api/v2/apps/memory/profile_schemas \
   --data '{
     "name": "用户基础画像",
     "description": "包含年龄和兴趣的用户信息",
+    "plan_version": "pro",
     "attributes": [
       {"name": "年龄", "description": "用户年龄"},
       {"name": "爱好", "description": "用户的兴趣爱好"},
@@ -221,7 +224,194 @@ curl -X GET "https://dashscope.aliyuncs.com/api/v2/apps/memory/profile_schemas/{
 
 ## API 参考
 
-完整的 API 接口参考（包括请求参数、返回结果和示例代码），请参见[长期记忆（新）API 参考](https://help.aliyun.com/zh/model-studio/long-term-memory-api-reference)。该文档也包含错误码说明及对应的处理建议。
+完整的 API 接口参考（包括请求参数、返回结果和示例代码），请参见[长期记忆（新）API 参考](https://help.aliyun.com/zh/model-studio/long-term-memory-api-reference)。以下补充记忆规则管理和画像模板管理相关的 API。
+
+### 记忆片段规则管理（Memory Project）
+
+记忆片段规则的 `plan_version` 决定该规则下 Add 调用的策略版本。不传时默认 Pro。可通过以下 API 管理规则：
+
+**接口**
+
+**方法**
+
+**计费**
+
+**说明**
+
+CreateMemoryProject
+
+POST
+
+—
+
+创建记忆片段规则，入参含 `plan_version`（默认 pro）。Pro ¥0.03/次，Lite ¥0.018/次。
+
+UpdateMemoryProject
+
+PATCH
+
+—
+
+更新规则，可修改 `plan_version`（pro↔lite）。修改后新 Add 调用遵循新策略版本。
+
+ListMemoryProjects
+
+GET
+
+—
+
+列出规则，出参含 `plan_version` 字段。
+
+GetMemoryProject
+
+GET
+
+—
+
+查询规则详情，出参含 `plan_version` 字段。
+
+SearchMemory
+
+POST
+
+Pro ¥0.001/次  
+Lite ¥0.00002/次  
+
+检索记忆，入参 `plan_version` 独立控制策略版本，与规则的策略版本无关。不传默认 pro。优先级高于 `enable_rerank`。
+
+AddMemory
+
+POST
+
+Pro ¥0.03/次  
+Lite ¥0.018/次  
+
+写入记忆，策略版本由关联规则的 `plan_version` 决定。不传 `project_id` 时默认 pro。
+
+```
+# 创建 Pro 版记忆片段规则
+curl -X POST https://dashscope.aliyuncs.com/api/v2/apps/memory/memory_projects \
+  --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "memory_library_id": "your_memory_library_id",
+    "name": "my-project",
+    "instruction_type": "default",
+    "expired_in_days": 30,
+    "auto_refresh": true,
+    "plan_version": "pro"
+  }'
+```
+```
+# 更新规则策略版本为 Lite
+curl -X PATCH https://dashscope.aliyuncs.com/api/v2/apps/memory/memory_projects/{project_id} \
+  --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "memory_library_id": "your_memory_library_id",
+    "plan_version": "lite"
+  }'
+```
+
+### 画像模板管理（Profile Schema）
+
+画像模板的 `plan_version` 控制画像记忆的策略版本。不传时默认 Pro。可通过以下 API 管理画像模板：
+
+**接口**
+
+**方法**
+
+**计费**
+
+**说明**
+
+CreateProfileSchema
+
+POST
+
+Pro ¥0.03/次  
+Lite ¥0.025/次  
+
+创建画像模板，入参含 `plan_version`（默认 pro）。
+
+ListProfileSchemas
+
+GET
+
+—
+
+列出画像模板，出参含 `plan_version` 字段。
+
+UpdateProfileSchema
+
+PATCH
+
+—
+
+更新画像模板，可修改 `plan_version`（pro↔lite）。
+
+GetProfileSchema
+
+GET
+
+—
+
+查询画像模板详情，出参含 `plan_version` 字段。
+
+**说明**
+
+画像模板的 `plan_version` 当前仅作为字段透出，不影响画像提取的实际处理逻辑。后续版本可能根据 `plan_version` 区分画像记忆的写入策略版本。
+
+```
+# 创建 Lite 版画像模板
+curl -X POST https://dashscope.aliyuncs.com/api/v2/apps/memory/profile_schemas \
+  --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "memory_library_id": "your_memory_library_id",
+    "name": "user-profile-lite",
+    "description": "用户基础画像",
+    "plan_version": "lite",
+    "attributes": [
+      {"name": "姓名", "description": "用户姓名", "immutable": true},
+      {"name": "爱好", "description": "用户兴趣爱好", "immutable": false}
+    ]
+  }'
+```
+
+### plan\_version 参数规则
+
+**规则**
+
+**说明**
+
+Add 策略版本来源
+
+由关联的 MemoryProject 的 `plan_version` 决定。不传 `project_id` 时默认 pro。
+
+Search 策略版本来源
+
+由请求参数 `plan_version` 独立控制，与 project 的策略版本无关。不传默认 pro。
+
+大小写
+
+不敏感。"PRO"、"pro"、"Pro" 等效；"LITE"、"lite" 等效。
+
+非法值
+
+传入非 pro/lite 的值时返回报错。
+
+优先级
+
+Search 同时传 `plan_version` 和 `enable_rerank` 时，`plan_version` 优先。仅未传 `plan_version` 时 `enable_rerank` 生效。
+
+更新生效范围
+
+修改规则的 `plan_version` 后，新 Add 的记忆遵循新策略版本，已写入的记忆不受影响。
+
+存量兼容
+
+商业化前已存在的规则，`plan_version` 默认为 pro。
 
 ## 相关文档
 
@@ -246,3 +436,17 @@ curl -X GET "https://dashscope.aliyuncs.com/api/v2/apps/memory/profile_schemas/{
 记忆片段 search 接口
 
 300 QPM
+
+### 商业化计费相关
+
+-   **Pro 和 Lite 策略版本有什么区别？**
+    
+    Pro 版检索时开启 Rerank（结果重排序），质量更高；Lite 版关闭 Rerank，成本更低。Add 的策略版本由 MemoryProject 的 `plan_version` 决定，Search 的策略版本由请求参数 `plan_version` 独立控制。详见[记忆库计费标准](https://help.aliyun.com/zh/model-studio/memory-library#h3-pricing)。
+    
+-   **SearchMemory 的 plan\_version 和 MemoryProject 的 plan\_version 是什么关系？**
+    
+    两者独立。SearchMemory 的 `plan_version` 只影响本次检索调用，与 project 的策略版本无关。例如 project 为 lite，Search 传 `plan_version: "pro"` 时仍按 pro 计费并开启 Rerank。
+    
+-   **plan\_version 和 enable\_rerank 同时传会怎样？**
+    
+    `plan_version` 优先级更高。传了 `plan_version` 时 `enable_rerank` 被忽略。仅当未传 `plan_version` 时 `enable_rerank` 生效。

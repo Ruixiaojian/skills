@@ -1,48 +1,37 @@
 # 流式输出
 
-流式输出（Streaming Output）是指模型响应以增量方式分块返回，而非等待全部生成完成后再一次性返回完整结果。该机制显著降低端到端延迟，提升用户感知流畅度，并支持实时渲染、语音合成驱动、渐进式思考展示等交互场景。
+流式输出（Streaming）是指模型在生成响应过程中，将结果以增量方式分块（chunk）实时返回给客户端，而非等待全部内容生成完毕后一次性返回。这种方式显著降低端到端延迟，提升用户感知的响应实时性，是构建交互式 AI 应用（如聊天助手、语音对话、代码补全）的关键能力。
 
-## 在百炼平台的不同场景中，这个概念如何使用
+## 在百炼平台的不同场景中如何使用
 
-流式输出是百炼平台全栈 API 的通用能力，但具体实现方式和语义因协议与场景而异：
-
-- **标准文本生成（Chat Completions / DashScope 原生接口）**：启用 `stream=true` 后，服务端按 token 或语义片段（如标点、短句）逐块推送 `data: {...}` SSE 消息；每个 chunk 包含 `delta.content`（本次新增文本）、`index`（消息序号）及可选的 `finish_reason`（如 `"stop"` 或 `"length"`）。适用于聊天界面实时打字效果、长文本生成监控等。
-
-- **[OpenAI 兼容接口](openai-compatible-interface.md)（含 Toolkits & Frameworks）**：完全兼容 OpenAI 的流式格式，同时扩展支持 `stream_options={"include_usage": true}` —— 此时在流结束前的最后一个 chunk 中，将额外返回 `usage` 字段（含 `prompt_tokens`、`completion_tokens`、`total_tokens`），便于客户端精准统计与计费对账。
-
-- **Realtime / Omni-Realtime API（WebSocket/AOQ/WebRTC）**：采用事件驱动流式模型，响应以结构化事件形式推送（如 `response.text.delta`、`response.audio.delta`、`conversation.item.input_audio_transcription`）。`delta` 事件天然具备增量性，无需客户端做去重处理；配合 `semantic_vad` 或 `server_vad` 可实现“边说边听、边听边答”的低延迟闭环。
-
-- **Application Support（应用层）**：除基础 `stream=True` 外，支持 `incremental_output=True`（仅当 `stream=True` 时生效），确保每次 chunk 仅包含**本次新增 token**，而非从开头累计重传（避免前端重复渲染或语音合成卡顿），是构建高性能对话 UI 的关键配置。
-
-- **批量处理（Batch）与文件处理（Files API）**：**不支持流式输出**。所有 Batch 请求均为同步阻塞式响应，需等待全部任务完成才返回结果数组；Files API 的文档解析、向量化等操作亦为异步任务，通过 `status` 轮询获取最终结果。
+- **文本生成（Qwen 系列）**：通过 DashScope 原生接口或 [OpenAI 兼容接口](openai-compatibility.md)（`/chat/completions`）启用 `stream=true`，服务端按 token 或语义单元逐块返回 `delta.content`；工具调用阶段可能返回 `delta.tool_calls`，需兼容空 content 场景。
+- **专用模型（法睿、意图识别、OCR、MT 等）**：所有专用模型均支持流式输出，调用时设置 `stream=True`（Python SDK）或 `"stream": true`（HTTP），适用于法律文书渐进生成、翻译片段实时呈现、OCR 结构化字段逐步解析等场景。
+- **实时[多模态](multimodal.md)（Omni Realtime / Realtime API）**：基于 WebSocket 的实时接口天然采用事件流模式，文本、音频、工具调用结果均以独立事件（如 `text.delta`、`audio.delta`、`function_call.delta`）实时推送，支持毫秒级响应与低延迟语音交互。
+- **[OpenAI 兼容接口](openai-compatibility.md)（Chat、Responses、Vision）**：完全遵循 OpenAI 流式协议（SSE），返回 `data: {...}` 格式事件流；`Responses API` 在启用联网搜索时，流式输出会包含中间检索步骤与最终答案，便于前端展示思考过程。
+- **批量与框架集成（LangChain / Batch）**：LangChain 的 `streaming=True` 选项可透传至百炼底层；Batch 接口暂不支持流式，但单次请求内多个子任务仍可通过 `stream_options={"include_usage": true}` 在流末尾附加 token 统计。
 
 ## 关键参数和配置
 
-| 参数 | 类型 | 说明 | 是否必需 | 默认值 |
-|------|------|------|----------|--------|
-| `stream` | `boolean` | 启用流式响应的核心开关 | 否 | `false` |
-| `stream_options` | `object` | 流式增强选项（仅 [OpenAI 兼容接口](openai-compatible-interface.md)支持） | 否 | — |
-| `stream_options.include_usage` | `boolean` | 是否在流末尾 chunk 中返回 token 使用统计 | 否 | `false` |
-| `incremental_output` | `boolean` | 是否启用真正增量式流（避免内容重复） | 否 | `false`（仅 `stream=true` 时生效） |
+- **`stream`**（必选布尔值）：启用流式输出的核心开关。默认为 `false`；设为 `true` 后，响应体变为事件流（HTTP SSE）或异步迭代器（SDK）。
+- **`stream_options`**（可选对象，仅 [OpenAI 兼容接口](openai-compatibility.md)）：
+  - `{"include_usage": true}`：在流结束前发送一条含 `usage` 字段的 final chunk，包含 `prompt_tokens`、`completion_tokens` 和 `total_tokens`。
+- **SDK 使用要点**：
+  - Python DashScope：`Generation.call(..., stream=True)` 返回 `Generator`，需循环 `for chunk in response:` 处理；
+  - Python OpenAI SDK：`client.chat.completions.create(..., stream=True)` 返回 `Stream` 对象，同样迭代处理；
+  - Node.js / curl：需正确处理 `Content-Type: text/event-stream` 及 `data:` 前缀，按行解析并去除空行与注释（`event:`、`id:` 等字段可忽略）。
+- **注意事项**：
+  - 流式响应中 `delta.content` 可能为空（尤其在工具调用或思考阶段），务必检查 `delta.tool_calls` 或 `delta.function_call` 字段；
+  - OpenAI 兼容接口的 `choices[0].delta` 字段结构与标准 OpenAI 一致，但部分字段（如 `finish_reason`）仅出现在 final chunk；
+  - 实时 API（WebSocket）无 `stream` 参数，其流式行为由协议本身保证，开发者直接监听 `text.delta`、`audio.delta` 等事件即可。
 
-> ⚠️ 注意事项：
-> - Anthropic 兼容接口（`/v1/messages`）必须显式设置 `stream: true`，且需正确解析 `event: message_start` / `content_block_delta` / `message_stop` 等 SSE 事件类型；
-> - Omni-Realtime API 不使用 `stream` 参数，其流式行为由协议（WebSocket/AOQ）和事件模型天然决定；
-> - `incremental_output=True` 是百炼特有优化，OpenAI 官方 SDK 默认行为为全量重传（`delta.content` 为当前完整文本），务必显式启用以获得最佳体验。
-
-## 面向开发者，简洁实用
-
-- ✅ **推荐做法**：所有实时交互类应用（Web 聊天、语音助手、代码补全）均应默认开启 `stream=True`；若需精确计费或调试，追加 `stream_options={"include_usage": true}`（OpenAI 兼容）或监听 `response.usage` 事件（Omni-Realtime）。
-- ✅ **性能提示**：启用 `incremental_output=True` 可减少网络传输量与前端字符串拼接开销，尤其在高吞吐场景下效果显著。
-- ❌ **避坑指南**：不要在 Batch、Files 或非流式 Endpoint（如 `/v1/embeddings`）上设置 `stream=true` —— 将返回错误（HTTP 400）；Omni-Realtime 接口忽略 `stream` 参数，勿误配。
-- 🛠️ **调试建议**：使用 `curl -N` 或 SDK 的 `stream=True` 模式捕获原始流，观察 chunk 结构；生产环境建议监听 `finish_reason` 判断生成是否正常终止，避免因超时或截断导致内容不全。
+面向开发者：优先使用 SDK 封装的流式迭代器（如 Python 的 `for chunk in response:`），避免手动解析 SSE；生产环境务必添加超时、重试与错误降级逻辑；前端渲染时建议对 `delta.content` 做防抖合并，避免频繁 DOM 更新。
 
 ## 关联主题页
 
 - [qwen api reference](../api/qwen-api-reference.md)
-- [toolkits and frameworks](../api/toolkits-and-frameworks.md)
+- [more models](../api/more-models.md)
 - [omni realtime api](../api/omni-realtime-api.md)
 - [realtime api user guide](../api/realtime-api-user-guide.md)
-- [application support](../guides/application-support.md)
+- [toolkits and frameworks](../api/toolkits-and-frameworks.md)
 
 

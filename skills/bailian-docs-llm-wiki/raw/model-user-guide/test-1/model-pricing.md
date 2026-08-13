@@ -6590,6 +6590,76 @@ tongyi-xiaomi-analysis-pro
 
 ## **文本生成-千问-开源版**
 
+### **Qwen3.8**
+
+计费规则：按输入Token和输出Token计费。
+
+**说明**
+
+以下模型仅在华北2（北京）地域下有免费额度，其他地域均无免费额度。
+
+#### 华北2（北京）
+
+**模型 ID（Model ID）**
+
+**模式**
+
+**单次请求的输入Token数**
+
+**输入单价（每百万Token）**
+
+**输出单价（每百万Token）**
+
+> **思维链+回答**
+
+**免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
+
+有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
+
+qwen3.8-2.4t-a95b
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+非思考和思考模式
+
+0<Token≤1M
+
+12元
+
+36元
+
+100万Token
+
+#### 新加坡
+
+**模型 ID（Model ID）**
+
+**服务部署范围**
+
+**模式**
+
+**单次请求的输入Token数**
+
+**输入单价（每百万Token）**
+
+**输出单价（每百万Token）**
+
+> **思维链+回答**
+
+qwen3.8-2.4t-a95b
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+国际
+
+非思考和思考模式
+
+0<Token≤1M
+
+14.988元
+
+44.965元
+
 ### **Qwen3.6**
 
 计费规则：按输入Token和输出Token计费。
@@ -15605,6 +15675,8 @@ pixverse/pixverse-v5.6-kf2v
 
 **模型 ID（Model ID）**
 
+**输入参考类型**
+
 **输出视频类型**
 
 **输出视频分辨率**
@@ -15612,6 +15684,148 @@ pixverse/pixverse-v5.6-kf2v
 **输出单价**
 
 **免费额度**[**（注）**](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
+
+pixverse/pixverse-v6-r2v-omni
+
+有参考视频
+
+有声视频
+
+`audio=true`
+
+360P
+
+0.42元/秒
+
+无免费额度
+
+540P
+
+0.54元/秒
+
+720P
+
+0.72元/秒
+
+1080P
+
+1.36元/秒
+
+无声视频
+
+`audio=false`
+
+360P
+
+0.3元/秒
+
+540P
+
+0.42元/秒
+
+720P
+
+0.54元/秒
+
+1080P
+
+1.06元/秒
+
+无参考视频
+
+有声视频
+
+`audio=true`
+
+360P
+
+0.21元/秒
+
+540P
+
+0.27元/秒
+
+720P
+
+0.36元/秒
+
+1080P
+
+0.68元/秒
+
+无声视频
+
+`audio=false`
+
+360P
+
+0.15元/秒
+
+540P
+
+0.21元/秒
+
+720P
+
+0.27元/秒
+
+1080P
+
+0.53元/秒
+
+**模型 ID（Model ID）**
+
+**输出视频类型**
+
+**输出视频分辨率**
+
+**输出单价**
+
+**免费额度**[**（注）**](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
+
+pixverse/pixverse-v6-r2v
+
+有声视频
+
+`audio=true`
+
+360P
+
+0.21元/秒
+
+无免费额度
+
+540P
+
+0.27元/秒
+
+720P
+
+0.36元/秒
+
+1080P
+
+0.68元/秒
+
+无声视频
+
+`audio=false`
+
+360P
+
+0.15元/秒
+
+540P
+
+0.21元/秒
+
+720P
+
+0.27元/秒
+
+1080P
+
+0.53元/秒
 
 pixverse/pixverse-c1-r2v
 

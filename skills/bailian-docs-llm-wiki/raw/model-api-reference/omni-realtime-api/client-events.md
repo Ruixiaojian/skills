@@ -21,9 +21,22 @@ Qwen-Omni-Realtime API的客户端事件参考。
             "text",
             "audio"
         ],
-        "voice": "Chelsie",
-        "input_audio_format": "pcm",
-        "output_audio_format": "pcm",
+        "model": "qwen3.5-omni-flash-realtime",
+        "voice": "Tina",
+        "audio": {
+            "input": {
+                "format": {
+                    "type": "pcm",
+                    "sample_rate": 16000
+                }
+            },
+            "output": {
+                "format": {
+                    "type": "wav",
+                    "sample_rate": 24000
+                }
+            }
+        },
         "instructions": "你是某五星级酒店的AI客服专员，请准确且友好地解答客户关于房型、设施、价格、预订政策的咨询。请始终以专业和乐于助人的态度回应，杜绝提供未经证实或超出酒店服务范围的信息。",
         "turn_detection": {
             "type": "server_vad",
@@ -96,13 +109,53 @@ Qwen-Omni-Realtime API的客户端事件参考。
 -   Qwen-Omni-Turbo-Realtime：`Chelsie`
     
 
+**audio** `_object_`（可选）
+
+输入和输出音频配置。未配置时沿用现有默认行为。
+
+**适用模型：`qwen3.5-omni-plus-realtime`、`qwen3.5-omni-flash-realtime`。**
+
+**属性**
+
+**audio.input** `_object_`（可选）
+
+用户输入音频配置。
+
+**audio.input.format** `_object_`（可选）
+
+用户输入音频的格式和采样率。建议在会话 IDLE 阶段（首次发送音频前）完成配置，发送音频后不可再修改。
+
+**audio.input.format.type** `_string_`（可选）
+
+用户输入音频格式。可选值：`pcm`（默认值，单声道、16 bit 裸 PCM）、`wav`（WAV 容器封装的单声道、16 bit PCM）。
+
+**audio.input.format.sample\_rate** `_integer_`（可选）
+
+用户输入音频采样率，单位为 Hz。可选值：`8000`、`16000`（默认值）、`24000`、`48000`。
+
+**audio.output** `_object_`（可选）
+
+模型输出音频配置。
+
+**audio.output.format** `_object_`（可选）
+
+模型输出音频的格式和采样率。建议在会话建立初期、尚未开始音频交互前完成配置。
+
+**audio.output.format.type** `_string_`（可选）
+
+模型输出音频格式。可选值：`pcm`（默认值，单声道、16 bit 裸 PCM）、`wav`（WAV 容器封装的单声道、16 bit PCM）。
+
+**audio.output.format.sample\_rate** `_integer_`（可选）
+
+模型输出音频采样率，单位为 Hz。可选值：`8000`、`16000`、`24000`（默认值）、`48000`。
+
 **input\_audio\_format** `_string_`（可选）
 
-用户输入音频的格式，当前仅支持设为`pcm`。输入音频要求为16 kHz采样率的PCM音频流。
+历史兼容字段，新增接入建议使用 `audio.input.format` 同时配置输入格式和采样率。
 
 **output\_audio\_format** `_string_`（可选）
 
-模型输出音频的格式，当前仅支持设为`pcm`。输出音频为24 kHz采样率的PCM音频流。当前不支持自定义输出采样率。
+历史兼容字段，新增接入建议使用 `audio.output.format` 同时配置输出格式和采样率。
 
 **smooth\_output** `_boolean｜null_`（可选）
 
@@ -135,7 +188,7 @@ VAD 类型，可选值：
 
 -   `server_vad`（默认值）：基于声学特征检测语音结束。
     
--   `semantic_vad`：基于语义有效性检测语音结束，可过滤回应语、背景音等无意义声音。仅 `qwen3.5-omni-realtime` 系列模型支持。
+-   `semantic_vad`：基于语义有效性检测语音结束，可过滤回应语、背景音等无意义声音。仅 Qwen3.5-Omni-Realtime 系列模型支持。
     
 
 **threshold** `_float_`（可选）
@@ -222,7 +275,7 @@ VAD 灵敏度。值越低，VAD 越灵敏，越容易将微弱声音（包括背
 
 默认值：
 
--   `qwen3.5-omni-realtime` 系列：0.7
+-   Qwen3.5-Omni-Realtime 系列模型：0.7
     
 -   `qwen3-omni-flash-realtime` 系列：0.9
     
@@ -241,7 +294,7 @@ VAD 灵敏度。值越低，VAD 越灵敏，越容易将微弱声音（包括背
 
 默认值：
 
--   `qwen3.5-omni-realtime` 系列：0.8
+-   Qwen3.5-Omni-Realtime 系列模型：0.8
     
 -   `qwen3-omni-flash-realtime` 系列：1.0
     
@@ -258,7 +311,7 @@ VAD 灵敏度。值越低，VAD 越灵敏，越容易将微弱声音（包括背
 
 默认值：
 
--   `qwen3.5-omni-realtime` 系列：20
+-   Qwen3.5-Omni-Realtime 系列模型：20
     
 -   `qwen3-omni-flash-realtime` 系列：50
     
@@ -285,7 +338,7 @@ VAD 灵敏度。值越低，VAD 越灵敏，越容易将微弱声音（包括背
 
 默认值：
 
--   `qwen3.5-omni-realtime` 系列：1.0
+-   Qwen3.5-Omni-Realtime 系列模型：1.0
     
 -   `qwen3-omni-flash-realtime` 系列：1.05
     
@@ -302,7 +355,7 @@ VAD 灵敏度。值越低，VAD 越灵敏，越容易将微弱声音（包括背
 
 默认值：
 
--   `qwen3.5-omni-realtime` 系列：1.5
+-   Qwen3.5-Omni-Realtime 系列模型：1.5
     
 -   `qwen3-omni-flash-realtime` 系列：0.0
     
