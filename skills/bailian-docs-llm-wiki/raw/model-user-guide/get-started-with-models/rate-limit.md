@@ -2848,6 +2848,12 @@ tongyi-xiaomi-analysis-pro
 
 > **含输入与输出Token**
 
+qwen3.8-2.4t-a95b
+
+5,000
+
+5,000,000
+
 qwen3.6-35b-a3b
 
 600
@@ -3109,6 +3115,14 @@ qwen3-8b
 **每分钟消耗Token数（TPM）**
 
 > **含输入与输出Token**
+
+qwen3.8-2.4t-a95b
+
+国际
+
+5,000
+
+5,000,000
 
 qwen3.6-35b-a3b
 
@@ -7830,13 +7844,15 @@ pixverse/pixverse-c1-kf2v
 
 pixverse/pixverse-c1-r2v
 
-pixverse/pixverse-v6-t2v
+pixverse/pixverse-v6-r2v-omni
 
 5
 
 5
 
 > 同一个阿里云百炼API Key 在 4 个模型间共享额度。即这 4 个模型处于运行状态的任务总数加起来不能超过 5 个。
+
+pixverse/pixverse-v6-t2v
 
 pixverse/pixverse-v6-it2v
 

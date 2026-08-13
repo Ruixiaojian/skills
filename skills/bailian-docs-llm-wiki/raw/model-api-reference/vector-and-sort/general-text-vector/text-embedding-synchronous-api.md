@@ -108,9 +108,7 @@ qwen3.7-text-embedding
 
 中文、英语、西班牙语、法语、葡萄牙语、印尼语、日语、韩语、德语、俄罗斯语等201种主流语种与方言
 
-100万Token
-
-有效期：百炼开通后90天内
+无免费额度
 
 text-embedding-v4
 
@@ -499,7 +497,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-m
       "object": "embedding"
     }
   ],
-  "model": "text-embedding-v4",
+  "model": "qwen3.7-text-embedding",
   "object": "list",
   "usage": {
     "prompt_tokens": 184,

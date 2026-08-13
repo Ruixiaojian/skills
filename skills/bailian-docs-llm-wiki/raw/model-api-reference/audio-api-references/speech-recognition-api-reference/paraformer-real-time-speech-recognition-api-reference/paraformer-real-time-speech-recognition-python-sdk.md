@@ -14,7 +14,7 @@
 
 ## **前提条件**
 
--   已开通服务并[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。请[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)，而非硬编码在代码中，防范因代码泄露导致的安全风险。
+-   已开通服务并[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。请[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)，而非硬编码在代码中，防范因代码泄露导致的安全风险。
     
     **说明**
     
@@ -143,7 +143,7 @@
 
 提交单个语音实时转写任务，通过传入本地文件的方式同步阻塞地拿到转写结果。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/4858074871/CAEQURiBgMDS0c2RpxkiIDNmYjBlMTE3ODQxYTQ3Nzk4MGMxNTc5MjY3OWVjZjlj4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/8535166871/CAEQURiBgMDS0c2RpxkiIDNmYjBlMTE3ODQxYTQ3Nzk4MGMxNTc5MjY3OWVjZjlj4709861_20241015153444.149.svg)
 
 实例化[Recognition类](#d6bc1f133f871)绑定[请求参数](#555007db2033f)，调用`call`进行识别/翻译并最终获取[识别结果（RecognitionResult）](#bc3e1a43d6hhy)。
 
@@ -191,7 +191,7 @@ print(
 
 提交单个语音实时转写任务，通过实现回调接口的方式流式输出实时识别结果。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/4858074871/CAEQURiBgIDvi..2pxkiIGE4NTc3Njg4ZGM2YzQ2NzVhZGI3MzE2YWUwYTA3OGEy4709861_20241015153444.149.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/8535166871/CAEQURiBgIDvi..2pxkiIGE4NTc3Njg4ZGM2YzQ2NzVhZGI3MzE2YWUwYTA3OGEy4709861_20241015153444.149.svg)
 
 1.  启动流式语音识别
     
@@ -639,7 +639,7 @@ False
 
 -   true：在持续发送静音音频的情况下，可保持与服务端的连接不中断。
     
--   false（默认）：即使持续发送静音音频，连接也将在60秒后因超时而断开。
+-   false（默认）：即使持续发送静音音频，连接也将在一定时间后因超时而断开。
     
     静音音频指的是在音频文件或数据流中没有声音信号的内容。静音音频可以通过多种方法生成，例如使用音频编辑软件如Audacity或Adobe Audition，或者通过命令行工具如FFmpeg。
     
@@ -759,6 +759,7 @@ class Callback(RecognitionCallback):
 
     def on_event(self, result: RecognitionResult) -> None:
         # 实现接收识别结果的逻辑
+        pass
 
     def on_complete(self) -> None:
         print('任务完成')

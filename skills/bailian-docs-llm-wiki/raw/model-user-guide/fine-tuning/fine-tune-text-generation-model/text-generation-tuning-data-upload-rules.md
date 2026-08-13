@@ -35,11 +35,11 @@
 
 **文本生成**
 
-**图片输入**
+**视觉理解-图片输入**
 
-**视频输入（qwen3.5+）**
+**视觉理解-视频输入（qwen3.5+）**
 
-**工具调用（qwen3.5+）**
+**视觉理解-工具调用（qwen3.5+）**
 
 **深度思考**
 
@@ -63,7 +63,7 @@
 
 ✗
 
-待确认（DPO+tool 组合，source 未给格式段）
+✗
 
 ✓
 
@@ -95,7 +95,7 @@
 
 训练方法 SFT/DPO/CPT 字段定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)。
 
-## SFT 文本格式
+## 文本生成 - SFT 格式
 
 SFT 文本生成训练数据采用 jsonl 文件格式，基于 ChatML messages 多轮结构。
 
@@ -117,11 +117,11 @@ SFT 文本生成支持以下样例格式，各样例的完整 JSON 结构见对�
 ```
 {
   "messages": [
-    {"role": "system", "content": [{"text": "系统输入1"}]},
-    {"role": "user", "content": [{"text": "用户输入1"}]},
-    {"role": "assistant", "content": [{"text": "期望的模型输出1"}]},
-    {"role": "user", "content": [{"text": "用户输入2"}]},
-    {"role": "assistant", "content": [{"text": "期望的模型输出2"}]}
+    {"role": "system", "content": "系统输入1"},
+    {"role": "user", "content": "用户输入1"},
+    {"role": "assistant", "content": "期望的模型输出1"},
+    {"role": "user", "content": "用户输入2"},
+    {"role": "assistant", "content": "期望的模型输出2"}
   ]
 }
 ```
@@ -133,124 +133,22 @@ SFT 文本生成支持以下样例格式，各样例的完整 JSON 结构见对�
 ```
 {
   "messages": [
-    {"role": "system", "content": [{"text": "系统输入1"}]},
-    {"role": "user", "content": [{"text": "用户输入1"}]},
-    {"role": "assistant", "content": [{"text": "模型输出1"}]},
-    {"role": "user", "content": [{"text": "用户输入2"}]},
-    {"role": "assistant", "content": [{"text": "<think>\n期望的思考内容2\n</think>\n\n期望的输出2"}]}
+    {"role": "system", "content": "系统输入1"},
+    {"role": "user", "content": "用户输入1"},
+    {"role": "assistant", "content": "模型输出1"},
+    {"role": "user", "content": "用户输入2"},
+    {"role": "assistant", "content": "<think>\n期望的思考内容2\n</think>\n\n期望的输出2"}
   ]
 }
 ```
 
 ### 工具调用（function calling）
 
-工具调用（function calling）格式样例（tools 定义 + messages 多轮含 tool 角色，tool\_call\_id 一一对应）：
-
-```
-{
-  "tools": [
-    {
-      "type": "function",
-      "function": {
-        "name": "get_weather",
-        "description": "查询指定城市的实时天气",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "city": {"type": "string", "description": "城市名称，例如：北京"}
-          },
-          "required": ["city"]
-        }
-      }
-    }
-  ],
-  "messages": [
-    {"role": "user", "content": [{"text": "帮我查一下北京的天气"}]},
-    {
-      "role": "assistant",
-      "content": [{"text": "好的，我来帮您查询北京的天气。"}],
-      "tool_calls": [
-        {
-          "id": "call_3a11c1ba883b41b6a4e0cb",
-          "type": "function",
-          "function": {
-            "name": "get_weather",
-            "arguments": "{\"city\": \"北京\"}"
-          }
-        }
-      ]
-    },
-    {"role": "tool", "tool_call_id": "call_3a11c1ba883b41b6a4e0cb", "content": [{"text": "{\"city\": \"北京\", \"weather\": \"晴\", \"temperature\": \"25℃\"}"}]},
-    {"role": "assistant", "content": [{"text": "北京今天天气晴朗，气温 25℃，适合出行。"}]}
-  ]
-}
-```
-
-### 工具与思考组合
-
-工具与思考组合格式样例（工具调用与深度思考同时出现，思考标签与 tool\_calls 在同一条 assistant）：
-
-```
-{
-  "tools": [
-    {
-      "type": "function",
-      "function": {
-        "name": "get_weather",
-        "description": "查询指定城市的实时天气",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "city": {"type": "string", "description": "城市名称，例如：北京"}
-          },
-          "required": ["city"]
-        }
-      }
-    }
-  ],
-  "messages": [
-    {
-      "role": "user",
-      "content": [
-        {"text": "帮我查一下北京的天气"}
-      ]
-    },
-    {
-      "role": "assistant",
-      "content": [
-        {"text": "<think>\n用户询问北京天气，调用 get_weather 工具获取实时数据\n</think>\n"}
-      ],
-      "tool_calls": [
-        {
-          "id": "call_3a11c1ba883b41b6a4e0cb",
-          "type": "function",
-          "function": {
-            "name": "get_weather",
-            "arguments": "{\"city\": \"北京\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "call_3a11c1ba883b41b6a4e0cb",
-      "content": [
-        {"text": "{\"city\": \"北京\", \"weather\": \"晴\", \"temperature\": \"25℃\"}"}
-      ]
-    },
-    {
-      "role": "assistant",
-      "content": [
-        {"text": "北京今天天气晴朗，气温 25℃，适合出行。"}
-      ]
-    }
-  ]
-}
-```
+请使用[视觉理解-SFT 格式](#yz71e49hgo000)。
 
 ### 思考标签规则
 
-深度思考内容用 `<think>…</think>` 标签包裹，置于 assistant 输出文本内（与最终答复同属最后一条 assistant 的 content）。规则：
+深度思考内容用 `<think>\n…\n</think>\n\n` 标签包裹，置于 assistant 输出文本内（与最终答复同属最后一条 assistant 的 content）。规则：
 
 -   只能放在最后一条 assistant 输出中；中间的 assistant 输出不加思考标签。
     
@@ -258,38 +156,6 @@ SFT 文本生成支持以下样例格式，各样例的完整 JSON 结构见对�
     
 -   若训练样本设置模型不输出思考标签，训练完成后不建议再开启思考模式调用。
     
-
-### 工具字段说明
-
-工具调用（function calling）模式在 messages 多轮结构基础上增加 tools 定义与 tool\_calls/role:tool 机制，字段约束如下：
-
--   tools：工具定义数组，每项含 type:"function" 与 function{name, description, parameters}；parameters 为 JSON Schema（含 type/properties/required）。
-    
--   messages：多轮对话数组，角色含 user、assistant、tool。
-    
--   content：多模态内容数组，可含 image、text、video 等项（与多模态理解格式一致）。
-    
--   assistant.tool\_calls：模型生成的工具调用数组，含 id、type:"function"、function{name, arguments}；arguments 为 JSON 字符串。
-    
--   role:"tool"：工具返回，tool\_call\_id 必须与对应 tool\_calls\[\].id 一一对应，content 内为工具返回结果。
-    
-
-多轮对话最后一条通常为 assistant 基于工具返回的最终答复。tool 模式属于 SFT 场景，DPO 场景的 tool 数据支持情况见[DPO 文本格式](#sec-dpo-text)。
-
-loss\_weight 字段约束：
-
--   邀测参数，取值范围 0.0 至 1.0，数值越大表示该行在训练时的相对重要性越高。
-    
--   SFT 思考模型仅最后一条 assistant 行支持 loss\_weight。
-    
--   如需使用请联系商务经理。
-    
-
-百炼不支持 OpenAI 的 name、weight 参数，所有 assistant 输出都会被训练。从 OpenAI/Azure 迁移的训练数据不可携带 name/weight 字段。
-
-数据多样性与均衡性建议：各场景数据数量应相对均衡，数据比例符合实际场景比例，避免某一类数据过多导致模型偏向于学习该类特征，影响泛化能力。
-
-ChatML 与 loss\_weight 字段定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)。
 
 ### 评测集格式
 
@@ -303,6 +169,14 @@ ChatML 与 loss\_weight 字段定义详见[模型调优简介](https://help.aliy
     
 -   仅草稿版本支持在线编辑（Prompt/Completion），已发布版本不可编辑。
     
+
+本地上传格式说明：
+
+```
+{"prompt": "谁在文艺复兴时期绘制人体?", "completion": "文艺复兴时期是一个关于艺术、文化和学术的复兴运动,在这个时期,许多艺术家都绘制了人体。"}
+{"prompt": "为什么太阳会发光发热?", "completion": "太阳是由氢原子核在高温高压下聚变而产生的巨大能量。这种聚变反应释放出大量的光和热能。"}
+{"prompt": "为什么天空是蓝色的?", "completion": "阳光照射到地球大气层中时,波长较短的蓝光会被大气中的气体分子散射开来,形成我们看到的蓝天。"}
+```
 
 日志回流入库限制：
 
@@ -319,9 +193,108 @@ ChatML 与 loss\_weight 字段定义详见[模型调优简介](https://help.aliy
 
 评测集应准备数据不重叠的独立集合，用于客观评估模型泛化能力。评测集管理规则详见[训练集与评测集](https://help.aliyun.com/zh/model-studio/training-set-and-evaluation-set)。
 
-## SFT 图片输入
+## 文本生成 - DPO 格式
+
+DPO 文本生成训练数据采用 jsonl 格式，基于 ChatML messages 多轮结构，额外含 chosen 与 rejected 两条对比的 assistant 输出，用于偏好对齐训练。messages 内的所有内容均作为输入，DPO 用于训练模型对最后一条 user 输入的正负反馈。messages 多轮结构规则见[文本生成 - SFT 格式](#sec-sft-text)。
+
+针对深度思考内容，chosen 或 rejected 的 assistant 输出可使用思考标签包裹，思考标签只能放最后一条 assistant 行，规则见[文本生成 - SFT 格式](#sec-sft-text)。
+
+loss\_weight 邀测参数支持 chosen 模块，取值范围 0.0 至 1.0，数值越大训练重要性越高，需联系商务经理，详见[文本生成 - SFT 格式](#sec-sft-text)。
+
+DPO 场景的工具调用数据支持情况待确认（source 文档未给出 DPO+tool 格式段，需产品确认），工具字段说明见[文本生成 - SFT 格式](#sec-sft-text)。
+
+DPO 训练数据单文件大小上限为 200 MB，与 SFT 文本生成一致。DPO 定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)，草稿与发布操作见[训练集与评测集](https://help.aliyun.com/zh/model-studio/training-set-and-evaluation-set)。
+
+DPO 文本生成训练数据样例见下文代码块：
+
+## 普通 ChatML
+
+普通 chosen/rejected 对比格式样例（两条对比的 assistant 输出）：
+
+```
+{
+  "messages": [
+    {"role": "system", "content": "系统输入"},
+    {"role": "user", "content": "用户输入1"},
+    {"role": "assistant", "content": "模型输出1"},
+    {"role": "user", "content": "用户输入2"},
+    {"role": "assistant", "content": "模型输出2"},
+    {"role": "user", "content": "用户输入3"}
+  ],
+  "chosen": {"role": "assistant", "content": "赞同的模型期望输出3"},
+  "rejected": {"role": "assistant", "content": "反对的模型期望输出3"}
+}
+```
+
+## 深度思考（thinking）
+
+思考标签格式样例（深度思考内容用思考标签包裹，放最后 assistant）：
+
+```
+{
+  "messages": [
+    {"role": "system", "content": "系统输入"},
+    {"role": "user", "content": "用户输入1"},
+    {"role": "assistant", "content": "模型输出1"},
+    {"role": "user", "content": "用户输入2"}
+  ],
+  "chosen": {"role": "assistant", "content": "<think>\n期望的思考内容\n</think>\n\n期望的模型输出"},
+  "rejected": {"role": "assistant", "content": "反对的模型期望输出2"}
+}
+```
+
+## 文本生成 - CPT 格式
+
+CPT 文本生成训练数据采用 jsonl 纯文本格式，每行一个 jsonl 对象，结构为 {text}，text 字段为纯文本内容。messages 多轮结构规则见[文本生成 - SFT 格式](#sec-sft-text)。
+
+CPT 训练数据约束：
+
+-   建议至少 5000 万 Token，单文件大小上限 300 MB。
+    
+-   不支持草稿状态与数据继承，每次新增版本均需新建数据并立即发布。
+    
+
+CPT 定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)，版本管理与数据继承操作见[训练集与评测集](https://help.aliyun.com/zh/model-studio/training-set-and-evaluation-set)。CPT 纯文本样例完整 JSON 结构见下文代码块。
+
+各训练方式版本新增时的数据继承策略如下（CPT 不支持继承已有数据，每次新增版本均需新建）：
+
+**数据继承策略**
+
+**SFT**
+
+**DPO**
+
+**CPT**
+
+继承已有数据
+
+✓
+
+✓
+
+✗
+
+创建新数据
+
+✓
+
+✓
+
+支持（强制新建）
+
+{text} 纯文本格式样例（每行一个 jsonl 纯文本对象）：
+
+```
+{
+  "text": "文本内容"
+}
+```
+
+## 视觉理解-SFT 格式
 
 SFT 图片训练数据用于千问 VL 多模态理解（控制台 UI 选项为「图片理解」）场景，采用 zip 压缩包格式，包含 data.jsonl 训练文本数据文件与图片文件。data.jsonl 须置于压缩包根目录，data.jsonl 中每条训练数据的 messages 采用 content 数组结构，数组项含图片字段（image）与文本字段（text）。推荐使用单层目录结构，打包规则详见[多模态压缩包打包规则](#sec-zip-package)。
+
+## 图片输入限制
 
 图片准入限制如下：
 
@@ -336,121 +309,9 @@ resized\_width 与 resized\_height 为可选的目标缩放控制参数，用于
 
 图片消耗 token 计算详见[图像与视频理解-计费与限流](https://help.aliyun.com/zh/model-studio/vision#10c14b25cdhuh)。
 
-SFT 图片训练样例见下文标签页：
+## 视频输入限制
 
-### 图片加文本
-
-图片加文本格式样例（content 数组含图片项与文本项）：
-
-```
-{
-  "messages": [
-    {"role": "system", "content": [{"text": "系统输入"}]},
-    {
-      "role": "user",
-      "content": [
-        {"text": "用户输入1"},
-        {"image": "图像文件名1.jpg", "resized_width": 200, "resized_height": 200}
-      ]
-    },
-    {"role": "assistant", "content": [{"text": "期望的模型输出1"}]}
-  ]
-}
-```
-
-### 图片加思考
-
-图片加思考格式样例（规则见[SFT 文本格式](#sec-sft-text)）：
-
-```
-{
-  "messages": [
-    {"role": "system", "content": [{"text": "系统输入"}]},
-    {
-      "role": "user",
-      "content": [
-        {"text": "这张图片是什么？"},
-        {"image": "image1.jpg"}
-      ]
-    },
-    {
-      "role": "assistant",
-      "content": [
-        {"text": "<think>\n图片为城市风景，需进一步分析\n</think>\n\n该图片为北京天安门广场。"}
-      ]
-    }
-  ]
-}
-```
-
-### 图片加工具
-
-图片加工具格式样例（含图片多模态 content 项与工具调用机制，JSON 逐字保留）：
-
-```
-{
-  "tools": [
-    {
-      "type": "function",
-      "function": {
-        "name": "get_weather",
-        "description": "查询指定城市的实时天气",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "city": {"type": "string", "description": "城市名称，例如：北京"}
-          },
-          "required": ["city"]
-        }
-      }
-    }
-  ],
-  "messages": [
-    {
-      "role": "user",
-      "content": [
-        {"image": "beijing.jpeg"},
-        {"text": "这张图片是哪个城市？帮我查一下它现在的天气"}
-      ]
-    },
-    {
-      "role": "assistant",
-      "content": [
-        {"text": "我需要通过图片判断图片归属的城市"}
-      ],
-      "tool_calls": [
-        {
-          "id": "call_3a11c1ba883b41b6a4e0cb",
-          "type": "function",
-          "function": {
-            "name": "get_weather",
-            "arguments": "{\"city\": \"北京\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "call_3a11c1ba883b41b6a4e0cb",
-      "content": [
-        {"text": "{\"city\": \"北京\", \"weather\": \"晴\", \"temperature\": \"25℃\"}"}
-      ]
-    },
-    {
-      "role": "assistant",
-      "content": [
-        {"text": "北京今天天气晴朗，气温 25℃，适合出行。"}
-      ]
-    }
-  ]
-}
-```
-
-多模态理解定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)。
-
-## SFT 视频输入
-
-SFT 视频训练数据用于千问 VL 多模态理解场景，仅 qwen3.5 及以后的 VL 模型支持。支持两种视频输入模式：
+仅 qwen3.5 及以后的多模态模型支持。支持两种视频输入模式：
 
 -   **视频文件路径模式**：video 字段为字符串（如 "video1.mp4"），由平台处理抽帧。适用于使用完整视频文件的场景。
     
@@ -459,7 +320,7 @@ SFT 视频训练数据用于千问 VL 多模态理解场景，仅 qwen3.5 及以
 
 **说明**
 
-训练数据中的图片与视频须同时满足模型调用的输入限制（如图像分辨率、视频时长、帧率等），调用限制详见[视觉理解模型使用限制](https://help.aliyun.com/zh/model-studio/vision)。
+训练数据中的图片与视频须同时满足模型调用的输入限制（如图像分辨率、视频时长、帧率等），调用限制详见[视频限制](https://help.aliyun.com/zh/model-studio/vision#006b533c6cc0)。
 
 视频消耗 token 计算详见[图像与视频理解-计费与限流](https://help.aliyun.com/zh/model-studio/vision#10c14b25cdhuh)。
 
@@ -513,6 +374,108 @@ float（截取结束时间，可选）
 
 不适用
 
+SFT 图片训练样例见下文标签页：
+
+### 普通 ChatML
+
+普通 ChatML 格式样例（system/user/assistant 多轮对话）：
+
+```
+{
+  "messages": [
+    {"role": "system", "content": [{"text": "系统输入1"}]},
+    {"role": "user", "content": [{"text": "用户输入1"}]},
+    {"role": "assistant", "content": [{"text": "期望的模型输出1"}]},
+    {"role": "user", "content": [{"text": "用户输入2"}]},
+    {"role": "assistant", "content": [{"text": "期望的模型输出2"}]}
+  ]
+}
+```
+
+### 深度思考（thinking）
+
+深度思考（thinking）格式样例（思考标签放最后一条 assistant，前后换行必须保留）：
+
+```
+{
+  "messages": [
+    {"role": "system", "content": [{"text": "系统输入1"}]},
+    {"role": "user", "content": [{"text": "用户输入1"}]},
+    {"role": "assistant", "content": [{"text": "模型输出1"}]},
+    {"role": "user", "content": [{"text": "用户输入2"}]},
+    {"role": "assistant", "content": [{"text": "<think>\n期望的思考内容2\n</think>\n\n期望的输出2"}]}
+  ]
+}
+```
+
+### 工具调用（function calling）
+
+**说明**
+
+**qwen3.5+** 的模式支持使用工具调用数据格式。
+
+工具调用（function calling）格式样例（tools 定义 + messages 多轮含 tool 角色，tool\_call\_id 一一对应）：
+
+```
+{
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "get_weather",
+        "description": "查询指定城市的实时天气",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "city": {"type": "string", "description": "城市名称，例如：北京"}
+          },
+          "required": ["city"]
+        }
+      }
+    }
+  ],
+  "messages": [
+    {"role": "user", "content": [{"text": "帮我查一下北京的天气"}]},
+    {
+      "role": "assistant",
+      "content": [{"text": "好的，我来帮您查询北京的天气。"}],
+      "tool_calls": [
+        {
+          "id": "call_3a11c1ba883b41b6a4e0cb",
+          "type": "function",
+          "function": {
+            "name": "get_weather",
+            "arguments": "{\"city\": \"北京\"}"
+          }
+        }
+      ]
+    },
+    {"role": "tool", "tool_call_id": "call_3a11c1ba883b41b6a4e0cb", "content": [{"text": "{\"city\": \"北京\", \"weather\": \"晴\", \"temperature\": \"25℃\"}"}]},
+    {"role": "assistant", "content": [{"text": "北京今天天气晴朗，气温 25℃，适合出行。"}]}
+  ]
+}
+```
+
+### 图片输入
+
+图片加文本格式样例（content 数组含图片项与文本项）：
+
+```
+{
+  "messages": [
+    {"role": "system", "content": [{"text": "系统输入"}]},
+    {
+      "role": "user",
+      "content": [
+        {"text": "用户输入1"},
+        {"image": "图像文件名1.jpg", "resized_width": 200, "resized_height": 200}
+      ]
+    },
+    {"role": "assistant", "content": [{"text": "期望的模型输出1"}]}
+  ]
+}
+```
+
 ### 视频文件路径模式
 
 视频文件路径模式格式样例（video 字段为视频文件路径字符串）：
@@ -553,128 +516,50 @@ float（截取结束时间，可选）
 }
 ```
 
-### 视频加思考
+多模态理解定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)。
 
-视频加思考格式样例，思考标签规则详见[SFT 文本生成训练数据](#sec-sft-text)。
+### 工具字段说明
 
-```
-{
-  "messages": [
-    {"role": "system", "content": [{"text": "系统输入"}]},
-    {
-      "role": "user",
-      "content": [
-        {"text": "这段视频讲了什么？"},
-        {"video": "video1.mp4"}
-      ]
-    },
-    {
-      "role": "assistant",
-      "content": [
-        {"text": "<think>\n视频内容为城市夜景，包含交通场景\n</think>\n\n该视频展示夜间城市交通。"}
-      ]
-    }
-  ]
-}
-```
+工具调用（function calling）模式在 messages 多轮结构基础上增加 tools 定义与 tool\_calls/role:tool 机制，字段约束如下：
 
-## DPO 文本格式
-
-DPO 文本生成训练数据采用 jsonl 格式，基于 ChatML messages 多轮结构，额外含 chosen 与 rejected 两条对比的 assistant 输出，用于偏好对齐训练。messages 内的所有内容均作为输入，DPO 用于训练模型对最后一条 user 输入的正负反馈。messages 多轮结构规则见[SFT 文本格式](#sec-sft-text)。
-
-针对深度思考内容，chosen 或 rejected 的 assistant 输出可使用思考标签包裹，思考标签只能放最后一条 assistant 行，规则见[SFT 文本格式](#sec-sft-text)。
-
-loss\_weight 邀测参数支持 chosen 模块，取值范围 0.0 至 1.0，数值越大训练重要性越高，需联系商务经理，详见[SFT 文本格式](#sec-sft-text)。
-
-DPO 场景的工具调用数据支持情况待确认（source 文档未给出 DPO+tool 格式段，需产品确认），工具字段说明见[SFT 文本格式](#sec-sft-text)。
-
-DPO 训练数据单文件大小上限为 200 MB，与 SFT 文本生成一致。DPO 定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)，草稿与发布操作见[训练集与评测集](https://help.aliyun.com/zh/model-studio/training-set-and-evaluation-set)。
-
-DPO 文本生成训练数据样例见下文代码块：
-
--   普通 chosen/rejected 对比：两条对比的 assistant 输出。
+-   tools：工具定义数组，每项含 type:"function" 与 function{name, description, parameters}；parameters 为 JSON Schema（含 type/properties/required）。
     
--   思考标签结构：深度思考内容用思考标签包裹。
+-   messages：多轮对话数组，角色含 user、assistant、tool。
+    
+-   content：多模态内容数组，可含 image、text、video 等项（与多模态理解格式一致）。
+    
+-   assistant.tool\_calls：模型生成的工具调用数组，含 id、type:"function"、function{name, arguments}；arguments 为 JSON 字符串。
+    
+-   role:"tool"：工具返回，tool\_call\_id 必须与对应 tool\_calls\[\].id 一一对应，content 内为工具返回结果。
     
 
-普通 chosen/rejected 对比格式样例（两条对比的 assistant 输出）：
+多轮对话最后一条通常为 assistant 基于工具返回的最终答复。tool 模式属于 SFT 场景，DPO 场景的 tool 数据支持情况见[文本生成 - DPO 格式](#sec-dpo-text)。
 
-```
-{
-  "messages": [
-    {"role": "system", "content": [{"text": "系统输入"}]},
-    {"role": "user", "content": [{"text": "用户输入1"}]},
-    {"role": "assistant", "content": [{"text": "模型输出1"}]},
-    {"role": "user", "content": [{"text": "用户输入2"}]},
-    {"role": "assistant", "content": [{"text": "模型输出2"}]},
-    {"role": "user", "content": [{"text": "用户输入3"}]}
-  ],
-  "chosen": {"role": "assistant", "content": [{"text": "赞同的模型期望输出3"}]},
-  "rejected": {"role": "assistant", "content": [{"text": "反对的模型期望输出3"}]}
-}
-```
+loss\_weight 字段约束：
 
-思考标签格式样例（深度思考内容用思考标签包裹，放最后 assistant）：
-
-```
-{
-  "messages": [
-    {"role": "system", "content": [{"text": "系统输入"}]},
-    {"role": "user", "content": [{"text": "用户输入1"}]},
-    {"role": "assistant", "content": [{"text": "模型输出1"}]},
-    {"role": "user", "content": [{"text": "用户输入2"}]}
-  ],
-  "chosen": {"role": "assistant", "content": [{"text": "<think>期望的模型思考内容</think>期望的模型输出"}]},
-  "rejected": {"role": "assistant", "content": [{"text": "反对的模型期望输出2"}]}
-}
-```
-
-## CPT 文本格式
-
-CPT 文本生成训练数据采用 jsonl 纯文本格式，每行一个 jsonl 对象，结构为 {text}，text 字段为纯文本内容。messages 多轮结构规则见[SFT 文本格式](#sec-sft-text)。
-
-CPT 训练数据约束：
-
--   建议至少 5000 万 Token，单文件大小上限 300 MB。
+-   邀测参数，取值范围 0.0 至 1.0，数值越大表示该行在训练时的相对重要性越高。
     
--   不支持草稿状态与数据继承，每次新增版本均需新建数据并立即发布。
+-   SFT 思考模型仅最后一条 assistant 行支持 loss\_weight。
+    
+-   如需使用请联系商务经理。
     
 
-CPT 定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)，版本管理与数据继承操作见[训练集与评测集](https://help.aliyun.com/zh/model-studio/training-set-and-evaluation-set)。CPT 纯文本样例完整 JSON 结构见下文代码块。
+百炼不支持 OpenAI 的 name、weight 参数，所有 assistant 输出都会被训练。从 OpenAI/Azure 迁移的训练数据不可携带 name/weight 字段。
 
-各训练方式版本新增时的数据继承策略如下（CPT 不支持继承已有数据，每次新增版本均需新建）：
+数据多样性与均衡性建议：各场景数据数量应相对均衡，数据比例符合实际场景比例，避免某一类数据过多导致模型偏向于学习该类特征，影响泛化能力。
 
-**数据继承策略**
+ChatML 与 loss\_weight 字段定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)。
 
-**SFT**
+### 思考标签规则
 
-**DPO**
+深度思考内容用 `<think>\n…\n</think>\n\n` 标签包裹，置于 assistant 输出文本内（与最终答复同属最后一条 assistant 的 content）。规则：
 
-**CPT**
-
-继承已有数据
-
-✓
-
-✓
-
-✗
-
-创建新数据
-
-✓
-
-✓
-
-支持（强制新建）
-
-{text} 纯文本格式样例（每行一个 jsonl 纯文本对象）：
-
-```
-{
-  "text": "文本内容"
-}
-```
+-   只能放在最后一条 assistant 输出中；中间的 assistant 输出不加思考标签。
+    
+-   思考标签前后的换行符必须保留。
+    
+-   若训练样本设置模型不输出思考标签，训练完成后不建议再开启思考模式调用。
+    
 
 ## RL 训练数据格式
 
@@ -758,7 +643,7 @@ Trainingdata_vl.zip
 
 ## 文件大小与数量限制
 
-本地上传文件大小与数量上限按训练方式分场景设定，详见下文分场景表。图片准入限制见[SFT 图片输入](#sec-sft-image)，评测集格式限制见[评测集格式](#sec-eval-set)，日志回流入库限制见[评测集格式](#sec-eval-set)。
+本地上传文件大小与数量上限按训练方式分场景设定，详见下文分场景表。图片准入限制见[视觉理解-SFT 格式](#sec-sft-image)，评测集格式限制见[评测集格式](#sec-eval-set)，日志回流入库限制见[评测集格式](#sec-eval-set)。
 
 max\_length 取值区间 500 至 131072 为训练序列长度配置参数，非上传准入上限。单条训练数据上传准入大小上限源文档未给出数值，以控制台页面展示为准。
 
@@ -772,7 +657,7 @@ max\_length 取值区间 500 至 131072 为训练序列长度配置参数，非�
 
 **推荐数据量**
 
-SFT 文本生成
+文本生成 - SFT 格式
 
 200 MB
 
@@ -780,13 +665,21 @@ SFT 文本生成
 
 至少上千条
 
-DPO 文本生成
+文本生成 - DPO 格式
 
 200 MB
 
 10（默认）
 
 至少上百条
+
+文本生成 - CPT 格式
+
+300 MB
+
+1
+
+至少 5000 万 Token
 
 多模态（zip）
 
@@ -795,14 +688,6 @@ DPO 文本生成
 1
 
 根据实际场景准备充足样本
-
-CPT 文本生成
-
-300 MB
-
-1
-
-至少 5000 万 Token
 
 文件名（不含后缀）
 
@@ -814,7 +699,7 @@ CPT 文本生成
 
 扩展名
 
-须在 supportedExtension 列表
+须在 [新增数据集](https://bailian.console.aliyun.com/#/efm/model_data/createDataAss) 列表中
 
 —
 

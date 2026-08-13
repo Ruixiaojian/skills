@@ -1,46 +1,47 @@
 # Token
 
-Token 是百炼平台中用于计量模型输入与输出内容的基本单位，也是计费、限流、性能监控和资源调度的核心度量标准。一个 Token 通常对应一个子词（subword）或符号（如标点、空格、中文字符），具体切分方式由模型自身的 tokenizer 决定；开发者无需手动分词，但需理解其对成本、延迟和功能行为的影响。
+Token 是百炼平台中用于计量模型输入与输出内容长度、计费、资源调度和性能监控的核心计量单位。一个 Token 通常对应一个子词（subword）或标点符号，在文本场景下近似为中文字符（约1.5–2字/Token）或英文单词（约3/4词/Token）；在[多模态](multimodal.md)场景中，图像、音频等输入也会按统一规则转换为等效 Token 数参与计费与限流。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-- **API 调用与计费**：每次请求的 `input_tokens`（输入 Token 数）和 `output_tokens`（实际生成的输出 Token 数）共同构成计费依据。例如调用 `qwen3.8-max` 模型时，1000 字中文输入约消耗 1300–1500 tokens，每生成 1 token 均计入账单。费用按「输入 + 输出」总 Token 数累加，不同模型单价独立（详见控制台计费页）。
-
-- **请求控制与稳定性保障**：
-  - `max_tokens` 参数显式限制单次响应的最大输出长度（如设为 `512`，则模型最多生成 512 tokens），防止意外长输出导致超时或超额扣费；
-  - TPM（Tokens Per Minute）预留机制以 kTPM（千 Token/分钟）为单位购买专属吞吐容量，保障高并发下输入/输出 Token 的稳定处理能力；
-  - 快速模式（`*-fast-preview`）虽不预留 TPM，但仍按实际 Token 数计费，并通过排队机制平滑瞬时 Token 请求峰。
-
+- **计费与用量管理**：所有模型调用（含文本、视觉、语音等）均按实际消耗的输入 Token + 输出 Token 总量计费。用量可在「模型用量」页面按模型、API Key、时间范围实时查看，并作为套餐（如 Coding Plan、Token Plan）的消耗依据。
+- **推理控制与资源约束**：
+  - `max_tokens` 参数限制模型单次响应的最大输出长度，直接影响 Token 消耗与响应时长；
+  - OpenCode 的 `budgetTokens`（如 `thinking.budgetTokens: 1024`）用于硬性限制思考链（Chain-of-Thought）阶段的 Token 使用上限，防止过度推理；
+  - TPM（Tokens Per Minute）预留能力以 kTPM 为单位锁定专属吞吐容量，保障高并发下的 Token 处理确定性。
 - **可观测性与调试**：
-  - 模型监控中，“Token 消耗”是核心成本指标，支持按 `workspace_id`、`model`、`apikey_id` 维度下钻分析；
-  - 应用监控将每个 LLM 节点的 `input_tokens + output_tokens` 作为 Span 级别统计项，用于定位链路瓶颈（如某次 RAG 中检索+重排+生成共消耗 8640 tokens）；
-  - 流式响应中，`first_token_latency`（首 Token 延迟）直接反映模型“启动速度”，其值受输入 Token 数显著影响——输入越长，首 Token 延迟通常越高。
-
-- **协议兼容性适配**：
-  - [OpenAI 兼容接口](openai-compatible-interface.md)返回字段 `usage.prompt_tokens` / `usage.completion_tokens` 与百炼原生字段 `input_tokens` / `output_tokens` 严格对齐；
-  - Anthropic 协议中 `usage.input_tokens` / `usage.output_tokens` 同样映射至百炼 Token 计量体系，确保跨协议计费一致性。
+  - 应用监控中，每个 `LLM` 节点的「Token总量」= 输入 Token + 输出 Token，是分析智能体/工作流成本与效率的关键指标；
+  - 模型监控支持开启推理日志后，精确记录每次调用的输入/输出原文及对应 Token 数，用于成本归因与效果回溯；
+  - 「首 Token 耗时（TTFT）」和「非首 Token 延时」均以 Token 粒度衡量流式响应性能。
+- **配额与限流**：账号级与业务空间级的 `model_limit` 和 `workspace_limit` 实际限制的是单位时间内的 Token 吞吐量（即 TPM），而非请求数；超限将触发 HTTP 429 响应。
 
 ## 关键参数和配置
 
-| 参数 | 说明 | 开发建议 |
+| 参数 | 说明 | 推荐实践 |
 |------|------|----------|
-| `max_tokens` | 控制模型最大输出长度（不含输入部分） | ✅ 必须显式设置，避免默认值（如 `2048`）导致不可控成本；<br>⚠️ 若设为 `1`，模型可能仅输出单个 token（如句号），无法满足业务逻辑；<br>💡 结合 `stop` 参数可更精准截断（如 `stop=["\n", "。"]`）。 |
-| `input_tokens` / `output_tokens` | 响应体中返回的实际消耗量（只读） | ✅ 解析响应 JSON 的 `usage` 字段获取，用于本地成本核算与告警（如单次 > 10k tokens 触发通知）；<br>⚠️ 不可用于请求参数，仅作结果反馈。 |
-| TPM 预留额度（kTPM） | 输入/输出方向分别配置的专属吞吐容量 | ✅ 按业务峰值预估：若每秒平均 50 QPS × 平均 200 tokens/req = 10,000 tokens/s ≈ 600k TPM；<br>⚠️ 输入 TPM 和输出 TPM 独立生效，高输出场景（如摘要生成）需重点配置输出 TPM。 |
+| `max_tokens` | 控制模型生成内容的最大 Token 数（输出侧） | 必须显式设置，避免意外长输出导致费用激增；建议设为业务所需上限的 1.2 倍 |
+| `budgetTokens` | （OpenCode 场景）思考链阶段允许消耗的最大 Token 数 | 根据任务复杂度调整：简单代码补全设 256–512，复杂规划任务可设 1024–2048 |
+| `input_tokens` / `output_tokens` | 监控日志中返回的实际消耗值（只读） | 用于成本分析、异常检测（如某次调用输出 Token 异常偏高） |
+| TPM 预留值（kTPM） | 按天预购的输入/输出 Token 每分钟处理能力 | 高吞吐应用（如 Agent 批量执行）建议预留 ≥ 预估峰值 TPM × 1.5，避免排队 |
+
+> ⚠️ 注意：  
+> - Token 计算遵循各模型官方分词器（如 Qwen 使用 tiktoken 的 `qwen` 编码器），不支持自定义分词；  
+> - [多模态](multimodal.md)输入（如图片）的 Token 折算由平台自动完成，开发者无需手动计算；  
+> - 缓存命中（如 GLM-5.2 输入缓存）会按折扣系数（如 25%）折算 Token 消耗，降低实际费用。
 
 ## 面向开发者，简洁实用
 
-- **不要猜测 Token 数**：使用 [百炼 Token 计算器](https://bailian.console.aliyun.com/tools/token-calculator) 或 SDK 的 `dashscope.Tokenizer.count_tokens()`（Python）精确估算输入文本的 Token 量。
-- **警惕隐式 Token 消耗**：系统提示词（system [prompt](../guides/prompt.md)）、工具描述（tool description）、历史对话（messages history）均计入 `input_tokens`；精简提示词、启用 `enable_thinking: false`（如适用）可显著降本。
-- **监控必看字段**：在控制台「模型监控 → 性能指标」中重点关注 `input_tpm`、`output_tpm`、`avg_output_tokens_per_request`，三者异常波动往往指向提示词膨胀、循环生成或错误重试。
-- **调试技巧**：当遇到 `429 Too Many Requests` 时，检查是否触发 TPM 限流（而非 QPS 限流）；若 `output_tokens` 接近 `max_tokens` 且响应被截断，说明模型已达长度上限，需调整 `max_tokens` 或优化输出逻辑。
+- ✅ **必做**：所有生产环境 API 调用必须设置 `max_tokens`，并在监控中定期检查 `output_tokens` 分布，识别异常长响应。  
+- ✅ **推荐**：启用模型监控的「推理日志」，结合 `input_tokens`/`output_tokens` 字段做细粒度成本审计；对关键 Agent 设置 `budgetTokens` 防止失控推理。  
+- ❌ **避免**：依赖默认 `max_tokens`（不同模型差异大）；在未开通高级监控时尝试解析原始日志推算 Token；将 Token 数直接等同于字符数做前端预估（误差可达 ±30%）。  
+- 🔧 **调试技巧**：使用 [模型列表 API](https://dashscope.aliyuncs.com/api/v1/models) 查询目标模型的 `context_length` 和 `pricing`，确认其 Token 容量与单价；通过 `curl -v` 或 SDK 日志捕获响应头中的 `X-DashScope-Token-Usage`（若启用）快速验证 Token 计算。
 
 ## 关联主题页
 
-- [preparations](../api/preparations.md)
+- [token plan guide](../guides/token-plan-guide.md)
 - [model high speed inference](../guides/model-high-speed-inference.md)
-- [model monitoring](../guides/model-monitoring.md)
 - [application monitoring](../guides/application-monitoring.md)
-- [use chat client or development tool](../guides/use-chat-client-or-development-tool.md)
+- [model monitoring](../guides/model-monitoring.md)
+- [more about models](../api/more-about-models.md)
 
 

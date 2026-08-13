@@ -6,7 +6,7 @@
 
 ## **快速开始**
 
-1.  [获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)
+1.  [获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)
     
 2.  **下载SDK并运行示例代码：**
     
@@ -322,7 +322,7 @@
     
     -   true：在持续发送静音音频的情况下，可保持与服务端的连接不中断。
         
-    -   false（默认）：即使持续发送静音音频，连接也将在60秒后因超时而断开。
+    -   false（默认）：即使持续发送静音音频，连接也将在一定时间后因超时而断开。
         
     
     静音音频指的是在音频文件或数据流中没有声音信号的内容。静音音频可以通过多种方法生成，例如使用音频编辑软件如Audacity或Adobe Audition，或者通过命令行工具如FFmpeg。

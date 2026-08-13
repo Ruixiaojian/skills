@@ -6,7 +6,7 @@
 
 ## **前提条件**
 
--   已开通服务并[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。请[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)，而非硬编码在代码中，防范因代码泄露导致的安全风险。
+-   已开通服务并[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。请[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)，而非硬编码在代码中，防范因代码泄露导致的安全风险。
     
 -   [安装最新版DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk)。
     
@@ -827,7 +827,7 @@ boolean
 
 -   true：在持续发送静音音频的情况下，可保持与服务端的连接不中断。
     
--   false（默认）：即使持续发送静音音频，连接也将在60秒后因超时而断开。
+-   false（默认）：即使持续发送静音音频，连接也将在一定时间后因超时而断开。
     
 
 静音音频指的是在音频文件或数据流中没有声音信号的内容。静音音频可以通过多种方法生成，例如使用音频编辑软件如Audacity或Adobe Audition，或者通过命令行工具如FFmpeg。

@@ -4,7 +4,7 @@
 
 ## **前期准备**
 
-SDK 版本需要不低于1.25.17。请先阅读[实时多模态交互流程](https://help.aliyun.com/zh/model-studio/omni-realtime-interaction-process)。
+SDK 版本需要不低于 1.26.5。请先阅读[实时多模态交互流程](https://help.aliyun.com/zh/model-studio/omni-realtime-interaction-process)。
 
 ## **快速开始**
 
@@ -95,30 +95,46 @@ str
 
 默认音色：
 
--   `Qwen3.5-Omni-Realtime`系列模型: `"Tina"`
+-   Qwen3.5-Omni-Realtime系列模型: `"Tina"`
     
--   `Qwen3-Omni-Flash-Realtime`: `"Cherry"`
+-   Qwen3-Omni-Flash-Realtime: `"Cherry"`
     
--   `Qwen-Omni-Turbo-Realtime`: `"Chelsie"`
+-   Qwen-Omni-Turbo-Realtime: `"Chelsie"`
     
+
+input\_audio\_config
+
+AudioFormatConfig
+
+用户输入音频格式配置。通过 `AudioFormatConfig` 同时设置格式（`type`：`pcm`/`wav`）和采样率（`sample_rate`：`8000`/`16000`/`24000`/`48000`，默认 16000 Hz）。
+
+**适用模型：`qwen3.5-omni-plus-realtime`、`qwen3.5-omni-flash-realtime`。**
+
+output\_audio\_config
+
+AudioFormatConfig
+
+模型输出音频格式配置。通过 `AudioFormatConfig` 同时设置格式（`type`：`pcm`/`wav`）和采样率（`sample_rate`：`8000`/`16000`/`24000`/`48000`，默认 24000 Hz）。
+
+**适用模型：`qwen3.5-omni-plus-realtime`、`qwen3.5-omni-flash-realtime`。**
 
 input\_audio\_format
 
 AudioFormat
 
-用户输入音频的格式，当前仅支持设为`PCM_16000HZ_MONO_16BIT`，表示16 kHz采样率的PCM音频流。
+历史兼容字段，新增接入建议使用 `input_audio_config` 同时配置输入格式和采样率。
 
 output\_audio\_format
 
 AudioFormat
 
-模型输出音频的格式，当前仅支持设为`PCM_24000HZ_MONO_16BIT`，表示24 kHz采样率的PCM音频流。当前不支持自定义输出采样率。
+历史兼容字段，新增接入建议使用 `output_audio_config` 同时配置输出格式和采样率。
 
 smooth\_output
 
 bool
 
-仅Qwen3-Omni-Flash-Realtime系列版本支持设置。
+仅Qwen3-Omni-Flash-Realtime系列模型支持设置。
 
 -   True：获得口语化的回复
     
@@ -157,7 +173,7 @@ VAD类型，取值如下：
 
 -   `server_vad`（默认值）：基于声学特征检测用户语音结束。
     
--   `semantic_vad`：基于语义有效性检测用户语音结束，可过滤无意义语音（如回应语、背景音）。仅`Qwen3.5-Omni-Realtime`系列模型支持。
+-   `semantic_vad`：基于语义有效性检测用户语音结束，可过滤无意义语音（如回应语、背景音）。仅Qwen3.5-Omni-Realtime系列模型支持。
     
 
 turn\_detection\_threshold
@@ -244,11 +260,11 @@ temperature越高，生成的内容更多样，反之，生成的内容更确定
 
 由于temperature与top\_p均可以控制生成内容的多样性，因此建议只设置其中一个值。
 
--   `Qwen3.5-Omni-Realtime`系列模型：0.7
+-   Qwen3.5-Omni-Realtime系列模型：0.7
     
--   `Qwen3-Omni-Flash-Realtime`系列：0.9
+-   Qwen3-Omni-Flash-Realtime系列模型：0.9
     
--   `Qwen-Omni-Turbo-Realtime`系列：1.0
+-   Qwen-Omni-Turbo-Realtime系列模型：1.0
     
 
 > `qwen-omni-turbo` 系列模型**不支持修改**。
@@ -267,11 +283,11 @@ top\_p越高，生成的内容更多样。反之，生成的内容更确定。
 
 top\_p默认值：
 
--   `Qwen3.5-Omni-Realtime`系列模型：0.8
+-   Qwen3.5-Omni-Realtime系列模型：0.8
     
--   `Qwen3-Omni-Flash-Realtime`系列：1.0
+-   Qwen3-Omni-Flash-Realtime系列模型：1.0
     
--   `Qwen-Omni-Turbo-Realtime`系列：0.01
+-   Qwen-Omni-Turbo-Realtime系列模型：0.01
     
 
 > `qwen-omni-turbo` 系列模型**不支持修改**。
@@ -286,11 +302,11 @@ integer
 
 top\_k默认值：
 
--   `Qwen3.5-Omni-Realtime`系列模型：20
+-   Qwen3.5-Omni-Realtime系列模型：20
     
--   `Qwen3-Omni-Flash-Realtime`系列：50
+-   Qwen3-Omni-Flash-Realtime系列模型：50
     
--   `Qwen-Omni-Turbo-Realtime`系列：20
+-   Qwen-Omni-Turbo-Realtime系列模型：20
     
 
 > `qwen-omni-turbo` 系列模型**不支持修改**。
@@ -317,7 +333,7 @@ float
 
 repetition\_penalty默认值：
 
--   `Qwen3.5-Omni-Realtime`系列模型：1.0
+-   Qwen3.5-Omni-Realtime系列模型：1.0
     
 -   其他模型：1.05
     
@@ -334,7 +350,7 @@ float
 
 presence\_penalty默认值：
 
--   `Qwen3.5-Omni-Realtime`系列模型：1.5
+-   Qwen3.5-Omni-Realtime系列模型：1.5
     
 -   其他模型：0.0
     
@@ -393,6 +409,8 @@ def update_session(self,
                        PCM_16000HZ_MONO_16BIT,
                        output_audio_format: AudioFormat = AudioFormat.
                        PCM_24000HZ_MONO_16BIT,
+                       input_audio_config: AudioFormatConfig = None,
+                       output_audio_config: AudioFormatConfig = None,
                        enable_input_audio_transcription: bool = True,
                        input_audio_transcription_model: str = None,
                        enable_turn_detection: bool = True,
@@ -580,6 +598,40 @@ def get_last_response_id(self) -> str
 无
 
 获取最近一次response的response\_id。
+
+### **AudioFormatConfig 配置类**
+
+通过 `from dashscope.audio.qwen_omni import AudioFormatConfig, AudioFormatType, AudioSampleRate` 引入。用于同时配置音频格式和采样率。
+
+**适用模型：`qwen3.5-omni-plus-realtime`、`qwen3.5-omni-flash-realtime`。**
+
+```
+from dashscope.audio.qwen_omni import (
+    AudioFormatConfig, AudioFormatType, AudioSampleRate,
+)
+
+# 方式一：使用枚举
+conversation.update_session(
+    output_modalities=[MultiModality.AUDIO, MultiModality.TEXT],
+    voice=voice,
+    input_audio_config=AudioFormatConfig(
+        type=AudioFormatType.PCM,
+        sample_rate=AudioSampleRate.SAMPLE_RATE_16K
+    ),
+    output_audio_config=AudioFormatConfig(
+        type=AudioFormatType.WAV,
+        sample_rate=AudioSampleRate.SAMPLE_RATE_24K
+    ),
+)
+
+# 方式二：自由传值
+conversation.update_session(
+    output_modalities=[MultiModality.AUDIO, MultiModality.TEXT],
+    voice=voice,
+    input_audio_config=AudioFormatConfig(type="pcm", sample_rate=16000),
+    output_audio_config=AudioFormatConfig(type="wav", sample_rate=24000),
+)
+```
 
 ### **回调接口（OmniRealtimeCallback）**
 

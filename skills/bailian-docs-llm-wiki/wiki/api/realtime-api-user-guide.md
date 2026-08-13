@@ -1,66 +1,88 @@
 # realtime api user guide
 
-Realtime API 是百炼平台面向低延迟、高可靠性实时交互场景提供的统一接入层，支持 AOQ（AI over QUIC）、WebRTC 和 WebSocket 三种传输协议，覆盖语音识别、语音合成、多模态对话、实时翻译等全栈 AI 实时能力。开发者可根据终端类型、网络环境、功能需求和工程成熟度选择最适配的协议方案。
+Realtime API 是百炼平台提供的低延迟、高可靠实时交互能力接口，支持 AOQ、WebRTC 和 WebSocket 三种传输协议，面向[多模态](../concepts/multimodal.md) AI 场景深度优化。开发者可根据终端类型、网络环境、功能需求和接入成本灵活选型，快速构建语音对话、实时翻译、全模态交互等应用。本文档系统梳理核心能力、参数配置、接入流程及关键约束，供开发者直接参考实施。
 
 ## 支持的模型/功能
 
-Realtime API 当前支持以下模型与应用类型，但**协议支持存在差异**：
+Realtime API 当前支持以下模型与应用类型，但**不同协议的支持范围存在差异**：
 
-- **实时全模态**（`qwen3.5-omni-plus-realtime`, `qwen3.5-omni-flash-realtime`）：全部协议（AOQ/WebRTC/WebSocket）均支持 [Realtime API 概述](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-overview.md)  
-- **实时语音翻译**（`qwen3.5-livetranslate-flash-realtime`）：全部协议支持  
-- **多模态开发套件**（`multimodal-dialog`）：全部协议支持  
-- **实时语音识别**（`Qwen-Audio-3.0-ASR-Flash-Streaming`, `Fun-ASR-Realtime` 系列）：仅 AOQ 和 WebSocket 支持；**WebRTC 不支持**  
-- **实时语音合成**（`CosyVoice` 系列、`qwen-audio-3.0-tts-flash`/`plus`）：仅 AOQ 和 WebSocket 支持；**WebRTC 不支持**  
-- **实时语音对话**（`qwen-audio-3.0-realtime-plus`, `qwen-audio-3.0-realtime-flash`）：全部协议支持  
+- **实时全模态**：`qwen3.5-omni-plus-realtime`、`qwen3.5-omni-flash-realtime` —— 全协议（AOQ/WebRTC/WebSocket）均支持  
+- **实时语音翻译**：`qwen3.5-livetranslate-flash-realtime` —— 全协议均支持  
+- **[多模态](../concepts/multimodal.md)开发套件**：`multimodal-dialog` —— 全协议均支持  
+- **实时语音识别（ASR）**：`Qwen-Audio-3.0-ASR-Flash-Streaming`、`Fun-ASR-Realtime` 系列 —— **仅 AOQ 和 WebSocket 支持，WebRTC 不支持**  
+- **实时语音合成（TTS）**：`CosyVoice` 系列、`qwen-audio-3.0-tts-flash`、`qwen-audio-3.0-tts-plus` —— **仅 AOQ 和 WebSocket 支持，WebRTC 不支持**  
+- **实时语音对话**：`qwen-audio-3.0-realtime-plus`、`qwen-audio-3.0-realtime-flash` —— 全协议均支持  
 
-> **注意**：文档 1 明确列出 WebRTC 对 ASR/TTS 模型“不支持”，但文档 5 的“WebRTC 接入”章节未强调此限制，且未提供替代方案示例。实际集成时请以文档 1 的模型支持矩阵为准，避免在 WebRTC 场景中误用 ASR/TTS 模型。
+> **注意**：文档 [Realtime API 概述](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-overview.md) 明确列出 WebRTC 对 ASR/TTS 模型“不支持”，而部分旧版 SDK 示例或未更新的代码片段可能隐含错误假设。请以该文档为准，避免在 WebRTC 场景中尝试调用 ASR/TTS 模型。
+
+模型最新名称、上下文长度、定价及快照版本，请始终以[阿里云百炼控制台](https://bailian.console.aliyun.com/cn-beijing#/home)为准；并发限流策略详见[限流文档](https://help.aliyun.com/zh/model-studio/rate-limit)。
 
 ## 关键参数
 
-| 参数 | 协议适用性 | 说明 |
-|------|------------|------|
-| `Authorization: Bearer <API_KEY>` | 全协议 | 建连阶段 HTTP Header 鉴权，**API Key 必须由服务端持有并用于请求网关**；客户端仅使用网关返回的临时 `aoqTokenForClient`（AOQ）或直接携带（WebSocket/WebRTC）[Token鉴权](../../raw/model-api-reference/realtime-api-user-guide/realtime-token-authentication.md) |
-| `x-dashscope-rtc-transport: moq` | AOQ 专用 | 标识使用 AOQ 协议，必须在建连请求中显式声明 |
-| `clientIp`（请求体） | AOQ 专用 | 客户端真实公网 IP，用于 Relay 接入点智能调度；不填则默认使用网关出口 IP |
-| `sid`, `aoqTokenForClient`, `clientRelayCertFingerprint`, `clientRelayEndpoints` | AOQ 专用 | 由服务端调用 `/api/v1/webrtc/realtime` 分配返回，客户端 SDK 连接必需 |
-| `session.update` 事件中的 `modalities`, `voice`, `input_audio_format`, `output_audio_format`, `instructions`, `turn_detection` | 全协议（语义一致） | 会话初始化配置，决定输出模态（文本/音频）、音色、音频格式（PCM）、系统指令及 VAD 行为；其中 `turn_detection.type` 推荐对 `qwen3.5-omni-realtime` 系列设为 `semantic_vad` |
+### 协议级通用参数
+- `Authorization`: Bearer `<API_KEY>` —— 建连阶段必需，**不可暴露于客户端**（AOQ 推荐服务端代理鉴权）  
+- `workspaceIdHash`: 工作区哈希值，由网关分配（如 `allocate` 接口响应中的 `extraInfo.workspaceIdHash`），AOQ 必填  
+- `sid`: 会话唯一标识，由网关分配，AOQ 必填  
+- `token`: 客户端连接令牌（如 `aoqTokenForClient`），AOQ 必填；WebSocket/WebRTC 中直接使用 API Key  
+- `relayEndpoints` & `certFingerprint`: AOQ Relay 接入点及 TLS 证书指纹，用于 QUIC 连接建立  
+
+### 会话配置参数（`session.update` 事件）
+- `modalities`: 输出模态数组，如 `["text"]` 或 `["text","audio"]`  
+- `voice`: TTS 音色名（如 `"Ethan"`），仅当 `modalities` 包含 `"audio"` 时生效  
+- `input_audio_format` / `output_audio_format`: 当前仅支持 `"pcm"`  
+- `instructions`: 系统角色指令（UTF-8 字符串）  
+- `turn_detection`: 语音活动检测（VAD）配置对象  
+  - `type`: `"server_vad"` 或 `"semantic_vad"`（推荐后者用于 Omni 系列）  
+  - `threshold`: VAD 检测阈值（0.0–1.0）  
+  - `silence_duration_ms`: 静音触发响应时长（毫秒）  
+
+### AOQ SDK 特有参数
+- `enableSendMediaStream(.audio, false)`：建连后默认禁用媒体发送，**必须在收到 `session.updated` 后显式启用**，否则服务端可能丢弃数据 [媒体流发送管理](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-function/aoq-media-stream-control.md)  
+- `isExternal = true`：在 `startAudioCapture`/`startVideoCapture` 中启用外部采集模式，用于自定义音频/视频源注入 [自定义音频采集](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-function/aoq-custom-audio-capture.md)、[自定义视频输入](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-function/aoq-custom-video-input.md)  
 
 ## 使用方式
 
 ### 协议选型与接入路径
-- **AOQ**：适用于移动端原生 App（Android/iOS/HarmonyOS/Linux），需集成 [AOQ SDK](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-desc.md)，流程为：服务端分配凭证 → 客户端 `createEngine` → `connect` → 收到 `session.updated` 后调用 `enableSendMediaStream(true)` 开启媒体流。
-- **WebRTC**：适用于浏览器端或已有 WebRTC 基础设施的场景，**无官方 SDK**，需基于标准 WebRTC API（如 `RTCPeerConnection`）实现 SDP 交换与 DataChannel 通信。
-- **WebSocket**：适用于服务端集成或快速原型验证，接入门槛最低，可直接通过 DashScope SDK 或原生 WebSocket 库连接。
+| 协议 | 适用场景 | 客户端依赖 | 关键步骤 |
+|--------|-----------|-------------|------------|
+| **AOQ** | 移动端原生 App、极致弱网对抗、[多模态](../concepts/multimodal.md)混合传输 | AOQ SDK（Android/iOS/HarmonyOS/Linux） | 1. 服务端调用 `allocate` 获取 `sid`/`token`/`relayEndpoints`<br>2. 客户端 `createEngine` → `connect(config)`<br>3. 监听 `onConnectionStatusChange(.connected)` → 发送 `session.update`<br>4. 监听 `onDataMsg("session.updated")` → 调用 `enableSendMediaStream(.audio, true)` |
+| **WebRTC** | 浏览器端、已有 WebRTC 基础设施 | 浏览器原生 API 或 `aiortc` 等库 | 1. 客户端生成 Offer SDP<br>2. POST 到 `https://{endpoint}/api/v1/webrtc/realtime?model=...`（带 `Authorization`）<br>3. 解析 Answer SDP 并 `setRemoteDescription`<br>4. 通过 DataChannel（如 `"oai-events"`）收发 JSON 事件 |
+| **WebSocket** | 服务端集成、快速原型验证、跨平台兼容 | DashScope SDK 或标准 WebSocket Client | 1. 直接 WebSocket 握手（`wss://...`），Header 带 `Authorization`<br>2. 发送 `session.update` 初始化会话<br>3. 通过文本帧或二进制帧传输音频/图像数据 |
 
-### 核心控制逻辑（AOQ）
-- **连接状态管理**：SDK 提供明确的状态机（`Connecting` → `Connected`/`Failed` → `Disconnected`），业务需监听 `onConnectionStatusChange` 回调处理状态迁移 [连接状态管理](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-function/aoq-connection-management.md)。
-- **媒体流发送时机**：必须在收到服务端 `session.updated` 事件后，再调用 `enableSendMediaStream(.audio, true)` 和 `enableSendMediaStream(.video, true)`，否则服务端可能拒绝接收数据 [媒体流发送管理](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-function/aoq-media-stream-control.md)。
-- **自定义音视频处理**：支持外部采集/播放模式，通过 `isExternal=true` 关闭 SDK 内置模块，并使用 `pushAudioExternalStreamData` 或 `onPlaybackAudioFrame` 等接口接管 PCM 数据流，适用于 TTS 输出、ASR 输入、音效处理等高级场景。
+### AOQ SDK 核心流程（必读）
+1. **初始化与连接**：调用 `AoqClientEngine.createEngine()` 创建引擎，实现 `AoqEngineDelegate` 回调；`connect(config)` 触发状态迁移（`Connecting` → `Connected` 或 `Failed` → `Disconnected`）[连接状态管理](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-function/aoq-connection-management.md)  
+2. **媒体流控制**：建连前调用 `enableSendMediaStream(.audio, false)`，收到 `session.updated` 后再启用，确保服务端已就绪  
+3. **自定义扩展**：  
+   - 音频：通过 `addAudioExternalStream()` + `pushAudioExternalStreamData()` 注入 TTS 或文件音频  
+   - 视频：通过 `startVideoCapture(isExternal: true)` + `pushExternalVideoCapturedFrame()` 推送原始帧，或 `setVideoEncoderConfig(isExternal: true)` + `pushExternalVideoEncodedFrame()` 推送 JPEG 编码帧  
 
 ## 限制和注意事项
 
-- **API Key 安全**：严禁将 API Key 硬编码至客户端代码或提交至代码仓库；AOQ 协议强制要求服务端代理鉴权，客户端仅使用临时 [Token](../concepts/token.md)，此设计显著提升安全性。
-- **模型兼容性**：部分模型（如 ASR/TTS）不支持 WebRTC 协议，强行接入将导致建连失败或功能异常；务必依据 [Realtime API 概述](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-overview.md) 中的模型支持矩阵选择协议。
-- **音频/视频格式约束**：
-  - 输入音频：当前仅支持 `pcm` 格式，采样率需匹配模型要求（如 Omni 系列要求 16 kHz）。
-  - 输出音频：当前仅支持 `pcm` 格式，采样率为 24 kHz。
-  - 视频编码：原始帧模式支持 I420/NV12/NV21/BGRA/RGBA；编码帧模式当前**仅支持 JPEG**。
-- **资源管理**：调用 `pushAudioExternalStreamData` 或 `pushExternalVideoCapturedFrame` 时，若返回错误码 `110`（缓冲区满），需短暂休眠（如 30ms）后重试，不可丢弃数据；引擎销毁前必须停止所有推送循环并移除外部流。
-- **平台差异**：iOS 的 `CVPixelBuffer`、Android 的 `TextureOES` 等零拷贝格式需按平台规范正确管理内存引用；OHOS 平台需使用 `XComponent` 作为渲染容器。
+- **API Key 安全**：严禁硬编码于客户端。AOQ 必须采用服务端代理鉴权（AppServer 调用 `allocate` 获取临时 token）；WebSocket/WebRTC 若由客户端直连，需通过后端代理或短期 [Token](../concepts/token.md) 机制规避泄露风险 [Token鉴权](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-quick-start-guide/realtime-token-authentication.md)  
+- **媒体流时序**：AOQ 下，**未收到 `session.updated` 前发送媒体流将导致服务端静默丢弃**。务必遵循“先禁用、后开启”流程，不可依赖默认行为  
+- **编解码约束**：  
+  - 输入音频：仅支持 16 kHz PCM（`input_audio_format: "pcm"`）  
+  - 输出音频：仅支持 24 kHz PCM（`output_audio_format: "pcm"`）  
+  - 视频编码：H.264 为主，JPEG 仅支持外部编码帧模式  
+- **平台兼容性**：  
+  - AOQ SDK 不支持浏览器环境，仅适用于原生客户端（Android/iOS/HarmonyOS/Linux）  
+  - WebRTC 在浏览器中原生支持，移动端需依赖第三方 WebRTC 库（非阿里云提供）  
+- **资源释放**：调用 `disconnect()` 后引擎仍存活，可重连；`destroy()` 才彻底释放资源。自定义音频/视频流推送线程必须在 `removeAudioExternalStream()`/`stopVideoCapture()` 前停止，避免访问已释放内存  
+- **Opus 依赖**：AOQ SDK 使用插件方式加载 Opus 编解码器，集成时**必须下载并加载 `libPluginOpus`（Android/iOS/HarmonyOS）或 `PluginOpus.framework`（iOS）**，否则 Opus 编码失败 [SDK下载](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-quick-start-guide/realtime-sdk-download.md)
 
 ## 来源文档
 
 - [Realtime API 概述](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-overview.md)
 - [SDK下载](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-quick-start-guide/realtime-sdk-download.md)
-- [AOQ SDK简介](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-desc.md)
-- [Token鉴权](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-quick-start-guide/realtime-token-authentication.md)
 - [接入模型与应用](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-quick-start-guide/realtime-connect-model.md)
+- [Token鉴权](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-quick-start-guide/realtime-token-authentication.md)
+- [AOQ SDK简介](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-desc.md)
 - [连接状态管理](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-function/aoq-connection-management.md)
 - [媒体流发送管理](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-function/aoq-media-stream-control.md)
-- [音频常用功能介绍](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-function/aoq-audio-features.md)
 - [自定义音频播放](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-function/aoq-custom-audio-playback.md)
 - [自定义音频采集](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-function/aoq-custom-audio-capture.md)
 - [视频常用功能介绍](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-function/aoq-video-features.md)
 - [自定义视频输入](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-function/aoq-custom-video-input.md)
+- [音频常用功能介绍](../../raw/model-api-reference/realtime-api-user-guide/realtime-api-aoq-api/realtime-api-aoq-sdk-function/aoq-audio-features.md)
 
 

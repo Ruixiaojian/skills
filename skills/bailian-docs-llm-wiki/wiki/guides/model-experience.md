@@ -1,55 +1,75 @@
 # model experience
 
-`model experience` 是百炼平台面向开发者提供的模型能力总览，涵盖文本、视觉、音视频、3D、向量等全模态模型的选型指南、关键参数与使用约束。本文档聚焦实用信息，不包含营销话术，所有推荐均基于当前（2026年中）稳定可用的模型版本，并明确标注能力边界与兼容性要求。
+`model experience` 是百炼平台面向开发者提供的模型能力总览，涵盖文本、视觉、音频、视频、3D、[多模态](../concepts/multimodal.md)及向量检索等全栈AI模型服务。它提供统一的API接入方式、标准化的参数体系和跨模态协同能力，支持从简单文本生成到复杂音视频理解与生成的多样化场景。所有模型均按能力档位（高能力/平衡/轻量）组织，并明确标注上下文窗口、功能支持与地域限制。
 
 ## 支持的模型/功能
 
-百炼平台提供覆盖多模态的模型能力矩阵，按任务类型划分如下：
+百炼平台提供覆盖[多模态](../concepts/multimodal.md)的模型矩阵，按任务类型划分如下：
 
-- **文本生成**：支持[长上下文](../concepts/long-context.md)（最高1000万[Token](../concepts/token.md)）、Function Calling、内置工具（联网搜索/代码解释器）、结构化JSON输出及逐步推理（`enable_thinking`）。主力模型为 `qwen3.8-max`（最强推理）、`qwen3.7-plus`（平衡）、`qwen3.7-flash`（低成本），详见 [文本生成](../../raw/model-user-guide/model-experience/text-generation-model.md)。
-- **视觉理解**：支持图像、视频（最长2小时）、OCR（专用 `qwen3.5-ocr`）及多模态结构化输出。`qwen3.7-plus` 和 `qwen3.8-max` 为通用首选，`qwen3.5-omni-plus` 适用于需音频输入的视频理解场景 [视觉理解](../../raw/model-user-guide/model-experience/vision-model.md)。
-- **图片/视频生成与编辑**：`qwen-image-3.0-pro` 支持高保真文生图与复杂版面编辑；`happyhorse-1.1-t2v` 和 `wan2.7-i2v-2026-04-25` 分别覆盖文生视频与首尾帧续写；`Tripo/Tripo-P1.0` 提供文/图/多图生3D能力，仅限华北2（北京）地域 [Tripo 3D模型生成](../../raw/model-user-guide/model-experience/tripo-3d-generation-guide.md)。
-- **语音与音乐**：`qwen-audio-3.0-asr-flash-streaming`（实时ASR）、`qwen-audio-3.0-tts-plus`（TTS+声音复刻）、`fun-music-v1`（邀测中，仅北京地域）构成端到端语音链路 [语音识别](../../raw/model-user-guide/model-experience/asr-model.md)、[语音合成](../../raw/model-user-guide/model-experience/tts-model.md)、[音乐生成](../../raw/model-user-guide/model-experience/fun-music.md)。
-- **全模态与S2S**：`qwen3.5-omni-plus` 支持文本/音频/图片/视频联合理解与Function Calling；`qwen3.5-livetranslate-flash-realtime` 提供60语种实时语音翻译；`qwen-audio-3.0-realtime-plus` 实现低延迟语音对话 [全模态](../../raw/model-user-guide/model-experience/omni.md)、[语音转语音](../../raw/model-user-guide/model-experience/s2s-model.md)。
-- **向量与重排序**：`text-embedding-v4`（文本）、`qwen3-vl-embedding`（图文融合）、`qwen3-rerank`（纯文本重排）支撑RAG检索优化 [向量与重排序](../../raw/model-user-guide/model-experience/embedding-rerank-model.md)。
+- **文本生成**：以 `qwen3.8-max`（最强推理）、`qwen3.7-plus`（能力与成本均衡）、`qwen3.7-flash`（低成本）为核心，全部支持 1M 上下文、Function Calling、内置工具（联网搜索/代码解释器等）及结构化 JSON 输出；`qwen-long` 专用于超长文档（10M [Token](../concepts/token.md)）[原文标题](../../raw/model-user-guide/model-experience/text-generation-model.md)。  
+- **视觉理解**：`qwen3.7-plus` 和 `qwen3.7-flash` 支持图像（最高1600万像素）、视频（最长2小时/2GB）输入，具备 Function Calling 与结构化输出能力；`qwen3.5-ocr` 专用于高精度文档/表格/手写体 OCR [原文标题](../../raw/model-user-guide/model-experience/vision-model.md)。  
+- **图片生成与编辑**：`qwen-image-3.0-pro` 支持复杂版面、小字渲染与图中图；`wan2.7-image-pro` 支持品牌色控制与角色一致性多图生成；`z-image-turbo` 适用于快速低成本写实人像生成 [原文标题](../../raw/model-user-guide/model-experience/image-model.md)。  
+- **视频生成与编辑**：`happyhorse-1.1-t2v`（文生视频）、`wan2.7-i2v-2026-04-25`（首尾帧生视频）、`happyhorse-1.0-video-edit`（指令式编辑）构成主力组合，均支持 1080P 有声视频输出 [原文标题](../../raw/model-user-guide/model-experience/video-generate-edit-model.md)。  
+- **语音与音频**：  
+  - 语音合成（TTS）：`qwen-audio-3.0-tts-plus` 同时支持声音复刻与声音设计；`cosyvoice-v3.5-plus` 支持 SSML 与 LaTeX 公式朗读 [原文标题](../../raw/model-user-guide/model-experience/tts-model.md)。  
+  - 语音转语音（S2S）：`qwen-audio-3.0-realtime-plus`（低延迟对话）、`qwen3.5-livetranslate-flash-realtime`（60语种实时翻译）为首选 [原文标题](../../raw/model-user-guide/model-experience/s2s-model.md)。  
+  - 语音识别（ASR）：`qwen-audio-3.0-asr-flash-streaming`（实时流式）、`qwen-audio-3.0-asr-flash-filetrans`（支持说话人分离）覆盖主流需求 [原文标题](../../raw/model-user-guide/model-experience/asr-model.md)。  
+- **3D生成**：`Tripo/Tripo-P1.0`（快速预览，2万面）与 `Tripo/Tripo-H3.1`（影视级，200万面）支持文生3D、单图生3D、多图生3D三种模式，仅限华北2（北京）地域 [原文标题](../../raw/model-user-guide/model-experience/tripo-3d-generation-guide.md)。  
+- **音乐生成**：`fun-music-v1`（支持自定义歌词与性别）与 `fun-music-preview`（仅 [prompt](prompt.md) 输入）处于邀测阶段，仅限华北2（北京）地域 [原文标题](../../raw/model-user-guide/model-experience/fun-music.md)。  
+- **全模态**：`qwen3.5-omni-plus`（旗舰，支持音视频+图文+Function Calling+联网搜索）、`qwen3-omni-flash`（轻量，支持思考模式）、`qwen3.5-livetranslate-flash`（专业翻译）构成三支柱 [原文标题](../../raw/model-user-guide/model-experience/omni.md)。  
+- **向量与重排序**：`text-embedding-v4`（文本嵌入，默认1024维）、`qwen3-vl-embedding`（图文融合）、`qwen3-rerank`（纯文本重排序）支撑 RAG 与语义搜索 [原文标题](../../raw/model-user-guide/model-experience/embedding-rerank-model.md)。
 
-> **注意**：文档 1 中 `qwen-long` 的上下文窗口标为“10M”，而文档 2 中同模型未列此项，且其功能栏明确标注“不支持 Function Calling / 内置工具”。实际使用时应以模型广场实时参数为准，该模型仅适用于纯长文档摘要，不可用于工具调用场景。
+> **注意**：文档 1 与文档 2 均将 `qwen3.7-plus` 列为视觉理解推荐模型，但文档 2 表格中其“内置工具”列为“支持”，而文档 1 明确说明“所有通用模型均支持 Function Calling”，且“内置工具（联网搜索、代码解释器等）”需单独确认支持状态——二者一致，无矛盾。  
+> **注意**：文档 9（全模态）称 `qwen3.5-omni-plus` 支持“音频最长3小时、视频最长1小时”，而文档 2（视觉理解）称 `qwen3.7-plus` 支持“最长2小时视频”，此处存在不一致。根据模型命名逻辑（Qwen3.7 > Qwen3.5），应以文档 2 的 `qwen3.7-plus` 视频能力为准；文档 9 中的 `qwen3.5-omni-plus` 视频时长描述可能过时或指代 HTTP 模式下的文件上传限制，建议以模型广场实时参数为准。
 
 ## 关键参数
 
-各模型核心参数需在调用时显式指定或隐含于模型ID中：
+各模型通过标准化参数控制行为，核心参数如下：
 
-- **上下文长度**：文本模型如 `qwen3.7-plus` 为1M [Token](../concepts/token.md)（约70万汉字），`qwen-long` 为10M [Token](../concepts/token.md)；视觉模型统一支持1M上下文；视频模型最大处理2小时/2GB；Tripo 3D模型无Token概念，但受面数限制（`Tripo-P1.0` 最高2万面，`Tripo-H3.1` 最高200万面）。
-- **输入格式约束**：
-  - 图像：单图最高1600万像素，Token数 ≈ `h × w / (32 × 32) + 2`；
-  - 视频：`qwen3.7-plus` 等支持最长2小时，但需≤2GB；
-  - 音频：ASR模型 `qwen-audio-3.0-asr-flash-filetrans` 支持12小时/2GB，而 `qwen-audio-3.0-asr-flash` 仅限5分钟/2GB；
-  - 3D生成：单图输入需JPEG/PNG格式、20–6000像素宽高、≤20MB；多图输入限2–4张。
-- **输出控制**：
-  - 结构化输出：通过 `response_format={"type": "json_object"}` 或系统提示词触发，`qwen3.7-plus` 及以上文本模型、Qwen3-VL系列均支持；
-  - 思考模式：文本模型通过 `enable_thinking=true`（Responses API）或 `reasoning.effort` 控制，但 `qwen3.5-omni-flash` 等Omni模型在WebSocket模式下不支持思考模式（见文档 9 和 11）；
-  - 音频格式：TTS模型通过 `format=mp3` 或 `wav` 指定，`fun-music-v1` 同样支持此参数。
+- **通用控制**：  
+  - `enable_thinking` 或 `reasoning.effort`：开启/调节深度思考模式（Qwen3及以上文本模型）；  
+  - `response_format` / `output_schema`：声明结构化输出 JSON Schema；  
+  - `tools`：定义 Function Calling 工具列表（JSON Schema 格式）。  
+
+- **[多模态](../concepts/multimodal.md)输入**：  
+  - 图像：`"image": "https://..."` 或 base64 编码；  
+  - 视频：`"video": "https://..."`（需符合时长/大小限制）；  
+  - 多图：`"images": [{"type": "png", "file_token": "..."}, ...]`（Tripo）；  
+  - 音频：`"audio": "https://..."`（S2S/ASR/OMNI）。  
+
+- **生成类模型特有**：  
+  - 图片/视频：`parameters.texture_quality`（`standard`/`detailed`）、`parameters.geometry_quality`（`standard`/`ultra`）；  
+  - 音乐：`input.prompt`、`input.lyrics`、`input.gender`（`female`/`male`）、`input.is_instrumental`（`true`/`false`）；  
+  - TTS：`input.voice_id`（音色ID）、`input.text`、`input.style`（指令控制，如“温柔语速稍慢”）；  
+  - ASR：`input.hotwords`（热词表）、`input.context_prompt`（领域上下文）。  
+
+- **异步任务**：  
+  - `X-DashScope-Async: enable` 头 + 轮询 `GET /api/v1/tasks/{task_id}`（Tripo、部分视频模型）。
 
 ## 使用方式
 
-- **API接入**：所有模型均通过统一HTTP/WebSocket接口调用，URL格式为 `https://{WorkspaceId}.{region}.maas.aliyuncs.com/api/v1/services/{service}/{endpoint}`。`{region}` 必须匹配模型部署地域（如Tripo仅支持 `cn-beijing`），`{service}` 如 `text-generation`、`audio/music/generation`。
-- **异步任务**：3D生成（Tripo）、批量视频生成等耗时操作需先创建任务（返回 `task_id`），再轮询结果（建议间隔≥15秒），详见 [Tripo 3D模型生成](../../raw/model-user-guide/model-experience/tripo-3d-generation-guide.md)。
-- **协议选择**：
-  - 实时交互（语音助手、直播字幕）：优先选用WebSocket（如 `qwen-audio-3.0-asr-flash-streaming`）；
-  - 文件处理（会议录音转写、视频分析）：使用HTTP（如 `qwen-audio-3.0-asr-flash-filetrans`）；
-  - S2S场景：`qwen-audio-3.0-realtime-plus` 仅支持WebSocket，而 `qwen3-livetranslate-flash` 仅支持HTTP。
-- **SDK支持**：DashScope SDK（Python/Java）覆盖全部主流模型；Android/iOS SDK仅支持Qwen-Audio系列（ASR/TTS/S2S）及Fun系列（ASR/Music）。
+- **同步调用**：HTTP POST 到 `{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/...`（文本、TTS、ASR、Embedding 等）；WebSocket 连接用于实时流式交互（Realtime TTS、S2S、ASR Streaming）。  
+- **异步调用**：适用于耗时较长任务（3D生成、视频生成），先发请求获取 `task_id`，再轮询结果（间隔 ≥15 秒）[原文标题](../../raw/model-user-guide/model-experience/tripo-3d-generation-guide.md)。  
+- **地域与权限**：  
+  - Tripo、Fun-Music 仅限华北2（北京）；  
+  - 所有模型需开通对应服务并配置有效 `DASHSCOPE_API_KEY`；  
+  - 部分模型（如 `qwen3.5-livetranslate-flash-realtime`）需在模型广场手动开通。  
+- **SDK 支持**：DashScope Python/Java SDK 支持绝大多数模型；Android/iOS SDK 主要覆盖 Qwen-Audio-TTS、Qwen-Audio-ASR 及 Fun-ASR。
 
 ## 限制和注意事项
 
-- **地域限制**：`fun-music-v1`、`Tripo/Tripo-P1.0` 仅在华北2（北京）地域可用；部分旧版模型（如 `qwen-omni-turbo`）已停更，新项目必须使用 `qwen3.5-omni-plus` 或 `qwen3-omni-flash`。
-- **功能互斥**：Omni模型中，联网搜索与Function Calling不可同时启用；思考模式启用时，S2S模型无法输出语音（文档 9 明确说明）。
-- **成本与性能权衡**：
-  - `qwen3.7-flash` 在效果接近 `qwen3.7-plus` 的前提下降低成本，但 `deepseek-v4-flash` 不支持内置工具，需自行集成；
-  - `z-image-turbo` 生成速度快10倍、价格约1/5，但不支持图片编辑；
-  - `qwen3-rerank` 支持最多500个文档重排，超限时需分批处理。
-- **兼容性风险**：`text-embedding-v3` 与 `v4` 维度不兼容，迁移存量索引需重新向量化；`qwen3.5-ocr` 专为文档优化，通用场景应优先用 `qwen3.7-plus`。
-- **安全与合规**：所有模型调用需配置有效API Key及业务空间ID；语音复刻需用户授权音频样本；生成内容需符合中国法律法规及平台内容安全策略。
+- **地域限制**：Tripo 3D、Fun-Music、Qwen-Audio Realtime 系列强制要求华北2（北京）地域；其他模型在新加坡、美国、法兰克福等区域可用，但功能与版本可能不同。  
+- **输入约束**：  
+  - 图像：单图 ≤1600万像素（视觉模型），Tripo 单图宽高 20~6000px；  
+  - 视频：`qwen3.7-plus` 最长2小时/2GB，`qwen3.5-omni-plus` 最长1小时（文档冲突见上）；  
+  - 音频：ASR 文件最大 12 小时/2GB（`qwen-audio-3.0-asr-flash-filetrans`），TTS 输入文本长度依模型而定。  
+- **功能兼容性**：  
+  - Function Calling 与联网搜索不可同时启用（Qwen3.5-Omni）；  
+  - 思考模式下不支持语音输出（S2S）；  
+  - `qwen-long` 不支持 Function Calling、内置工具或思考模式；  
+  - `qwen3-vl-rerank` 仅支持多模态重排序，纯文本请用 `qwen3-rerank` 或 `gte-rerank-v2`。  
+- **版本管理**：快照版本（如 `qwen3.7-plus-2026-05-26`）用于稳定性保障，但非最新能力；推荐优先使用无日期后缀的模型 ID，其自动指向最新稳定快照。  
+- **计费差异**：Qwen3-TTS 系列（如 `qwen3-tts-flash`）按 [Token](../concepts/token.md) 计费，而 Qwen-Audio-TTS/CosyVoice 系列按请求/时长计费，选型时需注意成本模型。
 
 ## 来源文档
 
@@ -57,12 +77,12 @@
 - [视觉理解](../../raw/model-user-guide/model-experience/vision-model.md)
 - [图片生成与编辑](../../raw/model-user-guide/model-experience/image-model.md)
 - [视频生成与编辑](../../raw/model-user-guide/model-experience/video-generate-edit-model.md)
-- [语音合成](../../raw/model-user-guide/model-experience/tts-model.md)
 - [音乐生成](../../raw/model-user-guide/model-experience/fun-music.md)
+- [语音合成](../../raw/model-user-guide/model-experience/tts-model.md)
 - [Tripo 3D模型生成](../../raw/model-user-guide/model-experience/tripo-3d-generation-guide.md)
-- [语音识别](../../raw/model-user-guide/model-experience/asr-model.md)
 - [语音转语音](../../raw/model-user-guide/model-experience/s2s-model.md)
-- [向量与重排序](../../raw/model-user-guide/model-experience/embedding-rerank-model.md)
 - [全模态](../../raw/model-user-guide/model-experience/omni.md)
+- [语音识别](../../raw/model-user-guide/model-experience/asr-model.md)
+- [向量与重排序](../../raw/model-user-guide/model-experience/embedding-rerank-model.md)
 
 

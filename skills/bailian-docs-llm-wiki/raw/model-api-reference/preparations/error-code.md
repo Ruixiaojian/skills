@@ -150,6 +150,12 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
 
 **解决方案：** 请将模型第一轮响应的 Assistant Message 添加到 messages 数组后再添加 Tool Message。
 
+### **An assistant message with "tool\_calls" must be followed by tool messages responding to each "tool\_call\_id"**
+
+**原因：** assistant 消息包含 tool\_calls 时，后续必须跟随 tool 角色消息来响应每个 tool\_call\_id。常见于使用工具调用百炼 API 时消息序列格式不正确，例如在带 tool\_calls 的 assistant 消息之后直接追加 user 消息。
+
+**解决方案：** 在带 tool\_calls 的 assistant 消息之后、发送下一个 user 消息之前，插入对应的 tool 角色消息（每条包含匹配的 tool\_call\_id 和该工具的执行结果）。assistant 消息中的每个 tool\_call\_id 都必须有且仅有一条 tool 消息与之对应。
+
 ### **Required body invalid, please check the request body format.**
 
 **原因：** 请求体（body）格式不符合接口要求。
@@ -243,7 +249,7 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
 
 -   **检查模型名称格式：**确认`model`参数大小写是否正确，是否存在多余的空格。
     
--   **使用正确的模型名称：**请对照[模型列表](https://help.aliyun.com/zh/model-studio/getting-started/models)中的模型名称，检查输入的`model`是否正确。请勿混用开源社区的模型名与百炼模型ID，如应该使用`qwen3-235b-a22b-instruct-2507`，而非`Qwen/Qwen3-235B-A22B-Instruct-2507`。
+-   **使用正确的模型名称：**请对照[模型列表](https://help.aliyun.com/zh/model-studio/models)中的模型名称，检查输入的`model`是否正确。请勿混用开源社区的模型名与百炼模型ID，如应该使用`qwen3-235b-a22b-instruct-2507`，而非`Qwen/Qwen3-235B-A22B-Instruct-2507`。
     
 
 ### **The product is not activated, please confirm that you have activated products and try again after activation.**
@@ -1913,6 +1919,12 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **原因：** 无权访问此模型。可能因该模型需申请权限，或模型免费额度已耗尽且不支持付费使用（如 `deepseek-r1-distill-llama-70b`）。
 
+**使用通用 API Key 调用 Token Plan 专属模型**
+
+**原因：** Token Plan 专属模型（如 `qwen3.8-max-preview`）仅限 Token Plan 订阅用户使用专属 API Key（以 `sk-sp-` 开头）配合 Token Plan 专属 Base URL 调用。使用通用 API Key（以 `sk-` 开头）调用这些模型会返回 403 `access_denied` 错误。
+
+**解决方案：** 请前往阿里云百炼控制台，在**我的订阅**的 API Key 区域获取 Token Plan 专属 API Key 与专属 Base URL，并确认同时更新了两者，具体配置方法请参见[快速开始](https://help.aliyun.com/zh/model-studio/token-plan-team-quickstart)。若 API Key 与 Base URL 不匹配（例如专属 API Key 搭配通用 Base URL），将返回 401 鉴权错误，请参见本文档 **401-InvalidApiKey/invalid\_api\_key**。
+
 **解决方案：** 请前往阿里云百炼控制台，在[模型广场](https://bailian.console.aliyun.com/?tab=model#/model-market)的对应模型卡片下方单击**立即申请**发起测试申请。或改用其他模型，例如千问或万相的文生图模型替代 Flux。
 
 ## **403-** AccessDenied.Unpurchased
@@ -2032,12 +2044,18 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：**
 
--   请对照[模型列表](https://help.aliyun.com/zh/model-studio/getting-started/models)中的模型名称，检查您输入的模型名称（参数`model`的取值）是否正确。
+-   请对照[模型列表](https://help.aliyun.com/zh/model-studio/models)中的模型名称，检查您输入的模型名称（参数`model`的取值）是否正确。
     
 -   请前往[模型广场](https://bailian.console.aliyun.com/?tab=model#/model-market)开通模型服务。
     
 -   如果您通过国际站 API 端点（如 `{WorkspaceId}.us-east-1.maas.aliyuncs.com`）发起调用，请注意不同地域可用的模型列表不同。调用前请确认目标模型是否在该地域可用，部分模型在美国地域需使用带 `-us` 后缀的模型名称（如 `qwen-max-us`）。
     
+-   如果您使用**专属部署端点**调用模型，出现 ModelNotFound 时还需检查以下两点：
+    
+    1.  **确认使用部署名称**：专属部署端点的 `model` 参数应填写部署名称（model code），而非模型名称。部署名称可在百炼控制台的**模型部署**页面查看，格式类似 `qwen3.5-flash-2026-02-23-9439a8e1eafa`。使用模型名称调用专属部署端点，或在标准 API 端点上使用部署名称，均会返回 `model_not_found`。
+        
+    2.  **区分调用方式**：通用调用使用标准 API 端点和模型名称，专属部署调用使用专属部署端点 URL 和部署名称，两者不可混用。通用调用与专属部署调用的 API-KEY 也可能不同，混用会导致 `invalid_api_key` 认证错误。
+        
 
 ## **404-** model\_not\_supported
 
@@ -2127,6 +2145,8 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 **原因：** 调用频率（RPS/RPM）触发限流。
 
 **解决方案：** 请参考[限流](https://help.aliyun.com/zh/model-studio/rate-limit)，控制调用频率。
+
+**说明：** 若单次调用即返回 429，请检查请求头是否设置了 `X-DashScope-Async: enable`。部分模型（如 `qwen-image-3.0-pro`）不支持异步调用，设置该请求头时即使单次请求也会返回 429。请移除 `X-DashScope-Async` 请求头，或将其值设为 `disable`，然后使用同步调用重试。详情请参见本文档中「**403-**AccessDenied/access\_denied」下「**Current user api does not support asynchronous calls.**」条目。
 
 ## **429-** Throttling.BurstRate/limit\_burst\_rate
 

@@ -43,7 +43,7 @@
 
 ## **result-generated**
 
-**说明**：识别结果，包含中间结果（sentence\_end=false）和最终结果（sentence\_end=true）。
+**说明**：识别结果，包含中间结果（sentence\_end=false）和最终结果（sentence\_end=true）。其中，新句子的首个中间结果包含 sentence\_begin=true。
 
 **header** `_object_`
 
@@ -56,6 +56,34 @@
 **event** `_string_`
 
 事件类型，固定为 `result-generated`。
+
+**句子开始结果：**
+
+```
+{
+  "header": {
+    "task_id": "2bf83b9a-baeb-4fda-8d9a-xxxxxxxxxxxx",
+    "event": "result-generated",
+    "attributes": {}
+  },
+  "payload": {
+    "output": {
+      "sentence": {
+        "begin_time": 0,
+        "end_time": null,
+        "text": "",
+        "sentence_begin": true,
+        "sentence_end": false,
+        "sentence_id": 1,
+        "words": []
+      }
+    },
+    "usage": null
+  }
+}
+```
+
+**最终结果：**
 
 ```
 {
@@ -149,6 +177,10 @@
 **heartbeat** `_boolean_`
 
 若为 true，可跳过该结果（心跳包）。
+
+**sentence\_begin** `_boolean_`
+
+用于标识句子开始。
 
 **sentence\_end** `_boolean_`
 

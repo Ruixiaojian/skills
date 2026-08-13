@@ -1,6 +1,6 @@
 # 爱诗-参考生视频API参考
 
-爱诗-参考生视频模型支持传入多张参考图片，通过**文本提示词**描述场景，将图片中的主体角色融合生成一段流畅的视频。
+爱诗-参考生视频模型支持传入多张参考图片或视频，通过**文本提示词**描述场景，将素材中的主体角色融合生成一段流畅的视频。
 
 **重要**
 
@@ -21,7 +21,7 @@
     
 -   **选择 URL**：选择对应的地域 Endpoint URL，支持HTTP URL或 DashScope SDK URL。
     
--   **配置 API Key**：选择地域并[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，再[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
+-   **配置 API Key**：选择地域并[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，再[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
     
 
 ## HTTP调用
@@ -42,6 +42,48 @@
     
 
 #### 请求参数
+
+## 参考生视频（图片+视频，omni）
+
+通过 `media` 传入参考视频和参考图片，使用 `resolution` 和 `aspect_ratio` 控制输出分辨率和画面比例。
+
+```
+# 调用时请将 {WorkspaceId} 替换为真实的业务空间ID。
+curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis' \
+    -H 'X-DashScope-Async: enable' \
+    -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "model": "pixverse/pixverse-v6-r2v-omni",
+    "input": {
+        "media": [
+            {
+                "type": "video_url",
+                "url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260129/qigswt/wan-r2v-role2.mp4",
+                "ref_name": "参考视频"
+            },
+            {
+                "type": "image_url",
+                "url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260320/knsple/wan-r2v-role-frame.jpg",
+                "ref_name": "男人"
+            },
+            {
+                "type": "image_url",
+                "url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260129/wfjikw/wan-r2v-backgroud5.png",
+                "ref_name": "咖啡厅"
+            }
+        ],
+        "prompt": "@男人 在@咖啡厅 中弹吉他 参考@参考视频"
+    },
+    "parameters": {
+        "resolution": "720P",
+        "aspect_ratio": "16:9",
+        "duration": 0,
+        "audio": true,
+        "watermark": false
+    }
+}'
+```
 
 ## 参考生视频
 
@@ -148,6 +190,8 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 可选值：
 
+-   pixverse/pixverse-v6-r2v-omni
+    
 -   pixverse/pixverse-c1-r2v
     
 -   pixverse/pixverse-v6-r2v
@@ -157,6 +201,8 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 **模型选型**
 
+-   需要图片+视频融合参考生成时，推荐选用 **v6-r2v-omni**，支持同时传入参考图片和参考视频。
+    
 -   针对打斗、法术特效及高速运动等动态场景以及多宫格场景，推荐选用 **c1**。
     
 -   通用场景推荐使用**v6**，**v5.6**建议直接升级至v6。
@@ -174,6 +220,8 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 支持中英文，每个汉字/字母占一个字符，字符编码为UTF-8，超过部分会自动截断。
 
+-   pixverse/pixverse-v6-r2v-omni：不超过5000个字符。
+    
 -   pixverse/pixverse-c1-r2v：不超过5000个字符。
     
 -   pixverse/pixverse-v6-r2v：不超过2048个字符。
@@ -197,7 +245,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 **media** `_array_` **（必选）**
 
-媒体素材列表，用于指定视频生成所需的参考图像。
+媒体素材列表，用于指定视频生成所需的参考图像和视频。
 
 数组的每个元素为一个媒体对象，包含 `type`和 `url`字段。
 
@@ -205,19 +253,27 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 **type** `_string_` **（必选）**
 
-媒体素材类型。固定值为：
+媒体素材类型。可选值：
 
 -   `image_url`：图像URL。
     
+-   `video_url`：视频URL（仅 pixverse/pixverse-v6-r2v-omni 支持）。
+    
 
-素材限制：
+素材数量限制：
 
--   图像数量：1～7张。
+-   图像数量：pixverse/pixverse-v6-r2v-omni 最多10张，其他模型最多7张。
+    
+-   视频数量（仅 omni）：1～2个。
     
 
 **url** `_string_` **（必选）**
 
-图像文件的URL地址，必须为公网可访问的URL。
+媒体素材URL。素材包括图像、视频（视频仅 omni 模型支持）。
+
+传入图像（type=image\_url）
+
+参考图像URL，必须为公网可访问的 URL。
 
 -   支持 HTTP 或 HTTPS 协议。
     
@@ -233,9 +289,29 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 -   文件大小：不超过20MB。
     
 
+传入视频（type=video\_url，仅 omni 模型）
+
+参考视频URL，必须为公网可访问的 URL。
+
+-   支持 HTTP 或 HTTPS 协议。
+    
+-   示例值：https://xxx/xxx.mp4。
+    
+
+视频限制：
+
+-   格式：MP4、MOV。
+    
+-   分辨率：长边不超过1920像素。
+    
+-   文件大小：单个视频不超过50MB。
+    
+-   时长：两个视频总时长不超过15秒。
+    
+
 **ref\_name** `_string_` （可选）
 
-参考图片中主体的名称标识，用于在prompt中通过`@ref_name` 引用。
+参考图片或视频中主体的名称标识，用于在prompt中通过`@ref_name` 引用。长度不超过30个字符。
 
 **parameters** `_object_` **（必选）**
 
@@ -243,9 +319,49 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 **属性**
 
-**size** `_string_` **（必选）**
+**resolution** `_string_` **（omni 模型必选）**
 
-生成视频的分辨率，格式为`宽*高`的像素值。
+生成视频的分辨率档位。仅 pixverse/pixverse-v6-r2v-omni 使用此参数。
+
+可选值：
+
+-   `360P`
+    
+-   `540P`
+    
+-   `720P`
+    
+-   `1080P`
+    
+
+**aspect\_ratio** `_string_` **（omni 模型必选）**
+
+生成视频的宽高比。仅 pixverse/pixverse-v6-r2v-omni 使用此参数。
+
+可选值：
+
+-   `auto`：自动采用第一个图片或视频的宽高比。
+    
+-   `16:9`
+    
+-   `4:3`
+    
+-   `1:1`
+    
+-   `3:4`
+    
+-   `9:16`
+    
+-   `3:2`
+    
+-   `2:3`
+    
+-   `21:9`
+    
+
+**size** `_string_` **（c1/v6/v5.6 模型必选）**
+
+生成视频的分辨率，格式为`宽*高`的像素值。不支持 pixverse/pixverse-v6-r2v-omni 模型。
 
 不同分辨率档位对应的可选值见下方表格。
 
@@ -645,6 +761,12 @@ duration直接影响费用，请在调用前确认[爱诗-参考生视频](https
 
 可选值：
 
+-   pixverse/pixverse-v6-r2v-omni：
+    
+    -   有视频参考时：必须填 `0`，系统将自动取输入视频中的最长时长。
+        
+    -   仅图片参考时：取值范围为\[1, 15\]之间的整数。
+        
 -   pixverse/pixverse-c1-r2v：取值范围为\[1, 15\]之间的整数。
     
 -   pixverse/pixverse-v6-r2v：取值范围为\[1, 15\]之间的整数。

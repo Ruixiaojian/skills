@@ -8,6 +8,155 @@
           "Video"
         ],
         "request_modality": [
+          "Text",
+          "Image",
+          "Video"
+        ]
+      },
+      "description": "V6-r2v-omni是PixVerse在26年8月推出的新模型，是在现有 Video (T2V/I2V)、Transition (首尾帧)、Extend 基础上新增的能力，支持视频与图片混合输入生成视频",
+      "features": [],
+      "provider": "pixverse",
+      "model": "pixverse/pixverse-v6-r2v-omni",
+      "prices": [
+        {
+          "priceUnit": "每秒",
+          "price": "0.21",
+          "type": "360P_no_reference_video",
+          "priceName": "视频生成（360P 无参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "0.27",
+          "type": "540P_no_reference_video",
+          "priceName": "视频生成（540P 无参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "0.36",
+          "type": "720P_no_reference_video",
+          "priceName": "视频生成（720P 无参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "0.68",
+          "type": "1080P_no_reference_video",
+          "priceName": "视频生成（1080P 无参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "0.42",
+          "type": "360P_reference_video",
+          "priceName": "视频生成（360P 有参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "0.54",
+          "type": "540P_reference_video",
+          "priceName": "视频生成（540P 有参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "0.72",
+          "type": "720P_reference_video",
+          "priceName": "视频生成（720P 有参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "1.36",
+          "type": "1080P_reference_video",
+          "priceName": "视频生成（1080P 有参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "0.15",
+          "type": "360P_no_audio_no_reference_video",
+          "priceName": "视频生成（360P 无声 无参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "0.21",
+          "type": "5400P_no_audio_no_reference_video",
+          "priceName": "视频生成（540P 无声 无参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "0.27",
+          "type": "720P_no_audio_no_reference_video",
+          "priceName": "视频生成（720P 无声 无参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "0.53",
+          "type": "1080P_no_audio_no_reference_video",
+          "priceName": "视频生成（1080P 无声 无参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "0.3",
+          "type": "360P_no_audio_reference_video",
+          "priceName": "视频生成（360P 无声 有参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "0.42",
+          "type": "540P_no_audio_reference_video",
+          "priceName": "视频生成（540P 无声 有参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "0.54",
+          "type": "720P_no_audio_reference_video",
+          "priceName": "视频生成（720P 无声 有参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "1.06",
+          "type": "1080P_no_audio_reference_video",
+          "priceName": "视频生成（1080P 无声 有参考视频）"
+        }
+      ],
+      "qpmInfo": {
+        "model-default-actual": {
+          "count_limit_period": 60,
+          "async_user_queue_limit": 500,
+          "count_limit": 300,
+          "type": "model-default",
+          "async_user_concurrency_limit": 5
+        },
+        "model-default": {
+          "count_limit_period": 60,
+          "async_user_queue_limit": 500,
+          "count_limit": 300,
+          "type": "model-default",
+          "async_user_concurrency_limit": 5
+        }
+      },
+      "priceTimeBands": [],
+      "capabilities": [
+        "VG"
+      ],
+      "modelAlias": "",
+      "versionTag": "MAJOR",
+      "latestOnlineAt": "2026-08-11T10:09:32.000+00:00",
+      "inferenceProvider": "pixverse",
+      "name": "PixVerse-V6-r2v-omni",
+      "docUrl": "https://help.aliyun.com/document_detail/3025612.html",
+      "category": "Third-party",
+      "samples": {
+        "dashscope": {
+          "default": {
+            "curl": "curl --location 'https://[workspace-id].cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis' \\\n    -H 'X-DashScope-Async: enable' \\\n    -H \"Authorization: Bearer $DASHSCOPE_API_KEY\" \\\n    -H 'Content-Type: application/json' \\\n    -d '{\n    \"model\": \"pixverse/pixverse-v6-r2v-omni\",\n    \"input\": {\n        \"media\": [\n            {\n                \"type\": \"video_url\",\n                \"url\": \"https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260129/qigswt/wan-r2v-role2.mp4\",\n                \"ref_name\": \"参考视频\"\n            },\n            {\n                \"type\": \"image_url\",\n                \"url\": \"https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260320/knsple/wan-r2v-role-frame.jpg\",\n                \"ref_name\": \"男人\"\n            },\n            {\n                \"type\": \"image_url\",\n                \"url\": \"https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260129/wfjikw/wan-r2v-backgroud5.png\",\n                \"ref_name\": \"咖啡厅\"\n            }\n        ],\n        \"prompt\": \"@男人 在@咖啡厅 中弹吉他 参考@参考视频\"\n    },\n    \"parameters\": {\n        \"resolution\": \"720P\",\n        \"aspect_ratio\": \"16:9\",\n        \"duration\": 0,\n        \"audio\": true,\n        \"watermark\": false\n    }\n}'",
+            "docUrl": "https://help.aliyun.com/document_detail/3025612.html"
+          }
+        }
+      }
+    },
+    {
+      "inferenceMetadata": {
+        "response_modality": [
+          "Video"
+        ],
+        "request_modality": [
           "Text"
         ]
       },

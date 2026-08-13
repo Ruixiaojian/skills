@@ -95,7 +95,7 @@ PTU（[模型部署](https://help.aliyun.com/zh/model-studio/model-deployment-in
 
 ¥362.90
 
-千问3.7-Flash-2026-07-15
+千问3.7-Flash-2026-07-15 联系商务经理开通
 
 ¥2.00
 
@@ -171,7 +171,7 @@ Kimi-K2.6
 
 ¥453.20
 
-千问3.7-Flash-2026-07-15
+千问3.7-Flash-2026-07-15 联系商务经理开通
 
 ¥2.30
 
