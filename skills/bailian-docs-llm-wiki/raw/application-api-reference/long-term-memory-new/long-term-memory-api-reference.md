@@ -152,7 +152,7 @@ GET
 
 ### 1\. AddMemory - 添加记忆片段
 
-将用户对话存储为记忆片段，自动提取关键信息和用户画像。
+将用户对话存储为记忆片段，自动提取关键信息。若需同时提取用户画像，需传入 `profile_schema`。
 
 **请求体参数：**
 
@@ -216,7 +216,7 @@ string
 
 否
 
-[画像模板 ID](#4najl0a4ju096)，在记忆库详情页获取。
+[画像模板 ID](#4najl0a4ju096)，在记忆库详情页获取。不传则不提取用户画像，仅写入记忆片段。
 
 memory\_library\_id
 
@@ -1581,7 +1581,7 @@ for attr in result.get("attributes", []):
 
 ### 11\. GetUserProfile - 获取用户画像
 
-获取系统自动提取的用户画像信息。
+获取已提取的用户画像信息。画像属性由 AddMemory 传入 `profile_schema` 时提取；若返回的属性值均为空，请确认调用 AddMemory 时已传入相同的画像模板 ID。
 
 **路径参数：**`profile_schema_id` - 画像模板 ID
 

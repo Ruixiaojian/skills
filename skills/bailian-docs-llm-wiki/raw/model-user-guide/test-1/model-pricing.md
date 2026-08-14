@@ -8666,7 +8666,7 @@ qwen3-coder-next
 
 **说明**
 
-Deepseek-v4系列模型价格近期将有所上调，具体调整方案和生效时间以正式通知为准。
+DeepSeek-V4系列模型价格近期将有所上调，具体调整方案和生效时间请参考[DeepSeek-V4-Flash-0731 模型涨价通知](https://www.aliyun.com/notice/118555)。
 
 #### 华北2（北京）
 
@@ -8689,6 +8689,20 @@ deepseek-v4-pro
 12元
 
 24元
+
+100万Token
+
+deepseek-v4-pro-0813
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+忙时 9元
+
+闲时 4.5元
+
+忙时 27元
+
+闲时 13.5元
 
 100万Token
 
@@ -8830,6 +8844,20 @@ deepseek-v4-pro
 
 24元
 
+deepseek-v4-pro-0813
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+全球
+
+忙时 9元
+
+闲时 4.5元
+
+忙时 27元
+
+闲时 13.5元
+
 deepseek-v4-pro-us
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
@@ -8870,6 +8898,16 @@ deepseek-v4-flash-us
 
 2.998元
 
+deepseek-v4-flash-0731-us
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+国际
+
+1.499元
+
+2.998元
+
 #### 新加坡
 
 **模型 ID（Model ID）**
@@ -8891,6 +8929,20 @@ deepseek-v4-pro
 17.986元
 
 35.972元
+
+deepseek-v4-pro-0813
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+国际
+
+忙时 9.625元
+
+闲时 4.813元
+
+忙时 28.875元
+
+闲时 14.438元
 
 deepseek-v4-flash-0731
 
@@ -8944,6 +8996,20 @@ deepseek-v4-pro
 
 24元
 
+deepseek-v4-pro-0813
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+全球
+
+忙时 9元
+
+闲时 4.5元
+
+忙时 27元
+
+闲时 13.5元
+
 deepseek-v4-flash-0731
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
@@ -8986,6 +9052,20 @@ deepseek-v4-pro
 
 24元
 
+deepseek-v4-pro-0813
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+全球
+
+忙时 9元
+
+闲时 4.5元
+
+忙时 27元
+
+闲时 13.5元
+
 deepseek-v4-flash-0731
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
@@ -9016,7 +9096,29 @@ deepseek-v4-pro
 
 35.972元
 
+deepseek-v4-pro-0813
+
+日本
+
+忙时 9元
+
+闲时 4.5元
+
+忙时 27元
+
+闲时 13.5元
+
 deepseek-v4-flash
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+日本
+
+1.499元
+
+2.998元
+
+deepseek-v4-flash-0731
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
@@ -16011,6 +16113,10 @@ kling/kling-v3-video-generation
 
 0.8元/秒
 
+4K
+
+3.0元/秒
+
 有声视频
 
 720P
@@ -16020,6 +16126,10 @@ kling/kling-v3-video-generation
 1080P
 
 1.2元/秒
+
+4K
+
+3.0元/秒
 
 kling/kling-v3-omni-video-generation
 
@@ -16035,6 +16145,10 @@ kling/kling-v3-omni-video-generation
 
 0.8元/秒
 
+4K
+
+3.0元/秒
+
 无声视频（有参考视频）
 
 720P
@@ -16045,6 +16159,10 @@ kling/kling-v3-omni-video-generation
 
 1.2元/秒
 
+4K
+
+3.0元/秒
+
 有声视频（无参考视频）
 
 720P
@@ -16054,6 +16172,10 @@ kling/kling-v3-omni-video-generation
 1080P
 
 1.2元/秒
+
+4K
+
+3.0元/秒
 
 **Vidu-文生视频**
 
@@ -16679,9 +16801,9 @@ multimodal-embedding-v1
 
 qwen3-vl-rerank
 
-文本输入：0.7元
+文本输入：0.5元
 
-图片输入：1.8元
+图片输入：0.5元
 
 100万Token
 

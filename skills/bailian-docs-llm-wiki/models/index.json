@@ -1,19 +1,19 @@
 {
-  "updatedAt": "2026-08-14",
+  "updatedAt": "2026-08-15",
   "totalFamilies": 179,
-  "totalModels": 398,
+  "totalModels": 399,
   "profileCoverage": {
-    "full": 344,
-    "partial": 11,
-    "structured-only": 43,
+    "full": 337,
+    "partial": 18,
+    "structured-only": 44,
     "none": 0
   },
   "capabilityDistribution": {
-    "TG": 37,
+    "TG": 38,
     "IG": 32,
     "VG": 27,
     "TTS": 16,
-    "Reasoning": 15,
+    "Reasoning": 14,
     "ASR": 14,
     "VU": 9,
     "Realtime-ASR": 8,
@@ -231,15 +231,15 @@
     {
       "slug": "deepseek",
       "name": "DeepSeek",
-      "primaryCapability": "Reasoning",
+      "primaryCapability": "TG",
       "capabilities": [
-        "Reasoning",
-        "TG"
+        "TG",
+        "Reasoning"
       ],
       "providers": [
         "deepseek"
       ],
-      "itemCount": 13,
+      "itemCount": 14,
       "items": [
         "deepseek-r1",
         "deepseek-r1-0528",
@@ -253,7 +253,8 @@
         "deepseek-v3.2-exp",
         "deepseek-v4-flash",
         "deepseek-v4-flash-0731",
-        "deepseek-v4-pro"
+        "deepseek-v4-pro",
+        "deepseek-v4-pro-0813"
       ],
       "maxContextWindow": 1000000
     },
@@ -1051,7 +1052,8 @@
       "name": "Qwen-Audio-TTS",
       "primaryCapability": "Realtime-Text-to-Speech",
       "capabilities": [
-        "Realtime-Text-to-Speech"
+        "Realtime-Text-to-Speech",
+        "TTS"
       ],
       "providers": [
         "qwen"

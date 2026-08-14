@@ -35,7 +35,7 @@
 - [start using](guides/start-using.md) — 2 篇源文档
 - [test 1](guides/test-1.md) — 5 篇源文档
 - [token plan guide](guides/token-plan-guide.md) — 14 篇源文档
-- [use cases](guides/use-cases.md) — 27 篇源文档
+- [use cases](guides/use-cases.md) — 31 篇源文档
 - [use chat client or development tool](guides/use-chat-client-or-development-tool.md) — 17 篇源文档
 
 ## API 参考
@@ -63,20 +63,22 @@
 
 ## 横切概念
 
-- [OpenAI 兼容接口](concepts/openai-compatibility.md) — 关联 5 个主题
-- [Token](concepts/token.md) — 关联 5 个主题
-- [函数调用](concepts/function-calling.md) — 关联 5 个主题
-- [多模态](concepts/multimodal.md) — 关联 5 个主题
+- [OpenAI 兼容接口](concepts/openai-compatible-api.md) — 关联 4 个主题
+- [Token](concepts/token.md) — 关联 4 个主题
+- [函数调用](concepts/function-calling.md) — 关联 3 个主题
+- [向量嵌入](concepts/embedding.md) — 关联 4 个主题
+- [异步任务](concepts/async-task.md) — 关联 4 个主题
+- [插件](concepts/plugin.md) — 关联 4 个主题
 - [检索增强生成](concepts/rag.md) — 关联 5 个主题
-- [模型上下文协议](concepts/mcp.md) — 关联 5 个主题
-- [流式输出](concepts/streaming-output.md) — 关联 5 个主题
-- [长期记忆](concepts/memory.md) — 关联 5 个主题
+- [模型上下文协议](concepts/mcp.md) — 关联 4 个主题
+- [流式输出](concepts/streaming-output.md) — 关联 3 个主题
+- [长期记忆](concepts/long-term-memory.md) — 关联 4 个主题
 
 ## 对比分析
 
-- [多模态生成能力对比：图像、3D 与视频生成 API](comparisons/image-3d-video-generation.md) — 对比 3 个主题
-- [实时语音 API 对比：Realtime API 与 Omni Realtime API](comparisons/speech-realtime-vs-omni.md) — 对比 2 个主题
-- [应用调用方式对比：Application Call、Bailian 调用与 Managed Agents](comparisons/application-calling-options.md) — 对比 3 个主题
-- [模型生命周期运维对比：部署、监控与评估](comparisons/model-deployment-monitoring-evaluation.md) — 对比 3 个主题
-- [知识管理方案对比：知识库与记忆库](comparisons/knowledge-base-vs-memory-library.md) — 对比 3 个主题
+- [多模态生成 API 对比：Image Generation vs Video Generation vs 3D Generation](comparisons/generation-apis-comparison.md) — 对比 3 个主题
+- [实时 API 方案对比：Realtime API vs Omni Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
+- [应用编排能力对比：Managed Agents API vs Application Component API vs Application Call](comparisons/application-orchestration-comparison.md) — 对比 3 个主题
+- [模型部署方式对比：Model Production vs Model Deployment 1](comparisons/model-deployment-options.md) — 对比 2 个主题
+- [知识能力方案对比：Knowledge API vs Knowledge Base vs Memory Library](comparisons/knowledge-solutions-comparison.md) — 对比 3 个主题
 

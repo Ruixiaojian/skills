@@ -1,44 +1,42 @@
 # 函数调用
 
-函数调用（Function Calling）是百炼平台中大语言模型主动识别用户意图、生成结构化工具调用请求，并交由外部系统执行的关键能力。它不是简单的 API 请求转发，而是模型在推理过程中自主规划、参数提取、格式校验并输出标准化 `tool_calls` 的闭环过程，是实现“模型驱动自动化”的核心机制。
+函数调用（Function Calling）是百炼平台支持的一种结构化工具协同机制，允许大模型在推理过程中主动识别用户意图、生成符合预定义 Schema 的函数调用请求，并交由外部系统执行；模型随后基于执行结果继续生成最终响应。该能力是构建智能体（Agent）、实现联网搜索、代码执行、数据库查询等复杂任务链路的核心基础设施。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-函数调用在百炼平台中并非单一接口特性，而是贯穿多个能力层的横切能力，具体体现为：
+- **文本生成模型**：`qwen3.8-max`、`qwen3.7-plus`、`qwen3.7-flash` 等主力文本模型均原生支持函数调用。开发者通过 `tools` 参数注册工具列表（含名称、描述、JSON Schema），模型会在合适时机输出 `tool_calls` 字段（非自由文本），避免幻觉与格式错误。典型用于 RAG 中的实时知识检索、办公自动化中的日程/邮件操作、以及多步骤决策任务。
+  
+- **多模态模型**：`qwen3.7-plus` 和 `qwen3.7-flash` 视觉模型同样支持函数调用，适用于“看图决策+调用工具”混合场景，例如：分析发票图像后自动调用财务系统 API 创建报销单；或解析会议截图后触发日历工具安排后续会议。
 
-- **DashScope 原生模型 API**：通过 `tools` 参数传入 JSON Schema 定义的工具列表，模型在响应中返回 `output.tool_calls` 字段（含 `id`、`function.name`、`function.arguments`），开发者需解析后同步调用对应工具，并将结果以 `tool_result` 形式回填至下一轮 `messages` 继续推理。
-- **Managed Agents（托管智能体）**：函数调用由 Agent 运行时自动接管——模型输出 `tool_calls` 后，平台在沙箱内安全执行已挂载的 Skill 或插件，无需开发者手动解析或调度；事件流中会推送 `tool_call_started` 和 `tool_call_finished` 事件，便于监控与调试。
-- **插件（Plug-in）系统**：所有官方/三方/自定义插件均以函数调用形式接入。模型根据 `tool_id` 和高级配置（如典型参数样例）生成调用请求，平台负责鉴权、参数透传（`biz_params`）、超时控制与结果归一化，屏蔽底层协议差异。
-- **Application Call（应用调用）**：当智能体应用配置了插件或工作流中嵌入了插件节点时，函数调用在内部自动触发；开发者仅需在 `input` 中提供自然语言指令，无需显式构造 `tools`，平台在应用编排层完成调用链路。
-- **[OpenAI 兼容接口](openai-compatibility.md)（Responses 模式）**：该模式内置函数调用能力（区别于标准 Chat Completions），模型可自主触发搜索、代码解释等能力，响应中直接包含 `choices[0].message.tool_calls`，且支持多轮自动续调，适合快速构建免编排的智能助手。
+- **语音转语音（S2S）与语音理解模型**：`qwen-audio-3.0-realtime-plus` 支持函数调用，可实现实时语音交互中的工具触发（如语音指令“查今天北京天气” → 调用气象 API）；`qwen3.5-omni-flash`（HTTP 模式）也支持，适用于视频内容分析后的动作调度（如检测到商品画面 → 调用电商比价服务）。
 
-> ⚠️ 注意：OpenAI 兼容的 `chat/completions` 接口（非 Responses 模式）**不支持函数调用**；`qwen-vl` 等[多模态](multimodal.md)模型仅在 DashScope 原生接口中支持函数调用，[OpenAI 兼容接口](openai-compatibility.md)暂不支持。
+- **接口协议层**：函数调用能力仅在 **Chat Completions** 和 **Responses API** 接口中完整可用；OpenAI 兼容的 `completions`、`embedding`、`vision`（QVQ 流式）等接口不支持。注意：Qwen-Audio 系列模型**不支持 OpenAI 兼容协议**，其函数调用需通过 DashScope 原生协议实现。
 
 ## 关键参数和配置
 
-| 参数/配置 | 说明 | 开发者须知 |
-|-----------|------|------------|
-| `tools`（数组） | 必填（除 Responses 模式外）。每个元素为 `{ "type": "function", "function": { "name": "...", "description": "...", "parameters": { ... } } }`，需严格遵循 JSON Schema 规范（支持 `string`/`number`/`boolean`/`object`/`array`，`null` 不支持）。 | Schema 中 `required` 字段必须存在，`properties` 中 Object 类型子字段**不可为空**，否则模型可能无法生成有效参数。 |
-| `tool_choice`（字符串或对象） | 控制调用策略：`"auto"`（默认，模型自主决定）、`"none"`（禁用）、`{"type": "function", "function": {"name": "xxx"}}`（强制指定）。 | 生产环境建议显式设为 `"auto"` 或精确函数名，避免模型跳过必要工具。 |
-| `tool_id`（插件专用） | 插件内工具的唯一标识符，非 Schema 中的 `name`。在插件市场或控制台复制获取，用于 `tools` 定义及 SDK 调用。 | `tool_id` 与 `function.name` 是两个不同概念：前者是平台侧注册 ID，后者是模型推理时使用的逻辑名，二者需在插件发布时映射一致。 |
-| `enable_search` / `code_interpreter` 等布尔开关 | Responses 模式下的快捷开关，等价于预置特定 `tools`。 | 开关开启后，模型仍需自主判断是否调用；若需强约束（如必须执行搜索），应改用 `tools` + `tool_choice` 显式控制。 |
-| `stream` 与 `tool_calls` 解析 | 流式响应中，`delta.content` 可能为空，关键信息在 `delta.tool_calls` 中分 chunk 返回。 | 必须累积 `delta.tool_calls` 的所有 chunk 后再 JSON.parse，不可对单个 chunk 直接解析；SDK 已内置聚合逻辑，推荐优先使用。 |
+- **`tools`**（必需）：数组类型，每个元素为 `{ "type": "function", "function": { "name", "description", "parameters" } }`。`parameters` 必须为 JSON Schema 对象（支持 `string`/`number`/`boolean`/`array`/`object` 及嵌套），百炼严格校验 Schema 合法性，非法 Schema 将导致 400 错误。
 
-## 面向开发者，简洁实用
+- **`tool_choice`**（可选）：控制调用策略：
+  - `"auto"`（默认）：模型自主决定是否及调用哪个工具；
+  - `"none"`：禁用函数调用，强制模型仅生成自然语言响应；
+  - `{"type": "function", "function": {"name": "xxx"}}`：强制指定调用某函数（适用于确定性流程编排）。
 
-- ✅ **首选 DashScope 原生接口**：功能最全、控制最细、[多模态](multimodal.md)支持完备，是生产环境函数调用的唯一推荐路径。
-- ✅ **Schema 设计要克制**：参数越少、类型越明确（避免嵌套过深的 `object`），模型提取准确率越高；为复杂参数提供 `examples`（高级配置）可显著提升鲁棒性。
-- ✅ **始终校验 `tool_calls` 再执行**：模型可能返回无效 `arguments`（如 JSON 格式错误、缺失必填字段），务必在调用外部工具前做 `JSON.parse()` + 字段校验。
-- ✅ **结果回填需严格匹配 `id`**：调用工具后，必须将结果以 `{"tool_call_id": "...", "role": "tool", "content": "..."}` 格式加入下一轮 `messages`，`tool_call_id` 必须与模型返回的 `id` 完全一致。
-- ❌ **不要在 OpenAI 兼容 `chat/completions` 中尝试 `tools`**：该字段会被忽略，且无任何报错提示。
-- ❌ **不要复用未发布的插件或禁用状态的 Skill**：函数调用会直接失败，错误码通常为 `InvalidToolId` 或 `ToolNotAvailable`。
+- **`response_format`**（推荐配合使用）：当需确保模型输出严格结构化（如工具参数校验失败时重试），可设为 `{"type": "json_object"}`，提升 `tool_calls` 参数生成的稳定性。
+
+- **工具执行与结果注入**：函数调用本身不执行——开发者需在收到含 `tool_calls` 的响应后，**同步执行对应工具逻辑**，再将结果以 `tool_message` 类型消息（含 `tool_call_id` 和 `content`）追加到对话历史，重新提交给模型完成后续推理。
+
+- **注意事项**：
+  - 单次请求最多支持 64 个工具定义；
+  - 工具名（`function.name`）必须为 ASCII 字母/数字/下划线，长度 ≤ 64 字符；
+  - 百炼不提供工具执行托管服务，所有工具逻辑需由业务侧实现并保障幂等性与超时控制；
+  - 若模型未触发任何工具调用，响应中将不含 `tool_calls` 字段，此时应直接返回 `message.content`。
+
+面向开发者：函数调用不是“黑盒[插件](plugin.md)”，而是明确的协议契约——你定义 Schema，模型生成合规请求，你执行并反馈结果。务必做工具侧错误处理与 fallback 设计，避免因单点失败阻断整个 Agent 流程。
 
 ## 关联主题页
 
-- [qwen api reference](../api/qwen-api-reference.md)
-- [managed agents api](../api/managed-agents-api.md)
-- [plug in](../guides/plug-in.md)
-- [application call](../api/application-call.md)
+- [model experience](../guides/model-experience.md)
+- [toolkits and frameworks](../api/toolkits-and-frameworks.md)
 - [more about models](../api/more-about-models.md)
 
 

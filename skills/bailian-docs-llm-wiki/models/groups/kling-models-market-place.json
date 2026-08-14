@@ -21,30 +21,38 @@
         {
           "priceUnit": "每秒",
           "price": "0.9",
-          "timeBand": "standard",
           "type": "video_ratio_720p",
           "priceName": "视频生成（720P）"
         },
         {
           "priceUnit": "每秒",
           "price": "1.2",
-          "timeBand": "standard",
           "type": "video_ratio_1080p",
           "priceName": "视频生成（1080P）"
         },
         {
           "priceUnit": "每秒",
+          "price": "3",
+          "type": "video_ratio_4k",
+          "priceName": "视频生成（4K）"
+        },
+        {
+          "priceUnit": "每秒",
           "price": "0.6",
-          "timeBand": "standard",
           "type": "720P_no_audio",
           "priceName": "视频生成（720P 无声）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.8",
-          "timeBand": "standard",
           "type": "1080P_no_audio",
           "priceName": "视频生成（1080P 无声）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "3",
+          "type": "4K_no_audio",
+          "priceName": "视频生成（4K 无声）"
         }
       ],
       "qpmInfo": {
@@ -65,9 +73,7 @@
           "async_user_concurrency_limit": 10
         }
       },
-      "priceTimeBands": [
-        "standard"
-      ],
+      "priceTimeBands": [],
       "capabilities": [
         "VG"
       ],
@@ -105,44 +111,56 @@
         {
           "priceUnit": "每秒",
           "price": "0.9",
-          "timeBand": "standard",
           "type": "720P_no_reference_video",
           "priceName": "视频生成（720P 无参考视频）"
         },
         {
           "priceUnit": "每秒",
           "price": "1.2",
-          "timeBand": "standard",
           "type": "1080P_no_reference_video",
           "priceName": "视频生成（1080P 无参考视频）"
         },
         {
           "priceUnit": "每秒",
+          "price": "3",
+          "type": "4K_no_reference_video",
+          "priceName": "视频生成（4K 无参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "0.9",
+          "type": "720P_reference_video",
+          "priceName": "视频生成（720P 有参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
+          "price": "1.2",
+          "type": "1080P_reference_video",
+          "priceName": "视频生成（1080P 有参考视频）"
+        },
+        {
+          "priceUnit": "每秒",
           "price": "0.6",
-          "timeBand": "standard",
           "type": "720P_no_audio_no_reference_video",
           "priceName": "视频生成（720P 无声 无参考视频）"
         },
         {
           "priceUnit": "每秒",
           "price": "0.8",
-          "timeBand": "standard",
           "type": "1080P_no_audio_no_reference_video",
           "priceName": "视频生成（1080P 无声 无参考视频）"
         },
         {
           "priceUnit": "每秒",
-          "price": "0.9",
-          "timeBand": "standard",
-          "type": "720P_no_audio_reference_video",
-          "priceName": "视频生成（720P 无声 有参考视频）"
+          "price": "3",
+          "type": "4K_no_audio_no_reference_video",
+          "priceName": "视频生成（4K 无声 无参考视频）"
         },
         {
           "priceUnit": "每秒",
-          "price": "1.2",
-          "timeBand": "standard",
-          "type": "1080P_no_audio_reference_video",
-          "priceName": "视频生成（1080P 无声 有参考视频）"
+          "price": "3",
+          "type": "4K_no_audio_reference_video",
+          "priceName": "视频生成（4K 无声 有参考视频）"
         }
       ],
       "qpmInfo": {
@@ -163,9 +181,7 @@
           "async_user_concurrency_limit": 10
         }
       },
-      "priceTimeBands": [
-        "standard"
-      ],
+      "priceTimeBands": [],
       "capabilities": [
         "VG"
       ],

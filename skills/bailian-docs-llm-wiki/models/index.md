@@ -1,6 +1,6 @@
 # 百炼模型市场索引
 
-> 自动生成 · 共 179 个模型家族 · 398 个主干模型 · 更新于 2026-08-14
+> 自动生成 · 共 179 个模型家族 · 399 个主干模型 · 更新于 2026-08-15
 
 **机器查询走结构化文件**：
 
@@ -17,8 +17,10 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 `notSuitableFor: []` 表示无已知限制。`profileCompleteness` 为 `structured-only` 时该画像未读过文档，仅机械字段可信。
 硬规格（价格/QPM/contextWindow/openSource）一律看行内顶层字段，不要从 profile 里找。
 
-## 文本生成 `TG` — 37 个家族
+## 文本生成 `TG` — 38 个家族
 
+- [DeepSeek](groups/deepseek.json) — DeepSeek是由深度求索提供的开源模型，包含 V3.1、V3、R1以及基于Qwen2.5系列蒸馏的大语言模型。
+  - 模型：`deepseek-r1`, `deepseek-r1-0528`, `deepseek-r1-distill-qwen-1.5b`, `deepseek-r1-distill-qwen-14b`, `deepseek-r1-distill-qwen-32b`, `deepseek-r1-distill-qwen-7b`, `deepseek-v3`, `deepseek-v3.1`, `deepseek-v3.2`, `deepseek-v3.2-exp`, `deepseek-v4-flash`, `deepseek-v4-flash-0731`, `deepseek-v4-pro`, `deepseek-v4-pro-0813`
 - [GLM](groups/glm-4.5.json) — GLM是由智谱提供的开源模型。
   - 模型：`glm-4.5`, `glm-4.5-air`, `glm-4.6`, `glm-4.7`, `glm-5`, `glm-5.1`, `glm-5.2`
 - [GLM-5.2-Fast](groups/glm-fast.json) — GLM-5.2-Fast-Preview 是智谱 AI 旗舰模型 GLM-5.2 的高速版本，支持 1M 超长上下文，模型能力对齐 GLM-5.2 标准版，具备逻辑推理、长文本理解与代码生成能力。通过…
@@ -253,10 +255,8 @@ join：`models.jsonl[].family == families.jsonl[].slug == index.json.families[].
 - [音乐生成](groups/fun-music.json) — 百聆音乐生成大模型（Fun音乐大模型）支持输入开放性歌曲的创作要求或歌词，生成整首男/女声演唱的中文或英文歌曲。歌曲通俗易懂，情绪由浅入深，是人类灵感与大模型能力的完美结合。
   - 模型：`fun-music-preview`, `fun-music-v1`
 
-## 推理 `Reasoning` — 15 个家族
+## 推理 `Reasoning` — 14 个家族
 
-- [DeepSeek](groups/deepseek.json) — DeepSeek是由深度求索提供的开源模型，包含 V3.1、V3、R1以及基于Qwen2.5系列蒸馏的大语言模型。
-  - 模型：`deepseek-r1`, `deepseek-r1-0528`, `deepseek-r1-distill-qwen-1.5b`, `deepseek-r1-distill-qwen-14b`, `deepseek-r1-distill-qwen-32b`, `deepseek-r1-distill-qwen-7b`, `deepseek-v3`, `deepseek-v3.1`, `deepseek-v3.2`, `deepseek-v3.2-exp`, `deepseek-v4-flash`, `deepseek-v4-flash-0731`, `deepseek-v4-pro`
 - [MiniMax](groups/MiniMax-M2.1.json) — MiniMax推出的旗舰级开源大模型，聚焦真实世界复杂任务，包含MiniMax-M2.1、MiniMax-M2.5等开源模型。
   - 模型：`MiniMax-M2.1`, `MiniMax-M2.5`
 - [QVQ-Max](groups/qvq-max.json) — 千问QVQ视觉推理模型，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。

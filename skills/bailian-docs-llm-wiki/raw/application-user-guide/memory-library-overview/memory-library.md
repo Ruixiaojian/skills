@@ -185,8 +185,6 @@ asyncio.run(search_memory_example())
 
 ### **默认记忆库**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3820503771/p1055468.png)
-
 -   默认记忆库无法删除，但可以编辑名称和描述、添加自定义记忆规则。
     
 -   默认记忆库已预置一条”默认项目”记忆片段规则，默认有效期 180 天。可点击编辑调整信息。
@@ -201,11 +199,11 @@ asyncio.run(search_memory_example())
         
         **记忆库描述**：可能会用于指导智能体调用的描述语句。
         
-    3.  单击**确定**完成创建。![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3820503771/p1055567.png)
+    3.  单击**确定**完成创建。
         
-    4.  创建成功后，会提示**是否立即开始创建记忆规则**：![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3820503771/p1055568.png)
+    4.  创建成功后，会提示**是否立即开始创建记忆规则**：
         
-        -   单击**立即创建**（推荐）：跳转到记忆规则配置页面，继续配置记忆规则。![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3820503771/p1055579.png)
+        -   单击**立即创建**（推荐）：跳转到记忆规则配置页面，继续配置记忆规则。该页面包含**记忆片段规则**和**用户画像规则**两个区域，前者通过对话记录描述记忆的关键事件，后者保存用户实体的信息。
             
         -   单击**暂不**：返回记忆库列表页面，可后续通过点击记忆库卡片上的**查看详情**进入配置。
             
@@ -220,9 +218,9 @@ asyncio.run(search_memory_example())
 
 记忆片段规则用于从给定的对话内容中提取关键事件和信息片段。
 
-1.  点击记忆库卡片的**查看详情**，进入记忆库详情页，在**记忆规则**标签页下的**记忆片段规则**区域，单击**添加片段规则**按钮。![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6377893771/p1055580.png)
+1.  点击记忆库卡片的**查看详情**，进入记忆库详情页，在**记忆规则**标签页下的**记忆片段规则**区域，单击**添加片段规则**按钮。
     
-2.  在对话框中配置以下参数：![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3820503771/p1055585.png)
+2.  在对话框中配置以下参数：
     
     -   **规则名称**：当前记忆抽取规则的唯一标识。
         
@@ -236,7 +234,7 @@ asyncio.run(search_memory_example())
         
     -   **记忆过期时间**：记忆的有效期，可选：7 天、30 天、180 天、永不过期。
         
-    -   **记忆抽取版本**：选择 **Pro**（推荐）或 **Lite**。Pro 版检索时开启 Rerank，质量更高，¥0.03/次；Lite 版关闭 Rerank，成本更低，¥0.018/次。不传时默认 Pro。详见[计费说明](#h3-pro-lite)。
+    -   **记忆抽取策略版本**：选择 **Pro**（推荐）或 **Lite**。Pro 版检索时开启 Rerank，质量更高，¥0.03/次；Lite 版关闭 Rerank，成本更低，¥0.018/次。不传时默认 Pro。详见[计费说明](#h3-pro-lite)。
         
 3.  单击**确认**完成配置。
     
@@ -245,7 +243,7 @@ asyncio.run(search_memory_example())
 
 用户画像规则用于持久化存储用户的属性信息。
 
-1.  进入记忆库详情页，在**记忆规则**标签页下的**用户画像规则**区域，单击**添加用户画像**。![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3820503771/p1055586.png)
+1.  进入记忆库详情页，在**记忆规则**标签页下的**用户画像规则**区域，单击**添加用户画像**。
     
 2.  在对话框中配置以下参数：
     
@@ -259,9 +257,24 @@ asyncio.run(search_memory_example())
             
         -   **初始值**：为该画像属性设置初始默认值。当用户尚未通过对话提供相关信息时，系统将使用该初始值作为画像属性的值。
             
-    -   **记忆抽取版本**：选择 **Pro**（推荐）或 **Lite**。Pro 版 ¥0.03/次，Lite 版 ¥0.025/次。不传时默认 Pro。详见[计费说明](#h3-pro-lite)。
+    -   **记忆抽取策略版本**：选择 **Pro**（推荐）或 **Lite**。Pro 版 ¥0.03/次，Lite 版 ¥0.025/次。不传时默认 Pro。详见[计费说明](#h3-pro-lite)。
         
-3.  单击**确认**完成配置。![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/4490727771/p1055587.png)
+3.  单击**确认**完成配置。
+    
+
+以上是在记忆库详情页直接配置用户画像规则的方式。如果在**智能体应用**（Agent 1.0）编排页面中使用记忆库，也可以直接在应用内配置长期记忆变量，操作方式如下：
+
+##### **在智能体应用中配置长期记忆变量**
+
+1.  进入智能体应用编排页面，切换到**记忆**标签页。
+    
+2.  开启长期记忆开关，然后单击配置按钮，进入**记忆变量**对话框。
+    
+3.  在**记忆变量**对话框中，单击**\+ 添加字段**（0/32）新增记忆变量，配置字段名称和描述后单击**保存**。
+    
+4.  配置完成后，单击**发布**按钮发布应用，配置才会生效。
+    
+5.  发布后，在测试窗口中输入与记忆变量相关的信息，智能体会触发长期记忆检索，并将提取的信息更新到对应的记忆变量中。
     
 
 ## **用户画像**
@@ -353,9 +366,10 @@ async def profile_example():
         ))
         schema_id = schema_result.profile_schema_id
 
-        # 2. 添加对话并提取画像
+        # 2. 添加对话并提取画像（必须传入 profile_schema，否则不会提取画像）
         await add_memory.arun(AddMemoryInput(
             user_id="user_001",
+            profile_schema=schema_id,
             messages=[
                 Message(role="user", content="我今年28岁，是一名软件工程师。周末喜欢踢足球。"),
                 Message(role="assistant", content="很高兴认识你！"),
@@ -433,7 +447,7 @@ asyncio.run(list_memory_example())
 
 在控制台调试记忆检索效果，优化召回的准确性和相关性。
 
-1.  在记忆库详情页的**记忆检索**标签页中，配置以下参数：![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/4490727771/p1055592.png)
+1.  在记忆库详情页的**记忆检索**标签页中，配置以下参数：
     
     -   **记忆实体 ID：**输入[写入记忆](#29baf0c8b5y5g)时设置的`user_id`字段值。
         
@@ -585,7 +599,7 @@ asyncio.run(manage_memory_example())
 
 [AddMemory - 添加记忆](https://help.aliyun.com/zh/model-studio/long-term-memory-api-reference)
 
-添加记忆。传入对话消息后，系统自动提取记忆片段和用户画像。也支持直接指定要存储的记忆内容。
+添加记忆。传入对话消息后，系统自动提取记忆片段；传入画像模板 ID 时同时提取用户画像。也支持直接指定要存储的记忆内容。
 
 [SearchMemory - 搜索记忆](https://help.aliyun.com/zh/model-studio/long-term-memory-api-reference)
 
@@ -649,7 +663,7 @@ asyncio.run(manage_memory_example())
 
 **计费项**
 
-**版本**
+**策略版本**
 
 **单价**
 
@@ -721,11 +735,11 @@ Lite
 
 约 ¥1.44/万条/月。按实际可检索记忆条数 × 存储时长计费，按小时出账。
 
-### Pro 与 Lite 版本说明
+### Pro 与 Lite 策略版本说明
 
-记忆库的 Add 和 Search 调用区分 **Pro** 和 **Lite** 两个版本，核心区别是检索时是否开启 **Rerank**（结果重排序模型）：
+记忆库的 Add 和 Search 调用区分 **Pro** 和 **Lite** 两个策略版本，核心区别是检索时是否开启 **Rerank**（结果重排序模型）：
 
-**版本**
+**策略版本**
 
 **Rerank**
 
@@ -751,15 +765,15 @@ Lite
 
 **说明**
 
--   **Add 调用**的版本由记忆片段规则（project）的 `billing_plan` 决定。创建规则时选择 Pro 或 Lite，不进行传入时默认 Pro。Add 调用遵循其关联规则的版本设置。
+-   **Add 调用**的版本由记忆片段规则（project）的 `plan_version` 决定。创建规则时选择 Pro 或 Lite，不进行传入时默认 Pro。Add 调用遵循其关联规则的版本设置。
     
--   **Search 调用**的版本由请求参数 `billing_plan` 独立控制，与 project 的版本无关。不传时默认 Pro。
+-   **Search 调用**的版本由请求参数 `plan_version` 独立控制，与 project 的版本无关。不传时默认 Pro。
     
--   当 Search 同时传入 `billing_plan` 和 `enable_rerank` 时，`billing_plan` 优先级更高。仅当未传 `billing_plan` 时 `enable_rerank` 生效。
+-   当 Search 同时传入 `plan_version` 和 `enable_rerank` 时，`plan_version` 优先级更高。仅当未传 `plan_version` 时 `enable_rerank` 生效。
     
--   更新规则的 `billing_plan` 后，新写入的记忆遵循更新后的版本规则。已写入的记忆不受影响。
+-   更新规则的 `plan_version` 后，新写入的记忆遵循更新后的策略版本规则。已写入的记忆不受影响。
     
--   商业化前已存在的规则，`billing_plan` 默认为 Pro。
+-   商业化前已存在的规则，`plan_version` 默认为 Pro。
     
 
 此外，检索记忆并将其注入 Prompt 时，记忆内容会作为上下文传递给大模型，从而增加 Token 消耗。具体费用以实际调用大模型产生的 Token 用量为准。
@@ -812,14 +826,18 @@ Lite
     
     300 QPM
     
-9.  **Pro 和 Lite 版本有什么区别？如何选择？**
+9.  **Pro 和 Lite 策略版本有什么区别？如何选择？**
     
-    Pro 版检索时开启 Rerank（结果重排序），检索质量更高但成本也更高；Lite 版关闭 Rerank，成本更低。对回答准确性要求高的场景建议用 Pro，高频调用且成本敏感的场景用 Lite。Add 调用的版本由记忆规则配置决定，Search 调用的版本由请求参数 `billing_plan` 独立控制。详见[计费说明](#h3-pro-lite)。
+    Pro 版检索时开启 Rerank（结果重排序），检索质量更高但成本也更高；Lite 版关闭 Rerank，成本更低。对回答准确性要求高的场景建议用 Pro，高频调用且成本敏感的场景用 Lite。Add 调用的策略版本由记忆规则配置决定，Search 调用的策略版本由请求参数 `plan_version` 独立控制。详见[计费说明](#h3-pro-lite)。
     
 10.  **免费额度有效期多久？**
      
      Add 和 Search 的免费额度自商业化生效日起 3 个月内有效，逾期未用自动作废。10,000 条免费存储无有效期限制，长期有效。
      
-11.  **创建规则后可以切换 Pro/Lite 版本吗？**
+11.  **创建规则后可以切换 Pro/Lite 策略版本吗？**
      
-     可以。在控制台编辑记忆规则时可修改版本，也可通过 API 的 UpdateMemoryProject / UpdateProfileSchema 接口修改 `billing_plan` 字段。修改后新写入的记忆遵循新版本规则，已写入的记忆不受影响。
+     可以。在控制台编辑记忆规则时可修改策略版本，也可通过 API 的 UpdateMemoryProject / UpdateProfileSchema 接口修改 `plan_version` 字段。修改后新写入的记忆遵循新策略版本规则，已写入的记忆不受影响。
+     
+12.  **长期记忆功能支持在 APP 端使用吗？**
+     
+     支持。记忆库提供开放的 API 接口，记忆的写入与检索全部通过 API 完成，与调用方的客户端类型无关。Web 应用、移动 APP、小程序均可通过 AddMemory、SearchMemory 接口集成记忆能力。若需将智能体应用发布到移动端，多平台发布与集成方式请参见[应用分享](https://help.aliyun.com/zh/model-studio/share-an-application)。

@@ -134,6 +134,12 @@ Qwen Code 支持以下使用场景：
         "envKey": "BAILIAN_TOKEN_PLAN_API_KEY"
       },
       {
+        "id": "deepseek-v4-pro-0813",
+        "name": "[Token Plan 个人版] deepseek-v4-pro-0813",
+        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY"
+      },
+      {
         "id": "deepseek-v4-flash-0731",
         "name": "[Token Plan 个人版] deepseek-v4-flash-0731",
         "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
@@ -222,6 +228,12 @@ Qwen Code 支持以下使用场景：
       {
         "id": "deepseek-v4-pro",
         "name": "[Token Plan 团队版] deepseek-v4-pro",
+        "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY"
+      },
+      {
+        "id": "deepseek-v4-pro-0813",
+        "name": "[Token Plan 团队版] deepseek-v4-pro-0813",
         "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
         "envKey": "BAILIAN_TOKEN_PLAN_API_KEY"
       },

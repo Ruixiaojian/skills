@@ -199,7 +199,7 @@ DPO 文本生成训练数据采用 jsonl 格式，基于 ChatML messages 多轮�
 
 针对深度思考内容，chosen 或 rejected 的 assistant 输出可使用思考标签包裹，思考标签只能放最后一条 assistant 行，规则见[文本生成 - SFT 格式](#sec-sft-text)。
 
-loss\_weight 邀测参数支持 chosen 模块，取值范围 0.0 至 1.0，数值越大训练重要性越高，需联系商务经理，详见[文本生成 - SFT 格式](#sec-sft-text)。
+loss\_weight 邀测参数支持 chosen 模块，取值范围 0.0 至 1.0，数值越大训练重要性越高，详见[文本生成 - SFT 格式](#sec-sft-text)。
 
 DPO 场景的工具调用数据支持情况待确认（source 文档未给出 DPO+tool 格式段，需产品确认），工具字段说明见[文本生成 - SFT 格式](#sec-sft-text)。
 
@@ -540,8 +540,6 @@ loss\_weight 字段约束：
 -   邀测参数，取值范围 0.0 至 1.0，数值越大表示该行在训练时的相对重要性越高。
     
 -   SFT 思考模型仅最后一条 assistant 行支持 loss\_weight。
-    
--   如需使用请联系商务经理。
     
 
 百炼不支持 OpenAI 的 name、weight 参数，所有 assistant 输出都会被训练。从 OpenAI/Azure 迁移的训练数据不可携带 name/weight 字段。

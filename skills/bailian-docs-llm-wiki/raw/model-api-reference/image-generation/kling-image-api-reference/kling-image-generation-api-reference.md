@@ -309,11 +309,11 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 **watermark** `_bool_` （可选）
 
-是否添加水印标识。水印位于图像右下角，文案固定为“可灵AI”。
+是否同时生成含水印的图像。水印位于图像右下角，文案固定为”可灵AI”。
 
--   `false`：默认值，不添加水印。
+-   `false`：默认值，不生成含水印的图像。
     
--   `true`：添加水印。
+-   `true`：同时生成含水印的图像。
     
 
 示例值：false。

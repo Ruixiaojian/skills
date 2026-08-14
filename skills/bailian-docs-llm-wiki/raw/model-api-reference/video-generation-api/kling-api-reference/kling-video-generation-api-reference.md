@@ -499,6 +499,8 @@ kling/kling-v3-omni-video-generation
     
 -   `std`：标准模式，输出视频分辨率为720P。
     
+-   `4k`：4K模式，输出视频分辨率为4K。
+    
 
 **aspect\_ratio** `_string_` （条件必填）
 
@@ -569,11 +571,11 @@ audio直接影响费用，请前往[百炼控制台](https://bailian.console.ali
 
 **watermark** `_boolean_` （可选）
 
-是否添加水印标识，水印位于视频右下角，文案固定为“可灵AI”。
+是否同时生成含水印的视频。水印位于视频右下角，文案固定为”可灵AI”。设置为true时，响应中将额外返回`watermark_video_url`字段。
 
--   `false`：默认值，不添加水印。
+-   `false`：默认值，不生成含水印的视频。
     
--   `true`：添加水印。
+-   `true`：同时生成含水印的视频。
     
 
 #### 响应参数

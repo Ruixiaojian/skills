@@ -194,3 +194,11 @@ qwen-audio-3.0-realtime-plus、qwen-audio-3.0-realtime-flash
 -   [通过WebRTC使用qwen3.5-omni-plus-realtime实现实时通话](https://help.aliyun.com/zh/model-studio/best-practice-webrtc-omni-realtime)
     
 -   [通过AOQ使用qwen3.5-omni-plus-realtime实现实时通话](https://help.aliyun.com/zh/model-studio/best-practice-aoq-omni-realtime)
+    
+-   [使用 AOQ 接入 qwen3.5-omni-plus-realtime 实现按键语音对话](https://help.aliyun.com/zh/model-studio/use-aoq-to-access-qwen3-5-omni-plus-realtime-to-realize-key-voice-dialogue)
+    
+-   [使用 AOQ 接入 qwen-audio-3.0-realtime-plus 实现实时语音对话](https://help.aliyun.com/zh/model-studio/real-time-voice-conversation-using-aoq-access-qwen-audio-3-0-realtime-plus)
+    
+-   [使用 AOQ 接入 qwen-audio-3.0-tts-flash 实现语音合成](https://help.aliyun.com/zh/model-studio/speech-synthesis-using-aoq-access-qwen-audio-3-0-tts-flash)
+    
+-   [使用 AOQ 接入 fun-asr-realtime 实现实时语音识别](https://help.aliyun.com/zh/model-studio/real-time-speech-recognition-using-aoq-access-fun-asr-realtime)
