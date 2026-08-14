@@ -68,7 +68,7 @@ curl -X POST https://dashscope.aliyuncs.com/api/v2/apps/memory/add \
   }'
 # memory_library_id：非必填，记忆库 ID，在记忆库卡片上获取。不填则使用默认记忆库。
 # project_id：非必填，记忆片段规则 ID，在记忆库详情页的记忆规则中获取。
-# profile_schema：非必填，用户画像规则 ID，在记忆库详情页的记忆规则中获取。
+# profile_schema：非必填，用户画像规则 ID，在记忆库详情页的记忆规则中获取。不传则不提取用户画像。
 # meta_data：非必填，自定义元数据，用于对记忆进行分类管理。
 
 # 添加记忆（自定义内容）

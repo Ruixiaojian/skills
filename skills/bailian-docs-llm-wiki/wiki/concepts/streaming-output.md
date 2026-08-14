@@ -1,37 +1,52 @@
 # 流式输出
 
-流式输出（Streaming）是指模型在生成响应过程中，将结果以增量方式分块（chunk）实时返回给客户端，而非等待全部内容生成完毕后一次性返回。这种方式显著降低端到端延迟，提升用户感知的响应实时性，是构建交互式 AI 应用（如聊天助手、语音对话、代码补全）的关键能力。
+流式输出（Streaming Output）是指模型响应以增量方式分块（chunk）持续返回，而非等待完整结果一次性返回。它适用于实时对话、语音合成、长文本生成等对延迟敏感的场景，可显著降低首字延迟（Time to First [Token](token.md), TTFT）并提升用户体验。
 
 ## 在百炼平台的不同场景中如何使用
 
-- **文本生成（Qwen 系列）**：通过 DashScope 原生接口或 [OpenAI 兼容接口](openai-compatibility.md)（`/chat/completions`）启用 `stream=true`，服务端按 token 或语义单元逐块返回 `delta.content`；工具调用阶段可能返回 `delta.tool_calls`，需兼容空 content 场景。
-- **专用模型（法睿、意图识别、OCR、MT 等）**：所有专用模型均支持流式输出，调用时设置 `stream=True`（Python SDK）或 `"stream": true`（HTTP），适用于法律文书渐进生成、翻译片段实时呈现、OCR 结构化字段逐步解析等场景。
-- **实时[多模态](multimodal.md)（Omni Realtime / Realtime API）**：基于 WebSocket 的实时接口天然采用事件流模式，文本、音频、工具调用结果均以独立事件（如 `text.delta`、`audio.delta`、`function_call.delta`）实时推送，支持毫秒级响应与低延迟语音交互。
-- **[OpenAI 兼容接口](openai-compatibility.md)（Chat、Responses、Vision）**：完全遵循 OpenAI 流式协议（SSE），返回 `data: {...}` 格式事件流；`Responses API` 在启用联网搜索时，流式输出会包含中间检索步骤与最终答案，便于前端展示思考过程。
-- **批量与框架集成（LangChain / Batch）**：LangChain 的 `streaming=True` 选项可透传至百炼底层；Batch 接口暂不支持流式，但单次请求内多个子任务仍可通过 `stream_options={"include_usage": true}` 在流末尾附加 token 统计。
+流式输出在百炼平台中存在两类独立实现机制，需根据接入方式选择对应配置：
+
+- **Realtime API（AOQ/WebSocket/WebRTC）**：  
+  所有支持音频/文本输出的实时模型（如 `qwen3.5-omni-plus-realtime`、`Fun-ASR-Realtime`、`CosyVoice` 等）**默认启用流式输出**，无需显式开关。响应通过协议原生通道（如 WebSocket message、AOQ data track 或 WebRTC DataChannel）以事件形式持续推送，例如：
+  - `text.delta` 事件：返回新增文本片段；
+  - `audio.delta` 事件：返回 PCM 音频帧（按 `audio.output.format.sample_rate` 切片）；
+  - `session.updated` 后即开始流式输出，开发者需注册对应事件监听器实时消费。
+
+- **Application / Assistant API（非实时 HTTP 接口）**：  
+  需**显式启用**流式能力，通过请求参数控制：
+  - `stream=True`：启用流式响应（HTTP chunked transfer encoding）；
+  - `incremental_output=True`：启用增量式语义分块（如按句子/标点切分），避免单字或乱序输出；  
+  二者需同时设置才生效。响应体为 `text/event-stream` 格式，每行以 `data:` 开头，前端需用 `EventSource` 或手动解析 chunk。
+
+> ⚠️ 注意：Realtime API 与 Application API 的流式机制互不兼容——Realtime 不接受 `stream` 参数，Application 不支持 `audio.delta` 等实时事件。
 
 ## 关键参数和配置
 
-- **`stream`**（必选布尔值）：启用流式输出的核心开关。默认为 `false`；设为 `true` 后，响应体变为事件流（HTTP SSE）或异步迭代器（SDK）。
-- **`stream_options`**（可选对象，仅 [OpenAI 兼容接口](openai-compatibility.md)）：
-  - `{"include_usage": true}`：在流结束前发送一条含 `usage` 字段的 final chunk，包含 `prompt_tokens`、`completion_tokens` 和 `total_tokens`。
-- **SDK 使用要点**：
-  - Python DashScope：`Generation.call(..., stream=True)` 返回 `Generator`，需循环 `for chunk in response:` 处理；
-  - Python OpenAI SDK：`client.chat.completions.create(..., stream=True)` 返回 `Stream` 对象，同样迭代处理；
-  - Node.js / curl：需正确处理 `Content-Type: text/event-stream` 及 `data:` 前缀，按行解析并去除空行与注释（`event:`、`id:` 等字段可忽略）。
-- **注意事项**：
-  - 流式响应中 `delta.content` 可能为空（尤其在工具调用或思考阶段），务必检查 `delta.tool_calls` 或 `delta.function_call` 字段；
-  - OpenAI 兼容接口的 `choices[0].delta` 字段结构与标准 OpenAI 一致，但部分字段（如 `finish_reason`）仅出现在 final chunk；
-  - 实时 API（WebSocket）无 `stream` 参数，其流式行为由协议本身保证，开发者直接监听 `text.delta`、`audio.delta` 等事件即可。
+| 场景 | 参数名 | 类型 | 说明 | 必填 |
+|------|--------|------|------|------|
+| **Application API** | `stream` | `bool` | 启用 HTTP 流式传输 | 是（若需流式） |
+| | `incremental_output` | `bool` | 启用语义级增量分块（推荐开启） | 是（若需可控分块） |
+| **Realtime API（WebSocket/AOQ）** | `modalities` | `string[]` | 指定输出模态，如 `["text", "audio"]` | 是 |
+| | `audio.output.format.type` | `string` | 输出编码格式：`"pcm"`（推荐）、`"wav"` | 否（默认 `"pcm"`） |
+| | `audio.output.format.sample_rate` | `int` | 输出采样率：`8000`/`16000`/`24000`（默认）/`48000` | 否 |
+| | `turn_detection.type` | `string` | VAD 类型（影响音频流断句时机）：`"server_vad"`（默认）或 `"semantic_vad"`（仅 Omni 3.5+） | 否 |
 
-面向开发者：优先使用 SDK 封装的流式迭代器（如 Python 的 `for chunk in response:`），避免手动解析 SSE；生产环境务必添加超时、重试与错误降级逻辑；前端渲染时建议对 `delta.content` 做防抖合并，避免频繁 DOM 更新。
+- Realtime API 中，`audio.delta` 和 `text.delta` 事件天然按模型生成节奏推送，无需额外参数控制“是否流式”，但可通过 `turn_detection` 调整音频流的语义断点。
+- Application API 中，`incremental_output=True` 可确保文本按自然语言单位（如句号、换行）分块，避免 `stream=True` 单独使用时出现碎片化输出（如单字、半词）。
+
+## 面向开发者的实践建议
+
+- ✅ **优先选用 Realtime API 实现真流式**：语音助手、实时翻译等场景必须用 AOQ/WebSocket，其端到端延迟更低、音频/文本同步性更好。
+- ✅ **Application 流式仅用于轻量文本交互**：如客服机器人网页端，配合 `incremental_output=True` + 前端 `EventSource` 即可快速实现打字机效果。
+- ❌ **勿混用参数**：在 Realtime 请求中传 `stream=True` 将被忽略；在 Application 请求中设 `modalities` 会报错。
+- 🛠️ **调试技巧**：  
+  - Realtime：监听 `text.delta` 和 `audio.delta` 事件日志，确认 chunk size 是否符合预期（如 PCM 每帧 20ms）；  
+  - Application：用 `curl -N` 测试响应流，验证 `data:` 行是否连续、无空行。
 
 ## 关联主题页
 
-- [qwen api reference](../api/qwen-api-reference.md)
-- [more models](../api/more-models.md)
-- [omni realtime api](../api/omni-realtime-api.md)
 - [realtime api user guide](../api/realtime-api-user-guide.md)
-- [toolkits and frameworks](../api/toolkits-and-frameworks.md)
+- [omni realtime api](../api/omni-realtime-api.md)
+- [application support](../guides/application-support.md)
 
 

@@ -46,7 +46,7 @@ HTTP 请求地址：`POST https://{WorkspaceId}.ap-northeast-1.maas.aliyuncs.com
 
 **说明**
 
-Responses API 目前仅支持`deepseek-v4-flash`、`deepseek-v4-flash-0731`、`deepseek-v4-pro`模型，且仅在华北2（北京）与新加坡地域提供服务。
+Responses API 目前仅支持`deepseek-v4-flash`、`deepseek-v4-flash-0731`、`deepseek-v4-pro`、`deepseek-v4-pro-0813`模型，且仅在华北2（北京）与新加坡地域提供服务。
 
 ## 华北2（北京）
 
@@ -94,7 +94,7 @@ SDK 调用配置的`base_url`：`dashscope.base_http_api_url = "https://{Workspa
 
 ## **快速开始**
 
-deepseek-v4-pro 是 DeepSeek 系列旗舰模型，在编程、数学和通用任务方面表现出色。deepseek-v4-flash-0731 是最新发布的版本。您可以通过`enable_thinking`参数在思考与非思考模式之间切换。以下示例展示如何调用思考模式的 deepseek-v4-pro 模型。
+deepseek-v4-pro-0813 是 DeepSeek 系列旗舰模型，在编程、数学和通用任务方面表现出色。deepseek-v4-flash-0731 是Flash系列最新版本。您可以通过`enable_thinking`参数在思考与非思考模式之间切换。以下示例展示如何调用思考模式的 deepseek-v4-pro 模型。
 
 需要已[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并完成[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如果通过SDK调用，需要[安装 OpenAI 或 DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk#8833b9274f4v8)。
 

@@ -186,6 +186,15 @@ Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/to
             "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
           },
           {
+            "id": "deepseek-v4-pro-0813",
+            "name": "deepseek-v4-pro-0813",
+            "reasoning": false,
+            "input": ["text"],
+            "contextWindow": 163840,
+            "maxTokens": 32768,
+            "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
+          },
+          {
             "id": "deepseek-v4-flash-0731",
             "name": "deepseek-v4-flash-0731",
             "reasoning": false,
@@ -210,6 +219,7 @@ Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/to
         "bailian-token-plan/qwen3.6-flash": {},
         "bailian-token-plan/glm-5.2": {},
         "bailian-token-plan/deepseek-v4-pro": {},
+        "bailian-token-plan/deepseek-v4-pro-0813": {},
         "bailian-token-plan/deepseek-v4-flash-0731": {}
       }
     }
@@ -333,6 +343,15 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
                 "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
               },
               {
+                "id": "deepseek-v4-pro-0813",
+                "name": "deepseek-v4-pro-0813",
+                "reasoning": false,
+                "input": ["text"],
+                "contextWindow": 163840,
+                "maxTokens": 32768,
+                "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
+              },
+              {
                 "id": "deepseek-v4-flash",
                 "name": "deepseek-v4-flash",
                 "reasoning": false,
@@ -445,6 +464,7 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
             "bailian-token-plan/qwen3.6-plus": {},
             "bailian-token-plan/qwen3.6-flash": {},
             "bailian-token-plan/deepseek-v4-pro": {},
+            "bailian-token-plan/deepseek-v4-pro-0813": {},
             "bailian-token-plan/deepseek-v4-flash": {},
             "bailian-token-plan/deepseek-v4-flash-0731": {},
             "bailian-token-plan/deepseek-v3.2": {},
@@ -570,6 +590,15 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
                 "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
               },
               {
+                "id": "deepseek-v4-pro-0813",
+                "name": "deepseek-v4-pro-0813",
+                "reasoning": false,
+                "input": ["text"],
+                "contextWindow": 163840,
+                "maxTokens": 32768,
+                "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
+              },
+              {
                 "id": "deepseek-v4-flash",
                 "name": "deepseek-v4-flash",
                 "reasoning": false,
@@ -682,6 +711,7 @@ Token Plan 团队版[支持的模型](https://help.aliyun.com/zh/model-studio/to
             "bailian-token-plan/qwen3.6-plus": {},
             "bailian-token-plan/qwen3.6-flash": {},
             "bailian-token-plan/deepseek-v4-pro": {},
+            "bailian-token-plan/deepseek-v4-pro-0813": {},
             "bailian-token-plan/deepseek-v4-flash": {},
             "bailian-token-plan/deepseek-v4-flash-0731": {},
             "bailian-token-plan/deepseek-v3.2": {},

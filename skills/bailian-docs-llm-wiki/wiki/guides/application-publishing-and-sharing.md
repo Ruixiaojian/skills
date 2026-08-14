@@ -1,49 +1,55 @@
 # application publishing and sharing
 
-百炼平台支持将已发布的智能体应用（Agent 1.0）或工作流应用以多种方式对外发布与共享，包括 UI 应用、钉钉/微信机器人、可复用组件及音视频实时互动渠道。所有发布行为均需基于已发布的应用，并受 Agent 版本、业务空间隔离和权限模型约束。发布后的调用费用由应用创建者 UID 承担。
+百炼平台支持将智能体（Agent 1.0）或工作流应用以多种方式发布与共享，包括生成可访问的 UI 应用、集成至钉钉/微信等第三方平台、封装为可复用组件、以及接入音视频实时互动场景。所有发布行为均需基于已创建并发布的应用，且不同渠道对应用类型、参数配置和权限模型有明确约束。开发者应根据目标使用场景选择适配的发布方式，并注意版本兼容性与运行时限制。
 
 ## 支持的模型/功能
 
-- **仅限 Agent 1.0**：魔笔分享渠道、钉钉、微信、组件发布、音视频实时互动等功能**仅支持 Agent 1.0 智能体应用**；Agent 2.0 应用不支持上述渠道，仅可通过 API 调用 [分享智能体应用](../../raw/application-user-guide/application-publishing-and-sharing/share-an-application.md)。
-- **UI 应用**：支持通过[UI设计器](../../raw/application-user-guide/application-publishing-and-sharing/ui-designer.md)将智能体或工作流应用封装为网页界面，提供低代码拖拽编辑、多端适配（PC/H5）、权限控制及一键发布能力。
-- **组件化能力**：智能体或工作流应用可发布为标准化组件，供其他智能体（作为工具）或工作流（作为节点）引用，支持 `query` 和 `imageList` 等预设系统参数 [使用智能体或工作流作为组件](../../raw/application-user-guide/application-publishing-and-sharing/use-agent-or-workflow-as-component.md)。
-- **音视频实时互动**：仅支持图文类应用（含智能体与工作流），通过 SDK 或 H5/APP 扫码方式实现语音/视频对话，依赖 AICallKit 集成。
+- **仅限 Agent 1.0**：魔笔 UI 应用、钉钉机器人、微信公众号、组件化发布、音视频实时互动等功能**全部仅支持 Agent 1.0 智能体应用**；Agent 2.0 应用不支持上述任何分享渠道，仅可通过 API 调用 [分享智能体应用](../../raw/application-user-guide/application-publishing-and-sharing/share-an-application.md)。
+- **工作流应用支持范围**：工作流应用可发布为组件（见 [使用智能体或工作流作为组件](../../raw/application-user-guide/application-publishing-and-sharing/use-agent-or-workflow-as-component.md)），也可用于 UI 设计器集成及音视频实时互动（图文类应用），但**不支持钉钉/微信机器人发布**。
+- **UI 应用能力**：UI 设计器支持集成智能体或工作流应用，并提供低代码页面搭建、数据库映射、权限配置及多环境部署能力，详见 [UI设计器](../../raw/application-user-guide/application-publishing-and-sharing/ui-designer.md)。
 
-> **注意**：文档 1 明确指出“Agent 2.0 仅支持通过 API 调用”，而文档 3 在“快速开始”示例中未限定 Agent 版本，但其组件接入逻辑（如“智能体作为工具”）实际依赖 Agent 1.0 的 MCP 工具调用机制。因此，组件发布与引用**必须基于 Agent 1.0 应用**，否则无法触发自动调用。
+> **注意**：文档 1 明确指出“Agent 2.0 仅支持通过 API 调用”，而文档 3 在“准备工作”中要求“百炼应用、API Key 和 UI 设计需归属于同一业务空间”，但未限定应用版本；实际实践中，UI 设计器**无法选择 Agent 2.0 应用**作为后端服务，该限制隐含在控制台交互逻辑中，应以文档 1 的版本声明为准。
 
 ## 关键参数
 
 | 参数 | 说明 | 约束 |
 |------|------|------|
-| `API Key` | 用于身份认证与计费归属，必须与目标应用、UI 设计器位于**同一业务空间** | 不同业务空间的 API Key 不可见；未授权时需先完成计算巢 AppFlow SLR 授权 [分享智能体应用](../../raw/application-user-guide/application-publishing-and-sharing/share-an-application.md) |
-| `query` / `imageList` | 组件预设系统参数，不可删除；`query` 类型为 `String`，建议设为必填；`imageList` 类型为 `Array<String>`，仅在启用视觉模型时生效 | 若组件不需图像输入，应将 `imageList` 的“是否可见”设为否 |
-| 传参方式（`业务透传` vs `模型识别`） | `业务透传`：由调用方显式传入（智能体中为用户输入/上游节点输出）；`模型识别`：仅在智能体中由大模型根据参数描述自动填充，**工作流中该模式无效，必须显式传参** | 文档 1 与文档 3 均强调：工作流引用组件时，即使配置为“模型识别”，也**必须从上游节点提供输入值**，否则运行失败 |
-| 环境有效期 | 开发环境 UI 链接**24 小时后失效**；生产环境长期有效，但需订阅付费套餐并绑定自定义域名 | [UI设计器](../../raw/application-user-guide/application-publishing-and-sharing/ui-designer.md) 中明确说明开发环境时效性 |
+| `query`（系统预设） | 用户输入文本主参数，类型为 `String`，默认必填 | 不可删除；若无需暴露，须设为“是否可见=否” |
+| `imageList`（系统预设） | 图像公网地址列表，类型为 `Array<String>`，默认非必填 | 仅当组件使用视觉模型时生效；否则建议隐藏 |
+| `biz_param`（API 调用） | 用于透传业务参数的字段，格式为 JSON 对象 | 仅在调用含“业务透传”参数的组件时必需，如测试时需手动填入入参变量配置 |
+| 回调地址 / [Token](../concepts/token.md) 有效时间 / 分享 ID | 钉钉/微信/音视频渠道的核心交付物 | 回调地址需配置到第三方平台；[Token](../concepts/token.md) 有效期影响 H5/APP 体验链接时效；分享 ID 用于 SDK 快速集成 |
 
 ## 使用方式
 
-1. **前置条件**：确保目标应用已发布，且应用、API Key、UI 设计器（如使用）处于**同一业务空间**。
-2. **发布入口**：
-   - 控制台 → **应用管理** → 目标应用卡片 → **发布** → 选择渠道（UI/钉钉/微信/组件/音视频）；
-   - 或进入应用详情页 → **发布渠道** 页签操作。
-3. **典型流程**：
-   - **UI 应用**：选择“UI 应用” → 自动填充或手动配置 API Key 与智能体 → 编辑界面 → 发布至开发/生产环境 → 获取应用地址分享；
-   - **钉钉/微信**：在“发布平台”页签授权 AppFlow → 配置对应平台凭证（Client ID/Secret、模板 ID、AppID）→ 获取回调地址或二维码；
-   - **组件**：在“发布渠道”页签 → “组件” → 创建 → 配置名称、描述、参数（别名、是否可见、传参方式）→ 发布；
-   - **音视频**：在“AI 实时互动”页签 → 配置 API Key → 生成体验二维码或发布至 H5/APP/SDK。
+1. **UI 应用发布**  
+   进入应用「发布渠道」页签 → 选择「UI 应用」→ 「创建」→ 自动填充基础信息（API Key、智能体、图标等）→ 发布至开发/生产环境 → 获取应用地址分享。开发环境链接**24 小时失效**，生产环境需订阅付费套餐 [UI设计器](../../raw/application-user-guide/application-publishing-and-sharing/ui-designer.md)。
+
+2. **钉钉/微信发布**  
+   - 均需先完成计算巢 AppFlow 授权（SLR + API-KEY 加密传输）；  
+   - 钉钉需在开放平台创建应用、获取 Client ID/Secret、创建 AI 卡片模板并申请 `Card.Streaming.Write` 权限；  
+   - 微信需在公众号后台获取 AppID 并完成授权；  
+   - 配置完成后，复制回调地址（钉钉）或生成客服二维码（微信）交付终端用户。
+
+3. **组件化发布**  
+   - 在应用编辑页点击「发布应用」→ 勾选「发布应用组件」，或进入「组件管理」→ 「创建组件」；  
+   - 必填「组件名称」「组件描述」，配置 `query`/`imageList` 等参数的别名、是否可见、传参方式（`业务透传` 或 `模型识别`）；  
+   - 在智能体中作为技能引用，在工作流中作为节点拖入并绑定上游输出 [使用智能体或工作流作为组件](../../raw/application-user-guide/application-publishing-and-sharing/use-agent-or-workflow-as-component.md)。
+
+4. **音视频实时互动**  
+   仅支持图文类应用（智能体/工作流）；需配置 API Key → 生成临时体验二维码（24 小时）→ 发布后开通智能媒体服务并授权 SLR → 选择 H5/APP 扫码或 SDK 集成（含快速集成与开发集成两种模式）。
 
 ## 限制和注意事项
 
-- **版本限制**：Agent 2.0 应用**不支持任何 UI 或渠道发布功能**，仅支持 API 调用 [分享智能体应用](../../raw/application-user-guide/application-publishing-and-sharing/share-an-application.md)。
-- **嵌套与多级调用禁止**：A 调用 B 且 B 调用 A 会导致死循环；A→B→C 多级链路易超时，应尽量扁平化设计 [使用智能体或工作流作为组件](../../raw/application-user-guide/application-publishing-and-sharing/use-agent-or-workflow-as-component.md)。
-- **工作流中组件参数约束**：即使参数配置为“模型识别”，工作流也**不会自动推断值**，必须通过上游节点显式传入，否则任务失败。
-- **权限与计费**：所有分享链接默认仅限阿里云用户访问；费用由应用创建者 UID 承担，包括模型调用、文件存储（UI 应用）、数据库容量等 [UI设计器](../../raw/application-user-guide/application-publishing-and-sharing/ui-designer.md)。
-- **环境隔离**：开发环境 UI 链接 24 小时过期，生产环境需付费订阅；UI 应用若使用文件上传或数据库，需关注免费配额（1GB 文件 / 0.3GB 数据库）。
+- **版本锁定**：所有非 API 类发布渠道（UI、钉钉、微信、组件、音视频）**严格限定为 Agent 1.0**，Agent 2.0 应用不可选 [分享智能体应用](../../raw/application-user-guide/application-publishing-and-sharing/share-an-application.md)。
+- **嵌套与多级调用禁止**：组件 A 调用 B、B 又调用 A 将导致死循环；A→B→C 多级链路易触发超时，应尽量扁平化设计 [使用智能体或工作流作为组件](../../raw/application-user-guide/application-publishing-and-sharing/use-agent-or-workflow-as-component.md)。
+- **传参方式差异**：`模型识别` 在智能体中由大模型自动填充参数，但在工作流中**无效**——必须通过上游节点显式传入值，否则运行失败。
+- **环境与权限隔离**：UI 设计器、API Key、智能体应用必须位于**同一业务空间**，否则无法关联 [UI设计器](../../raw/application-user-guide/application-publishing-and-sharing/ui-designer.md)。
+- **计费责任归属**：所有通过分享链接产生的模型调用、存储、带宽等费用，均由应用创建者 UID 账号承担，与访问者身份无关。
 
 ## 来源文档
 
 - [分享智能体应用](../../raw/application-user-guide/application-publishing-and-sharing/share-an-application.md)
-- [UI设计器](../../raw/application-user-guide/application-publishing-and-sharing/ui-designer.md)
 - [使用智能体或工作流作为组件](../../raw/application-user-guide/application-publishing-and-sharing/use-agent-or-workflow-as-component.md)
+- [UI设计器](../../raw/application-user-guide/application-publishing-and-sharing/ui-designer.md)
 
 

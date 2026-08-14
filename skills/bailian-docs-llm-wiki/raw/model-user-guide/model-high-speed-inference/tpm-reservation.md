@@ -79,6 +79,8 @@ PTU（[模型部署](https://help.aliyun.com/zh/model-studio/model-deployment-in
 
 ## **支持的模型**
 
+> 价格以控制台为准，表格仅供参考。
+
 ## 华北2（北京）
 
 **模型名称**
@@ -148,6 +150,12 @@ DeepSeek-v4-Pro
 ¥121.00
 
 ¥241.90
+
+DeepSeek-v4-Pro-0813
+
+¥90.7
+
+¥272.2
 
 Kimi-K2.6
 
@@ -225,6 +233,12 @@ DeepSeek-v4-Pro
 
 ¥362.60
 
+DeepSeek-v4-Pro-0813
+
+¥94.3
+
+¥282.9
+
 ## 计费与使用说明
 
 -   部署成功即开始计费，预留容量内的调用不额外收费。
@@ -296,7 +310,15 @@ glm-5.1
 \[32K, 200K\]：输入 1.33 / 输出 1.17  
   
 
-deepseek-v4-pro
+DeepSeek-v4-Pro-0813
+
+1 Million
+
+0.01（缓存命中部分按 10% 折算容量）
+
+无阶梯（1.0）
+
+DeepSeek-v4-Pro
 
 256K
 
@@ -304,7 +326,7 @@ deepseek-v4-pro
 
 无阶梯（1.0）
 
-deepseek-v4-flash
+DeepSeek-v4-Flash
 
 256K
 

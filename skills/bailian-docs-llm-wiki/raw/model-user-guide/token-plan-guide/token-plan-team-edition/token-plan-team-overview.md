@@ -29,6 +29,15 @@ Token Plan 团队版提供套餐专属 Base URL，兼容 OpenAI、Anthropic 接�
 
 ## **支持的模型**
 
+**重要**
+
+团队版部分模型享有以下限时权益：
+
+-   **deepseek-v4-pro-0813 限时夜间五折**：每晚 22:00 - 次日 08:00 期间调用 deepseek-v4-pro-0813 模型，Credits 消耗享 5 折优惠。
+    
+
+阿里云百炼有权根据运营情况对活动进行变更或调整，包括不限于活动内容和有效期等，请以页面最新内容或阿里云通知为准。
+
 **品牌**
 
 **模型 ID（Model ID）**
@@ -65,6 +74,10 @@ qwen-image-2.0-pro
 
 图片生成
 
+qwen-image-3.0-pro NEW
+
+图片生成
+
 qwen-audio-3.0-tts-plus
 
 语音合成
@@ -72,6 +85,10 @@ qwen-audio-3.0-tts-plus
 qwen-audio-3.0-realtime-plus NEW
 
 实时语音对话
+
+qwen-audio-3.0-asr-flash NEW
+
+语音识别
 
 万相
 
@@ -86,6 +103,10 @@ wan2.7-image-pro
 DeepSeek
 
 deepseek-v4-pro
+
+推理模型、文本生成
+
+deepseek-v4-pro-0813 NEW
 
 推理模型、文本生成
 

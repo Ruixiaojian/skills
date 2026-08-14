@@ -1,50 +1,61 @@
 # model production
 
-`model production` 指在百炼平台将训练/微调完成的模型部署为可稳定、可计量、可扩缩的在线推理服务的能力，核心支撑 TPM 预留（容量保障）与通用 PTU v2 部署两类生产模式。当前仅 TPM 预留场景提供完整的全生命周期 OpenAPI 管理能力，包括创建、扩缩容、续订、溢出策略调整等；通用模型部署（如微调后模型上线）暂未开放对应 API 文档 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)。开发者需通过 DashScope OpenAPI 调用，认证方式、参数约束与区域限制均需严格遵循规范。
+`model production` 是百炼平台中模型从训练、部署到服务化运行的全生命周期管理能力集合，涵盖微调（Fine-tuning）、在线部署（Deployment）及 TPM 预留（TPM Reservation）等核心环节。开发者可通过 OpenAPI 或控制台完成模型定制、容量保障型服务发布与弹性扩缩容操作。该能力面向生产环境高可用、可计量、可治理的需求设计，不提供模型训练基础设施，仅支持基于百炼托管模型的微调与部署。
 
-## 支持的模型与功能
+## 支持的模型/功能
 
-- **支持模型（TPM 预留）**：华北2（北京）区域支持 `qwen-max`（即千问3.8-Max）、`qwen-plus-2026-05-26`（千问3.7-Plus-2026-05-26）、`qwen-flash-2026-04-16`（千问3.6-Flash-2026-04-16）、`glm-5.2`、`glm-5.1`、`deepseek-v4-flash`、`deepseek-v4-pro`、`kimi-k2.6`；新加坡区域不支持 `kimi-k2.6`，其余一致。
-- **深度思考支持**：上述全部 9 款模型均支持 `thinking_output_tpm` 配额，启用方式详见 [深度思考模型](https://help.aliyun.com/zh/model-studio/deep-thinking)，具体步长与起跑值以控制台创建页实时展示为准。
-- **功能覆盖**：提供创建（`POST /api/v1/deployments`）、单/列表查询（`GET /api/v1/deployments/{id}` / `GET /api/v1/deployments`）、扩缩容（`PUT /api/v1/deployments/{id}/scale`）、续订（`PUT /api/v1/deployments/{id}/renew`）、溢出策略修改（`PUT /api/v1/deployments/{id}/updateOverflowStrategy`）共六类 REST 接口，完整覆盖 TPM 预留部署生命周期管理 [TPM 预留 DashScope OpenAPI 接口文档](../../raw/model-api-reference/model-production/tpm-reserved-openapi.md)。
-
-> **注意**：文档 2《模型部署》仅声明“将微调或导入的模型部署为在线推理服务”，但未提供任何 API 细节、参数或示例；文档 3《模型调优》仅描述微调功能，与部署无直接接口关联。二者均无法支撑实际开发，当前唯一可用的生产级部署 API 文档是 [TPM 预留 DashScope OpenAPI 接口文档](../../raw/model-api-reference/model-production/tpm-reserved-openapi.md)。
+- **微调（Fine-tuning）**：支持对百炼平台托管的基础大模型进行监督微调，生成专属适配业务场景的定制模型。具体能力详见 [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)。
+- **部署类型**：
+  - **通用部署（PTU v2）**：按需弹性伸缩，适用于流量波动大、成本敏感场景；
+  - **TPM 预留部署（`service_tier=ptu_default`）**：预购固定 TPM（[Token](../concepts/token.md)s Per Minute）容量，保障推理吞吐下限，适用于 SLA 要求严格的生产服务。
+- **当前支持的 TPM 预留模型（华北2 北京）**：`qwen-max`（即千问3.8-Max）、`qwen-plus-2026-05-26`、`qwen-flash-2026-04-16`、`glm-5.2`、`glm-5.1`、`deepseek-v4-flash`、`deepseek-v4-pro`、`kimi-k2.6`、`qwen-3.7-max-2026-05-20`。  
+  > **注意**：新加坡区域不支持 `kimi-k2.6`，其余模型一致；所有 9 款模型均支持 `thinking_output_tpm` 配额，但该字段仅对深度思考模型家族生效，启用方式见[深度思考模型](https://help.aliyun.com/zh/model-studio/deep-thinking)。
 
 ## 关键参数
 
-- `plan`: 必填，固定为 `"ptu"`，标识 TPM 预留场景（后端统一映射为 `ptu_v2`）。
-- `service_tier`: 可选，`"ptu_default"` 表示 TPM 预留（容量保障），`"ptu_fast"` 表示 PTU v2 通用部署（非预留）；创建 TPM 预留时建议显式指定 `"ptu_default"`。
-- `deployed_model`: 路径参数，格式为 `{model_name}-ptu-{random_suffix}`，由后端自动生成，不可自定义；`suffix` 字段在创建请求中**禁止传入**。
-- `ptu_capacity`: 必填对象，含三个独立维度（单位：kTPM = 1000 [Token](../concepts/token.md)s/分钟）：
-  - `input_tpm`: 输入配额，须为模型指定 step 的整数倍；
-  - `output_tpm`: 输出配额，须为模型指定 step 的整数倍；
-  - `thinking_output_tpm`: 思考输出配额，仅对支持思考的模型有效，同样须为 step 整数倍。
-- `charge_type`: 必填，`"pre_paid"`（预付费）或 `"post_paid"`（后付费）；预付费需额外提供 `pre_paid_info` 对象（含 `duration`, `auto_renewal`, `auto_renewal_duration`）。
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `model_name` | String | 是 | 基础模型名，如 `qwen-max`，须在[支持清单](../../raw/model-api-reference/model-production/tpm-reserved-openapi.md)中 |
+| `plan` | String | 是 | 固定为 `ptu`（TPM 预留场景） |
+| `service_tier` | String | 否 | `ptu_default`（TPM 预留）或 `ptu_fast`（PTU v2 通用，默认）；二者非版本关系，而是部署策略差异 |
+| `charge_type` | String | 是 | `pre_paid`（预付费）或 `post_paid`（后付费） |
+| `ptu_capacity` | Object | 是 | 容量配置对象，含 `input_tpm`、`output_tpm`、`thinking_output_tpm`（仅思考模型），单位为 kTPM（1000 TPM），取值须为模型指定 step 的整数倍 |
+| `pre_paid_info` | Object | 条件必填 | `charge_type=pre_paid` 时必填，含 `duration`（1~30/60/90/120/365 天）、`auto_renewal`（布尔值）、`auto_renewal_duration`（`auto_renewal=true` 时必填） |
+
+> **注意**：`suffix` 字段在 TPM 预留创建中**不可传入**，由后端自动生成 `deployed_model`（如 `qwen-max-ptu-a1b2c3d4`），长度不固定；若手动传入将导致 `InvalidParameter` 错误。
 
 ## 使用方式
 
-- **认证**：使用百炼 API Key，请求头必须包含 `Authorization: Bearer <api-key>`；API Key 与区域强绑定，不可跨区调用。
-- **SDK 支持**：
-  - DashScope 原生 SDK：Python、Java；
-  - OpenAI 兼容 SDK：Python、Node.js、Java、Go，路径前缀为 `/compatible-mode/v1`。
-- **域名与工作空间**：
-  - 默认域名：`https://dashscope.aliyuncs.com`；
-  - 工作空间专属域名：`[workspaceId].[region].maas.aliyuncs.com`（如 `cn-beijing`, `ap-southeast-1`）；
-  - 如需指定工作空间，请求头添加 `X-DashScope-WorkSpace: <workspace-id>`。
-- **状态流转**：创建后初始状态为 `"DEPLOYING"`，成功后变为 `"RUNNING"`；扩缩容时状态为 `"SCALING"`（预付费）或直接生效（后付费）；续订后状态为 `"WAIT_PRE_PAID_BILLING_TO_SCALING"`。
+1. **认证**：使用百炼 API Key，请求头携带 `Authorization: Bearer <api-key>`；API Key 与区域强绑定，不可跨区调用。
+2. **Endpoint**：
+   - DashScope 原生域名：`https://dashscope.aliyuncs.com`
+   - Workspace 专属域名（需指定工作空间）：`https://{WorkspaceId}.{region}.maas.aliyuncs.com`
+   - OpenAI 兼容路径前缀：`/compatible-mode/v1`
+3. **核心接口（TPM 预留）**：
+   - 创建：`POST /api/v1/deployments`（状态流转：`DEPLOYING` → `RUNNING`）
+   - 查询单个：`GET /api/v1/deployments/{deployed_model}`
+   - 列表查询：`GET /api/v1/deployments?page_no=1&page_size=10`
+   - 扩缩容：`PUT /api/v1/deployments/{deployed_model}/scale`（`input_tpm`/`output_tpm`/`thinking_output_tpm` 必须同向调整）
+   - 续订：`PUT /api/v1/deployments/{deployed_model}/renew`（预付费专用，状态变为 `WAIT_PRE_PAID_BILLING_TO_SCALING`）
+   - 修改溢出策略：`PUT /api/v1/deployments/{deployed_model}/updateOverflowStrategy`（`enable`：溢出至公共池按量计费；`disable`：直接限流）
+
+完整接口定义与示例详见 [TPM 预留 DashScope OpenAPI 接口文档](../../raw/model-api-reference/model-production/tpm-reserved-openapi.md)。
 
 ## 限制和注意事项
 
-- **区域限制**：TPM 预留仅在华北2（北京）、新加坡、东京、法兰克福等已开通区域可用；模型可用性因区域而异（如 `kimi-k2.6` 不在新加坡提供）。
-- **扩缩容约束**：`input_tpm`、`output_tpm`、`thinking_output_tpm` 必须同向调整（全部增大或全部减小），混合方向将返回 `400 InvalidParameter` 错误；仅 `plan="ptu"` 的部署支持扩缩容。
-- **溢出策略影响**：`overflow_strategy="enable"` 时，超出 TPM 容量的流量将按量计费；`"disable"` 时直接限流，不产生费用但可能触发 `429 Throttling.AllocationQuota` 错误 [TPM 预留 DashScope OpenAPI 接口文档](../../raw/model-api-reference/model-production/tpm-reserved-openapi.md)。
-- **错误处理**：关键错误码包括 `404 ModelNotFound`（确认模型名拼写及区域支持）、`403 AccessDenied`（检查工作空间与模型授权）、`429 Throttling.AllocationQuota`（扩容或切换溢出策略）；所有错误响应均含 `request_id`，用于提工单排查 [TPM 预留 DashScope OpenAPI 接口文档](../../raw/model-api-reference/model-production/tpm-reserved-openapi.md)。
-- **文档缺失**：微调模型的部署能力（即文档 2 所述）当前无公开 API 规范，实际生产应优先采用 TPM 预留模式；文档 3《模型调优》与部署无接口耦合，仅涉及训练阶段。
+- **区域限制**：TPM 预留目前仅支持 `cn-beijing`（华北2）、`ap-southeast-1`（新加坡）、`ap-northeast-1`（东京）、`eu-central-1`（法兰克福）；弗吉尼亚区域暂不支持。
+- **扩缩容约束**：
+  - 仅 `plan=ptu` 的部署支持扩缩容；
+  - 预付费扩缩容为异步操作，状态为 `SCALING` 期间禁止重复调用；
+  - `input_tpm`、`output_tpm`、`thinking_output_tpm` 必须同步增减，混合方向（如 input 增、output 减）将返回 `InvalidParameter`。
+- **续订时效**：22:00 后提交的续订请求，到期时间顺延至 N+2 日 00:00。
+- **错误处理**：HTTP 429 `Throttling.AllocationQuota` 表示超出预留 TPM 容量且 `overflow_strategy=enable`，此时流量已溢出计费；若设为 `disable` 则直接限流，无额外费用但影响可用性。
+- **模型部署一致性**：通用部署（`service_tier=ptu_fast`）与 TPM 预留（`service_tier=ptu_default`）共用同一套部署 API，但计费模型与容量保障机制不同；二者不可混用参数，例如 `ptu_capacity` 仅对 `ptu_default` 有效。相关概念对比详见 [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)。
 
 ## 来源文档
 
-- [TPM 预留 DashScope OpenAPI 接口文档](../../raw/model-api-reference/model-production/tpm-reserved-openapi.md)
-- [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)
 - [模型调优](../../raw/model-api-reference/model-production/fine-tuning-jobs-api.md)
+- [模型部署](../../raw/model-api-reference/model-production/deployments-api.md)
+- [TPM 预留 DashScope OpenAPI 接口文档](../../raw/model-api-reference/model-production/tpm-reserved-openapi.md)
 
 
