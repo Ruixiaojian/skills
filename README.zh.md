@@ -69,6 +69,7 @@ npx skills add modelstudioai/skills
 | [`happyhorse-prompt-studio`](./skills/happyhorse-prompt-studio/) | **HappyHorse 1.0 视频提示词工作室**：用生动示例引导用户发现场景，再组装出 日/中/英 三语的成片级 Prompt。覆盖漫剧、角色 PV、漫画运动、虚拟偶像 MV 及自由创作场景。 |
 | [`spark-video`](./skills/spark-video/) | **端到端短片制作**：编剧 ↔ 导演（逐场景）→ 并行渲染 DAG → 逐 clip 审片 → 拼接。适合"帮我做一集短剧/产品广告"一句话出片。入口技能注册为 **`spark-video-episode`**（见 [`SKILL.md`](./skills/spark-video/SKILL.md)）。 |
 | [`novel-game`](./skills/novel-game/) | **小说改编互动小说网页游戏（React SPA）**：分支剧情引擎 + AI 生成角色立绘/过场（视频或图片）+ 可选 TTS 旁白 + 程序化 Web Audio 音频 + localStorage 存档 + 多种 UI 风格（像素 / 赛博朋克 / 水墨 / 简约）。命中"互动小说 / 文字冒险 / 视觉小说 / 小说改编游戏"时激活，全程通过 `bl video / image / speech` 离线生成素材后本地运行。 |
+| [`vox-video-director`](./skills/vox-video-director/) | **端到端 Vox 风格纸质拼贴视频制作**：主题、口播视频或单张锚定照片 → beat map → 内容驱动的 5–10 秒片段 → 拼贴关键帧 → 动效 → 旁白 → 字幕与本地 ffmpeg 合成。使用 `bl image / video / speech`，并在计费生成前停在审批点。 |
 
 ---
 
