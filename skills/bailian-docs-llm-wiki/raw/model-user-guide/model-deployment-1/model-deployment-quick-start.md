@@ -8,14 +8,14 @@
 
 ## 前提条件
 
--   您已经完整阅读了[模型部署](https://help.aliyun.com/zh/model-studio/model-deployment-introduction)，熟悉如何在阿里云百炼平台进行模型部署的支持的模型和基本步骤。
+-   您已经完整阅读了[模型部署](https://help.aliyun.com/zh/model-studio/model-deployment-introduction)，熟悉阿里云百炼平台模型部署支持的模型和基本步骤。
     
 -   您需要已[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
     
 
 ## **1\. 部署模型**
 
-下面的命令使用已经调优好的自定义模型`qwen3-8b-ft-202511132025-0260`，创建一个专属服务`qwen3-8b-ft-202511132025-0260`。
+下面的命令展示如何创建专属服务。其中，按 Token 计费的示例使用已经调优好的自定义模型`qwen3-8b-ft-202511132025-0260`，创建一个专属服务`qwen3-8b-ft-202511132025-0260`；按预置吞吐和按模型单元的示例使用预置模型。
 
 获取自定义模型 ID 的方法：前往[百炼控制台-模型调优](https://bailian.console.aliyun.com/cn-beijing?tab=model#/efm/model_manager)，点击需要部署的**任务名称** -> **产出** -> 点击蓝色字体的模型名称，进入**我的模型**页面，在模型基本信息区域可查看模型 ID。
 
@@ -39,7 +39,7 @@ curl "https://dashscope.aliyuncs.com/api/v1/deployments" \
     "plan": "ptu",
     "ptu_capacity": {
         "input_tpm": 10000,
-	"output_tpm": 1000
+        "output_tpm": 1000
     }
 }'
 ```
@@ -115,7 +115,7 @@ curl "https://dashscope.aliyuncs.com/api/v1/deployments" \
 
 部分模型的**模型单元**部署模式支持该设置，可限制模型调用的 RPM、TPM。
 
-如何在 API 设置上述内容，请参考：[使用 API 创建模型部署任务](https://help.aliyun.com/zh/model-studio/model-deployment-api#0dda8fc0587ho)。
+如何在 API 设置上述内容，请参考：[使用 API 创建部署](https://help.aliyun.com/zh/model-studio/create-deployment-api)。
 
 ### 按模型 Token 使用量计费
 
@@ -133,7 +133,7 @@ curl "https://dashscope.aliyuncs.com/api/v1/deployments" \
 }'
 ```
 
-> capacity 参数设置无效，但必须填写。如需希望扩缩容，请前往百炼模型部署[控制台](https://bailian.console.aliyun.com/?tab=model#/efm/model_deploy)填写表单申请。
+> capacity 参数设置无效，但必须填写。如需扩缩容，请前往百炼模型部署[控制台](https://bailian.console.aliyun.com/?tab=model#/efm/model_deploy)填写表单申请。
 
 命令执行成功后，返回如下结果：（以 Lora 部署为例）
 
@@ -152,7 +152,7 @@ curl "https://dashscope.aliyuncs.com/api/v1/deployments" \
         "charge_type": "post_paid",
         "creator": "16542*****",
         "modifier": "16542*****",
-        "plan": "***"
+        "plan": "lora"
     }
 }
 ```
@@ -212,7 +212,7 @@ from dashscope import Generation
 from http import HTTPStatus
 import os
 response = Generation.call(
-    model='qwen3-8b',
+    model='qwen3-8b-ft-202511132025-0260',
     prompt='你是谁？',
     enable_thinking=False,
     api_key=os.getenv('DASHSCOPE_API_KEY'),

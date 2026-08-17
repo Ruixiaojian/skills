@@ -19,7 +19,7 @@
 
 ## 支持的模型
 
-`qwen3-max`、`qwen3-max-2026-01-23`、`qwen3.8-max`、`qwen3.7-max`、`qwen3.7-max-2026-05-20`、`qwen3.7-max-2026-06-08`、`qwen3.7-plus`、`qwen3.7-plus-2026-05-26`、`qwen3.6-plus`、`qwen3.6-plus-2026-04-02`、`qwen3.5-plus`、`qwen3.5-plus-2026-02-15`、`qwen3.5-plus-2026-04-20`、`qwen3.7-flash`、`qwen3.7-flash-2026-07-15`、`qwen3.6-flash`、`qwen3.6-flash-2026-04-16`、`qwen3.5-flash`、`qwen3.5-flash-2026-02-23`、`qwen3.6-35b-a3b`、`qwen3.5-397b-a17b`、`qwen3.5-122b-a10b`、`qwen3.5-27b`、`qwen3.5-35b-a3b`、`qwen-plus`、`qwen-flash`、`qwen3-coder-plus`、`qwen3-coder-flash`、`qwen3-coder-next`、`deepseek-v4-flash`、`deepseek-v4-flash-0731`、`deepseek-v4-pro`、`deepseek-v4-pro-0813`（DeepSeek-V4 模型仅支持华北2（北京）与新加坡地域）。
+`qwen3-max`、`qwen3-max-2026-01-23`、`qwen3.8-max`、`qwen3.7-max`、`qwen3.7-max-2026-05-20`、`qwen3.7-max-2026-06-08`、`qwen3.7-plus`、`qwen3.7-plus-2026-05-26`、`qwen3.6-plus`、`qwen3.6-plus-2026-04-02`、`qwen3.5-plus`、`qwen3.5-plus-2026-02-15`、`qwen3.5-plus-2026-04-20`、`qwen3.7-flash`、`qwen3.7-flash-2026-07-15`、`qwen3.6-flash`、`qwen3.6-flash-2026-04-16`、`qwen3.5-flash`、`qwen3.5-flash-2026-02-23`、`qwen3.6-35b-a3b`、`qwen3.5-397b-a17b`、`qwen3.5-122b-a10b`、`qwen3.5-27b`、`qwen3.5-35b-a3b`、`qwen-plus`、`qwen-flash`、`qwen3-coder-plus`、`qwen3-coder-flash`、`qwen3-coder-next`、`deepseek-v4-flash`、`deepseek-v4-flash-0731`、`deepseek-v4-pro`、`deepseek-v4-pro-0813``glm-5.2`（DeepSeek-V4 模型仅支持华北2（北京）与新加坡地域）。
 
 ## 服务地址
 
@@ -774,6 +774,10 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
 **支持的模型：**`qwen3-max`、`qwen3.8-max`、`qwen3.7-max`、`qwen3.7-max-2026-05-20`、`qwen3.7-max-2026-06-08`、`qwen3.7-plus`、`qwen3.7-plus-2026-05-26`、`qwen3.6-plus`、`qwen3.5-plus`、`qwen3.7-flash`、`qwen3.6-flash`、`qwen3.5-flash`、`qwen-plus`、`qwen-flash`、`qwen3-coder-plus`、`qwen3-coder-flash`
 
 > Session 缓存 最小可缓存提示词长度为 1024 Token，缓存有效期为 5 分钟。相关约束限制与[显式缓存](https://help.aliyun.com/zh/model-studio/context-cache)一致。
+
+Session 缓存的缓存键由完整请求内容计算生成，包含 system prompt、user prompt、tools 等所有请求组成部分。仅当两次请求的完整内容完全一致时，才能命中缓存；user prompt 中仅修改一个字符，也会导致缓存键不同，无法命中缓存。
+
+多轮对话中每轮 user prompt 不同，Session 缓存的命中率会显著下降。建议使用 `previous_response_id` 参数关联历史响应，复用历史请求中 system prompt 部分的缓存，仅新增内容需重新计算。
 
 ## Python
 

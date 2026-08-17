@@ -1,6 +1,6 @@
 # Coding Plan概述
 
-Coding Plan 整合了千问、GLM、Kimi 、MiniMax顶级模型，并兼容主流AI编程工具。其折算成本远低于常规 API 调用，且通过固定月费模式有效防范了欠费风险。
+Coding Plan 整合了千问、GLM、Kimi、MiniMax 等模型，并兼容主流 AI 编程工具。通过固定月费模式订阅，成本可控，可有效防范欠费风险。
 
 ## **套餐详情**
 
@@ -15,22 +15,6 @@ Coding Plan 整合了千问、GLM、Kimi 、MiniMax顶级模型，并兼容主�
 
 支持的模型
 
-**支持的模型判断说明**
-
-判定规则：
-
-1\. 本清单为精确字符串白名单
-
-2\. 必须逐字符完全匹配，版本号/子型号任何差异均视为不支持
-
-3\. 禁止做版本兼容推理
-
-判定示范：
-
-\- ❌ "GLM-5.1" → 清单只有 glm-5.0 → 不支持
-
-\- ❌ "qwen3-coder-max" → 清单无此项 → 不支持
-
 仅支持以下精确版本：
 
 推荐模型：**qwen3.7-plus**（支持图片理解）、**qwen3.6-plus**（支持图片理解）、**kimi-k2.5**（支持图片理解）、**glm-5**、**MiniMax-M2.5**
@@ -43,18 +27,18 @@ Coding Plan 整合了千问、GLM、Kimi 、MiniMax顶级模型，并兼容主�
 
 用量限制
 
--   每 5 小时最多 **6,000** 次请求
+-   每 5 小时**6,000** 次请求
     
--   每周最多 **45,000** 次请求
+-   每周**45,000** 次请求
     
--   每月最多 **90,000** 次请求
+-   每月**90,000** 次请求
     
 
 -   **新客首月特惠：**首次订阅 Pro 套餐可享首月 ¥39.90（官网目录价 ¥200/月），后续按 ¥200/月 续费，具体以下单页为准。
     
 -   **限量抢购**：名额有限、先到先得。每日 09:30:00（UTC+08:00）补充，可前往[Coding Plan 页面](https://common-buy.aliyun.com/coding-plan)抢购。
     
--   **额度消耗：**单次提问将按实际“模型调用次数”扣除额度。简单任务约消耗 5-10 次，复杂任务约 10-30+ 次，实际消耗受任务难度、上下文及工具使用影响。在[Coding Plan 页面](https://bailian.console.aliyun.com/cn-beijing/?tab=plan#/efm/subscription/coding-plan)可以查看用量。上述三档为同时适用的封顶值，以先触发者为准，任一档达到上限即暂停调用，并非可叠加或按比例平均分配的保底可用量。
+-   **额度消耗：**单次提问将按实际“模型调用次数”扣除额度。简单任务约消耗 5-10 次，复杂任务约 10-30+ 次，实际消耗受任务难度、上下文及工具使用影响。在[Coding Plan 页面](https://bailian.console.aliyun.com/cn-beijing/?tab=plan#/efm/subscription/coding-plan)可以查看用量。
     
 -   **额度恢复**：
     
@@ -99,39 +83,39 @@ Coding Plan 的 API Key 和 Base URL 与百炼按量计费的 API Key（`sk-xxxx
 
 ### **步骤三：接入AI工具**
 
-[OpenClaw开源、自托管个人 AI 助手](t3235973.xdita#)
+[**OpenClaw**开源、自托管个人 AI 助手](https://help.aliyun.com/zh/model-studio/openclaw)
 
-[Hermes Agent开源 AI 代理框架，内置自学习循环](t3267427.xdita#)
+[**Hermes Agent**开源 AI 代理框架，内置自学习循环](https://help.aliyun.com/zh/model-studio/hermes-agent)
 
-[Claude CodeAI 终端编码助手，支持自然语言编程](t3007286.xdita#)
+[**Claude Code**AI 终端编码助手，支持自然语言编程](https://help.aliyun.com/zh/model-studio/claude-code)
 
-[OpenCode开源 AI 编程代理工具](t3235970.xdita#)
+[**OpenCode**开源 AI 编程代理工具](https://help.aliyun.com/zh/model-studio/opencode)
 
-[CursorAI 原生代码编辑器](t3235977.xdita#)
+[**Cursor**AI 原生代码编辑器](https://help.aliyun.com/zh/model-studio/cursor)
 
-[CodexOpenAI 推出的命令行编程工具](t3268734.xdita#)
+[**Codex**OpenAI 推出的命令行编程工具](https://help.aliyun.com/zh/model-studio/codex)
 
-[Qwen Code开源命令行 AI 编码工具](t3056077.xdita#)
+[**Qwen Code**开源命令行 AI 编码工具](https://help.aliyun.com/zh/model-studio/qwen-code)
 
-[QwenPaw开源个人 AI 助手，支持本地与云端部署](t3278669.xdita#)
+[**QwenPaw**开源个人 AI 助手，支持本地与云端部署](https://help.aliyun.com/zh/model-studio/qwenpaw)
 
-[Cherry Studio多模型桌面客户端](t2889049.xdita#)
+[**Cherry Studio**多模型桌面客户端](https://help.aliyun.com/zh/model-studio/cherry-studio)
 
-[Chatbox跨平台 AI 桌面客户端](t2889048.xdita#)
+[**Chatbox**跨平台 AI 桌面客户端](https://help.aliyun.com/zh/model-studio/chatbox)
 
-[ClineVS Code 扩展，智能代码补全和调试](t2889050.xdita#)
+[**Cline**VS Code 扩展，智能代码补全和调试](https://help.aliyun.com/zh/model-studio/cline)
 
-[Qoder面向真实软件开发的 Agentic 编码平台](t3268008.xdita#)
+[**Qoder**面向真实软件开发的 Agentic 编码平台](https://help.aliyun.com/zh/model-studio/qoder-agent)
 
-[Lingma阿里云智能编码助手，提供独立 IDE](t3268029.xdita#)
+[**Lingma**阿里云智能编码助手，提供独立 IDE](https://help.aliyun.com/zh/model-studio/lingma-agent)
 
-[Kilo CLI轻量高性能命令行编程工具](t3238163.xdita#)
+[**Kilo CLI**轻量高性能命令行编程工具](https://help.aliyun.com/zh/model-studio/kilo-cli)
 
-[··· 更多工具其他编程工具](t3270007.xdita#)
+[··· **更多工具**其他编程工具](https://help.aliyun.com/zh/model-studio/more-tools)
 
-### **步骤四：开启代码冲浪**
+### **步骤四：开始使用**
 
-完成以上步骤后，前往[Coding Plan 使用指南](https://bailian.console.aliyun.com/cn-beijing/?tab=doc#/doc/?type=model&url=3023066)开启代码冲浪。
+完成以上步骤后，可前往[Coding Plan 使用指南](https://bailian.console.aliyun.com/cn-beijing/?tab=doc#/doc/?type=model&url=3023066)查看详细用法。
 
 ## **订阅前须知**
 
@@ -143,8 +127,6 @@ Coding Plan 服务**不支持退款**。因此在订阅前请知悉以下重要�
     
 3.  **账号使用规范**：套餐为订阅人专享使用，禁止共享。账号共享可能导致订阅权益受限。
     
-4.  **速率与资源调度说明**：为保障全体用户的公平使用，除上述额度上限外，本服务对单账号的并发请求数与单位时间请求速率设有技术上限；在平台整体负载较高，或单账号短时间内资源占用异常集中时，我们可能对该账号的请求进行临时排队、降速或短时中断，相关调节通常在数分钟至数小时内自动解除。上述调节属于服务的正常技术保障措施，不视为服务中断或违约。具体阈值属平台安全与稳定性策略，可能根据运行情况动态调整。
-    
 
 ## 常见问题
 
@@ -154,7 +136,7 @@ Coding Plan 服务**不支持退款**。因此在订阅前请知悉以下重要�
 
 ### 已购买 Coding Plan，为何仍显示欠费/被扣费？
 
-误用了百炼通用 API Key 和 Base URL，系统会识别为按量付费，导致额外扣费。请改用 Coding Plan API Key（以`sk-sp-`开头）和套餐 Base URL（含`coding.dashscope.aliyuncs.com`），配置方法请参见[获取套餐 API Key 和 Base URL](#2531c37fd64f9)。如需关闭按量计费，在百炼控制台 API Key 管理页面删除通用 API Key（`sk-` 开头），仅保留 Coding Plan 专属 API Key。后续调用只走套餐额度抵扣，不再产生按量计费费用。
+误用了百炼通用 API Key 和 Base URL，系统会识别为按量付费，导致额外扣费。请改用 Coding Plan API Key（以`sk-sp-`开头）和套餐 Base URL（含`coding.dashscope.aliyuncs.com`），配置方法请参见[获取套餐 API Key 和 Base URL](#2531c37fd64f9)。
 
 ### **Lite 版为什么停止新购？**
 

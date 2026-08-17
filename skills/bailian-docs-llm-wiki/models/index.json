@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-08-17",
+  "updatedAt": "2026-08-18",
   "totalFamilies": 179,
   "totalModels": 399,
   "profileCoverage": {
-    "full": 335,
-    "partial": 15,
-    "structured-only": 49,
+    "full": 323,
+    "partial": 12,
+    "structured-only": 64,
     "none": 0
   },
   "capabilityDistribution": {
@@ -1531,8 +1531,8 @@
         "TR"
       ],
       "providers": [
-        "qwen",
-        "qwen-domain-model"
+        "qwen-domain-model",
+        "qwen"
       ],
       "itemCount": 3,
       "items": [

@@ -224,6 +224,10 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 -   `agent`：智能体提示词增强（APE），提供更精细的改写效果。仅支持文生图（T2I），图生图（I2I）场景传入`agent`将返回400错误。
     
 
+**enable\_thinking** `_boolean_` （可选）
+
+是否开启思考模式，默认值为`true`。开启时，模型将增强推理能力以提升出图质量，但会增加生成耗时。仅在 prompt\_extend=true 时生效，适用于 Direct T2I、Direct I2I 和 Agent T2I，I2I Agent 暂不支持。
+
 **n** `_integer_` （可选）
 
 输出图像的数量，支持输出1-6张图片，默认值为1。
@@ -241,9 +245,9 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 反向提示词，用来描述不希望在画面中看到的内容，可以对画面进行限制。
 
-**seed** `_integer_` （可选）
+**seed** `_integer_`（可选）
 
-随机数种子，取值范围`[0, 2147483647]`。固定种子可使生成结果相对稳定。
+随机数种子，取值范围为`[0, 2147483647]`，未传入时，服务会随机选择种子。固定种子可使生成结果相对稳定。
 
 **watermark** `_boolean_` （可选）
 
@@ -693,6 +697,10 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 -   `agent`：智能体提示词增强（APE），提供更精细的改写效果。仅支持文生图（T2I），图生图（I2I）场景传入`agent`将返回400错误。
     
 
+**enable\_thinking** `_boolean_` （可选）
+
+是否开启思考模式，默认值为`true`。开启时，模型将增强推理能力以提升出图质量，但会增加生成耗时。仅在 prompt\_extend=true 时生效，适用于 Direct T2I、Direct I2I 和 Agent T2I，I2I Agent 暂不支持。
+
 **n** `_integer_` （可选）
 
 输出图像的数量，支持输出1-6张图片，默认值为1。
@@ -710,9 +718,9 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
 
 反向提示词，用来描述不希望在画面中看到的内容，可以对画面进行限制。
 
-**seed** `_integer_` （可选）
+**seed** `_integer_`（可选）
 
-随机数种子，取值范围`[0, 2147483647]`。固定种子可使生成结果相对稳定。
+随机数种子，取值范围为`[0, 2147483647]`，未传入时，服务会随机选择种子。固定种子可使生成结果相对稳定。
 
 **watermark** `_boolean_` （可选）
 

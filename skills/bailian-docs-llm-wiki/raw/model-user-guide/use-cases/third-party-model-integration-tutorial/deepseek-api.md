@@ -4,7 +4,7 @@
 
 **重要**
 
-deepseek-v3、deepseek-v3.1、deepseek-v3.2、deepseek-v3.2-exp、deepseek-r1、deepseek-r1-0528、deepseek-r1-distill-qwen-7b/14b/32b 将于**2026年10月10日**下架。推荐转用：[qwen3.7-plus](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-plus)、[qwen3.7-max](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.8-max)、[qwen3.6-flash](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.6-flash)。
+deepseek-v3、deepseek-v3.1、deepseek-v3.2、deepseek-v3.2-exp、deepseek-r1、deepseek-r1-0528、deepseek-r1-distill-qwen-7b/14b/32b 将于**2026年10月10日**下架。推荐转用：[qwen3.7-plus](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-plus)、[qwen3.7-max](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-max)、[qwen3.6-flash](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.6-flash)。
 
 ## **服务接入地址**
 
@@ -94,7 +94,7 @@ SDK 调用配置的`base_url`：`dashscope.base_http_api_url = "https://{Workspa
 
 ## **快速开始**
 
-deepseek-v4-pro-0813 是 DeepSeek 系列旗舰模型，在编程、数学和通用任务方面表现出色。deepseek-v4-flash-0731 是Flash系列最新版本。您可以通过`enable_thinking`参数在思考与非思考模式之间切换。以下示例展示如何调用思考模式的 deepseek-v4-pro 模型。
+deepseek-v4-pro-0813 是 DeepSeek 系列旗舰模型，在编程、数学和通用任务方面表现出色。deepseek-v4-flash-0731 是Flash系列最新版本。您可以通过`enable_thinking`参数在思考与非思考模式之间切换。以下示例以 deepseek-v4-pro 模型为例展示思考模式的调用方式，您可以将 model 参数替换为其他 DeepSeek 模型。
 
 需要已[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并完成[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如果通过SDK调用，需要[安装 OpenAI 或 DashScope SDK](https://help.aliyun.com/zh/model-studio/install-sdk#8833b9274f4v8)。
 
@@ -471,6 +471,8 @@ curl -X POST "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services
 
 ## Anthropic兼容
 
+鉴权方式：通过 `x-api-key` 请求头或 `Authorization: Bearer` 请求头传入百炼 API Key，二者选其一即可。思考模式等参数的详细说明请参见[Anthropic兼容-Messages](https://help.aliyun.com/zh/model-studio/anthropic-api-messages)。
+
 ## Python
 
 ### **示例代码**
@@ -529,9 +531,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic/v
 
 ## **推理强度（reasoning\_effort）**
 
-deepseek-v4-pro、deepseek-v4-flash 和 deepseek-v4-flash-0731 默认开启思考模式。通过`reasoning_effort`参数可以调整推理强度，可选值为`low`、`medium`、`high`、`xhigh`和`max`，默认为`high`。
-
-其中，`low`和`medium`的效果等同于`high`；`xhigh`的效果等同于`max`。
+deepseek-v4-pro、deepseek-v4-flash 、 deepseek-v4-flash-0731 和 deepseek-v4-pro-0813默认开启思考模式。通过`reasoning_effort`参数可以调整推理强度，可选值为`low(仅deepseek-v4-flash-0731 和 deepseek-v4-pro-0813 支持)`、`high`和`max`，默认为`high`。
 
 ## **OpenAI兼容**
 
@@ -604,7 +604,7 @@ print(response.output.choices[0].message.content)
 
 ## **Responses API**
 
-`deepseek-v4-flash`、`deepseek-v4-flash-0731`与`deepseek-v4-pro`支持通过 OpenAI 兼容的 Responses API 调用，仅支持华北2（北京）与新加坡地域，服务接入地址参见[服务接入地址](#ds-bu-h2)。
+`deepseek-v4-flash`、`deepseek-v4-flash-0731`、`deepseek-v4-pro`与`deepseek-v4-pro-0813`支持通过 OpenAI 兼容的 Responses API 调用，仅支持华北2（北京）与新加坡地域，服务接入地址参见[服务接入地址](#ds-bu-h2)。
 
 通过 Responses API 调用时，可在`tools`参数中添加`web_search`（[联网搜索](https://help.aliyun.com/zh/model-studio/web-search)）、`web_extractor`（[网页抓取](https://help.aliyun.com/zh/model-studio/web-extractor)）与`code_interpreter`（[代码解释器](https://help.aliyun.com/zh/model-studio/qwen-code-interpreter)）工具。
 
@@ -933,7 +933,7 @@ deepseek-v4-flash
 
 共393,216
 
-deepseek-v4-flash
+deepseek-v4-flash-us
 
 1.0
 
@@ -1046,6 +1046,8 @@ deepseek-v3
 -   “-” 表示没有默认值，也不支持设置。
     
 -   deepseek-r1、deepseek-r1-0528、蒸馏版模型不支持设置以上参数值。
+    
+-   “共393,216” 表示 deepseek-v4 系列模型的 max\_tokens 与 thinking\_budget 共用同一上限，两者合计最大为 393,216 Token（即模型的最大输出长度）。
     
 -   参数含义请参考[OpenAI兼容-Chat](https://help.aliyun.com/zh/model-studio/qwen-api-via-openai-chat-completions)。
     

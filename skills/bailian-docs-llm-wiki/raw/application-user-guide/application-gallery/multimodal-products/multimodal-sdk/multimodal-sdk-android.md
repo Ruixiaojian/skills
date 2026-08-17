@@ -23,9 +23,9 @@ Package
 
 Version
 
-[bailian-multimodal-android-sdk-1.0.6.6.zip](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260618/ecncnb/bailian-multi-modal-android-sdk-1.0.6.6.zip)
+[bailian-multi-modal-android-sdk-1.0.6.7.zip](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260817/ohqphm/bailian-multi-modal-android-sdk-1.0.6.7.zip)
 
-1.0.6.6
+1.0.6.7
 
 ## **SDK接入**
 
@@ -549,6 +549,14 @@ string
 
 热词id，设置该参数时会覆盖管控台热词配置。当管控台提供的热词不能满足客户需求时，可以考虑用Open API程序化管理热词，参见[热词API文档](https://next.api.aliyun.com/document/MultimodalDialog/2025-09-03/Vocabulary)。
 
+language
+
+string
+
+否
+
+语音识别语种，默认和控制台选择的语言保持一致。
+
 **parameters.downstream**的参数说明如下：
 
 **一级参数**
@@ -655,7 +663,7 @@ int
 
 否
 
-合成音频的比特率，取值范围：6~510kbps，默认值为32，单位kbps，只在合成音频格式为opus或raw-opus时生效
+合成音频的比特率，取值范围：6~510kbps，默认值为32，单位kbps，只在合成音频格式为mp3, opus或raw-opus时生效
 
 intermediate\_text
 
@@ -706,9 +714,15 @@ string
 
 否
 
-设置指令，用于控制方言、情感等合成效果。该功能适用于qwen3-tts-instruct-flash-realtime、cosyvoice-v3.5-plus、cosyvoice-v3.5-flash、cosyvoice-v3-plus、cosyvoice-v3-flash。
+设置指令，用于控制方言、情感等合成效果。该功能适用的模型以及在不同模型的格式要求请参见[指令控制](https://help.aliyun.com/zh/model-studio/realtime-tts-user-guide#12884a10929p9)。
 
-instruction有固定格式要求，具体格式参考[Java SDK](https://help.aliyun.com/zh/model-studio/cosyvoice-java-sdk)里的"instruction"参数说明。
+language
+
+string
+
+否
+
+语音合成语种，默认和控制台选择的语言保持一致。
 
 **parameters.client\_info**的参数说明如下：
 
@@ -792,7 +806,7 @@ json object
 
 否
 
-设置需要透传给agent的参数，各类agent传递的参数参考[调用官方Agent](https://help.aliyun.com/zh/model-studio/official-agent)文档说明。可以在extra\_config子节点中设置对话扩展参数，目前支持enable\_web\_search，表示是否开启联网搜索。这里的设置优先级更高，会覆盖管控台配置。
+设置需要透传给agent 和 mcp 服务的参数，各类agent传递的参数参考[调用官方Agent](https://help.aliyun.com/zh/model-studio/official-agent)文档说明， mcp 传递参数依照 mcp 服务本身所需的参数。可以在extra\_config子节点中设置对话扩展参数，目前支持：1. enable\_web\_search，表示是否开启联网搜索。这里的设置优先级更高，会覆盖管控台配置；2. agent\_timeout，表示agent连接超时的时间，传值范围是10秒到120秒。如果不传，则默认为10秒。
 
 user\_prompt\_params
 
@@ -907,9 +921,13 @@ VAD检测方
           "biz_params":{
             "user_defined_params": {
                 "extra_config": {
-                    "enable_web_search": false
+                    "enable_web_search": false,
+                    "agent_timeout": 10
                 },
                 "agent_id_xxxxx": {
+                    "name": "value"
+                },
+                "mcp_server_id_xxxxx":{
                     "name": "value"
                 }
             },

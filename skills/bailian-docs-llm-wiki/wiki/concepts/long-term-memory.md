@@ -1,57 +1,41 @@
 # 长期记忆
 
-长期记忆是百炼平台提供的结构化、跨会话用户状态持久化能力，用于解决大模型原生“无状态”导致的上下文遗忘问题。它通过自动语义提取、向量化存储与智能检索，将对话中的关键事件（如提醒、偏好、承诺）和用户属性（如职业、兴趣）转化为可管理、可复用的记忆资产。
+长期记忆是百炼平台提供的结构化、跨会话用户状态持久化能力，通过自动从对话中提取关键事件（记忆片段）和结构化属性（用户画像），实现语义化存储与高精度检索，使智能体具备持续理解用户偏好、历史行为与上下文的能力。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-- **智能体（Agent）应用**：作为核心状态层，支持 `autoCapture`（对话后自动提取）与 `autoRecall`（对话前自动检索），使 Agent 能记住用户历史指令（如“我讨厌咖啡因”）、持续跟踪任务进展（如“上次说要分析Q3销售数据”）。OpenClaw Agent 可通过插件一键集成，无需修改业务逻辑。
+- **智能体（Agent）应用**：在 Agent 2.0 中，长期记忆作为可规划的“工具”被统一调度。对话结束时自动调用 `AddMemory` 持久化关键信息；新会话开始前或用户提问时，通过 `SearchMemory` 检索相关记忆，并将结果注入系统提示或历史消息，显著增强上下文连贯性与个性化响应能力。OpenClaw 等框架支持插件式自动捕获与召回，无需手动编码。
   
-- **工作流（Workflow）与高代码应用**：通过调用 `SearchMemory` 接口在任意节点注入用户记忆，实现个性化流程分支（例如：若用户画像中 `is_vip == true`，则跳过付费确认步骤）；也可在 `AddMemory` 中写入工作流执行结果（如“订单ID: ORD-789 已创建”），供后续会话复用。
+- **工作流（Workflow）应用**：虽不内置自动记忆机制，但可通过「HTTP 调用」节点集成长期记忆 API，在关键节点（如用户确认偏好后、任务完成时）显式写入 `custom_content` 或触发画像更新，再于后续步骤中检索，实现流程驱动的记忆闭环。
 
-- **记忆库（Memory Library）统一管理**：所有应用共享同一套记忆基础设施。开发者可在控制台创建多个记忆库，按业务域隔离（如 `user_memory`、`support_ticket_memory`），并为每个库独立配置提取规则（有效期、字段映射、Pro/Lite 策略），实现多应用协同记忆。
+- **高代码应用**：开发者可直接使用 `agentscope-runtime>=1.1.5` SDK 中的 `AddMemory`、`SearchMemory` 等异步工具类，在自定义 Python 逻辑中灵活控制记忆的写入时机、内容粒度与检索策略，适配复杂业务规则（如仅保存付费用户行为、按标签过滤记忆）。
 
-- **与用户画像深度耦合**：当传入 `profile_schema` 时，系统在 `AddMemory` 过程中同步解析并更新结构化画像（如从“我今年35岁，在杭州做设计师”中提取 `age=35`, `city="杭州"`, `occupation="设计师"`），画像字段可直接用于条件判断或模板填充。
+- **Managed Agents（托管智能体）**：长期记忆独立于沙箱运行环境，为托管会话提供外部状态支撑。例如，在多步文件处理任务中，可将用户对某份 PDF 的标注偏好（如“重点关注财务数据”）存为记忆片段，后续会话中自动召回并指导模型聚焦解析。
+
+- **API 直接调用（Application Call）**：当通过 DashScope API 调用已发布应用时，长期记忆不参与 `session_id` 管理（该机制仅维护短期对话轮次），但可在应用内部逻辑中主动调用记忆 API，实现“一次配置、全局生效”的用户状态复用。
 
 ## 关键参数和配置
 
-| 参数 | 类型 | 必填 | 说明 | 场景 |
-|------|------|------|------|------|
-| `user_id` | string | 是 | 用户唯一标识（≤64 字符），所有操作均以此隔离数据空间。**必须与业务系统用户 ID 对齐**。 | 全场景通用 |
-| `memory_library_id` | string | 否 | 指定记忆库 ID（≤32 字符）；不传则使用默认库。建议生产环境显式指定，便于权限与配额管理。 | 全场景通用 |
-| `projectId` | string | 否 | 记忆片段规则 ID（控制提取策略、有效期、是否启用 Rerank）。**决定 `AddMemory` 行为**，不可在请求体中覆盖。 | AddMemory / 自动捕获 |
-| `top_k` / `min_score` | integer / number | 否 | `SearchMemory` 专用：最多返回 `top_k` 条（1–100，默认 10）；仅返回相似度 ≥ `min_score`（0–100，默认 0）的结果。 | SearchMemory |
-| `plan_version` | string | 否 | `SearchMemory` 显式指定检索策略：`pro`（开启 Rerank，精度高，¥0.001/次）或 `lite`（基础向量检索，¥0.00002/次）。**优先级高于 `projectId` 关联的默认策略**。 | SearchMemory |
-| `autoCapture` / `autoRecall` | boolean | 否 | 默认 `true`。控制是否在智能体对话生命周期中自动触发写入/召回。设为 `false` 时需手动调用 API。 | OpenClaw / 新版智能体 |
-| `meta_data` | object | 否 | 键值对（如 `{"source": "web_app", "session_id": "sess_abc"}`），透传至 `AddMemory`/`UpdateMemory`，并在 `ListMemory` 中返回，用于业务追踪与审计。 | AddMemory / UpdateMemory |
+| 参数 | 类型 | 必填 | 说明 | 实际建议 |
+|------|------|------|------|----------|
+| `user_id` | string | 是 | 用户唯一标识（≤64 字符），用于严格隔离不同用户的记忆空间。同一用户所有操作必须保持一致。 | 使用业务侧稳定的用户 ID（如 `uid_123456`），避免使用临时会话 ID。 |
+| `memory_library_id` | string | 否 | 记忆库 ID（≤32 字符）。不传则使用账号默认库；多应用共享时建议显式指定统一库 ID。 | 生产环境推荐显式传入，便于权限管控与监控。 |
+| `messages` / `custom_content` | array / string | 互斥 | `messages`：最多 50 条对话消息（一问一答计为 2 条），由平台自动提取关键信息；`custom_content`：≤512 字符纯文本，优先级更高，适合写入结构化摘要或明确指令。 | 对话质量高时用 `messages`；需强控内容或补充元信息时用 `custom_content`。 |
+| `profile_schema` | string | 否 | 用户画像模板 ID，需预先通过 `CreateProfileSchema` 创建并发布。仅当需结构化抽取（如年龄、职业）时传入。 | 模板设计应精简（≤10 字段），避免语义重叠；首次调用前务必确认模板已启用。 |
+| `meta_data` | object | 否 | 自定义键值对（如 `{"category": "reminder", "source": "agent_v2"}`），支持后续按条件过滤与分析。 | 建议约定统一 key 名（如 `category`, `priority`, `source_app`），便于运营看板建设。 |
+| `plan_version` | string | 否（`SearchMemory` 推荐必填） | 取值 `pro`（开启 Rerank，精度高）或 `lite`（关闭 Rerank，成本低），大小写不敏感。**该字段优先级最高，覆盖项目/规则级配置。** | 高价值场景（如客服决策）用 `pro`；高频轻量检索（如日程提醒）用 `lite`。 |
+| `top_k` / `min_score` | integer / double | 否 | `SearchMemory` 专属：召回数量（1–100）、最小相似度（0.0–1.0）。建议 `top_k=5` + `min_score=0.3` 平衡覆盖率与噪声。 | 避免 `top_k > 20`，防止 Prompt 过长；`min_score < 0.2` 易引入无关噪声。 |
+| `expired_in_days` | integer | 否 | 记忆片段有效期（天），不传则永不过期。支持动态设置（如 `30` 表示 30 天后自动失效）。 | 敏感信息（如验证码）设为 `1`；通用偏好设为 `180`；核心画像建议 `0`（永不过期）。 |
 
-> ⚠️ 注意：  
-> - `messages`（对话数组）与 `custom_content`（纯文本）互斥，后者优先级更高；`messages` 中单条 `content` 支持字符串或含图片 base64 的数组。  
-> - 记忆默认**非永久有效**：有效期由 `projectId` 所绑定的记忆片段规则决定（支持 7/30/180 天或永不过期），非 API 参数控制。  
-> - 所有接口均基于 `https://dashscope.aliyuncs.com/api/v2/apps/memory/`，认证方式为 `Authorization: Bearer $DASHSCOPE_API_KEY`。
+> ⚠️ 注意：`UpdateMemory` 的 `timestamp` 为秒级 Unix 时间戳（非毫秒）；`AddMemory` 无自动去重，重复内容需业务侧通过 `meta_data` 标记或 `ListMemory` + `DeleteMemory` 主动清理。
 
 ## 面向开发者，简洁实用
 
-- ✅ **快速上手**：安装 `agentscope-runtime>=1.1.5`，直接使用封装类：
-  ```python
-  from agentscope.runtime import AddMemory, SearchMemory
-  await AddMemory(user_id="u123", messages=[{"role":"user","content":"明天下午3点开会"}]).arun()
-  result = await SearchMemory(user_id="u123", query="会议时间", top_k=3).arun()
-  ```
-
-- ✅ **调试建议**：  
-  - 先在[控制台记忆库页面](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/memory/list)创建测试库与规则，再调用 API；  
-  - 使用 `ListMemory` 查看实际存储的片段结构，验证提取效果；  
-  - `SearchMemory` 返回的 `score` 字段即向量相似度（0–1），低于 `min_score` 的结果已被过滤。
-
-- ⚠️ **避坑指南**：  
-  - 不要依赖 `UpdateMemory.timestamp` 实现过期逻辑——记忆有效期由规则控制，`timestamp` 仅用于排序；  
-  - `plan_version` 仅影响 `SearchMemory`，`AddMemory` 的提取质量由 `projectId` 决定；  
-  - QPM 限流按阿里云账号全局计数（总 3000 QPM），高频调用需做好本地缓存或批量聚合。
-
-- 💡 **最佳实践**：  
-  - 对敏感信息（如手机号、身份证号），在 `meta_data` 中标记 `"pii": true`，后续可结合 DLP 策略处理；  
-  - 将 `user_id` 与业务主键强绑定，避免因登录态切换导致记忆断裂；  
-  - 生产环境务必设置 `memory_library_id` 和 `projectId`，确保行为可预期、可审计。
+- **快速上手**：只需 `user_id` + `messages` 或 `custom_content` 即可调用 `AddMemory`；`SearchMemory` 传 `user_id` + 查询语句（如 `"我上次说要买什么？"`）即可返回相关片段。
+- **SDK 优先**：强烈推荐使用 `agentscope-runtime`（≥1.1.5）封装的异步工具类，自动处理认证、重试与错误码映射，减少胶水代码。
+- **注入 Prompt**：将 `SearchMemory` 返回的 `memory_nodes[].content` 拼接至系统提示词末尾（格式建议：`【过往记忆】${content}`），避免干扰原始指令。
+- **成本可控**：`lite` 版本调用成本约为 `pro` 的 1/3；`SearchMemory` QPM 限流 300，若超限请增加本地缓存或降级为关键词匹配。
+- **生命周期自主**：平台不提供自动过期，务必在业务逻辑中根据场景显式设置 `expired_in_days` 或定期调用 `DeleteMemory` 清理。
 
 ## 关联主题页
 
@@ -59,5 +43,6 @@
 - [memory library overview](../guides/memory-library-overview.md)
 - [managed agents](../guides/managed-agents.md)
 - [llm application](../guides/llm-application.md)
+- [application call](../api/application-call.md)
 
 
