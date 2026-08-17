@@ -4,7 +4,7 @@
 
 ## **模型调优流程**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/9572185871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7340996871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
 
 ## **步骤一：选择调优方式**
 
@@ -411,7 +411,7 @@ Checkpoint 有保存时长限制，超过保存时长后将被自动清理，届
 
 -   文本生成模型调优虽然能在特定业务/场景取得非常好的效果，但有以下限制：
     
-    -   **耗时较长**，包括：拥有一个大规模（最少 0.5亿 token）CPT 数据集、构建一个有效（1000+）SFT 数据集、收集足够的（100+）Bad Case 构建[模型部署计费](https://help.aliyun.com/zh/model-studio/model-training-and-deployment-billing#2083766ef99p1)有效 DPO 数据集、模型优化迭代速度慢等。
+    -   **耗时较长**，包括：拥有一个大规模（最少 0.5亿 token）CPT 数据集、构建一个有效（1000+）SFT 数据集、收集足够的（100+）Bad Case 构建有效 DPO 数据集、模型优化迭代速度慢等。
         
     -   **费用较高，**调优后的模型部署后才能使用，[模型部署计费](https://help.aliyun.com/zh/model-studio/model-training-and-deployment-billing#2083766ef99p1)较高。
         

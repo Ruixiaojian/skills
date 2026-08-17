@@ -1142,18 +1142,6 @@ Function Calling
 
 每百万tokens
 
-输入（Batch File）
-
-0.1
-
-每百万tokens
-
-输出（Batch File）
-
-0.4
-
-每百万tokens
-
 显式缓存创建
 
 0.25
@@ -1163,18 +1151,6 @@ Function Calling
 显式缓存命中
 
 0.02
-
-每百万tokens
-
-输入（Batch Chat)
-
-0.2
-
-每百万tokens
-
-输出（Batch Chat)
-
-0.8
 
 每百万tokens
 
@@ -1204,18 +1180,6 @@ Function Calling
 
 每百万tokens
 
-输入（Batch File）
-
-0.3
-
-每百万tokens
-
-输出（Batch File）
-
-1.2
-
-每百万tokens
-
 显式缓存创建
 
 0.75
@@ -1225,18 +1189,6 @@ Function Calling
 显式缓存命中
 
 0.06
-
-每百万tokens
-
-输入（Batch Chat)
-
-0.6
-
-每百万tokens
-
-输出（Batch Chat)
-
-2.4
 
 每百万tokens
 
@@ -1266,18 +1218,6 @@ Function Calling
 
 每百万tokens
 
-输入（Batch File）
-
-0.6
-
-每百万tokens
-
-输出（Batch File）
-
-2.4
-
-每百万tokens
-
 显式缓存创建
 
 1.5
@@ -1287,18 +1227,6 @@ Function Calling
 显式缓存命中
 
 0.12
-
-每百万tokens
-
-输入（Batch Chat)
-
-1.2
-
-每百万tokens
-
-输出（Batch Chat)
-
-4.8
 
 每百万tokens
 

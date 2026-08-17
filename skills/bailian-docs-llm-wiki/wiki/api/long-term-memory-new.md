@@ -1,57 +1,47 @@
 # long term memory new
 
-[长期记忆](../concepts/long-term-memory.md)（新）是百炼平台提供的结构化用户状态持久化能力，支持自动从对话中提取关键信息并构建可检索的记忆片段与用户画像。该功能通过 RESTful API 提供 Add、Search、List、Delete、Update 等核心操作，并与画像模板（Profile Schema）深度集成。所有接口均基于 `https://dashscope.aliyuncs.com/api/v2/apps/memory/` 域名，需使用 DashScope API Key 认证。
+[长期记忆](../concepts/long-term-memory.md)（新）是百炼平台提供的结构化用户状态持久化能力，支持从对话中自动提取关键信息形成记忆片段，并提供语义搜索、画像构建等能力。该功能通过 RESTful API 和 `agentscope-runtime` SDK 提供，适用于需要跨会话保持用户上下文的智能体应用。所有接口均需使用 DashScope API Key 认证，Base URL 为 `https://dashscope.aliyuncs.com/api/v2/apps/memory/`。
 
 ## 支持的模型/功能
 
-- **记忆片段管理**：支持从对话（`messages`）或自定义文本（`custom_content`）中自动提取语义化记忆，单次 `AddMemory` 最多生成多个独立片段（如多条提醒指令被拆分为不同节点）。
-- **语义搜索**：`SearchMemory` 基于向量相似度召回，支持 `top_k`、`min_score`、`enable_rerank` 及 `plan_version`（`pro`/`lite`）等策略控制，详见 [长期记忆API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)。
-- **用户画像构建**：通过 `profile_schema` 关联预定义模板，在 `AddMemory` 时同步提取结构化画像字段；支持 `CreateProfileSchema`、`GetUserProfile` 等全套画像模板管理接口。
-- **全生命周期操作**：除增删改查外，支持分页列表（`ListMemory`）、时间戳覆盖（`UpdateMemory.timestamp`）及元数据（`meta_data`）透传。
-
-> **注意**：原始文档中 `UpdateMemory` 的 cURL 示例末尾被截断（`"{new_memory_custo`），完整参数应为 `custom_content` 字符串，实际使用请以 [长期记忆API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md) 中“5. UpdateMemory”章节的正式定义为准。
+- **核心记忆操作**：`AddMemory`（自动提取对话关键信息）、`SearchMemory`（语义相似度检索）、`ListMemory`（分页查询）、`DeleteMemory`、`UpdateMemory`  
+- **用户画像管理**：`CreateProfileSchema` / `GetProfileSchema` / `ListProfileSchemas` / `DeleteProfileSchema` / `UpdateProfileSchema`，以及 `GetUserProfile`  
+- **策略版本支持**：`SearchMemory` 支持 `pro`（开启 Rerank，默认）和 `lite`（关闭 Rerank）两种计费策略，详见 [长期记忆API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)  
+- **SDK 封装**：`agentscope-runtime>=1.1.5` 提供 `AddMemory`、`SearchMemory` 等异步工具类，降低集成复杂度，具体用法见 [长期记忆API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)
 
 ## 关键参数
 
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
-| `user_id` | string | 是 | 记忆归属实体 ID（≤64 字符），所有接口共用，用于隔离用户数据。 |
-| `messages` / `custom_content` | array / string | 互斥 | `messages`：最多 50 条对话记录（一问一答计 2 条）；`custom_content`：纯文本（≤512 字符），优先级高于 `messages`。 |
-| `memory_library_id` | string | 否 | 记忆库 ID（≤32 字符），不传则使用默认库；影响所有操作的作用域。 |
-| `top_k`, `min_score` | integer, double | 否 | `SearchMemory` 专用：召回数量（1–100，默认 10）和最小相似度（[0,1]，默认 0.3）。 |
-| `plan_version` | string | 否 | `SearchMemory` 计费策略：`pro`（开启 Rerank，¥0.001/次）或 `lite`（关闭 Rerank，¥0.00002/次），大小写不敏感，**优先级高于 `enable_rerank`**。 |
-| `meta_data` | object | 否 | 用户自定义键值对，支持在 `AddMemory`/`UpdateMemory` 中写入，`ListMemory` 返回时透出。 |
+| `user_id` | string | 是 | 记忆实体唯一标识（≤64 字符），所有接口均需传入 |
+| `messages` 或 `custom_content` | array / string | 互斥 | `messages` 最多 50 条（一问一答计为 2 条）；`custom_content` ≤512 字符，优先级高于 `messages` |
+| `memory_library_id` | string | 否 | 记忆库 ID（≤32 字符），不传则使用默认库；可在 [记忆库控制台](https://bailian.console.aliyun.com/cn-beijing/?tab=app#/memory/list) 获取 |
+| `top_k` / `min_score` | integer / double | 否 | `SearchMemory` 中控制召回数量（1–100）与最小相似度（0.0–1.0） |
+| `plan_version` | string | 否 | `SearchMemory` 策略版本，取值 `pro` 或 `lite`（大小写不敏感），**优先级高于 `enable_rerank`**；该字段定义见 [长期记忆API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md) |
+
+> **注意**：`AddMemory` 的 `profile_schema` 参数用于指定画像模板 ID，但文档未明确说明其是否支持动态创建或仅限已有模板。实际调用前请确认模板已通过 `CreateProfileSchema` 创建并发布。
 
 ## 使用方式
 
-1. **认证**：在请求 Header 中添加 `Authorization: Bearer $DASHSCOPE_API_KEY`（API Key 获取见 [获取 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)）。
-2. **Base URL**：`https://dashscope.aliyuncs.com/api/v2/apps/memory/`
-3. **SDK 调用**（推荐）：
-   - 安装 `agentscope-runtime>=1.1.5`：`pip install agentscope-runtime>=1.1.5`
-   - 使用封装类（如 `AddMemory`, `SearchMemory`），输入对应 `Input` 模型（如 `AddMemoryInput`），异步调用 `arun()`。
-4. **cURL 示例**（以 `AddMemory` 为例）：
-   ```bash
-   curl -X POST https://dashscope.aliyuncs.com/api/v2/apps/memory/add \
-     --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "user_id": "user_001",
-       "messages": [{"role":"user","content":"每天9点提醒我喝水"}],
-       "meta_data": {"source": "mobile_app"}
-     }'
+1. **认证**：在请求 Header 中添加 `Authorization: Bearer $DASHSCOPE_API_KEY`  
+2. **Base URL**：`https://dashscope.aliyuncs.com/api/v2/apps/memory/`  
+3. **典型流程**：  
+   - 添加记忆：`POST /add`，传入 `user_id` + `messages` 或 `custom_content`  
+   - 检索记忆：`POST /memory_nodes/search`，传入 `user_id` + `messages` + `top_k`  
+   - 列出/删除/更新：分别调用 `GET /memory_nodes`、`DELETE /memory_nodes/{id}`、`PATCH /memory_nodes/{id}`  
+4. **SDK 调用**（推荐）：  
+   ```python
+   from agentscope_runtime.tools.modelstudio_memory import AddMemory, SearchMemory
+   # 示例见 [长期记忆API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)
    ```
-   完整接口路径与参数详见 [长期记忆API 参考](../../raw/application-api-reference/long-term-memory-new/long-term-memory-api-reference.md)。
 
 ## 限制和注意事项
 
-- **限流**（阿里云账号级别）：
-  - 所有接口总计 ≤ 3000 QPM；
-  - `AddMemory` ≤ 120 QPM；
-  - `SearchMemory` ≤ 300 QPM。
-- **计费生效时间**：记忆库将于 **2026 年 8 月 20 日 10:00（北京时间）** 正式商业化计费，`plan_version` 直接关联费用，务必提前评估。
-- **数据时效性**：当前生成的记忆片段与用户画像**无自动失效机制**，需业务侧自行管理生命周期。
-- **兼容性**：`messages` 中 `content` 支持 string 或 array（如含图片 base64），但 `custom_content` 仅接受 string；`project_id` 用于指定记忆片段规则，不传则使用默认规则。
-- **错误处理**：所有接口返回标准 `request_id`，用于问题排查；`SearchMemory` 在 `min_score` 过高时可能返回空数组，建议结合业务场景调整阈值。
+- **限流**（阿里云账号级别）：全部接口总计 ≤3000 QPM；`/add` ≤120 QPM；`/memory_nodes/search` ≤300 QPM  
+- **商业化时间点**：记忆库将于 **2026 年 8 月 20 日 10:00（北京时间）起正式计费**，Add/Search 调用按 `pro`/`lite` 版本区分定价  
+- **数据时效性**：生成的记忆片段与用户画像**暂无自动失效机制**，需业务侧自行管理生命周期  
+- **内容长度**：`custom_content` 严格限制为 ≤512 字符；`messages` 中单条 `content` 无显式长度限制，但整体 messages 数量上限为 50  
+- **字段兼容性**：`UpdateMemory` 的 `timestamp` 为秒级 Unix 时间戳（非毫秒），且为可选参数；若未传，默认使用当前系统时间
 
 ## 来源文档
 

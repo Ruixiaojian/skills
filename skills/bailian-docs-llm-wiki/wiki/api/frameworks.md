@@ -1,49 +1,47 @@
 # frameworks
 
-百炼平台提供多种主流 AI 开发框架的官方集成支持，帮助开发者快速将大模型能力嵌入现有技术栈。当前重点支持 LlamaIndex 和 Spring AI Alibaba 两大生态，分别面向 RAG 应用构建和 Java 生态应用集成。所有集成均基于百炼统一的 API 网关与模型服务层，无需自行管理模型部署与向量计算基础设施。
+百炼平台提供多种主流 AI 开发框架的官方集成支持，帮助开发者快速构建 RAG 应用、知识库检索服务及大模型智能体/工作流应用。当前重点支持 LlamaIndex 和 Spring AI Alibaba 两大生态，覆盖 Python 和 Java 技术栈，所有集成均基于百炼统一的 API Key 认证与云端服务能力（如知识库管理、向量检索、模型推理）。开发者无需自行部署基础设施，可聚焦于业务逻辑与提示工程。
 
 ## 支持的模型/功能
 
-- **LlamaIndex 集成**：通过 `DashScopeCloudIndex` 实现云端知识库的自动构建与检索，支持 `.txt`、`.docx`、`.pdf` 等非结构化文档上传与智能切分；检索后端默认使用官方向量模型，生成阶段可自由指定 `qwen-max`、`qwen-plus` 等千问系列模型（详见 [通过LlamaIndex API构建RAG应用](../../raw/application-api-reference/frameworks/llamaindex.md)）。
-- **Spring AI Alibaba 集成**：支持两类核心场景：
-  - 调用已发布的**智能体应用**或**工作流应用**（需应用 ID），适用于复杂逻辑编排；
-  - 直接检索**云端知识库**（需知识库名称），实现轻量级 RAG，底层自动完成检索 + 上下文注入 + 大模型生成闭环（详见 [使用Spring AI Alibaba集成阿里云百炼大模型应用](../../raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-llm-application.md) 和 [通过Spring AI Alibaba检索阿里云百炼知识库](../../raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-knowledge-base.md)）。
+- **RAG 构建**：通过 [通过LlamaIndex API构建RAG应用](../../raw/application-api-reference/frameworks/llamaindex.md) 支持基于云端知识库的端到端 RAG 流程，包括文档上传、智能切分、默认向量嵌入（`docmind`）、相似性检索与重排（`gte-rerank`），并支持 `qwen-max`、`qwen-plus` 等千问系列模型生成回答。
+- **知识库检索**：通过 [通过Spring AI Alibaba检索阿里云百炼知识库](../../raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-knowledge-base.md) 提供 `DashScopeDocumentRetriever`，支持在 Spring Boot 应用中直接检索已创建的百炼知识库，自动注入上下文并调用默认 `qwen-max` 模型生成响应。
+- **大模型应用集成**：通过 [使用Spring AI Alibaba集成阿里云百炼大模型应用](../../raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-llm-application.md) 支持调用百炼平台创建的**智能体应用**和**工作流应用**，支持非流式与 SSE 流式响应，并可获取思考链（`thoughts`）与文档引用（`docReferences`）等结构化输出。
 
-> **注意**：文档 1 明确声明“不支持自定义文档切分方式或自定义嵌入模型”，而文档 3 的 `DashScopeDocumentRetriever` 示例中未提及切分控制能力，但其底层依赖百炼知识库服务——这意味着所有 Spring AI Alibaba 知识库检索也受限于同一约束，即**无法在框架层覆盖百炼默认的切分与嵌入策略**。
+> **注意**：文档 1 明确说明“不支持自定义文档切分方式或自定义嵌入模型”，而文档 2 和 3 均未提及该限制；但三者均未提供替代方案（如本地嵌入模型接入路径），因此该限制为当前事实约束，开发者需按此设计系统边界。
 
 ## 关键参数
 
-| 参数名 | 说明 | 来源框架 | 必填 | 示例值 |
-|--------|------|----------|------|--------|
-| `DASHSCOPE_API_KEY` 或 `AI_DASHSCOPE_API_KEY` | 百炼平台 API Key，用于身份认证 | LlamaIndex / Spring AI Alibaba | 是 | `sk-xxx` |
-| `APP_ID` | 智能体/工作流应用 ID（仅 Spring AI Alibaba 调用应用时必需） | Spring AI Alibaba（应用调用） | 是（应用调用场景） | `app-abc123` |
-| `INDEX_NAME` | 云端知识库名称（仅 Spring AI Alibaba 检索知识库时必需） | Spring AI Alibaba（知识库检索） | 是（知识库检索场景） | `"测试知识库"` |
-| `WORKSPACE_ID` / `AI_DASHSCOPE_WORKSPACE_ID` | 子业务空间 ID（仅在非主账号空间创建资源时需要） | 两者均支持 | 否 | `"ws-xyz789"` |
-| `model_name`（LlamaIndex） / `withModel()`（Spring AI Alibaba） | 指定生成模型，影响回答质量与延迟 | LlamaIndex / Spring AI Alibaba | 否（有默认值） | `"qwen-max"` |
+| 参数名 | 作用 | 可选值/说明 | 来源 |
+|--------|------|-------------|------|
+| `model_name` (LlamaIndex) | 指定生成回答所用的大模型 | `"qwen-max"`, `"qwen-plus"` 等，详见[文本生成-千问](https://help.aliyun.com/zh/model-studio/models#9f8890ce29g5u) | [通过LlamaIndex API构建RAG应用](../../raw/application-api-reference/frameworks/llamaindex.md) |
+| `similarity_top_k` / `similarity_cutoff` / `top_n` | 控制检索结果数量、相似度阈值与重排后返回数 | 示例中设为 `5` / `0.4` / `1`，需根据业务效果调优 | [通过LlamaIndex API构建RAG应用](../../raw/application-api-reference/frameworks/llamaindex.md) |
+| `AI_DASHSCOPE_API_KEY` / `DASHSCOPE_API_KEY` | 百炼 API Key 环境变量名 | 文档 2 使用 `AI_DASHSCOPE_API_KEY`，文档 3 使用 `DASHSCOPE_API_KEY` —— **二者不兼容，必须按对应框架要求配置** | [通过Spring AI Alibaba检索阿里云百炼知识库](../../raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-knowledge-base.md) 和 [使用Spring AI Alibaba集成阿里云百炼大模型应用](../../raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-llm-application.md) |
+| `APP_ID` | 百炼大模型应用 ID（仅用于智能体/工作流集成） | 必须提前在控制台创建并获取 | [使用Spring AI Alibaba集成阿里云百炼大模型应用](../../raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-llm-application.md) |
+| `workspace-id` / `AI_DASHSCOPE_WORKSPACE_ID` / `WORKSPACE_ID` | 子业务空间 ID 环境变量名 | 文档 2 使用 `AI_DASHSCOPE_WORKSPACE_ID`，文档 3 使用 `WORKSPACE_ID` —— **命名不一致，需严格匹配对应 SDK 版本** | [通过Spring AI Alibaba检索阿里云百炼知识库](../../raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-knowledge-base.md) 和 [使用Spring AI Alibaba集成阿里云百炼大模型应用](../../raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-llm-application.md) |
 
 ## 使用方式
 
-- **LlamaIndex**：  
-  1. 安装 `llama-index` 及 `llama-index-readers-dashscope` 等扩展包；  
-  2. 使用 `DashScopeParse` 解析本地文件，`DashScopeCloudIndex.from_documents()` 构建云端知识库；  
-  3. 通过 `index.as_query_engine()` 配置 `similarity_top_k`、`SimilarityPostprocessor`、`DashScopeRerank` 等参数定制检索行为（详见 [通过LlamaIndex API构建RAG应用](../../raw/application-api-reference/frameworks/llamaindex.md)）。
+- **LlamaIndex（Python）**  
+  1. 安装依赖：`pip install -r requirements.txt`（含 `llama-index`, `llama-index-readers-dashscope`, `llama-index-indices-managed-dashscope`）；  
+  2. 执行 `create_cloud_index.py` 上传本地 `.txt`/`.docx`/`.pdf` 文件并构建云端知识库；  
+  3. 执行 `rag.py` 初始化 `DashScopeCloudIndex`，配置 `query_engine` 并启动交互式 RAG 应用。
 
-- **Spring AI Alibaba**：  
-  1. 在 `pom.xml` 中引入 `spring-ai-alibaba-starter-dashscope`（v1.0.0.2+）；  
-  2. 在 `application.yml` 中配置 `spring.ai.dashscope.api-key` 及 `app-id` 或 `index-name`；  
-  3. 使用 `DashScopeAgent` 调用应用，或 `DashScopeDocumentRetriever` + `DocumentRetrievalAdvisor` 构建知识库检索链路（流式/非流式均支持）。
+- **Spring AI Alibaba（Java）**  
+  - **知识库检索**：引入 `spring-ai-alibaba-starter-dashscope`，配置 `application.yml` 中 `spring.ai.dashscope.api-key` 与 `INDEX_NAME`，注入 `DashScopeDocumentRetriever` 并通过 `DocumentRetrievalAdvisor` 绑定至 `ChatClient`。  
+  - **大模型应用调用**：同上依赖，配置 `spring.ai.dashscope.agent.app-id`，使用 `DashScopeAgent` 实例调用 `call()`（非流式）或 `stream()`（SSE 流式）方法。
 
 ## 限制和注意事项
 
-- **知识库能力限制**：所有框架接入的云端知识库均采用百炼默认的智能文档切分与官方向量模型，**不支持自定义切分规则、分块大小、嵌入模型或重排序模型**（除 `DashScopeRerank` 提供的有限重排外）。如需完全可控的本地 RAG，请参考独立方案（见 [通过LlamaIndex API构建RAG应用](../../raw/application-api-reference/frameworks/llamaindex.md) 中的提示）。
-- **文件格式限制**：LlamaIndex 方案仅支持 `.txt`、`.docx`、`.pdf`；Spring AI Alibaba 知识库检索依赖百炼知识库本身支持的格式（同前），不额外扩展。
-- **环境兼容性**：Spring AI Alibaba 要求 JDK 17+、Spring Boot 3.x；LlamaIndex 示例基于 Python 3.9+，无 JVM 依赖。
-- **计费说明**：框架本身免费，但调用百炼模型（如 `qwen-max`）或应用服务时按实际推理 [Token](../concepts/token.md) 计费（详见 [使用Spring AI Alibaba集成阿里云百炼大模型应用](../../raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-llm-application.md)）。
+- **知识库能力限制**：所有框架均依赖百炼平台托管的知识库，当前不支持自定义嵌入模型或文档切分策略（见 [通过LlamaIndex API构建RAG应用](../../raw/application-api-reference/frameworks/llamaindex.md)）；若需完全可控的本地 RAG 流程，应参考[基于本地知识库构建RAG应用](https://help.aliyun.com/zh/model-studio/build-rag-application-based-on-local-retrieval)。
+- **环境变量命名冲突**：Spring AI Alibaba 的两个集成场景（知识库 vs 大模型应用）对 API Key 和 Workspace ID 的环境变量命名不一致（`AI_DASHSCOPE_API_KEY` vs `DASHSCOPE_API_KEY`；`AI_DASHSCOPE_WORKSPACE_ID` vs `WORKSPACE_ID`），**混用将导致认证失败**，务必按目标场景严格配置。
+- **应用类型限制**：Spring AI Alibaba 仅支持集成百炼的**智能体应用**和**工作流应用**，不支持直接调用基础模型（LLM）API 或对话应用（Chat Application）——该能力需通过 `DashScopeLLM` 等原生客户端实现。
+- **JDK 与 Spring Boot 版本要求**：Spring AI Alibaba 集成要求 JDK 17+ 和 Spring Boot 3.x（GA 或更高版本），低于此版本将无法启动或出现类加载异常。
 
 ## 来源文档
 
 - [通过LlamaIndex API构建RAG应用](../../raw/application-api-reference/frameworks/llamaindex.md)
-- [使用Spring AI Alibaba集成阿里云百炼大模型应用](../../raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-llm-application.md)
 - [通过Spring AI Alibaba检索阿里云百炼知识库](../../raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-knowledge-base.md)
+- [使用Spring AI Alibaba集成阿里云百炼大模型应用](../../raw/application-api-reference/frameworks/spring-ai-alibaba/spring-ai-alibaba-integrate-llm-application.md)
 
 
