@@ -1,53 +1,54 @@
 # Token
 
-Token 是百炼平台中用于计量模型调用资源消耗的核心计费与调度单元，代表模型处理输入/输出内容的最小语义单位（如中文字符、子词或标点）。在百炼生态中，Token 不是固定长度的字节单位，而是由模型 tokenizer 动态生成的离散标识符，其数量直接影响额度消耗、性能调度与计费结果。
+Token 是百炼平台中用于计量模型计算资源消耗的核心计费与性能观测单位，代表模型处理文本、图像、语音、视频等多模态内容时所消耗的基础计算粒度。在百炼体系中，Token 不仅是费用结算的最小单元，也是监控延迟、评估质量、优化成本的关键可观测指标。
 
 ## 在百炼平台的不同场景中，这个概念如何使用
 
-- **Token Plan 订阅服务**：以 Credits 为统一计量单位，实际消耗按模型类型、Token 数量、思考模式（如工具调用、多步推理）动态折算。例如，视频生成按分辨率与时长线性增加 Token 消耗；Harness 工具调用（如 `code_interpreter`）会额外计入工具执行过程中的中间 Token。**不支持**将 Token 数简单乘以单价估算费用。
+- **计费与额度管理**：所有模型调用（含输入和输出）均按实际消耗的 Token 总量计费或抵扣。免费额度（100 万 Token）、Token Plan 的 Credits、节省计划与资源包，均以 Token 为统一计量基准；输入 Token 与输出 Token 合并计入总额度，不区分类型或方向。
+  
+- **模型监控**：在「模型监控」中，`TPM`（Tokens Per Minute）、`TTFT`（Time to First Token）、`ITL`（Inter-Token Latency）等核心指标均以 Token 为锚点；Token 消耗可按模型、业务空间、API Key 等维度聚合分析，用于识别高成本请求或异常调用模式。
 
-- **高吞吐推理（TPM 预留）**：Token 是容量保障的基本粒度。TPM（Token Per Minute）指每分钟可稳定处理的输入+输出 Token 总量（单位：kTPM），用于锁定专属推理资源。溢出策略（如自动降级至按量）和缓存折扣（如输入缓存命中按 25% 折算）均基于 Token 数计算。
+- **应用监控**：在「应用监控」中，每个 `LLM` 节点自动上报 `input_tokens` 和 `output_tokens`，总和即为该次模型调用的 Token 用量；`EMBEDDING` 节点则上报向量化输入的 Token 数，支撑 RAG 链路的成本归因与性能诊断。
 
-- **快速模式（Fast mode）**：虽不显式暴露 Token 参数，但 TPS（Tokens Per Second）是核心性能指标——`glm-5.2-fast-preview` 通过优化调度路径，将输出速度提升至标准 API 的 1.5~2 倍（80~100 TPS），直接反映 Token 级别的实时吞吐能力。
+- **应用评测**：当使用 LLM 评估器（如 `qwen-plus`）进行自动评分时，评估过程本身会产生额外 Token 消耗，该部分费用独立计费，需在评测任务配置中明确评估模型并预留额度。
 
-- **模型评测与数据管理**：Token 用于评估数据规模与质量。例如，CPT 训练建议数据量 ≥5000 万 Token；日志回流生成训练集时，系统按 Token 数统计有效样本容量；评测集虽不直接计费，但大模型评估器（如裁判模型）的调用本身也按 Token 消耗 Credits。
-
-> ⚠️ 注意：Token 的具体数值取决于所用模型的 tokenizer（如 Qwen 使用 tiktoken 兼容分词器，GLM 使用自研分词器），同一文本在不同模型下 Token 数可能差异显著。开发者应通过 `/v1/tokenize` 接口（若开放）或 SDK 的 `count_tokens()` 方法实测，不可跨模型套用经验值。
+- **多模态与工具调用**：图像/视频/语音类模型的 Token 计算已内建适配（如 `qwen-image-2.0-pro` 按视觉 tokenization 规则折算），无需开发者手动转换；Harness 工具调用（联网搜索、代码解释器等）的 Token 消耗包含工具执行上下文开销，且**仅通过 Responses API 调用才纳入 Token Plan Credits 抵扣**。
 
 ## 关键参数和配置
 
-| 场景 | 关键参数 | 说明 | 开发者须知 |
-|------|----------|------|------------|
-| **Token Plan** | `sk-sp-xxx` API Key | 必须使用 `sk-sp-` 开头的专属密钥，与通用 `sk-` 密钥隔离 | 错误密钥会导致 `401 Unauthorized`，且无法抵扣 Token Plan 额度 |
-| | Base URL | OpenAI 兼容：`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1` | 仅限华北2（北京）地域，其他地域请求返回 `403 Forbidden` |
-| | Credits 消耗 | 动态计算，非 `Token × 单价`；含模型系数、工具调用加成、缓存折扣等 | 查看消耗请登录控制台「额度中心」，或解析响应头 `X-Credits-Used` 字段 |
-| **TPM 预留** | `model` 字段 | 使用专属 model code（如 `qwen3-max-dedicated-xxxxx`） | 替换标准模型 ID 后即生效，无需改 Base URL（仍用 DashScope 域名） |
-| | kTPM 配置值 | 创建时设定，如 `100 kTPM` = 每分钟 10 万 Token 容量 | 溢出策略需显式选择：`自动溢出至按量`（默认）或 `仅预留容量（429）` |
-| **快速模式** | `model` 字段 | 固定为 `glm-5.2-fast-preview` | 必须使用专属域名 `https://{workspace_id}.{region}.maas.aliyuncs.com/...`，否则降级为标准模式 |
-| | 输入缓存单价 | `glm-5.2-fast-preview` 输入缓存为 4 元/百万 Token | 缓存命中时，仅按折扣后 Token 数计费，响应头 `X-Cache-Hit: true` 可验证 |
+- **`max_tokens`**：请求级关键参数，控制模型最大输出长度，直接影响 Token 消耗上限与响应成本。建议根据实际需求合理设置，避免过度预留导致浪费。
+  
+- **地域约束**：Token 相关计费与监控能力（如分钟级日志、高级监控）当前仅在北京、新加坡、弗吉尼亚地域完全可用；华北2（北京）是免费额度、Token Plan 及多数多模态模型的默认支持地域。
+
+- **API Key 类型决定 Token 归属**：
+  - 通用 `sk-xxx` Key：可消耗免费额度及按量付费；
+  - Token Plan `sk-sp-xxx` Key：仅抵扣 Credits，**不触发免费额度**；
+  - Coding Plan `sk-ws-xxx` Key：不兼容 Token Plan，误用将导致按量扣费。
+
+- **Token 统计口径**：
+  - 输入 Token：原始 [prompt](../guides/prompt.md) + system message + history + 多模态输入（如 base64 图片经视觉 tokenizer 编码后的 token 数）；
+  - 输出 Token：模型实际生成的全部 tokens（含流式响应中的每个 chunk）；
+  - 不计入：HTTP headers、metadata、非模型节点（如 `RETRIEVER`、`RERANKER`）的文本切片本身不产 Token，但其结果作为 LLM 输入后会参与计费。
 
 ## 面向开发者，简洁实用
 
-- ✅ **必做**：  
-  - 所有 Token Plan 调用必须使用 `sk-sp-` 密钥 + 北京地域 Base URL；  
-  - TPM 预留需替换 `model` 字段，快速模式需替换 `model` + Base URL；  
-  - 多模态模型（图像/视频/语音）**不可**通过 Chat Completions 接口调用，必须走独立 API 或 Harness 工具扩展机制。
+- ✅ **查用量**：控制台 →「模型监控」→「调用统计」页签，筛选时间范围与 API Key，查看实时 Token 消耗趋势；分钟级数据延迟约 2–5 分钟。
+  
+- ✅ **省成本**：优先启用「免费额度用完即停」开关；对稳定流量使用 AI 通用型节省计划（最高 5.3 折）；高频调用单模型可购资源包；团队协作推荐 Token Plan（统一额度、免密钥管理）。
 
-- ❌ **禁止**：  
-  - 将 Token Plan 用于自动化脚本、批量任务或应用后端服务（仅限交互式开发工具）；  
-  - 在非北京地域尝试 Token Plan 或基线评测（控制台对应入口将隐藏）；  
-  - 混用 TPM 预留 model code 与快速模式域名（返回 `404 Not Found` 或降级）。
+- ✅ **避踩坑**：
+  - 多模态模型（图像/视频/语音）**不可直接用 Chat Completions 接口调用**，必须通过 Skill / Slash Command / Agent 扩展机制接入；
+  - Harness 工具若未使用 Responses API，工具调用无效且按量计费；
+  - 免费额度不覆盖 Batch 调用、模型训练、部署、ASR 权限未开通等场景。
 
-- 🔍 **调试技巧**：  
-  - 用 `curl -H "Authorization: Bearer sk-sp-xxx" "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/models"` 查看当前可用模型列表；  
-  - 响应头中关注 `X-Credits-Used`（消耗 Credits）、`X-TPM-Remaining`（TPM 预留剩余）、`X-Cache-Hit`（缓存状态）；  
-  - 对长文本，先调用 `/v1/tokenize`（如有）预估 Token 数，避免因超限触发 429。
+- ✅ **调试建议**：开启「推理日志」后，可在模型监控 →「日志」页签查看每次调用的精确 input/output token 数（需模型支持），快速定位高 Token 请求原因（如过长 [prompt](../guides/prompt.md)、冗余 history、未设 `max_tokens`）。
 
 ## 关联主题页
 
 - [token plan guide](../guides/token-plan-guide.md)
-- [model high speed inference](../guides/model-high-speed-inference.md)
-- [model evaluation introduction](../guides/model-evaluation-introduction.md)
-- [model data overview](../guides/model-data-overview.md)
+- [application monitoring](../guides/application-monitoring.md)
+- [model monitoring](../guides/model-monitoring.md)
+- [test 1](../guides/test-1.md)
+- [application evaluation](../guides/application-evaluation.md)
 
 

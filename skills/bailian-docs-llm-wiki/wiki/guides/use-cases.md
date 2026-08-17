@@ -1,84 +1,72 @@
 # use cases
 
-百炼平台提供覆盖文本、图像、视频、语音、多模态等全栈能力的模型服务与工程化工具，支持从 Prompt 工程、RAG 构建、智能体编排到实时音视频交互的多样化生产级用例。所有方案均基于函数计算、知识库、AOQ 等标准化基础设施，开箱即用，按需付费，面向开发者提供可复用、可扩展、可监控的落地路径。
+百炼平台提供覆盖文本、视觉、语音、多模态等全栈能力的 AI 应用构建支持，面向开发者提供开箱即用的行业方案与灵活可组合的技术组件。核心价值在于降低大模型应用门槛：无需自建基础设施即可快速验证业务逻辑，同时支持从 [Prompt 工程](../concepts/prompt-engineering.md)、RAG、Agent 编排到自定义模型微调的全链路开发。
 
 ## 支持的模型/功能
 
-百炼支持两类核心能力：**原生模型服务**与**第三方模型集成**。
+百炼支持两类模型接入方式：**平台原生模型**（如 `qwen3-vl-plus`、`qwen3.5-omni-plus-realtime`、`wan2.7`）和**第三方直供模型**（如 DeepSeek、Kimi、GLM、MiniMax、MiMo）。所有模型均通过统一 API 接口调用，支持 OpenAI 兼容协议与 DashScope SDK。
 
-- **原生模型**：包括 Qwen 系列（如 `qwen3-vl-plus` 用于解题批改 [AI 解题 + 批改：推动课程教学智变](../../raw/model-user-guide/use-cases/ai-homework-helper.md)）、Wan2.7 / HappyHorse（用于影视创作全流程 [HappyHorse 打造一站式影视创作平台](../../raw/model-user-guide/use-cases/infinite-canvas.md)）、Qwen-Deep-Research（用于深度情报分析）、qwen3.5-omni-plus-realtime（用于 WebRTC 实时对话）等。
-  
-- **第三方模型**：通过 [OpenAI 兼容接口](../concepts/openai-compatible-api.md)或 DashScope SDK 接入 DeepSeek（硅基流动/万擎双源）、Kimi（月之暗面）、GLM（智谱）、MiniMax、MiMo（小米）、Stepfun、Vidu 等。所有第三方模型均需在华北2（北京）地域开通并使用专属业务空间域名（如 `https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com`），且部分模型存在明确下架时间（如 GLM-4.6/4.7 将于 2026年10月10日下架 [GLM](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/glm.md)）。
+- **多模态理解与生成**：`qwen3-vl-plus` 支持图文输入解题与批改；`wan2.7` 和 `HappyHorse` 构成端到端视频生成管线；`qwen3.5-omni-plus-realtime` 支持音视频实时交互 [原文标题](../../raw/model-user-guide/use-cases/infinite-canvas.md)。
+- **深度推理与研究**：`Qwen-Deep-Research` 模型专用于多轮检索、交叉验证与结构化报告生成，适用于投资尽调与战略分析场景 [原文标题](../../raw/model-user-guide/use-cases/deep-research.md)。
+- **实时语音交互**：`qwen-audio-3.0-realtime-plus`（VAD 自动模式）与 `qwen3.5-omni-plus-realtime`（Manual 按键模式）分别适配不同硬件交互范式，AOQ SDK 提供跨平台（Android/iOS/HarmonyOS）接入能力 [原文标题](../../raw/model-user-guide/use-cases/best-practice-aoq-omni-realtime.md)。
+- **第三方模型集成**：DeepSeek、Kimi、GLM、MiniMax、MiMo 等模型均需在华北2（北京）地域开通并使用专属业务空间域名（`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com`），部分模型（如 `deepseek-v4-pro`）支持 `enable_thinking` 参数控制推理过程输出 [原文标题](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/deepseek-api-by-vanchin.md)。
 
-> **注意**：文档 20（DeepSeek-硅基流动）与文档 21（DeepSeek-万擎）均声明仅支持华北2（北京）地域，但文档 31（DeepSeek-阿里云）明确列出美国、新加坡、德国、日本等多地接入地址；实际部署时应以控制台可用模型列表及限流文档为准，避免因地域配置错误导致调用失败。
+> **注意**：文档 19 与文档 29 均描述 DeepSeek 集成，但存在关键差异：文档 19（阿里云百炼供应商）明确支持联网搜索与上下文缓存；文档 29（硅基流动供应商）强调更长上下文支持。二者限流策略与功能边界不同，开发者需根据业务需求选择对应供应商。
 
 ## 关键参数
 
-不同模态任务依赖特定参数组合，需严格遵循 API 规范：
-
-- **文生文**：核心为 `prompt`，推荐使用结构化 Prompt 框架（背景/目的/风格/语气/受众/输出）提升可控性 [文生文Prompt指南](../../raw/model-user-guide/use-cases/prompt-engineering-guide.md)。
-- **文生图/图生图**：`prompt`（正向描述）与 `negative_prompt`（排除项）为必需；V2 版本默认启用 `prompt_extend: true`（大模型智能扩写）。
-- **文生视频/图生视频**：除基础 `prompt` 外，需显式指定运动、运镜、声音（人声/音效/BGM）或多镜头结构（含时间戳与分镜内容）[文生视频/图生视频Prompt指南](../../raw/model-user-guide/use-cases/text-to-video-prompt.md)。
-- **实时语音交互（AOQ/WebRTC）**：关键参数包括 `turn_detection`（`server_vad`/`semantic_vad`/`null` 控制轮次模式）、`input_audio_buffer.commit`（Manual 模式必需）、`preserve_thinking`（Kimi 多轮思考传递）等。
-- **第三方模型通用参数**：`enable_thinking`（开启思考模式）、`reasoning_effort`（控制推理深度）、`stream`（流式开关）均为非 OpenAI 标准字段，须通过 `extra_body`（Python SDK）或顶层参数（Node.js SDK）传入。
+- **Prompt 控制**：文生图（`text-to-image-prompt.md`）与文生视频（`text-to-video-prompt.md`）均采用结构化公式（主体+场景+运动/风格+美学控制），支持 `negative_prompt` 与 `prompt_extend`（V2）等精细化控制；Vidu 视频生成额外支持运镜、景别、导演风格等维度关键词 [原文标题](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/vidu-video-generation-prompt-guide.md)。
+- **实时交互模式**：`qwen3.5-omni-plus-realtime` 支持 `server_vad`（服务端自动检测）与 `Manual`（客户端按键控制）两种轮次划分方式，后者需显式调用 `input_audio_buffer.commit` 与 `response.create` [原文标题](../../raw/model-user-guide/use-cases/use-aoq-to-access-qwen3-5-omni-plus-realtime-to-realize-key-voice-dialogue.md)。
+- **思考模式开关**：DeepSeek、Kimi、GLM、MiniMax、MiMo 等第三方模型均通过非标准参数（如 `enable_thinking` 或 `reasoning_effort`）控制是否输出推理过程，该参数需通过 `extra_body`（Python SDK）或顶层字段（Node.js SDK）传入。
+- **缓存与限流**：显式缓存（`cache_control`）支持对 system [prompt](prompt.md)、env、user message 等关键上下文片段进行标记复用；限流维度包含 RPM/TPM（分钟级）、RPS/TPS（瞬时）、Traffic Burst（增速），需配合 `X-DashScope-Wait-Timeout` 请求头应对突发流量 [原文标题](../../raw/model-user-guide/use-cases/rate-limiting-best-practices.md)。
 
 ## 使用方式
 
-典型工作流分为四类，均支持函数计算免运维部署：
-
-1. **低代码编排**：通过无限画布节点式拖拽（图像生成+视频生成+剪辑）构建影视创作管线 [HappyHorse 打造一站式影视创作平台](../../raw/model-user-guide/use-cases/infinite-canvas.md)；或通过百炼流程编排引擎构建电商客服智能体（RAG/Agent/对话流）[高效搭建 AI 智能体与工作流应用](../../raw/model-user-guide/use-cases/build-ai-applications-based-on-alibaba-cloud-model-studio.md)。
+1. **快速验证**：所有方案均提供“15–30 分钟部署”路径，基于函数计算（FC）封装 Web 服务，依赖对象存储（OSS）、百炼模型服务与可选的 ECS 资源，按量付费且含免费试用额度。
 2. **SDK 集成**：
-   - RAG：使用 `llama-index-indices-managed-dashscope` 直接对接百炼知识库服务 [基于LlamaIndex构建RAG应用](../../raw/model-user-guide/use-cases/build-rag-applications-based-on-llamaindex.md)；
-   - 多模态文档转视频：调用 Qwen-VL 解析文档、万相生成图片、TTS 合成语音、FFmpeg 合成最终视频 [借助大模型将文档转换为视频](../../raw/model-user-guide/use-cases/use-llm-to-convert-document-to-video.md)。
-3. **实时交互协议**：
-   - WebRTC：浏览器端直连，适用于低延迟音视频场景（需处理 CORS 代理）；
-   - AOQ：移动端 SDK 接入，支持 Manual/VAD 模式切换、Data/Audio 分轨传输，适用于硬件终端（眼镜/机器人）[通过AOQ使用qwen3.5-omni-plus-realtime实现实时通话](../../raw/model-user-guide/use-cases/best-practice-aoq-omni-realtime.md)。
-4. **缓存与流控**：
-   - 显式缓存：通过 `cache_control` 标记 system/user message 实现确定性命中，适用于 Agent 长上下文管理 [显式缓存最佳实践](../../raw/model-user-guide/use-cases/explicit-cache-guide.md)；
-   - 限流应对：优先采用服务端排队（`X-DashScope-Wait-Timeout` 头），其次客户端令牌桶/并发信号量，最后架构层 MQ 削峰 [限流应对最佳实践](../../raw/model-user-guide/use-cases/rate-limiting-best-practices.md)。
+   - 文本/多模态：使用 DashScope SDK 或 OpenAI 兼容 SDK，配置 `base_url` 为业务空间专属地址（如 `https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`）。
+   - 实时音视频：WebRTC 方案需浏览器端直接连接，依赖 `RTCPeerConnection` 与 SDP 交换；AOQ 方案需 AppServer 代理鉴权获取 [Token](../concepts/token.md)，客户端集成 AOQ SDK 并处理 Audio/Data 双轨事件。
+3. **RAG 构建**：通过 LlamaIndex 集成百炼知识库服务，使用 `DashScopeParse` 解析 PDF/DOCX 文件（单文件 ≤100MB，≤1000 页），调用 `DashScopeCloudIndex` 创建与检索索引。
+4. **自定义模型**：遵循“调优→部署→评测”三步流程，训练数据需格式化为 `Prompt-Completion` 对，最低建议 500 条；模型必须部署后方可调用与评测。
 
 ## 限制和注意事项
 
-- **地域与模型绑定**：所有第三方模型（DeepSeek/Kimi/GLM/MiniMax/MiMo/Stepfun/Vidu）及部分原生模型（如 qwen3.5-omni-plus-realtime）仅在华北2（北京）地域可用，跨地域调用将失败。
-- **API Key 安全**：严禁将 API Key 硬编码至客户端（iOS/Android/HarmonyOS App），必须通过业务 AppServer 代理鉴权并下发临时 [Token](../concepts/token.md) [使用 AOQ 接入 qwen3.5-omni-plus-realtime 实现按键语音对话](../../raw/model-user-guide/use-cases/use-aoq-to-access-qwen3-5-omni-plus-realtime-to-realize-key-voice-dialogue.md)。
-- **资源约束**：
-  - 文档解析：DashScopeParse 单文件 ≤100MB 且 ≤1000 页 [基于LlamaIndex构建RAG应用](../../raw/model-user-guide/use-cases/build-rag-applications-based-on-llamaindex.md)；
-  - 视频生成：Vidu 对提示词长度与动态复杂度敏感，需避免主体分散、术语模糊 [Vidu视频生成Prompt指南](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/vidu-video-generation-prompt-guide.md)；
-  - 实时语音：WebRTC 视频发送帧率建议降至 2fps 以保障弱网稳定性 [通过WebRTC使用qwen3.5-omni-plus-realtime实现实时通话](../../raw/model-user-guide/use-cases/best-practice-webrtc-omni-realtime.md)。
-- **模型生命周期**：GLM-4.6/4.7、MiniMax-M2.1、Moonshot-Kimi-K2-Instruct 等模型已明确标注下架时间，迁移至 Qwen3 系列为官方推荐路径。
+- **地域与域名约束**：第三方模型（DeepSeek/Kimi/GLM/MiniMax/MiMo）仅在华北2（北京）地域可用，且强烈推荐迁移至业务空间专属域名（`{WorkspaceId}.cn-beijing.maas.aliyuncs.com`），旧域名 `dashscope.aliyuncs.com` 性能与稳定性较低。
+- **模型下架计划**：`deepseek-v3.*`、`kimi-k2-*`、`glm-4.*`、`MiniMax-M2.1` 等模型将于 2026 年中至年末陆续下架，官方推荐迁移到 `qwen3.7-plus` 等通义系列模型。
+- **实时交互权限**：WebRTC 方案需浏览器麦克风/摄像头权限；AOQ 方案在 Android/iOS/HarmonyOS 上需声明并动态申请 `RECORD_AUDIO`、`CAMERA` 权限，iOS 还需在 `Info.plist` 中配置 `NSMicrophoneUsageDescription`。
+- **缓存与成本**：显式缓存首次写入产生 25% 额外开销，但命中后节省 90% 成本；若未发生至少一次命中，则总体成本高于不启用缓存。
+- **文件解析限制**：`DashScopeParse` 仅支持 `.pdf`、`.doc`、`.docx`，单文件大小上限 100MB，页数上限 1000 页。
 
 ## 来源文档
 
-- [HappyHorse 打造一站式影视创作平台](../../raw/model-user-guide/use-cases/infinite-canvas.md)
 - [高效搭建 AI 智能体与工作流应用](../../raw/model-user-guide/use-cases/build-ai-applications-based-on-alibaba-cloud-model-studio.md)
 - [AI 解题 + 批改：推动课程教学智变](../../raw/model-user-guide/use-cases/ai-homework-helper.md)
-- [文生文Prompt指南](../../raw/model-user-guide/use-cases/prompt-engineering-guide.md)
-- [文生图Prompt指南](../../raw/model-user-guide/use-cases/text-to-image-prompt.md)
+- [HappyHorse 打造一站式影视创作平台](../../raw/model-user-guide/use-cases/infinite-canvas.md)
+- [深度研究：生成你的独家洞察报告](../../raw/model-user-guide/use-cases/deep-research.md)
 - [文生视频/图生视频Prompt指南](../../raw/model-user-guide/use-cases/text-to-video-prompt.md)
 - [基于LlamaIndex构建RAG应用](../../raw/model-user-guide/use-cases/build-rag-applications-based-on-llamaindex.md)
 - [自定义模型调优、部署与评测](../../raw/model-user-guide/use-cases/model-training-best-practices.md)
 - [借助大模型将文档转换为视频](../../raw/model-user-guide/use-cases/use-llm-to-convert-document-to-video.md)
-- [深度研究：生成你的独家洞察报告](../../raw/model-user-guide/use-cases/deep-research.md)
 - [限流应对最佳实践 ](../../raw/model-user-guide/use-cases/rate-limiting-best-practices.md)
 - [显式缓存最佳实践](../../raw/model-user-guide/use-cases/explicit-cache-guide.md)
 - [通过WebRTC使用多模态交互套件实现实时通话](../../raw/model-user-guide/use-cases/best-practice-webrtc-multimodal-dialog.md)
 - [通过WebRTC使用qwen3.5-omni-plus-realtime实现实时通话](../../raw/model-user-guide/use-cases/best-practice-webrtc-omni-realtime.md)
 - [通过AOQ使用qwen3.5-omni-plus-realtime实现实时通话](../../raw/model-user-guide/use-cases/best-practice-aoq-omni-realtime.md)
 - [使用 AOQ 接入 qwen3.5-omni-plus-realtime 实现按键语音对话](../../raw/model-user-guide/use-cases/use-aoq-to-access-qwen3-5-omni-plus-realtime-to-realize-key-voice-dialogue.md)
-- [使用 AOQ 接入 fun-asr-realtime 实现实时语音识别](../../raw/model-user-guide/use-cases/real-time-speech-recognition-using-aoq-access-fun-asr-realtime.md)
-- [使用 AOQ 接入 qwen-audio-3.0-tts-flash 实现语音合成](../../raw/model-user-guide/use-cases/speech-synthesis-using-aoq-access-qwen-audio-3-0-tts-flash.md)
 - [使用 AOQ 接入 qwen-audio-3.0-realtime-plus 实现实时语音对话](../../raw/model-user-guide/use-cases/real-time-voice-conversation-using-aoq-access-qwen-audio-3-0-realtime-plus.md)
-- [DeepSeek-硅基流动](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/siliconflow-deepseek-api.md)
+- [使用 AOQ 接入 qwen-audio-3.0-tts-flash 实现语音合成](../../raw/model-user-guide/use-cases/speech-synthesis-using-aoq-access-qwen-audio-3-0-tts-flash.md)
+- [使用 AOQ 接入 fun-asr-realtime 实现实时语音识别](../../raw/model-user-guide/use-cases/real-time-speech-recognition-using-aoq-access-fun-asr-realtime.md)
+- [文生图Prompt指南](../../raw/model-user-guide/use-cases/text-to-image-prompt.md)
+- [DeepSeek-阿里云](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/deepseek-api.md)
 - [DeepSeek](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/deepseek-api-by-vanchin.md)
+- [Kimi](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/kimi-api.md)
 - [Kimi-月之暗面](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/kimi-api-by-moonshot-ai.md)
 - [GLM](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/glm.md)
 - [GLM-智谱](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/glm-zhipu.md)
 - [MiniMax](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/minimax-api.md)
 - [MiniMax](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/minimax-api-by-minimax.md)
-- [Kimi](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/kimi-api.md)
-- [MiMo-小米](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/mimo.md)
-- [Stepfun-阶跃星辰](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/stepfun.md)
 - [Vidu视频生成Prompt指南](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/vidu-video-generation-prompt-guide.md)
-- [DeepSeek-阿里云](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/deepseek-api.md)
+- [MiMo-小米](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/mimo.md)
+- [DeepSeek-硅基流动](../../raw/model-user-guide/use-cases/third-party-model-integration-tutorial/siliconflow-deepseek-api.md)
 
 

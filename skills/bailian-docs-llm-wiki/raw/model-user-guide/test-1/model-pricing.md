@@ -8710,9 +8710,13 @@ deepseek-v4-flash-0731
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
 
-1元
+忙时 3元
 
-2元
+闲时 1.5元
+
+忙时 9元
+
+闲时 4.5元
 
 100万Token
 
@@ -8874,9 +8878,13 @@ deepseek-v4-flash-0731
 
 全球
 
-1元
+忙时 3元
 
-2元
+闲时 1.5元
+
+忙时 9元
+
+闲时 4.5元
 
 deepseek-v4-flash
 
@@ -8950,9 +8958,13 @@ deepseek-v4-flash-0731
 
 国际
 
-1.499元
+忙时 3.208元
 
-2.998元
+闲时 1.604元
+
+忙时 9.625元
+
+闲时 4.813元
 
 deepseek-v4-flash
 
@@ -9016,9 +9028,13 @@ deepseek-v4-flash-0731
 
 全球
 
-1元
+忙时 3元
 
-2元
+闲时 1.5元
+
+忙时 9元
+
+闲时 4.5元
 
 deepseek-v4-flash
 
@@ -9072,9 +9088,13 @@ deepseek-v4-flash-0731
 
 全球
 
-1元
+忙时 3元
 
-2元
+闲时 1.5元
+
+忙时 9元
+
+闲时 4.5元
 
 deepseek-v4-flash
 
