@@ -1,4 +1,4 @@
-# 查询模型权限
+# 查询模型授权
 
 调用 GET /api/v1/models/permissions 接口查询当前业务空间下可授权或已授权的模型列表及其权限明细。
 
@@ -170,7 +170,7 @@ Object
 
 -   `inference`（Boolean）：是否具备模型调用权限。示例：`true`
     
--   `finetune`（Boolean）：是否具备模型训练权限。示例：`false`
+-   `fine_tune`（Boolean）：是否具备模型训练权限。示例：`false`
     
 -   `deploy`（Boolean）：是否具备模型部署权限。示例：`false`
     
@@ -178,7 +178,7 @@ Object
 ## 请求示例
 
 ```
-curl "https://dashscope.aliyuncs.com/api/v1/models/permissions?authorization_scope=AUTHORIZED&action=INFERENCE&page_no=1&page_size=20" \
+curl "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/models/permissions?authorization_scope=AUTHORIZED&action=INFERENCE&page_no=1&page_size=20" \
     --header "Authorization: Bearer ${DASHSCOPE_API_KEY}" \
     --header 'Content-Type: application/json'
 ```

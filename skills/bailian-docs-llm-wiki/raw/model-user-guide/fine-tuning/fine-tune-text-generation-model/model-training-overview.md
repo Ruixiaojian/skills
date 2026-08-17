@@ -25,7 +25,7 @@
 
 ### **模型调优流程**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/9388195871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/1825396871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
 
 详情参见：
 
@@ -764,6 +764,8 @@ qwen-plus-character-2025-11-06
     -   以 Base64 编码传入时（Anthropic 兼容接口）：受**请求体整体不超过** `**6MB**` 的限制，**多张图像**时需共享此额度。
         
     
+    上述限制取决于所选模型，不支持通过购买高级套餐或升级模型版本提升。
+    
     > 如需压缩文件体积请参见 [如何将图像或视频压缩到满足要求的大小](https://help.aliyun.com/zh/model-studio/vision#ec8e0a8e03moe) 。
     
 -   **图片数量限制：**多图输入时根据传入方式不同，支持的图片数量上限有所区别：
@@ -836,7 +838,7 @@ qwen-plus-character-2025-11-06
 
 ###### **文件传入方式**
 
--   **公网URL**：提供一个公网可访问的文件地址，支持HTTP或HTTPS协议。为获得最佳稳定性和性能，可将文件[上传至OSS](https://help.aliyun.com/zh/oss/user-guide/console-quick-start)或[上传文件获取临时URL](https://help.aliyun.com/zh/model-studio/get-temporary-file-url)，获取公网 URL。
+-   **公网URL**：提供一个公网可访问的文件地址，支持HTTP或HTTPS协议。为获得最佳稳定性和性能，可将文件[上传至OSS](https://help.aliyun.com/zh/oss/user-guide/console-quick-start)或[上传文件获取临时URL](https://help.aliyun.com/zh/model-studio/get-temporary-file-url)，获取公网 URL。**百炼**服务无法访问 OSS 内网地址（endpoint 中带 `-internal`，如 `https://<bucket>.oss-cn-hangzhou-internal.aliyuncs.com/image.jpg`），传入内网地址会导致文件下载失败，返回 `InvalidParameter`，message 为 `Failed to download multimodal content`。请改用 OSS 公网域名（如 `https://<bucket>.oss-cn-hangzhou.aliyuncs.com/image.jpg`）或 OSS 临时签名 URL 传入文件。
     
     **重要**
     

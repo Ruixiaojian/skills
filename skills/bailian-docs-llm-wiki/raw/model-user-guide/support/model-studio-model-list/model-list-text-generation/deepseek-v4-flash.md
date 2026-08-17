@@ -842,6 +842,10 @@ Function Calling
 
 本文仅展示模型调用原价，不包含限时优惠等活动信息，请前往[百炼控制台](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/all)查看活动优惠。
 
+**说明**
+
+DeepSeek-V4系列模型价格近期将有所上调，具体调整方案和生效时间请参考[DeepSeek-V4-Flash-0731 模型涨价通知](https://www.alibabacloud.com/zh/notice/detail?_p_lc=1&id=2097)。
+
 ## 华北2（北京）
 
 计费项
@@ -852,19 +856,25 @@ Function Calling
 
 输入
 
-1
+忙时 3元
+
+闲时 1.5元
 
 每百万tokens
 
 输出
 
-2
+忙时 9元
+
+闲时 4.5元
 
 每百万tokens
 
 输入（缓存命中）
 
-0.2
+忙时 0.9元
+
+闲时 0.45元
 
 每百万tokens
 
@@ -880,19 +890,25 @@ Function Calling
 
 输入
 
-1.499
+忙时 3.208元
+
+闲时 1.604元
 
 每百万tokens
 
 输出
 
-2.998
+忙时 9.625元
+
+闲时 4.813元
 
 每百万tokens
 
 输入（缓存命中）
 
-0.3
+忙时 0.963元
+
+闲时 0.481元
 
 每百万tokens
 
@@ -908,19 +924,25 @@ Function Calling
 
 输入
 
-1
+忙时 3元
+
+闲时 1.5元
 
 每百万tokens
 
 输出
 
-2
+忙时 9元
+
+闲时 4.5元
 
 每百万tokens
 
 输入（缓存命中）
 
-0.2
+忙时 0.9元
+
+闲时 0.45元
 
 每百万tokens
 
@@ -936,19 +958,25 @@ Function Calling
 
 输入
 
-1
+忙时 3元
+
+闲时 1.5元
 
 每百万tokens
 
 输出
 
-2
+忙时 9元
+
+闲时 4.5元
 
 每百万tokens
 
 输入（缓存命中）
 
-0.2
+忙时 0.9元
+
+闲时 0.45元
 
 每百万tokens
 
@@ -964,19 +992,25 @@ Function Calling
 
 输入
 
-1
+忙时 3元
+
+闲时 1.5元
 
 每百万tokens
 
 输出
 
-2
+忙时 9元
+
+闲时 4.5元
 
 每百万tokens
 
 输入（缓存命中）
 
-0.2
+忙时 0.9元
+
+闲时 0.45元
 
 每百万tokens
 
