@@ -1,0 +1,7 @@
+interface:
+  display_name: "Vox Video Director"
+  short_description: "用百炼 CLI 生成 Vox 风格纸质拼贴解说与广告视频"
+  default_prompt: "使用 $vox-video-director 把我的主题制作成一条带旁白和字幕的 Vox 风格拼贴视频。"
+
+policy:
+  allow_implicit_invocation: true
