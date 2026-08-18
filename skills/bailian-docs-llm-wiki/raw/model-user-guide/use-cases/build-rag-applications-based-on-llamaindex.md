@@ -1,16 +1,16 @@
 # 基于LlamaIndex构建RAG应用
 
-在Llamaindex中使用阿里云百炼提供的检索增强服务。
+在LlamaIndex中使用阿里云百炼提供的检索增强服务。
 
 ## 开始
 
 ### **前提条件**
 
--   您需要已[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
+-   您需要已[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
     
 -   已在[百炼控制台](https://bailian.console.aliyun.com/#/knowledge-base)开通知识库服务。首次进入知识库页面时，按照页面提示开通即可。
     
--   如果需要指定业务空间，还要获取指定业务空间的”业务空间ID”。
+-   如果需要指定业务空间，还要获取指定业务空间的“业务空间ID”。
     
 -   在Python编程工具的终端中执行以下命令安装DashScopeCloudIndex的安装包（您的Python版本要求：>=3.8 且 <=3.12）。
     
@@ -40,12 +40,13 @@ import os
 from llama_index.readers.dashscope.base import DashScopeParse
 from llama_index.readers.dashscope.utils import ResultType
 
-# 设置业务空间 ID 将决定文档解析结果在”创建知识库“步骤中上传到哪个业务空间
-os.environ['DASHSCOPE_WORKSPACE_ID'] = "<Your Workspace id, Default workspace is empty.>"
+# 设置业务空间 ID 将决定文档解析结果在“创建知识库”步骤中上传到哪个业务空间
+os.environ['DASHSCOPE_WORKSPACE_ID'] = "<您的业务空间ID，使用默认业务空间时留空>"
 
 # 第一种方式：使用文档解析器解析一个或多个文件
 file = [
-    # 需要解析的文件，支持pdf,doc,docx
+    # 需要解析的文件，支持pdf,doc,docx，请替换为您的文件路径
+    "path/to/your_file.pdf",
 ]
 # 解析文件
 parse = DashScopeParse(result_type=ResultType.DASHSCOPE_DOCMIND)
@@ -83,7 +84,7 @@ index = DashScopeCloudIndex.from_documents(
 
 ### 读取知识库
 
-通过以下代码，您可以在Llamaindex中初始化已创建的知识库。
+通过以下代码，您可以在LlamaIndex中初始化已创建的知识库。
 
 ```
 index = DashScopeCloudIndex("my_first_index")
@@ -124,5 +125,6 @@ query_engine = index.as_query_engine(llm=dashscope_llm)
 # add documents to index
 index._insert(documents)
 # delete documents from index
+doc_id = "your_doc_id"  # 替换为待删除文档的ID
 index.delete_ref_doc([doc_id])
 ```

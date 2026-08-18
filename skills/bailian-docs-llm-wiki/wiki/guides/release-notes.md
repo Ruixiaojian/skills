@@ -1,32 +1,51 @@
 # release notes
 
-百炼平台的 Release Notes 汇总了模型生命周期管理（上架、下线）、平台功能迭代及关键能力变更，面向开发者提供可操作的版本演进信息。所有变更均以实际生效日期为准，建议通过控制台「模型观测」和「通知中心」及时获取最新动态。本文档不包含营销性描述，仅提炼技术事实与约束条件。
+百炼平台的 Release Notes 汇总了模型、功能、API 及平台能力的最新动态，涵盖新增模型上架、历史模型下线、核心功能迭代与关键限制变更。所有变更均面向开发者设计，直接影响调用逻辑、计费策略与系统集成方式。建议开发者定期查阅本页，并结合 [原文标题](../../raw/model-user-guide/release-notes/model-depreciation.md) 和 [原文标题](../../raw/model-user-guide/release-notes/newly-released-models.md) 进行模型生命周期管理。
 
 ## 支持的模型/功能
 
-- **新增模型**：2026年7–8月集中上架[多模态](../concepts/multi-modal.md)旗舰模型，包括 `qwen3.8-max`（2.4T MoE，100万上下文）、`kimi/kimi-k3`（2.8T，KDA注意力）、`deepseek-v4-pro-0813`（1.6T/49B激活）、`pixverse/pixverse-v6-r2v-omni`（混合参考视频生成）等；语音方向新增 `qwen-audio-3.0-asr-flash-streaming`（实时ASR）、`qwen-audio-3.0-tts-plus`（高表现力TTS）及 `qwen-audio-3.0-realtime-plus`（双工对话）三类模型。详情见 [模型上架与更新](../../raw/model-user-guide/release-notes/newly-released-models.md)。
-- **功能扩展**：2026年6月起全面支持视频生成模型调优（如万相系列）、图像生成模型调优（`qwen-image-3.0-pro`）、视觉理解模型（VL）调优（[原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md)）；7月上线知识检索服务与知识问答服务，支持多知识库联合检索与混合排序；8月新增模型升级通知机制，提升版本变更透明度。
-- **平台能力升级**：2026年6月起支持 API Key 加密存储与业务空间专属推理域名；7月上线智能体托管运行时 API；8月支持 Responses API 异步调用（`background=true`）；模型评测模块于6月新增排行榜与 BLEU_4 等综合评分方法。
+- **新增模型（2026年7–8月重点）**：  
+  - 文本/多模态旗舰：`qwen3.8-max`（2.4T MoE）、`kimi/kimi-k3`（2.8T）、`deepseek-v4-pro-0813`（1.6T）、`glm-5.2`（1M上下文）；  
+  - 视频生成：`pixverse/pixverse-v6-r2v-omni`（混合参考）、`vidu/viduq3-drama_reference2video`（剧集专用）、`wan3.0-video`（All-in-One）；  
+  - 音视频：`qwen-audio-3.0-realtime-plus`（双工低延迟）、`qwen-audio-3.0-tts-plus`（高表现力）；  
+  - 向量与工具：`qwen3.7-text-embedding`（256–2560维可调）、`stepfun/step-3.7-flash`（Agent优化）。  
+- **功能模块升级**：  
+  - 知识库 RAG 新增联合检索与知识问答服务（2026-06-23）；  
+  - 智能体托管运行时 API 上线（2026-06-29），支持会话与工具执行全托管；  
+  - Responses API 新增异步调用模式（`background=true`，2026-06-01）；  
+  - 模型调优新增强化学习（RL）训练（邀约制，2026-05-31）及视频/图像/视觉理解模型类型支持（2026-05–06月）；  
+  - 多模态翻译 API 全面上线（2026-05-26），覆盖文本、图片、文档、网页四类接口。  
+> **注意**：文档2中 `qwen3.7-flash-2026-07-15` 与文档3中 `qwen3.7-flash`（2026-07-21）存在命名冗余，实际为同一模型快照，推荐以控制台显示的完整 ID（如 `qwen3.7-flash-2026-07-15`）为准调用，避免版本歧义。
 
 ## 关键参数
 
-- **上下文长度**：主流新模型（如 `qwen3.8-max`、`glm-5.2`、`kimi-k3`）原生支持 **100 万 [Token](../concepts/token.md)** 上下文；`qwen-image-3.0` 支持最大 **4.5k token 输入**；`pixverse/pixverse-v6-r2v-omni` 支持最长 **16 秒视频生成**。
-- **性能指标**：`deepseek-v4-flash-0731` 输出延迟低、QPM 高，适用于高并发轻量化任务；`kimi-k2.7-code-highspeed` 编程输出速度达 **180–260 [Token](../concepts/token.md)/s**；`qwen-audio-3.0-tts-flash` 首包延时 **≤200ms**；`qwen-audio-3.0-realtime-flash` 实现端到端低时延双工交互。
-- **向量与嵌入**：`qwen3.7-text-embedding` 支持 **256–2560 维自定义向量维度**，在 MTEB 多语言检索任务中效果较 v4 提升 20%。
+- **上下文长度**：主流旗舰模型（`qwen3.8-max`、`kimi-k3`、`glm-5.2`、`deepseek-v4-pro-0813`）均原生支持 **1,000,000 token**；`qwen-image-3.0` 支持最大 **4.5k token 输入**。  
+- **推理性能**：`deepseek-v4-flash-0731` 输出延迟低，`qwen-audio-3.0-tts-flash` 首包延时 ≤200ms，`kimi-k2.7-code-highspeed` 编程场景输出达 260 Token/s。  
+- **向量维度**：`qwen3.7-text-embedding` 支持用户自定义 **256–2560 维**，需在请求中显式指定 `dimension` 参数。  
+- **异步任务**：Responses API 异步模式需轮询 `/v1/async_tasks/{task_id}` 或配置 EventBridge HTTP 回调（2026-04-23 功能）。
 
 ## 使用方式
 
-- **模型调用**：所有新模型均通过标准 DashScope API 接入，支持 [OpenAI 兼容接口](../concepts/openai-compatible-interface.md)（`/v1/chat/completions`）与 Anthropic Messages 格式（[原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md)）；视频/图像类模型需按具体文档指定输入格式（如 `pixverse/pixverse-v6-r2v-omni` 要求图片+视频混合参考）。
-- **部署与调优**：预置模型（如 `qwen-flash`）支持 API 直接部署并按模型单元（MU）时长计费；微调模型支持 LoRA/全参 SFT 及 DPO 偏好训练（千问2.5/3系列、GLM-5.1/5.2）；图像/视频/视觉理解模型调优能力已于 2026 年 5–6 月全面开放。
-- **异步与事件驱动**：长耗时任务（如视频生成、大文件 RAG）推荐使用 Responses API 异步模式；异步任务完成事件可通过事件总线（EventBridge）HTTP 回调或 RocketMQ 主动推送，避免轮询。
+- **模型调用**：  
+  - 所有新模型通过标准 `/v1/services/aigc/text-generation/generation` 或对应模态接口（如 `/v1/services/aigc/image-generation/generation`）调用；  
+  - 必须在 `model` 字段传入完整模型ID（如 `qwen3.8-max`），不支持模糊匹配或系列别名；  
+  - 视频/3D等多模态模型需按文档要求上传 `input.image_urls`、`input.video_urls` 或 `input.reference_images` 等结构化字段。  
+- **功能接入**：  
+  - 新增 SDK（如 Linux C++、Android Lite、RTOS C）需引用对应版本依赖并初始化 `BailianClient`；  
+  - [Prompt 工程](../concepts/prompt-engineering.md)、Skill 能力包、数据连接模块均通过独立 API 接入，路径见 [原文标题](../../raw/model-user-guide/release-notes/model-release-notes.md) 中各功能点链接；  
+  - 临时 API Key 生成用于不可信环境，调用 `/v1/auth/token` 获取（2026-06-03 上线）。
 
 ## 限制和注意事项
 
-- > **注意**：文档 1 中称“主线模型下线前通知期为 3 个月”，但文档 3 显示 2026 年 7 月 10 日发布的 [部分老旧模型下线通知](https://www.aliyun.com/notice/118434) 对应 2026 年 10 月 10 日下线，实际通知期仅约 3 个月；而同日发布的 [部分老旧长尾模型下线通知](https://www.aliyun.com/notice/118427) 未明确下线日期。此处以文档 1 的通用规则为准，但开发者须以具体公告日期为最终依据。
-- > **注意**：文档 2 列出 `qwen3.7-flash-2026-07-15` 与 `qwen3.7-flash` 并存，但未说明二者是否为同一模型快照。结合文档 3 中 6 月已上线 `qwen3.7-flash` 调优支持，推断 `-2026-07-15` 为该模型的明确快照标识，非独立模型，调用时应优先使用无日期后缀的稳定 ID（如 `qwen3.7-flash`），避免依赖快照 ID 导致未来不可用。
-- 模型下线后，**已部署应用将立即失效**：自正式下线日起，API 推理、新调优/新部署均停止；已训练/已部署模型不受影响，但无法再创建新实例。务必通过 [模型观测](https://bailian.console.aliyun.com/#/model-telemetry) 定期检查存量模型状态。
-- 部分功能存在地域限制：新增美国、德国、日本地域部署范围（2026年6月12日），但 `pixverse`、`vidu`、`Tripo` 等第三方模型当前仅在华北2（北京）可用，调用前需确认 endpoint 区域。
-- 企业知识库（旧）已于 2026 年 7 月 16 日下线，迁移至新版知识库 RAG 服务；`qwen-turbo` 资源包于 6 月 28 日启动退市，不再售卖。
+- **模型下线机制**：  
+  - **快照模型**（含日期标识，如 `qwen-max-2025-01-25`）提前 **30天** 通知；**主线模型**（如 `qwen3.7-max`）提前 **3个月** 通知；  
+  - 下线通知发布后即开始限流（QPM/TPM 逐步缩减），正式下线后 API 返回 `404` 或 `ModelNotAvailable` 错误；  
+  - 已部署/调优的模型不受影响，但**禁止新建调优或部署任务**（详见 [原文标题](../../raw/model-user-guide/release-notes/model-depreciation.md)）。  
+- **平台级变更**：  
+  - 企业知识库（旧）已于 2026-07-16 下线，存量应用需迁移至新版知识库；  
+  - `qwen-turbo` 资源包于 2026-06-28 启动退市，不再续购；  
+  - 记忆库自 2026-07-21 起商业化，免费额度仅限个人版基础用量。  
+> **注意**：文档3中“2026年7月10日部分老旧模型下线通知”（公告号 118434）与文档1中“2026年10月10日将下线”列表存在时间冲突——文档1明确该公告对应 **2026年10月10日下线批次**，文档3的日期应为公告发布时间而非下线日，开发者请以文档1的下线日期为准。
 
 ## 来源文档
 

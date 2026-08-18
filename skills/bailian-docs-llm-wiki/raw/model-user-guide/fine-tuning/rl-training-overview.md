@@ -185,6 +185,7 @@ RL 训练**仅支持**通过模型训练单元（MTU）计费，不支持按 Tok
     
     ```
     export DASHSCOPE_API_KEY="sk-your-api-key"
+    export FC_PYPI_LIB="dashscope-1.25.23-py3-none-any.whl"
     export LOG_LEVEL="info"
     ```
     
@@ -196,7 +197,7 @@ RL 训练**仅支持**通过模型训练单元（MTU）计费，不支持按 Tok
 2.  **下载完成后需要安装 DashScope SDK**（要求 Python >= 3.10）：请按照 Demo 包中附带的指引安装相关依赖：
     
     ```
-    # 使用PyPI源：
+    # 本地环境使用 PyPI 源安装；FC 容器侧无需手动安装，会自动安装 FC_PYPI_LIB 指定的离线 whl 包：
     pip install dashscope
     ```
     
@@ -324,7 +325,7 @@ async def main():
                 name="reward-1",
                 weight=1.0,
                 timeout=120,
-                reward_metric_weight={"reward_metric_weightA": 0.3, "reward_metric_weightB": 0.7},
+                reward_metric_weight={"accuracy": 0.7, "format": 0.3},  # key 为 Reward 函数返回的指标名
                 fcmodel=FunctionComponentModel(
                     classpath="functions.reward.reward.DemoRewardProcessor"),
                 runtime=FunctionComponentRuntime(
@@ -433,9 +434,9 @@ Checkpoint 列表、发布状态，可将 Checkpoint 发布至"我的模型"后�
 
 ## 发布与部署模型
 
-训练完成后，最后一个 Checkpoint 会自动发布至**我的模型**。如需发布中间 Checkpoint，前往百炼控制台**模型调优** > **产出**页面手动操作，详见_模型调优控制台（百炼文档，需在线查看）_。
+训练完成后，最后一个 Checkpoint 会自动发布至**我的模型**。如需发布中间 Checkpoint，前往百炼控制台**模型调优** > **产出**页面手动操作，详见[在控制台进行模型调优](https://help.aliyun.com/zh/model-studio/model-training-on-console)。
 
-发布后的模型可在**我的模型**页面进行部署。部署完成后即可通过 API 调用模型。详见_模型部署（百炼文档，需在线查看）_。
+发布后的模型可在**我的模型**页面进行部署。部署完成后即可通过 API 调用模型。详见[模型部署](https://help.aliyun.com/zh/model-studio/model-deployment-introduction)。
 
 ## 后续步骤
 
@@ -443,6 +444,4 @@ Checkpoint 列表、发布状态，可将 Checkpoint 发布至"我的模型"后�
     
 -   了解训练配置和监控 → [强化学习训练配置 — 提交与配置](https://help.aliyun.com/zh/model-studio/rl-training-config-monitoring)
     
--   训练指标参考字典 → [强化学习的可观测配置与指标参考](https://help.aliyun.com/zh/model-studio/observable-configuration-for-reinforcement-learning)
-    
--   了解可观测性配置与轨迹查看 → [强化学习的可观测配置与指标参考](https://help.aliyun.com/zh/model-studio/observable-configuration-for-reinforcement-learning)
+-   了解可观测性配置、轨迹查看与训练指标参考 → [强化学习的可观测配置与指标参考](https://help.aliyun.com/zh/model-studio/observable-configuration-for-reinforcement-learning)

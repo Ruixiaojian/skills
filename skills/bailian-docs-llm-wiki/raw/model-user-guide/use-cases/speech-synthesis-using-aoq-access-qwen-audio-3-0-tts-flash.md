@@ -96,6 +96,14 @@ qwen-audio-3.0-tts-flash 支持 AOQ Inference 事件协议。本教程选择该�
 3.  在 Python 代码中使用 import aoq\_client\_sdk。也可通过 AOQ\_CLIENT\_SDK\_LIB 指定 libAoqClientSdk.so 的绝对路径。
     
 
+## **体验 Demo**
+
+阿里云百炼提供适用于 Android 平台的 Demo，可用于快速验证 AOQ 接入效果。下载 APK 并配置 API Key 和 `workspaceId` 后，即可体验部分模型。
+
+扫描以下二维码下载 Demo：
+
+![Demo 下载二维码](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7714207871/p1095700.png)
+
 ## **实现流程**
 
 1.  AppServer 通过 Inference Token 地址获取 qwen-audio-3.0-tts-flash 的 AOQ 连接参数。

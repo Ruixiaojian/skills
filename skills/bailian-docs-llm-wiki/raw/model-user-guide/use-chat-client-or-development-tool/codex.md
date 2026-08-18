@@ -100,7 +100,7 @@ wire_api = "responses"
 
 #### Chat/Completions API（其他模型）
 
-其他模型需通过 Chat/Completions API 接入，需安装旧版本 Codex，如 0.80.0：
+其他模型需通过 Chat/Completions API 接入，需安装旧版本 Codex，如 0.80.0（新版本 Codex 已不再支持 wire\_api = "chat" 配置，升级后如遇报错请参见下文 FAQ）：
 
 ```
 npm install -g @openai/codex@0.80.0
@@ -212,7 +212,7 @@ wire_api = "responses"
 
 #### Chat/Completions API（其他模型）
 
-其他模型需通过 Chat/Completions API 接入，需安装旧版本 Codex，如 0.80.0：
+其他模型需通过 Chat/Completions API 接入，需安装旧版本 Codex，如 0.80.0（新版本 Codex 已不再支持 wire\_api = "chat" 配置，升级后如遇报错请参见下文 FAQ）：
 
 ```
 npm install -g @openai/codex@0.80.0
@@ -306,11 +306,11 @@ wire_api = "chat"
 
 ### Coding Plan
 
-`model`请选择[支持的模型](https://help.aliyun.com/zh/model-studio/coding-plan-overview)。将`OPENAI_API_KEY`环境变量设置为 Coding Plan 专属 [API Key](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/efm/coding_plan)。
+`model`请选择[支持的模型](https://help.aliyun.com/zh/model-studio/coding-plan)。将`OPENAI_API_KEY`环境变量设置为 Coding Plan 专属 [API Key](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/efm/coding_plan)。
 
 #### Chat/Completions API
 
-Coding Plan 仅支持 Chat/Completions API，需安装旧版本 Codex，如 0.80.0：
+Coding Plan 仅支持 Chat/Completions API，需安装旧版本 Codex，如 0.80.0（新版本 Codex 已不再支持 wire\_api = "chat" 配置，升级后如遇报错请参见下文 FAQ）：
 
 ```
 npm install -g @openai/codex@0.80.0
@@ -431,7 +431,7 @@ wire_api = "responses"
 
 #### Chat/Completions API
 
-适用于仅支持 Chat/Completions API 的模型，需安装 Codex 0.80.0：
+适用于仅支持 Chat/Completions API 的模型，需安装 Codex 0.80.0（新版本 Codex 已不再支持 wire\_api = "chat" 配置，升级后如遇报错请参见下文 FAQ）：
 
 ```
 npm install -g @openai/codex@0.80.0
@@ -554,9 +554,17 @@ codex
     
     **配置信息**
     
+    Token Plan 个人版
+    
+    供应商名称：百炼-Token Plan 个人版
+    
+    API Key：[控制台获取](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)
+    
+    请求地址：`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
+    
     Token Plan 团队版
     
-    供应商名称：百炼-Token Plan
+    供应商名称：百炼-Token Plan 团队版
     
     API Key：[控制台获取](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/uac-admin/organization/members/list)
     
@@ -576,7 +584,7 @@ codex
     
     API Key：[百炼 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)
     
-    请求地址：`https://dashscope.aliyuncs.com/compatible-mode/v1`
+    请求地址：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
     
 2.  展开**高级选项**填写模型名称，从对应套餐[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-overview)中选择，例如 `qwen3.7-max`（Coding Plan 不支持）。
     
@@ -663,11 +671,11 @@ codex
 
 -   **请求超频**（`429 Requests rate limit exceeded`）：短时间内请求过于密集。
     
--   **限额用尽**（`429 Allocated quota exceeded` 或 `Your token-plan 5-hour/1-week quota has been exhausted`）：Token Plan 个人版的 5 小时或 7 天限额触顶。
+-   **限额用尽**（`429 Allocated quota exceeded` 或 `Your token-plan 1-week quota has been exhausted`）：Token Plan 个人版的 7 天限额触顶。
     
 
 **解决方案**：
 
 -   请求超频：等待一分钟后重试，降低请求频率。
     
--   限额用尽：等待对应窗口周期（5 小时或 7 天）结束后额度自动重置；或购买用量包（用量包额度不受窗口限额约束）；或升级套餐。注意：报错信息中的重置时间（如 `The quota will reset at HH:MM:SS UTC`）以协调世界时（UTC）为准，换算为北京时间（CST）需加 8 小时。
+-   限额用尽：等待 7 天窗口周期结束后额度自动重置；或购买用量包（用量包额度不受窗口限额约束）；或升级套餐。注意：报错信息中的重置时间（如 `The quota will reset at HH:MM:SS UTC`）以协调世界时（UTC）为准，换算为北京时间（CST）需加 8 小时。

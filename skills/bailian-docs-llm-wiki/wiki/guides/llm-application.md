@@ -1,65 +1,67 @@
 # llm application
 
-`llm application` 是阿里云百炼平台面向业务场景构建 AI 应用的核心抽象，它通过封装模型调用、外部能力集成与执行逻辑编排，使开发者无需从零实现推理服务即可快速交付具备私有知识理解、实时工具调用和多步任务规划能力的生产级 AI 应用。该能力覆盖零代码（智能体）、低代码（工作流）和专业代码（高代码）三类开发范式，适用于客服、报告生成、日程管理、内容创作等广泛业务场景。
+`llm application` 是阿里云百炼平台面向大模型落地的核心能力抽象，提供三种互补的构建范式：以自主决策为特征的智能体（Agent）、以流程确定性为优势的工作流（Workflow），以及以代码完全可控为特点的高代码应用。开发者可根据业务复杂度、可控性要求与团队技术栈，选择零代码、低代码或专业编码方式快速构建生产级 AI 应用。
 
 ## 支持的模型/功能
 
-百炼 `llm application` 支持三大应用类型，各自适配不同复杂度与可控性要求：
+- **模型支持**：所有 `llm application` 类型均支持千问系列主流模型（如 `qwen-max`、`qwen-plus-latest`、`qwen-vl-plus`），部分能力对模型有特定要求。例如，新版智能体推荐使用 `千问-Max` 系列以保障多步规划效果；文件问答中图片处理需搭配 `千问VL` 系列模型才能启用“模型处理+规划”模式 [文件问答](../../raw/application-user-guide/llm-application/file-q-a.md)。
+- **核心功能矩阵**：
+  - **智能体（Agent）**：支持知识库（RAG）、MCP 工具调用、内置沙箱工具（`bash`/`read`/`edit` 等）、短期记忆（0–30 轮）、自定义变量与标签过滤。新版（Agent 2.0）将知识库与 MCP 统一为可自主规划的工具，显著提升过程透明度与任务泛化能力 [新版智能体应用](../../raw/application-user-guide/llm-application/new-single-agent-application.md)。
+  - **工作流（Workflow）**：提供可视化节点编排，支持大模型节点、意图分类、变量处理、智能体群组等十余种节点类型，适用于固定流程自动化。其会话变量（`query`/`historyList`/`imageList`）可在全生命周期内跨节点引用 [工作流应用](../../raw/application-user-guide/llm-application/workflow-application.md)。
+  - **高代码应用**：基于 Python 项目结构，支持 Serverless Function 与 K8s 两种部署方式，提供一站式 MCP 接入、API 网关、可观测性及 Spark Design 前端框架集成，适合深度定制与企业级运维场景 [高代码应用](../../raw/application-user-guide/llm-application/rich-code-application.md)。
 
-- **智能体（Agent）应用**：以提示词驱动自主决策，支持动态规划、知识库检索（RAG）、MCP 工具调用、文件处理（全文引用/切片检索/自定义处理）及短期记忆。新版智能体（Agent 2.0）将知识库与 MCP 统一为可规划工具，并完整展示“思考-执行-反思”链路，显著提升复杂任务处理能力 [新版智能体应用](../../raw/application-user-guide/llm-application/new-single-agent-application.md)。  
-- **工作流（Workflow）应用**：通过可视化节点（大模型、意图分类、变量处理、智能体群组等）编排确定性执行流程，支持多轮对话状态维护（`historyList`）、会话变量全局共享及结构化输出控制，适合固定路径的自动化任务 [工作流应用](../../raw/application-user-guide/llm-application/workflow-application.md)。  
-- **高代码应用**：面向专业开发者，基于 Python 项目一键部署为 Serverless Function 或 K8s 服务，支持 MCP 工具一站式接入、自定义前端（Spark Design）、API 网关与企业级可观测能力 [高代码应用](../../raw/application-user-guide/llm-application/rich-code-application.md)。
-
-所有类型均支持千问系列模型（如 `qwen-max`、`qwen-plus-latest`、`qwen-vl-plus`），其中[多模态](../concepts/multi-modal.md)任务需选用 `qwen-vl-*` 等视觉理解模型；文件问答功能明确支持 `.docx`、`.pdf`、`.png`、`.mp4` 等十余种格式，单文件上限 10MB [文件问答](../../raw/application-user-guide/llm-application/file-q-a.md)。
-
-> **注意**：文档 3（旧版智能体）与文档 2（新版智能体）存在架构不兼容声明：“不支持将旧版智能体升级到新版本”，且新版已将知识库作为可规划工具纳入统一调度体系，而旧版仍将其视为独立模块。实际开发应优先采用 [新版智能体应用](../../raw/application-user-guide/llm-application/new-single-agent-application.md)，旧版仅用于存量维护。
+> **注意**：文档 3（旧版智能体）与文档 2（新版智能体）存在明确架构不兼容声明：“不支持将旧版智能体升级到新版本”，且新版已将知识库作为可规划工具纳入统一调度体系，而旧版仍将其视为独立能力模块。实际开发应以 [新版智能体应用](../../raw/application-user-guide/llm-application/new-single-agent-application.md) 为准。
 
 ## 关键参数
 
-| 参数类别 | 参数名 | 说明 | 可配置位置 |
-|----------|--------|------|-------------|
-| **模型基础** | `temperature` | 控制生成随机性，取值 0–2，推荐 0.3–0.7 保证稳定性 | 模型选择器右侧参数配置器（[新版智能体应用](../../raw/application-user-guide/llm-application/new-single-agent-application.md)） |
-| | `max_tokens` | 模型生成回复的最大长度（不含提示词） | 同上 |
-| | `enable_thinking` | 是否开启思考模式（仅支持模型可用），影响 ReAct 过程中“Thinking”步骤的展示 | 同上 |
-| **文件处理** | `单文件最大解析长度（token）` | 全文引用模式下单文件截断阈值，超长部分从末尾丢弃 | 文件处理配置面板（[文件问答](../../raw/application-user-guide/llm-application/file-q-a.md)） |
-| | `召回片段数` | 切片检索模式下返回的相关文本片段数量上限 | 同上 |
-| **执行控制** | `ReAct 最大轮次` | 单次会话中工具调用最大次数（1–50），超限则终止调用并生成最终回复 | 新版智能体“运行与结果分析”章节（[新版智能体应用](../../raw/application-user-guide/llm-application/new-single-agent-application.md)） |
-| **记忆与上下文** | 短期记忆轮数 | 设置 0–30 轮多轮对话上下文传递（0 表示禁用） | 新版智能体“记忆”模块（[新版智能体应用](../../raw/application-user-guide/llm-application/new-single-agent-application.md)） |
+- **通用参数**：
+  - `temperature`：控制生成随机性，范围通常为 0.0–1.0。
+  - `max_tokens`（最长回复长度）：限制模型输出 token 数，不含提示词。
+- **智能体特有参数**：
+  - `enable_thinking`：仅对支持思考模式的模型生效，开启后可展示推理链路（Thinking 步骤）。
+  - `ReAct 最大轮次`（1–50）：限制单次会话中工具调用总次数，超限则终止调用并生成最终回复。
+  - 文件处理模式：`全文引用`（截断策略影响输入 token）、`切片检索`（召回片段数 + 最大拼装长度）、`自定义处理`（依赖工具配置）[文件问答](../../raw/application-user-guide/llm-application/file-q-a.md)。
+- **工作流特有参数**：
+  - 节点级 `记忆` 配置：支持“本节点缓存”或“自定义缓存”（全局上下文），影响 `historyList` 的注入范围。
+- **高代码应用特有参数**：
+  - 部署资源规格（vCPU/内存/磁盘）、最小实例数、单实例并发度，直接影响性能与成本。
 
 ## 使用方式
 
-1. **创建与配置**：  
-   - 智能体：控制台 → 应用管理 → 创建应用 → 选择“智能体应用” → Agent 2.0 → 配置模型、系统提示词、知识库、MCP 工具等。  
-   - 工作流：同上 → 选择“工作流应用” → 拖拽节点（开始/大模型/意图分类/结束等）→ 连接连线 → 配置各节点参数（如大模型节点的提示词、用户提示词 `${sys.query}`）。  
-   - 高代码：同上 → 选择“高代码应用” → 选择部署方式（Serverless/K8s）→ 提交代码（模板或 .whl 包）→ 部署。
-
-2. **测试与调试**：  
-   - 所有类型均提供右侧面板“文本对话体验”，支持上传文件、输入文本并实时查看响应与执行轨迹（智能体展示卡片流，工作流显示节点日志）。  
-   - 高代码应用额外提供“API测试”模式，可手动调用 `/health`、`/process` 等接口。
-
-3. **发布与集成**：  
-   - **必须发布后方可调用**：点击应用配置页右上角“发布”按钮确认变更。  
-   - API 调用：在“发布渠道”页签 → “API调用” → “查看API”，获取 endpoint 与鉴权方式（Bearer [Token](../concepts/token.md)）。  
-   - 文件问答 API 需按预设模式（全文引用/切片检索）调用，无法动态切换；生产环境推荐使用 `session_file_id` 方式上传大文件 [文件问答](../../raw/application-user-guide/llm-application/file-q-a.md)。
+- **创建与配置**：
+  - 智能体：控制台 → 应用中心 → 创建应用 → 选择“智能体应用” → 指定 Agent 2.0 版本 → 配置模型、系统提示词、知识库、MCP 等 [新版智能体应用](../../raw/application-user-guide/llm-application/new-single-agent-application.md)。
+  - 工作流：通过拖拽节点（开始/大模型/意图分类/结束等）构建执行图，配置各节点模型、提示词及变量映射 [工作流应用](../../raw/application-user-guide/llm-application/workflow-application.md)。
+  - 高代码应用：支持控制台模板创建或 CLI 上传 `.whl` 包，需授权 FC 与 API 网关权限，并配置部署方式（Serverless/K8s）与资源规格 [高代码应用](../../raw/application-user-guide/llm-application/rich-code-application.md)。
+- **发布与调用**：
+  - 所有类型应用**必须发布后方可调用**。发布操作位于应用配置页右上角，发布后可获取 API Endpoint。
+  - API 调用统一遵循 RESTful 规范，请求体需包含 `input`（消息数组）、`session_id` 等字段；文件需通过 `file_list`（URL）或 `session_file_id`（上传 API 返回 ID）传递 [文件问答](../../raw/application-user-guide/llm-application/file-q-a.md)。
+  - 高代码应用建议启用网关功能，通过自定义域名和 Token 鉴权接入生产环境。
 
 ## 限制和注意事项
 
-- **强制发布要求**：所有应用类型均需完成“发布”操作才能通过 API 或第三方渠道调用，未发布应用仅限控制台内测试 [智能体应用](../../raw/application-user-guide/llm-application/single-agent-application.md)。  
-- **文件生命周期**：通过聊天窗口上传的文件**仅在当前会话有效**，刷新或关闭页面即失效；通过 API 上传的 `session_file_id` 有效期为 24 小时 [文件问答](../../raw/application-user-guide/llm-application/file-q-a.md)。  
-- **计费关键点**：  
-  - 模型调用费用按输入/输出 [Token](../concepts/token.md) 计费，**知识库召回内容计入输入 [Token](../concepts/token.md)**，可能显著增加成本；  
-  - 全文引用模式因整文件入参，Token 消耗远高于切片检索模式；  
-  - MCP 工具调用可能产生第三方费用（如天气 API），百炼平台不收取该部分费用 [新版智能体应用](../../raw/application-user-guide/llm-application/new-single-agent-application.md)。  
-- **权限依赖**：RAM 子账号创建应用并发布时，需提前授予 `ram:CreateServiceLinkedRole` 权限，否则发布失败 [智能体应用](../../raw/application-user-guide/llm-application/single-agent-application.md)。  
-- **地域限制**：文件问答功能当前仅支持中国大陆版（北京地域），其他地域暂不可用 [文件问答](../../raw/application-user-guide/llm-application/file-q-a.md)。
+- **功能限制**：
+  - 智能体[长期记忆](../concepts/long-term-memory.md)功能当前未上线，仅支持短期记忆（0–30 轮）。
+  - 工作流中 `imageList` 仅在启用“自定义缓存”的节点（如大模型、意图分类）中可用，其他节点无法直接访问。
+  - 文件问答中，聊天窗口上传的文件**仅在当前会话有效**，刷新或关闭页面即失效；生产环境应使用 `session_file_id` 方式 [文件问答](../../raw/application-user-guide/llm-application/file-q-a.md)。
+- **计费关键点**：
+  - 模型调用费用按输入/输出 token 计费，其中知识库召回内容、文件解析文本、记忆体内容均计入输入 token（记忆体内容暂不计费）。
+  - 工具调用（MCP/插件）可能产生额外费用，部分由第三方收取，百炼不代收。
+  - 高代码应用部署后即开始计费，包括函数计算、API 网关、存储及模型调用。
+- **安全与权限**：
+  - 发布应用需确保 RAM 账号具备 `ram:CreateServiceLinkedRole` 权限，否则失败 [智能体应用](../../raw/application-user-guide/llm-application/single-agent-application.md)。
+  - 环境变量（如 API Key）应在“环境”配置项中设置，避免硬编码于技能代码中。
+- **调试建议**：
+  - 新版智能体可通过“卡片流”查看完整 `Thinking → Tool Call → Reflection` 过程，是定位非预期行为的首选手段。
+  - 工作流调试应逐节点验证输出变量（如 `大模型1/result`），利用会话变量追踪数据流向。
+  - 文件问答若结果不准确，优先检查是否因 token 截断导致信息丢失，或切换至 `切片检索` 模式优化长文档处理。
 
 ## 来源文档
 
 - [应用类型介绍](../../raw/application-user-guide/llm-application/application-introduction.md)
 - [新版智能体应用](../../raw/application-user-guide/llm-application/new-single-agent-application.md)
 - [智能体应用](../../raw/application-user-guide/llm-application/single-agent-application.md)
-- [工作流应用](../../raw/application-user-guide/llm-application/workflow-application.md)
 - [高代码应用](../../raw/application-user-guide/llm-application/rich-code-application.md)
+- [工作流应用](../../raw/application-user-guide/llm-application/workflow-application.md)
 - [文件问答](../../raw/application-user-guide/llm-application/file-q-a.md)
 
 

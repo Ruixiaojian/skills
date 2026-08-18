@@ -1,7 +1,5 @@
 # 错误码
 
-\[INFO\] Doc info: docId=8654856, topicId=2614202, spaceId=2486 \[INFO\] Document content read: nodeId=4757773, 188539 chars       错误码 
-
 本文介绍使用阿里云百炼服务可能出现的错误信息及解决方案。
 
 ## **使用阿里云 AI 助理**
@@ -37,7 +35,7 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
 
 ## **400-InvalidParameter**
 
-### **parameter.enable\_thinking must be set to false for non-streaming calls** **/** parameter.enable\_thinking only support stream call
+### **parameter.enable\_thinking must be set to false for non-streaming calls****/** parameter.enable\_thinking only support stream call
 
 **原因：** 使用非流式输出方式调用了思考模式模型。
 
@@ -79,7 +77,7 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
 
 **解决方案：** 请将`incremental_output`参数设置为`true`再调用，API将返回增量内容。
 
-### **Range of input length should be \[1, xxx\]**
+### **Range of input length should be \[1, xxx\]（InternalError.Algo.InvalidParameter）**
 
 **原因：** 调用模型时输入内容长度超过模型上限。
 
@@ -380,6 +378,21 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
 
 **解决方案：** 请修改输入格式为字符串或字符串列表。
 
+### **No backend server available**
+
+**原因：** 百炼平台后端服务暂时不可用，可能由服务更新、扩容、资源调度或临时故障导致。
+
+**解决方案：**
+
+1.  前往阿里云控制台的[费用与成本](https://usercenter2.aliyun.com/home)页面，确认账号不存在欠费。已欠费请及时充值，充值后等待几分钟生效。
+    
+2.  使用 `curl` 或 `ping` 测试本地网络到 `dashscope.aliyuncs.com` 的连通性，排除网络或防火墙拦截。
+    
+3.  登录阿里云百炼控制台，查看所调用服务的状态是否正常。
+    
+4.  确认账号与网络均正常后，等待几分钟重新调用 API。
+    
+
 ### **File \[id:file-fe-xxx\] format is not supported.**
 
 **原因：** Qwen-Long模型仅限于处理纯文本格式文件（TXT、DOCX、PDF、EPUB、MOBI、MD），不支持图片或扫描文档。
@@ -571,7 +584,7 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
     
     > 使用 Base64 或本地路径可避免服务端下载超时，提升稳定性。
     
--   **放行 `DashScopeUserBot`**
+-   **放行** `**DashScopeUserBot**`
     
     若图片托管在您控制的服务器上，请在安全策略中放行 User-Agent 包含 `DashScopeUserBot` 的请求。也可改用[传入本地文件（Base64 编码或文件路径）](https://help.aliyun.com/zh/model-studio/vision#d987f8de5395x)的方式，避免服务端下载公网 URL。
     
@@ -595,7 +608,7 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
     
     **解决方案：**
     
-    1.  通过DashScope使用qwen3.7-plus、qwen3-vl-plus等**多模态模型**时：需使用MultiModalConversation.call() 或multimodal-generation端点，具体参考[图像与视频理解](https://help.aliyun.com/zh/model-studio/vision)。
+    1.  通过DashScope使用qwen3.7-plus、qwen3-vl-plus、qwen3.8-max等**多模态模型**时：需使用MultiModalConversation.call() 或multimodal-generation端点，具体参考[图像与视频理解](https://help.aliyun.com/zh/model-studio/vision)。从纯文本模型（如qwen3.7-max）切换为多模态模型（如qwen3.8-max）时，需将调用方式从Generation.call() 改为MultiModalConversation.call()，否则会返回url error。
         
         > 若使用 spring-ai-alibaba 框架，请确认是否设置多模态参数[withMultiModel](https://github.com/spring-ai-alibaba/examples/blob/c66ffdec789defe4adf86b34bac0084df3b71e92/spring-ai-alibaba-multi-model-example/dashscope-multi-model/src/main/java/com/alibaba/cloud/ai/example/multi/controller/MultiModelController.java#L82)。
         
@@ -648,18 +661,6 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
 **原因：** 缺少入参，或入参格式错误。
 
 **解决方案：** 请检查请求参数是否完整且格式正确。
-
-### **Invalid ext\_bbox.**
-
-**原因：** 输入的ext\_bbox无效。
-
-**解决方案：** 详情参见[Emoji 视频生成](https://help.aliyun.com/zh/model-studio/emoji-api)。
-
-### **Driven not exist: driven\_id.**
-
-**原因：** 输入的driven\_id不存在。
-
-**解决方案：** 详情参见[Emoji 视频生成](https://help.aliyun.com/zh/model-studio/emoji-api)。
 
 ### **Missing training files.**
 
@@ -805,21 +806,15 @@ Request ID 格式为 UUID（例如 `649b2bbc-c541-9e16-9845-db7fe4fe5b2d`），�
 
 ### **The request parameter is invalid, please check the request parameter.**
 
-**原因：** `clothes_type`入参不合规。
+**原因：** 该报错为多场景通用报错：可能是`clothes_type`入参不合规（AI试衣-图片分割），也可能是画幅入参不合规。
 
-**解决方案：** 详情参见[AI试衣-图片分割](https://help.aliyun.com/zh/model-studio/aitryon-parsing-api)。
+**解决方案：** 详情参见[AI试衣-图片分割](https://help.aliyun.com/zh/model-studio/aitryon-parsing-api)；若为画幅入参问题，可选"1:1"或"3:4"。
 
 ### **The type or value of {parameter} is out of definition.**
 
 **原因：** 参数类型或值不符合要求。
 
 **解决方案：** 详情参见[LivePortrait 视频生成](https://help.aliyun.com/zh/model-studio/liveportrait-api)。
-
-### **The request parameter is invalid, please check the request parameter.**
-
-**原因：** 画幅入参不合规。
-
-**解决方案：** 可选"1:1"或"3:4"。
 
 ### **request timeout after 23 seconds.**
 
@@ -1121,7 +1116,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请更换或修改输入图片后重试；若确认图片内容合规仍被持续拦截，可提交工单进一步核实。
 
-## **400-APIConnectionError**
+## **APIConnectionError（客户端网络异常，服务端未返回状态码）**
 
 ### **Connection error.**
 
@@ -1412,7 +1407,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 请上传单人照。
 
-## **400-** InvalidPerson
+## **400-**InvalidPerson
 
 ### The input image has no human body or multi human bodies. Please upload other image with single person.
 
@@ -1917,7 +1912,9 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 ### **Access denied.**
 
-**原因：** 无权访问此模型。可能因该模型需申请权限，或模型免费额度已耗尽且不支持付费使用（如 `deepseek-r1-distill-llama-70b`）。
+**原因：** 无权访问此模型。可能因该模型需申请权限、模型免费额度已耗尽且不支持付费使用（如 `deepseek-r1-distill-llama-70b`），或该模型已下线。
+
+**解决方案：** 若该模型已下线，请在[模型下线机制说明](https://help.aliyun.com/zh/model-studio/model-depreciation)中确认其下线状态，并改用该文档推荐的替代模型。
 
 **使用通用 API Key 调用 Token Plan 专属模型**
 
@@ -2190,7 +2187,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **原因：** 当前并发请求数超出平台动态分配的上限。
 
-**解决方案：** 等待片刻后重试即可。平台会根据整体资源负载动态调整并发上限，高峰时段可能触发此限制。如需提升 TPM 额度，可在百炼控制台的[**限流提额**](https://help.aliyun.com/zh/model-studio/rate-limit#h2-title-temp-limit-raise)页面申请临时限流额度提升。
+**解决方案：** 等待片刻后重试即可。平台会根据整体资源负载动态调整并发上限，高峰时段可能触发此限制。
 
 ## **429-CommodityNotPurchased**
 
@@ -2212,7 +2209,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **原因：** 模型推理商品已失效。
 
-## **430-Audio.** DecoderError
+## **430-Audio.**DecoderError
 
 ### Decoder audio file failed.
 
@@ -2220,7 +2217,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案**：建议通过工具（如ffprobe、mediainfo）或命令（如Linux/macOS的file命令）确认音频文件的实际编码格式，以确保符合要求。
 
-## **430-Audio.** FileSizeExceed
+## **430-Audio.**FileSizeExceed
 
 ### **File too large**
 
@@ -2228,7 +2225,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 用于声音复刻的音频文件需10M以内。
 
-## **430-Audio.** AudioRateError
+## **430-Audio.**AudioRateError
 
 ### **File sample rate unsupported**
 
@@ -2236,7 +2233,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：** 采样率设置为16KHz及以上。
 
-## **430-Audio.** AudioSilentError
+## **430-Audio.**AudioSilentError
 
 ### **Silent file unsupported.**
 
@@ -2775,6 +2772,17 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 3.  检查 finish-task 指令：确保 payload 中包含 `"input": {}`。
     
 
+### **close code 1007 Model not found**
+
+**原因：**通过 WebSocket 协议调用实时模型（如 Qwen3-Omni-Flash-Realtime）时，请求中的模型名称错误，或该模型服务尚未开通。服务端以 `close code 1007` 关闭连接，reason 为 `Model not found`。
+
+**解决方案：**
+
+-   请对照[模型列表](https://help.aliyun.com/zh/model-studio/models)中的模型名称，检查您输入的模型名称（参数 `model` 的取值）是否正确。实时模型的名称含 `-realtime` 等后缀，不可省略或改写。
+    
+-   请前往[模型广场](https://bailian.console.aliyun.com/?tab=model#/model-market)确认该模型服务是否已开通；未开通时请先开通再重试。
+    
+
 ## **200-** BailianGateway.Workspace.NotAuthorised
 
 **控制台出现错误信息“部分功能使用受限”。**
@@ -2783,7 +2791,7 @@ A：请核对资源包的可抵扣范围。以qwen-plus/qwen-plus-latest系列�
 
 **解决方案：**（1）请重新访问百炼控制台首页，再导航到目标页面。（2）需要主账号或具有管理员权限的 RAM 账号为该子账号开通对应业务空间的权限。
 
-## **200-** BailianGateway.Team.NotAuthorised
+## **200-**BailianGateway.Team.NotAuthorised
 
 **原因：**当前 RAM 子账号没有所访问团队（组织）的权限。当 RAM 子账号访问其未被授权的团队（组织）资源时，网关的团队级授权校验未通过，返回此报错。
 

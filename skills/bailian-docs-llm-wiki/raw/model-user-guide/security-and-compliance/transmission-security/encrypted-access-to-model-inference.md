@@ -4,7 +4,7 @@
 
 ## 加解密过程
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3732870871/CAEQWhiBgMDutN2xvBkiIGU1NWJmYmRkYzEzMTQ4YTU5YTg5YmJiZWVkODk1ZWQw4860485_20250226112255.459.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/8460407871/CAEQWhiBgMDutN2xvBkiIGU1NWJmYmRkYzEzMTQ4YTU5YTg5YmJiZWVkODk1ZWQw4860485_20250226112255.459.svg)
 
 采用混合加密机制：数据由AES对称算法加密，其密钥通过RSA非对称加密实现安全传输。
 
@@ -12,7 +12,7 @@
     
     -   生成AES对称密钥。AES是一种高效的对称加密算法，在此用于加密`input`内容。
         
-        > **说明：**`input`为大模型应用调用请求中的核心对象，包含必选的提示词（`prompt`）和可选的历史对话记录（`messages`）等参数。
+        > **说明：**`input`为大模型应用调用请求中的核心对象，包含对话消息（`messages`）等参数，本文示例均通过`messages`传入对话内容。
         
     -   使用密钥对`input`内容进行加密。
         
@@ -35,7 +35,7 @@
 
 ## 前提条件
 
-已开通阿里云百炼服务并获得API-KEY：[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
+已开通阿里云百炼服务并获得API-KEY：[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
 
 > **重要：**建议您将API-KEY配置到环境变量中以降低API-KEY的泄漏风险，配置方法可参考[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。您也可以在代码中配置API-KEY，但是泄漏风险会提高。
 
@@ -148,8 +148,23 @@ DashScope SDK会自动完成解密，返回的响应内容为明文，无需手�
 
 ```
 {
-    "finish_reason": "stop",
-    "text": "我是Qwen，由阿里云开发的超大规模语言模型。我的目标是帮助用户更高效地获取信息、解决各种问题并激发创造力。无论是回答问题、提供信息还是进行创意性的讨论，我都会尽力提供支持。有什么我可以帮到你的吗？"
+    "request_id": "902fee3b-f7f0-9a8c-96a1-6b4ea25af114",
+    "output": {
+        "choices": [
+            {
+                "finish_reason": "stop",
+                "message": {
+                    "role": "assistant",
+                    "content": "我是Qwen，由阿里云开发的超大规模语言模型。我的目标是帮助用户更高效地获取信息、解决各种问题并激发创造力。无论是回答问题、提供信息还是进行创意性的讨论，我都会尽力提供支持。有什么我可以帮到你的吗？"
+                }
+            }
+        ]
+    },
+    "usage": {
+        "input_tokens": 22,
+        "output_tokens": 62,
+        "total_tokens": 84
+    }
 }
 ```
 
@@ -182,8 +197,23 @@ DashScope SDK会自动完成解密，返回的响应内容为明文，无需手�
 
 ```
 {
-    "finish_reason": "stop",
-    "text": "我是Qwen，由阿里云开发的超大规模语言模型。我的目标是帮助用户更高效地获取信息、解决各种问题并激发创造力。无论是回答问题、提供信息还是进行创意性的讨论，我都会尽力提供支持。有什么我可以帮到你的吗？"
+    "request_id": "902fee3b-f7f0-9a8c-96a1-6b4ea25af114",
+    "output": {
+        "choices": [
+            {
+                "finish_reason": "stop",
+                "message": {
+                    "role": "assistant",
+                    "content": "我是Qwen，由阿里云开发的超大规模语言模型。我的目标是帮助用户更高效地获取信息、解决各种问题并激发创造力。无论是回答问题、提供信息还是进行创意性的讨论，我都会尽力提供支持。有什么我可以帮到你的吗？"
+                }
+            }
+        ]
+    },
+    "usage": {
+        "input_tokens": 22,
+        "output_tokens": 62,
+        "total_tokens": 84
+    }
 }
 ```
 
@@ -289,7 +319,7 @@ DashScope SDK会自动完成解密，返回的响应内容为明文，无需手�
         
 2.  **生成初始向量（IV）**
     
-    生成GCM加密所需的随机初始化向量：使用安全的随机数生成器生成一个12字节的随机字节序列，然后将这个字节序列进行Base64编码得到IV。
+    生成GCM加密所需的随机初始化向量（IV）：使用安全的随机数生成器生成一个12字节的随机字节序列，该字节序列本身即为IV；将IV进行Base64编码仅用于放入请求头传输。
     
     **示例代码**：
     
@@ -501,7 +531,7 @@ Java
 private static String sendEncryptedRequest(String apiKey, String publicKeyId, String encryptedAesKey, byte[] iv, String encryptedInput) throws Exception {
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder().build();
         JSONObject requestBodyJson = new JSONObject();
-        requestBodyJson.put("model", "qwen-max");
+        requestBodyJson.put("model", "qwen-plus");
         requestBodyJson.put("input", encryptedInput);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), requestBodyJson.toJSONString());
         JSONObject headerJson = new JSONObject();
@@ -540,7 +570,7 @@ def send_encrypted_request(api_key, public_key_id, encrypted_aes_key, iv, encryp
     }
     # 构建请求体
     payload = {
-        "model": "qwen-max",
+        "model": "qwen-plus",
         "input": encrypted_input
     }
     # 发送POST请求
@@ -706,7 +736,7 @@ public class Main {
     private static String sendEncryptedRequest(String apiKey, String publicKeyId, String encryptedAesKey, byte[] iv, String encryptedInput) throws Exception {
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder().build();
         JSONObject requestBodyJson = new JSONObject();
-        requestBodyJson.put("model", "qwen-max");
+        requestBodyJson.put("model", "qwen-plus");
         requestBodyJson.put("input", encryptedInput);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), requestBodyJson.toJSONString());
         JSONObject headerJson = new JSONObject();
@@ -830,7 +860,7 @@ def send_encrypted_request(api_key, public_key_id, encrypted_aes_key, iv, encryp
     }
     # 构建请求体
     payload = {
-        "model": "qwen-max",
+        "model": "qwen-plus",
         "input": encrypted_input
     }
     # 发送POST请求
@@ -870,12 +900,19 @@ if __name__ == "__main__":
 
 **响应示例**
 
-DashScope SDK会自动完成解密，返回的响应内容为明文，无需手动解密。
+HTTP 调用返回的`output`字段为Base64编码的密文，需按照上文"三、解密响应数据"的说明手动解密。解密后的`output`内容示例如下：
 
 ```
 {
-    "finish_reason": "stop",
-    "text": "我是Qwen，由阿里云开发的超大规模语言模型。我的目标是帮助用户更高效地获取信息、解决各种问题并激发创造力。无论是回答问题、提供信息还是进行创意性的讨论，我都会尽力提供支持。有什么我可以帮到你的吗？"
+    "choices": [
+        {
+            "finish_reason": "stop",
+            "message": {
+                "role": "assistant",
+                "content": "我是Qwen，由阿里云开发的超大规模语言模型。我的目标是帮助用户更高效地获取信息、解决各种问题并激发创造力。无论是回答问题、提供信息还是进行创意性的讨论，我都会尽力提供支持。有什么我可以帮到你的吗？"
+            }
+        }
+    ]
 }
 ```
 

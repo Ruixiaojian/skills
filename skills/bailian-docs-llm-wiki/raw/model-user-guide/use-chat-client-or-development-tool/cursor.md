@@ -35,6 +35,8 @@ Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beiji
 
 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)
 
+部分模型名称需调整：glm-5.2 写为 **glm-5-2**。
+
 ### Token Plan 团队版
 
 **API Key**
@@ -109,10 +111,10 @@ Coding Plan [支持的模型](https://help.aliyun.com/zh/model-studio/coding-pla
 3.  直接用自然语言描述需求即可开始使用，例如：
     
     ```
-    帮我生成 6 张亚马逊电商主图，产品是白色无线蓝牙耳机。
+    帮我为产品官网项目生成 6 张白色无线蓝牙耳机的商品展示图。
     ```
     ```
-    帮我生成一段 30 秒的白色无线蓝牙耳机产品演示视频。
+    帮我生成一段 30 秒的白色无线蓝牙耳机产品演示视频，用于官网首页展示。
     ```
     
 

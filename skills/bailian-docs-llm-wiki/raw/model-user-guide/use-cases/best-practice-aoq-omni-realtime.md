@@ -86,6 +86,14 @@ dependencies {
 3.  在 `EntryAbility` 中通过 `abilityAccessCtrl.createAtManager().requestPermissionsFromUser` 触发运行时授权。
     
 
+## **体验 Demo**
+
+阿里云百炼提供适用于 Android 平台的 Demo，可用于快速验证 AOQ 接入效果。下载 APK 并配置 API Key 和 `workspaceId` 后，即可体验部分模型。
+
+扫描以下二维码下载并安装 Android Demo：
+
+![Demo 下载二维码](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7714207871/p1095700.png)
+
 ## **AppServer获取Token**
 
 请按照[Token鉴权](https://help.aliyun.com/zh/model-studio/realtime-token-authentication)的 AOQ 章节搭建获取 Token 的 AppServer。每次通话前，客户端需要向业务侧 AppServer 请求一次 Token。
@@ -503,17 +511,15 @@ engine.switchCamera(AoqCameraDirection.AoqCameraDirectionBack);
 4.  **后台续传**：如需通话切到后台后继续传音频，`Info.plist` 必须开启 `UIBackgroundModes = audio`，并在前台时正确激活 `AVAudioSession`（SDK 会处理大部分情况，业务侧用 `setAudioSessionRestriction:` 可精细控制是否让 SDK 接管）。
     
 
-## **Demo 示例下载**
+## **iOS Demo 源码**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5762814871/p1087917.png)
+![iOS Demo 界面](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5762814871/p1087917.png)
 
-示例源码下载：
-
-**iOS：**[aoqdemo.zip](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260715/grpnos/aoqdemo.zip)
+如需参考 iOS 端的 AOQ 接入实现，请下载示例源码：[aoqdemo.zip](https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260715/grpnos/aoqdemo.zip)。
 
 ## **相关文档**
 
--   AOQ Client SDK 详细 API：[AOQ SDK简介](https://help.aliyun.com/zh/model-studio/realtime-api-aoq-sdk-desc/)
+-   AOQ Client SDK 详细 API：[SDK简介](https://help.aliyun.com/zh/model-studio/realtime-api-aoq-sdk-desc/)
     
 -   qwen3.5-omni-plus-realtime 模型客户端事件：[客户端事件](https://help.aliyun.com/zh/model-studio/client-events)
     

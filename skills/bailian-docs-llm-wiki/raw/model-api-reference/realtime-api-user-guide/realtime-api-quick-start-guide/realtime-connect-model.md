@@ -15,7 +15,7 @@
 
 扫描以下二维码下载 Demo：
 
-![Demo 下载二维码](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/1342546871/p1094466.png)
+![Demo 下载二维码](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7714207871/p1095700.png)
 
 ## **AOQ 接入**
 

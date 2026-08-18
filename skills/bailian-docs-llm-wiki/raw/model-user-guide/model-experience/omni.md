@@ -803,7 +803,7 @@ Qwen3.5-Livetranslate支持60种语言（29种音频+文本，31种仅文本）�
 
 WebSocket
 
-文本、音频、图片
+文本、音频、图片、视频
 
 支持
 
@@ -827,7 +827,7 @@ HTTP
 
 WebSocket
 
-文本、音频、图片
+文本、音频、图片、视频
 
 支持
 
@@ -1140,6 +1140,14 @@ WebSocket
 WebSocket
 
 音频
+
+60
+
+`qwen3.5-livetranslate-flash`
+
+HTTP
+
+音频、视频
 
 60
 

@@ -1,66 +1,65 @@
 # model evaluation introduction
 
-模型评测是百炼平台提供的模型能力量化评估功能，支持通过自定义或基线方式对文本生成类模型进行多维度打分与对比。它帮助开发者在模型选型、调优验证、质量监控等场景中基于客观指标做出技术决策。该功能以数据集、评测维度和评测任务为三大核心要素，覆盖全自动（AI/规则）与人工评估范式。
+模型评测是百炼平台用于量化评估文本生成类模型能力的核心功能，支持通过自定义或基线方式，结合多种评分器类型对模型输出进行打分、对比与分析。其核心在于将抽象的“模型质量”转化为可复用、可配置、可追踪的结构化指标。评测结果可用于模型选型、调优验证、持续监控等关键研发环节。
 
 ## 支持的模型/功能
 
-- **支持模型类型**：当前仅支持文本生成类模型（如 Qwen 系列、Llama 衍生模型等），不支持[多模态](../concepts/multi-modal.md)、语音或结构化输出模型；预置模型与调优后模型均可作为被评测对象 [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md)。
-- **评测方式**：
-  - **自定义评测**：用户自主提供评测数据集（EvaluationSet 类型）与自定义维度，支持大模型评估、规则评估、人工评估三种评分范式；
-  - **基线评测**：使用平台预置公开数据集（如 C-Eval、GSM8K、BBH），仅限北京地域可用，不支持维度配置与结果下载 [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md)。
-- **复用能力**：评测维度创建为模板后可被多个评测任务引用，实现评估标准统一 [评测维度](../../raw/model-user-guide/model-evaluation-introduction/evaluation-metrics.md)。
+百炼模型评测当前**仅支持文本生成类模型**（如 Qwen 系列、Llama 衍生模型等），不支持多模态、语音或结构化输出模型。功能上分为两类：
+
+- **自定义评测**：用户自主准备评测数据集（EvaluationSet 类型）、创建评测维度、选择被测模型并执行端到端评测。支持三种评分方式：  
+  - **大模型评估**（AI 自动评测）：由裁判模型（如千问-Max）按 Prompt 指导进行语义级打分或分类；  
+  - **规则评估**（自动化指标）：基于算法（BLEU/ROUGE/Cosine/Fuzzy Match 等）或字符串逻辑（相等/包含）直接计算；  
+  - **人工评估**（人工标注）：由评测人员逐条标注 Pass/Fail 标签，适用于主观性强的场景。  
+  详见 [评测维度](../../raw/model-user-guide/model-evaluation-introduction/evaluation-metrics.md)。
+
+- **基线评测**：使用平台预置的公开标准数据集（如 C-Eval、GSM8K、BBH）快速获取模型基础能力基准分，**仅北京地域可用**，且不支持自定义维度、结果下载或人工标注。该能力与自定义评测互为补充，但不可混用。
+
+> **注意**：文档 2 中称“维度类型创建后不可修改。选错类型需删除维度重新创建，已关联该维度的评测任务不受影响”，而文档 1 明确强调“评分器类型创建后不可更改，选错只能删除重建”，且补充说明“如果该维度已被评测任务引用，则无法删除，需先移除关联的评测任务后再删除”。二者存在矛盾——文档 1 的限制更严格（引用即阻断删除），实际操作应以文档 1 为准，即**维度被引用时不可删除，必须先解绑任务**。
 
 ## 关键参数
 
-| 参数类别 | 参数名 | 说明 | 约束与建议 |
-|----------|--------|------|------------|
-| **维度通用参数** | 维度名称 | 必填，≤20 字符 | 建议采用“评估方面+评估方式”命名，如`回答准确性-LLM评分` [评测维度](../../raw/model-user-guide/model-evaluation-introduction/evaluation-metrics.md) |
-| | 描述 | 选填，≤100 字符 | 补充说明评判目标 |
-| **大模型评估专用** | 裁判模型 | 如千问-Max（推荐）、Qwen1.5-72B 等 | 影响评分质量与费用；仅大模型评估类型需配置 [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md) |
-| | 评分器 Prompt | 含 `${prompt}` / `${output}` / `${completion}` 变量 | 至少含一个变量；长度 ≤50000 字符；模糊描述易致评分集中 [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md) |
-| | 评分范围（数值型） | 整数区间，如 `0–5` | 默认 `0–5`；范围过宽（如 `0–100`）会降低 LLM 评分一致性 [评测维度](../../raw/model-user-guide/model-evaluation-introduction/evaluation-metrics.md) |
-| | 通过阈值 | 数值型/相似度型必填，步长 0.1 或 0.01 | 用于统计通过率；与评分范围解耦（例：0–5 分时设阈值 3.0） [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md) |
-| **规则评估专用** | 相似度算法 | ROUGE-1/2/L、BLEU、Cosine、Fuzzy Match、Accuracy | 摘要用 ROUGE-L，翻译用 BLEU，语义相关用 Cosine [评测维度](../../raw/model-user-guide/model-evaluation-introduction/evaluation-metrics.md) |
-| | 匹配规则 | 相等 / 不相等 / 包含 | Function Calling 场景常用“包含”，NL2SQL 常用“相等” [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md) |
+所有评测维度均需配置以下公共参数，部分类型还需专属参数：
 
-> **注意**：文档1称“维度类型创建后不可修改”，文档2亦强调“评分器类型创建后不可更改，选错只能删除重建”。二者一致，无矛盾。
+| 参数 | 说明 | 是否必填 | 取值约束 |
+|------|------|----------|----------|
+| 维度名称 | 模板唯一标识 | 是 | ≤20 字符，建议采用“评估方面+评估方式”命名（如`回答准确性-LLM评分`） |
+| 描述 | 补充说明 | 否 | ≤100 字符 |
+| 类型 | 5 种评分器之一 | 是 | 创建后不可更改 |
+
+**类型专属关键参数**：
+- **大模型评估-分类型**：裁判模型（必填）、评分器 Prompt（必含 `${prompt}`/`${output}`/`${completion}` 至少一个变量）、Pass/Fail 标签（互斥且不重复）；
+- **大模型评估-数值型**：同上 + 评分范围（整数，默认 `0~5`）、通过阈值（小数，步长 `0.1`，默认 `3.0`）；
+- **规则评估-字符串匹配**：评测输入（参考文本）、比较操作符（相等/不相等/包含）、模型输出（待匹配文本），至少一侧含变量；
+- **规则评估-文本相似度**：评测输入、模型输出、评估指标（7 种算法可选）、通过阈值（`0~1`，步长 `0.01`）；
+- **人工评估-分类型**：仅需配置 Pass/Fail 标签。
+
+详细参数说明与配置逻辑请参见 [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md)。
 
 ## 使用方式
 
-1. **前置准备**  
-   - 开通百炼账号并访问[控制台模型评测页](https://bailian.console.aliyun.com/#/efm/model_evaluate/task/creation)；  
-   - 在**数据管理模块**上传评测集（EvaluationSet 类型），必须含 `Prompt` 和 `Completion` 两列（基线评测除外） [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md)。
+标准评测流程为四步闭环：  
+1. **准备数据集**：在数据管理模块上传 `EvaluationSet` 类型数据集（含 `Prompt` 和 `Completion` 列），或复用已有 `InferenceResultSet`（含 `Output`）；  
+2. **创建评测维度**：在控制台 **模型评测 > 评测维度** 页面创建模板，选择类型并完成参数配置；  
+3. **创建评测任务**：在 **模型评测 > 评测任务** 页面，选择“自定义评测”，指定被测模型、数据来源（数据集 or 推理结果集）、关联维度，并设置是否参与排行榜；  
+4. **查看结果**：任务完成后，在详情页的 **数据明细** Tab 查看逐样本评分，在 **指标统计** Tab 查看综合得分、通过率及分数分布图。
 
-2. **创建评测维度**  
-   - 进入**评测维度** Tab → **创建评测维度**；  
-   - 选择类型（如`大模型评估-数值型`）→ 配置裁判模型、评分器模板（推荐先用预置模板）→ 设置评分范围与通过阈值；  
-   - 自定义 Prompt 时务必引用 `${prompt}`、`${output}` 或 `${completion}` 变量 [评测维度](../../raw/model-user-guide/model-evaluation-introduction/evaluation-metrics.md)。
-
-3. **创建评测任务**  
-   - 进入**评测任务** Tab → **创建评测任务**；  
-   - 选择**自定义评测**（或北京地域的**基线评测**）→ 选定被评测模型 → 数据来源选**评测数据集**（触发推理，产生费用）或**推理结果集**（跳过推理，零推理费）→ 关联已建维度；  
-   - System Prompt 为被评测模型设定角色，多数场景可留空 [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md)。
-
-4. **查看与分析结果**  
-   - 任务状态为“评测完成”后，进入详情页：  
-     - **数据明细 Tab**：逐条查看 Prompt / Output / Completion 及各维度评分；  
-     - **指标统计 Tab**：关注综合得分（各维度平均分）、通过率（≥通过阈值样本占比）、分数分布图——避免仅依赖综合得分掩盖维度短板 [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md)。
+> **注意**：`System Prompt`（配置于评测任务）作用于被测模型，用于设定角色；而 `评分器 Prompt`（配置于评测维度）作用于裁判模型，用于指导评分。二者对象与费用归属不同，不可混淆。该区分在 [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md) 中有明确说明。
 
 ## 限制和注意事项
 
-- **地域限制**：基线评测仅在北京地域可用，其他地域控制台不显示该选项，属正常行为 [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md)。  
-- **数据格式强约束**：评测数据集必须为 EvaluationSet 类型且已发布版本；训练集、未发布数据集将导致任务失败 [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md)。  
-- **不可逆操作**：  
-  - 维度类型创建后不可修改，需删除重建（已关联任务不受影响）；  
-  - 任务提交后不可更换被评测模型或修改数据源；终止任务后已评测数据保留但无法恢复 [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md)。  
-- **费用敏感点**：  
-  - 大模型评估维度产生裁判模型 [Token](../concepts/token.md) 费用；规则评估与人工评估无此费用；  
-  - 使用**评测数据集**会触发被评测模型推理并计费，**推理结果集**则无推理费；建议小规模验证（50–100 条）后再全量运行 [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md)。  
-- **API 缺失**：当前模型评测功能**仅支持控制台操作**，不提供公开 API/SDK；需自动化流程可参考 PAI Judge Model API 替代 [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md)。
+- **地域限制**：基线评测仅在北京地域可用，其他地域控制台不显示该选项；
+- **模型限制**：仅支持文本生成类模型，不支持图像、音频等多模态模型；
+- **维度绑定约束**：评测维度被排行榜绑定后，删除该维度将导致排行榜无法创建新任务（绑定维度为空）；被评测任务引用时，维度不可删除；
+- **费用说明**：  
+  - 使用**大模型评估**维度会产生裁判模型推理费用（按 Token 计费）；  
+  - 使用**评测数据集**作为数据源会产生被测模型推理费用；  
+  - **规则评估**与**人工评估**无裁判模型费用；使用**推理结果集**可规避被测模型推理费用；
+- **成本优化建议**：优先用规则评估（零裁判费用）；首次评测用 50–100 条数据小规模验证配置；保存并复用推理结果集避免重复推理；
+- **配置风险提示**：评分器 Prompt 必须至少包含一个变量（`${prompt}`/`${output}`/`${completion}`），否则提交失败；Pass/Fail 标签不可重复，否则阻止提交；评分范围建议不超过 `0~10`，过大易降低 LLM 评分一致性。
 
 ## 来源文档
 
-- [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md)
 - [评测维度](../../raw/model-user-guide/model-evaluation-introduction/evaluation-metrics.md)
+- [模型评测](../../raw/model-user-guide/model-evaluation-introduction/model-evaluation-overview.md)
 
 

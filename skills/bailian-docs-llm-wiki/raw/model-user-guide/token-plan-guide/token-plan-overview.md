@@ -117,7 +117,7 @@ Token Plan 兼容 OpenAI 和 Anthropic 接口协议，任何支持自定义 **Ba
 
 **Harness 工具**
 
-支持多种 Harness 工具，以 Credits 统一抵扣（[查看详情](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview#tpp01-harness)）
+支持多种 Harness 工具，以 Credits 统一抵扣（[查看详情](https://help.aliyun.com/zh/model-studio/token-plan-harness-tool#tpws-models-team)）
 
 **团队管理**
 

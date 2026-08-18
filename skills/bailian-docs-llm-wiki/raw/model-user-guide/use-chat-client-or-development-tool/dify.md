@@ -4,7 +4,7 @@ Dify 是一个开源的大模型应用开发平台，您可以基于阿里云百
 
 ## **前提条件**
 
-您需要[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，并确保已开通阿里云百炼的模型服务。
+您需要[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，并确保已开通阿里云百炼的模型服务。
 
 **重要**
 
@@ -34,7 +34,7 @@ Dify 属于工作流/自动化平台，**不支持**使用 Token Plan 个人版�
 -   若使用新加坡地域模型，在卡片的 **API-KEY 设置**界面填入该地域的API Key，并设置**使用国际端点**为**是**。
     
 
-> 若 API Key 配置过程报错：**Invalid API-key provided**，可尝试安装较早版本的千问插件。
+> 若 API Key 配置过程报错：**Invalid API-key provided**，请参见 **1.1. 安装模型供应商** 中关于插件版本的说明。
 
 ![20251127172111](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/8671034671/p1030274.jpg)
 
@@ -83,11 +83,7 @@ Dify 具有多种大模型应用类型，请选择您使用的类型进行参考
     
     单击**添加消息**，在**USER**对应的消息下输入问题：“你是谁”，单击节点右上角的运行按钮![20251127203142](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/4671034671/p1030341.jpg)。
     
-    运行完成后，输出结果的`text`字段中，思考内容被\`
-    
-    ...
-    
-    \`标签包裹，标签之后为模型的回复正文。
+    运行完成后，输出结果的`text`字段中，思考内容被`<think>...</think>`标签包裹，标签之后为模型的回复正文。
     
     LLM节点返回的`text`字段包含思考与回复内容，您可以使用Dify的代码执行节点，通过正则表达式分别提取。
     
@@ -96,16 +92,20 @@ Dify 具有多种大模型应用类型，请选择您使用的类型进行参考
 
 1.  **创建知识库**
     
-
-创建一个[知识库](https://cloud.dify.ai/datasets)并进入。 2. **选择数据源**
-
-在此步骤上传您的知识库文件。 3. **文本分段与清洗**
-
-您可以在此步骤配置阿里云百炼提供的 Embedding 模型与 Rerank 模型，此处以 text-embedding-v4 与 gte-rerank-v2 为例。其余参数请您按需配置。
-
-> gte-rerank-v2仅支持。
-
-> Embedding 模型暂时无法选择multimodal-embedding-v1模型，敬请关注后续动态。
+    创建一个[知识库](https://cloud.dify.ai/datasets)并进入。
+    
+2.  **选择数据源**
+    
+    在此步骤上传您的知识库文件。
+    
+3.  **文本分段与清洗**
+    
+    您可以在此步骤配置阿里云百炼提供的 Embedding 模型与 Rerank 模型，此处以 text-embedding-v4 与 gte-rerank-v2 为例。其余参数请您按需配置。
+    
+    > gte-rerank-v2 仅支持华北2（北京）地域。
+    
+    > Embedding 模型暂时无法选择multimodal-embedding-v1模型，敬请关注后续动态。
+    
 
 ## **常见问题**
 
@@ -113,7 +113,7 @@ Dify 具有多种大模型应用类型，请选择您使用的类型进行参考
 
 A：有以下常见原因：
 
--   最新版插件性能可能不稳定，请尝试安装较低版本插件。
+-   最新版插件性能可能不稳定，请参见 **1.1. 安装模型供应商** 中关于插件版本的说明。
     
 -   使用了子业务空间的 API Key。`0.0.41`版本的千问插件会校验`qwen-turbo`模型调用权限，请为`qwen-turbo`[添加模型调用权限](https://help.aliyun.com/zh/model-studio/use-workspace#f2e68d7ba7ubk)。
     
@@ -153,7 +153,7 @@ A：Dify 没有提供万相模型相关的插件，通过Dify的Chatflow/工作�
     为了在其它大模型应用中使用万相的文生图/视频功能，您可以在界面右上方单击**发布**并选择**发布为工具**。
     
 
-> 模板使用的模型为北京地域的`wanx2.1-t2i-turbo``wan2.2-t2i-flash`（文生图）/`wanx2.1-t2v-turbo``wan2.1-t2v-turbo`（文生视频）。您可以在STEP1节点修改模型，在STEP1和STEP3节点修改地域API。
+> 模板使用的模型为北京地域的`wanx2.1-t2i-turbo`（文生图）/`wanx2.1-t2v-turbo`（文生视频）。您可以在STEP1节点修改模型，在STEP1和STEP3节点修改地域API。
 
 ### **Q4：如何私有化部署 Dify？**
 
