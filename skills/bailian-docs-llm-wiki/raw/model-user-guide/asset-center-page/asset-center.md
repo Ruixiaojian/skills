@@ -16,7 +16,7 @@
 
 ## 支持的模型
 
-当前资产中心支持的模型包括：`qwen-image-2.0-pro-2026-06-22`、`qwen-image-2.0-pro-2026-04-22`、`z-image`、`wan2.7-image-pro`、`wan2.7-image`、`wan2.7-videoedit`、`wan2.7-r2v`、`wan2.7-i2v`、`wan2.7-t2v`。
+当前资产中心支持的模型包括：`qwen-image-2.0-pro-2026-06-22`、`qwen-image-2.0-pro-2026-04-22`、`z-image`、`wan2.7-image-pro`、`wan2.7-image`、`wan2.7-videoedit`、`wan2.7-r2v`、`wan2.7-i2v`、`wan2.7-t2v`。支持的模型范围可能随产品迭代调整，请以控制台资产中心页面实际展示为准。
 
 > 当前资产中心支持管理图片和视频资产，暂不支持音频资产。
 

@@ -1,59 +1,66 @@
 # preparations
 
-在调用百炼平台模型服务前，开发者需完成 API Key 获取与配置、SDK 或 CLI 工具安装、环境适配等基础准备。这些步骤直接影响调用的安全性、兼容性与稳定性，是所有模型调用（文本、图像、语音、视频、向量等）的共同前置条件。本文档整合关键实践路径，聚焦可执行的技术要点。
+在调用百炼平台模型服务前，开发者需完成 API Key 获取与配置、SDK 或 CLI 工具安装、环境准备等基础步骤。这些操作是所有模型调用（文本、图像、视频、语音、向量等）的共同前置条件，直接影响服务可用性与安全性。本文档汇总关键准备事项，聚焦可执行的技术要点，避免冗余说明。
 
 ## 支持的模型/功能
 
 百炼平台支持全模态模型调用，包括：
-- **文本生成**：如 `qwen3-235b-a22b-instruct-2507`、`qwen3.7-max`、`deepseek-r1` 等；
-- **[多模态](../concepts/multi-modal.md)理解与生成**：如 `qwen3-vl-plus`（视觉理解）、`qwen3.5-omni-plus`（全模态对话）、`qwen-image-2.0`（文生图）、`happyhorse-1.1-t2v`（文生视频）；
-- **语音与音频**：如 `cosyvoice`（TTS）、`paraformer`（ASR）；
-- **结构化能力**：如 `response_format: {"type": "json_object"}`（需提示词含 `json` 关键词）；
-- **高级功能**：思考模式（`enable_thinking=true`，仅限流式）、联网搜索（`enable_search=true`，需模型支持）、工具调用（`tool_calls`）等。
+- **文本生成**：如 `qwen3.7-max`、`qwen3-235b-a22b-instruct-2507` 等；
+- **多模态理解与生成**：如 `qwen3.5-omni-plus`（支持图文音视频输入）、`qwen3-vl-plus`（视觉理解）、`qwen-image-2.0`（文生图）；
+- **语音与视频**：如 `cosyvoice`（TTS）、`paraformer`（ASR）、`happyhorse-1.1-t2v`（文生视频）；
+- **结构化能力**：如 JSON 输出、思考模式（`enable_thinking`）、联网搜索（`enable_search`）等高级功能。
 
-> **注意**：文档 4 明确指出 `Model not exist.` 错误的常见原因是混用开源社区模型名（如 `Qwen/Qwen3-235B...`）与百炼官方模型 ID（如 `qwen3-235b-a22b-instruct-2507`），请严格以 [模型列表](https://help.aliyun.com/zh/model-studio/models) 中的 ID 为准。该约束在 [原文标题](../../raw/model-api-reference/preparations/error-code.md) 中有详细说明。
+> **注意**：并非所有模型均支持全部功能。例如，`qwen3-235b-a22b-thinking-2507` 模型强制要求 `enable_thinking=true`，而纯文本模型（如 `qwen3-max`）不支持 `image_url` 类型的 `content` 元素 [错误码](../../raw/model-api-reference/preparations/error-code.md)。具体支持情况请以[模型列表](https://help.aliyun.com/zh/model-studio/models)为准。
 
 ## 关键参数
 
-调用时需关注以下核心参数及其取值范围（违反将触发 400 错误）：
+调用时需关注以下核心参数及其约束：
 
-| 参数 | 合法范围 | 说明 |
-|------|----------|------|
-| `temperature` | `[0.0, 2.0)` | 文档 4 要求必须为浮点数，且严格小于 2.0 |
-| `top_p` | `(0.0, 1.0]` | 必须大于 0 且小于等于 1 |
-| `max_tokens` | `[1, 模型最大输出 Token 数]` | 具体上限见各模型文档 |
-| `n`（生成数量） | `[1, 4]`（文本）或 `[1, 6]`（图像） | 图像生成上限为 6，见 [原文标题](../../raw/model-api-reference/preparations/use-model-studio-cli.md) |
-| `seed` | `[0, 9223372036854775807]` | DashScope 协议下整数范围严格限定 |
-| `thinking_budget` | 正整数，≤ 模型最大思维链长度 | 详见模型列表中“思维链长度”字段 |
-| `enable_thinking` | `true` 或 `false`，部分模型强制为 `true` | 如 `qwen3-235b-a22b-thinking-2507` 不允许设为 `false` |
-
-此外，结构化输出（`response_format={"type":"json_object"}`）要求提示词中必须包含 `json` 字样；思考模式与结构化输出互斥，启用前者时需关闭后者。
+| 参数 | 说明 | 合法范围 | 注意事项 |
+|--------|------|-----------|----------|
+| `model` | 模型 ID | 必须与[模型市场](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market)中开通的模型名称完全一致（大小写敏感、无空格） | 不可混用开源社区命名（如 `Qwen/Qwen3-235B...`），应使用百炼标准 ID（如 `qwen3-235b-a22b-instruct-2507`）[错误码](../../raw/model-api-reference/preparations/error-code.md) |
+| `temperature` | 采样温度 | `[0.0, 2.0)` | 超出范围将返回 `400-InvalidParameter` 错误 |
+| `top_p` | 核采样阈值 | `(0.0, 1.0]` | 同上 |
+| `max_tokens` | 最大输出 token 数 | `[1, 模型最大输出 Token]` | 超限需参考模型文档调整 |
+| `seed` | 随机种子 | `[0, 9223372036854775807]` | DashScope 协议下严格校验 |
+| `enable_thinking` | 是否启用思考模式 | `true` / `false` | 部分模型强制为 `true`；开启时必须配合 `stream=true` 和 `incremental_output=true`，且禁用 `response_format="json_object"` [错误码](../../raw/model-api-reference/preparations/error-code.md) |
+| `messages` / `prompt` | 输入内容 | 二者必选其一，不可同时为空或同时非空 | `messages` 格式需符合 OpenAI 或 DashScope 协议规范，`content` 字段类型需与模型能力匹配（纯文本模型仅接受字符串） |
 
 ## 使用方式
 
 ### 1. 获取与配置 API Key  
-通过 [百炼控制台密钥管理](https://bailian.console.aliyun.com/?tab=model#/api-key) 创建 API Key，并按归属账号（主账号或 RAM 用户）、业务空间（默认空间支持全部标准模型）、权限（IP 白名单/模型范围）进行精细化配置。推荐将 Key 配置为环境变量 `DASHSCOPE_API_KEY`，支持 Linux/macOS/Windows 全平台永久或临时设置，具体方法详见 [原文标题](../../raw/model-api-reference/preparations/get-api-key.md)。
+通过[获取与配置 API Key](../../raw/model-api-reference/preparations/get-api-key.md)完成：
+- 在控制台密钥管理页创建或复制 API Key；
+- 推荐配置为环境变量 `DASHSCOPE_API_KEY`（Linux/macOS/Windows 均有详细步骤）；
+- 若需权限隔离或成本核算，应选择非默认业务空间创建 Key；
+- **严禁**在客户端代码或不可信环境中硬编码长期有效 Key；高安全场景请使用[临时 API Key](https://help.aliyun.com/zh/model-studio/generate-temporary-api-key)（最长 1800 秒）。
 
 ### 2. 安装 SDK 或 CLI  
-- **SDK**：支持 OpenAI 兼容 SDK（Python/Node.js/Java/Go）或 DashScope 官方 SDK（Python/Java）。Python 环境需 `>=3.8`，Java 需 `>=8`，Go 需 `>=1.22`。安装命令统一为 `pip install -U openai` 或 `pip install -U dashscope`。  
-- **CLI**：`bailian-cli`（命令 `bl`）专为 AI Agent 设计，需 Node.js `>=22.12.0`，仅支持 `npm install -g bailian-cli` 安装。认证支持控制台 OAuth 登录（推荐）、API Key 直接登录、环境变量、配置文件等多种方式，详见 [原文标题](../../raw/model-api-reference/preparations/use-model-studio-cli.md)。
+- **SDK**：支持 Python（`openai` 或 `dashscope`）、Java（`dashscope-sdk-java` 或 `openai-java`）、Node.js（`openai`）、Go（`openai-go`）；详见[安装SDK](../../raw/model-api-reference/preparations/install-sdk.md)；
+- **CLI**：推荐使用 `bailian-cli`（`npm install -g bailian-cli`），支持浏览器登录（`bl auth login --console`）或 API Key 登录（`bl auth login --api-key <key>`），并提供 `bl text chat`、`bl image generate` 等开箱即用命令。
 
-### 3. 调用入口  
-- **HTTP 接口**：Base URL 分中国大陆版 `https://dashscope.aliyuncs.com/compatible-mode/v1` 与国际版 `https://dashscope-intl.aliyuncs.com/compatible-mode/v1`；  
-- **SDK/CLI**：自动适配，无需手动拼接 URL。
+### 3. 设置 Base URL 与地域  
+- [OpenAI 兼容接口](../concepts/openai-compatible-api.md) Base URL：
+  - 中国大陆版：`https://dashscope.aliyuncs.com/compatible-mode/v1`
+  - 国际版：`https://dashscope-intl.aliyuncs.com/compatible-mode/v1`
+- CLI 默认地域为 `cn`，可通过 `--region us` 或 `--region intl` 切换；
+- SDK 中需显式配置 `base_url`（OpenAI SDK）或 `api_base`（DashScope SDK）。
 
 ## 限制和注意事项
 
-- **API Key 安全**：严禁在客户端代码（浏览器、移动 App）或不可信环境中硬编码长期有效 Key；高风险场景应使用 [临时 API Key](https://help.aliyun.com/zh/model-studio/generate-temporary-api-key)（最长 1800 秒）。  
-- **地域与网络**：IPv6 白名单仅华北2（北京）支持；美国（弗吉尼亚）仅支持 IPv4；CLI 安装需确保能访问 `registry.npmjs.org`，否则需配置镜像代理。  
-- **模型能力边界**：纯文本模型（如 `qwen3-max`）不支持 `image_url` 等[多模态](../concepts/multi-modal.md) `content`，否则报错 `Unexpected item type in content`；思考模式模型（如 `qwen3.5-omni-plus`）强制要求 `stream=true` 和 `incremental_output=true`，详见 [原文标题](../../raw/model-api-reference/preparations/error-code.md)。  
-- **调试与排障**：所有失败请求务必记录 `Request ID`（UUID 格式），用于自助排查或提交工单；JSON 请求体需通过 `jsonlint.com` 等工具校验语法，避免因引号缺失、逗号冗余等低级错误导致 `Required body invalid`。
+- **API Key 限制**：单个业务空间最多创建 20 个 API Key；主账号下最多 20 个业务空间；IP 白名单最多支持 20 个地址或网段。
+- **模型调用限制**：不同模型对 `n`（生成数量）、`seed`、`max_tokens` 等参数有独立上限（如 `n` 通常为 `[1, 4]` 或 `[1, 6]`），超限将触发 `400-InvalidParameter` 错误。
+- **安全约束**：
+  - 环境变量配置后需重启 IDE/终端/服务进程才能生效；
+  - 使用 `sudo` 运行脚本时，需加 `-E` 参数传递环境变量（`sudo -E python xx.py`）；
+  - CLI 的 `--api-key` 参数仅当次生效，不落盘；持久化推荐 `bl auth login` 而非 `bl config set`（后者不校验 Key 有效性）。
+- **调试必备**：调用失败时务必记录 `Request ID`（UUID 格式），用于自助排查或提交工单；可结合[阿里云 AI 助理](https://www.aliyun.com/ai-assistant/)输入错误信息快速定位原因 [错误码](../../raw/model-api-reference/preparations/error-code.md)。
 
 ## 来源文档
 
 - [获取与配置 API Key](../../raw/model-api-reference/preparations/get-api-key.md)
-- [安装SDK](../../raw/model-api-reference/preparations/install-sdk.md)
 - [使用百炼 CLI](../../raw/model-api-reference/preparations/use-model-studio-cli.md)
+- [安装SDK](../../raw/model-api-reference/preparations/install-sdk.md)
 - [错误码](../../raw/model-api-reference/preparations/error-code.md)
 
 

@@ -4,7 +4,7 @@
 
 **重要**
 
-Moonshot-Kimi-K2-Instruct、kimi-k2-thinking 将于**2026年7月9日**下架。推荐转用：[qwen3.7-plus](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-plus)、[qwen3.8-max](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.8-max)、[qwen3.6-flash](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.6-flash)。
+Moonshot-Kimi-K2-Instruct、kimi-k2-thinking 已于**2026年7月9日**下架。推荐转用：[qwen3.7-plus](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.7-plus)、[qwen3.8-max](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.8-max)、[qwen3.6-flash](https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/qwen3.6-flash)。
 
 **支持的地域：**华北2（北京）、新加坡、日本（东京）、美国（弗吉尼亚）、德国（法兰克福）。
 
@@ -50,7 +50,7 @@ HTTP 请求地址：`POST https://{WorkspaceId}.ap-northeast-1.maas.aliyuncs.com
 
 纯文本模型（如 kimi-k2-thinking）的 HTTP 请求地址为`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
 
-多模态模型（如 kimi-k2.7-code、kimi-k2.6、kimi-k2.5）的 HTTP 请求地址为`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
+多模态模型（如 kimi-k3、kimi-k2.7-code、kimi-k2.6、kimi-k2.5）的 HTTP 请求地址为`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
 
 SDK调用配置的`base_url`：
 
@@ -84,7 +84,7 @@ dashscope.base_http_api_url = 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.co
 
 纯文本模型（如 kimi-k2-thinking）的 HTTP 请求地址为`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
 
-多模态模型（如 kimi-k2.7-code、kimi-k2.6、kimi-k2.5）的 HTTP 请求地址为`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
+多模态模型（如 kimi-k3、kimi-k2.7-code、kimi-k2.6、kimi-k2.5）的 HTTP 请求地址为`POST https://{WorkspaceId}.us-east-1.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
 
 SDK调用配置的`base_url`：
 
@@ -115,7 +115,7 @@ dashscope.base_http_api_url = 'https://{WorkspaceId}.us-east-1.maas.aliyuncs.com
 
 纯文本模型（如 kimi-k2-thinking）的 HTTP 请求地址为`POST https://{WorkspaceId}.eu-central-1.maas.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
 
-多模态模型（如 kimi-k2.7-code、kimi-k2.6、kimi-k2.5）的 HTTP 请求地址为`POST https://{WorkspaceId}.eu-central-1.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
+多模态模型（如 kimi-k3、kimi-k2.7-code、kimi-k2.6、kimi-k2.5）的 HTTP 请求地址为`POST https://{WorkspaceId}.eu-central-1.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
 
 SDK调用配置的`base_url`：
 
@@ -146,7 +146,7 @@ dashscope.base_http_api_url = 'https://{WorkspaceId}.eu-central-1.maas.aliyuncs.
 
 纯文本模型（如 kimi-k2-thinking）的 HTTP 请求地址为`POST https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
 
-多模态模型（如 kimi-k2.7-code、kimi-k2.6、kimi-k2.5）的 HTTP 请求地址为`POST https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
+多模态模型（如 kimi-k3、kimi-k2.7-code、kimi-k2.6、kimi-k2.5）的 HTTP 请求地址为`POST https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
 
 SDK调用配置的`base_url`：
 
@@ -180,7 +180,7 @@ dashscope.base_http_api_url = 'https://{WorkspaceId}.ap-southeast-1.maas.aliyunc
 
 纯文本模型（如 kimi-k2-thinking）的 HTTP 请求地址为`POST https://{WorkspaceId}.ap-northeast-1.maas.aliyuncs.com/api/v1/services/aigc/text-generation/generation`
 
-多模态模型（如 kimi-k2.7-code、kimi-k2.6、kimi-k2.5）的 HTTP 请求地址为`POST https://{WorkspaceId}.ap-northeast-1.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
+多模态模型（如 kimi-k3、kimi-k2.7-code、kimi-k2.6、kimi-k2.5）的 HTTP 请求地址为`POST https://{WorkspaceId}.ap-northeast-1.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation`
 
 SDK调用配置的`base_url`：
 
@@ -230,7 +230,7 @@ client = OpenAI(
 )
 
 completion = client.chat.completions.create(
-    model="kimi-k2.6",
+    model="kimi-k3",
     messages=[{"role": "user", "content": "你是谁"}],
     stream=True,
     extra_body={"enable_thinking": True},
@@ -306,7 +306,7 @@ async function main() {
     const messages = [{ role: 'user', content: '你是谁' }];
 
     const stream = await openai.chat.completions.create({
-        model: 'kimi-k2.6',
+        model: 'kimi-k3',
         messages,
         stream: true,
         enable_thinking: true,
@@ -384,7 +384,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
 -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
 -H "Content-Type: application/json" \
 -d '{
-    "model": "kimi-k2.6",
+    "model": "kimi-k3",
     "messages": [
         {
             "role": "user",
@@ -419,14 +419,14 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
     },
     "created": 1762753998,
     "system_fingerprint": null,
-    "model": "kimi-k2.6",
+    "model": "kimi-k3",
     "id": "chatcmpl-485ab490-90ec-48c3-85fa-1c732b683db2"
 }
 ```
 
 ## DashScope
 
-> 以下 DashScope 示例使用 `multimodal-generation` 端点调用 kimi-k2.6（支持文本与多模态）。更多多模态用法请参见[多模态调用示例](#af95c67524)。
+> 以下 DashScope 示例使用 `multimodal-generation` 端点调用 kimi-k3（支持文本与多模态）。更多多模态用法请参见[多模态调用示例](#af95c67524)。
 
 ## Python
 
@@ -443,7 +443,7 @@ messages = [{"role": "user", "content": "你是谁？"}]
 completion = MultiModalConversation.call(
     # 如果没有配置环境变量，请用阿里云百炼API Key替换：api_key="sk-xxx"
     api_key=os.getenv("DASHSCOPE_API_KEY"),
-    model="kimi-k2.6",
+    model="kimi-k3",
     messages=messages,
     result_format="message",  # 设置结果格式为 message
     stream=True,              # 开启流式输出
@@ -539,7 +539,7 @@ public class Main {
             MultiModalConversationParam param = MultiModalConversationParam.builder()
                     // 若没有配置环境变量，请用阿里云百炼API Key将下行替换为：.apiKey("sk-xxx")
                     .apiKey(System.getenv("DASHSCOPE_API_KEY"))
-                    .model("kimi-k2.6")
+                    .model("kimi-k3")
                     .messages(Arrays.asList(userMsg))
                     .build();
 
@@ -558,20 +558,7 @@ public class Main {
 ### **返回结果**
 
 ```
-====================思考过程====================
-用户问"你是谁？"，这是一个关于身份的直接问题。我需要根据我的实际身份如实回答。
-
-我是由月之暗面科技有限公司（Moonshot AI）开发的人工智能助手，我的名字是Kimi。我应当清晰、简洁地说明这一点。
-
-回答应该包括：
-1. 我的身份：AI助手
-2. 我的开发者：月之暗面科技有限公司（Moonshot AI）
-3. 我的名字：Kimi
-4. 我的核心能力：长文本处理、智能对话、文件处理等
-
-我不应该假装是人类，也不应该提供过多技术细节，只需给出清晰、友好的回答即可。
-====================完整回复====================
-我是由月之暗面科技有限公司（Moonshot AI）开发的人工智能助手，名叫 Kimi。我擅长处理长文本、进行智能对话、解答问题、辅助创作，还能帮您分析和处理文件。有什么可以帮您的吗？
+回复: 我是由月之暗面科技有限公司（Moonshot AI）开发的人工智能助手，名叫 Kimi。我擅长处理长文本、进行智能对话、解答问题、辅助创作，还能帮您分析和处理文件。有什么可以帮您的吗？
 ```
 
 ## HTTP
@@ -584,7 +571,7 @@ curl -X POST "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services
 -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
 -H "Content-Type: application/json" \
 -d '{
-    "model": "kimi-k2.6",
+    "model": "kimi-k3",
     "input":{
         "messages":[
             {
@@ -643,7 +630,7 @@ client = anthropic.Anthropic(
 )
 
 message = client.messages.create(
-    model="kimi-k2.6",
+    model="kimi-k3",
     max_tokens=1024,
     messages=[
         {"role": "user", "content": "你是谁"}
@@ -672,7 +659,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic/v
 -H "Content-Type: application/json" \
 -H "anthropic-version: 2023-06-01" \
 -d '{
-    "model": "kimi-k2.6",
+    "model": "kimi-k3",
     "max_tokens": 1024,
     "messages": [
         {
@@ -685,7 +672,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic/v
 
 ## **多模态调用示例**
 
-kimi-k2.7-code、kimi-k2.6、kimi-k2.5 支持同时处理文本、图像或视频输入，并可通过 `enable_thinking` 参数开启思考模式。以下示例展示如何调用多模态能力。
+kimi-k2.7-code、kimi-k2.6、kimi-k2.5、kimi-k3 支持同时处理文本、图像或视频输入（kimi-k3 暂不支持视频输入），并可通过 `enable_thinking` 参数开启思考模式。以下示例展示如何调用多模态能力。
 
 ### **开启或关闭思考模式**
 
@@ -696,7 +683,7 @@ kimi-k2.6、kimi-k2.5属于混合思考模型，模型可以在思考后回复�
 -   `false`（默认）：关闭思考模式
     
 
-kimi-k2.7-code 为仅思考模型，始终开启思考模式（`enable_thinking`默认为 `true`，不可关闭），`preserve_thinking`默认为 `true`。
+kimi-k2.7-code 与 kimi-k3为仅思考模型，始终开启思考模式（`enable_thinking`默认为 `true`，不可关闭），`preserve_thinking`默认为 `true`。
 
 kimi-k2.6 支持通过 `preserve_thinking` 参数在多轮对话中传递思考过程，详情请参见[传递思考过程](https://help.aliyun.com/zh/model-studio/deep-thinking#jln7docdq5et5)。
 
@@ -718,7 +705,7 @@ client = OpenAI(
 
 # 单图传入示例（开启思考模式）
 completion = client.chat.completions.create(
-    model="kimi-k2.6",
+    model="kimi-k3",
     messages=[
         {
             "role": "user",
@@ -787,7 +774,7 @@ const openai = new OpenAI({
 
 // 单图传入示例（开启思考模式）
 const completion = await openai.chat.completions.create({
-    model: 'kimi-k2.6',
+    model: 'kimi-k3',
     messages: [
         {
             role: 'user',
@@ -852,7 +839,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
 -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
 -H "Content-Type: application/json" \
 -d '{
-    "model": "kimi-k2.6",
+    "model": "kimi-k3",
     "messages": [
         {
             "role": "user",
@@ -922,7 +909,7 @@ dashscope.base_http_api_url = "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.co
 # 单图传入示例（开启思考模式）
 response = MultiModalConversation.call(
     api_key=os.getenv("DASHSCOPE_API_KEY"),
-    model="kimi-k2.6",
+    model="kimi-k3",
     messages=[
         {
             "role": "user",
@@ -1009,7 +996,7 @@ public class KimiK26MultiModalExample {
             MultiModalConversationParam param = MultiModalConversationParam.builder()
                     // 若没有配置环境变量，请用阿里云百炼API Key替换
                     .apiKey(System.getenv("DASHSCOPE_API_KEY"))
-                    .model("kimi-k2.6")
+                    .model("kimi-k3")
                     .messages(Arrays.asList(userMessage))
                     .enableThinking(true)  // 开启思考模式
                     .build();
@@ -1066,7 +1053,7 @@ curl -X POST "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services
 -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
 -H "Content-Type: application/json" \
 -d '{
-    "model": "kimi-k2.6",
+    "model": "kimi-k3",
     "input": {
         "messages": [
             {
@@ -1119,6 +1106,10 @@ curl -X POST "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services
 ```
 
 ### **视频理解**
+
+**说明**
+
+kimi-k3 暂不支持视频输入（仅支持文本与图片输入），本节视频理解示例不适用于 kimi-k3。
 
 ## 视频文件
 
@@ -2061,6 +2052,22 @@ public class Main {
 
 [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)
 
+kimi-k3
+
+支持
+
+支持
+
+支持
+
+支持
+
+支持
+
+支持
+
+支持
+
 kimi-k2.7-code
 
 支持
@@ -2141,7 +2148,7 @@ Moonshot-Kimi-K2-Instruct
 
 支持
 
-## **动态加载工具（Kimi K3）**
+## **动态加载工具（Kimi-K3）**
 
 当应用需要挂载大量工具时，如果把所有工具的声明一次性放进请求顶层的`tools`字段，会遇到工具定义膨胀（Tool Definition Bloat）问题：每个请求都要携带全部工具的描述和参数 Schema，Token 消耗高；候选工具越多，模型也越容易选错工具、构造出错误的调用参数。
 
@@ -2149,7 +2156,7 @@ Moonshot-Kimi-K2-Instruct
 
 **说明**
 
-动态加载工具目前仅 kimi-k3 支持，在其他模型（如 kimi-k2.6）上请求会返回`tokenization failed`错误。
+动态加载工具目前仅 kimi-k3 支持 ，在其他模型（如 kimi-k2.6）上请求会返回`tokenization failed`错误。
 
 ### **在 messages 中注入工具声明**
 
@@ -2290,6 +2297,20 @@ API 层面没有专门的工具搜索接口。如果工具数量很多，可以�
 
 **max\_frames**
 
+kimi-k3
+
+true（仅思考模式，不可关闭）
+
+1.0
+
+0.95
+
+0.0
+
+\-
+
+\-
+
 kimi-k2.7-code
 
 true（仅思考模式，不可关闭）
@@ -2370,6 +2391,8 @@ Moonshot-Kimi-K2-Instruct
 
 Kimi 系列模型是由月之暗面公司（Moonshot AI）推出的大语言模型。
 
+-   kimi-k3：Kimi 迄今能力最强的旗舰模型，始终进行推理并采用保留式思考（仅思考模式）。支持文本与图片输入（暂不支持视频输入）、对话与 Agent 任务，并支持动态加载工具。
+    
 -   kimi-k2.7-code：Kimi 最强编程模型，长上下文指令遵循更可靠，编程任务成功率更高。支持文本、图片与视频输入、思考模式、对话与 Agent 任务。
     
 -   kimi-k2.6：Kimi最新最智能的模型，具备更强更稳的长程代码编写能力，指令遵循和自我纠错能力显著提升。同时支持文本、图片与视频输入、思考与非思考模式、对话与 Agent 任务。
@@ -2380,6 +2403,8 @@ Kimi 系列模型是由月之暗面公司（Moonshot AI）推出的大语言模�
     
 -   Moonshot-Kimi-K2-Instruct：不支持深度思考，直接生成回复，响应速度更快，适用于需要快速直接回答的场景。
     
+
+> kimi-k3 价格信息请参见[模型调用计费](https://help.aliyun.com/zh/model-studio/model-pricing)。
 
 > kimi-k2.7-code 价格信息请参见[模型调用计费](https://help.aliyun.com/zh/model-studio/model-pricing)。
 

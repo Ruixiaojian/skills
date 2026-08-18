@@ -91,7 +91,31 @@
 
 ✗
 
-矩阵表中各训练方式已链接至对应详解节，字段定义详见下条。
+各训练方式版本新增时的数据继承策略如下（CPT 不支持继承已有数据，每次新增版本均需新建）：
+
+**数据继承策略**
+
+**SFT**
+
+**DPO**
+
+**CPT**
+
+继承已有数据
+
+✓
+
+✓
+
+✗
+
+创建新数据
+
+✓
+
+✓
+
+支持（强制新建）
 
 训练方法 SFT/DPO/CPT 字段定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)。
 
@@ -99,7 +123,7 @@
 
 SFT 文本生成训练数据采用 jsonl 文件格式，基于 ChatML messages 多轮结构。
 
--   支持 system、user、assistant 三种角色，content 字段为 `[{text: "…"}]` 数组。
+-   支持 system、user、assistant 三种角色，content 字段为字符串（多模态场景的 content 数组结构见对应多模态格式章节）。
     
 -   单文件大小上限 200 MB。
     
@@ -126,6 +150,17 @@ SFT 文本生成支持以下样例格式，各样例的完整 JSON 结构见对�
 }
 ```
 
+#### **进阶用法**
+
+1.  支持`loss_weight`参数，取值范围 `(0.0, 1.0]`，数值越大代表训练时该条数据的重要性越高。
+    
+    > 默认支持 Qwen3.5 及以上版本模型；如需支持 Qwen3、Qwen2.5 系列模型，请联系商务经理。
+    
+    ```
+    {"role": "assistant", "content": "期望的模型输出", "loss_weight": "1.0"}
+    ```
+    
+
 ### 深度思考（thinking）
 
 深度思考（thinking）格式样例（思考标签放最后一条 assistant，前后换行必须保留）：
@@ -146,7 +181,7 @@ SFT 文本生成支持以下样例格式，各样例的完整 JSON 结构见对�
 
 请使用[视觉理解-SFT 格式](#yz71e49hgo000)。
 
-### 思考标签规则
+### 思考模式格式说明
 
 深度思考内容用 `<think>\n…\n</think>\n\n` 标签包裹，置于 assistant 输出文本内（与最终答复同属最后一条 assistant 的 content）。规则：
 
@@ -170,7 +205,7 @@ SFT 文本生成支持以下样例格式，各样例的完整 JSON 结构见对�
 -   仅草稿版本支持在线编辑（Prompt/Completion），已发布版本不可编辑。
     
 
-本地上传格式说明：
+本地上传文件格式为 xlsx（列结构见控制台下载模板），每条评测数据为一组 Prompt/Completion 内容，示例如下：
 
 ```
 {"prompt": "谁在文艺复兴时期绘制人体?", "completion": "文艺复兴时期是一个关于艺术、文化和学术的复兴运动,在这个时期,许多艺术家都绘制了人体。"}
@@ -199,9 +234,7 @@ DPO 文本生成训练数据采用 jsonl 格式，基于 ChatML messages 多轮�
 
 针对深度思考内容，chosen 或 rejected 的 assistant 输出可使用思考标签包裹，思考标签只能放最后一条 assistant 行，规则见[文本生成 - SFT 格式](#sec-sft-text)。
 
-loss\_weight 邀测参数支持 chosen 模块，取值范围 0.0 至 1.0，数值越大训练重要性越高，详见[文本生成 - SFT 格式](#sec-sft-text)。
-
-DPO 场景的工具调用数据支持情况待确认（source 文档未给出 DPO+tool 格式段，需产品确认），工具字段说明见[文本生成 - SFT 格式](#sec-sft-text)。
+loss\_weight （邀测）参数支持 chosen 模块，取值范围 0.0 至 1.0，数值越大训练重要性越高，详见[文本生成 - SFT 格式](#sec-sft-text)。
 
 DPO 训练数据单文件大小上限为 200 MB，与 SFT 文本生成一致。DPO 定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)，草稿与发布操作见[训练集与评测集](https://help.aliyun.com/zh/model-studio/training-set-and-evaluation-set)。
 
@@ -255,32 +288,6 @@ CPT 训练数据约束：
     
 
 CPT 定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)，版本管理与数据继承操作见[训练集与评测集](https://help.aliyun.com/zh/model-studio/training-set-and-evaluation-set)。CPT 纯文本样例完整 JSON 结构见下文代码块。
-
-各训练方式版本新增时的数据继承策略如下（CPT 不支持继承已有数据，每次新增版本均需新建）：
-
-**数据继承策略**
-
-**SFT**
-
-**DPO**
-
-**CPT**
-
-继承已有数据
-
-✓
-
-✓
-
-✗
-
-创建新数据
-
-✓
-
-✓
-
-支持（强制新建）
 
 {text} 纯文本格式样例（每行一个 jsonl 纯文本对象）：
 
@@ -518,7 +525,7 @@ SFT 图片训练样例见下文标签页：
 
 多模态理解定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)。
 
-### 工具字段说明
+### 工具调用格式说明
 
 工具调用（function calling）模式在 messages 多轮结构基础上增加 tools 定义与 tool\_calls/role:tool 机制，字段约束如下：
 
@@ -533,22 +540,13 @@ SFT 图片训练样例见下文标签页：
 -   role:"tool"：工具返回，tool\_call\_id 必须与对应 tool\_calls\[\].id 一一对应，content 内为工具返回结果。
     
 
-多轮对话最后一条通常为 assistant 基于工具返回的最终答复。tool 模式属于 SFT 场景，DPO 场景的 tool 数据支持情况见[文本生成 - DPO 格式](#sec-dpo-text)。
-
-loss\_weight 字段约束：
-
--   邀测参数，取值范围 0.0 至 1.0，数值越大表示该行在训练时的相对重要性越高。
-    
--   SFT 思考模型仅最后一条 assistant 行支持 loss\_weight。
-    
+多轮对话最后一条通常为 assistant 基于工具返回的最终答复。
 
 百炼不支持 OpenAI 的 name、weight 参数，所有 assistant 输出都会被训练。从 OpenAI/Azure 迁移的训练数据不可携带 name/weight 字段。
 
 数据多样性与均衡性建议：各场景数据数量应相对均衡，数据比例符合实际场景比例，避免某一类数据过多导致模型偏向于学习该类特征，影响泛化能力。
 
-ChatML 与 loss\_weight 字段定义详见[模型调优简介](https://help.aliyun.com/zh/model-studio/model-training-overview)。
-
-### 思考标签规则
+### 思考模式格式说明
 
 深度思考内容用 `<think>\n…\n</think>\n\n` 标签包裹，置于 assistant 输出文本内（与最终答复同属最后一条 assistant 的 content）。规则：
 
@@ -643,7 +641,7 @@ Trainingdata_vl.zip
 
 本地上传文件大小与数量上限按训练方式分场景设定，详见下文分场景表。图片准入限制见[视觉理解-SFT 格式](#sec-sft-image)，评测集格式限制见[评测集格式](#sec-eval-set)，日志回流入库限制见[评测集格式](#sec-eval-set)。
 
-max\_length 取值区间 500 至 131072 为训练序列长度配置参数，非上传准入上限。单条训练数据上传准入大小上限源文档未给出数值，以控制台页面展示为准。
+max\_length 取值区间 500 至 131072 为训练序列长度配置参数，非上传准入上限。单条训练数据上传准入大小上限以控制台页面展示为准。
 
 本地上传文件大小与数量上限按训练方式分场景设定，推荐数据量为最低建议值：
 
@@ -797,7 +795,7 @@ OSS 导入与云存储挂载的差异对比如下：
 
 强制立即发布（不支持草稿）
 
-评测集✓
+评测集
 
 ✗
 
@@ -806,8 +804,6 @@ OSS 导入与云存储挂载的差异对比如下：
 ## 上传校验与常见错误
 
 在**新增数据集**页面本地上传文件时，前端校验会拒绝不符合准入规则的文件并弹出提示。常见校验拒绝与上传出错场景见下文折叠项：
-
-【截图：report/creates/2026-07-28-第1批/text-generation-tuning-data-upload-rules/screenshots/cn-create-dataset-import-upload.png — alt：新增数据集页面数据上传区，显示存储位置（平台OSS存储/云存储挂载）、导入方式（本地上传/从OSS导入/日志回流）、本地上传限制（0/10、200MB、jsonl/xls/xlsx）及发布配置（立即发布/保存为草稿）。caption：新增数据集页数据上传区与本地上传准入限制】
 
 **问题：**上传文件时前端提示文件数量超过上限，文件被拒绝上传。
 

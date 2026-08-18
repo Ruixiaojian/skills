@@ -21,7 +21,7 @@
 - [memory library overview](guides/memory-library-overview.md) — 3 篇源文档
 - [model compression](guides/model-compression.md) — 1 篇源文档
 - [model context protocol](guides/model-context-protocol.md) — 5 篇源文档
-- [model data overview](guides/model-data-overview.md) — 3 篇源文档
+- [model data overview](guides/model-data-overview.md) — 2 篇源文档
 - [model deployment 1](guides/model-deployment-1.md) — 4 篇源文档
 - [model evaluation introduction](guides/model-evaluation-introduction.md) — 2 篇源文档
 - [model experience](guides/model-experience.md) — 11 篇源文档
@@ -30,19 +30,19 @@
 - [plug in](guides/plug-in.md) — 3 篇源文档
 - [prompt](guides/prompt.md) — 5 篇源文档
 - [release notes](guides/release-notes.md) — 3 篇源文档
-- [security and compliance](guides/security-and-compliance.md) — 12 篇源文档
+- [security and compliance](guides/security-and-compliance.md) — 11 篇源文档
 - [skill](guides/skill.md) — 1 篇源文档
 - [start using](guides/start-using.md) — 2 篇源文档
 - [test 1](guides/test-1.md) — 5 篇源文档
 - [token plan guide](guides/token-plan-guide.md) — 14 篇源文档
-- [use cases](guides/use-cases.md) — 30 篇源文档
-- [use chat client or development tool](guides/use-chat-client-or-development-tool.md) — 17 篇源文档
+- [use cases](guides/use-cases.md) — 31 篇源文档
+- [use chat client or development tool](guides/use-chat-client-or-development-tool.md) — 16 篇源文档
 
 ## API 参考
 
 - [3d generation](api/3d-generation.md) — 1 篇源文档
 - [application call](api/application-call.md) — 5 篇源文档
-- [application component api reference](api/application-component-api-reference.md) — 54 篇源文档
+- [application component api reference](api/application-component-api-reference.md) — 56 篇源文档
 - [file management api](api/file-management-api.md) — 1 篇源文档
 - [frameworks](api/frameworks.md) — 3 篇源文档
 - [image generation](api/image-generation.md) — 27 篇源文档
@@ -59,26 +59,26 @@
 - [realtime api user guide](api/realtime-api-user-guide.md) — 12 篇源文档
 - [toolkits and frameworks](api/toolkits-and-frameworks.md) — 10 篇源文档
 - [vector and sort](api/vector-and-sort.md) — 4 篇源文档
-- [video generation api](api/video-generation-api.md) — 33 篇源文档
+- [video generation api](api/video-generation-api.md) — 35 篇源文档
 
 ## 横切概念
 
-- [OpenAI 兼容接口](concepts/openai-compatible-interface.md) — 关联 5 个主题
-- [Prompt 工程](concepts/prompt-engineering.md) — 关联 5 个主题
-- [Token](concepts/token.md) — 关联 5 个主题
-- [函数调用](concepts/function-calling.md) — 关联 5 个主题
-- [多模态](concepts/multi-modal.md) — 关联 5 个主题
-- [异步处理](concepts/asynchronous-processing.md) — 关联 5 个主题
+- [OpenAI 兼容接口](concepts/openai-compatible-api.md) — 关联 5 个主题
+- [Prompt 工程](concepts/prompt-engineering.md) — 关联 4 个主题
+- [Token 计量与计费](concepts/token.md) — 关联 5 个主题
+- [函数调用](concepts/function-calling.md) — 关联 4 个主题
+- [文件处理与引用](concepts/file-handling.md) — 关联 5 个主题
 - [检索增强生成](concepts/rag.md) — 关联 5 个主题
-- [模型上下文协议](concepts/model-context-protocol.md) — 关联 5 个主题
-- [流式输出](concepts/streaming-output.md) — 关联 5 个主题
-- [长期记忆](concepts/long-term-memory.md) — 关联 5 个主题
+- [模型上下文协议](concepts/mcp.md) — 关联 4 个主题
+- [模型部署与推理优化](concepts/model-deployment.md) — 关联 4 个主题
+- [流式输出](concepts/streaming-output.md) — 关联 4 个主题
+- [长期记忆](concepts/long-term-memory.md) — 关联 4 个主题
 
 ## 对比分析
 
-- [多模态生成 API 对比：图像、视频与3D生成](comparisons/generation-apis-comparison.md) — 对比 3 个主题
-- [实时 API 方案对比：Realtime API 与 Omni Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
-- [应用调用方式对比：Application Call、Managed Agents 与 Bailian Application Calling](comparisons/application-calling-options.md) — 对比 3 个主题
-- [模型部署策略对比：Model Production、Model Deployment 1 与 Model High Speed Inference](comparisons/model-deployment-strategies.md) — 对比 3 个主题
-- [长期记忆方案对比：Long Term Memory 与 Memory Library](comparisons/memory-solutions-comparison.md) — 对比 2 个主题
+- [多模态生成能力对比：图像、视频与3D生成](comparisons/generation-apis-comparison.md) — 对比 3 个主题
+- [实时 API 方案对比：Omni Realtime 与 Realtime API](comparisons/realtime-api-comparison.md) — 对比 2 个主题
+- [应用调用方式对比：Bailian 应用调用、Application Call 与 Managed Agents](comparisons/application-calling-methods.md) — 对比 3 个主题
+- [模型部署方案对比：高并发推理、模型压缩与生产部署](comparisons/model-deployment-options.md) — 对比 3 个主题
+- [长期记忆与知识库方案对比](comparisons/memory-solutions-comparison.md) — 对比 3 个主题
 

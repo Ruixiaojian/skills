@@ -8,7 +8,7 @@ Qoder CN 个人社区版和个人专业版均支持接入百炼，企业版不�
 
 ## **安装**
 
-1.  前往 [Qoder CN 官网](https://lingma.aliyun.com/download)下载并安装 Qoder CN。
+1.  前往 [Qoder CN 官网](https://qoder.cn/)下载并安装 Qoder CN。
     
 2.  初次启动后完成初始配置。
     
@@ -57,7 +57,7 @@ Qoder CN 个人社区版和个人专业版均支持接入百炼，企业版不�
 
 ## 了解更多
 
-如需进一步了解 Qoder CN 的智能体、MCP、Skills 等扩展能力，请参考 [Qoder CN 官方文档](https://help.aliyun.com/zh/lingma/introduction-of-lingma)。
+如需进一步了解 Qoder CN 的智能体、MCP、Skills 等扩展能力，请参考 [Qoder CN 官方文档](https://docs.qoder.cn/product-overview/introduction-of-qodercn)。
 
 ## 常见问题
 

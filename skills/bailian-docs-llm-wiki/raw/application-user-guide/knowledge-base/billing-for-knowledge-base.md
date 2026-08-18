@@ -350,7 +350,7 @@
         
 -   **检索流程与计费关系详解**
     
-    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3354925871/CAEQaxiBgMCFrtjd3BkiIDA2ZWRiNzYxYzZiNzRkNGM5Mzg4NGQ5ZjhlODBlOWZj6139615_20260107153729.136.svg)
+    ![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/6839107871/CAEQaxiBgMCFrtjd3BkiIDA2ZWRiNzYxYzZiNzRkNGM5Mzg4NGQ5ZjhlODBlOWZj6139615_20260107153729.136.svg)
     1.  **初步召回**
         
         系统根据以下参数从知识库中召回文本切片：
@@ -637,7 +637,7 @@
     
     **重要**
     
-    删除操作会**永久清除**知识库内的数据**且无法恢复**，请**谨慎操作**。
+    删除操作会**永久清除**知识库内的数据**且无法恢复**，请**谨慎操作**。删除知识库实例后，关联该知识库的知识检索和知识问答服务将自动失效，不再产生检索调用费用。
     
 7.  **为什么排序模型调用次数会多于应用调用次数？**
     

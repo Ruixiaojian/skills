@@ -32,6 +32,8 @@
     
 3.  **获取API Key：**前往[API Key](https://bailian.console.aliyun.com/?tab=model#/api-key)页面，单击**创建API Key****，**即可通过API KEY调用大模型。
     
+    创建 API Key 时无需选择模型，调用时通过请求体中的`model`参数指定要调用的模型（例如`model="qwen-plus"`），可用模型请参见[模型列表](https://help.aliyun.com/zh/model-studio/models)。如需限制该 API Key 可调用的模型范围，创建时选择**自定义**权限，并开启**访问模型范围**开关，开启后该 API Key 仅能调用已选择的模型。
+    
 4.  **获取业务空间ID：**使用**华北2（北京）**、**新加坡**、**日本（东京）**或**德国（法兰克福）**地域的模型时，需在Base URL中填入业务空间ID（WorkspaceId），可在[业务空间管理](https://modelstudio.console.aliyun.com/cn-beijing?tab=globalset#/efm/business_management)页面中查看。
     
 
@@ -253,7 +255,7 @@
         Microsoft Windows [版本 10.0.19045.5371]
         (c) Microsoft Corporation。保留所有权利。
         C:\Windows\system32>echo %DASHSCOPE_API_KEY%
-        sk-ee16697?fe4
+        sk-ee166797fe40xxx
         C:\Windows\system32>
         ```
         
@@ -356,9 +358,9 @@ echo $env:DASHSCOPE_API_KEY
 
 ### **检查您的Python版本**
 
-您可以在终端中输入以下命令查看当前计算环境是否安装了Python和pip：
-
 您的Python需要为3.8或以上版本，请您参考[安装Python](https://help.aliyun.com/zh/sdk/developer-reference/installing-python)进行安装。
+
+您可以在终端中输入以下命令查看当前计算环境是否安装了Python和pip：
 
 ```
 python -V
@@ -390,7 +392,7 @@ Q：执行`python -V`、`pip --version`报错：
 
 解决办法如下：
 
-##### **Windows系统**
+## **Windows系统**
 
 1.  请确认是否已参考[安装Python](https://help.aliyun.com/zh/sdk/developer-reference/installing-python)，在您的计算环境中安装Python，并将python.exe添加至环境变量PATH中。
     
@@ -683,9 +685,6 @@ npm config set registry https://registry.npmmirror.com/
     
     运行成功后您将会看到输出结果：
     
-    ```
-    我是来自阿里云的语言模型，我叫千问。
-    ```
     ```
     PS D:\node_project> node hello_qwen.mjs
     (node:25072) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
@@ -1291,7 +1290,7 @@ A：您可以访问[费用与成本](https://usercenter2.aliyun.com/home)中心�
 
 ### **调用大模型API后报错**`**Model.AccessDenied**`**，如何处理？**
 
-A：该报错是因为您使用子业务空间的API Key，子业务空间无法访问**主账号空间**的应用或模型。使用子空间API Key需由主账号管理员为对应子空间开通模型授权（如本文使用`千问-Plus`模型）。详细操作步骤请参见[设置模型调用权限](https://help.aliyun.com/zh/model-studio/permission-management-overview#f642213a1f38l)。
+A：该报错是因为您使用子业务空间的API Key，子业务空间无法访问**主账号空间**的应用或模型。使用子空间API Key需由主账号管理员为对应子空间开通模型授权（如本文使用`qwen3.8-max`模型）。详细操作步骤请参见[设置模型调用权限](https://help.aliyun.com/zh/model-studio/permission-management-overview#f642213a1f38l)。
 
 ### **如何接入** [**Chatbox**](https://chatboxai.app/zh)**、**[**Cherry Studio**](https://cherry-ai.com/)**、**[Cline](https://cline.bot/)**或** [Dify](https://cloud.dify.ai/apps)**？**
 
@@ -1307,7 +1306,7 @@ A：请根据您的使用情况参考以下步骤：
 
 1.  单击左下角的设置按钮，在**模型服务**栏中找到**阿里云百炼**，**API 密钥**输入您的 API Key，获取方法请参见：[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)；**API 地址**填入`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/`（请将WorkspaceId替换为业务空间ID）；单击**添加**。
     
-2.  在**模型 ID**填入您需要使用的千问模型，此处以 qwen-max-latest 为例（更多可用的模型请参考[选择模型](https://help.aliyun.com/zh/model-studio/models)中的千问模型）； **模型名称**与**分组名称**会自动生成。
+2.  在**模型 ID**填入您需要使用的千问模型，此处以 qwen3.8-max 为例（更多可用的模型请参考[选择模型](https://help.aliyun.com/zh/model-studio/models)中的千问模型）； **模型名称**与**分组名称**会自动生成。
     
 3.  在界面上方选中添加的模型，部分模型支持联网搜索，打开输入框处的联网搜索按钮。输入“杭州天气咋样？”进行测试：
     

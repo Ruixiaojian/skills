@@ -47,6 +47,8 @@ npm install -g @anthropic-ai/claude-code
 
 新建 `~/.claude/settings.json`（Windows 路径：`C:\Users\<用户名>\.claude\settings.json`），写入对应套餐的配置。
 
+若您此前使用旧版兼容接口 `https://dashscope.aliyuncs.com/api/v2/apps/claude-code-proxy`（仅支持 `qwen3-coder-plus` 模型），请按本文配置迁移至新版接口，详见下文 FAQ“使用旧版接口，切换模型不生效”。
+
 ### Token Plan 个人版
 
 将 YOUR\_API\_KEY 替换为 Token Plan 个人版专属 [API Key](https://bailian.console.aliyun.com/cn-beijing?tab=plan#/efm/subscription/overview)。可用模型参见 Token Plan 个人版[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-personal-overview)。
@@ -170,9 +172,70 @@ Claude Code 默认使用 200K 上下文窗口。如果需要处理大型代码�
 
 修改配置后，需新开终端窗口重新启动 Claude Code 使配置生效。更多环境变量说明参见 [Claude Code 官方环境变量文档](https://code.claude.com/docs/zh-CN/env-vars)。
 
+## **权限模式配置**
+
+Claude Code 提供 6 种权限模式，控制工具执行操作时的确认行为：
+
+**模式**
+
+**行为**
+
+`default`
+
+每次操作询问用户确认。
+
+`acceptEdits`
+
+自动批准文件编辑，其他操作仍询问。
+
+`plan`
+
+只读规划模式，不执行修改。
+
+`dontAsk`
+
+不询问，需要询问的操作直接拒绝。
+
+`bypassPermissions`
+
+绕过所有权限检查。
+
+`delegate`
+
+委托模式。
+
+### 命令行参数
+
+使用 `--permission-mode` 指定本次会话的默认权限模式：
+
+```
+claude --permission-mode plan
+claude --permission-mode acceptEdits
+```
+
+### 交互命令
+
+在会话中输入 `/permissions`，可动态管理工具的预批准（pre-approve）和预拒绝（pre-deny）规则，支持配置 bash、edit 和 MCP 工具的规则。
+
+### settings.json 配置
+
+在 `~/.claude/settings.json`（Windows 路径：`C:\Users\<用户名>\.claude\settings.json`）中配置 `permissions` 字段：
+
+```
+{
+    "permissions": {
+        "allow": ["Bash(git:*)", "Read", "Edit"],
+        "deny": ["Bash(rm:*)"],
+        "defaultMode": "default"
+    }
+}
+```
+
+`allow` 自动批准匹配的工具调用，`deny` 自动拒绝匹配的工具调用。规则支持通配符，例如 `Bash(npm:*)` 匹配所有以 npm 开头的命令。`defaultMode` 设置会话的默认权限模式，取值为上表 6 种模式之一。
+
 ## **使用 CC Switch**
 
-[CC Switch](https://github.com/farion1231/cc-switch) 是社区开源的桌面 GUI，支持在多个API Key 或计费套餐之间一键切换，无需手动修改 `settings.json`。
+[CC Switch](https://github.com/farion1231/cc-switch) 是社区开源的桌面 GUI，支持在多个API Key 或计费套餐之间一键切换，无需手动修改 `settings.json`。该工具为第三方软件，其脚本与代码不受阿里云审核和维护，安装使用前请自行评估其来源可信度与代码安全性。
 
 ### 安装
 
@@ -225,13 +288,13 @@ Claude Code 默认使用 200K 上下文窗口。如果需要处理大型代码�
     
 2.  展开**高级选项**配置模型映射，将主模型与 Haiku、Sonnet、Opus 默认模型设置为对应套餐[支持的模型](https://help.aliyun.com/zh/model-studio/token-plan-overview)。映射关系按需选择，示例如下：
     
-    -   主模型：`qwen3.7-max`（Coding Plan 不支持）
+    -   主模型：`qwen3.7-max`（Coding Plan 不支持，可填 qwen3.7-plus）
         
-    -   Haiku 默认模型：`qwen3.6-flash`（Coding Plan 不支持）
+    -   Haiku 默认模型：`qwen3.6-flash`（Coding Plan 不支持，可填 qwen3.7-plus）
         
-    -   Sonnet 默认模型：`qwen3.7-max`（Coding Plan 不支持）
+    -   Sonnet 默认模型：`qwen3.7-max`（Coding Plan 不支持，可填 qwen3.7-plus）
         
-    -   Opus 默认模型：`qwen3.7-max`（Coding Plan 不支持）
+    -   Opus 默认模型：`qwen3.7-max`（Coding Plan 不支持，可填 qwen3.7-plus）
         
 3.  回到主界面，点击该供应商右侧**启用**按钮，然后新开一个 Claude Code 会话使配置生效。
     
@@ -318,6 +381,43 @@ Claude Code 桌面版（Claude Desktop）与 Claude Code CLI 是两个独立入�
 -   Token Plan 团队版：[Token Plan 团队版常见问题](https://help.aliyun.com/zh/model-studio/token-plan-team-faq)
     
 
+### 调用时返回 401 invalid\_api\_key
+
+此错误表示 API Key 类型与 `ANTHROPIC_BASE_URL` 不匹配。百炼提供三种接入方式，每种方式使用不同的 `base_url` 和专属 API Key，两者必须配套使用：
+
+**接入方式**
+
+**base\_url**
+
+**API Key**
+
+按量计费
+
+`https://dashscope.aliyuncs.com/apps/anthropic`
+
+百炼 API Key（`sk-` 开头）
+
+Coding Plan
+
+`https://coding.dashscope.aliyuncs.com/apps/anthropic`
+
+Coding Plan 专属 API Key
+
+Token Plan 团队版
+
+`https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic`
+
+Token Plan 团队版专属 API Key
+
+排查步骤如下：
+
+1.  **检查请求地址。**查看 `~/.claude/settings.json` 中 `ANTHROPIC_BASE_URL` 的取值。
+    
+2.  **确认 API Key 类型。**对照上表，确认所用 API Key 的类型与 `base_url` 匹配。
+    
+3.  **修正配置。**使用百炼按量计费 API Key 时，将 `ANTHROPIC_BASE_URL` 设为 `https://dashscope.aliyuncs.com/apps/anthropic`。
+    
+
 ### 启动 Claude Code 后，界面显示"Unable to connect to Anthropic services. Failed to connect to api.anthropic.com: ERR\_BAD\_REQUEST"
 
 此错误表示 Claude Code 正在尝试连接 Anthropic 官方服务而非阿里云百炼。通常是环境变量未正确配置或未生效。按以下步骤排查：
@@ -342,3 +442,16 @@ Claude Code 桌面版（Claude Desktop）与 Claude Code CLI 是两个独立入�
 **该提示不影响 Claude Code 正常使用，可忽略。**Claude Code 通过 `/v1/messages` 发起对话，所用模型由 CC Switch **高级选项**中的模型映射直接指定，不依赖模型列表端点的自动发现。请求地址与 API Key 配置正确时，直接点击**启用**并新开一个 Claude Code 会话即可正常对话。
 
 若确实无法对话，请确认：请求地址以 `/apps/anthropic` 结尾、勿额外添加 `/v1`，并已在[高级选项的模型映射](#ccswitch-add-li2)中填入对应套餐支持的模型。
+
+### CC Switch 中模型映射后无法调用
+
+模型映射配置后在 Claude Code 中无法调用、返回 `AccessDenied`（HTTP 403，错误码 `access_denied`）错误时，检查该模型是否在百炼控制台的**模型广场**中被标记为“即将下线”。标记为“即将下线”的模型仍会显示在列表中，但 API 调用会返回 403 `AccessDenied`。排查步骤如下：
+
+1.  **检查模型是否标记“即将下线”。**在百炼控制台的**模型广场**搜索所用模型，查看其状态标签。
+    
+2.  **更换为最新可用模型。**将模型映射中的旧版模型（如 `qwen-coder-turbo-0919`）替换为最新版本的可用模型（如 `qwen3-coder-plus`）。
+    
+3.  **重新配置模型映射并测试。**在 CC Switch 的**高级选项**中更新模型映射，点击**启用**并新开一个 Claude Code 会话验证。
+    
+
+百炼控制台的**模型广场**中标记“即将下线”的模型可能随时不可用，请关注模型生命周期，并在模型广场查看模型的可用状态。

@@ -136,8 +136,8 @@ class Callback(RecognitionCallback):
         print('RecognitionCallback task_id: ', message.request_id)
         print('RecognitionCallback error: ', message.message)
         # Stop and close the audio stream if it is running
-        if 'stream' in globals() and stream.active:
-            stream.stop()
+        if 'stream' in globals() and stream.is_active():
+            stream.stop_stream()
             stream.close()
         # Forcefully exit the program
         sys.exit(1)

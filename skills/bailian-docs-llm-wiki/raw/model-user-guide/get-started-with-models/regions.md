@@ -20,7 +20,7 @@
 3.  推理结果回到接入地域存储，再响应给应用（用户静态数据始终存于所选地域）。
     
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/0220546871/CAEQchiBgICkyp3I_hkiIGFjZmY5ZThjZWM2MzRkMmJhNTk5NWVmYTkwMWY3ZGI07466796_20260515102254.505.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/9377607871/CAEQchiBgICkyp3I_hkiIGFjZmY5ZThjZWM2MzRkMmJhNTk5NWVmYTkwMWY3ZGI07466796_20260515102254.505.svg)
 
 ## 选择地域和服务部署范围
 
@@ -28,13 +28,13 @@
 
 ## 选择接入域名
 
-百炼为模型推理 API 提供业务空间专属、Dashscope 和试用三种接入域名，适用于从试用体验到企业级生产的不同场景。推荐使用**业务空间专属域名**，各域名的核心差异如下：
+百炼为模型推理 API 提供业务空间专属、DashScope 和试用三种接入域名，适用于从试用体验到企业级生产的不同场景。推荐使用**业务空间专属域名**，各域名的核心差异如下：
 
 **对比项**
 
 **业务空间专属域名（推荐）**
 
-**Dashscope 域名（现有域名）**
+**DashScope 域名（现有域名）**
 
 **试用域名**
 
@@ -66,11 +66,11 @@
 
 **限流额度**
 
-RPM、TPM 按模型区分
+RPM、TPM 按模型区分，主账号维度合并计算
 
-RPM、TPM 按模型区分
+RPM、TPM 按模型区分，主账号维度合并计算
 
-RPM 为1000，TPM 按模型区分
+RPM 为1000（主账号维度），TPM 按模型区分
 
 **请求超时**
 
@@ -82,7 +82,7 @@ RPM 为1000，TPM 按模型区分
 
 **协议支持**
 
-HTTP、SSE、WebSocket、WebRTC、AOQ
+HTTP、SSE、WebSocket、WebRTC、AOQ（AI over QUIC）
 
 HTTP、SSE、WebSocket
 
@@ -106,7 +106,7 @@ HTTP、SSE
 
 **业务空间专属域名**
 
-**Dashscope 域名**
+**DashScope 域名**
 
 **试用域名**
 
@@ -190,10 +190,12 @@ HTTP、SSE
     
 -   **华北2（北京）**和**新加坡地域**各仅支持一种服务部署范围，无需选择。
     
+-   **新加坡**地域支持中国站企业实名认证账号直接开通，无主体类型、行业或资格限制；按量付费，账单在百炼侧结算，支持人民币支付。
+    
 
 ## 迁移至业务空间专属域名
 
-从 Dashscope 域名或试用域名迁移到业务空间专属域名只需两步，无需修改业务逻辑代码：
+从 DashScope 域名或试用域名迁移到业务空间专属域名只需两步，无需修改业务逻辑代码：
 
 1.  **获取业务空间专属域名**：
     

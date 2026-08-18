@@ -70,6 +70,10 @@ Qwen Code 支持以下使用场景：
 -   Windows：`C:\Users\<Windows用户名>\.qwen\settings.json`
     
 
+**说明**
+
+关键字段说明：`env` 用于定义存放 API Key 的环境变量，模型条目中的 `envKey` 需与该环境变量名保持一致；`generationConfig.extra_body.enable_thinking` 用于开启或关闭模型思考模式；部分示例中的 `$version` 为配置文件格式版本号，请保留默认值。完整字段以 Qwen Code 产品文档为准。
+
 ```
 {
   "env": {
@@ -559,9 +563,9 @@ Qwen Code Desktop 是 Qwen Code 的图形界面应用，内置 CLI 运行时，�
     
 3.  在弹窗中选择 **Alibaba ModelStudio** 页签，根据计费方案选择对应项：
     
-    -   **Coding Plan**：个人开发者，按次计量。
+    -   **Coding Plan**：固定月费订阅，按模型调用次数计量。
         
-    -   **Token Plan**：团队使用，按 token 消耗抵扣。
+    -   **Token Plan**：含个人版与团队版，按 token 消耗抵扣 Credits。
         
     -   **Standard API Key**：使用已有的百炼 API Key 按量计费。
         
@@ -666,6 +670,10 @@ Qwen Code Desktop 是 Qwen Code 的图形界面应用，内置 CLI 运行时，�
     配置我的 API Key 是：sk-xxxxxxxxxxxxx
     ```
     
+    **警告**
+    
+    API Key 为敏感凭证，请勿泄露。在对话中粘贴明文 API Key 可能被会话记录留存，建议优先通过环境变量或 settings.json 配置 API Key。
+    
 3.  直接用自然语言描述需求即可开始使用，例如：
     
     ```
@@ -697,6 +705,10 @@ Qwen Code Desktop 是 Qwen Code 的图形界面应用，内置 CLI 运行时，�
     ```
     /extensions install wshobson/agents
     ```
+    
+    **警告**
+    
+    wshobson/agents、vercel-labs/skills 等为第三方仓库，其脚本与代码不受阿里云审核和维护。安装第三方插件或 Skill 前，请自行评估其来源可信度与代码安全性，谨慎在生产环境中使用。
     
 4.  输入以下内容安装 skill。
     
@@ -747,7 +759,7 @@ Qwen Code Desktop 是 Qwen Code 的图形界面应用，内置 CLI 运行时，�
     
 -   Coding Plan：[Coding Plan 常见问题](https://help.aliyun.com/zh/model-studio/coding-plan-faq)
     
--   Token Plan 个人版：[Token Plan 常见问题](https://help.aliyun.com/zh/model-studio/token-plan-team-faq)
+-   Token Plan 个人版：[Token Plan 个人版常见问题](https://help.aliyun.com/zh/model-studio/token-plan-personal-faq)
     
 -   Token Plan 团队版：[Token Plan 团队版常见问题](https://help.aliyun.com/zh/model-studio/token-plan-team-faq)
     

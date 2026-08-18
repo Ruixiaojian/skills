@@ -8,7 +8,7 @@
 
 **重要**
 
-知识库相关功能仅能在中国站**华北2（北京）**地域开通和使用，其他地域如新加坡、德国（法兰克福）等均不支持知识库功能。
+知识库相关功能在中国站仅支持**华北2（北京）**地域，在国际站仅支持**新加坡**地域开通和使用，其他地域如德国（法兰克福）等均不支持知识库功能。
 
 ## **前置步骤**
 
@@ -992,7 +992,6 @@ class KnowledgeBaseCreate {
             // 步骤2：准备文件信息
             echo "步骤2：准备文件信息\n";
             $fileName = basename($filePath);
-            echo("this is filename : $fileName");
             $fileMd5 = self::calculateMd5($filePath);
             $fileSize = self::getFileSize($filePath);
 
@@ -1012,7 +1011,6 @@ class KnowledgeBaseCreate {
             echo "步骤5：将文件添加到阿里云百炼服务器\n";
             $addResponse = self::addFile($client, $leaseId, $parser, $categoryId, $workspaceId);
             $fileId = $addResponse->body->data->fileId;
-            echo("fileid: $fileId\n");
             // 步骤6：检查文件状态
             echo "步骤6：检查阿里云百炼中的文件状态\n";
             while (true) {
@@ -1441,6 +1439,7 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
@@ -4361,6 +4360,7 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -5324,7 +5324,7 @@ def main():
                     print("无效输入，请输入 y 或 n。")
             client = create_client()
             resp = delete_index(client, workspace_id, index_id)
-            if resp.body.status == 200:
+            if resp.body.status == '200':
                 print(f"知识库{index_id}删除成功！")
             else:
                 err_info = UtilClient.to_jsonstring(resp.body)
@@ -5488,7 +5488,7 @@ namespace AlibabaCloud\SDK\Sample;
 use AlibabaCloud\Dara\Models\RuntimeOptions;
 use AlibabaCloud\SDK\Bailian\V20231229\Bailian;
 use AlibabaCloud\SDK\Bailian\V20231229\Models\DeleteIndexRequest;
-use AlibabaCloud\SDK\Bailian\V20231229\Models\ListIndexDocumentsRequest;
+use AlibabaCloud\SDK\Bailian\V20231229\Models\ListIndicesRequest;
 use \Exception;
 
 use Darabonba\OpenApi\Models\Config;
@@ -5541,10 +5541,10 @@ class KnowledgeBaseManage {
      */
     public static function listIndices($client, $workspaceId) {
         $headers = [];
-        $listIndexDocumentsRequest = new ListIndexDocumentsRequest([]);
+        $listIndicesRequest = new ListIndicesRequest([]);
         $runtime = new RuntimeOptions([]);
         // 调用客户端方法
-        return $client->listIndicesWithOptions($workspaceId, $listIndexDocumentsRequest, $headers, $runtime);
+        return $client->listIndicesWithOptions($workspaceId, $listIndicesRequest, $headers, $runtime);
     }
 
     /**
@@ -6604,103 +6604,6 @@ func CreateClient() (*bailian20231229.Client, error) {
 		AccessKeyId:     tea.String(os.Getenv("ALIBABA_CLOUD_ACCESS_KEY_ID")),
 		AccessKeySecret: tea.String(os.Getenv("ALIBABA_CLOUD_ACCESS_KEY_SECRET")),
 		Endpoint:        tea.String("bailian.cn-beijing.aliyuncs.com"),
-	}
-	return bailian20231229.NewClient(config)
-}
-
-func ListChunks(client *bailian20231229.Client, workspaceId string, indexId string) (*bailian20231229.ListChunksResponseBody, error) {
-	req := &bailian20231229.ListChunksRequest{
-		IndexId:  tea.String(indexId),
-		PageNum:  tea.Int32(1),
-		PageSize: tea.Int32(10),
-	}
-	headers := make(map[string]*string)
-	runtime := &util.RuntimeOptions{}
-	resp, err := client.ListChunksWithOptions(tea.String(workspaceId), req, headers, runtime)
-	if err != nil {
-		return nil, err
-	}
-	return resp.Body, nil
-}
-
-func UpdateChunk(client *bailian20231229.Client, workspaceId string, pipelineId string, chunkId string, dataId string, content string) error {
-	req := &bailian20231229.UpdateChunkRequest{
-		PipelineId:              tea.String(pipelineId),
-		DataId:                  tea.String(dataId),
-		ChunkId:                 tea.String(chunkId),
-		IsDisplayedChunkContent: tea.Bool(true),
-		Content:                 tea.String(content),
-	}
-	headers := make(map[string]*string)
-	runtime := &util.RuntimeOptions{}
-	resp, err := client.UpdateChunkWithOptions(tea.String(workspaceId), req, headers, runtime)
-	if err != nil {
-		return err
-	}
-	fmt.Printf("Update success: %v\n", tea.BoolValue(resp.Body.Success))
-	return nil
-}
-
-func DeleteChunk(client *bailian20231229.Client, workspaceId string, pipelineId string, chunkIds []*string) error {
-	req := &bailian20231229.DeleteChunkRequest{
-		PipelineId: tea.String(pipelineId),
-		ChunkIds:   chunkIds,
-	}
-	headers := make(map[string]*string)
-	runtime := &util.RuntimeOptions{}
-	resp, err := client.DeleteChunkWithOptions(tea.String(workspaceId), req, headers, runtime)
-	if err != nil {
-		return err
-	}
-	fmt.Printf("Delete success: %v\n", tea.BoolValue(resp.Body.Success))
-	return nil
-}
-
-func main() {
-	client, err := CreateClient()
-	if err != nil {
-		fmt.Printf("Error creating client: %v\n", err)
-		os.Exit(1)
-	}
-	workspaceId := os.Getenv("WORKSPACE_ID")
-	indexId := "YOUR_INDEX_ID"
-
-	// 列出切片
-	body, err := ListChunks(client, workspaceId, indexId)
-	if err != nil {
-		fmt.Printf("Error listing chunks: %v\n", err)
-		os.Exit(1)
-	}
-	fmt.Printf("Total chunks: %d\n", tea.Int64Value(body.Data.Total))
-
-	// 更新切片
-	err = UpdateChunk(client, workspaceId, indexId, "YOUR_CHUNK_ID", "YOUR_DOC_ID", "更新后的切片内容")
-	if err != nil {
-		fmt.Printf("Error updating chunk: %v\n", err)
-	}
-
-	// 删除切片
-	err = DeleteChunk(client, workspaceId, indexId, []*string{tea.String("YOUR_CHUNK_ID")})
-	if err != nil {
-		fmt.Printf("Error deleting chunk: %v\n", err)
-	}
-package main
-
-import (
-	"fmt"
-	"os"
-
-	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
-	bailian20231229 "github.com/alibabacloud-go/bailian-20231229/v2/client"
-	util "github.com/alibabacloud-go/tea-utils/v2/service"
-	"github.com/alibabacloud-go/tea/tea"
-)
-
-func CreateClient() (*bailian20231229.Client, error) {
-	config := &openapi.Config{
-		AccessKeyId:     tea.String(os.Getenv("ALIBABA_CLOUD_ACCESS_KEY_ID")),
-		AccessKeySecret: tea.String(os.Getenv("ALIBABA_CLOUD_ACCESS_KEY_SECRET")),
-		Endpoint:        tea.String("bailian.ap-southeast-1.aliyuncs.com"),
 	}
 	return bailian20231229.NewClient(config)
 }
@@ -9227,6 +9130,44 @@ print(resp.json())
 }
 ```
 
+## **结构化输出**
+
+知识库检索 API 不支持 `response_format` 参数。如需 JSON 格式输出，需在**模型调用层**设置 `response_format`。
+
+以 Python SDK `alibabacloud_bailian20231229` 2.14.3 为例，`RetrieveRequest` 共 15 个字段：`index_id`、`query`、`dense_similarity_top_k`、`enable_reranking`、`enable_rewrite`、`extra`、`images`、`query_history`、`rerank`、`rerank_min_score`、`rerank_top_n`、`rewrite`、`save_retriever_history`、`search_filters`、`sparse_similarity_top_k`，其中不含 `response_format`。
+
+Agent API 的 `instructions` 字段可通过提示词指定 JSON 输出格式，即创建应用时将“请以 JSON 格式输出”写入 `instructions`。
+
+阿里云百炼不直接生成 JSON 文件，返回的 JSON 内容需由调用方自行写入文件。
+
+### **知识库检索 + JSON 输出**
+
+先调用检索接口获取知识库文本切片，再将切片作为上下文调用 DashScope 模型接口，并设置 `response_format={"type": "json_object"}`，即可得到结构化输出。
+
+```
+import dashscope
+from alibabacloud_bailian20231229.client import Client
+from alibabacloud_bailian20231229 import models
+
+# 1. 检索知识库
+retrieve_req = models.RetrieveRequest(index_id="xxx", query="产品信息")
+retrieve_resp = client.retrieve_with_options(workspace_id, retrieve_req, {}, runtime)
+context = "\n".join([n.content for n in retrieve_resp.body.data.nodes])
+
+# 2. 调用模型设置 JSON 输出
+resp = dashscope.Generation.call(
+    model="qwen-plus",
+    messages=[
+        {"role": "system", "content": f"根据以下知识库内容回答，输出JSON格式：\n{context}"},
+        {"role": "user", "content": "列出所有产品型号及价格"}
+    ],
+    response_format={"type": "json_object"}
+)
+print(resp.output.text)
+```
+
+模型调用接口的更多参数说明，参见[DashScope API 参考](https://help.aliyun.com/zh/model-studio/qwen-api-via-dashscope)。
+
 ## **更新知识库**
 
 接下来通过示例，引导您更新文档搜索类知识库。所有引用该知识库的应用会实时生效您本次的更新（新增内容可用于检索和召回，而已删除内容将不再可用）。
@@ -9932,9 +9873,9 @@ public ListIndicesResponse listIndices(com.aliyun.bailian20231229.Client client,
  */
 public function listIndices($client, $workspaceId) {
     $headers = [];
-    $listIndexDocumentsRequest = new ListIndexDocumentsRequest([]);
+    $listIndicesRequest = new ListIndicesRequest([]);
     $runtime = new RuntimeOptions([]);
-    return $client->listIndicesWithOptions($workspaceId, $listIndexDocumentsRequest, $headers, $runtime);
+    return $client->listIndicesWithOptions($workspaceId, $listIndicesRequest, $headers, $runtime);
 }
 ```
 
@@ -10579,6 +10520,19 @@ func deleteChunk(client *bailian20231229.Client, workspaceId, pipelineId string,
     
     请确保在整个文件上传流程中（从`ApplyFileUploadLease`到`AddFile`），使用同一个`CategoryId`。您可以通过`ListCategory`接口获取当前业务空间下的类目列表，确认所使用的`CategoryId`正确无误。
     
+
+7.  **调用知识库应用时，为什么 API 返回结果与控制台调试窗口不一致？**
+    
+    按以下维度排查：
+    
+    -   **多轮对话上下文**：**控制台调试窗口**默认保留多轮对话历史；API 调用若不传`session_id`，每次都是无上下文的单次调用，依赖上文指代的追问会丢失指代对象，可能返回与调试窗口完全不同的答案。需要多轮对话能力时，从首次调用的响应中取回`session_id`，并在后续调用中传入同一个`session_id`，以保持会话连续性。
+        
+    -   **应用发布状态**：应用配置修改后需单击**发布**才会生效，API 调用的始终是**已发布**版本。若调试窗口中验证的是尚未发布的改动，API 返回不会体现这些改动。请先确认应用状态为**已发布**。
+        
+    -   **参数对齐**：通过应用调用（App API）时使用应用中配置的默认参数（如`temperature`、`top_p`等），与调试窗口一致；若直接调用模型服务 DashScope 的 API，这些参数需自行显式指定，取值可能与调试环境不同，从而导致回答风格与内容差异。
+        
+    -   **知识库关联方式**：通过应用调用（App API）时会自动关联应用中已配置的知识库，无需手动指定；若直接调用知识库检索 API，则必须显式传入`knowledgebase_id`，遗漏或传错会导致检索不到预期知识。
+        
 
 ## 计费说明
 

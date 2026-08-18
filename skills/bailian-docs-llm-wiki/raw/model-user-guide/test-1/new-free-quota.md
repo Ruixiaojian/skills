@@ -96,7 +96,7 @@ ASR 类模型需在百炼控制台业务空间逐一开通权限后方可调用�
 
 #### 方式三：通过模型用量页面查看
 
--   在控制台的[**模型用量**](https://bailian.console.aliyun.com/?tab=model#/model-usage)页面，查看各模型的免费额度使用与剩余情况。
+-   在控制台的[**模型用量**](https://bailian.console.aliyun.com/?tab=costing-balance#/costing-balance/usage-statistics)页面，查看各模型的免费额度使用与剩余情况。
     
 
 ## 使用免费额度
@@ -107,11 +107,11 @@ ASR 类模型需在百炼控制台业务空间逐一开通权限后方可调用�
 
 默认情况下，全新未认证用户免费额度耗尽后无法继续使用，需要[认证](https://myaccount.console.aliyun.com/cert-info)并[充值](https://billing-cost.console.aliyun.com/fortune/fund-management/recharge)后方能继续按量付费。已认证用户免费额度耗尽后继续调用会直接扣费，可提前开启**免费额度用完即停**功能，防止产生意外费用。
 
-全新未认证用户免费额度耗尽后，将停止响应并返回错误码 `AllocationQuota.FreeTierOnly`，需要[认证](https://myaccount.console.aliyun.com/cert-info)并充值后方能继续按量付费。
+全新未认证用户免费额度耗尽后，将停止响应并返回 HTTP 403 错误，错误码为 `AllocationQuota.FreeTierOnly`，需要[认证](https://myaccount.console.aliyun.com/cert-info)并充值后方能继续按量付费。
 
 ### 免费额度用完即停
 
-免费额度用完即停（部分用户称“安心模式”）。开启此功能后，免费额度耗尽时将停止响应并返回错误码 `AllocationQuota.FreeTierOnly`，不会继续扣费。
+免费额度用完即停（部分用户称“安心模式”）。开启此功能后，免费额度耗尽时将停止响应并返回 HTTP 403 错误，错误码为 `AllocationQuota.FreeTierOnly`，不会继续扣费。
 
 未完成实名认证的用户，系统默认强制开启用完即停模式，开关不可见且无法操作。完成实名认证后，可在控制台查看并自行切换该开关。
 
@@ -147,7 +147,7 @@ ASR 类模型需在百炼控制台业务空间逐一开通权限后方可调用�
 
 #### 如何关闭
 
-该功能默认关闭。开启后，可随时关闭。可在免费额度页面操作列关闭单个模型的**免费额度用完即停**开关，或经批量操作下拉菜单选择**批量关闭**。
+已完成实名认证的用户，该功能默认关闭，开启后可随时关闭；未完成实名认证的用户由系统强制开启该功能，无法自行关闭。可在免费额度页面操作列关闭单个模型的**免费额度用完即停**开关，或经批量操作下拉菜单选择**批量关闭**。
 
 百炼移动端暂不支持开启或关闭该功能，需使用电脑端访问控制台操作。
 
@@ -211,7 +211,7 @@ ASR 类模型需在百炼控制台业务空间逐一开通权限后方可调用�
     
 -   控制台的免费额度数据为分钟级更新且需手动刷新。若未及时刷新，页面显示仍有额度但实际已耗尽，导致产生调用费用。操作前刷新页面，以最新显示为准。
     
--   IDE 插件自动补全导致 Token 快速消耗。使用 Cline、CodeBuddy 等 IDE 插件调用模型时，插件会自动携带完整的代码上下文和对话历史，单次对话可能消耗数千 Token。实测显示，包含约 2000 字代码上下文的调用消耗 1758 Token，而一条简短消息仅消耗 26 Token，相差约 67 倍。
+-   IDE 插件自动补全导致 Token 快速消耗。使用 Cline、CodeBuddy 等 IDE 插件调用模型时，插件会自动携带完整的代码上下文和对话历史，单次对话可能消耗数千 Token，远高于普通简短对话的消耗。
     
 
 可通过[如何查看产生费用的模型？](#3bfa8283d0tc2)和[如何查看模型调用记录？](#ab6ba5c538rn3)确认费用详情。
@@ -274,7 +274,7 @@ OAuth 认证提供独立的免费额度（每天 2000 次调用），与百炼�
 
 ### 使用 Token Plan 专属 API Key 调用图像/视频生成模型报 400 错误？
 
-图像/视频生成模型（如 wanx 系列、qwen-vl-max-latest 等多模态生成模型）不支持通过文本生成类 Base URL 直接调用。若使用 Token Plan 团队版专属 API Key 经文本 Base URL（`https://dashscope.aliyuncs.com/compatible-mode/v1`）直接请求此类模型，将返回 HTTP 400 错误。
+图像/视频生成模型（如 wanx 系列、qwen-vl-max-latest 等多模态生成模型）不支持通过文本生成类 Base URL 直接调用。若使用 Token Plan 团队版专属 API Key 经文本 Base URL（`https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`）直接请求此类模型，将返回 HTTP 400 错误。
 
 解决方法：请通过百炼应用中的 Skill（技能）或扩展机制接入多模态生成模型，而非直接以文本对话方式调用。
 

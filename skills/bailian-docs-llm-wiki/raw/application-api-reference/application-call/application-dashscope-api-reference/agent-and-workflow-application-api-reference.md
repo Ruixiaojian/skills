@@ -1330,7 +1330,7 @@ class Program
     static async Task Main(string[] args)
     {
         // 若没有配置环境变量，可用百炼API Key将下行替换为：apiKey="sk-xxx"。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
-        string apiKey = Environment.GetEnvironmentVariable("DASHSCOPE_API_KEY")?? throw new InvalidOperationException("DASHSCOPE_API_KEY environment variable is not set.");;
+        string apiKey = Environment.GetEnvironmentVariable("DASHSCOPE_API_KEY")?? throw new InvalidOperationException("DASHSCOPE_API_KEY environment variable is not set.");
         string appId = "APP_ID";// 替换为实际的应用ID
 
         if (string.IsNullOrEmpty(apiKey))
@@ -1476,6 +1476,27 @@ func main() {
 	}
 }
 ```
+
+### **发布新版本对 API 调用的影响**
+
+应用发布新版本后，APP\_ID 始终指向最新已发布版本。发布时正在进行的请求不会被中断，会按发布前的配置正常完成；发布完成后，通过同一 APP\_ID 发起的新请求将使用新版本的配置（包括**提示词**、模型、工具等）。
+
+API 不支持通过参数指定调用历史版本。请求体仅包含`input`和`parameters`字段，不提供版本号或历史版本参数。
+
+多轮对话的`session_id`在新版本发布后继续使用时，可能出现上下文理解偏差或工具调用异常，因为该会话的历史上下文基于发布前的配置产生。建议在发布重大变更前结束活跃的多轮对话，或在发布后使用新的`session_id`重新开始会话。
+
+如需恢复发布前的配置，请在**百炼控制台**的**应用详情页**执行版本回滚：
+
+1.  单击**版本管理**。
+    
+2.  选中需要恢复的历史版本。
+    
+3.  单击**覆盖当前草稿**。
+    
+4.  单击**发布**，使回滚生效。
+    
+
+为降低对线上调用的影响，建议在业务低峰期发布重大变更；如需同时对外提供多个版本的能力，可通过创建多个应用（使用不同的 APP\_ID）实现版本管理。
 
 ### **流式输出**
 
@@ -1667,7 +1688,7 @@ async function callDashScope() {
             prompt: "你是谁？"
         },
         parameters: {
-            'incremental_output' : 'true' // 增量输出
+            'incremental_output' : true // 增量输出
         },
         debug: {}
     };
@@ -2079,7 +2100,7 @@ public class Main {
 **请求示例**
 
 ```
-curl -X POST https://dashscope.aliyuncs.com/api/v1/apps/{APP_ID}/completion \
+curl -X POST https://dashscope.aliyuncs.com/api/v1/apps/APP_ID/completion \
 --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
 --header 'Content-Type: application/json' \
 --data '{
@@ -2242,7 +2263,7 @@ class Program
     static async Task Main(string[] args)
     {
         // 若没有配置环境变量，可用百炼API Key将下行替换为：apiKey="sk-xxx"。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
-        string apiKey = Environment.GetEnvironmentVariable("DASHSCOPE_API_KEY")?? throw new InvalidOperationException("DASHSCOPE_API_KEY environment variable is not set.");;
+        string apiKey = Environment.GetEnvironmentVariable("DASHSCOPE_API_KEY")?? throw new InvalidOperationException("DASHSCOPE_API_KEY environment variable is not set.");
         string appId = "APP_ID";// 替换为实际的应用ID
         // PIPELINE_ID1替换为指定的知识库ID
         if (string.IsNullOrEmpty(apiKey))
@@ -2832,7 +2853,7 @@ class Program
     static async Task Main(string[] args)
     {
         // 若没有配置环境变量，可用百炼API Key将下行替换为：apiKey="sk-xxx"。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
-        string apiKey = Environment.GetEnvironmentVariable("DASHSCOPE_API_KEY")?? throw new InvalidOperationException("DASHSCOPE_API_KEY environment variable is not set.");;
+        string apiKey = Environment.GetEnvironmentVariable("DASHSCOPE_API_KEY")?? throw new InvalidOperationException("DASHSCOPE_API_KEY environment variable is not set.");
         string appId = "APP_ID";// 替换为实际的应用ID
         string memoryId = "MEMORY_ID";//替换为实际的memory_id
         if (string.IsNullOrEmpty(apiKey))
@@ -2892,7 +2913,7 @@ class Program
     static async Task Main(string[] args)
     {
         // 若没有配置环境变量，可用百炼API Key将下行替换为：apiKey="sk-xxx"。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
-        string apiKey = Environment.GetEnvironmentVariable("DASHSCOPE_API_KEY")?? throw new InvalidOperationException("DASHSCOPE_API_KEY environment variable is not set.");;
+        string apiKey = Environment.GetEnvironmentVariable("DASHSCOPE_API_KEY")?? throw new InvalidOperationException("DASHSCOPE_API_KEY environment variable is not set.");
         string appId = "APP_ID";// 替换为实际的应用ID
         string memoryId = "MEMORY_ID";//替换为实际的memory_id
         if (string.IsNullOrEmpty(apiKey))
@@ -3123,7 +3144,7 @@ response = Application.call(
     app_id='APP_ID',  # 应用ID替换APP_ID
     prompt='请根据以下文件帮我推荐一款3000元以下的手机',
     rag_options={
-        "session_file_ids": ["Session_Session_File_ID1"],  # Session_File_ID1 替换为实际的临时文件ID,逗号隔开多个
+        "session_file_ids": ["Session_File_ID1"],  # Session_File_ID1 替换为实际的临时文件ID,逗号隔开多个
     }
 )
 
@@ -3187,7 +3208,7 @@ public class Main {
 **请求示例**
 
 ```
-curl -X POST https://dashscope.aliyuncs.com/api/v1/apps/{APP_ID}/completion \
+curl -X POST https://dashscope.aliyuncs.com/api/v1/apps/APP_ID/completion \
 --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
 --header 'Content-Type: application/json' \
 --data '{
@@ -3348,7 +3369,7 @@ class Program
     static async Task Main(string[] args)
     {
         // 若没有配置环境变量，可用百炼API Key将下行替换为：apiKey="sk-xxx"。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
-        string apiKey = Environment.GetEnvironmentVariable("DASHSCOPE_API_KEY")?? throw new InvalidOperationException("DASHSCOPE_API_KEY environment variable is not set.");;
+        string apiKey = Environment.GetEnvironmentVariable("DASHSCOPE_API_KEY")?? throw new InvalidOperationException("DASHSCOPE_API_KEY environment variable is not set.");
         string appId = "APP_ID";// 替换为实际的应用ID
         // Session_File_ID1替换为指定的临时文件ID
         if (string.IsNullOrEmpty(apiKey))
@@ -3658,7 +3679,7 @@ public class Main {
 **URL请求示例**
 
 ```
-curl -X POST https://dashscope.aliyuncs.com/api/v1/apps/{APP_ID}/completion \
+curl -X POST https://dashscope.aliyuncs.com/api/v1/apps/APP_ID/completion \
 --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
 --header 'Content-Type: application/json' \
 --data '{
@@ -3680,7 +3701,7 @@ base64_image=$(base64 -i /path/to/your/image.jpeg)  # macOS/Linux
 data_url="data:image/jpeg;base64,${base64_image}"
 
 # 调用应用 API
-curl -X POST https://dashscope.aliyuncs.com/api/v1/apps/{APP_ID}/completion \
+curl -X POST https://dashscope.aliyuncs.com/api/v1/apps/APP_ID/completion \
 --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
 --header 'Content-Type: application/json' \
 --data "{
@@ -3895,7 +3916,7 @@ class Program
     static async Task Main(string[] args)
     {
         // 若没有配置环境变量，可用百炼API Key将下行替换为：apiKey="sk-xxx"。但不建议在生产环境中直接将API Key硬编码到代码中，以减少API Key泄露风险。
-        string apiKey = Environment.GetEnvironmentVariable("DASHSCOPE_API_KEY")?? throw new InvalidOperationException("DASHSCOPE_API_KEY environment variable is not set.");;
+        string apiKey = Environment.GetEnvironmentVariable("DASHSCOPE_API_KEY")?? throw new InvalidOperationException("DASHSCOPE_API_KEY environment variable is not set.");
         string appId = "APP_ID";// 替换为实际的应用ID
         
         if (string.IsNullOrEmpty(apiKey))
@@ -4563,6 +4584,7 @@ API 调用时，通过 `user_defined_params` 以 `mcp_id` 为 key 传入对应�
 
 组合逻辑：  
 不同键之间为“与”(AND) 逻辑。例如，`"author": "John.Doe", "source": ["internal_wiki", "public_docs"]` 表示筛选出作者是 "John.Doe" 并且来源是 "internal\_wiki" 或 "public\_docs" 的文档。  
+  
 
 > Java SDK 中为 **metadataFilter**。
 
@@ -4587,7 +4609,7 @@ API 调用时，通过 `user_defined_params` 以 `mcp_id` 为 key 传入对应�
 
 -   可在[知识库](https://bailian.console.aliyun.com/#/knowledge-base)页面，单击知识库卡片的**查看详情** > **查看索引**查看。
     
--   或通过[ListChunks](https://help.aliyun.com/zh/model-studio/developer-reference/api-bailian-2023-12-29-listchunks)接口获取。
+-   或通过[ListChunks](https://help.aliyun.com/zh/model-studio/api-bailian-2023-12-29-listchunks)接口获取。
     
 
 该对象由一个或多个键值对组成：
@@ -4605,6 +4627,7 @@ API 调用时，通过 `user_defined_params` 以 `mcp_id` 为 key 传入对应�
 
 组合逻辑：  
 不同键之间为“与”(AND) 逻辑。例如，`"year": 2024, "department": ["技术部", "产品部"]` 表示筛选出年份是 2024 并且 部门是 "技术部" 或 "产品部" 的文档切片。  
+  
 
 > Java SDK 中为 **structuredFilter**。
 

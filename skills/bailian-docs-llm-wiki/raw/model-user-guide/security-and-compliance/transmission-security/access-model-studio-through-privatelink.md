@@ -4,11 +4,18 @@
 
 ## **工作原理**
 
+百炼无专属网关，仅支持以下两种接入方式：
+
+-   **公网调用**：直接访问公网 MaaS 域名 `dashscope.aliyuncs.com`（国际站为 `dashscope-intl.aliyuncs.com`）或业务空间级公网域名，流量经公网到达百炼。
+    
+-   **PrivateLink 私网连接**：在 VPC 中创建接口终端节点后，通过终端节点服务域名访问百炼，流量全程走阿里云内网，不经过公网。
+    
+
 在专有网络（VPC）中创建接口终端节点后，阿里云私网连接服务（PrivateLink）将为您的VPC与阿里云百炼建立一条私网连接（终端节点连接）。该连接为单向设计，仅允许您的 VPC 内的资源主动访问阿里云百炼，阿里云百炼无法通过此连接反向访问您 VPC 内的资源。
 
 VPC 内的计算资源访问终端节点时，流量将通过 PrivateLink 转发至阿里云百炼服务端，不经过公网。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2868390871/CAEQYxiBgMCtvojh0RkiIDEzOTVhZTNhNGQxYTQ3YTQ5MjlhODJjZjM4MTY2NjQw5274221_20250627113930.173.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5798507871/CAEQYxiBgMCtvojh0RkiIDEzOTVhZTNhNGQxYTQ3YTQ5MjlhODJjZjM4MTY2NjQw5274221_20250627113930.173.svg)
 
 如需从其他地域的VPC内进行私网访问，请参考[跨地域私网访问阿里云百炼 API](#a576f2631au0h)。
 
@@ -56,9 +63,9 @@ VPC 内的计算资源访问终端节点时，流量将通过 PrivateLink 转发
 
 完成接口终端节点创建后，可以在接口终端节点的详情页中获取服务域名，用于后续私网访问阿里云百炼 API。
 
-**默认服务域名**仅支持 HTTP 协议，如需 HTTPS 访问，可使用**自定义服务域名**。
+**默认服务域名**仅支持 HTTP 协议，如需 HTTPS 访问，可使用**自定义服务域名**。请注意：HTTP 为明文传输，请求头中携带的 API Key 等敏感信息在传输过程中不加密。虽然流量仅经过阿里云内网，如您对传输安全有更高要求，建议使用自定义服务域名并通过 HTTPS 访问。
 
-在**基本信息**页签下找到**终端节点服务域名**区域，可获取默认服务域名（格式为 `ep-{实例ID}.privatelink.aliyuncs.com`）。开启**自定义服务域名**开关后，可获取自定义服务域名（格式为 `vpc-{实例ID}.{地域ID}.dashscope.aliyuncs.com`）。
+在**基本信息**页签下找到**终端节点服务域名**区域，可获取默认服务域名（格式为 `ep-{实例ID}.dashscope.{地域ID}.privatelink.aliyuncs.com`）。开启**自定义服务域名**开关后，可获取自定义服务域名（格式为 `vpc-{实例ID}.{地域ID}.dashscope.aliyuncs.com`）。
 
 ### **步骤三：调用验证**
 
@@ -195,7 +202,7 @@ public class Main {
 }
 ```
 
-> 调用前，需要您已完成[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。如需要直接传入 API Key，请将`$DASHSCOPE_API_KEY` 替换为您的 API Key。
+> 调用前，需要您已完成[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。如需要直接传入 API Key，请将`$DASHSCOPE_API_KEY` 替换为您的 API Key。
 
 ## **跨地域私网访问**阿里云**百炼 API**
 
@@ -244,7 +251,7 @@ public class Main {
 
 配置完成后，在发起端 VPC 内访问前文中配置好的终端节点默认服务域名时，转发路由器（TR）会将流量路由至阿里云百炼服务所在地域的终端节点，实现跨地域私网访问阿里云百炼 API。
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3868390871/CAEQZhiBgICUtYmu2RkiIDk3YWZiYjVkYWUyNTQwNDI4ZTQyZGMyMTk5MDIyYzg45274221_20250627113930.173.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/5798507871/CAEQZhiBgICUtYmu2RkiIDk3YWZiYjVkYWUyNTQwNDI4ZTQyZGMyMTk5MDIyYzg45274221_20250627113930.173.svg)
 
 默认情况下，终端节点的默认服务域名可以在跨地域互联的 VPC 内直接被访问，但自定义服务域名仅在终端节点所在地域 VPC 内有效。因此，如需在发起端通过自定义域名私网访问阿里云百炼 API ，可参考[快速使用内网域名解析](https://help.aliyun.com/zh/dns/pvtz-quickly-use-the-built-in-domain-name-resolution)，创建一个与自定义服务域名同名的内网域名，将该域名通过 CNAME 记录解析至该终端节点的默认服务域名：
 
@@ -312,3 +319,15 @@ public class Main {
     配置完成后，即可通过 `https://test-for-dns-right.dashscope.aliyuncs.com/api/v1`（OpenAI兼容模式为`https://test-for-dns-right.dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`）进行模型调用。
     
     > 使用带下划线的域名 `https://test_for_dns_wrong.dashscope.aliyuncs.com/api/v1` 会导致调用报错。
+    
+4.  **调用百炼 API 出现超时或长时间无响应，如何排查？**
+    
+    请按以下四个方向排查：
+    
+    -   **网络问题**：DNS 解析失败，或到终端节点的 TCP 连接超时。请检查发起端 VPC 与终端节点是否在同一 VPC（或已通过云企业网互通）、终端节点关联的安全组是否在入方向放通 80（HTTP）和 443（HTTPS）端口，以及自定义服务域名的内网权威域名解析是否正确指向终端节点默认服务域名。
+        
+    -   **服务限流**：请求速率或 Token 消耗超出模型 RPM/TPM 上限时，接口返回 HTTP 429（`Throttling.RateQuota` 等限流错误码）。请在控制台的模型限流页面查看当前配额，必要时提交提额申请。
+        
+    -   **服务高峰期**：业务高峰时段的请求会进入服务端排队队列，表现为响应延迟增大甚至超时。请适当增加客户端超时时间，或错峰重试。
+        
+    -   **参数设置**：QwQ、QVQ 等推理型模型仅支持流式（stream）调用，以非流式方式调用会直接报错或长时间不返回。请在请求中设置 `stream=true`，或使用对应 SDK 的流式接口启用流式输出。

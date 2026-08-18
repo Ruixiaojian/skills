@@ -25,7 +25,7 @@
 
 ### **模型调优流程**
 
-![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/1825396871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
+![image](https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2119107871/CAEQZhiBgMDg9PGS2hkiIDNlZDFiMGRlMTJhOTQ1YzJhMmNjNDM3NzQ1ZjNiOGZk4608430_20240830103738.564.svg)
 
 详情参见：
 
@@ -319,8 +319,6 @@ qwen-plus-character-2025-11-06
 
 支持
 
-> `-Base`表示该模型只完成了预训练，虽然模型内已经存储了海量的知识，但无法正常进行对话。
-
 #### 视觉理解（千问VL）
 
 **模型服务**
@@ -420,8 +418,6 @@ qwen2.5-vl-7b-instruct
 ×
 
 ×
-
-> `-Base`表示该模型只完成了预训练，虽然模型内已经存储了海量的知识，但无法正常进行对话。
 
 #### **调优方法对比**
 
@@ -879,7 +875,7 @@ def smart_size(image_path, max_pixels, vl_high_resolution_images):
     image = Image.open(image_path)
     height, width = image.height, image.width
 
-    # Qwen3.6、Qwen3.5、Qwen3-VL 等模型的缩放因子为 32；其他模型为 28
+    # Qwen3.6、Qwen3.5、Qwen3-VL 等模型的缩放因子为 32；使用其他模型时，请将 factor 改为 28
     factor = 32
     h_bar = round(height / factor) * factor
     w_bar = round(width / factor) * factor
@@ -951,7 +947,7 @@ if __name__ == "__main__":
     FPS_MAX_FRAMES = 2000
     
     # 视频输入的最大像素值，使用Qwen3-VL-Plus模型，请将VIDEO_TOTAL_PIXELS设置为131072 * 32 * 32，其他模型设置为65536 * 32 * 32
-    VIDEO_TOTAL_PIXELS = int(float(os.environ.get('VIDEO_MAX_PIXELS', 131072 * 32 * 32)))
+    VIDEO_TOTAL_PIXELS = int(float(os.environ.get('VIDEO_TOTAL_PIXELS', 131072 * 32 * 32)))
     
     def round_by_factor(number: int, factor: int) -> int:
         """返回与”number“最接近的整数，该整数可被”factor“整除。"""
@@ -1107,7 +1103,7 @@ if __name__ == "__main__":
     VIDEO_MAX_PIXELS = 640 * 32 * 32
     
     # 视频输入的最大像素值，使用Qwen3-VL-Plus模型，请将VIDEO_TOTAL_PIXELS设置为131072 * 32 * 32，其他模型设置为65536 * 32 * 32
-    VIDEO_TOTAL_PIXELS = int(float(os.environ.get('VIDEO_MAX_PIXELS', 131072 * 32 * 32)))
+    VIDEO_TOTAL_PIXELS = int(float(os.environ.get('VIDEO_TOTAL_PIXELS', 131072 * 32 * 32)))
     
     def round_by_factor(number: int, factor: int) -> int:
         """返回与”number“最接近的整数，该整数可被”factor“整除。"""
@@ -1225,7 +1221,7 @@ if __name__ == "__main__":
 
 -   文本生成模型调优虽然能在特定业务/场景取得非常好的效果，但有以下限制：
     
-    -   **耗时较长**，包括：拥有一个大规模（最少 0.5亿 token）CPT 数据集、构建一个有效（1000+）SFT 数据集、收集足够的（100+）Bad Case 构建[模型部署计费](https://help.aliyun.com/zh/model-studio/model-training-and-deployment-billing#2083766ef99p1)有效 DPO 数据集、模型优化迭代速度慢等。
+    -   **耗时较长**，包括：拥有一个大规模（最少 0.5亿 token）CPT 数据集、构建一个有效（1000+）SFT 数据集、收集足够的（100+）Bad Case 构建有效 DPO 数据集、模型优化迭代速度慢等。
         
     -   **费用较高，**调优后的模型部署后才能使用，[模型部署计费](https://help.aliyun.com/zh/model-studio/model-training-and-deployment-billing#2083766ef99p1)较高。
         

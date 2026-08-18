@@ -8,11 +8,11 @@
 
 > 目前支持文本和图片类型的模型，模型与 AI 安全护栏服务的对应关系，以及计费信息，请参见[面向阿里云百炼用户的AI安全护栏服务](https://help.aliyun.com/zh/document_detail/2923687.html)。
 
-### 步骤一：开通内容审核服务
+### 步骤一：开通 AI 安全护栏服务
 
-访问 AI 安全护栏[购买](<https://common-buy.aliyun.com/?commodityCode= lvwang_guardrail_public_cn>)页面，创建**服务关联角色**，单击**立即购买**即可完成开通。
+访问 AI 安全护栏[购买](https://common-buy.aliyun.com/?commodityCode=lvwang_guardrail_public_cn)页面，创建**服务关联角色**，单击**立即购买**即可完成开通。
 
-### 步骤二：授权内容安全设置
+### 步骤二：授权 AI 安全护栏
 
 1.  访问**[安全管理](https://bailian.console.aliyun.com/?globalset=1#/efm/global_set)**页面。
     
@@ -20,27 +20,24 @@
     
     即页面显示**全局设置**标题，右侧状态为**已开通（不可取消）**，页面主体展示**自建安全机制承诺函**全文内容。
     
-2.  单击**去授权**，开启内容安全设置。
+2.  单击**去授权**，开启 AI 安全护栏。
     
 3.  确认授权。
     
 
 ### 步骤三：设置请求头header
 
-调用阿里云百炼时，在请求头header设置以下参数，接入 AI 安全护栏服务。
+调用阿里云百炼时，在请求头header设置以下参数，接入 AI 安全护栏服务。注意：参数值为 JSON 字符串，而非嵌套 JSON 对象。
 
 ```
 {
-    "X-DashScope-DataInspection": {
-       "input": "cip",
-       "output": "cip"
-    }
+    "X-DashScope-DataInspection": "{\"input\":\"cip\",\"output\":\"cip\"}"
 }
 ```
 
 **调用示例**
 
-> 调用时请设置DASHSCOPE\_API\_KEY，获取方法，请参见[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
+> 调用时请设置DASHSCOPE\_API\_KEY，获取方法，请参见[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
 
 ## Python
 
@@ -316,7 +313,7 @@ curl -X POST https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation
 ```
 {
     "code": "DataInspectionFailed",
-    "message": "Output data may contain inappropriate content.",
+    "message": "Input data may contain inappropriate content. For details, see: https://help.aliyun.com/zh/model-studio/error-code#inappropriate-content",
     "request_id": "f4109865-bcb5-9e4d-8fa9-xxxxxxxxxxxx"
 }
 ```
@@ -325,7 +322,7 @@ curl -X POST https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation
 
 登录[AI 安全护栏控制台](https://yundun.console.aliyun.com/?spm=a2c4g.11186623.0.0.7129eb8bc4Mksa&p=guardrail#/overview)，在**检测结果** > **结果查询**页签页面查看审核结果，以进一步分析文本内容中高频的违规类型，审核结果示例如下。
 
-结果查询页面包含筛选栏（支持按条件、文本内容、时间范围搜索）和结果表格。表格列包括**文本内容**、**服务Service**、**风险等级**、**返回标签（释义）**、**反馈结果**、**请求时间**和**操作**。示例中两条记录分别对应`bailian_query_check`（请求检查）和`bailian_response_check`（响应检查）服务，均被标记为**高风险**，返回标签为`contraband_act（疑似违禁行为）:100`，每行可单击**详情**或**反馈**进行操作。
+结果查询页面包含筛选栏（支持按条件、文本内容、时间范围搜索）和结果表格。表格列包括**文本内容**、**服务Service**、**风险等级**、**返回标签（释义）**、**反馈结果**、**请求时间**和**操作**。示例中两条记录分别对应`bailian_query_check`（请求检查）和`bailian_response_check`（响应检查）服务，均被标记为**高风险**，返回标签为`contraband_act（疑似其他的刑事犯罪）:100`，每行可单击**详情**或**反馈**进行操作。
 
 ## 知识库检索场景安全拦截
 
