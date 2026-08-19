@@ -1,19 +1,19 @@
 {
-  "updatedAt": "2026-08-19",
+  "updatedAt": "2026-08-20",
   "totalFamilies": 179,
-  "totalModels": 399,
+  "totalModels": 401,
   "profileCoverage": {
-    "full": 339,
-    "partial": 16,
-    "structured-only": 44,
+    "full": 0,
+    "partial": 0,
+    "structured-only": 401,
     "none": 0
   },
   "capabilityDistribution": {
-    "TG": 38,
+    "TG": 37,
     "IG": 32,
     "VG": 27,
     "TTS": 16,
-    "Reasoning": 14,
+    "Reasoning": 15,
     "ASR": 14,
     "VU": 9,
     "Realtime-ASR": 8,
@@ -2368,14 +2368,17 @@
       "name": "Qwen3.8开源模型",
       "primaryCapability": "TG",
       "capabilities": [
-        "TG"
+        "TG",
+        "Reasoning",
+        "VU"
       ],
       "providers": [
         "qwen"
       ],
-      "itemCount": 1,
+      "itemCount": 2,
       "items": [
-        "qwen3.8-2.4t-a95b"
+        "qwen3.8-2.4t-a95b",
+        "qwen3.8-27b"
       ],
       "maxContextWindow": 1000000
     },
@@ -3061,19 +3064,20 @@
     {
       "slug": "zhipu-models-market-place",
       "name": "智谱GLM系列文本模型",
-      "primaryCapability": "TG",
+      "primaryCapability": "Reasoning",
       "capabilities": [
-        "TG",
-        "Reasoning"
+        "Reasoning",
+        "TG"
       ],
       "providers": [
         "zhipu-ai"
       ],
-      "itemCount": 3,
+      "itemCount": 4,
       "items": [
         "ZHIPU/GLM-5",
         "ZHIPU/GLM-5.1",
-        "ZHIPU/GLM-5.2"
+        "ZHIPU/GLM-5.2",
+        "ZHIPU/GLM-5.3"
       ],
       "maxContextWindow": 1048576
     }

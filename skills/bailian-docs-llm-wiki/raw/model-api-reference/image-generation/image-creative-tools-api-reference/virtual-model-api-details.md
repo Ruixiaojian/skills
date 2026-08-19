@@ -78,7 +78,7 @@ virtualmodel-v2
 
 ## 前提条件
 
-您需要已[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
+您需要已[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
 
 ## HTTP调用
 
@@ -91,7 +91,7 @@ virtualmodel-v2
 
 ### **步骤1：创建任务获取任务ID**
 
-`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/virtualmodel/generation/`
+`POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/virtualmodel/generation`
 
 调用时请将`{WorkspaceId}`替换为真实的[业务空间ID](https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id#d3eb3cd37b7fu)。
 
@@ -323,9 +323,7 @@ URL 需为公网可访问的地址，并支持 HTTP 或 HTTPS 协议。您也可
 
 控制生成seed。**仅在V2版本使用。**
 
-取值范围：\[-1,10000000\]。默认值为-1, 表示系统随机内置seed.
-
-> seed表示随机种子值，-1表示系统内部随机一个值；0至10000000则是由用户自行决定所用的随机种子值，同样的seed值会生成相同的结果。
+取值范围：\[0, 4294967290\]。不传时系统随机生成 seed。指定具体值（0～4294967290）时使用固定随机种子，相同 seed 值会生成相同结果。
 
 **aspect\_ratio** _String 可选_
 

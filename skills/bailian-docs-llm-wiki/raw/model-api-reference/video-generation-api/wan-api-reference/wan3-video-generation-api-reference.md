@@ -1,6 +1,6 @@
 # 万相3.0-视频生成API参考
 
-万相3.0是全能参考视频生成模型（All-in-One），统一支持**文生视频**、**图生视频**（首帧/首尾帧）和**参考生视频**等多种用法。最长可生成30秒视频。当前处于**邀测**阶段。
+万相3.0是全能参考视频生成模型（All-in-One），统一支持**文生视频**、**图生视频**（首帧/首尾帧）和**参考生视频**等多种用法。最长可生成30秒视频，输出帧率为30fps。当前处于**邀测**阶段。
 
 ## 适用范围
 
@@ -10,7 +10,7 @@
     
 -   **选择 URL**：选择对应的地域 Endpoint URL。
     
--   **配置 API Key**：选择地域并[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，再[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
+-   **配置 API Key**：选择地域并[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)，再[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。
     
 
 **说明**
@@ -742,7 +742,7 @@ task\_id查询有效期为 24 小时，超时后将无法查询，返回以下�
 
 **fps** `_integer_`
 
-生成视频的帧率。
+生成视频的帧率。默认值为30。
 
 **SR** `_integer_`
 

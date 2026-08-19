@@ -4,7 +4,7 @@
 
 **重要**
 
-本文档描述的功能仅在华北2（北京）地域可用，如需使用模型，需从华北2（北京）地域[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
+本文档描述的功能仅在华北2（北京）地域可用，如需使用模型，需从华北2（北京）地域[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)。
 
 **重要**
 
@@ -23,9 +23,9 @@
 
 ## **快速开始**
 
-glm-5.2 是 GLM 系列最新模型，支持真正可用的 1M 上下文。运行以下代码快速调用思考模式的 glm-5.2 模型。
+ZHIPU/GLM-5.3 是 GLM 系列最新模型，支持真正可用的 1M 上下文。运行以下代码快速调用思考模式的 ZHIPU/GLM-5.3 模型。
 
-需要已[获取API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并完成[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如果通过SDK调用，需要[安装SDK](https://help.aliyun.com/zh/model-studio/install-sdk#8833b9274f4v8)。
+需要已[获取与配置 API Key](https://help.aliyun.com/zh/model-studio/get-api-key)并完成[配置API Key到环境变量](https://help.aliyun.com/zh/model-studio/configure-api-key-through-environment-variables)。如果通过SDK调用，需要[安装SDK](https://help.aliyun.com/zh/model-studio/install-sdk#8833b9274f4v8)。
 
 ## OpenAI兼容
 
@@ -51,10 +51,10 @@ client = OpenAI(
 
 messages = [{"role": "user", "content": "你是谁"}]
 completion = client.chat.completions.create(
-    model="ZHIPU/GLM-5.2",
+    model="ZHIPU/GLM-5.3",
     messages=messages,
     # 通过 extra_body 设置 enable_thinking 开启思考模式
-    # reasoning_effort 控制思考深度，可选值：max（默认）、high、none
+    # reasoning_effort 控制思考深度，可选值：max（默认）、high、low
     extra_body={"enable_thinking": True, "reasoning_effort": "max"},
     stream=True,
     stream_options={
@@ -149,11 +149,11 @@ async function main() {
         const messages = [{ role: 'user', content: '你是谁' }];
         
         const stream = await openai.chat.completions.create({
-            model: 'ZHIPU/GLM-5.2',
+            model: 'ZHIPU/GLM-5.3',
             messages,
             // 注意：在 Node.js SDK，enable_thinking 这样的非标准参数作为顶层属性传递，无需放在 extra_body 中
             enable_thinking: true,
-            // reasoning_effort 控制思考深度，可选值：max（默认）、high、none
+            // reasoning_effort 控制思考深度，可选值：max（默认）、high、low
             reasoning_effort: 'max',
             stream: true,
             stream_options: {
@@ -236,7 +236,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
 -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
 -H "Content-Type: application/json" \
 -d '{
-    "model": "ZHIPU/GLM-5.2",
+    "model": "ZHIPU/GLM-5.3",
     "messages": [
         {
             "role": "user",
@@ -254,7 +254,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
 
 ## **流式工具调用**
 
-glm-5.2、glm-5.1、glm-5支持`tool_stream`参数（boolean，默认`false`），仅在`stream`为`true`时生效。开启后，Function Calling 返回的 tool\_call 参数（arguments）会以流式增量方式逐步返回。
+ZHIPU/GLM-5.3、ZHIPU/GLM-5.2ZHIPU/GLM-5.1、ZHIPU/GLM-5支持`tool_stream`参数（boolean，默认`false`），仅在`stream`为`true`时生效。开启后，Function Calling 返回的 tool\_call 参数（arguments）会以流式增量方式逐步返回。
 
 `stream`与`tool_stream`的组合行为如下：
 
@@ -318,7 +318,7 @@ tools = [
 messages = [{"role": "user", "content": "北京天气怎么样"}]
 
 completion = client.chat.completions.create(
-    model="ZHIPU/GLM-5.2",
+    model="ZHIPU/GLM-5.3",
     tools=tools,
     messages=messages,
     extra_body={
@@ -376,7 +376,7 @@ const tools = [
 async function main() {
     try {
         const stream = await openai.chat.completions.create({
-            model: 'ZHIPU/GLM-5.2',
+            model: 'ZHIPU/GLM-5.3',
             messages: [{ role: 'user', content: '北京天气怎么样' }],
             tools: tools,
             tool_stream: true,
@@ -426,7 +426,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
 -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
 -H "Content-Type: application/json" \
 -d '{
-    "model": "ZHIPU/GLM-5.2",
+    "model": "ZHIPU/GLM-5.3",
     "messages": [
         {
             "role": "user",
@@ -454,6 +454,33 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
     "tool_stream": true
 }'
 ```
+
+## **思考控制（thinking.type 与 reasoning\_effort）**
+
+ZHIPU/GLM-5.3 始终以思考模式运行，不支持关闭思考，请保持 `thinking.type` 为 `enabled`（使用 `enable_thinking` 时保持为 `true`），并通过 `reasoning_effort` 控制推理深度。
+
+**参数**
+
+**说明**
+
+**支持的值**
+
+`thinking.type`
+
+控制是否开启思考，默认为 `enabled`。ZHIPU/GLM-5.3 不再支持 `disabled`，传入 `disabled` 会导致 API 请求失败。
+
+`enabled`
+
+`reasoning_effort`
+
+控制模型的推理深度。未传入时默认为 `max`，推荐使用 `max`。
+
+-   `max`（默认）：深度推理
+    
+-   `high`：增强推理
+    
+-   `low`：轻度推理
+    
 
 ## **清除历史思考（clear\_thinking）**
 
@@ -494,7 +521,7 @@ messages = [
 ]
 
 completion = client.chat.completions.create(
-    model="ZHIPU/GLM-5.2",
+    model="ZHIPU/GLM-5.3",
     messages=messages,
     extra_body={
     "thinking": {
@@ -514,7 +541,7 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
 -H "Authorization: Bearer $DASHSCOPE_API_KEY" \
 -H "Content-Type: application/json" \
 -d '{
-    "model": "ZHIPU/GLM-5.2",
+    "model": "ZHIPU/GLM-5.3",
     "messages": [
         {"role": "user", "content": "请计算 15 * 23 是多少？"},
         {"role": "assistant", "content": "15 乘以 23 等于 345。", "reasoning_content": "15 * 23 = 345"},
@@ -546,6 +573,24 @@ curl -X POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/
 [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)
 
 [**思考深度控制**](https://docs.bigmodel.cn/cn/guide/start/concept-param#reasoning_effort)
+
+ZHIPU/GLM-5.3
+
+支持
+
+支持
+
+不支持
+
+不支持
+
+支持
+
+支持
+
+支持
+
+> reasoning\_effort
 
 ZHIPU/GLM-5.2
 
@@ -622,6 +667,18 @@ ZHIPU/GLM-5
 
 **repetition\_penalty**
 
+ZHIPU/GLM-5.3
+
+true（不可关闭）
+
+1.0
+
+0.95
+
+\-
+
+\-
+
 ZHIPU/GLM-5.2
 
 true
@@ -662,7 +719,7 @@ true
 
 ## **模型列表与计费**
 
-GLM 系列模型是智谱AI专为智能体设计的混合推理模型，提供思考与非思考两种模式。
+GLM 系列模型是智谱AI专为智能体设计的混合推理模型，提供思考与非思考两种模式，其中 ZHIPU/GLM-5.3 仅支持思考模式。
 
 模型上下文长度与价格信息请参见[百炼控制台](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/all)。
 

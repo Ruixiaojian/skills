@@ -6630,6 +6630,20 @@ qwen3.8-2.4t-a95b
 
 100万Token
 
+qwen3.8-27b
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+非思考和思考模式
+
+0<Token≤1M
+
+3元
+
+12元
+
+100万Token
+
 #### 新加坡
 
 **模型 ID（Model ID）**
@@ -6659,6 +6673,20 @@ qwen3.8-2.4t-a95b
 14.988元
 
 44.965元
+
+qwen3.8-27b
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+国际
+
+非思考和思考模式
+
+0<Token≤1M
+
+3.646元
+
+21.875元
 
 ### **Qwen3.6**
 
@@ -8912,9 +8940,13 @@ deepseek-v4-flash-0731-us
 
 国际
 
-1.499元
+忙时 3.208元
 
-2.998元
+闲时 1.604元
+
+忙时 9.625元
+
+闲时 4.813元
 
 #### 新加坡
 
@@ -9116,18 +9148,6 @@ deepseek-v4-pro
 
 35.972元
 
-deepseek-v4-pro-0813
-
-日本
-
-忙时 9元
-
-闲时 4.5元
-
-忙时 27元
-
-闲时 13.5元
-
 deepseek-v4-flash
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
@@ -9144,9 +9164,13 @@ deepseek-v4-flash-0731
 
 日本
 
-1.499元
+忙时 3.208元
 
-2.998元
+闲时 1.604元
+
+忙时 9.625元
+
+闲时 4.813元
 
 ### **DeepSeek-硅基流动**
 
@@ -9264,6 +9288,16 @@ vanchin/deepseek-ocr
 
 有效期：自开通百炼/模型发布/申请通过之日起90天内（以较晚者为准）
 
+kimi-k3
+
+仅思考模式
+
+20元
+
+100元
+
+100万Token
+
 kimi-k2.7-code
 
 仅思考模式
@@ -9326,6 +9360,16 @@ Moonshot-Kimi-K2-Instruct
 
 **输出单价（每百万Token）**
 
+kimi-k3
+
+全球
+
+仅思考模式
+
+20元
+
+100元
+
 kimi-k2.7-code
 
 全球
@@ -9358,6 +9402,16 @@ kimi-k2.5
 
 **输出单价（每百万Token）**
 
+kimi-k3
+
+全球
+
+仅思考模式
+
+20元
+
+100元
+
 kimi-k2.7-code
 
 全球
@@ -9389,6 +9443,18 @@ kimi-k2.5
 **输入单价（每百万Token）**
 
 **输出单价（每百万Token）**
+
+kimi-k3
+
+> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
+
+全球
+
+仅思考模式
+
+20元
+
+100元
 
 kimi-k2.7-code
 
@@ -9424,6 +9490,16 @@ kimi-k2.5
 
 **输出单价（每百万Token）**
 
+kimi-k3
+
+国际
+
+仅思考模式
+
+21.875元
+
+109.376元
+
 kimi-k2.7-code
 
 国际
@@ -9450,16 +9526,6 @@ kimi-k2.7-code
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
 
-kimi/kimi-k3
-
-> [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
-
-20元
-
-100元
-
-无
-
 kimi/kimi-k2.7-code-highspeed
 
 > [上下文缓存](https://help.aliyun.com/zh/model-studio/context-cache)享有折扣
@@ -9467,6 +9533,8 @@ kimi/kimi-k2.7-code-highspeed
 13元
 
 54元
+
+无
 
 kimi/kimi-k2.7-code
 
@@ -9869,6 +9937,16 @@ glm-5.1
 > **思维链和回答**
 
 **免费额度**[（注）](https://help.aliyun.com/zh/model-studio/new-free-quota#591f3dfedfyzj)
+
+ZHIPU/GLM-5.3
+
+非思考和思考模式
+
+8元
+
+28元
+
+无
 
 ZHIPU/GLM-5.2
 
