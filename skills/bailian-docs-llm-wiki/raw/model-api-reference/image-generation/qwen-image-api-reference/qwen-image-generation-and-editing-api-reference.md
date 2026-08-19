@@ -279,7 +279,7 @@ curl --location 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/servi
     "usage": {
         "output_height": 1024,
         "output_width": 1024,
-        "input_image_count": 1,
+        "input_image_count": 0,
         "input_image_type": "qima_input_1k",
         "output_image_count": 1,
         "output_image_type": "qima_output_1k"

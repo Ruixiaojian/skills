@@ -120,6 +120,10 @@
 
 > 如需停止记录，只需在模型监控配置中关闭推理日志即可。
 
+**说明**
+
+推理日志仅记录 HTTP API 调用的输入与输出。WebSocket 实时调用（如 qwen-audio 实时语音模型）产生的转写文本（partial/final）和语音回复音频仅在会话中传输给客户端，不写入推理日志。审计日志会记录此类调用的模型名、状态码、时长和 Token 用量，但不包含转写文本和音频内容。
+
 ### **步骤二：查看历史对话**
 
 1.  在模型监控列表中找到目标模型，点击其右侧**操作**列的**日志**。
@@ -724,7 +728,7 @@
 
 ## **配额与限制**
 
--   **数据保留周期：**普通和高级监控的数据默认均保留**30天**。如需查询更早的用量信息，请通过[费用与成本](https://billing-cost.console.aliyun.com/finance/expense-report/expense-detail-by-instance?month=2025-02&statisticItem=DEFAULT_CHARGE_ITEM&commodityCode%5BfilterMode%5D=IN&commodityCode%5Bvalues%5D=sfm_deployment_public_cn%26sfm_inference_public_cn%26sfm_training_public_cn&statisticCycle=MONTHLY_SUMMARY)页面查询。
+-   **数据保留周期：**普通和高级监控的数据默认均保留**30天**。开启推理日志后，调用数据写入日志服务SLS并保留**30天**，可在SLS控制台调整保留时间。关闭推理日志后，日志不再同步到SLS。如需查询更早的用量信息，请通过[费用与成本](https://billing-cost.console.aliyun.com/finance/expense-report/expense-detail-by-instance?month=2025-02&statisticItem=DEFAULT_CHARGE_ITEM&commodityCode%5BfilterMode%5D=IN&commodityCode%5Bvalues%5D=sfm_deployment_public_cn%26sfm_inference_public_cn%26sfm_training_public_cn&statisticCycle=MONTHLY_SUMMARY)页面查询。
     
 -   **告警模板限制：**每个业务空间最多可创建**100**个告警模板。
     
@@ -854,6 +858,10 @@
         
 5.  完成以上所有权限配置后，返回[模型监控（北京）](https://bailian.console.aliyun.com/?tab=model#/model-telemetry)页面，使用子账号重试开启**推理日志**。
     
+
+**如何确保调用后的数据被删除？**
+
+百炼平台在调用完成后不会即时物理删除数据，数据保留遵循服务协议的最短必要时间原则。推理日志默认关闭；开启后，调用数据写入日志服务SLS并保留**30天**，关闭后不再写入新数据。如需缩短保留时间，可在SLS控制台修改对应日志库的TTL。
 
 ## **附录**
 

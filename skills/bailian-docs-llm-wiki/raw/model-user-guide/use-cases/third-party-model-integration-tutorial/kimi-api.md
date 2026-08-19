@@ -2156,7 +2156,7 @@ Moonshot-Kimi-K2-Instruct
 
 **说明**
 
-动态加载工具目前仅 kimi-k3 支持 ，在其他模型（如 kimi-k2.6）上请求会返回`tokenization failed`错误。
+动态加载工具目前仅 kimi-k3 支持，在其他模型（如 kimi-k2.6）上请求会返回`tokenization failed`错误。
 
 ### **在 messages 中注入工具声明**
 
@@ -2404,9 +2404,13 @@ Kimi 系列模型是由月之暗面公司（Moonshot AI）推出的大语言模�
 -   Moonshot-Kimi-K2-Instruct：不支持深度思考，直接生成回复，响应速度更快，适用于需要快速直接回答的场景。
     
 
-> kimi-k3 价格信息请参见[模型调用计费](https://help.aliyun.com/zh/model-studio/model-pricing)。
+**说明**
 
-> kimi-k2.7-code 价格信息请参见[模型调用计费](https://help.aliyun.com/zh/model-studio/model-pricing)。
+kimi-k3 不支持 `thinking_budget` 参数，思考长度不可通过该参数限制。
+
+kimi-k3 暂不支持 OpenAI 兼容 Responses 接口（coming soon），请使用 OpenAI 兼容 Chat Completions 接口调用。
+
+> 价格信息请参见[模型调用计费](https://help.aliyun.com/zh/model-studio/model-pricing)。
 
 模型上下文长度与价格信息请参见[百炼控制台](https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/all)。
 

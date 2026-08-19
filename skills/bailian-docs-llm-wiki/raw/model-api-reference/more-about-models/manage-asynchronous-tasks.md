@@ -21,10 +21,21 @@
 -   异步任务在完成后通常保留 24 小时 （具体以对应任务的 API 文档为准），超时后系统将自动清理历史任务数据。
     
 
+**说明**
+
+查询任务结果的次数不影响任务的执行。建议根据任务类型合理设置查询间隔：
+
+-   较快的任务（如文本向量）可以使用较短的查询间隔。
+    
+-   较慢的任务（如图像生成、视频生成）建议使用较长的查询间隔。
+    
+-   避免过于频繁地查询任务状态，以防触发限流（20 QPS）。
+    
+
 #### **请求接口**
 
 ```
-GET https://dashscope.aliyuncs.com/api/v1/tasks/{task_id}
+GET https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/tasks{task_id}
 ```
 
 #### **入参描述**
@@ -195,7 +206,7 @@ Object
 #### **请求示例**
 
 ```
-curl -X GET 'https://dashscope.aliyuncs.com/api/v1/tasks/73205176-xxxx-xxxx-xxxx-16bd5d902219' \
+curl -X GET 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/tasks73205176-xxxx-xxxx-xxxx-16bd5d902219' \
 --header "Authorization: Bearer $DASHSCOPE_API_KEY"
 ```
 
@@ -257,7 +268,7 @@ curl -X GET 'https://dashscope.aliyuncs.com/api/v1/tasks/73205176-xxxx-xxxx-xxxx
 #### **请求接口**
 
 ```
-GET https://dashscope.aliyuncs.com/api/v1/tasks/
+GET https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/tasks
 ```
 
 #### **入参描述**
@@ -559,7 +570,7 @@ String
 #### **请求示例**
 
 ```
-curl -X GET 'https://dashscope.aliyuncs.com/api/v1/tasks/?start_time=xxx&end_time=xxx&status=xxx' \
+curl -X GET 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/tasks?start_time=xxx&end_time=xxx&status=xxx' \
 --header "Authorization: Bearer $DASHSCOPE_API_KEY"
 ```
 
@@ -618,7 +629,7 @@ curl -X GET 'https://dashscope.aliyuncs.com/api/v1/tasks/?start_time=xxx&end_tim
 #### **请求接口**
 
 ```
-POST https://dashscope.aliyuncs.com/api/v1/tasks/{task_id}/cancel
+POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/tasks{task_id}/cancel
 ```
 
 #### **入参描述**
@@ -696,7 +707,7 @@ String
 #### **请求示例**
 
 ```
-curl -X POST 'https://dashscope.aliyuncs.com/api/v1/tasks/73205176-xxxx-xxxx-xxxx-16bd5d902219/cancel' \
+curl -X POST 'https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/tasks73205176-xxxx-xxxx-xxxx-16bd5d902219/cancel' \
 --header "Authorization: Bearer $DASHSCOPE_API_KEY"
 ```
 
@@ -727,3 +738,26 @@ Failed to cancel the task, please confirm if the task is in PENDING status.
 取消任务失败，请确认任务状态为`PENDING`。
 
 仅 PENDING 状态的任务可取消，其他状态任务无法取消。
+
+## **常见问题**
+
+### 任务查询返回 DataInspectionFailed 错误码是什么含义？
+
+`DataInspectionFailed` 表示输出数据可能包含不适当的内容，已被内容安全审核拦截。对于包含多个子任务的异步任务（如批量图像生成），部分子任务可能返回此错误码，而其他子任务仍正常完成。此时整体任务状态可能为 `SUCCEEDED`，但 `task_metrics` 中会显示失败的子任务数量。
+
+### 如何判断异步任务是否执行完成？
+
+通过查询任务接口返回的 `task_status` 字段判断：
+
+-   `PENDING`：任务排队中，尚未开始处理。
+    
+-   `RUNNING`：任务处理中。
+    
+-   `SUCCEEDED`：任务执行成功。
+    
+-   `FAILED`：任务执行失败，请查看 `output` 中的 `code` 和 `message` 了解失败原因。
+    
+
+### 频繁查询任务状态会影响任务执行吗？
+
+不会。查询任务状态的请求与任务执行是独立的，查询次数不影响任务的执行进度和结果。但请注意，查询接口有 20 QPS 的限流限制，过于频繁的查询可能会触发限流，返回错误响应。建议根据任务类型合理设置查询间隔。

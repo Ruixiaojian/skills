@@ -62,9 +62,9 @@ wan2.2-s2v
 
 生成数字人视频的流程为：
 
--   **步骤一**：调用 wan2.2-s2v-detect 接口，传入图片URL，确认图片合规。
+-   **步骤1**：调用 wan2.2-s2v-detect 接口，传入图片URL，确认图片合规。
     
--   **步骤二**：若检测通过，调用 wan2.2-s2v 异步接口，传入图片URL和音频URL，提交视频生成任务，并轮询获取结果。
+-   **步骤2**：若检测通过，调用 wan2.2-s2v 异步接口，传入图片URL和音频URL，提交视频生成任务，并轮询获取结果。
     
 
 ## **快速开始**
@@ -86,7 +86,7 @@ HTTP 请求分两步：先创建任务，再获取结果。初学者建议使用
 该请求会返回一个`task_id`用于查询结果。
 
 ```
-curl 'https://dashscope.aliyuncs.com/api/v1/services/aigc/image2video/video-synthesis/' \
+curl 'https://dashscope.aliyuncs.com/api/v1/services/aigc/image2video/video-synthesis' \
  --header 'X-DashScope-Async: enable' \
  --header "Authorization: Bearer $DASHSCOPE_API_KEY" \
  --header 'Content-Type: application/json' \
@@ -106,10 +106,10 @@ curl 'https://dashscope.aliyuncs.com/api/v1/services/aigc/image2video/video-synt
 
 请将`86ecf553-d340-4e21-xxxxxxxxx`替换为真实的task\_id。
 
-> 若使用新加坡地域的模型，需将base\_url替换为https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1/tasks/86ecf553-d340-4e21-xxxxxxxxx，其中WorkspaceId需替换为真实的业务空间ID。
+> 若使用新加坡地域的模型，需将base\_url替换为https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/api/v1/tasks/86ecf553-d340-4e21-xxxxxxxxx，其中{WorkspaceId}需替换为真实的业务空间ID。
 
 ```
-curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/86ecf553-d340-4e21-xxxxxxxxx \
+curl -X GET https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api/v1/tasks/86ecf553-d340-4e21-xxxxxxxxx \
 --header "Authorization: Bearer $DASHSCOPE_API_KEY"
 ```
 
@@ -145,7 +145,7 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/86ecf553-d340-4e21-xxxxx
 
 **风格控制**
 
-场景驱动（说话, 唱歌, 表演）
+场景驱动（说话、唱歌、表演）
 
 风格驱动（适中、平静、活泼）
 
@@ -161,9 +161,9 @@ curl -X GET https://dashscope.aliyuncs.com/api/v1/tasks/86ecf553-d340-4e21-xxxxx
     
 -   视频生成：
     
-    -   480P: 0.5元/秒
+    -   480P：0.5元/秒
         
-    -   720P: 0.9元/秒
+    -   720P：0.9元/秒
         
 
 -   图像检测：0.004元/张
